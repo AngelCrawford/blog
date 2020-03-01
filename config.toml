@@ -1,0 +1,46 @@
+title = "Article Time"
+baseURL = ""
+languageCode = "de-DE"
+theme = "articletime"
+
+# TODO: Robots Metatag testen
+enableRobotsTXT = true
+# TODO: Add TwitterHande to the new theme
+twitterHandle = "crawford_ftw" #Twitter name, to bind shared cards to your profile
+
+DefaultContentLanguage = "de"
+Paginate = 1 # this is set low for demonstrating with dummy content. Set to a higher number
+googleAnalytics = ""
+
+[sitemap]
+  changefreq = "weekly"
+  priority = "0.9"
+  filename = "sitemap.xml"
+
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
+
+[params]
+  author = "Angel Crawford"
+  favicon = "favicon.de.ico"
+  description = "The last theme you'll ever need. Maybe."
+
+  # TODO: SEO einfügen in die Seite
+  [params.seo]
+      # TODO: Share Image ändern und Keywords bestimmen
+    shareImage = "images/social.jpg"
+    keywords = "Webcard, Profil Karte, Angel Crawford"
+
+  # TODO: Soziale Medien einfügen
+  [params.social]
+    facebook = "#"
+    twitter = "https://twitter.com/GoHugoIO"
+    instagram = "#"
+    github = "#"
+  
+  [params.post_settings]
+    featured_image = "/images/gohugo-default-sample-hero-image.jpg"
+    recent_posts_number = 2
+    show_reading_time = true

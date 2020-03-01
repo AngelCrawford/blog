@@ -1,0 +1,32 @@
+<nav class="navbar" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a class="navbar-item" href="{{ .Site.BaseURL }}">
+      {{ .Site.Title }}
+    </a>
+    <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarHeader">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+
+  <div class="navbar-menu" id="navbarHeader">
+      
+    <div class="navbar-start">
+      {{ range .Site.Menus.main }}
+        <a class="navbar-item" href="{{ .URL }}" title="{{ .Name }} page">
+          {{ .Name }}
+        </a>
+      {{ end }}
+    </div>
+
+    <div class="navbar-end">
+      <div class="navbar-item">
+        {{ partialCached "social-follow.html" . }}
+      </div>
+    </div>
+    
+  </div>
+
+</nav>
+  

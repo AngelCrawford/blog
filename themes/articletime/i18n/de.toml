@@ -1,0 +1,29 @@
+[minutesRead]
+other = "Leseminuten"
+
+[readMore]
+other = "weiterlesen"
+
+[words]
+other = "Wörter"
+
+[whatsInThis]
+other = "Was ist in dieser {{ .Type }}"
+
+[related]
+other = "Ähnliches"
+
+[yourName]
+other = "Dein Name"
+
+[emailAddress]
+other = "Email Adresse"
+
+[message]
+other = "Nachricht"
+
+[emailRequiredNote]
+other = "Eine Email Adresse wird benötigt."
+
+[send]
+other = "Senden"

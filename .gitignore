@@ -1,0 +1,10 @@
+# Hugo default output directory
+/themes/ananke
+/resources
+
+## OS Files
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/

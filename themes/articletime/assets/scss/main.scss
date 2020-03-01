@@ -1,0 +1,38 @@
+/*
+ * Template Name: Card
+ * Author: Angel Crawford
+ * Author URI: https://angel-crawford.de
+ * Template URI: https://angel-crawford.de
+ * Description: Theme for my online presence.
+*/
+
+//-------------------------------------------------------------------------------
+// Variables
+//-------------------------------------------------------------------------------
+
+// Colors
+$color-background   : #191919;
+$color-text         : #f2ebe3;
+$color-maverick     : #f2ebe3;
+$color-tagline      : #f2ebe3;
+$primary            : #17a2b8;
+$accent             : #20c997;
+$secondary          : #b78846;
+
+// Breakpoints
+// $bp-smallish        : {{ .Site.Params.breakpoints.bp_smallish | default "1200px" }};
+// $bp-tablet          : {{ .Site.Params.breakpoints.bp_tablet | default "800px" }};
+// $bp-mobile          : {{ .Site.Params.breakpoints.bp_mobile | default "500px" }};
+
+// @import "01-reset";
+// Bulma CSS Framework (https://bulma.io/documentation/overview/start)
+@import "bulma/bulma.sass";
+
+@import "fontawesome/fontawesome";
+@import "fontawesome/solid";
+@import "fontawesome/brands";
+@import "fontawesome/regular";
+
+
+li.page-item.active a {color: red;}
+li.page-item.disabled a {color: #aaa;}

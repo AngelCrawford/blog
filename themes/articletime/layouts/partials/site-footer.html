@@ -1,0 +1,22 @@
+<footer class="footer">
+  <div class="content has-text-centered">
+    <a href="{{ .Site.BaseURL }}" >
+      &copy; {{ now.Format "2006" }} {{ .Site.Title }}
+    </a>
+    <div>{{ partial "social-follow.html" . }}</div>
+
+    {{ if .Site.Menus.footer }}
+      <ul>
+        {{ range .Site.Menus.footer }}
+        <li>
+          <a href="{{ .URL }}" title="{{ .Name }} page">
+            {{ .Name }}
+          </a>
+        </li>
+        {{ end }}
+      </ul>
+    {{ end }}
+  </div>
+
+ 
+</footer>
