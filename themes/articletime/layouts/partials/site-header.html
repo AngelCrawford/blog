@@ -3,34 +3,33 @@
   {{/* Trimming the slash and adding absURL make sure the image works no matter where our site lives */}}
   {{ $featured_image := (trim $featured_image "/") | absURL }}
   <header style="background-image: url('{{ $featured_image }}');">
-    <div>
-      {{ partial "site-navigation.html" .}}
-      <div>
-        <h1>
-          {{ .Title | default .Site.Title }}
-        </h1>
+    
+    {{ partial "site-navigation.html" .}}
+    
+    <section class="hero">
+      <div class="hero-body">
+
+        <h1 class="title">{{ .Title | default .Site.Title }}</h1>
         {{ with .Params.description }}
-          <h2>
-            {{ . }}
-          </h2>
+          <h2 class="subtitle">{{ . }}</h2>
         {{ end }}
       </div>
-    </div>
+    </section>
+
   </header>
 {{ else }}
   <header>
-    <div>
-      {{ partial "site-navigation.html" . }}
-      <div>
-        <h1>
-          {{ .Title | default .Site.Title }}
-        </h1>
+    
+    {{ partial "site-navigation.html" . }}
+
+    <section class="hero">
+      <div class="hero-body">
+        <h1 class="title">{{ .Title | default .Site.Title }}</h1>
         {{ with .Params.description }}
-          <h2>
-            {{ . }}
-          </h2>
+          <h2 class="subtitle">{{ . }}</h2>
         {{ end }}
       </div>
-    </div>
+    </section>
+
   </header>
 {{ end }}

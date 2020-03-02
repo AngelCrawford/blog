@@ -9,8 +9,8 @@
   <div class="container">
     <div class="columns is-multiline">
       
-      {{ $paginator := .Paginate (where site.RegularPages "Type" "posts") }}
-      {{ range $paginator.Pages }}
+      {{ $paginator := .Paginator.Pages  }}
+      {{ range $paginator }}
 
         {{ partial "summary.html" . }}
       {{ end }}

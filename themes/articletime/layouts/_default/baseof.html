@@ -52,11 +52,13 @@
   </head>
 
   <body>
-
+    
     {{ block "header" . }}{{ partial "site-header.html" .}}{{ end }}
-    <main role="main">
-      {{ block "main" . }}{{ end }}
-    </main>
+    <div class="container">
+      <main role="main">
+        {{ block "main" . }}{{ end }}
+      </main>
+    </div>
     {{ block "footer" . }}{{ partialCached "site-footer.html" . }}{{ end }}
   </body>
 </html>
