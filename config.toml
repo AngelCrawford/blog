@@ -1,7 +1,7 @@
-title = "Article Time"
+title = "Private Blog"
 baseURL = ""
 languageCode = "de-DE"
-theme = "articletime"
+theme = "article"
 
 # TODO: Robots Metatag testen
 enableRobotsTXT = true
@@ -24,7 +24,7 @@ googleAnalytics = ""
 
 [params]
   author = "Angel Crawford"
-  favicon = "favicon.de.ico"
+  favicon = "favicon.ico"
   description = "The last theme you'll ever need. Maybe."
 
   # TODO: SEO einfügen in die Seite
@@ -36,7 +36,7 @@ googleAnalytics = ""
   # TODO: Soziale Medien einfügen
   [params.social]
     facebook = "#"
-    twitter = "https://twitter.com/GoHugoIO"
+    twitter = "#"
     instagram = "#"
     github = "#"
   
