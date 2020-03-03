@@ -22,6 +22,10 @@ googleAnalytics = ""
     [markup.goldmark.renderer]
       unsafe = true
 
+[permalinks]
+  articles = "/:section/:year/:month/:day/:slug"
+
+
 [params]
   author = "Angel Crawford"
   favicon = "favicon.ico"
