@@ -1,7 +1,7 @@
 ---
 date: 2019-04-09T10:58:08-04:00
 description: "The Grand Hall"
-featured_image: "posts/test/866-300x200.jpg"
+featured_image: "articles/test/866-300x200.jpg"
 tags: ["scene"]
 title: "Test"
 ---
