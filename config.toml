@@ -23,7 +23,7 @@ googleAnalytics = ""
       unsafe = true
 
 [permalinks]
-  articles = "/:section/:year/:month/:day/:slug"
+  articles = "/:section/:year/:month/:slug"
 
 
 [params]

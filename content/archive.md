@@ -1,9 +1,10 @@
 ---
-title: Contact
-featured_image: "https://i.picsum.photos/id/779/700/200.jpg"
+title: Archive
+featured_image: "https://i.picsum.photos/id/369/700/200.jpg"
 omit_header_text: true
 description: We'd love to hear from you
 type: page
+layout: archive
 menu:
   main: {}
 
