@@ -22,9 +22,16 @@ googleAnalytics = ""
     [markup.goldmark.renderer]
       unsafe = true
 
-[permalinks]
-  articles = "/:section/:year/:month/:slug"
+[taxonomies]
+  year = "year"
+  month = "month"
+  tags = "tags"
+  category = "category"
 
+[permalinks]
+  articles = "/:section/:year/:month/:slug/"
+  year = "/articles/:slug/"
+  month = "/articles/:slug/"
 
 [params]
   author = "Angel Crawford"
