@@ -33,8 +33,10 @@
     <!-- # TODO: Favicon -->
 
     <!-- Styles -->
-    {{ $sass := resources.Get "scss/main.scss" | resources.ExecuteAsTemplate "style.scss" . }}
-    {{ $style := $sass | resources.ToCSS | resources.Minify | resources.Fingerprint }}
+     {{/*  TODO: Was ist eine SourceMap für SCSS und wie mache ich das mit Hugo?  */}}
+    {{ $sassOptions := (dict "targetPath" "css/style.css" "outputStyle" "compressed" "enableSourceMap" true ) }}
+    {{ $sass := resources.Get "scss/main.scss" | resources.ExecuteAsTemplate "style.css" . }}
+    {{ $style := $sass | resources.ToCSS $sassOptions | resources.Minify | resources.Fingerprint }}
     <link rel="stylesheet" href="{{ $style.Permalink }}">
 
     <!-- Scripts -->
