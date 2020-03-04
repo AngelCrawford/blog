@@ -2,21 +2,27 @@
 {{ if $featured_image }}
   {{/* Trimming the slash and adding absURL make sure the image works no matter where our site lives */}}
   {{ $featured_image := (trim $featured_image "/") | absURL }}
-  <header style="background-image: url('{{ $featured_image }}');">
+  <header class="header" style="background-image: url('{{ $featured_image }}');">
 {{ else }}
-  <header>
+  <header class="header">
 {{ end }}
     
-    {{ partial "site-navigation.html" .}}
-    
-    <section class="hero">
-      <div class="hero-body">
+    <div class="container">
+      
+      {{ partial "site-navigation.html" .}}
+      
+      <section class="hero">
+        
+        <div class="hero-body">
+          
 
-        <h1 class="title">{{ .Title | default .Site.Title }}</h1>
-        {{ with .Params.description }}
-          <h2 class="subtitle">{{ . }}</h2>
-        {{ end }}
-      </div>
-    </section>
+          <h1 class="title">{{ .Title | default .Site.Title }}</h1>
+          {{ with .Params.description }}
+            <h2 class="subtitle">{{ . }}</h2>
+          {{ end }}
+        </div>
+      </section>
+      
+    </div>
 
   </header>

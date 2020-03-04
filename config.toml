@@ -5,11 +5,9 @@ theme = "article"
 
 # TODO: Robots Metatag testen
 enableRobotsTXT = true
-# TODO: Add TwitterHande to the new theme
-twitterHandle = "crawford_ftw" #Twitter name, to bind shared cards to your profile
 
 DefaultContentLanguage = "de"
-Paginate = 1 # this is set low for demonstrating with dummy content. Set to a higher number
+Paginate = 3 # this is set low for demonstrating with dummy content. Set to a higher number
 googleAnalytics = ""
 
 [sitemap]
@@ -40,7 +38,8 @@ googleAnalytics = ""
 
   # TODO: SEO einfügen in die Seite
   [params.seo]
-      # TODO: Share Image ändern und Keywords bestimmen
+    # TODO: Share Image ändern und Keywords bestimmen
+    twitterHandle = "crawford_ftw" #Twitter name, to bind shared cards to your profile
     shareImage = "images/social.jpg"
     keywords = "Webcard, Profil Karte, Angel Crawford"
 
