@@ -4,7 +4,8 @@ tagline: "Datenschutzerklärung"
 robotsdisallow: true
 type: page
 menu:
-  footer: {}
+  footer:
+    weight: 20
 ---
 
 ## Datenschutz auf einen Blick

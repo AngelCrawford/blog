@@ -13,8 +13,9 @@
   <div class="navbar-menu" id="navbarHeader">
       
     <div class="navbar-start">
+      {{ $currentPage := . }}
       {{ range .Site.Menus.main }}
-        <a class="navbar-item" href="{{ .URL }}" title="{{ .Name }} page">
+        <a class="navbar-item {{ if or ($currentPage.IsMenuCurrent "main" .) ($currentPage.HasMenuCurrent "main" .) }} is-active{{ end }}" href="{{ .URL }}" title="{{ .Name }} page">
           {{ .Name }}
         </a>
       {{ end }}

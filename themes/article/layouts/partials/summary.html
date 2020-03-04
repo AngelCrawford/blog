@@ -15,9 +15,6 @@
       <div class="media-content">
         <a class="title is-4" href="{{ .Permalink }}">{{ .Title }}</a>
 
-        
-
-
         <span class="heading">
           <time datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">
             {{ .PublishDate.Format "January 2, 2006" }}
@@ -35,12 +32,16 @@
       <div class="content">
         {{ .Summary }}
         <a href="{{ .URL }}">{{ i18n "readMore" }}</a>
+
+        {{ range (.GetTerms "tags") }}
+          <a href="{{ .Permalink }}" class="card-footer-item"><span class="tag">{{ .LinkTitle }}</span></a>
+        {{ end }}
       </div>
       <footer class="card-footer">
         <span class="card-footer-item">{{ .ReadingTime }} {{ i18n "minutesRead" }}</span>
         <span class="card-footer-item">{{ .WordCount }} {{ i18n "words" }}</span>
-        {{ range (.GetTerms "tags") }}
-          <a href="{{ .Permalink }}" class="card-footer-item"><span class="tag">{{ .LinkTitle }}</span></a>
+        {{ range (.GetTerms "category") }}
+          <a href="{{ .Permalink }}" class="card-footer-item"><span class="tag is-primary">{{ .LinkTitle }}</span></a>
         {{ end }}
       </footer>
     </div>

@@ -3,7 +3,8 @@ title: "Impressum"
 robotsdisallow: true
 type: page
 menu:
-  footer: {}
+  footer:
+    weight: 10
 ---
 
 Es handelt sich hier um eine rein private Website.
