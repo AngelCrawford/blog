@@ -1,22 +1,20 @@
 {{ define "main" }}
+
+  <h1 class="title">Layoutseite: index.html</h1>
   
-  <div class="container">
-    <div class="content">
-      {{ .Content }}
-    </div>
+  <div class="content">
+    {{ .Content }}
   </div>
 
-  <div class="container">
-    <div class="columns is-multiline">
-      
-      {{ $paginator := .Paginate (where site.RegularPages "Type" "articles") }}
-      {{ range $paginator.Pages }}
-
-        {{ partial "summary.html" . }}
-      {{ end }}
-    </div>
-
-    {{ partial "custom-pagination.html" . }}
+  <div class="columns is-multiline">
     
-  </div> 
+    {{ $paginator := .Paginate (where site.RegularPages "Type" "articles") }}
+    {{ range $paginator.Pages }}
+
+      {{ partial "summary.html" . }}
+    {{ end }}
+  </div>
+
+  {{ partial "custom-pagination.html" . }}
+  
 {{ end }}

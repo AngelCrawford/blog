@@ -1,10 +1,9 @@
 {{ define "main" }}
-  
-  <div class="container">
-    <div class="content">
-      {{ .Content }}
-    </div>
-  </div>
+	<h1 class="title">Layoutseite: page/archive.html</h1>
+	
+	<div class="content">
+		{{ .Content }}
+	</div>
 
 	{{ range where .Site.Pages "Section" "articles" }}
 		{{ range (.Pages.GroupByDate "2006") }}
@@ -34,7 +33,7 @@
 											{{ end }}
 										{{ end }}
 									</div>
-							</div>
+								</div>
 							</div>
 						</div>
 

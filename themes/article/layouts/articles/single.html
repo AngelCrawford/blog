@@ -1,0 +1,49 @@
+{{ define "main" }}
+
+  <h1 class="title">Layoutseite: articles/single.html</h1>
+
+
+  <div class="content">
+    <div class="tile is-ancestor">
+      <div class="tile is-parent">
+        <div class="tile is-child is-paddingless">
+          <article>
+            {{ .Content }}
+          </article>  
+        </div>
+      </div>
+
+      <div class="tile is-3 is-vertical is-parent">
+        <div class="tile is-child box">
+          <p class="title">Information</p>
+          <div class="author">
+            Author: {{ if .Params.Author }} {{ .Params.Author }} {{ else }} {{ .Site.Params.Author }} {{ end }}
+          </div>
+          <div class="category">
+            Kategorie:
+            {{ range (.GetTerms "category") }}
+              <a href="{{ .Permalink }}"><span class="tag is-primary">{{ .LinkTitle }}</span></a>
+            {{ end }}
+          </div>
+          <div class="tags">Tags:
+            {{ range (.GetTerms "tags") }}
+              <a href="{{ .Permalink }}"><span class="tag">{{ .LinkTitle }}</span></a>
+            {{ end }}
+          </div>
+        </div>
+        <div class="tile is-child box">
+          <p class="title">Table of Content</p>
+          {{ .TableOfContents }}
+        </div>
+      </div>
+
+    </div>
+  </div>
+ 
+
+      
+     
+
+      
+
+{{ end }}

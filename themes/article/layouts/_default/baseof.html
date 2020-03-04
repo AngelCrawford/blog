@@ -54,11 +54,11 @@
     
     {{ block "header" . }}{{ partial "site-header.html" .}}{{ end }}
 
-    <div class="container">
       <main role="main">
-        {{ block "main" . }}{{ end }}
+        <div class="container">
+          {{ block "main" . }}{{ end }}
+        </div>
       </main>
-    </div>
     
     {{ block "footer" . }}{{ partialCached "site-footer.html" . }}{{ end }}
   </body>

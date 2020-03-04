@@ -7,22 +7,18 @@
   <header class="header">
 {{ end }}
     
-    <div class="container">
+    {{ partial "site-navigation.html" .}}
+    
+    <section class="hero">
       
-      {{ partial "site-navigation.html" .}}
-      
-      <section class="hero">
+      <div class="hero-body">
         
-        <div class="hero-body">
-          
 
-          <h1 class="title">{{ .Title | default .Site.Title }}</h1>
-          {{ with .Params.description }}
-            <h2 class="subtitle">{{ . }}</h2>
-          {{ end }}
-        </div>
-      </section>
+        <h1 class="title">{{ .Title | default .Site.Title }}</h1>
+        {{ with .Params.description }}
+          <h2 class="subtitle">{{ . }}</h2>
+        {{ end }}
+      </div>
+    </section>
       
-    </div>
-
   </header>

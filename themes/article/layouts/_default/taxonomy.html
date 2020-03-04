@@ -1,22 +1,20 @@
 {{ define "main" }}
-  
-  <div class="container">
-    <div class="content">
-      {{ .Content }}
-    </div>
+
+  <h1 class="title">Layoutseite: _default/taxonomy.html</h1>
+
+  <div class="content">
+    {{ .Content }}
   </div>
 
-  <div class="container">
-    <div class="columns is-multiline">
-      
-      {{ $paginator := .Paginator.Pages  }}
-      {{ range $paginator }}
-
-        {{ partial "summary.html" . }}
-      {{ end }}
-    </div>
-
-    {{ partial "custom-pagination.html" . }}
+  <div class="columns is-multiline">
     
-  </div> 
+    {{ $paginator := .Paginator.Pages  }}
+    {{ range $paginator }}
+
+      {{ partial "summary.html" . }}
+    {{ end }}
+  </div>
+
+  {{ partial "custom-pagination.html" . }}
+
 {{ end }}

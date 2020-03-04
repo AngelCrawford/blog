@@ -1,11 +1,10 @@
 {{ define "main" }}
-
 {{ $featured_image := .Site.Param "featured_image"}}
 
-  <div class="container">
-    <div class="content">
-      {{ .Content }}
-    </div>
+  <h1 class="title">Layoutseite: _default/terms.html</h1>
+ 
+  <div class="content">
+    {{ .Content }}
   </div>
 
   <div class="columns is-mobile is-multiline">
@@ -26,11 +25,11 @@
                 {{ $pageCount := len .Pages }}
                 <p>{{ $pageCount }} post{{ if ne $pageCount 1 }}s{{ end }} </p>
             </div>
-         </div>
+        </div>
         </div>
       </div>
     {{ end }}
-</div>
+  </div>
 
 {{ end }}
 
