@@ -3,6 +3,7 @@ date: 2017-04-14T11:25:05-04:00
 description: "Esmeralda"
 featured_image: "https://i.picsum.photos/id/789/300/200.jpg"
 tags: []
+series: ["Seriennummer"]
 title: "Chapter VI: Esmeralda"
 year: "2017"
 month: "2017/04"

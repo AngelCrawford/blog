@@ -13,11 +13,11 @@
     {{ with .Site.Params.description }}<meta name="description" content="{{ . }}" />{{ end }}
     {{ with .Site.Params.keywords }}<meta name="keywords" content="{{ . }}" />{{ end }}
    
-    {{ with .Params.robotsdisallow }}
+    {{- with .Params.robotsdisallow -}}
       <meta name="robots" content="noindex, nofollow, noarchive">
-    {{ else }}
+    {{- else -}}
       <meta name="robots" content="index, follow, archive">
-    {{ end }}
+    {{- end -}}
     <meta name="referrer" content="always" />
 
     <!-- Social & Open Graph -->
@@ -34,15 +34,15 @@
 
     <!-- Styles -->
      {{/*  TODO: Was ist eine SourceMap für SCSS und wie mache ich das mit Hugo?  */}}
-    {{ $sassOptions := (dict "targetPath" "style.css" "outputStyle" "compressed" "enableSourceMap" true ) }}
-    {{ $sass := resources.Get "scss/main.scss" | resources.ExecuteAsTemplate "style.css" . }}
-    {{ $style := $sass | resources.ToCSS $sassOptions | resources.Fingerprint }}
+    {{- $sassOptions := (dict "targetPath" "style.css" "outputStyle" "compressed" "enableSourceMap" true ) -}}
+    {{- $sass := resources.Get "scss/main.scss" | resources.ExecuteAsTemplate "style.css" . -}}
+    {{- $style := $sass | resources.ToCSS $sassOptions | resources.Fingerprint -}}
     <link rel="stylesheet" href="{{ $style.Permalink }}">
 
     <!-- Scripts -->
-    {{ $jQuery := resources.Get "js/jquery-3.4.1.js" }}
-    {{ $js := resources.Get "js/main.js" }}
-    {{ $script := slice $jQuery $js | resources.Concat "js/bundle.js" | resources.Minify | resources.Fingerprint }}
+    {{- $jQuery := resources.Get "js/jquery-3.4.1.js" -}}
+    {{- $js := resources.Get "js/main.js" -}}
+    {{- $script := slice $jQuery $js | resources.Concat "js/bundle.js" | resources.Minify | resources.Fingerprint -}}
     <script src="{{ $script.Permalink }}"></script>
 
     <!-- TODO: Human.txt -->

@@ -1,8 +1,7 @@
 {{ define "main" }}
 
   <h1 class="title">Layoutseite: articles/single.html</h1>
-
-  
+ 
   <div class="content">
     <div class="columns">
       <div class="column box">
@@ -14,7 +13,7 @@
       <div class="column is-3">
         <div class="box">
         <p class="title">Information</p>
-          <div class="time-date">
+          <div class="date-single">
             <time datetime="{{ .PublishDate.Format "2006-01-02T15:04:05Z07:00" }}">
               {{ .PublishDate.Day }}. {{ index $.Site.Data.demonths (printf "%d" .PublishDate.Month) }} {{ .PublishDate.Year }}
             </time>
@@ -24,29 +23,64 @@
             </time>
           </div>
 
-          <div class="author">
+          <div class="author-single">
             Author: {{ if .Params.Author }} {{ .Params.Author }} {{ else }} {{ .Site.Params.Author }} {{ end }}
           </div>
-          <div class="category">
-            Kategorie:
-            {{ range (.GetTerms "category") }}
-              <a href="{{ .Permalink }}"><span class="tag is-primary">{{ .LinkTitle }}</span></a>
-            {{ end }}
-          </div>
-          <div class="tags">Tags:
-            {{ range (.GetTerms "tags") }}
-              <a href="{{ .Permalink }}"><span class="tag">{{ .LinkTitle }}</span></a>
-            {{ end }}
-          </div>
-          <div class="reading-time">{{ .ReadingTime }} {{ i18n "minutesRead" }}</div>
+          {{- if .Params.categories -}}
+          <div class="categories-single">Kategorie:
+              {{- range (.GetTerms "categories") -}}
+                <a href="{{ .Permalink }}"><span class="tag is-primary">{{ .LinkTitle }}</span></a>
+              {{- end -}}
+            </div>
+          {{- end -}}
+          {{- if .Params.tags -}}
+            <div class="tags-single">Tags:
+              {{- range (.GetTerms "tags") -}}
+                <a href="{{ .Permalink }}"><span class="tag">{{ .LinkTitle }}</span></a>
+              {{- end -}}
+            </div>
+          {{- end -}}
+          <div class="reading-time-single">{{ .ReadingTime }} {{ i18n "minutesRead" }}</div>
+
+          {{ if .Params.series }}
+            <div class="series-single">Serie:
+              {{ $name := index .Params.series 0 }}
+              This post is part of the <a href="{{.Site.BaseURL}}/series/{{$name | urlize}}">{{$name}}</a> series.
+            </div>
+          {{ end }}
         </div>
 
-        <div class="box">
-          <p class="title">Table of Content</p>
-          {{ .TableOfContents }}
-        </div>
+        {{ if ge (len .TableOfContents) 100 }}
+          <div class="box">
+            <p class="title">Table of Content</p>
+            {{ .TableOfContents }}
+          </div>
+        {{ end }}
+        
+        {{ if .Params.series }}
+          <div class="box">
+            <p class="title">Serie</p>
+
+            {{- $series_name := index .Params.series 0 -}}
+            {{- range .Site.RegularPages.ByDate -}}
+              {{- if in .Params.series $series_name -}}
+                <li>{{ .Title }} {{ .PublishDate.Format "02-01-2006" }}</li>
+              {{- end -}}
+            {{- end -}}
+            
+          </div>
+        {{ end }}
+
       </div>
     </div>
+
+    {{ if .Params.series }}
+      <div class="columns">
+        <div class="column is-9 box">
+          {{ partial "series-footer" . }}
+        </div>
+      </div>
+    {{ end }}
 
   </div>
  

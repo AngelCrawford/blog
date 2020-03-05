@@ -28,7 +28,8 @@ googleAnalytics = ""
   year = "year"
   month = "month"
   tags = "tags"
-  category = "category"
+  category = "categories"
+  series = "series"
 
 [permalinks]
   articles = "/:section/:year/:month/:slug/"

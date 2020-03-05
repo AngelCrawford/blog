@@ -3,7 +3,7 @@ date: 2017-03-13T11:15:58-04:00
 description: "Quasimodo"
 featured_image: ""
 tags: []
-category: "Kategorie 1"
+categories: "Kategorie 1"
 title: "Chapter V: Quasimodo"
 year: "2017"
 month: "2017/03"

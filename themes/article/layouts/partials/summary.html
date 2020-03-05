@@ -45,7 +45,7 @@
       <footer class="card-footer">
         <span class="card-footer-item">{{ .ReadingTime }} {{ i18n "minutesRead" }}</span>
         <span class="card-footer-item">{{ .WordCount }} {{ i18n "words" }}</span>
-        {{ range (.GetTerms "category") }}
+        {{ range (.GetTerms "categories") }}
           <a href="{{ .Permalink }}" class="card-footer-item"><span class="tag is-primary">{{ .LinkTitle }}</span></a>
         {{ end }}
       </footer>
