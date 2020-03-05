@@ -14,6 +14,16 @@
       <div class="column is-3">
         <div class="box">
         <p class="title">Information</p>
+          <div class="time-date">
+            <time datetime="{{ .PublishDate.Format "2006-01-02T15:04:05Z07:00" }}">
+              {{ .PublishDate.Day }}. {{ index $.Site.Data.demonths (printf "%d" .PublishDate.Month) }} {{ .PublishDate.Year }}
+            </time>
+            <br />
+            <time datetime="{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}">
+              Updated: {{ .Lastmod.Day }}. {{ index $.Site.Data.demonths (printf "%d" .Lastmod.Month) }} {{ .Lastmod.Year }}
+            </time>
+          </div>
+
           <div class="author">
             Author: {{ if .Params.Author }} {{ .Params.Author }} {{ else }} {{ .Site.Params.Author }} {{ end }}
           </div>
