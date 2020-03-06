@@ -7,10 +7,10 @@
     {{ .Content }}
   </div>
 
-  <div class="columns is-mobile is-multiline">
+  <div class="columns is-multiline">
     {{ range .Data.Terms.ByCount }}
 
-      <div class="column is-flex is-half-mobile is-one-third-tablet is-one-quarter-desktop is-one-fifth-widescreen">
+      <div class="column is-flex is-one-fifth">
         <div class="card">
           <div class="card-image">
             <a href="{{ .Page.Permalink }}">
@@ -20,11 +20,9 @@
             </a>
           </div>
           <div class="card-content has-text-centered">
-            <div>
-              <a class="title is-5 is-size-6-mobile" href="{{ .Page.Permalink }}">{{ .Page.Title }}</a>
-                {{ $pageCount := len .Pages }}
-                <p>{{ $pageCount }} post{{ if ne $pageCount 1 }}s{{ end }} </p>
-            </div>
+            <a class="title is-5 is-size-6-mobile" href="{{ .Page.Permalink }}">{{ .Page.Title }}</a>
+            {{ $pageCount := len .Pages }}
+            <p>{{ $pageCount }} post{{ if ne $pageCount 1 }}s{{ end }}</p>
         </div>
         </div>
       </div>

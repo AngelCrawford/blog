@@ -1,7 +1,7 @@
 <div class="column is-one-third is-flex">
   <article class="card">
-    {{ $featured_image := .Params.featured_image }}
-    {{ if .Params.featured_image }}
+    {{- $featured_image := .Params.featured_image -}}
+    {{- if .Params.featured_image -}}
       <div class="card-image">
         <figure class="image is-4by3">
           {{/* Trimming the slash and adding absURL make sure the image works no matter where our site lives */}}
@@ -9,9 +9,9 @@
           <a href="{{.URL}}"><img src="{{ $featured_image }}" alt="image from {{ .Title }}"></a>
         </figure>
       </div>
-    {{ end }}
+    {{- end -}}
 
-    <div class="card-content is-paddingless">
+    <div class="card-content">
       <div class="media-content">
         <a class="title is-4" href="{{ .Permalink }}">{{ .Title }}</a>
 
@@ -26,9 +26,8 @@
         </span>
 
         <span class="heading">
-          <div class="author">
-            Author
-            </span>: {{ if .Params.Author }} {{ .Params.Author }} {{ else }} {{ .Site.Params.Author }} {{ end }}
+          <div class="author">Author:
+            {{ if .Params.Author }} {{ .Params.Author }} {{ else }} {{ .Site.Params.Author }} {{ end }}
           </div>
         </span>
       </div>
