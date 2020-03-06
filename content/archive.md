@@ -1,6 +1,6 @@
 ---
 title: Archive
-featured_image: "https://i.picsum.photos/id/369/700/200.jpg"
+image: "https://i.picsum.photos/id/369/700/200.jpg"
 omit_header_text: true
 description: We'd love to hear from you
 type: page

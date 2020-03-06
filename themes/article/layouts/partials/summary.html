@@ -1,14 +1,17 @@
 <div class="column is-one-third is-flex">
   <article class="card">
-    {{- $featured_image := .Params.featured_image -}}
-    {{- if .Params.featured_image -}}
+    {{- if .Params.image -}}
       <div class="card-image">
         <figure class="image is-4by3">
-          {{/* Trimming the slash and adding absURL make sure the image works no matter where our site lives */}}
-          {{ $featured_image := (trim $featured_image "/") | absURL }}
-          <a href="{{.URL}}"><img src="{{ $featured_image }}" alt="image from {{ .Title }}"></a>
+          <a href="{{.URL}}">
+            <img src="{{ with .Params.image }}{{ . }}{{ end }}" alt="image from {{ .Title }}">
+          </a>
         </figure>
       </div>
+    {{- end -}}
+
+    {{- range first 1 (.Resources.ByType "image") -}}     
+        <img src="{{ with .Fill "400x300" | images.Filter images.Grayscale }}{{ .RelPermalink  }}{{ end }}" alt="{{ .Name }}" />
     {{- end -}}
 
     <div class="card-content">

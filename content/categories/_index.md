@@ -1,6 +1,6 @@
 ---
 title: "Categories"
-featured_image: 'https://i.picsum.photos/id/124/700/200.jpg'
+image: 'https://i.picsum.photos/id/124/700/200.jpg'
 description: "The last theme you'll ever need. Maybe."
 menu: "main"
 ---

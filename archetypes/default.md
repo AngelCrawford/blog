@@ -6,7 +6,7 @@ lastmod: {{ now.Format "2006-01-02" }}
 tags: []
 categories: ""
 series: []
-featured_image: ""
+image: ""
 description: ""
 year: "{{ now.Format "2006" }}"
 month: "{{ now.Format "2006/01" }}"

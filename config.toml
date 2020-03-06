@@ -68,6 +68,5 @@ googleAnalytics = ""
     github = "#"
   
   [params.post_settings]
-    featured_image = "/images/gohugo-default-sample-hero-image.jpg"
     recent_posts_number = 2
     show_reading_time = true

@@ -1,6 +1,6 @@
 ---
 title: "scene"
-featured_image: 'https://i.picsum.photos/id/549/700/200.jpg'
+image: 'https://i.picsum.photos/id/549/700/200.jpg'
 description: "The last theme you'll ever need. Maybe."
 ---
 
