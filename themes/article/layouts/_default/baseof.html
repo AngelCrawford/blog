@@ -6,7 +6,7 @@
    
     <title>{{ block "title" . }}{{ .Site.Title }} {{ with .Params.Title }} | {{ . }}{{ end }}{{ end }}</title>
     <meta name="viewport" content="width=device-width,minimum-scale=1">
-    {{ hugo.Generator }}
+    <!-- {{ hugo.Generator }} -->
 
     <!-- SEO -->
     {{ with .Site.Params.author }}<meta name="author" content="{{ . }}" />{{ end }}
@@ -59,6 +59,6 @@
         </div>
       </main>
     
-    {{ block "footer" . }}{{ partialCached "site-footer.html" . }}{{ end }}
+    {{ block "footer" . }}{{ partial "site-footer.html" . }}{{ end }}
   </body>
 </html>

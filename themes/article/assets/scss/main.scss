@@ -26,6 +26,7 @@ $secondary          : #b78846;
 
 // @import "01-reset";
 // Bulma CSS Framework (https://bulma.io/documentation/overview/start)
+
 @import "bulma/bulma.sass";
 
 @import "fontawesome/fontawesome";
@@ -34,5 +35,11 @@ $secondary          : #b78846;
 @import "fontawesome/regular";
 
 
-li.page-item.active a {color: red;}
+
 li.page-item.disabled a {color: #aaa;}
+
+.is-active, 
+a.navbar-item.is-active, 
+.navbar-link.is-active { 
+  color: red; 
+}

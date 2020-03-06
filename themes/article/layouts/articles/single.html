@@ -61,10 +61,17 @@
           <div class="box">
             <p class="title">Serie</p>
 
+            {{- $currentPage := . -}}
             {{- $series_name := index .Params.series 0 -}}
             {{- range .Site.RegularPages.ByDate -}}
               {{- if in .Params.series $series_name -}}
-                <li>{{ .Title }} {{ .PublishDate.Format "02-01-2006" }}</li>
+
+              {{- if not (eq $currentPage.RelPermalink .URL) -}}
+                <a href="{{ .URL }}" title="{{ .Name }} page"><li>{{ .PublishDate.Format "02-01-2006" }} - {{ .Title }}</li></a>
+              {{- else -}}
+                <li class="is-active">{{ .PublishDate.Format "02-01-2006" }} - {{ .Title }}</li>
+              {{- end -}}
+                
               {{- end -}}
             {{- end -}}
             
