@@ -10,9 +10,11 @@
         {{ $currentPage := . }}
         {{ range .Site.Menus.footer }}
           <li>
-            <a href="{{ .URL }}" title="{{ .Name }} page" class="{{ if or ($currentPage.IsMenuCurrent "footer" .) ($currentPage.HasMenuCurrent "footer" .) }}is-active{{ end }}">
-              {{ .Name }}
-            </a>
+            {{ with .Page }}
+              <a href="{{ .URL }}" title="{{ .Name }} page" class="{{ if eq $currentPage.RelPermalink .URL }}is-active{{ end }}">
+                {{ .Name }}
+              </a>
+            {{ end }}
           </li>
         {{ end }}
       </ul>

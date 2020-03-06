@@ -6,6 +6,7 @@ theme = "article"
 # TODO: Robots Metatag testen
 enableRobotsTXT = true
 enableGitInfo = true
+#sectionPagesMenu  = "footer"
 
 DefaultContentLanguage = "de"
 Paginate = 3 # this is set low for demonstrating with dummy content. Set to a higher number
