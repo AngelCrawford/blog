@@ -1,0 +1,4 @@
+{{ $_hugo_config := `{ "version": 1 }` }}
+<div class="message{{- " " -}}{{- with .Get "theme" -}}is-{{.}}{{- else -}}is-dark{{- end -}}" role="alert">
+	<div class="message-body">{{- .Inner -}}</div>
+</div>
