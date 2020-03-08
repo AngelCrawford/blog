@@ -1,6 +1,8 @@
 ---
 title: "Tags"
-image: 'https://i.picsum.photos/id/124/700/200.jpg'
+images: 
+- src: './124-1200x500.jpg'
+  byline: "dikasjdsa"
 description: "The last theme you'll ever need. Maybe."
 ---
 

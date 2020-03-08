@@ -1,26 +1,20 @@
 <div class="column is-one-third is-flex">
   <article class="card">
-    {{- if .Params.image -}}
-      <div class="card-image">
-        <figure class="image is-4by3">
-          <a href="{{.URL}}">
-            <img src="{{ with .Params.image }}{{ . }}{{ end }}" alt="image from {{ .Title }}">
-          </a>
-        </figure>
-      </div>
-    {{- end -}}
 
-    {{ range first 1 (.Resources.ByType "image") }}
-        {{ $img := .Fill "400x300" | images.Filter images.Grayscale }}
-        <figure class="image is-4by3">
+    <div class="card-image">
+      <!-- // HACK: Is this right? -->
+      <figure class="image is-4by3">
+        {{- range first 1 (.Resources.ByType "image") -}}
+          {{- $img := .Fill "400x300" | images.Filter images.Grayscale -}}
           <a href="#">
             <img src="{{ $img.RelPermalink }}" alt="{{ $.Title }}">
           </a>
-          
-        </figure>
-        <!-- // BUG: Cannot access this SHITTY byline! WHHHHHYYY! -->
-        <figcaption>ds: {{ .Params.byline }}</figcaption>
-    {{ end }}
+        {{- end -}}
+        {{- with .Params.images -}}
+          {{ range first 1 . }}<figcaption>Byline: {{ .byline | safeHTML }}</figcaption>{{ end }}
+        {{- end -}}
+      </figure>
+    </div>
 
     <div class="card-content">
       <div class="media-content">

@@ -34,7 +34,15 @@ $secondary          : #b78846;
 @import "fontawesome/brands";
 @import "fontawesome/regular";
 
-
+header.header {
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+header.header section.hero .hero-body h1,
+header.header section.hero .hero-body h2,
+.byline.page-header {
+  color: #fff;
+}
 
 li.page-item.disabled a {color: #aaa;}
 
@@ -46,4 +54,11 @@ a.navbar-item.is-active,
 
 .card {
   width: 100%;
+}
+
+figcaption {
+  z-index: 2;
+  position: absolute;
+  bottom: 0;
+  color: #fff;
 }

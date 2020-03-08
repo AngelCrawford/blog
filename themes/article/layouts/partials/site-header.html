@@ -1,23 +1,24 @@
-{{ if .Params.image }}
-  <header class="header" style="background-image: url('{{ with .Params.image }}{{ . }}{{ end }}');">
-{{ else }}
-  <header class="header">
+{{ range first 1 (.Resources.ByType "image") }}
+  {{ $fill := .Fill "1200x200" | images.Filter images.Grayscale }}
+  {{ $img := $fill.RelPermalink }}
+  <header class="header" style="background-image: url('{{ $img }}');">
 {{ end }}
-    
     {{ partial "site-navigation.html" .}}
     
     <section class="hero">
 
-      {{ with .Params.image }}{{ . }}{{ end }}
-
       <div class="hero-body">
-        
-
         <h1 class="title">{{ .Title | default .Site.Title }}</h1>
         {{ with .Params.description }}
           <h2 class="subtitle">{{ . }}</h2>
         {{ end }}
+
+        {{ with .Params.images }}
+          {{ range first 1 . }}
+            <div class="byline page-header">{{ .byline | safeHTML }}</div>
+          {{ end }}
+        {{ end }}
       </div>
-    </section>
       
+    </section>
   </header>

@@ -1,10 +1,8 @@
 ---
-date: 2017-04-10T11:00:59-04:00
-description: "Pierre Gringoire"
-image: ""
-tags: []
-series: ["Seriennummer"]
-title: "Chapter II: Pierre Gringoire"
+date: 2017-04-11T11:13:32-04:00
+description: "Monsieur the Cardinal"
+tags: [test]
+title: "Chapter III: Monsieur the Cardinal"
 year: "2017"
 month: "2017/04"
 ---

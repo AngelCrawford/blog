@@ -1,9 +1,11 @@
 ---
 title: Kontakt
-image: "https://i.picsum.photos/id/779/700/200.jpg"
 omit_header_text: true
 description: We'd love to hear from you
 type: page
+images:
+- src: "./779-2000x1000.jpg"
+  byline: "Some byline text"
 menu:
   footer:
     weight: 30
