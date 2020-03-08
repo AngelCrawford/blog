@@ -10,9 +10,17 @@
       </div>
     {{- end -}}
 
-    {{- range first 1 (.Resources.ByType "image") -}}     
-        <img src="{{ with .Fill "400x300" | images.Filter images.Grayscale }}{{ .RelPermalink  }}{{ end }}" alt="{{ .Name }}" />
-    {{- end -}}
+    {{ range first 1 (.Resources.ByType "image") }}
+        {{ $img := .Fill "400x300" | images.Filter images.Grayscale }}
+        <figure class="image is-4by3">
+          <a href="#">
+            <img src="{{ $img.RelPermalink }}" alt="{{ $.Title }}">
+          </a>
+          
+        </figure>
+        <!-- // BUG: Cannot access this SHITTY byline! WHHHHHYYY! -->
+        <figcaption>ds: {{ .Params.byline }}</figcaption>
+    {{ end }}
 
     <div class="card-content">
       <div class="media-content">

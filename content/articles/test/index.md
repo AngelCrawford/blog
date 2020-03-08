@@ -9,9 +9,10 @@ title: "Test 123"
 year: "2019"
 month: "2019/04"
 author: HJKHJ Udsanhjs
-image: 
-  src: "/articles/2019/04/test-123/799-500x700.jpg"
-  name: "jdsklajdskl"
+resources: 
+- src: ./799-500x700.jpg"
+  params:
+    byline: "jdsklajdskl"
 ---
 
 ## Introduction
