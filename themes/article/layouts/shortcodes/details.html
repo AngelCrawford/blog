@@ -1,0 +1,9 @@
+{{- $heading := .Get 0 -}}
+{{- $items := split (.Get 1) "," -}}
+
+<div class="title">{{ $heading }}</div>
+<div class="tags">
+  {{- range $items -}}
+    <span class="tag">{{ . }}</span>
+  {{- end -}}
+</div>

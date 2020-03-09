@@ -6,6 +6,15 @@
     <div class="columns">
       <div class="column box">
         <article>
+          {{ if .Params.icons }}
+            <h2>Details</h2>
+            {{ range .Params.icons }}
+              <!-- TODO: Add Tooltip, per Extension oder selber coden -->
+              <span style="font-size: 3em; color: {{ .color }};">
+                <i class="{{ .src }}"></i>
+              </span>
+            {{ end }}
+          {{ end }}
           {{ .Content }}
         </article>
       </div>

@@ -14,7 +14,18 @@ images:
   byline: "jdsklajdskl <a href='#'>test</a>"
 - src: "./attachment_85857177-e1574291495328.png"
   byline: "Test für das Attachment"
+icons:
+- src: "fab fa-windows"
+  color: "#456987"
+  tooltip: "Some Tooltip info"
+- src: "fab fa-linux"
+  color: "tomato"
+- src: "fab fa-android"
+  color: "green"
 ---
+
+{{< details "Genre" "Some, Tags, I Want" >}}
+{{< details "Info" "Some, Tags, I Want" >}}
 
 ## Introduction
 
