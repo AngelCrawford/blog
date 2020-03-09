@@ -5,20 +5,20 @@
     </a>
     <div>{{ partial "social-follow.html" . }}</div>
 
-    {{ if .Site.Menus.footer }}
+    {{- if .Site.Menus.footer -}}
       <ul>
-        {{ $currentPage := . }}
-        {{ range .Site.Menus.footer }}
+        {{- $currentPage := . -}}
+        {{- range .Site.Menus.footer -}}
           <li>
-            {{ if not (eq $currentPage.RelPermalink .URL) }}
+            {{- if not (eq $currentPage.RelPermalink .URL) -}}
               <a href="{{ .URL }}" title="{{ .Name }} page">{{ .Name }}</a>
-            {{ else }}
+            {{- else -}}
               <span class="is-active">{{ .Name }}</span>
-            {{ end }}
+            {{- end -}}
           </li>
-        {{ end }}
+        {{- end -}}
       </ul>
-    {{ end }}
+    {{- end -}}
   </div>
  
 </footer>
