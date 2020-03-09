@@ -14,6 +14,10 @@ images:
   byline: "Idee <a href='#'>test</a>"
 - src: "./name.jpg"
   byline: "Idee <a href='#'>test</a>"
+icons:
+- src: "fab fa-windows"
+  color: "#456987"
+  tooltip: "Some Tooltip info"
 ---
 
 Lorem Ipsum.
