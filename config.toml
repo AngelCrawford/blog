@@ -66,6 +66,7 @@ googleAnalytics = ""
     twitter = "#"
     instagram = "#"
     github = "#"
+    rss = "/index.xml"
   
   [params.post_settings]
     recent_posts_number = 2

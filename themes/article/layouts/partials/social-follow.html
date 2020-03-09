@@ -21,3 +21,9 @@
     <i class="fab fa-github"></i>
   </a>
 {{ end }}
+
+{{ with .Param "social.rss" }}
+  <a href="{{ . }}" target="_blank" class="github" title="Github link" rel="noopener" aria-label="follow on Github——Opens in a new window">
+    <i class="fas fa-rss"></i>
+  </a>
+{{ end }}
