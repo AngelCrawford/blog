@@ -18,7 +18,7 @@
 
     <div class="card-content">
       <div class="media-content">
-        <a class="title is-4" href="{{ .RelPermalink }}">{{ .Title }}</a>
+        <a class="title is-4" href="{{ .RelPermalink }}"><h2>{{ .Title }}</h2></a>
 
         <span class="heading">
           <time datetime="{{ .PublishDate.Format "2006-01-02T15:04:05Z07:00" }}">
@@ -30,10 +30,8 @@
           </time>
         </span>
 
-        <span class="heading">
-          <div class="author">Author:
-            {{ if .Params.Author }} {{ .Params.Author }} {{ else }} {{ .Site.Params.Author }} {{ end }}
-          </div>
+        <span class="heading author">Author:
+          {{ if .Params.Author }} {{ .Params.Author }} {{ else }} {{ .Site.Params.Author }} {{ end }}
         </span>
       </div>
   

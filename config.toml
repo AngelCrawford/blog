@@ -47,7 +47,6 @@ googleAnalytics = ""
         name = "date"
         weight = 10
 
-
 [params]
   author = "Angel Crawford"
   favicon = "favicon.ico"

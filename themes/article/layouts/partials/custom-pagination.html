@@ -4,7 +4,7 @@
 
   <!-- If there's more than one page. -->
   {{- if gt $paginator.TotalPages 1 -}}
-    <nav class="pagination is-centered" role="navigation" aria-label="pagination">
+    <nav class="pagination is-centered" aria-label="pagination">
       {{- with $paginator.First -}}
           <a {{ if $paginator.HasPrev }}href="{{ .URL }}"{{ end }} class="pagination-previous" aria-label="First" {{ if not $paginator.HasPrev }}disabled{{ end }}><span aria-hidden="true">&laquo;&laquo;</span></a>
       {{- end -}}
