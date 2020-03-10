@@ -75,11 +75,11 @@
             {{- range .Site.RegularPages.ByDate -}}
               {{- if in .Params.series $series_name -}}
 
-              {{- if not (eq $currentPage.RelPermalink .RelPermalink) -}}
-                <a href="{{ .RelPermalink }}" title="{{ .Name }} page"><li>{{ .PublishDate.Format "02-01-2006" }} - {{ .Title }}</li></a>
-              {{- else -}}
-                <li class="is-active">{{ .PublishDate.Format "02-01-2006" }} - {{ .Title }}</li>
-              {{- end -}}
+                {{- if not (eq $currentPage.RelPermalink .RelPermalink) -}}
+                  <a href="{{ .RelPermalink }}" title="{{ .Name }} page"><li>{{ .PublishDate.Format "02-01-2006" }} - {{ .Title }}</li></a>
+                {{- else -}}
+                  <li class="is-active">{{ .PublishDate.Format "02-01-2006" }} - {{ .Title }}</li>
+                {{- end -}}
                 
               {{- end -}}
             {{- end -}}

@@ -1,7 +1,7 @@
 ---
 date: 2017-04-14T11:25:05-04:00
 description: "Esmeralda"
-tags: []
+tags: ["test", "zwei"]
 series: ["Seriennummer"]
 title: "Chapter VI: Esmeralda"
 year: "2017"

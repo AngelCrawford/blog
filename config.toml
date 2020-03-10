@@ -37,26 +37,25 @@ googleAnalytics = ""
   month = "/articles/:slug/"
 
 [related]
-    threshold = 0 
-    includeNewer = true
-    toLower = false
-    [[related.indices]]
-        name = "categories"
-        weight = 100
-    [[related.indices]]
-        name = "date"
-        weight = 10
+  threshold = 0 
+  includeNewer = true
+  toLower = false
+  [[related.indices]]
+    name = "categories"
+    weight = 100
+  [[related.indices]]
+    name = "date"
+    weight = 10
 
 [params]
   author = "Angel Crawford"
   favicon = "favicon.ico"
-  description = "The last theme you'll ever need. Maybe."
+  description = "The last theme you'll ever need. Maybe. dsds"
 
-  # TODO: SEO einfügen in die Seite
   [params.seo]
-    # TODO: Share Image ändern und Keywords bestimmen
+    # TODO: Keywords bestimmen
+    # TODO: Author, wenn Autoren bestimmt werden, dass hier weg nehmen, an die SEO Sachen im Header denken
     twitterHandle = "crawford_ftw" #Twitter name, to bind shared cards to your profile
-    shareImage = "images/social.jpg"
     keywords = "Webcard, Profil Karte, Angel Crawford"
 
   # TODO: Soziale Medien einfügen
