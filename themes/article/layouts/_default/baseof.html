@@ -3,6 +3,10 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    {{- /*  FIXME: Muss unter umständen immer mal wieder angepasst werden  */ -}}
+    {{- /*  THANKS: https://blog.jeremylikness.com/blog/create-content-security-policy-csp-in-hugo/  */- }}
+    {{ printf `<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests; block-all-mixed-content; default-src 'self'; 
+      child-src %s; font-src %s; form-action %s; frame-src %s; img-src %s; object-src %s; style-src %s; script-src %s">` (delimit .Site.Params.csp.childsrc " ") (delimit .Site.Params.csp.fontsrc " ") (delimit .Site.Params.csp.formaction " ") (delimit .Site.Params.csp.framesrc " ") (delimit .Site.Params.csp.imgsrc " ") (delimit .Site.Params.csp.objectsrc " ") (delimit .Site.Params.csp.stylesrc " ") (delimit .Site.Params.csp.scriptsrc " ") | safeHTML }} 
    
     <title>{{ block "title" . }}{{ .Site.Title }} {{ with .Params.Title }} | {{ . }}{{ end }}{{ end }}</title>
     <meta name="viewport" content="width=device-width,minimum-scale=1">
@@ -69,7 +73,7 @@
       {{ printf `<link rel="%s" type="%s" href="%s" title="%s" />` .Rel .MediaType.Type .Permalink $.Site.Title | safeHTML }}
     {{ end -}}
 
-    <!-- # TODO: Favicon -->
+    <!-- Favicon -->
 
     <!-- Styles -->
     {{- $sassOptions := (dict "targetPath" "style.css" "outputStyle" "compressed" "enableSourceMap" true ) -}}
@@ -83,7 +87,6 @@
     {{- $script := slice $jQuery $js | resources.Concat "js/bundle.js" | resources.Minify | resources.Fingerprint -}}
     <script src="{{ $script.Permalink }}"></script>
 
-    <!-- TODO: Human.txt -->
     <link type="text/plain" rel="author" href="humans.{{ .Site.Language }}.txt" />
   </head>
 

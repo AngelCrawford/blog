@@ -5,11 +5,13 @@
 **Today's Progress:**
 * Added Details to the readme file
 * Created this Log file and filled the last days with my Twitter Tweets
+* Added Content Security Policy (CSP)
 
 **Thoughts:** Make Plans. Sometimes I'm kleening into work and will cling on for hours to a stupid problem. Take your time!
 
 **Link(s):**
 * [Example Log](https://github.com/kallaway/100-days-of-code/blob/master/log.md)
+* [CSP in Hugo](https://blog.jeremylikness.com/blog/create-content-security-policy-csp-in-hugo/)
 
 ## Day 10: March 10, Thuesday
 

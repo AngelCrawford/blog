@@ -67,5 +67,80 @@ googleAnalytics = ""
     rss = "/index.xml"
   
   [params.post_settings]
-    recent_posts_number = 2
-    show_reading_time = true
+    # recent_posts_number = 2
+    # show_reading_time = true
+
+  [params.csp]
+    childsrc = ["'self'"]
+    fontsrc = ["'self'", 
+      "https://fonts.gstatic.com", 
+      "disqus.com", 
+      "disquscdn.com", 
+      "*.disqus.com", 
+      "*.disquscdn.com"]
+    formaction = [
+      "'self'",
+      "https://syndication.twitter.com/",
+      "https://platform.twitter.com",
+      "disqus.com disquscdn.com",
+      "*.disqus.com",
+      "*.disquscdn.com"
+    ]
+    framesrc = [
+      "'self'",
+      "https://player.vimeo.com",
+      "www.youtube.com",
+      "www.youtube-nocookie.com",
+      "https://platform.twitter.com",
+      "https://syndication.twitter.com",
+      "jsfiddle.net",
+      "www.instagram.com",
+      "https://www.google.com",
+      "disqus.com",
+      "disquscdn.com",
+      "*.disqus.com",
+      "*.disquscdn.com"
+    ]
+    imgsrc = ["'self'"]
+    objectsrc = ["'none'"]
+    stylesrc = [
+      "'self'",
+      "'unsafe-inline'",
+      "https://fonts.googleapis.com",
+      "https://www.google.com",
+      "https://platform.twitter.com",
+      "*.twimg.com",
+      "disqus.com",
+      "disquscdn.com",
+      "*.disqus.com",
+      "*.disquscdn.com"
+    ]
+    scriptsrc = [
+      "'self'",
+      "'unsafe-inline'",
+      "https://platform.twitter.com",
+      "https://cdn.syndication.twimg.com",
+      "https://www.google-analytics.com",
+      "cse.google.com",
+      "https://www.google.com",
+      "https://www.googletagservices.com",
+      "jsfiddle.net",
+      "www.instagram.com",
+      "disqus.com",
+      "disquscdn.com",
+      "*.disqus.com",
+      "*.disquscdn.com"
+    ]
+
+    # img-src 'self' 
+    #   https://www.google-analytics.com 
+    #   *.google.com 
+    #   *.gstatic.com 
+    #   https://www.googleapis.com 
+    #   https://platform.twitter.com 
+    #   *.twimg.com 
+    #   https://syndication.twitter.com 
+    #   data: disquscdn.com 
+    #   *.disqus.com 
+    #   *.disquscdn.com; 
+        
