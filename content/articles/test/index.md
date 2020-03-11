@@ -5,10 +5,10 @@ publishdate: 2019-04-13T10:58:08-04:00
 description: "The Grand Hall"
 tags: ["scene"]
 categories: "Kategorie 1"
+authors: jdksaj
 title: "Test 123"
 year: "2019"
 month: "2019/04"
-author: HJKHJ Udsanhjs
 images: 
 - src: "./799-500x700.jpg"
   byline: "jdsklajdskl <a href='#'>test</a>"

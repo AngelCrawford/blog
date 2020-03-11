@@ -32,8 +32,10 @@
             </time>
           </div>
 
-          <div class="author-single">
-            Author: {{ if .Params.Author }} {{ .Params.Author }} {{ else }} {{ .Site.Params.Author }} {{ end }}
+          <div class="author-single">Author:
+            {{ range (.GetTerms "authors") }}
+              <a href="{{ .Permalink }}">{{ .Title }}</a>
+            {{ end }}
           </div>
           {{- if .Params.categories -}}
           <div class="categories-single">Kategorie:

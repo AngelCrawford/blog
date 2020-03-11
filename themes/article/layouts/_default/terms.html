@@ -17,6 +17,11 @@
         {{ partial "card-summary" . }}
       {{- end -}}
 
+    {{ else if (eq .Section "authors") }}
+      {{- range .Site.Taxonomies.authors.ByCount -}}
+        {{ partial "card-summary" . }}
+      {{- end -}}
+
     {{- else -}}
       {{- range .Site.Taxonomies.categories.ByCount -}}
         {{ partial "card-summary" . }}

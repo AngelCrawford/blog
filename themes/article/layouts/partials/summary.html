@@ -30,8 +30,18 @@
           </time>
         </span>
 
-        <span class="heading author">Author:
-          {{ if .Params.Author }} {{ .Params.Author }} {{ else }} {{ .Site.Params.Author }} {{ end }}
+        <span class="heading author">
+          {{ range (.GetTerms "authors") }}
+            <figure class="image is-48x48">
+              <a href="{{ .Permalink }}">
+                {{- range first 1 (.Resources.ByType "image") -}}
+                  {{- $img := .Fill "48x48" | images.Filter images.Grayscale -}}
+                  <img class="is-rounded" src="{{ $img.RelPermalink }}" alt="{{ $.Title }}">
+                {{- end -}}
+              </a>
+            </figure>
+            <a href="{{ .Permalink }}">{{ .Title }}</a>
+          {{ end }}
         </span>
       </div>
   

@@ -19,6 +19,10 @@
         {{- end -}}
       </ul>
     {{- end -}}
+
+    <p>
+      There are currently {{ len (where .Site.RegularPages "Section" "=" "articles") }} <a href="/articles">blog posts</a> on this site.
+    </p>
   </div>
  
 </footer>

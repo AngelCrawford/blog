@@ -6,6 +6,7 @@
 * Added Details to the readme file
 * Created this Log file and filled the last days with my Twitter Tweets
 * Added Content Security Policy (CSP)
+* Author Taxonomy (Image, Social Icons, Author Page with Bio)
 
 **Thoughts:** Make Plans. Sometimes I'm kleening into work and will cling on for hours to a stupid problem. Take your time!
 
