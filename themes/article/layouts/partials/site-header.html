@@ -1,5 +1,5 @@
 {{ range first 1 (.Resources.ByType "image") }}
-  {{ $fill := .Fill "1200x200" | images.Filter images.Grayscale }}
+  {{ $fill := .Fill "1200x200" | images.Filter (images.Sepia "100") }}
   {{ $img := $fill.RelPermalink }}
   <header class="header" style="background-image: url('{{ $img }}');">
 {{ end }}

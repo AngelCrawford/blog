@@ -7,12 +7,10 @@
   </div>
 
   {{ if eq .Section "authors" }}
-
     {{ range $.Params.socials }}
       <!-- TODO: Tooltip hinzufügen -->
       <a href="{{ .src }}"><i class="fab fa-{{ .name }}-square fa-2x"></i></a>
     {{ end }}
-
   {{ end }}
 
   <div class="columns is-multiline">

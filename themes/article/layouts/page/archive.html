@@ -19,13 +19,13 @@
 							<div class="card">
 								<div class="card-image">
 									<a href="{{ .Page.Permalink }}">
-										<figure class="image is-4by3">
-											{{- range first 1 (.Resources.ByType "image") -}}
-												{{- $img := .Fill "400x300" | images.Filter images.Grayscale -}}
-												<a href="#">
+										<figure class="image is-3by2">
+											<a href="{{ .Page.Permalink }}">
+												{{- range first 1 (.Resources.ByType "image") -}}
+													{{- $img := .Fill "480x320" | images.Filter (images.Sepia "100") -}}
 													<img src="{{ $img.RelPermalink }}" alt="{{ $.Title }}">
-												</a>
-											{{- end -}}
+												{{- end -}}
+											</a>
 											{{- with .Params.images -}}
 												{{ range first 1 . }}<figcaption>Byline: {{ .byline | safeHTML }}</figcaption>{{ end }}
 											{{- end -}}

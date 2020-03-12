@@ -32,9 +32,17 @@
             </time>
           </div>
 
-          <div class="author-single">Author:
+          <div class="author-single is-clearfix">
             {{ range (.GetTerms "authors") }}
-              <a href="{{ .Permalink }}">{{ .Title }}</a>
+              <figure class="image is-48x48 is-pulled-left">
+                <a href="{{ .Permalink }}">
+                  {{- range first 1 (.Resources.ByType "image") -}}
+                    {{- $img := .Fill "48x48" | images.Filter images.Grayscale -}}
+                    <img class="is-rounded" src="{{ $img.RelPermalink }}" alt="{{ $.Title }}">
+                  {{- end -}}
+                </a>
+              </figure>
+              <a class="is-pulled-right" href="{{ .Permalink }}">{{ .Title }}</a>
             {{ end }}
           </div>
           {{- if .Params.categories -}}
@@ -102,6 +110,54 @@
 
   </div>
 
+  {{ if .Params.authors }}
+    <div class="columns">
+      <div class="column is-9">
+
+
+          <article class="card is-horizontal">
+            {{ range (.GetTerms "authors") }}
+              <div class="card-image">
+                <!-- // HACK: Is this right? -->
+                <figure class="image is-2by3">
+                  <a href="{{ .Permalink }}">
+                    {{- range first 1 (.Resources.ByType "image") -}}
+                      {{- $img := .Fill "320x480" | images.Filter (images.Sepia "100") -}}
+                      <img src="{{ $img.RelPermalink }}" alt="{{ $.Title }}">
+                    {{- end -}}
+                  </a>
+                </figure>
+              </div>
+          
+              <div class="card-content">
+                <div class="card-content-wrapper">
+                  <div class="media-content">
+                    <a class="title is-4" href="{{ .RelPermalink }}"><h2>{{ .Title }}</h2></a>
+                    
+                    <span class="heading">
+                      Birthdate: {{ .Params.birthdate }}
+                    </span>
+                  </div>
+              
+                  <div class="content">
+                    {{ .Content }}
+                  </div>
+                
+                  <footer class="card-footer">
+                    {{ range .Params.socials }}
+                      <!-- TODO: Tooltip hinzufügen -->
+                      <span class="card-footer-item"><a href="{{ .src }}"><i class="fab fa-{{ .name }}-square fa-3x"></i></a></span>
+                    {{ end }}
+                  </footer>
+                </div>
+              </div>
+            {{ end }}
+          </article>
+
+      </div>
+    </div>
+  {{ end }}
+
   <!-- THANKS: https://www.pakstech.com/blog/hugo-related-pages/ -->
   <div class="columns">
     <div class="column is-9" >
@@ -114,15 +170,17 @@
           <div class="column is-one-third is-flex">
             <div class="card">
               <div class="card-image">
-                {{- range first 1 (.Resources.ByType "image") -}}
-                  {{- $img := .Fill "400x300" | images.Filter images.Grayscale -}}
-                  <a href="#">
-                    <img src="{{ $img.RelPermalink }}" alt="{{ $.Title }}">
-                  </a>
-                {{- end -}}
-                {{- with .Params.images -}}
-                  {{ range first 1 . }}<figcaption>Byline: {{ .byline | safeHTML }}</figcaption>{{ end }}
-                {{- end -}}
+                <figure class="image is-3by2">
+                  {{- range first 1 (.Resources.ByType "image") -}}
+                    {{- $img := .Fill "480x320" | images.Filter (images.Sepia "100") -}}
+                    <a href="#">
+                      <img src="{{ $img.RelPermalink }}" alt="{{ $.Title }}">
+                    </a>
+                  {{- end -}}
+                  {{- with .Params.images -}}
+                    {{ range first 1 . }}<figcaption>Byline: {{ .byline | safeHTML }}</figcaption>{{ end }}
+                  {{- end -}}
+                </figure>
               </div>
               <div class="card-content">
                 <a class="title is-5" href="{{ .Permalink }}">{{ .Title }}</a>

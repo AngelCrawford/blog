@@ -34,6 +34,8 @@ $secondary          : #b78846;
 @import "fontawesome/brands";
 @import "fontawesome/regular";
 
+@import "01-card";
+
 header.header {
   background-repeat: no-repeat;
   background-size: cover;
@@ -44,16 +46,16 @@ header.header section.hero .hero-body h2,
   color: #fff;
 }
 
+.wrapper {
+  padding: 1.5rem;
+}
+
 li.page-item.disabled a {color: #aaa;}
 
 .is-active, 
 a.navbar-item.is-active, 
 .navbar-link.is-active { 
   color: red; 
-}
-
-.card {
-  width: 100%;
 }
 
 figcaption {

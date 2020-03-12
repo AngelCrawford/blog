@@ -1,5 +1,16 @@
 # 100 Days Of Code - Log
 
+## Day 12: March 12, Thuesday
+
+**Today's Progress:**
+* Horizontal cards
+* Author Box on single posts
+
+**Thoughts:** The Plan was to programm everything first, then the design with CSS and JavaScript. But today I needed a little Flex-Box Fun. Sometimes the brain has to get rest.
+
+**Link(s):**
+* ds
+
 ## Day 11: March 11, Wednesday
 
 **Today's Progress:**
