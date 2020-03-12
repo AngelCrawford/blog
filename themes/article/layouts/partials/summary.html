@@ -47,10 +47,10 @@
         </div>
     
         <div class="content">
-          {{ if .Params.Description }}
-            {{ .Params.Description | truncate 300 }}
+          {{ if .Params.longdesc }}
+            {{ .Params.longdesc | truncate 280 " [...]" }}
           {{ else }}
-            {{ .Summary }} ...
+            {{ .Summary }} [...]
           {{ end }}
           
           <a href="{{ .RelPermalink }}">{{ i18n "readMore" }}</a>

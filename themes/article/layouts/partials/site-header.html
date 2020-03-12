@@ -10,7 +10,7 @@
       <div class="hero-body">
         <h1 class="title">{{ .Title | default .Site.Title }}</h1>
         {{ with .Params.description }}
-          <h2 class="subtitle">{{ . }}</h2>
+          <h2 class="subtitle">{{ . | truncate 160 }}</h2>
         {{ end }}
 
         {{ with .Params.images }}

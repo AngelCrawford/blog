@@ -34,32 +34,40 @@
     {{- if .IsPage }}
       {{- if not .PublishDate.IsZero }}<meta property="article:published_time" {{ .PublishDate.Format $iso8601 | printf "content=%q" | safeHTMLAttr }} />
       {{ else if not .Date.IsZero }}<meta property="article:published_time" {{ .Date.Format $iso8601 | printf "content=%q" | safeHTMLAttr }} />
-      {{ end }}
-      {{- if not .Lastmod.IsZero }}<meta property="article:modified_time" {{ .Lastmod.Format $iso8601 | printf "content=%q" | safeHTMLAttr }} />{{ end }}
-      {{- else }}
-        {{- if not .Date.IsZero }}<meta property="og:updated_time" {{ .Date.Format $iso8601 | printf "content=%q" | safeHTMLAttr }} />
-      {{- end }}
+      {{ end -}}
+      {{ if not .Lastmod.IsZero }}<meta property="article:modified_time" {{ .Lastmod.Format $iso8601 | printf "content=%q" | safeHTMLAttr }} />{{ end }}
 
-      <!-- TODO: Author funktioniert so nicht, muss erst eine Autoren funktion einbauen, per Taxonomy am Besten -->
-      {{- range .Site.Authors }}
-        {{ with .Social.facebook }}<meta property="article:author" content="https://www.facebook.com/{{ . }}" />{{ end }}
-        {{ with .Site.Social.facebook }}<meta property="article:publisher" content="https://www.facebook.com/{{ . }}" />{{ end }}
-        <meta property="article:section" content="{{ .Section }}" />
-        {{- with .Params.tags }}{{ range first 6 . }}
-          <meta property="article:tag" content="{{ . }}" />{{ end }}{{ end }}
-        {{- end }}
-      {{- end }}
+      {{- range (.Page.GetTerms "authors") -}}
+        {{- range .Params.socials }}
+          {{ if eq .name "facebook"}}<meta property="article:author" content="{{ .src }}" />{{ end }}
+          {{- if eq .name "twitter"}}<meta property="twitter:creator" content="@{{ .username }}" />{{ end }}
+        {{ end -}}
+        <meta property="article:section" content="{{ $.Section }}" />
+      {{- end -}}
+      
+      {{- with .Params.tags -}}
+        {{- range first 6 . }}
+          <meta property="article:tag" content="{{ . }}" />
+        {{ end -}}
+      {{- end -}}
+
+      <!-- If it is part of a series, link to related articles -->
+      {{- if .Params.series -}}
+        {{- $currentPage := . -}}
+        {{- $series_name := index .Params.series 0 -}}
+        {{- range .Site.RegularPages.ByDate }}
+          {{ if in .Params.series $series_name }}<meta property="og:see_also" content="{{ .Permalink }}" />{{ end }}
+        {{- end -}}
+      {{- end -}}
+
+      {{ else }}
+        {{ if not .Date.IsZero }}<meta property="og:updated_time" {{ .Date.Format $iso8601 | printf "content=%q" | safeHTMLAttr }} />
+      {{ end }}
+
+    {{ end }}
 
     {{ with .Site.Params.title }}<meta property="og:site_name" content="{{ . }}" />{{ end }}
 
-    <!-- If it is part of a series, link to related articles -->
-    {{- if .Params.series -}}
-      {{- $currentPage := . -}}
-      {{- $series_name := index .Params.series 0 -}}
-      {{ range .Site.RegularPages.ByDate }}
-        {{ if in .Params.series $series_name }}<meta property="og:see_also" content="{{ .Permalink }}" />{{ end }}
-      {{ end }}
-    {{- end -}}
     
     <!-- Robots -->
     {{- with .Params.robotsdisallow -}}
