@@ -12,9 +12,6 @@
     flex-shrink: 0;
     width: 280px;
     figure.image {
-      // display: block;
-      // position: relative;
-      // overflow: hidden;
       height: 100%;
       img {
         height: 100%;
@@ -26,6 +23,33 @@
     flex-shrink: 1;
     width: 100;
     padding: 0;
+  }
+}
+
+.card.full-image {
+  display: inline-block;
+  flex-grow: 1;
+  flex-shrink: 1;
+
+  .card-image {
+    // flex-grow: 0;
+    flex-shrink: 1;
+    // width: 100%;
+    // width: 100%;
+    figure.image {
+      // height: 100%;
+      // position: absolute;
+      
+      width: 100%;
+      img {
+        height: 100%;
+        width: 100%;
+      }
+    }
+  }
+  .card-content {
+    position: absolute;
+    margin-top: 0;
   }
 }
 

@@ -11,7 +11,13 @@
     {{ $paginator := .Paginate (where site.RegularPages "Type" "articles") }}
     {{ range $paginator.Pages }}
 
-      {{ partial "summary.html" . }}
+      {{ if eq .Params.format "link" }}
+        
+        {{ partial "link-summary.html" . }}
+      {{ else }}
+        {{ partial "summary.html" . }}
+      {{ end }}
+
     {{ end }}
   </div>
 

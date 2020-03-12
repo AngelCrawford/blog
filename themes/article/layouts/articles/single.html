@@ -159,40 +159,43 @@
   {{ end }}
 
   <!-- THANKS: https://www.pakstech.com/blog/hugo-related-pages/ -->
-  <div class="columns">
-    <div class="column is-9" >
-      <div class="content">
-        <h2>Related content</h2>
-      </div>
-      <div class="columns">
-        {{- $related := (where (.Site.RegularPages.Related .) "Type" "articles") | first 3 -}}
-        {{- range $related -}}
-          <div class="column is-one-third is-flex">
-            <div class="card">
-              <div class="card-image">
-                <figure class="image is-3by2">
-                  {{- range first 1 (.Resources.ByType "image") -}}
-                    {{- $img := .Fill "480x320" | images.Filter (images.Sepia "100") -}}
-                    <a href="#">
-                      <img src="{{ $img.RelPermalink }}" alt="{{ $.Title }}">
-                    </a>
-                  {{- end -}}
-                  {{- with .Params.images -}}
-                    {{ range first 1 . }}<figcaption>Byline: {{ .byline | safeHTML }}</figcaption>{{ end }}
-                  {{- end -}}
-                </figure>
-              </div>
-              <div class="card-content">
-                <a class="title is-5" href="{{ .Permalink }}">{{ .Title }}</a>
-                <span class="heading"><time>
-                  {{ .PublishDate.Day }}. {{ index $.Site.Data.demonths (printf "%d" .PublishDate.Month) }} {{ .PublishDate.Year }}
-                </time></span>
+ 
+  {{ if len (where (.Site.RegularPages.Related .) "Type" "articles") }}
+    <div class="columns">
+      <div class="column is-9" >
+        <div class="content">
+          <h2>Related content</h2>
+        </div>
+        <div class="columns">
+          {{- $related := (where (.Site.RegularPages.Related .) "Type" "articles") | first 3 -}}
+          {{- range $related -}}
+            <div class="column is-one-third is-flex">
+              <div class="card">
+                <div class="card-image">
+                  <figure class="image is-3by2">
+                    {{- range first 1 (.Resources.ByType "image") -}}
+                      {{- $img := .Fill "480x320" | images.Filter (images.Sepia "100") -}}
+                      <a href="#">
+                        <img src="{{ $img.RelPermalink }}" alt="{{ $.Title }}">
+                      </a>
+                    {{- end -}}
+                    {{- with .Params.images -}}
+                      {{ range first 1 . }}<figcaption>Byline: {{ .byline | safeHTML }}</figcaption>{{ end }}
+                    {{- end -}}
+                  </figure>
+                </div>
+                <div class="card-content">
+                  <a class="title is-5" href="{{ .Permalink }}">{{ .Title }}</a>
+                  <span class="heading"><time>
+                    {{ .PublishDate.Day }}. {{ index $.Site.Data.demonths (printf "%d" .PublishDate.Month) }} {{ .PublishDate.Year }}
+                  </time></span>
+                </div>
               </div>
             </div>
-          </div>
-        {{- end -}}
+          {{- end -}}
+        </div>
       </div>
     </div>
-  </div>
+  {{ end }}
  
 {{ end }}

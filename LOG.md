@@ -5,8 +5,10 @@
 **Today's Progress:**
 * Horizontal cards
 * Author Box on single posts
+* SEO (meta tags) for authors on posts
+* Working on new Format "Link" for posts
 
-**Thoughts:** The Plan was to programm everything first, then the design with CSS and JavaScript. But today I needed a little Flex-Box Fun. Sometimes the brain has to get rest.
+**Thoughts:** The Plan was to programm everything first, then the design with CSS and JavaScript. But today I needed a little Flex-Box Fun. Sometimes the brain has to get a break.
 
 **Link(s):**
 * ds
