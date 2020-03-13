@@ -1,15 +1,15 @@
 ---
-title:  "Link Test"
-description: "SEO Description and Subheader for single posts" # Not more than 160 characters!
-longdesc: "Summary for cards, remove for standard summary"
 date: 2020-03-12T22:23:46+01:00
 publishdate: 2020-03-12
 tags:
-- link
+- quote
+categories: ["Kategorie 1"]
 authors: angel
-format: link
+format: quote
+# headless: true
 year: "2020"
 month: "2020/03"
+link: https://bulma.io/documentation/modifiers/helpers/
 ---
 
-Lorem Ipsum.
+There are two hard things in computer science: cache invalidation, naming things, and off-by-one errors.

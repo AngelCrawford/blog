@@ -1,5 +1,16 @@
 # 100 Days Of Code - Log
 
+## Day 13: March 13, Friday
+
+**Today's Progress:**
+* Removed the Format "Links" and replaced with "Quote"
+* 
+
+**Thoughts:** 
+
+**Link(s):**
+* ds
+
 ## Day 12: March 12, Thuesday
 
 **Today's Progress:**
@@ -9,9 +20,6 @@
 * Working on new Format "Link" for posts
 
 **Thoughts:** The Plan was to programm everything first, then the design with CSS and JavaScript. But today I needed a little Flex-Box Fun. Sometimes the brain has to get a break.
-
-**Link(s):**
-* ds
 
 ## Day 11: March 11, Wednesday
 

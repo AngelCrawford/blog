@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     {{ if hugo.IsProduction }}
-      <!-- FIXME: EINBLENDEN BEO PRODUCTION! Muss unter umständen immer mal wieder angepasst werden -->
+      <!-- FIXME: EINBLENDEN BEI PRODUCTION! Muss unter umständen immer mal wieder angepasst werden -->
       <!-- THANKS: https://blog.jeremylikness.com/blog/create-content-security-policy-csp-in-hugo/ -->
       {{ printf `<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests; block-all-mixed-content; default-src 'self'; 
         font-src %s; form-action %s; frame-src %s; img-src %s; object-src %s; style-src %s; script-src %s">` (delimit .Site.Params.csp.fontsrc " ") (delimit .Site.Params.csp.formaction " ") (delimit .Site.Params.csp.framesrc " ") (delimit .Site.Params.csp.imgsrc " ") (delimit .Site.Params.csp.objectsrc " ") (delimit .Site.Params.csp.stylesrc " ") (delimit .Site.Params.csp.scriptsrc " ") | safeHTML }}

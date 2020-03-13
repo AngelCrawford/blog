@@ -1,11 +1,16 @@
 <div class="column is-one-third-fullhd is-half-desktop if-full-tablet is-full-mobile is-flex">
-  <article class="card is-horizontal full-image">
+  <article class="card quote">
 
-    <div class="card-image">
-      <figure class="image is-2by3">
+
+    
+
+
+    <div class="card-content-wrapper">
+
+      <figure class="image img-quote is-4by3">
         <a href="{{ .Permalink }}">
           {{- range first 1 (.Resources.ByType "image") -}}
-            {{- $img := .Fill "320x480" | images.Filter (images.Sepia "100") -}}
+            {{- $img := .Fill "600x480" | images.Filter (images.Sepia "100") -}}
               <img src="{{ $img.RelPermalink }}" alt="{{ $.Title }}">
           {{- end -}}
         </a>
@@ -13,25 +18,14 @@
           {{ range first 1 . }}<figcaption>Byline: {{ .byline | safeHTML }}</figcaption>{{ end }}
         {{- end -}}
       </figure>
-    </div>
 
-    <div class="card-content">
-      <div class="media-content">
-        <a class="title is-4" href="{{ .RelPermalink }}"><h2>{{ .Title }}</h2></a>
-
-        <span class="heading">
-          <time datetime="{{ .PublishDate.Format "2006-01-02T15:04:05Z07:00" }}">
-            {{ .PublishDate.Day }}. {{ index $.Site.Data.demonths (printf "%d" .PublishDate.Month) }} {{ .PublishDate.Year }}
-          </time>
-        
-          <time datetime="{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}">
-            (Updated {{ .Lastmod.Day }}. {{ index $.Site.Data.demonths (printf "%d" .Lastmod.Month) }} {{ .Lastmod.Year }})
-          </time>
-        </span>
-
+      <div class="card-content">
+        <p class="title">
+          “{{ .Content | markdownify }}”
+        </p>
         <span class="heading author">
           {{ range (.GetTerms "authors") }}
-            <figure class="image is-48x48">
+            <figure class="image is-48x48 is-pulled-left">
               <a href="{{ .Permalink }}">
                 {{- range first 1 (.Resources.ByType "image") -}}
                   {{- $img := .Fill "48x48" | images.Filter images.Grayscale -}}
@@ -39,13 +33,20 @@
                 {{- end -}}
               </a>
             </figure>
-            <a href="{{ .Permalink }}">{{ .Title }}</a>
+            <a class="subtitle" href="{{ .Permalink }}">{{ .Title }}</a>
           {{ end }}
         </span>
       </div>
-  
-      <div class="content"></div>
-    
+      <span class="heading date">
+        <time datetime="{{ .PublishDate.Format "2006-01-02T15:04:05Z07:00" }}">
+          {{ .PublishDate.Day }}. {{ index $.Site.Data.demonths (printf "%d" .PublishDate.Month) }} {{ .PublishDate.Year }}
+        </time>
+      
+        <time datetime="{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}">
+          (Updated {{ .Lastmod.Day }}. {{ index $.Site.Data.demonths (printf "%d" .Lastmod.Month) }} {{ .Lastmod.Year }})
+        </time>
+      </span>
+
       <footer class="card-footer">
         {{ range (.GetTerms "categories") }}
           <a href="{{ .RelPermalink }}" class="card-footer-item"><span class="tag is-primary">{{ .LinkTitle }}</span></a>
@@ -54,6 +55,8 @@
           <a href="{{ .RelPermalink }}" class="card-footer-item"><span class="tag">{{ .LinkTitle }}</span></a>
         {{ end }}
       </footer>
+      
     </div>
+
   </article> 
 </div>
