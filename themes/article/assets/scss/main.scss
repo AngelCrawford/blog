@@ -35,6 +35,7 @@ $secondary          : #b78846;
 @import "fontawesome/regular";
 
 @import "01-card";
+@import "02-ribbon";
 
 header.header {
   background-repeat: no-repeat;
@@ -63,4 +64,8 @@ figcaption {
   position: absolute;
   bottom: 0;
   color: #fff;
+}
+
+a.hashtags {
+  color: #191919;
 }

@@ -1,4 +1,11 @@
 <article class="card quote">
+  
+  <div class="ribbon is-primary">
+    {{ range first 1 (.GetTerms "categories") }}
+      <a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a>
+    {{ end }}
+  </div>
+
   <div class="card-content-wrapper">
 
     <figure class="image img-quote is-4by3">
@@ -40,11 +47,8 @@
     </span>
 
     <footer class="card-footer">
-      {{ range (.GetTerms "categories") }}
-        <a href="{{ .RelPermalink }}" class="card-footer-item"><span class="tag is-primary">{{ .LinkTitle }}</span></a>
-      {{ end }}
       {{ range (.GetTerms "tags") }}
-        <a href="{{ .RelPermalink }}" class="card-footer-item"><span class="tag">{{ .LinkTitle }}</span></a>
+        <a href="{{ .RelPermalink }}" class="card-footer-item hashtags">#{{ .LinkTitle }}</a>
       {{ end }}
     </footer>
     

@@ -1,0 +1,52 @@
+// THANKS: https://codepen.io/wikiki/pen/XagrqJ
+.has-ribbon {
+  position: relative;
+}
+.ribbon {
+  background-color: white;
+  color: #363636;
+  font-size: 1rem;
+  justify-content: center;
+  padding-left: 0.75em;
+  padding-right: 0.75em;
+  text-align: center;
+  white-space: nowrap;
+  position: absolute;
+  top: 0.5em;
+  font-weight: 400;
+  z-index: 60;
+  right: auto;
+  left: 0;
+  border-left: none;
+}
+.ribbon a {
+  color: #fff;
+}
+
+.ribbon.is-white {
+  background-color: whitesmoke;
+}
+
+.ribbon.is-black {
+  background-color: #0a0a0a;
+}
+
+.ribbon.is-primary {
+  background-color: #00d1b2;
+}
+
+.ribbon.is-info {
+  background-color: #3273dc;
+}
+
+.ribbon.is-success {
+  background-color: #23d160;
+}
+
+.ribbon.is-warning {
+  background-color: #ffdd57;
+}
+
+.ribbon.is-danger {
+  background-color: #ff3860;
+}

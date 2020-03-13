@@ -1,6 +1,11 @@
 <article class="card is-horizontal">
 
-  <div class="card-image">
+  <div class="card-image has-ribbon">
+    <div class="ribbon is-primary">
+      {{ range first 1 (.GetTerms "categories") }}
+        <a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a>
+      {{ end }}
+    </div>
     <!-- // HACK: Is this right? -->
     <figure class="image is-2by3">
       <a href="{{ .Permalink }}">
@@ -55,16 +60,13 @@
         <a href="{{ .RelPermalink }}">{{ i18n "readMore" }}</a>
 
         {{ range (.GetTerms "tags") }}
-          <a href="{{ .RelPermalink }}"><span class="tag">{{ .LinkTitle }}</span></a>
+          <a href="{{ .RelPermalink }}" class="hashtags">#{{ .LinkTitle }}</a>
         {{ end }}
       </div>
     
       <footer class="card-footer">
         <span class="card-footer-item">{{ .ReadingTime }} {{ i18n "minutesRead" }}</span>
         <span class="card-footer-item">{{ .WordCount }} {{ i18n "words" }}</span>
-        {{ range (.GetTerms "categories") }}
-          <a href="{{ .RelPermalink }}" class="card-footer-item"><span class="tag is-primary">{{ .LinkTitle }}</span></a>
-        {{ end }}
       </footer>
     </div>
   </div>

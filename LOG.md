@@ -5,11 +5,12 @@
 **Today's Progress:**
 * Removed the Format "Links" and replaced with "Quote"
 * Sticky posts with Hugos page weight
+* Ribbon added
 
 **Thoughts:** 
 
 **Link(s):**
-* ds
+* Thanks to https://codepen.io/wikiki/pen/XagrqJ
 
 ## Day 12: March 12, Thuesday
 
