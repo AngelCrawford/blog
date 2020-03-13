@@ -21,7 +21,12 @@
     {{- end -}}
 
     <p>
-      There are currently {{ len (where .Site.RegularPages "Section" "=" "articles") }} <a href="/articles">blog posts</a> on this site.
+      There are currently {{ len (where .Site.RegularPages "Section" "=" "articles") }} <a href="/articles">articles</a> on this site.
+    </p>
+    <p>
+      Stats: <br />
+      {{ $count := len (where (where .Site.RegularPages "Section" "=" "articles") ".Params.format" "==" "quote") }}
+      {{ i18n "quotes" $count }}
     </p>
   </div>
  

@@ -1,0 +1,17 @@
+{{ if and (eq .Params.weight 1) (not (eq .Params.format "quote")) }}
+  
+  <div class="column is-full-fullhd is-full-desktop is-full-tablet is-full-mobile is-flex">
+    {{ partial "summary.html" . }}
+  </div>
+  
+{{ else }}
+
+  <div class="column is-one-third-fullhd is-half-desktop is-full-tablet is-full-mobile is-flex">
+    {{ if eq .Params.format "quote" }}
+      {{ partial "quote-summary.html" . }}
+    {{ else }}
+      {{ partial "summary.html" . }}
+    {{ end }}
+  </div>
+
+{{ end }}

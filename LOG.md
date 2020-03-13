@@ -4,7 +4,7 @@
 
 **Today's Progress:**
 * Removed the Format "Links" and replaced with "Quote"
-* 
+* Sticky posts with Hugos page weight
 
 **Thoughts:** 
 

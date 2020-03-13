@@ -6,3 +6,7 @@ other = "weiterlesen"
 
 [words]
 other = "Wörter"
+
+[quotes]
+one = "One Quote"
+other = "{{.Count}} Quotes"

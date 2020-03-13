@@ -1,4 +1,5 @@
 ---
+title: "Quote Test"
 date: 2020-03-12T22:23:46+01:00
 publishdate: 2020-03-12
 tags:
@@ -6,7 +7,6 @@ tags:
 categories: ["Kategorie 1"]
 authors: angel
 format: quote
-# headless: true
 year: "2020"
 month: "2020/03"
 link: https://bulma.io/documentation/modifiers/helpers/

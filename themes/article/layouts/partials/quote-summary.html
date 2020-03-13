@@ -1,62 +1,53 @@
-<div class="column is-one-third-fullhd is-half-desktop if-full-tablet is-full-mobile is-flex">
-  <article class="card quote">
+<article class="card quote">
+  <div class="card-content-wrapper">
 
+    <figure class="image img-quote is-4by3">
+      {{- range first 1 (.Resources.ByType "image") -}}
+        {{- $img := .Fill "600x480" | images.Filter (images.Sepia "100") -}}
+          <img src="{{ $img.RelPermalink }}" alt="{{ $.Title }}">
+      {{- end -}}
+      {{- with .Params.images -}}
+        {{ range first 1 . }}<figcaption>Byline: {{ .byline | safeHTML }}</figcaption>{{ end }}
+      {{- end -}}
+    </figure>
 
-    
-
-
-    <div class="card-content-wrapper">
-
-      <figure class="image img-quote is-4by3">
-        <a href="{{ .Permalink }}">
-          {{- range first 1 (.Resources.ByType "image") -}}
-            {{- $img := .Fill "600x480" | images.Filter (images.Sepia "100") -}}
-              <img src="{{ $img.RelPermalink }}" alt="{{ $.Title }}">
-          {{- end -}}
-        </a>
-        {{- with .Params.images -}}
-          {{ range first 1 . }}<figcaption>Byline: {{ .byline | safeHTML }}</figcaption>{{ end }}
-        {{- end -}}
-      </figure>
-
-      <div class="card-content">
-        <p class="title">
-          “{{ .Content | markdownify }}”
-        </p>
-        <span class="heading author">
-          {{ range (.GetTerms "authors") }}
-            <figure class="image is-48x48 is-pulled-left">
-              <a href="{{ .Permalink }}">
-                {{- range first 1 (.Resources.ByType "image") -}}
-                  {{- $img := .Fill "48x48" | images.Filter images.Grayscale -}}
-                  <img class="is-rounded" src="{{ $img.RelPermalink }}" alt="{{ $.Title }}">
-                {{- end -}}
-              </a>
-            </figure>
-            <a class="subtitle" href="{{ .Permalink }}">{{ .Title }}</a>
-          {{ end }}
-        </span>
-      </div>
-      <span class="heading date">
-        <time datetime="{{ .PublishDate.Format "2006-01-02T15:04:05Z07:00" }}">
-          {{ .PublishDate.Day }}. {{ index $.Site.Data.demonths (printf "%d" .PublishDate.Month) }} {{ .PublishDate.Year }}
-        </time>
-      
-        <time datetime="{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}">
-          (Updated {{ .Lastmod.Day }}. {{ index $.Site.Data.demonths (printf "%d" .Lastmod.Month) }} {{ .Lastmod.Year }})
-        </time>
+    <div class="card-content">
+      <p class="title">
+        “{{ .Content | markdownify }}”
+      </p>
+      <span class="heading author">
+        {{ range (.GetTerms "authors") }}
+          <figure class="image is-48x48 is-pulled-left">
+            <a href="{{ .Permalink }}">
+              {{- range first 1 (.Resources.ByType "image") -}}
+                {{- $img := .Fill "48x48" | images.Filter images.Grayscale -}}
+                <img class="is-rounded" src="{{ $img.RelPermalink }}" alt="{{ $.Title }}">
+              {{- end -}}
+            </a>
+          </figure>
+          <a class="subtitle" href="{{ .Permalink }}">{{ .Title }}</a>
+        {{ end }}
       </span>
-
-      <footer class="card-footer">
-        {{ range (.GetTerms "categories") }}
-          <a href="{{ .RelPermalink }}" class="card-footer-item"><span class="tag is-primary">{{ .LinkTitle }}</span></a>
-        {{ end }}
-        {{ range (.GetTerms "tags") }}
-          <a href="{{ .RelPermalink }}" class="card-footer-item"><span class="tag">{{ .LinkTitle }}</span></a>
-        {{ end }}
-      </footer>
-      
     </div>
+    <span class="heading date">
+      <time datetime="{{ .PublishDate.Format "2006-01-02T15:04:05Z07:00" }}">
+        {{ .PublishDate.Day }}. {{ index $.Site.Data.demonths (printf "%d" .PublishDate.Month) }} {{ .PublishDate.Year }}
+      </time>
+    
+      <time datetime="{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}">
+        (Updated {{ .Lastmod.Day }}. {{ index $.Site.Data.demonths (printf "%d" .Lastmod.Month) }} {{ .Lastmod.Year }})
+      </time>
+    </span>
 
-  </article> 
-</div>
+    <footer class="card-footer">
+      {{ range (.GetTerms "categories") }}
+        <a href="{{ .RelPermalink }}" class="card-footer-item"><span class="tag is-primary">{{ .LinkTitle }}</span></a>
+      {{ end }}
+      {{ range (.GetTerms "tags") }}
+        <a href="{{ .RelPermalink }}" class="card-footer-item"><span class="tag">{{ .LinkTitle }}</span></a>
+      {{ end }}
+    </footer>
+    
+  </div>
+
+</article>

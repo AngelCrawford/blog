@@ -7,19 +7,15 @@
   </div>
 
   <div class="columns is-multiline">
-    
+
     {{ $paginator := .Paginate (where site.RegularPages "Type" "articles") }}
     {{ range $paginator.Pages }}
 
-      {{ if eq .Params.format "quote" }}
-        {{ partial "quote-summary.html" . }}
-      {{ else }}
-        {{ partial "summary.html" . }}
-      {{ end }}
+      {{ partial "cards" . }}
 
     {{ end }}
   </div>
 
-  {{ partial "pagination.html" . }}
+  {{ partial "pagination" . }}
   
 {{ end }}
