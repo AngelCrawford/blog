@@ -27,6 +27,18 @@ icons:
 {{< details "Genre" "Some, Tags, I Want" >}}
 {{< details "Info" "Some, Tags, I Want" >}}
 
+{{< rating "Storyline" "0" >}}
+{{< rating "Storyline" "0.5" >}}
+{{< rating "Storyline" "1" >}}
+{{< rating "Storyline" "1.5" >}}
+{{< rating "Storyline" "2" >}}
+{{< rating "Storyline" "2.5" >}}
+{{< rating "Storyline" "3" >}}
+{{< rating "Storyline" "3.5" >}}
+{{< rating "Storyline" "4" >}}
+{{< rating "Storyline" "4.5" >}}
+{{< rating "Storyline" "5" >}}
+
 ## Introduction
 
 One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin. ds

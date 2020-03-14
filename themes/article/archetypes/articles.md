@@ -9,6 +9,8 @@ tags:
 - zwei
 categories: ""
 series: [""]
+weight: 1 # makes the post sticky, remove if not wanted
+format: quote # tweet design on the home page (only needs categories, tags, author, date, publishdate, title and markdown content)
 authors: angel
 year: "{{ now.Format "2006" }}"
 month: "{{ now.Format "2006/01" }}"
@@ -20,6 +22,10 @@ icons:
   color: "#456987"
   tooltip: "Some Tooltip info"
 ---
+
+{{< rating "Storyline" "0" >}}
+{{< rating "Storyline" "3.5" >}}
+{{< rating "Storyline" "5" >}}
 
 {{< details "Genre" "Some, Tags, I Want" >}}
 {{< details "Info" "Some, Tags, I Want" >}}
