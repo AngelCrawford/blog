@@ -3,7 +3,7 @@ baseURL = "/"
 languageCode = "de-DE"
 theme = "article"
 
-# TODO: Robots Metatag testen
+# SEO: Robots Metatag testen
 enableRobotsTXT = true
 enableGitInfo = true
 
@@ -55,7 +55,7 @@ summaryLength = 45
   description = "The last theme you'll ever need. Maybe. dsds"
 
   [params.seo]
-    # TODO: Keywords bestimmen
+    # SEO: Keywords bestimmen
     # TODO: Author, wenn Autoren bestimmt werden, dass hier weg nehmen, an die SEO Sachen im Header denken
     twitterHandle = "crawford_ftw" #Twitter name, to bind shared cards to your profile
     keywords = "Webcard, Profil Karte, Angel Crawford"

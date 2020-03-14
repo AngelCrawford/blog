@@ -1,5 +1,15 @@
 # 100 Days Of Code - Log
 
+## Day 14: March 14, Wednesday
+
+**Today's Progress:**
+* Added Tooltips
+
+**Thoughts:** 
+
+**Link(s):**
+* [Tooltip](https://github.com/Wikiki/bulma-tooltip)
+
 ## Day 13: March 13, Friday
 
 **Today's Progress:**
@@ -7,8 +17,6 @@
 * Sticky posts with Hugos page weight
 * Ribbon for posts category
 * Stars for ratings added
-
-**Thoughts:** 
 
 **Link(s):**
 * Thanks to https://codepen.io/wikiki/pen/XagrqJ

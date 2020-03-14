@@ -9,8 +9,7 @@
           {{ if .Params.icons }}
             <h2>Details</h2>
             {{ range .Params.icons }}
-              <!-- TODO: Add Tooltip, per Extension oder selber coden -->
-              <span style="font-size: 3em; color: {{ .color }};">
+              <span {{ if .tooltip }}data-tooltip="{{ .tooltip }}"{{ end }} style="font-size: 3em; color: {{ .color }};">
                 <i class="{{ .src }}"></i>
               </span>
             {{ end }}
@@ -145,8 +144,7 @@
                 
                   <footer class="card-footer">
                     {{ range .Params.socials }}
-                      <!-- TODO: Tooltip hinzufügen -->
-                      <span class="card-footer-item"><a href="{{ .src }}"><i class="fab fa-{{ .name }}-square fa-3x"></i></a></span>
+                      <span class="card-footer-item"><a data-tooltip="{{ .name }}" href="{{ .src }}"><i class="fab fa-{{ .name }}-square fa-3x"></i></a></span>
                     {{ end }}
                   </footer>
                 </div>
