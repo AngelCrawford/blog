@@ -1,24 +1,26 @@
-<article class="card is-horizontal">
-
-  <div class="card-image has-ribbon">
-    <div class="ribbon is-primary">
-      {{ range first 1 (.GetTerms "categories") }}
-        <a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a>
-      {{ end }}
-    </div>
-    <!-- // HACK: Is this right? -->
-    <figure class="image is-2by3">
-      <a href="{{ .Permalink }}">
-        {{- range first 1 (.Resources.ByType "image") -}}
-          {{- $img := .Fill "320x480" | images.Filter (images.Sepia "100") -}}
-            <img src="{{ $img.RelPermalink }}" alt="{{ $.Title }}">
-        {{- end -}}
-      </a>
-      {{- with .Params.images -}}
-        {{ range first 1 . }}<figcaption>Byline: {{ .byline | safeHTML }}</figcaption>{{ end }}
-      {{- end -}}
-    </figure>
+<article class="card {{ if .Resources }}is-horizontal{{ end }}"> 
+  <div class="ribbon is-primary">
+    {{ range first 1 (.GetTerms "categories") }}
+      <a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a>
+    {{ end }}
   </div>
+
+  {{ if .Resources }}
+    <div class="card-image has-ribbon">
+      <!-- // HACK: Is this right? -->
+      <figure class="image is-2by3">
+        <a href="{{ .Permalink }}">
+          {{- range first 1 (.Resources.ByType "image") -}}
+            {{- $img := .Fill "320x480" | images.Filter (images.Sepia "100") -}}
+              <img src="{{ $img.RelPermalink }}" alt="{{ $.Title }}">
+          {{- end -}}
+        </a>
+        {{- with .Params.images -}}
+          {{ range first 1 . }}<figcaption>Byline: {{ .byline | safeHTML }}</figcaption>{{ end }}
+        {{- end -}}
+      </figure>
+    </div>
+  {{ end }}
 
   <div class="card-content">
     <div class="card-content-wrapper">

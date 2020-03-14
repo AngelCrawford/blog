@@ -4,8 +4,9 @@
 
 **Today's Progress:**
 * Added Tooltips
+* Design for Cards without image
 
-**Thoughts:** 
+**Thoughts:** Didn't do much today, I am so tired right now.
 
 **Link(s):**
 * [Tooltip](https://github.com/Wikiki/bulma-tooltip)

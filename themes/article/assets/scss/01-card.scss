@@ -1,16 +1,12 @@
 .card {
-  width: 100%;
-}
-
-.card.is-horizontal {
   display: flex;
+  width: 100%;
   flex-grow: 0;
   flex-shrink: 0;
-
   .card-image {
+    width: 280px;
     flex-grow: 0;
     flex-shrink: 0;
-    width: 280px;
     figure.image {
       height: 100%;
       img {
@@ -21,7 +17,7 @@
   .card-content {
     flex-grow: 0;
     flex-shrink: 1;
-    width: 100;
+    width: 100%;
     padding: 0;
   }
 }
@@ -35,19 +31,15 @@
     flex-grow: 0;
     padding: 1.5rem 1.5rem 1rem 1.5rem;
   }
-  .content, .card-content {
+  .content {
     flex-grow: 1;
     padding: 0 1.5rem 1.5rem 1.5rem;
     margin-bottom: 0;
-  }
-  .card-content {
-    padding-top: 1.5rem;
   }
   footer.card-footer {
     justify-content: flex-end;
     flex-grow: 0;
     flex-shrink: 1;
-    // overflow: hidden;
     font-size: 11px;
     letter-spacing: 1px;
     text-transform: uppercase;
@@ -66,7 +58,12 @@
   .card-content {
     padding: 5rem;
     z-index: 50;
+    flex-grow: 1;
     color: #fff;
+    display: flex; 
+    justify-content: center; 
+    flex-direction: column; 
+    width: 100%;
   }
   .heading.date {
     padding: 1.5rem;
