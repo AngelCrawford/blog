@@ -53,8 +53,13 @@
       </div>
   
       <div class="content">
-        {{ if (eq .Params.weight 1) }}
-          {{ .Content | truncate 700 " [...]" }}
+        {{ if or (eq .Params.weight 1) (not .Resources) }}
+          <!-- // FIXME: Wenn ich Content hier verwende, dann wird "summary" im Frontend nicht benutzt -->
+          {{ if .Params.summary }}
+            {{ .Summary | truncate 700 " [...]" }}
+          {{ else }}
+            {{ .Content | truncate 700 " [...]" | markdownify }}
+          {{ end }}
         {{ else }}
           {{ .Summary | truncate 280 " [...]" }}
         {{ end }}

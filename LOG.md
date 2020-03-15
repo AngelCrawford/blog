@@ -1,6 +1,13 @@
 # 100 Days Of Code - Log
 
-## Day 14: March 14, Wednesday
+## Day 15: March 15, Sunday
+
+**Today's Progress:**
+* Fixed some struggles with the summary
+
+**Thoughts:** Fixed some small problems today, not much. Viewed a movie at the same time. Does this count? Will add a day more to the challenge.
+
+## Day 14: March 14, Saturday
 
 **Today's Progress:**
 * Added Tooltips
