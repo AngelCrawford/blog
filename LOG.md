@@ -7,7 +7,7 @@
 * Corrected a missing class for the later design
 * Rating stars for format "movie"
 
-**Thoughts:** 
+**Thoughts:** Head to think about the movie format, dind't know, if I want a whole new design for it or only an icon-indicator.
 
 ## Day 15: March 15, Sunday
 

@@ -38,6 +38,21 @@ $secondary          : #b78846;
 @import "02-ribbon";
 @import "03-tooltip";
 
+html, body {
+  background-color: #555450;
+  color: #fff;
+}
+footer.footer, nav.navbar {
+  background-color: darken(#555450, 10%);
+  a {
+    color: #c7a22b;
+  }
+  a:hover {
+    color: darken(#c7a22b, 15%);
+  }
+}
+
+
 header.header {
   background-repeat: no-repeat;
   background-size: cover;
