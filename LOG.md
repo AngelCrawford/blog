@@ -1,5 +1,14 @@
 # 100 Days Of Code - Log
 
+## Day 16: March 16, Monday
+
+**Today's Progress:**
+* Cleaned up (W3C Validor)
+* Corrected a missing class for the later design
+* Rating stars for format "movie"
+
+**Thoughts:** 
+
 ## Day 15: March 15, Sunday
 
 **Today's Progress:**

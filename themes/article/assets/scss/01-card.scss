@@ -1,6 +1,9 @@
 .card {
-  display: flex;
   width: 100%;
+}
+
+.card-horiz-img .card {
+  display: flex;
   flex-grow: 0;
   flex-shrink: 0;
   .card-image {
@@ -21,6 +24,14 @@
     padding: 0;
   }
 }
+
+// .is-pinned .card {
+//   .card-image {
+//     width: 520px;
+//     max-height: 460px;
+//     overflow: hidden;
+//   }
+// }
 
 .card-content-wrapper {
   display: flex;

@@ -37,7 +37,7 @@
           </time>
         </span>
 
-        <span class="heading author">
+        <div class="heading author">
           {{ range (.GetTerms "authors") }}
             <figure class="image is-48x48">
               <a href="{{ .Permalink }}">
@@ -49,10 +49,14 @@
             </figure>
             <a href="{{ .Permalink }}">{{ .Title }}</a>
           {{ end }}
-        </span>
+          </div>
       </div>
   
       <div class="content">
+        {{- if .Params.rating -}}
+          <div class="rating">{{ partial "rating" . }} {{ .Params.rating }}</div>
+        {{- end -}}
+
         {{ if or (eq .Params.weight 1) (not .Resources) }}
           <!-- // FIXME: Wenn ich Content hier verwende, dann wird "summary" im Frontend nicht benutzt -->
           {{ if .Params.summary }}
@@ -66,14 +70,17 @@
         
         <a href="{{ .RelPermalink }}">{{ i18n "readMore" }}</a>
 
-        {{ range (.GetTerms "tags") }}
-          <a href="{{ .RelPermalink }}" class="hashtags">#{{ .LinkTitle }}</a>
-        {{ end }}
       </div>
     
       <footer class="card-footer">
         <span class="card-footer-item">{{ .ReadingTime }} {{ i18n "minutesRead" }}</span>
-        <span class="card-footer-item">{{ .WordCount }} {{ i18n "words" }}</span>
+        {{- if (.GetTerms "tags") -}}
+          <span class="card-footer-item">
+            {{- range (.GetTerms "tags") -}}
+              <a href="{{ .RelPermalink }}" class="hashtags">#{{ .LinkTitle }}</a>&nbsp;
+            {{- end -}}
+          </span>
+        {{- end -}}
       </footer>
     </div>
   </div>

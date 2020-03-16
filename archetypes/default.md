@@ -10,7 +10,8 @@ tags:
 categories: ""
 series: [""]
 weight: 1 # makes the post sticky, remove if not wanted
-format: quote # tweet design on the home page (only needs categories, tags, author, date, publishdate, title and markdown content)
+format: quote | rating # tweet/rating design on the home page
+rating: "0.5" # 0-5 with .5 possible, will show a rating on the home page
 authors: angel
 year: "{{ now.Format "2006" }}"
 month: "{{ now.Format "2006/01" }}"
@@ -22,6 +23,8 @@ icons:
   color: "#456987"
   tooltip: "Some Tooltip info"
 ---
+
+<!-- Konsole: hugo new --kind article-bundle articles/my-post -->
 
 {{< rating "Storyline" "0" >}}
 {{< rating "Storyline" "3.5" >}}

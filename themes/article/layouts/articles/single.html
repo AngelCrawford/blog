@@ -58,7 +58,11 @@
               {{- end -}}
             </div>
           {{- end -}}
-          <div class="reading-time-single">{{ .ReadingTime }} {{ i18n "minutesRead" }}</div>
+          <div class="reading-time-single">Leseminuten: {{ .ReadingTime }} {{ i18n "minutesRead" }}</div>
+
+          {{- if .Params.rating -}}
+            <div class="rating">Rating: {{ partial "rating" . }} {{ .Params.rating }}</div>
+          {{- end -}}
 
           {{ if .Params.series }}
             <div class="series-single">Serie:
@@ -111,8 +115,7 @@
 
   {{ if .Params.authors }}
     <div class="columns">
-      <div class="column is-9">
-
+      <div class="column is-9 card-horiz-img">
 
           <article class="card is-horizontal">
             {{ range (.GetTerms "authors") }}

@@ -19,10 +19,10 @@
     </figure>
 
     <div class="card-content">
-      <p class="title">
+      <h2 class="title">
         “{{ .Content | markdownify }}”
-      </p>
-      <span class="heading author">
+      </h2>
+      <div class="heading author">
         {{ range (.GetTerms "authors") }}
           <figure class="image is-48x48 is-pulled-left">
             <a href="{{ .Permalink }}">
@@ -34,7 +34,7 @@
           </figure>
           <a class="subtitle" href="{{ .Permalink }}">{{ .Title }}</a>
         {{ end }}
-      </span>
+        </div>
     </div>
 
     <footer class="card-footer">
