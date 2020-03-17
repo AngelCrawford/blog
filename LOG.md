@@ -1,5 +1,12 @@
 # 100 Days Of Code - Log
 
+## Day 17: March 17, Tuesday
+
+**Today's Progress:**
+* Card Design
+
+**Thoughts:** Wanted to have a little fun today, had to do the design that was stuck in my head. And have a look if it's looking good in real live, too.
+
 ## Day 16: March 16, Monday
 
 **Today's Progress:**

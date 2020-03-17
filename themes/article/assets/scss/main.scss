@@ -11,21 +11,24 @@
 //-------------------------------------------------------------------------------
 
 // Colors
-$color-background   : #191919;
-$color-text         : #f2ebe3;
-$color-maverick     : #f2ebe3;
-$color-tagline      : #f2ebe3;
-$primary            : #17a2b8;
-$accent             : #20c997;
-$secondary          : #b78846;
+$background   : #2f2f2f;
+$text         : #f2ebe3;
+$primary      : #b78846;
+$accent       : #20c997;
+$secondary    : #777777;
 
 // Breakpoints
 // $bp-smallish        : {{ .Site.Params.breakpoints.bp_smallish | default "1200px" }};
 // $bp-tablet          : {{ .Site.Params.breakpoints.bp_tablet | default "800px" }};
 // $bp-mobile          : {{ .Site.Params.breakpoints.bp_mobile | default "500px" }};
 
-// @import "01-reset";
 // Bulma CSS Framework (https://bulma.io/documentation/overview/start)
+
+// Miscellaneous
+$easing: ease-out;
+$radius-small: 0px;
+$radius: 0px;
+$radius-large: 0px;
 
 @import "bulma/bulma.sass";
 
@@ -38,9 +41,10 @@ $secondary          : #b78846;
 @import "02-ribbon";
 @import "03-tooltip";
 
+
 html, body {
-  background-color: #555450;
-  color: #fff;
+  background-color: $background;
+  color: $text;
 }
 footer.footer, nav.navbar {
   background-color: darken(#555450, 10%);
@@ -82,6 +86,9 @@ figcaption {
   color: #fff;
 }
 
-a.hashtags {
-  color: #191919;
+a, a h2 {
+  color: $primary;
+  &:hover {
+    color: $text;
+  }
 }

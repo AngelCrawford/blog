@@ -7,8 +7,7 @@
   color: #363636;
   font-size: 1rem;
   justify-content: center;
-  padding-left: 0.75em;
-  padding-right: 0.75em;
+  padding: 0.2em 0.75em 0.3em 0.75em;
   text-align: center;
   white-space: nowrap;
   position: absolute;
@@ -32,7 +31,7 @@
 }
 
 .ribbon.is-primary {
-  background-color: #00d1b2;
+  background-color: $primary;
 }
 
 .ribbon.is-info {

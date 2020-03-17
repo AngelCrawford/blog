@@ -1,5 +1,39 @@
 .card {
   width: 100%;
+  background: $background;
+  box-shadow: 5px 5px 5px rgba(#000, .3), -5px -5px 5px rgba($text, .07);
+  // margin: 1em;
+  h2 {
+    margin-bottom: .2em;
+  }
+  span.heading {
+    color: $secondary;
+  }
+  .card-footer {
+    border-top: 1px solid darken($background, 5%);
+    color: $secondary;
+    background: rgba(darken($background, 1%), .7);
+    .card-footer-item:not(:last-child) {
+      border-right: 1px solid darken($background, 5%);
+    }
+  }
+  .author-img {
+    position: absolute;
+    bottom: 0;
+    left: 68.5%;
+    z-index: 55;
+  }
+  .rating {
+    color: $background;
+    text-shadow: 0px 0px 3px $text;
+    margin-bottom: .3em;
+  }
+  a.hashtags {
+    color: $primary;
+    &:hover {
+      color: $text;
+    }
+  }
 }
 
 .card-horiz-img .card {
@@ -25,14 +59,6 @@
   }
 }
 
-// .is-pinned .card {
-//   .card-image {
-//     width: 520px;
-//     max-height: 460px;
-//     overflow: hidden;
-//   }
-// }
-
 .card-content-wrapper {
   display: flex;
   flex-flow: column;
@@ -45,7 +71,7 @@
   .content {
     flex-grow: 1;
     padding: 0 1.5rem 1.5rem 1.5rem;
-    margin-bottom: 0;
+    margin-bottom: .7em;
   }
   footer.card-footer {
     justify-content: flex-end;
@@ -59,6 +85,9 @@
 }
 
 .card.quote {
+  h2 {
+    color: $text;
+  }
   figure.image.img-quote {
     position: absolute;
     height: 100%;
@@ -75,6 +104,23 @@
     justify-content: center; 
     flex-direction: column; 
     width: 100%;
+    background-color: rgba(darken($background, 1%), .3);
+    a {
+      color: $primary;
+      &:hover {
+        color: $text;
+      }
+    }
+    .heading.author {
+      text-align: right;
+      line-height: 54px;
+      figure {
+        margin-left: 1em;
+      }
+    }
+  }
+  footer.card-footer {
+    color: lighten($secondary, 20%);
   }
   .heading.date {
     padding: 1.5rem;

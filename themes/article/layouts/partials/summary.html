@@ -1,9 +1,11 @@
 <article class="card {{ if .Resources }}is-horizontal{{ end }}"> 
-  <div class="ribbon is-primary">
-    {{ range first 1 (.GetTerms "categories") }}
-      <a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a>
-    {{ end }}
-  </div>
+  {{ if .GetTerms "categories" }}
+    <div class="ribbon is-primary">
+      {{ range first 1 (.GetTerms "categories") }}
+        <a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a>
+      {{ end }}
+    </div>
+  {{ end }}
 
   {{ if .Resources }}
     <div class="card-image has-ribbon">
@@ -31,30 +33,15 @@
           <time datetime="{{ .PublishDate.Format "2006-01-02T15:04:05Z07:00" }}">
             {{ .PublishDate.Day }}. {{ index $.Site.Data.demonths (printf "%d" .PublishDate.Month) }} {{ .PublishDate.Year }}
           </time>
-        
           <time datetime="{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}">
-            (Updated {{ .Lastmod.Day }}. {{ index $.Site.Data.demonths (printf "%d" .Lastmod.Month) }} {{ .Lastmod.Year }})
+            (Updated {{ .Lastmod.Format "02.01.2006" }})
           </time>
         </span>
-
-        <div class="heading author">
-          {{ range (.GetTerms "authors") }}
-            <figure class="image is-48x48">
-              <a href="{{ .Permalink }}">
-                {{- range first 1 (.Resources.ByType "image") -}}
-                  {{- $img := .Fill "48x48" | images.Filter images.Grayscale -}}
-                  <img class="is-rounded" src="{{ $img.RelPermalink }}" alt="{{ $.Title }}">
-                {{- end -}}
-              </a>
-            </figure>
-            <a href="{{ .Permalink }}">{{ .Title }}</a>
-          {{ end }}
-          </div>
       </div>
   
       <div class="content">
         {{- if .Params.rating -}}
-          <div class="rating">{{ partial "rating" . }} {{ .Params.rating }}</div>
+          <div class="rating">{{ partial "rating" . }}</div>
         {{- end -}}
 
         {{ if or (eq .Params.weight 1) (not .Resources) }}
@@ -82,6 +69,19 @@
           </span>
         {{- end -}}
       </footer>
+      <div class="card-footer-item author-img">
+        {{ range (.GetTerms "authors") }}
+          <figure class="image is-48x48">
+            <a href="{{ .Permalink }}">
+              {{- range first 1 (.Resources.ByType "image") -}}
+                {{- $img := .Fill "48x48" | images.Filter images.Grayscale -}}
+                <img class="is-rounded" src="{{ $img.RelPermalink }}" alt="{{ $.Title }}">
+              {{- end -}}
+            </a>
+          </figure>
+        {{ end }}
+      </div>
+
     </div>
   </div>
 </article>

@@ -115,7 +115,7 @@
 
   {{ if .Params.authors }}
     <div class="columns">
-      <div class="column is-9 card-horiz-img">
+      <div class="column is-9 card-horiz-img is-paddingless">
 
           <article class="card is-horizontal">
             {{ range (.GetTerms "authors") }}
@@ -163,7 +163,7 @@
  
   {{ if len (where (.Site.RegularPages.Related .) "Type" "articles") }}
     <div class="columns">
-      <div class="column is-9" >
+      <div class="column is-9 is-paddingless" >
         <div class="content">
           <h2>Related content</h2>
         </div>
