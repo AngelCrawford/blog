@@ -92,3 +92,12 @@ a, a h2 {
     color: $text;
   }
 }
+
+.content article h2, p.title {
+  color: $primary;
+}
+
+.box {
+  background-color: $background;
+  box-shadow: 5px 5px 5px rgba(#000, .3), -5px -5px 5px rgba($text, .07);
+}
