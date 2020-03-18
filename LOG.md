@@ -1,5 +1,9 @@
 # 100 Days Of Code - Log
 
+## Day 18: March 18, Wednesday
+
+Wanted to make a sticky ScrollSpy Navigation for the TOC, yeah, but it's a stupid day. Had to revert the changes, it's not what I want >.<
+
 ## Day 17: March 17, Tuesday
 
 **Today's Progress:**
