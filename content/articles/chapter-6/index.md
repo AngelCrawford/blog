@@ -1,8 +1,12 @@
 ---
 date: 2017-04-14T11:25:05-04:00
 tags: 
-- test
-- zwei
+- CSS
+- HTML
+- JS
+- Flex
+- Position
+- Tree
 series: ["Seriennummer"]
 authors: angel
 title: "Chapter VI: Esmeralda"

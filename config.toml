@@ -10,7 +10,7 @@ enableGitInfo = true
 DefaultContentLanguage = "de"
 Paginate = 10 # this is set low for demonstrating with dummy content. Set to a higher number
 googleAnalytics = ""
-summaryLength = 45
+# summaryLength = 45
 
 [sitemap]
   changefreq = "weekly"

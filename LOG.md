@@ -1,5 +1,12 @@
 # 100 Days Of Code - Log
 
+## Day 19: March 19, Thursday
+
+**Today's Progress:**
+* Learned "flex-wrap: wrap;"
+
+**Thoughts:** Flexbox is absolutely insane! Wanted to position the author image ... but I'm totally lost on how to do this. Does someone have an idea?
+
 ## Day 18: March 18, Wednesday
 
 Wanted to make a sticky ScrollSpy Navigation for the TOC, yeah, but it's a stupid day. Had to revert the changes, it's not what I want >.<

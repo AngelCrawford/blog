@@ -34,7 +34,7 @@
             {{ .PublishDate.Day }}. {{ index $.Site.Data.demonths (printf "%d" .PublishDate.Month) }} {{ .PublishDate.Year }}
           </time>
           <time datetime="{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}">
-            (Updated {{ .Lastmod.Format "02.01.2006" }})
+            (Updated {{ .Lastmod.Format "02.01.06" }})
           </time>
         </span>
       </div>
@@ -44,19 +44,37 @@
           <div class="rating">{{ partial "rating" . }}</div>
         {{- end -}}
 
-        {{ if or (eq .Params.weight 1) (not .Resources) }}
+        <!-- {{ if or (eq .Params.weight 1) (not .Resources) }} -->
           <!-- // FIXME: Wenn ich Content hier verwende, dann wird "summary" im Frontend nicht benutzt -->
-          {{ if .Params.summary }}
-            {{ .Summary | truncate 700 " [...]" }}
-          {{ else }}
-            {{ .Content | truncate 700 " [...]" | markdownify }}
-          {{ end }}
+          <!-- {{ if .Params.summary }} -->
+            <!-- {{ .Summary | truncate 800 " [...]" }} -->
+          <!-- {{ else }} -->
+            <!-- {{ .Content | truncate 800 " [...]" | markdownify }} -->
+          <!-- {{ end }} -->
+        <!-- {{ else }} -->
+          
+        <!-- {{ end }} -->
+        {{ if or (eq .Params.weight 1) (not .Resources) }}
+          {{ .Summary | truncate 700 " [...]" }}
         {{ else }}
           {{ .Summary | truncate 280 " [...]" }}
         {{ end }}
         
         <a href="{{ .RelPermalink }}">{{ i18n "readMore" }}</a>
 
+      </div>
+
+      <div class="author-img {{ if .Resources }}post-has-image{{ end }}">
+        {{ range (.GetTerms "authors") }}
+          <figure class="image is-48x48">
+            <a href="{{ .Permalink }}">
+              {{- range first 1 (.Resources.ByType "image") -}}
+                {{- $img := .Fill "48x48" | images.Filter images.Grayscale -}}
+                <img class="is-rounded" src="{{ $img.RelPermalink }}" alt="{{ $.Title }}">
+              {{- end -}}
+            </a>
+          </figure>
+        {{ end }}
       </div>
     
       <footer class="card-footer">
@@ -69,18 +87,6 @@
           </span>
         {{- end -}}
       </footer>
-      <div class="card-footer-item author-img">
-        {{ range (.GetTerms "authors") }}
-          <figure class="image is-48x48">
-            <a href="{{ .Permalink }}">
-              {{- range first 1 (.Resources.ByType "image") -}}
-                {{- $img := .Fill "48x48" | images.Filter images.Grayscale -}}
-                <img class="is-rounded" src="{{ $img.RelPermalink }}" alt="{{ $.Title }}">
-              {{- end -}}
-            </a>
-          </figure>
-        {{ end }}
-      </div>
 
     </div>
   </div>
