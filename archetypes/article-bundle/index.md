@@ -1,5 +1,5 @@
 ---
-title:  "{{ replace .TranslationBaseName "-" " " | title }}"
+title: "{{ replace .TranslationBaseName "-" " " | title }}"
 description: "SEO Description and Subheader for single posts" # Not more than 160 characters!
 longdesc: "Summary for cards, remove for standard summary"
 date: {{ .Date }}
@@ -10,7 +10,7 @@ tags:
 categories: ""
 series: [""]
 weight: 1 # makes the post sticky, remove if not wanted
-format: quote | rating # tweet/rating design on the home page
+format: rating # rating design on the home page
 rating: "0.5" # 0-5 with .5 possible, will show a rating on the home page
 authors: angel
 year: "{{ now.Format "2006" }}"

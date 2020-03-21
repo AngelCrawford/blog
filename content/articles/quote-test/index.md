@@ -10,6 +10,9 @@ format: quote
 year: "2020"
 month: "2020/03"
 link: https://bulma.io/documentation/modifiers/helpers/
+_build:
+  render: false
+  list: true
 ---
 
 There are two hard things in computer science: cache invalidation, naming things, and off-by-one errors.

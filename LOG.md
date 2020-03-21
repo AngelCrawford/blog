@@ -1,5 +1,18 @@
 # 100 Days Of Code - Log
 
+## Day 21: March 21, Saturday
+
+**Today's Progress:**
+* Updates Hugo to v0.68.0
+  * `hugo --minify` for the deploy file
+  * Build Options for my quotes
+
+**Thoughts:** 
+
+## Day 20: March 20, Friday
+
+**Thoughts:** Learned some SVG today, I want to build my Logo with it, but not sure how to start xD My goal is a clock with some fancy stuff. But not sure right now, in which directions I want to go. Didn't resolved the problem from yesterday >.<
+
 ## Day 19: March 19, Thursday
 
 **Today's Progress:**
