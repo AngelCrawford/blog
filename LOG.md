@@ -3,11 +3,11 @@
 ## Day 21: March 21, Saturday
 
 **Today's Progress:**
-* Updates Hugo to v0.68.0
+* Updated Hugo to v0.68.0
   * `hugo --minify` for the deploy file
   * Build Options for my quotes
 
-**Thoughts:** 
+**Thoughts:** Planning for the design, what features I want for the future and more. Searched in the web for actual Design ideas. Think I want to go with a dark Neumorphism design.
 
 ## Day 20: March 20, Friday
 
