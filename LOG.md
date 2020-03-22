@@ -1,5 +1,12 @@
 # 100 Days Of Code - Log
 
+## Day 22: March 22, Sunday
+
+**Today's Progress:**
+* Added colored categories
+
+**Thoughts:** Wanted to bring back a little color, to brighten up the "dark" desgin. 
+
 ## Day 21: March 21, Saturday
 
 **Today's Progress:**

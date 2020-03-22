@@ -1,10 +1,11 @@
-<article class="card {{ if .Resources }}is-horizontal{{ end }}"> 
+<article class="card {{ if .Resources }}is-horizontal{{ end }}">
   {{ if .GetTerms "categories" }}
-    <div class="ribbon is-primary">
-      {{ range first 1 (.GetTerms "categories") }}
-        <a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a>
-      {{ end }}
-    </div>
+    {{ range first 1 (.GetTerms "categories") }}
+      {{ $catName := .LinkTitle }}
+      <div class="ribbon is-primary" style="{{ range .Site.Params.categoryColor }}{{ if eq .name $catName }}background-color: {{ .color }};{{ end }}{{ end }}">
+          <a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a>
+      </div>
+    {{ end }}
   {{ end }}
 
   {{ if .Resources }}

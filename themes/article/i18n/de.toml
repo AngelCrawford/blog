@@ -8,5 +8,9 @@ other = "weiterlesen"
 other = "Wörter"
 
 [quotes]
-one = "One Quote"
-other = "{{.Count}} Quotes"
+one = "1 Kurz-Artikel"
+other = "{{.Count}} Kurz-Artikel"
+
+[movies]
+one = "1 Bewertungs-Artikel"
+other = "{{.CountM}} Bewertungs-Artikel"

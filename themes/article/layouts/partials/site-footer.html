@@ -24,9 +24,12 @@
       There are currently {{ len (where .Site.RegularPages "Section" "=" "articles") }} <a href="/articles">articles</a> on this site.
     </p>
     <p>
-      Stats: <br />
+      Statistik: <br />
       {{ $count := len (where (where .Site.RegularPages "Section" "=" "articles") ".Params.format" "==" "quote") }}
-      {{ i18n "quotes" $count }}
+      {{ i18n "quotes" $count }} <br />
+
+      {{ $countM := len (where (where .Site.RegularPages "Section" "=" "articles") ".Params.format" "==" "rating") }}
+      {{ i18n "movies" $countM }}
     </p>
   </div>
  

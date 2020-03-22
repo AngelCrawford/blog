@@ -67,6 +67,13 @@ googleAnalytics = ""
     instagram = "#"
     github = "#"
     rss = "/index.xml"
+
+  [[params.categoryColor]]
+    name = "Movie"
+    color = "#123456"
+  [[params.categoryColor]]
+    name = "Kategorie 1"
+    color = "teal"
   
   [params.csp]
     fontsrc = ["'self'", 
