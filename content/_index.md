@@ -1,6 +1,10 @@
 ---
-title: "Private Blog"
+title: "Home"
+menu:
+  main:
+    weight: 1
 images: 
 - src: "654-2000x1000.jpg"
+  byline: "TEST"
 ---
-Welcome to my blog with some of my work in progress. I've been working on this book idea. You can read some of the chapters below.
+

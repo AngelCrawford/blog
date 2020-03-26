@@ -31,11 +31,11 @@
         <a class="title is-4" href="{{ .RelPermalink }}"><h2>{{ .Title }}</h2></a>
 
         <span class="heading">
-          <time datetime="{{ .PublishDate.Format "2006-01-02T15:04:05Z07:00" }}">
-            {{ .PublishDate.Day }}. {{ index $.Site.Data.demonths (printf "%d" .PublishDate.Month) }} {{ .PublishDate.Year }}
-          </time>
-          <time datetime="{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}">
-            (Updated {{ .Lastmod.Format "02.01.06" }})
+          {{/*  <time datetime="{{ .PublishDate.Format "2006-01-02T15:04:05Z07:00" }}">
+            <i class="far fa-calendar-alt"></i> {{ .PublishDate.Day }}. {{ index $.Site.Data.demonths (printf "%d" .PublishDate.Month) }} {{ .PublishDate.Year }}
+          </time>  */}}
+          <time class="updated" datetime="{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}">
+            <i class="fas fa-pencil-alt"></i> {{ .Lastmod.Format "02.01.06" }}
           </time>
         </span>
       </div>
@@ -63,6 +63,14 @@
         
         <a href="{{ .RelPermalink }}">{{ i18n "readMore" }}</a>
 
+        {{- if (.GetTerms "tags") -}}
+          <div class="tags-wrapper"><i class="fas fa-tags"></i>
+            {{- range (.GetTerms "tags") -}}
+              <a href="{{ .RelPermalink }}" class="hashtags">#{{ .LinkTitle }} </a> 
+            {{- end -}}
+          </div>
+        {{- end -}}
+
       </div>
 
       <div class="author-img {{ if .Resources }}post-has-image{{ end }}">
@@ -80,13 +88,11 @@
     
       <footer class="card-footer">
         <span class="card-footer-item">{{ .ReadingTime }} {{ i18n "minutesRead" }}</span>
-        {{- if (.GetTerms "tags") -}}
-          <span class="card-footer-item">
-            {{- range (.GetTerms "tags") -}}
-              <a href="{{ .RelPermalink }}" class="hashtags">#{{ .LinkTitle }}</a>&nbsp;
-            {{- end -}}
-          </span>
-        {{- end -}}
+        <span class="card-footer-item">
+          <time datetime="{{ .PublishDate.Format "2006-01-02T15:04:05Z07:00" }}">
+            <i class="far fa-calendar-alt"></i> {{ .PublishDate.Format "02.01.06" }}
+          </time>
+        </span>
       </footer>
 
     </div>

@@ -13,7 +13,7 @@
 // Colors
 $background   : #2f2f2f;
 $text         : #f2ebe3;
-$primary      : #b78846;
+$primary      : #bd9153;
 $accent       : #20c997;
 $secondary    : #777777;
 
@@ -30,6 +30,12 @@ $radius-small: 0px;
 $radius: 0px;
 $radius-large: 0px;
 
+$family-primary: 'Montserrat-Regular';
+$family-secondary: 'Montserrat-Regular';
+
+$column-gap: 1.5rem;
+// $family-code: $family-monospace;
+
 @import "bulma/bulma.sass";
 
 @import "fontawesome/fontawesome";
@@ -37,6 +43,7 @@ $radius-large: 0px;
 @import "fontawesome/brands";
 @import "fontawesome/regular";
 
+@import "00-fonts";
 @import "01-card";
 @import "02-ribbon";
 @import "03-tooltip";
@@ -49,10 +56,10 @@ html, body {
 footer.footer, nav.navbar {
   background-color: darken(#555450, 10%);
   a {
-    color: #c7a22b;
+    color: $primary;
   }
   a:hover {
-    color: darken(#c7a22b, 15%);
+    color: darken($primary, 15%);
   }
 }
 
@@ -72,12 +79,6 @@ header.header section.hero .hero-body h2,
 }
 
 li.page-item.disabled a {color: #aaa;}
-
-.is-active, 
-a.navbar-item.is-active, 
-.navbar-link.is-active { 
-  color: red; 
-}
 
 figcaption {
   z-index: 2;
@@ -100,4 +101,176 @@ a, a h2 {
 .box {
   background-color: $background;
   box-shadow: 5px 5px 5px rgba(#000, .3), -5px -5px 5px rgba($text, .07);
+}
+
+
+header.header {
+  height: 360px;
+  background-position: center center;
+
+  .byline {
+    display: block;
+    position: absolute;
+    top: 1em;
+    left: 1.5em;
+    opacity: .1;
+    color: $primary;
+    font-size: 80%;
+  }
+  &:hover .byline {
+    opacity: 1;
+  }
+}
+
+.brand-logo {
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-justify-content: center;
+  justify-content: center;
+  width: auto;
+  // border: 1px solid red;
+  height: 360px;
+  width: 100%;
+  background: radial-gradient(circle, rgba(25,25,25,1) 10%, transparent 100%);
+  a.brand {
+    flex: 0 1 auto;
+    align-self: auto;
+    height: auto;
+    // border: 1px solid orange;
+    top: 9em;
+    z-index: 999;
+    position: absolute;
+  }
+  &:after {
+    content: "";
+    // border: 1px solid green;
+    background: url("/images/logo_back.png") no-repeat top center;
+    background-size: contain;
+    position: absolute;
+    opacity: .2;
+    top: 3em;
+    bottom: 0;
+    width: 100%;
+    height: 300px;
+    display: block;
+    z-index: 1;
+  }
+}
+
+nav.navbar {
+  background: transparent;
+  margin-top: -3.5em;
+  padding: 0 1.5em;
+  background: rgba(darken($background, 1%), .5);
+  // @include font-header;
+  .navbar-item.field {
+    padding-right: 0;
+  }
+  input[type=search] {
+    background-color: rgba(0, 0, 0, 0.2);
+    border: none;
+    box-shadow: 5px 5px 5px rgba(#000, .3), -5px -5px 5px rgba($text, .07);
+    &:focus {
+      box-shadow: inset 5px 5px 5px rgba(#000, .3), inset -5px -5px 5px rgba($text, .07);
+    }
+  }
+  i {
+    padding-left: .8em;
+    font-size: 20px;
+    &.fa-search {
+      color: $primary;
+      padding: 0 1em;
+    }
+  }  
+  .is-active, 
+  a.navbar-item.is-active, 
+  .navbar-link.is-active {
+    color: #e3d1b7;
+    background-color: rgba(0, 0, 0, 0.2);
+    box-shadow: inset 5px 5px 5px rgba(#000, .3), inset -5px -5px 5px rgba($text, .07);
+  }
+}
+
+.textlogo {
+  background: linear-gradient(to bottom, #b78846 32%, #d8bf9a 50%, #624925 72%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: #000;
+  @include font-header;
+  position: relative;
+  font-size: 70px;
+  margin: 0;
+  top: 25%;
+    
+  &:after {
+    background: none;
+    padding: 0 140px 0 140px;
+    content: attr(data-heading);
+    left: 0;
+    top: 0;
+    z-index: -1;
+    position: absolute;
+    text-shadow: -1px 0 1px #d3b68c, 0 1px 1px #d3b68c, 5px 5px 10px rgba(0, 0, 0, 0.7), -2px -2px 5px rgba(255, 255, 255, 0.3);
+  }
+  
+  span.shimmer {
+    padding: 0 140px 0 140px;
+    text-align: center;
+    background: -webkit-gradient(linear, left top, right top, from(#97856b), to(#97856b), color-stop(0.5, #e3d1b7));
+    background: -moz-gradient(linear, left top, right top, from(#97856b), to(#97856b), color-stop(0.5, #e3d1b7));
+    background: gradient(linear, left top, right top, from(#97856b), to(#97856b), color-stop(0.5, #e3d1b7));
+    -webkit-background-size: 25px 100%;
+    -moz-background-size: 25px 100%;
+    background-size: 25px 100%; 
+    -webkit-background-clip: text;
+    -moz-background-clip: text;
+    background-clip: text;
+    -webkit-animation-name: shimmer;
+    -moz-animation-name: shimmer;
+    animation-name: shimmer;
+    -webkit-animation-duration: 1s;
+    -moz-animation-duration: 1s;
+    animation-duration: 1s;
+    -webkit-animation-iteration-count: infinite;
+    -moz-animation-iteration-count: infinite;
+    animation-iteration-count: infinite; 
+    animation-direction: alternate;
+    animation-timing-function: linear;
+    background-repeat: no-repeat;
+    background-position: 0 0;
+  }
+}
+
+@-moz-keyframes shimmer {
+  0% {
+    background-position: top left;
+  }
+  100% {
+    background-position: top right;
+  }
+}
+@-webkit-keyframes shimmer {
+  0% {
+    background-position: top left;
+  }
+  100% {
+    background-position: top right;
+  }
+}
+@-o-keyframes shimmer {
+  0% {
+    background-position: top left;
+  }
+  100% {
+    background-position: top right;
+  }
+}
+@keyframes shimmer {
+  0% {
+    background-position: top left;
+  }
+  100% {
+    background-position: top right;
+  }
 }

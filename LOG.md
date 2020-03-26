@@ -1,5 +1,27 @@
 # 100 Days Of Code - Log
 
+## Day 26: March 26, Thuesday
+
+* Added Logo from Codepen to project
+* Design Header and Navigation
+* Some small changes to the cards
+
+**Thoughts:** Not ready yet, but I like it!
+
+**Link(s):**
+* [Gold Shimmer Text](https://codepen.io/angel_crawford/pen/xxGQbya)
+
+## Day 24/25: March 24/25, Tuesday/Wednesday
+
+**Thoughts:** Forgot my tweets >.<. Worked the last two days on the Logo. Wanted to make a textlogo with gold. Nailed it ;)
+
+**Link(s):**
+* [Gold Shimmer Text](https://codepen.io/angel_crawford/pen/xxGQbya)
+
+## Day 23: March 23, Monday
+
+**Thoughts:** Today, I need a day off. Will have to add two days by now.
+
 ## Day 22: March 22, Sunday
 
 **Today's Progress:**

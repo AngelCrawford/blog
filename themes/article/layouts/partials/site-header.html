@@ -1,24 +1,29 @@
 {{ range first 1 (.Resources.ByType "image") }}
-  {{ $fill := .Fill "1200x200" | images.Filter (images.Sepia "100") }}
-  {{ $img := $fill.RelPermalink }}
+  {{ $fill := .Fill "1700x320" | images.Filter (images.Sepia "80") }}
+  {{ $img := $fill.RelPermalink }} 
   <header class="header" style="background-image: url('{{ $img }}');">
 {{ end }}
+ 
+    <div class="brand-logo">
+      <a class="brand" href="{{ .Site.BaseURL }}">
+        <div class="textlogo" data-heading="{{ .Site.Title | safeHTML }}"><span class="shimmer">{{ .Site.Title | safeHTML }}</span></div>
+      </a>
+    </div>
+
     {{ partial "site-navigation.html" .}}
-    
-    <section class="hero">
 
-      <div class="hero-body">
-        <h1 class="title">{{ .Title | default .Site.Title }}</h1>
-        {{ with .Params.description }}
-          <h2 class="subtitle">{{ . | truncate 160 }}</h2>
-        {{ end }}
-
-        {{ with .Params.images }}
-          {{ range first 1 . }}
-            <div class="byline page-header">{{ .byline | safeHTML }}</div>
-          {{ end }}
-        {{ end }}
-      </div>
-      
-    </section>
+    {{ with .Params.images }}
+      {{ range first 1 . }}
+        <div class="byline page-header">Image by: {{ .byline | safeHTML }}</div>
+      {{ end }}
+    {{ end }}
   </header>
+
+  {{ if not .IsHome }}
+    <div class="wrapper">
+      <h1 class="title">{{ .Title | default .Site.Title }}</h1>
+      {{ with .Params.description }}
+        <h2 class="subtitle">{{ . | truncate 160 }}</h2>
+      {{ end }}
+    </div>
+  {{ end }}

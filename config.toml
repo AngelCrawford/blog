@@ -1,4 +1,4 @@
-title = "Private Blog"
+title = "Article Time"
 baseURL = "/"
 languageCode = "de-DE"
 theme = "article"

@@ -10,4 +10,26 @@ $(document).ready(function() {
       $(".navbar-menu").toggleClass("is-active");
 
   });
+
+ 
+  setTimeout(function(){
+    $(".shimmer").css("animation-play-state", "paused");
+  },2000);
+
+  window.setInterval(function(){
+    if ($(".shimmer").css("animation-play-state", "paused")) {
+      $(".shimmer").css("animation-play-state", "running");
+      setTimeout(function(){
+        $(".shimmer").css("animation-play-state", "paused");
+      },2000);
+    } 
+  }, 20000);
+  
+  $(".shimmer").hover(function() {
+    $(".shimmer").css("animation-play-state", "running");    
+    setTimeout(function(){
+      $(".shimmer").css("animation-play-state", "paused");
+    },2000);
+  });
+
 });

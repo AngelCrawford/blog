@@ -1,0 +1,52 @@
+@font-face {
+  font-family: 'Montserrat Alternates';
+  src: local('Montserrat Alternates'), url('fonts/Montserrat_Alternates/MontserratAlternates-Regular.ttf') format('truetype');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Montserrat-Light';
+  src: local('Montserrat'), local('Montserrat-Light'), url('fonts/Montserrat/Montserrat-Light.ttf') format('truetype');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Montserrat-Regular';
+  src: local('Montserrat'), local('Montserrat-Regular'), url('fonts/Montserrat/Montserrat-Regular.ttf') format('truetype');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Montserrat-Bold';
+  src: local('Montserrat'), local('Montserrat-Bold'), url('fonts/Montserrat/Montserrat-Bold.ttf') format('truetype');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Montserrat-Black';
+  src: local('Montserrat'), local('Montserrat-Black'), url('fonts/Montserrat/Montserrat-Black.ttf') format('truetype');
+  font-display: swap;
+}
+
+@mixin font-family($family, $weight) {
+ @if $family {
+   font-family: $family, Helvetica, Arial, Verdana, sans-serif;
+ } else {
+   font-family: Helvetica, Arial, Verdana, sans-serif;
+ }
+ @if $weight { font-weight: $weight; }
+}
+
+@mixin font-header {
+  @include font-family('Montserrat Alternates', 600);
+}
+
+@mixin font-light {
+ @include font-family('Montserrat-Light', 200);
+}
+@mixin font-regular {
+ @include font-family('Montserrat-Regular', 300);
+}
+@mixin font-bold {
+ @include font-family('Montserrat-Bold', 500);
+}
+@mixin font-black {
+ @include font-family('Montserrat-Black', 900);
+}
