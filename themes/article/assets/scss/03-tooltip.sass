@@ -9,7 +9,7 @@ $tooltip-font-size: $size-7 !default
 $tooltip-max-width: 15rem !default
 $tooltip-padding: .5rem 1rem !default
 $tooltip-radius: $radius-small !default
-$tooltip-z-index: 1020 !default
+$tooltip-z-index: 9999 !default
 
 =tooltip-hover
 	&:focus::before,
@@ -175,6 +175,7 @@ $tooltip-z-index: 1020 !default
 		cursor: pointer
 		overflow: visible
 		position: relative
+		z-index: 1
 
 		&::before,
 		&::after

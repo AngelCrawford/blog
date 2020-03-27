@@ -8,7 +8,7 @@ enableRobotsTXT = true
 enableGitInfo = true
 
 DefaultContentLanguage = "de"
-Paginate = 10 # this is set low for demonstrating with dummy content. Set to a higher number
+Paginate = 5 # this is set low for demonstrating with dummy content. Set to a higher number
 googleAnalytics = ""
 # summaryLength = 45
 
@@ -31,6 +31,7 @@ googleAnalytics = ""
   tags = "tags"
   category = "categories"
   series = "series"
+  contains = "contains"
   author = "authors"
 
 [permalinks]

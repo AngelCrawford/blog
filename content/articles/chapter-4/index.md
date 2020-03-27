@@ -7,9 +7,11 @@ series: ["Seriennummer"]
 authors: angel
 title: "Chapter IV: Master Jacques Coppenole"
 categories: ["quote"]
+contains:
+- image
 year: "2017"
 month: "2017/04"
-# weight: 1
+weight: 1
 images:
 - src: "./900-900x500.jpg"
   byline: "by <a href='https://unsplash.com/photos/W_9mOGUwR08'>Todd DeSantis</a>"

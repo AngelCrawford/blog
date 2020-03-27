@@ -8,6 +8,14 @@ tags:
 - eins
 - zwei
 categories: ""
+contains:
+- code
+- instagram
+- twitter
+- youtube
+- image
+- gallery
+- comment
 series: [""]
 weight: 1 # makes the post sticky, remove if not wanted
 format: rating # rating design on the home page

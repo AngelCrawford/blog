@@ -12,6 +12,8 @@ authors: angel
 title: "Chapter VI: Esmeralda"
 year: "2017"
 month: "2017/04"
+contains:
+- code
 images:
 - byline: "Test"
 ---

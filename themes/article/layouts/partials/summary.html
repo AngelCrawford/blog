@@ -31,9 +31,9 @@
         <a class="title is-4" href="{{ .RelPermalink }}"><h2>{{ .Title }}</h2></a>
 
         <span class="heading">
-          {{/*  <time datetime="{{ .PublishDate.Format "2006-01-02T15:04:05Z07:00" }}">
+          <time datetime="{{ .PublishDate.Format "2006-01-02T15:04:05Z07:00" }}">
             <i class="far fa-calendar-alt"></i> {{ .PublishDate.Day }}. {{ index $.Site.Data.demonths (printf "%d" .PublishDate.Month) }} {{ .PublishDate.Year }}
-          </time>  */}}
+          </time>
           <time class="updated" datetime="{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}">
             <i class="fas fa-pencil-alt"></i> {{ .Lastmod.Format "02.01.06" }}
           </time>
@@ -89,9 +89,21 @@
       <footer class="card-footer">
         <span class="card-footer-item">{{ .ReadingTime }} {{ i18n "minutesRead" }}</span>
         <span class="card-footer-item">
-          <time datetime="{{ .PublishDate.Format "2006-01-02T15:04:05Z07:00" }}">
-            <i class="far fa-calendar-alt"></i> {{ .PublishDate.Format "02.01.06" }}
-          </time>
+          
+          {{ if .Params.weight }}<i class="fas fa-thumbtack"></i>{{ end }}
+          <i class="far fa-newspaper"></i>
+          {{ if .Params.rating }}<i class="fas fa-film"></i>{{ end }}
+          {{ if .Params.series }}<i class="fas fa-layer-group"></i>{{ end }}
+          
+          {{ range (.GetTerms "contains") }}
+            {{ if eq .Title "code" }}<i class="fas fa-code"></i>{{ end }}
+            {{ if eq .Title "instagram" }}<i class="fab fa-instagram"></i>{{ end }}
+            {{ if eq .Title "twitter" }}<i class="fab fa-twitter"></i>{{ end }}
+            {{ if eq .Title "youtube" }}<i class="fab fa-youtube"></i>{{ end }}
+            {{ if eq .Title "image" }}<i class="fas fa-camera"></i>{{ end }}
+            {{ if eq .Title "gallery" }}<i class="far fa-images"></i>{{ end }}
+            {{ if eq .Title "comment" }}<i class="far fa-comments"></i>{{ end }}
+          {{ end }}
         </span>
       </footer>
 

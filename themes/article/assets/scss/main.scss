@@ -71,7 +71,7 @@ header.header {
 header.header section.hero .hero-body h1,
 header.header section.hero .hero-body h2,
 .byline.page-header {
-  color: #fff;
+  color: $text;
 }
 
 .wrapper {
@@ -84,7 +84,7 @@ figcaption {
   z-index: 2;
   position: absolute;
   bottom: 0;
-  color: #fff;
+  color: $text;
 }
 
 a, a h2 {
