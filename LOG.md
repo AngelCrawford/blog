@@ -1,5 +1,9 @@
 # 100 Days Of Code - Log
 
+## Day 27: March 27, Friday
+
+* Added icon information of the post to the cards start page
+
 ## Day 26: March 26, Thuesday
 
 * Added Logo from Codepen to project
