@@ -2,7 +2,7 @@
   {{ if .GetTerms "categories" }}
     {{ range first 1 (.GetTerms "categories") }}
       {{ $catName := .LinkTitle }}
-      <div class="ribbon is-primary" style="{{ range .Site.Params.categoryColor }}{{ if eq .name $catName }}background-color: {{ .color }};{{ end }}{{ end }}">
+      <div class="ribbon" style="{{ range .Site.Params.categoryColor }}{{ if eq .name $catName }}background-color: {{ .color }};{{ end }}{{ end }}">
           <a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a>
       </div>
     {{ end }}

@@ -80,13 +80,6 @@ header.header section.hero .hero-body h2,
 
 li.page-item.disabled a {color: #aaa;}
 
-figcaption {
-  z-index: 2;
-  position: absolute;
-  bottom: 0;
-  color: $text;
-}
-
 a, a h2 {
   color: $primary;
   &:hover {

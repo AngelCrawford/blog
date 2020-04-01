@@ -3,11 +3,11 @@
   position: relative;
 }
 .ribbon {
-  background-color: white;
+  background-color: $primary;
+  box-shadow: 3px 3px 3px rgba(#000, .3), -3px -3px 3px rgba($text, .07);
   color: #363636;
   font-size: 1rem;
   justify-content: center;
-  padding: 0.2em 0.75em 0.3em 0.75em;
   text-align: center;
   white-space: nowrap;
   position: absolute;
@@ -17,35 +17,17 @@
   right: auto;
   left: 0;
   border-left: none;
+  transition: background .2s;
 }
 .ribbon a {
-  color: #fff;
+  color: $text;
+  display: block;
+  font-weight: 600;
+  @include font-header;
+  padding: 0.2em 0.75em 0.3em 0.75em;
 }
 
-.ribbon.is-white {
-  background-color: whitesmoke;
-}
-
-.ribbon.is-black {
-  background-color: #0a0a0a;
-}
-
-.ribbon.is-primary {
-  background-color: $primary;
-}
-
-.ribbon.is-info {
-  background-color: #3273dc;
-}
-
-.ribbon.is-success {
-  background-color: #23d160;
-}
-
-.ribbon.is-warning {
-  background-color: #ffdd57;
-}
-
-.ribbon.is-danger {
-  background-color: #ff3860;
+.ribbon:hover {
+  background-color: darken($primary, 10%) !important;
+  box-shadow: inset 3px 3px 3px rgba(#000, .3), inset -3px -3px 3px rgba($text, .2);
 }

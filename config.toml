@@ -71,10 +71,13 @@ googleAnalytics = ""
 
   [[params.categoryColor]]
     name = "Movie"
-    color = "#123456"
+    color = "#537fbd"
   [[params.categoryColor]]
     name = "Kategorie 1"
     color = "teal"
+  [[params.categoryColor]]
+    name = "Allgemein"
+    color = "#cb282e"
   
   [params.csp]
     fontsrc = ["'self'", 

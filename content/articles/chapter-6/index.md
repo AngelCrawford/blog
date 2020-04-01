@@ -8,6 +8,7 @@ tags:
 - Position
 - Tree
 series: ["Seriennummer"]
+categories: "Allgemein"
 authors: angel
 title: "Chapter VI: Esmeralda"
 year: "2017"
