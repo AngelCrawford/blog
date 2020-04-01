@@ -1,5 +1,14 @@
 # 100 Days Of Code - Log
 
+## Info
+Thought a lot about it now, but I have to end the #100DaysOfCode  Challenge. No, I want to end it. But this challenge puts me in a little hate love for coding right now. I love the coding part of it, but I want to go on under my conditions.
+
+The pressure to HAVE to code every day, makes me hating it. I'm proud of the fact, that I can turn off my head everytime I want to. But the challenge doesn't allow me to do this. There is a little voice in my head, which screams: "THE CHALLENGE, DON'T FORGET IT", hate it.
+
+I learned a lot, about programming and myself, too. Don't want to ruin my love. Good wishes to all the others =) But the challenge isn't made for me.
+
+[Github Commits](https://github.com/AngelCrawford/blog/commits/master)
+
 ## Day 27: March 27, Friday
 
 * Added icon information of the post to the cards start page

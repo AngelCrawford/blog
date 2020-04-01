@@ -1,0 +1,18 @@
+ul.pagination-list {
+  li a.pagination-link {
+    border: none;
+    color: $primary;
+    font-weight: 600;
+    box-shadow: 3px 3px 3px rgba(#000, .3), -3px -3px 3px rgba($text, .07);
+    transition: .3s;
+    background-color: rgba(0, 0, 0, 0.2);
+
+    &.is-current, &.is-current:hover, &:hover {
+      background-color: $primary;
+      color: $background;
+      font-weight: 600;
+      box-shadow: inset 5px 5px 5px rgba(#000, .5), inset -5px -5px 5px rgba($text, .3);
+      border: none;
+    }
+  }
+}
