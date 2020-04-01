@@ -182,13 +182,20 @@ nav.navbar {
       color: $primary;
       padding: 0 1em;
     }
-  }  
+  }
   .is-active, 
   a.navbar-item.is-active, 
-  .navbar-link.is-active {
+  .navbar-link.is-active,
+  a.navbar-item.is-active:not(:focus):not(:hover), 
+  .navbar-link.is-active:not(:focus):not(:hover) {
     color: #e3d1b7;
-    background-color: rgba(0, 0, 0, 0.2);
+    background-color: rgba(0, 0, 0, .2);
     box-shadow: inset 5px 5px 5px rgba(#000, .3), inset -5px -5px 5px rgba($text, .07);
+  }
+  a:hover {
+    color: #e3d1b7;
+    box-shadow: 5px 5px 5px rgba(#000, .3), -5px -5px 5px rgba($text, .07);
+    background-color: rgba(0, 0, 0, 0.2);
   }
 }
 

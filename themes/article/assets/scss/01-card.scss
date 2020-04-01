@@ -2,6 +2,12 @@
   width: 100%;
   background: $background;
   box-shadow: 5px 5px 5px rgba(#000, .3), -5px -5px 5px rgba($text, .07);
+
+  &.no-image {
+    .media-content {
+      margin-left: 8em;
+    }
+  }
   
   &:after {
     content: "";

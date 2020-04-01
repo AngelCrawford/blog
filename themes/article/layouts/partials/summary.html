@@ -1,4 +1,4 @@
-<article class="card {{ if .Resources }}is-horizontal{{ end }}">
+<article class="card {{ if .Resources }}is-horizontal{{else}}no-image{{ end }}">
   {{ if .GetTerms "categories" }}
     {{ range first 1 (.GetTerms "categories") }}
       {{ $catName := .LinkTitle }}
@@ -45,18 +45,15 @@
           <div class="rating">{{ partial "rating" . }}</div>
         {{- end -}}
 
-        <!-- {{ if or (eq .Params.weight 1) (not .Resources) }} -->
+        {{ if eq .Params.weight 1 }}
           <!-- // FIXME: Wenn ich Content hier verwende, dann wird "summary" im Frontend nicht benutzt -->
-          <!-- {{ if .Params.summary }} -->
-            <!-- {{ .Summary | truncate 800 " [...]" }} -->
-          <!-- {{ else }} -->
-            <!-- {{ .Content | truncate 800 " [...]" | markdownify }} -->
-          <!-- {{ end }} -->
-        <!-- {{ else }} -->
-          
-        <!-- {{ end }} -->
-        {{ if or (eq .Params.weight 1) (not .Resources) }}
-          {{ .Summary | truncate 700 " [...]" }}
+          {{ if .Params.summary }}
+            {{ .Summary | truncate 800 " [...]" }}
+          {{ else }}
+            {{ .Content | truncate 800 " [...]" | markdownify }}
+          {{ end }}
+        {{ else if not .Resources }}
+          {{ .Summary | truncate 500 " [...]" }}
         {{ else }}
           {{ .Summary | truncate 280 " [...]" }}
         {{ end }}
