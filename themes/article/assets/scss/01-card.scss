@@ -137,6 +137,33 @@
     align-self: center;
     bottom: .7em;
     z-index: 55;
+    &:hover img {
+      border: 1px solid $primary;
+      box-shadow: 5px 5px 5px rgba(#000, .3),-5px -5px 5px rgba($text, .07);
+    }
+  }
+  .read-more {
+  //   display: block;
+  //   height: 48px;
+  //   width: 48px;
+  //   border-radius: 50%;
+  //   border: 1px solid $background;
+  //   color: $primary;
+  //   box-shadow: inset 5px 5px 5px rgba(#000, .3), inset -5px -5px 5px rgba($text, .07);
+  //   transition: all .3s ease-out;
+  //   background-color: rgba(#000, .2);
+  //   float: right;
+  //   i {
+  //     margin-top: 16px;
+  //     margin-left: 18px;
+  //   }
+    &:hover {
+      // border: 1px solid $primary;
+      // color: $primary;
+      color: $hover;
+      // background-color: rgba(#000, .2);
+      // box-shadow: 5px 5px 5px rgba(#000, .3),-5px -5px 5px rgba($text, .07);
+    }
   }
   footer.card-footer {
     justify-content: flex-end;
@@ -145,6 +172,7 @@
     letter-spacing: 1px;
     text-transform: uppercase;
     z-index: 50;
+    // box-shadow: inset 5px 5px 5px rgba(#000, .3), inset -5px -5px 5px rgba($text, .07);
     .card-footer-item {
       padding: .75em 2rem;
       padding-bottom: calc(0.75em + 3px);
@@ -186,8 +214,16 @@
       align-items: center;
       justify-content: right;
       background: linear-gradient(270deg, transparent 0%, rgba(25,25,25,.8) 50%, transparent 100%);
+      transition: all .3s ease-out;
       figure {
         margin-left: 1em;
+        img {
+          transition: all .3s ease-out;
+        }
+      }
+      &:hover img {
+        border: 1px solid $primary;
+        box-shadow: 5px 5px 5px rgba(#000, .3),-5px -5px 5px rgba($text, .07);
       }
     }
   }

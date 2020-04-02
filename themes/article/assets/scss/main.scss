@@ -13,6 +13,7 @@
 // Colors
 $background   : #2f2f2f;
 $text         : #f2ebe3;
+$hover        : #e3d1b7;
 $primary      : #bd9153;
 $accent       : #20c997;
 $secondary    : #777777;
@@ -182,12 +183,12 @@ nav.navbar {
   .navbar-link.is-active,
   a.navbar-item.is-active:not(:focus):not(:hover), 
   .navbar-link.is-active:not(:focus):not(:hover) {
-    color: #e3d1b7;
+    color: $hover;
     background-color: rgba(0, 0, 0, .2);
     box-shadow: inset 5px 5px 5px rgba(#000, .3), inset -5px -5px 5px rgba($text, .07);
   }
   a:hover {
-    color: #e3d1b7;
+    color: $hover;
     box-shadow: 5px 5px 5px rgba(#000, .3), -5px -5px 5px rgba($text, .07);
     background-color: rgba(0, 0, 0, 0.2);
   }
@@ -218,9 +219,9 @@ nav.navbar {
   span.shimmer {
     padding: 0 140px 0 140px;
     text-align: center;
-    background: -webkit-gradient(linear, left top, right top, from(#97856b), to(#97856b), color-stop(0.5, #e3d1b7));
-    background: -moz-gradient(linear, left top, right top, from(#97856b), to(#97856b), color-stop(0.5, #e3d1b7));
-    background: gradient(linear, left top, right top, from(#97856b), to(#97856b), color-stop(0.5, #e3d1b7));
+    background: -webkit-gradient(linear, left top, right top, from(#97856b), to(#97856b), color-stop(0.5, $hover));
+    background: -moz-gradient(linear, left top, right top, from(#97856b), to(#97856b), color-stop(0.5, $hover));
+    background: gradient(linear, left top, right top, from(#97856b), to(#97856b), color-stop(0.5, $hover));
     -webkit-background-size: 25px 100%;
     -moz-background-size: 25px 100%;
     background-size: 25px 100%; 

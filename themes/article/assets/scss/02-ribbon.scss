@@ -4,6 +4,7 @@
 }
 .ribbon {
   background-color: $primary;
+  // border: 1px solid $primary;
   box-shadow: 3px 3px 3px rgba(#000, .3), -3px -3px 3px rgba($text, .07);
   color: #363636;
   font-size: 1rem;
@@ -28,6 +29,10 @@
 }
 
 .ribbon:hover {
-  background-color: darken($primary, 10%) !important;
-  box-shadow: inset 3px 3px 3px rgba(#000, .3), inset -3px -3px 3px rgba($text, .2);
+  // border: 1px solid $hover;
+  color: $hover;
+  background-color: rgba(#000, .5) !important;
+  font-weight: 600;
+  box-shadow: inset 5px 5px 5px rgba(#000, .3), inset -5px -5px 5px rgba($text, .07);
+  // box-shadow: inset 3px 3px 3px rgba(#000, .3), inset -3px -3px 3px rgba($text, .2);
 }

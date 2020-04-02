@@ -1,18 +1,41 @@
-ul.pagination-list {
-  li a.pagination-link {
-    border: none;
-    color: $primary;
+.pagination {
+  a.pagination-previous[disabled],
+  a.pagination-next[disabled],
+  .pagination-previous[disabled]:hover,
+  .pagination-next[disabled]:hover {
+    border: 1px solid $background;
+    color: darken($primary, 15%);
     font-weight: 600;
-    box-shadow: 3px 3px 3px rgba(#000, .3), -3px -3px 3px rgba($text, .07);
-    transition: .3s;
-    background-color: rgba(0, 0, 0, 0.2);
+    box-shadow: none;
+    transition: all .3s ease-out;
+    background-color: rgba(#000, .2);
+    opacity: .7;
+    margin: .5em;
+  }
+}
+ul.pagination-list li a.pagination-link,
+a.pagination-previous,
+a.pagination-next {
+  height: 48px;
+  width: 48px;
+  border-radius: 50%;
+  border: 1px solid $background;
+  color: $primary;
+  font-weight: 600;
+  box-shadow: inset 5px 5px 5px rgba(#000, .3), inset -5px -5px 5px rgba($text, .07);
+  transition: all .3s ease-out;
+  background-color: rgba(#000, .2);
+  margin: .5em;
 
-    &.is-current, &.is-current:hover, &:hover {
-      background-color: $primary;
-      color: $background;
-      font-weight: 600;
-      box-shadow: inset 5px 5px 5px rgba(#000, .5), inset -5px -5px 5px rgba($text, .3);
-      border: none;
-    }
+  &.is-current, &.is-current:hover, &:hover {
+    border: 1px solid $primary;
+    color: $primary;
+    background-color: rgba(#000, .2);
+    font-weight: 600;
+    box-shadow: 5px 5px 5px rgba(#000, .3),-5px -5px 5px rgba($text, .07);
+  }
+  &:hover {
+    color: $hover;
+    border: 1px solid $hover;
   }
 }
