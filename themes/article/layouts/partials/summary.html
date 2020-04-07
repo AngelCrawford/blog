@@ -32,10 +32,14 @@
 
         <span class="heading">
           <time datetime="{{ .PublishDate.Format "2006-01-02T15:04:05Z07:00" }}">
-            <i class="far fa-calendar-alt"></i> {{ .PublishDate.Day }}. {{ index $.Site.Data.demonths (printf "%d" .PublishDate.Month) }} {{ .PublishDate.Year }}
+            <svg class='remix-small'>
+              <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#calendar-line"></use>
+            </svg> {{ .PublishDate.Day }}. {{ index $.Site.Data.demonths (printf "%d" .PublishDate.Month) }} {{ .PublishDate.Year }}
           </time>
           <time class="updated" datetime="{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}">
-            <i class="fas fa-pencil-alt"></i> {{ .Lastmod.Format "02.01.06" }}
+            <svg class='remix-small'>
+              <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#pencil-line"></use>
+            </svg> {{ .Lastmod.Format "02.01.06" }}
           </time>
         </span>
       </div>
@@ -62,7 +66,10 @@
         <!-- <a class="read-more" href="{{ .RelPermalink }}"><i class="fas fa-chevron-right"></i></a> -->
 
         {{- if (.GetTerms "tags") -}}
-          <div class="tags-wrapper"><i class="fas fa-tags"></i>
+          <div class="tags-wrapper">
+            <svg class='remix-small'>
+              <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#price-tag-3-line"></use>
+            </svg>
             {{- range (.GetTerms "tags") -}}
               <a href="{{ .RelPermalink }}" class="hashtags">#{{ .LinkTitle }} </a> 
             {{- end -}}
@@ -88,19 +95,62 @@
         <span class="card-footer-item">{{ .ReadingTime }} {{ i18n "minutesRead" }}</span>
         <span class="card-footer-item">
           
-          {{ if .Params.weight }}<i class="fas fa-thumbtack"></i>{{ end }}
-          <i class="far fa-newspaper"></i>
-          {{ if .Params.rating }}<i class="fas fa-film"></i>{{ end }}
-          {{ if .Params.series }}<i class="fas fa-layer-group"></i>{{ end }}
+          {{ if .Params.weight }}
+            <svg class='remix-small'>
+              <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#pushpin-line"></use>
+            </svg>
+          {{ end }}
+          <svg class='remix-small'>
+            <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#article-line"></use>
+          </svg>
+
+          {{ if .Params.rating }}
+            <svg class='remix-small'>
+              <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#film-line"></use>
+            </svg>
+          {{ end }}
+          {{ if .Params.series }}
+            <svg class='remix-small'>
+              <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#stack-line"></use>
+            </svg>
+          {{ end }}
           
           {{ range (.GetTerms "contains") }}
-            {{ if eq .Title "code" }}<i class="fas fa-code"></i>{{ end }}
-            {{ if eq .Title "instagram" }}<i class="fab fa-instagram"></i>{{ end }}
-            {{ if eq .Title "twitter" }}<i class="fab fa-twitter"></i>{{ end }}
-            {{ if eq .Title "youtube" }}<i class="fab fa-youtube"></i>{{ end }}
-            {{ if eq .Title "image" }}<i class="fas fa-camera"></i>{{ end }}
-            {{ if eq .Title "gallery" }}<i class="far fa-images"></i>{{ end }}
-            {{ if eq .Title "comment" }}<i class="far fa-comments"></i>{{ end }}
+            {{ if eq .Title "code" }}
+              <svg class='remix-small'>
+                <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#code-s-slash-fill"></use>
+              </svg>
+            {{ end }}
+            {{ if eq .Title "instagram" }}
+              <svg class='remix-small'>
+                <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#instagram-line"></use>
+              </svg>
+            {{ end }}
+            {{ if eq .Title "twitter" }}
+              <svg class='remix-small'>
+                <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#twitter-line"></use>
+              </svg>
+            {{ end }}
+            {{ if eq .Title "youtube" }}
+              <svg class='remix-small'>
+                <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#youtube-line"></use>
+              </svg>
+            {{ end }}
+            {{ if eq .Title "image" }}
+              <svg class='remix-small'>
+                <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#camera-line"></use>
+              </svg>
+            {{ end }}
+            {{ if eq .Title "gallery" }}
+              <svg class='remix-small'>
+                <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#gallery-line"></use>
+              </svg>
+            {{ end }}
+            {{ if eq .Title "comment" }}
+              <svg class='remix-small'>
+                <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#question-answer-line"></use>
+              </svg>
+            {{ end }}
           {{ end }}
         </span>
       </footer>
