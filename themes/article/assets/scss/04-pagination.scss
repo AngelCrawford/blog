@@ -11,6 +11,10 @@
     background-color: rgba(#000, .2);
     opacity: .7;
     margin: .5em;
+    .remix {
+      fill: darken($hover, 45%);
+      transition: all .3s ease-out;
+    }
   }
 }
 ul.pagination-list li a.pagination-link,
@@ -37,5 +41,8 @@ a.pagination-next {
   &:hover {
     color: $hover;
     border: 1px solid $hover;
+    .remix {
+      fill: $hover;
+    }
   }
 }

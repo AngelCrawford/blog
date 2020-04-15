@@ -159,6 +159,7 @@ nav.navbar {
   padding: 0 1.5em;
   background: rgba(darken($background, 1%), .5);
   // @include font-header;
+  font-weight: 600;
   .navbar-item.field {
     padding-right: 0;
   }
@@ -168,29 +169,44 @@ nav.navbar {
     box-shadow: 5px 5px 5px rgba(#000, .3), -5px -5px 5px rgba($text, .07);
     &:focus {
       box-shadow: inset 5px 5px 5px rgba(#000, .3), inset -5px -5px 5px rgba($text, .07);
+      ~ span.icon .remix {
+        fill: $hover;
+      }
     }
   }
-  i {
-    padding-left: .8em;
-    font-size: 20px;
-    &.fa-search {
-      color: $primary;
-      padding: 0 1em;
-    }
+
+  a.navbar-item,
+  .navbar-link {
+    border: 1px solid transparent;
+    transition: all .3s ease-out;
   }
   .is-active, 
   a.navbar-item.is-active, 
   .navbar-link.is-active,
   a.navbar-item.is-active:not(:focus):not(:hover), 
   .navbar-link.is-active:not(:focus):not(:hover) {
-    color: $hover;
+    color: $primary;
     background-color: rgba(0, 0, 0, .2);
-    box-shadow: inset 5px 5px 5px rgba(#000, .3), inset -5px -5px 5px rgba($text, .07);
+    border: 1px solid $primary;
+    box-shadow: 5px 5px 5px rgba(#000, .3), -5px -5px 5px rgba($text, .07);
+  }
+  a.icon {
+    margin-left: .5em;
   }
   a:hover {
     color: $hover;
-    box-shadow: 5px 5px 5px rgba(#000, .3), -5px -5px 5px rgba($text, .07);
     background-color: rgba(0, 0, 0, 0.2);
+    border: 1px solid $hover;
+    box-shadow: inset 5px 5px 5px rgba(#000, .3), inset -5px -5px 5px rgba($text, .07);
+
+    &.icon {
+      background-color: transparent;
+      border: none;
+      box-shadow: none;
+      .remix {
+        fill: $hover;
+      }
+    }
   }
 }
 
