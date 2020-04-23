@@ -9,8 +9,10 @@
           {{ if .Params.icons }}
             <h2>Details</h2>
             {{ range .Params.icons }}
-              <span {{ if .tooltip }}data-tooltip="{{ .tooltip }}"{{ end }} style="font-size: 3em; color: {{ .color }};">
-                <i class="{{ .src }}"></i>
+              <span {{ if .tooltip }}data-tooltip="{{ .tooltip }}"{{ end }}>
+                <svg class="remix-big" style="fill: {{ .color }};">
+                  <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#{{ .src }}"></use>
+                </svg>
               </span>
             {{ end }}
           {{ end }}

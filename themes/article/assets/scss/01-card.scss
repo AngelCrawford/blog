@@ -25,14 +25,11 @@
     width: 100%;
   }
   .card-image figcaption {
-    &:before {
-      content: "\f05a";
-      color: $primary;
-      font-family: "Font Awesome 5 Free";
-      font-weight: 600;
-      padding-right: .5em;
-      overflow: hidden;
-      font-size: 18px;
+    svg {
+      width: 21px;
+      height: 21px;
+      padding-top: 5px;
+      fill: $primary;
     }
     z-index: 2;
     position: absolute;

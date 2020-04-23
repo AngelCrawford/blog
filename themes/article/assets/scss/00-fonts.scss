@@ -72,15 +72,20 @@
   fill: #777777;
   display: inline-block;
 }
+.remix-big {
+  width: 40px;
+  height: 40px;
+  display: inline-block;
+}
 
 @font-face {
   font-family: "remixicon";
-  src: url('fonts/remixicon/remixicon.eot?t=1585308894416'); /* IE9*/
-  src: url('fonts/remixicon/remixicon.eot?t=1585308894416#iefix') format('embedded-opentype'), /* IE6-IE8 */
-  url("fonts/remixicon/remixicon.woff2?t=1585308894416") format("woff2"),
-  url("fonts/remixicon/remixicon.woff?t=1585308894416") format("woff"),
-  url('fonts/remixicon/remixicon.ttf?t=1585308894416') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
-  url('fonts/remixicon/remixicon.svg?t=1585308894416#remixicon') format('svg'); /* iOS 4.1- */
+  src: url('fonts/remixicon/remixicon.eot?t=1587658715456'); /* IE9*/
+  src: url('fonts/remixicon/remixicon.eot?t=1587658715456#iefix') format('embedded-opentype'), /* IE6-IE8 */
+       url("fonts/remixicon/remixicon.woff2?t=1587658715456") format("woff2"),
+       url("fonts/remixicon/remixicon.woff?t=1587658715456") format("woff"),
+       url('fonts/remixicon/remixicon.ttf?t=1587658715456') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
+       url('fonts/remixicon/remixicon.svg?t=1587658715456#remixicon') format('svg'); /* iOS 4.1- */
   font-display: swap;
 }
 
@@ -156,3 +161,6 @@
 .ri-youtube-line:before { content: "\f1ff"; }
 .ri-article-line:before { content: "\ea7c"; }
 .ri-stack-line:before { content: "\f0d1"; }
+.ri-android-line:before { content: "\ea34"; }
+.ri-ubuntu-line:before { content: "\f1cf"; }
+.ri-windows-line:before { content: "\f250"; }

@@ -1,6 +1,7 @@
 # Hugo default output directory
 /themes/ananke
 /resources
+.vscode/
 
 ## OS Files
 # Windows

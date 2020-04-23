@@ -17,7 +17,7 @@ images:
 - src: "./name.jpg"
   byline: "Idee <a href='#'>test</a>"
 icons:
-- src: "fab fa-windows"
+- src: "windows-line"
   color: "#456987"
   tooltip: "Some Tooltip info"
 ---

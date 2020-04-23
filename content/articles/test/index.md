@@ -19,12 +19,12 @@ images:
 - src: "./attachment_85857177-e1574291495328.png"
   byline: "Test für das Attachment"
 icons:
-- src: "fab fa-windows"
+- src: "windows-line"
   color: "#456987"
   tooltip: "Some Tooltip info"
-- src: "fab fa-linux"
+- src: "ubuntu-line"
   color: "tomato"
-- src: "fab fa-android"
+- src: "android-line"
   color: "green"
 ---
 
