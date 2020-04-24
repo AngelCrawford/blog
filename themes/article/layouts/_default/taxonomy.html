@@ -6,7 +6,11 @@
 
   {{ if eq .Section "authors" }}
     {{ range $.Params.socials }}
-      <a href="{{ .src }}" {{ if .name }}data-tooltip="{{ .name }}"{{ end }}><i class="fab fa-{{ .name }}-square fa-2x"></i></a>
+      <a data-tooltip="{{ .name }}" href="{{ .src }}">
+        <svg class='remix-big-primary'>
+          <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#{{ .icon }}-line"></use>
+        </svg>
+      </a>
     {{ end }}
   {{ end }}
 

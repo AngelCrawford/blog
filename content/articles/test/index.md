@@ -5,10 +5,9 @@ description: "One morning, when Gregor Samsa woke from troubled dreams, he found
 summary: "One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin. One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin. One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin. One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin."
 tags: ["scene"]
 categories: "Kategorie 1"
+series: ["Seriennummer"]
 contains:
 - code
-- twitter
-- youtube
 authors: jdksaj
 title: "Test 123"
 year: "2020"
