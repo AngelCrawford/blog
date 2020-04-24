@@ -40,17 +40,18 @@ $column-gap: 1.5rem;
 @import "bulma/bulma.sass";
 
 @import "00-fonts";
-@import "01-card";
-@import "02-ribbon";
-@import "03-tooltip";
+@import "01-header";
+@import "02-card";
+@import "03-ribbon";
 @import "04-pagination";
+@import "05-tooltip";
 
 
 html, body {
   background-color: $background;
   color: $text;
 }
-footer.footer, nav.navbar {
+footer.footer {
   background-color: darken(#555450, 10%);
   a {
     color: $primary;
@@ -58,17 +59,6 @@ footer.footer, nav.navbar {
   a:hover {
     color: darken($primary, 15%);
   }
-}
-
-
-header.header {
-  background-repeat: no-repeat;
-  background-size: cover;
-}
-header.header section.hero .hero-body h1,
-header.header section.hero .hero-body h2,
-.byline.page-header {
-  color: $text;
 }
 
 .wrapper {
@@ -91,199 +81,4 @@ a, a h2 {
 .box {
   background-color: $background;
   box-shadow: 5px 5px 5px rgba(#000, .3), -5px -5px 5px rgba($text, .07);
-}
-
-
-header.header {
-  height: 360px;
-  background-position: center center;
-
-  .byline {
-    display: block;
-    position: absolute;
-    top: 1em;
-    left: 1.5em;
-    opacity: .1;
-    color: $primary;
-    font-size: 80%;
-  }
-  &:hover .byline {
-    opacity: 1;
-  }
-}
-
-.brand-logo {
-  display: -ms-flexbox;
-  display: -webkit-flex;
-  display: flex;
-  -webkit-justify-content: center;
-  justify-content: center;
-  width: auto;
-  // border: 1px solid red;
-  height: 360px;
-  width: 100%;
-  background: radial-gradient(circle, rgba(25,25,25,1) 10%, transparent 100%);
-  a.brand {
-    flex: 0 1 auto;
-    align-self: auto;
-    height: auto;
-    // border: 1px solid orange;
-    top: 9em;
-    z-index: 999;
-    position: absolute;
-  }
-  &:after {
-    content: "";
-    // border: 1px solid green;
-    background: url("/images/logo_back.png") no-repeat top center;
-    background-size: contain;
-    position: absolute;
-    opacity: .2;
-    top: 3em;
-    bottom: 0;
-    width: 100%;
-    height: 300px;
-    display: block;
-    z-index: 1;
-  }
-}
-
-nav.navbar {
-  background: transparent;
-  margin-top: -3.5em;
-  padding: 0 1.5em;
-  background: rgba(darken($background, 1%), .5);
-  // @include font-header;
-  font-weight: 600;
-  .navbar-item.field {
-    padding-right: 0;
-  }
-  input[type=search] {
-    background-color: rgba(0, 0, 0, 0.2);
-    border: none;
-    box-shadow: 5px 5px 5px rgba(#000, .3), -5px -5px 5px rgba($text, .07);
-    &:focus {
-      box-shadow: inset 5px 5px 5px rgba(#000, .3), inset -5px -5px 5px rgba($text, .07);
-      ~ span.icon .remix {
-        fill: $hover;
-      }
-    }
-  }
-
-  a.navbar-item,
-  .navbar-link {
-    border: 1px solid transparent;
-    transition: all .3s ease-out;
-  }
-  .is-active, 
-  a.navbar-item.is-active, 
-  .navbar-link.is-active,
-  a.navbar-item.is-active:not(:focus):not(:hover), 
-  .navbar-link.is-active:not(:focus):not(:hover) {
-    color: $primary;
-    background-color: rgba(0, 0, 0, .2);
-    border: 1px solid $primary;
-    box-shadow: 5px 5px 5px rgba(#000, .3), -5px -5px 5px rgba($text, .07);
-  }
-  a.icon {
-    margin-left: .5em;
-  }
-  a:hover {
-    color: $hover;
-    background-color: rgba(0, 0, 0, 0.2);
-    border: 1px solid $hover;
-    box-shadow: inset 5px 5px 5px rgba(#000, .3), inset -5px -5px 5px rgba($text, .07);
-
-    &.icon {
-      background-color: transparent;
-      border: none;
-      box-shadow: none;
-      .remix {
-        fill: $hover;
-      }
-    }
-  }
-}
-
-.textlogo {
-  background: linear-gradient(to bottom, #b78846 32%, #d8bf9a 50%, #624925 72%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  color: #000;
-  @include font-header;
-  position: relative;
-  font-size: 70px;
-  margin: 0;
-  top: 25%;
-    
-  &:after {
-    background: none;
-    padding: 0 140px 0 140px;
-    content: attr(data-heading);
-    left: 0;
-    top: 0;
-    z-index: -1;
-    position: absolute;
-    text-shadow: -1px 0 1px #d3b68c, 0 1px 1px #d3b68c, 5px 5px 10px rgba(0, 0, 0, 0.7), -2px -2px 5px rgba(255, 255, 255, 0.3);
-  }
-  
-  span.shimmer {
-    padding: 0 140px 0 140px;
-    text-align: center;
-    background: -webkit-gradient(linear, left top, right top, from(#97856b), to(#97856b), color-stop(0.5, $hover));
-    background: -moz-gradient(linear, left top, right top, from(#97856b), to(#97856b), color-stop(0.5, $hover));
-    background: gradient(linear, left top, right top, from(#97856b), to(#97856b), color-stop(0.5, $hover));
-    -webkit-background-size: 25px 100%;
-    -moz-background-size: 25px 100%;
-    background-size: 25px 100%; 
-    -webkit-background-clip: text;
-    -moz-background-clip: text;
-    background-clip: text;
-    -webkit-animation-name: shimmer;
-    -moz-animation-name: shimmer;
-    animation-name: shimmer;
-    -webkit-animation-duration: 1s;
-    -moz-animation-duration: 1s;
-    animation-duration: 1s;
-    -webkit-animation-iteration-count: infinite;
-    -moz-animation-iteration-count: infinite;
-    animation-iteration-count: infinite; 
-    animation-direction: alternate;
-    animation-timing-function: linear;
-    background-repeat: no-repeat;
-    background-position: 0 0;
-  }
-}
-
-@-moz-keyframes shimmer {
-  0% {
-    background-position: top left;
-  }
-  100% {
-    background-position: top right;
-  }
-}
-@-webkit-keyframes shimmer {
-  0% {
-    background-position: top left;
-  }
-  100% {
-    background-position: top right;
-  }
-}
-@-o-keyframes shimmer {
-  0% {
-    background-position: top left;
-  }
-  100% {
-    background-position: top right;
-  }
-}
-@keyframes shimmer {
-  0% {
-    background-position: top left;
-  }
-  100% {
-    background-position: top right;
-  }
 }

@@ -126,6 +126,9 @@
       color: $secondary;
       a {
         color: darken($primary, 10%);
+        &:hover {
+          color: $hover;
+        }
       }
       .remix-small {
         margin-right: 0.75em;
@@ -149,20 +152,23 @@
     }
   }
   .read-more {
-  //   display: block;
-  //   height: 48px;
-  //   width: 48px;
-  //   border-radius: 50%;
-  //   border: 1px solid $background;
-  //   color: $primary;
-  //   box-shadow: inset 5px 5px 5px rgba(#000, .3), inset -5px -5px 5px rgba($text, .07);
-  //   transition: all .3s ease-out;
-  //   background-color: rgba(#000, .2);
-  //   float: right;
-  //   i {
-  //     margin-top: 16px;
-  //     margin-left: 18px;
-  //   }
+    // display: block;
+    // height: 48px;
+    // width: 48px;
+    // border-radius: 50%;
+    // border: 1px solid $background;
+    // color: $primary;
+    // box-shadow: inset 5px 5px 5px rgba(#000, .3), inset -5px -5px 5px rgba($text, .07);
+    // transition: all .3s ease-out;
+    // background-color: rgba(#000, .2);
+    // float: right;
+    // &:after {
+    //   content: "\ea6c";
+    //   font-family: "remixicon";
+    //   font-size: 30px;
+    //   line-height: 46px;
+    //   margin-left: 10px;
+    // }
     &:hover {
       // border: 1px solid $primary;
       // color: $primary;

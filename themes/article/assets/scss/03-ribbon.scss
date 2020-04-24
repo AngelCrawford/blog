@@ -25,12 +25,14 @@
   font-weight: 600;
   @include font-header;
   padding: 0.3em 0.75em;
+  transition: all .3s ease-out;
+  &:hover {
+    color: $background;
+  }
 }
 
 .ribbon:hover {
-  color: $hover;
-  background-color: $background !important;
-  // opacity: .5;
+  background-color: $hover !important;
   font-weight: 600;
   box-shadow: inset 5px 5px 5px rgba(#000, .3), inset -5px -5px 5px rgba($text, .07);
   // box-shadow: inset 3px 3px 3px rgba(#000, .3), inset -3px -3px 3px rgba($text, .2);
