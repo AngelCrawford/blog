@@ -97,7 +97,10 @@
       </div>
     
       <footer class="card-footer">
-        <span class="card-footer-item">{{ .ReadingTime }} {{ i18n "minutesRead" }}</span>
+        <span class="card-footer-item">
+          <svg class='remix-small'>
+            <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#time-line"></use>
+          </svg> {{ .ReadingTime }} {{ i18n "minutesRead" }}</span>
         <span class="card-footer-item">
           
           {{ if .Params.weight }}

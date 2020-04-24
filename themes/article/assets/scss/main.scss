@@ -45,6 +45,7 @@ $column-gap: 1.5rem;
 @import "03-ribbon";
 @import "04-pagination";
 @import "05-tooltip";
+@import "06-single";
 
 
 html, body {
@@ -70,15 +71,28 @@ li.page-item.disabled a {color: #aaa;}
 a, a h2 {
   color: $primary;
   &:hover {
-    color: $text;
+    color: $hover;
   }
 }
 
-.content article h2, p.title {
+p.title, h1.title,
+h2, h1 {
   color: $primary;
 }
 
 .box {
   background-color: $background;
   box-shadow: 5px 5px 5px rgba(#000, .3), -5px -5px 5px rgba($text, .07);
+  height: 100%;
 }
+
+.column {
+  // margin-left: 1.5rem;
+  // margin-right: 0rem;
+  // margin-top: 0rem;
+}
+// .columns [class^="is-"], .columns [class*="is-"] {
+//   padding-left: 1.5rem;
+//   padding-right: 0rem;
+//   padding-top: 0rem;
+// }

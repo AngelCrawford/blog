@@ -25,8 +25,7 @@
 {{- end -}}
 
 {{- if or ($.Scratch.Get "next_link") ($.Scratch.Get "prev_link") -}}
-  <p>Part {{ $.Scratch.Get "cur_page_num" }} of {{ $.Scratch.Get "total_page_num" }} in the <b>{{- $series_name -}}</b> series.</p>
-  <p></p>
+  <div>Part {{ $.Scratch.Get "cur_page_num" }} of {{ $.Scratch.Get "total_page_num" }} in the <b>{{- $series_name -}}</b> series.</div>
   {{- if $.Scratch.Get "prev_link" -}}
     {{- if ne ($.Scratch.Get "prev_link") ($.Scratch.Get "first_link") -}}
       <a href="{{- $.Scratch.Get "first_link" -}}">

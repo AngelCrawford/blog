@@ -1,125 +1,144 @@
 {{ define "main" }}
-
-  <h1 class="title">Layoutseite: articles/single.html</h1>
  
-  <div class="content">
-    <div class="columns">
-      <div class="column box">
-        <article>
+  <div class="columns">
+
+    <div class="column is-single-top is-9">
+      <article class="content box">
+
+        <h1 class="title">{{ .Title | default .Site.Title }}</h1>
+        {{ with .Params.description }}
+          <h2 class="subtitle">{{ . | truncate 160 }}</h2>
+        {{ end }}
+
+        <div class="details-single has-ribbon">
           {{ if .Params.icons }}
-            <h2>Details</h2>
-            {{ range .Params.icons }}
-              <span {{ if .tooltip }}data-tooltip="{{ .tooltip }}"{{ end }}>
-                <svg class="remix-big" style="fill: {{ .color }};">
-                  <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#{{ .src }}"></use>
-                </svg>
-              </span>
-            {{ end }}
-          {{ end }}
-          {{ .Content }}
-        </article>
-      </div>
-      
-      <div class="column is-3">
-        <div class="box">
-        <p class="title">Information</p>
-          <div class="date-single">
-            <time datetime="{{ .PublishDate.Format "2006-01-02T15:04:05Z07:00" }}">
-              {{ .PublishDate.Day }}. {{ index $.Site.Data.demonths (printf "%d" .PublishDate.Month) }} {{ .PublishDate.Year }}
-            </time>
-            <br />
-            <time datetime="{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}">
-              Updated: {{ .Lastmod.Day }}. {{ index $.Site.Data.demonths (printf "%d" .Lastmod.Month) }} {{ .Lastmod.Year }}
-            </time>
-          </div>
-
-          <div class="author-single is-clearfix">
-            {{ range (.GetTerms "authors") }}
-              <figure class="image is-48x48 is-pulled-left">
-                <a href="{{ .Permalink }}">
-                  {{- range first 1 (.Resources.ByType "image") -}}
-                    {{- $img := .Fill "48x48" | images.Filter images.Grayscale -}}
-                    <img class="is-rounded" src="{{ $img.RelPermalink }}" alt="{{ $.Title }}">
-                  {{- end -}}
-                </a>
-              </figure>
-              <a class="is-pulled-right" href="{{ .Permalink }}">{{ .Title }}</a>
-            {{ end }}
-          </div>
-          {{- if .Params.categories -}}
-          <div class="categories-single">Kategorie:
-              {{- range (.GetTerms "categories") -}}
-                <a href="{{ .Permalink }}"><span class="tag is-primary">{{ .LinkTitle }}</span></a>
-              {{- end -}}
+            <div class="ribbon is-single-page is-primary">
+              <svg class="remix-small">
+                <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#bookmark-line"></use>
+              </svg> Details
             </div>
-          {{- end -}}
-          {{- if .Params.tags -}}
-            <div class="tags-single">Tags:
-              {{- range (.GetTerms "tags") -}}
-                <a href="{{ .Permalink }}"><span class="tag">{{ .LinkTitle }}</span></a>
-              {{- end -}}
-            </div>
-          {{- end -}}
-          <div class="reading-time-single">Leseminuten: {{ .ReadingTime }} {{ i18n "minutesRead" }}</div>
-
-          {{- if .Params.rating -}}
-            <div class="rating">Rating: {{ partial "rating" . }} {{ .Params.rating }}</div>
-          {{- end -}}
-
-          {{ if .Params.series }}
-            <div class="series-single">Serie:
-              {{ $name := index .Params.series 0 }}
-              This post is part of the <a href="{{.Site.BaseURL}}/series/{{$name | urlize}}">{{$name}}</a> series.
-            </div>
+            <span class="details-icon-wrapper">
+              {{ range .Params.icons }}
+                <span {{ if .tooltip }}data-tooltip="{{ .tooltip }}"{{ end }}>
+                  <svg class="remix-big" style="fill: {{ .color }};">
+                    <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#{{ .src }}"></use>
+                  </svg>
+                </span>
+              {{ end }}
+            </span>
           {{ end }}
         </div>
-
-        {{ if ge (len .TableOfContents) 100 }}
-          <div class="box">
-            <p class="title">Table of Content</p>
-            {{ .TableOfContents }}
+        
+        {{ .Content }}
+  
+        {{ if .Params.series }}
+          <div class="series-single-footer">
+            {{ partial "series-footer" . }}
           </div>
         {{ end }}
+      </article>
+    </div>
+    
+    <div class="column is-single-top is-3">
+      <div class="single-information">
+        <p class="title is-4">Information</p>
         
-        {{ if .Params.series }}
-          <div class="box">
-            <p class="title">Serie</p>
+        {{- if .Params.categories -}}
+          <div class="categories-single">
+            {{ range first 1 (.GetTerms "categories") }}
+              {{ $catName := .LinkTitle }}
+              <span class="tag" style="{{ range .Site.Params.categoryColor }}{{ if eq .name $catName }}background-color: {{ .color }};{{ end }}{{ end }}">
+                <a href="{{ .Permalink }}">{{ .LinkTitle }}</a>
+              </span>
+            {{- end -}}
+          </div>
+        {{- end -}}
 
-            {{- $currentPage := . -}}
-            {{- $series_name := index .Params.series 0 -}}
+        <div class="date-single">
+          <time datetime="{{ .PublishDate.Format "2006-01-02T15:04:05Z07:00" }}">
+            <svg class='remix-small'>
+              <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#calendar-line"></use>
+            </svg>{{ .PublishDate.Day }}. {{ index $.Site.Data.demonths (printf "%d" .PublishDate.Month) }} {{ .PublishDate.Year }}
+          </time>
+          <time class="updated" datetime="{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}">
+            <svg class='remix-small'>
+              <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#pencil-line"></use>
+            </svg> {{ .Lastmod.Format "02.01.06" }}
+          </time>
+        </div>
+
+        {{- if .Params.tags -}}
+          <div class="tags-wrapper-single">
+            <svg class='remix-small'>
+              <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#price-tag-3-line"></use>
+            </svg>
+            {{- range (.GetTerms "tags") -}}
+              <a href="{{ .RelPermalink }}" class="hashtags">#{{ .LinkTitle }} </a> 
+            {{- end -}}
+          </div>
+        {{- end -}}
+
+        <div class="reading-time-single">
+          <svg class='remix-small'>
+            <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#time-line"></use>
+          </svg> {{ .ReadingTime }} {{ i18n "minutesRead" }}
+        </div>
+
+        {{- if .Params.rating -}}
+          <svg class='remix-small'>
+            <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#time-line"></use>
+          </svg> 
+          <span class="rating-single"><small>{{ .Params.rating }}</small>{{ partial "rating" . }}</span>
+        {{- end -}}
+
+        {{ if .Params.series }}
+          <div class="series-single">
+            {{ $name := index .Params.series 0 }}
+            <svg class='remix-small'>
+              <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#stack-line"></use>
+            </svg>
+            This post is part of the <a href="{{.Site.BaseURL}}/series/{{$name | urlize}}">{{$name}}</a> series.
+          </div>
+        {{ end }}
+      </div>
+
+      {{ if ge (len .TableOfContents) 100 }}
+        <div class="toc-single">
+          <p class="title is-4">Table of Content</p>
+          {{ .TableOfContents }}
+        </div>
+      {{ end }}
+      
+      {{ if .Params.series }}
+        <div class="serie-single">
+          <p class="title is-4">Serie</p>
+
+          {{- $currentPage := . -}}
+          {{- $series_name := index .Params.series 0 -}}
+          <ul>
             {{- range .Site.RegularPages.ByDate -}}
               {{- if in .Params.series $series_name -}}
-
                 {{- if not (eq $currentPage.RelPermalink .RelPermalink) -}}
-                  <a href="{{ .RelPermalink }}" title="{{ .Name }} page"><li>{{ .PublishDate.Format "02-01-2006" }} - {{ .Title }}</li></a>
+                  <a href="{{ .RelPermalink }}" title="{{ .Name }} page"><li><span class="small">{{ .Lastmod.Format "02.01.06" }}</span> - {{ .Title }}</li></a>
                 {{- else -}}
-                  <li class="is-active">{{ .PublishDate.Format "02-01-2006" }} - {{ .Title }}</li>
+                  <li class="is-active">{{ .Lastmod.Format "02.01.06" }} - {{ .Title }}</li>
                 {{- end -}}
                 
               {{- end -}}
             {{- end -}}
-            
-          </div>
-        {{ end }}
-
-      </div>
-    </div>
-
-    {{ if .Params.series }}
-      <div class="columns">
-        <div class="column is-9 box">
-          {{ partial "series-footer" . }}
+          </ul>
+          
         </div>
-      </div>
-    {{ end }}
+      {{ end }}
+    </div>
 
   </div>
 
   {{ if .Params.authors }}
     <div class="columns">
-      <div class="column is-9 card-horiz-img is-paddingless">
+      <div class="column is-9 card-horiz-img">
 
-          <article class="card is-horizontal">
+          <aside class="card is-horizontal">
             {{ range (.GetTerms "authors") }}
               <div class="card-image">
                 <!-- // HACK: Is this right? -->
@@ -161,20 +180,19 @@
                 </div>
               </div>
             {{ end }}
-          </article>
+          </aside>
 
       </div>
     </div>
   {{ end }}
 
   <!-- THANKS: https://www.pakstech.com/blog/hugo-related-pages/ -->
- 
   {{ if len (where (.Site.RegularPages.Related .) "Type" "articles") }}
     <div class="columns">
-      <div class="column is-9 is-paddingless" >
-        <div class="content">
-          <h2>Related content</h2>
-        </div>
+      <div class="column related-content-single is-9" >
+        <!-- <div class="content">
+          <p class="title is-4">Related content</p>
+        </div> -->
         <div class="columns">
           {{- $related := (where (.Site.RegularPages.Related .) "Type" "articles") | first 3 -}}
           {{- range $related -}}
@@ -189,7 +207,10 @@
                       </a>
                     {{- end -}}
                     {{- with .Params.images -}}
-                      {{ range first 1 . }}<figcaption>Byline: {{ .byline | safeHTML }}</figcaption>{{ end }}
+                      {{ range first 1 . }}<figcaption>
+                        <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#information-line"></use></svg>
+                        {{ .byline | safeHTML }}</figcaption>
+                      {{ end }}
                     {{- end -}}
                   </figure>
                 </div>

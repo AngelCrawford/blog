@@ -17,7 +17,14 @@ contains:
 - code
 images:
 - byline: "Test"
+icons:
+- src: "windows-line"
+  color: "#456987"
+  tooltip: "Some Tooltip info"
 ---
+
+{{< details "Genre" "Some, Tags, I Want" >}}
+{{< rating "Gesamt" "4" >}}
 
 ## Headline
 Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, 
@@ -27,22 +34,13 @@ sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, 
 
 ```html
   <meta name="author" content="Angel Crawford" />
-  <meta name="description" content="The last theme you&#39;ll ever need. Maybe." />
-  <meta name="robots" content="index, follow, archive"><meta name="referrer" content="always" />
 ```
 
 ```go {linenos=table,hl_lines=[8,"15-17"],linenostart=199}
-// GetTitleFunc returns a func that can be used to transform a string to
-// title case.
 // If an unknown or empty style is provided, AP style is what you get.
 func GetTitleFunc(style string) func(s string) string {
   switch strings.ToLower(style) {
   case "go":
     return strings.Title
-  case "chicago":
-    return transform.NewTitleConverter(transform.ChicagoStyle)
-  default:
-    return transform.NewTitleConverter(transform.APStyle)
-  }
 }
 ```

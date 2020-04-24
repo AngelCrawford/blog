@@ -26,10 +26,14 @@
   }
   .card-image figcaption {
     svg {
-      width: 21px;
-      height: 21px;
-      padding-top: 5px;
+      width: 20px;
+      height: 20px;
       fill: $primary;
+      -ms-transform: translate(0px, 6px);
+      -webkit-transform: translate(0px, 6px);
+      -o-transform: translate(0px, 6px);
+      -moz-transform: translate(0px, 6px);
+    
     }
     z-index: 2;
     position: absolute;
@@ -216,7 +220,7 @@
     a {
       color: $primary;
       &:hover {
-        color: $text;
+        color: $hover;
       }
     }
     .heading.author {

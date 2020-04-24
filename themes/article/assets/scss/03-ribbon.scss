@@ -19,7 +19,7 @@
   border-left: none;
   transition: all .3s ease-out;
 }
-.ribbon a {
+.ribbon a, .is-single-page {
   color: $text;
   display: block;
   font-weight: 600;
@@ -31,7 +31,33 @@
   }
 }
 
-.ribbon:hover {
+.is-single-page {
+  color: $background;
+  border: none;
+  text-transform: uppercase;
+  font-weight: 600;
+  top: .3em;
+  left: -1.5em;
+  @include font-bold;
+  font-size: .8em;
+  &:after {
+    content: "";
+    // height: 20px;
+    // width: 20px;
+    width: 0px;
+    height: 0px;
+    position: absolute;
+    margin-left: 9px;
+    margin-top: -4px;
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+    border-style: solid;
+    border-width: 16px 0 16px 16px;
+    border-color: transparent transparent transparent $primary;
+  }
+}
+
+.ribbon:not(.is-single-page):hover {
   background-color: $hover !important;
   font-weight: 600;
   box-shadow: inset 5px 5px 5px rgba(#000, .3), inset -5px -5px 5px rgba($text, .07);

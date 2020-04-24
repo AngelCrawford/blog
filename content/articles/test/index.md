@@ -8,6 +8,7 @@ categories: "Kategorie 1"
 series: ["Seriennummer"]
 contains:
 - code
+- gallery
 authors: jdksaj
 title: "Test 123"
 year: "2020"
@@ -29,18 +30,9 @@ icons:
 
 {{< details "Genre" "Some, Tags, I Want" >}}
 {{< details "Info" "Some, Tags, I Want" >}}
-
-{{< rating "Storyline" "0" >}}
-{{< rating "Storyline" "0.5" >}}
-{{< rating "Storyline" "1" >}}
-{{< rating "Storyline" "1.5" >}}
-{{< rating "Storyline" "2" >}}
+{{< rating "Gesamt" "4" >}}
 {{< rating "Storyline" "2.5" >}}
-{{< rating "Storyline" "3" >}}
-{{< rating "Storyline" "3.5" >}}
-{{< rating "Storyline" "4" >}}
-{{< rating "Storyline" "4.5" >}}
-{{< rating "Storyline" "5" >}}
+{{< rating "Schauspieler" "5" >}}
 
 ## Introduction
 
