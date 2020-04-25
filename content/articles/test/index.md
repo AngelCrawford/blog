@@ -29,9 +29,13 @@ featured_image:
 ---
 
 {{< details "Genre" "Some, Tags, I Want" >}}
+
 {{< details "Info" "Some, Tags, I Want" >}}
+
 {{< rating "Gesamt" "4" >}}
+
 {{< rating "Storyline" "2.5" >}}
+
 {{< rating "Schauspieler" "5" >}}
 
 ## Introduction
