@@ -92,9 +92,10 @@ h2.subtitle {
   margin-bottom: 3em;
 
   .date-single, 
-  .tags-wrapper-single,
+  .tags-single,
   .reading-time-single,
-  .series-single {
+  .series-single,
+  .ratings-single {
     font-size: 13px;
     letter-spacing: 0;
     color: $secondary;
@@ -105,12 +106,22 @@ h2.subtitle {
       -o-transform: translate(0px, 5px);
       -moz-transform: translate(0px, 5px);
     }
+    .remix {
+      fill: $secondary;
+      width: 15px;
+      height: 15px;
+      -ms-transform: translate(0px, 2px);
+      -webkit-transform: translate(0px, 2px);
+      -o-transform: translate(0px, 2px);
+      -moz-transform: translate(0px, 2px);
+
+    }
   }
   .date-single time:last-of-type .remix-small {
     margin-right: 0;
   }
   .date-single, 
-  .tags-wrapper-single,
+  .tags-single,
   .reading-time-single {
     text-transform: uppercase;
     font-size: 11px;

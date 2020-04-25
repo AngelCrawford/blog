@@ -68,7 +68,7 @@
         </div>
 
         {{- if .Params.tags -}}
-          <div class="tags-wrapper-single">
+          <div class="tags-single">
             <svg class='remix-small'>
               <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#price-tag-3-line"></use>
             </svg>
@@ -85,10 +85,12 @@
         </div>
 
         {{- if .Params.rating -}}
-          <svg class='remix-small'>
-            <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#time-line"></use>
-          </svg> 
-          <span class="rating-single"><small>{{ .Params.rating }}</small>{{ partial "rating" . }}</span>
+          <div class="ratings-single">
+            <svg class='remix-small'>
+              <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#time-line"></use>
+            </svg> 
+            {{ partial "rating" . }} ({{ .Params.rating }})
+          </div>
         {{- end -}}
 
         {{ if .Params.series }}
@@ -97,7 +99,7 @@
             <svg class='remix-small'>
               <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#stack-line"></use>
             </svg>
-            This post is part of the <a href="{{.Site.BaseURL}}/series/{{$name | urlize}}">{{$name}}</a> series.
+            This post is part of the <a href="{{.Site.BaseURL}}/series/{{$name | urlize}}">{{ $name }}</a> series.
           </div>
         {{ end }}
       </div>
@@ -112,9 +114,9 @@
       {{ if .Params.series }}
         <div class="serie-single">
           <p class="title is-4">Serie</p>
-
           {{- $currentPage := . -}}
           {{- $series_name := index .Params.series 0 -}}
+          <p class="title is-6"><a href="{{.Site.BaseURL}}/series/{{$series_name | urlize}}">{{ $series_name }}</a></p>
           <ul>
             {{- range .Site.RegularPages.ByDate -}}
               {{- if in .Params.series $series_name -}}

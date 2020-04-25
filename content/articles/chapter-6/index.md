@@ -15,8 +15,9 @@ year: "2017"
 month: "2017/04"
 contains:
 - code
-images:
-- byline: "Test"
+featured_image:
+- src: ./featured.jpg
+  byline: TEST <a href='#'>test</a>
 icons:
 - src: "windows-line"
   color: "#456987"

@@ -13,9 +13,9 @@ rating: "3.5" # 0-5 with .5 possible, will show a rating on the home page
 authors: angel
 year: "2020"
 month: "2020/03"
-images:
-- src: "./name.jpg"
-  byline: "Idee <a href='#'>test</a>"
+featured_image:
+- src: ./featured.jpg
+  byline: TEST <a href='#'>test</a>
 icons:
 - src: "windows-line"
   color: "#456987"

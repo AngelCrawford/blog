@@ -1,8 +1,8 @@
 ---
 title: "Tags"
-images: 
-- src: './124-1200x500.jpg'
-  byline: "dikasjdsa"
+featured_image:
+- src: ./featured.jpg
+  byline: TEST <a href='#'>test</a>
 description: "The last theme you'll ever need. Maybe."
 ---
 

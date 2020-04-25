@@ -4,9 +4,9 @@ omit_header_text: true
 description: We'd love to hear from you
 type: page
 layout: single
-images:
-- src: "./779-2000x1000.jpg"
-  byline: "Some byline text"
+featured_image:
+- src: ./featured.jpg
+  byline: TEST <a href='#'>test</a>
 menu:
   footer:
     weight: 30

@@ -13,18 +13,17 @@
       <!-- // HACK: Is this right? -->
       <figure class="image is-2by3">
         <a href="{{ .Permalink }}">
-          {{- range first 1 (.Resources.ByType "image") -}}
-            {{- $img := .Fill "320x480" | images.Filter (images.Sepia "100") -}}
-              <img src="{{ $img.RelPermalink }}" alt="{{ $.Title }}">
+          {{- $img := (.Resources.ByType "image").GetMatch "featured*" -}}
+          {{- with $img -}}
+            {{- $resize := .Fill "320x480" | images.Filter (images.Sepia "100") -}}
+              <img src="{{ $resize.RelPermalink }}" alt="{{ $.Title }}">
           {{- end -}}
         </a>
-        {{- with .Params.images -}}
-          {{ range first 1 . }}
-            <figcaption>
-              <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#information-line"></use></svg>
-              {{ .byline | safeHTML }}
-            </figcaption>
-          {{ end }}
+        {{- range .Params.featured_image -}}
+          <figcaption>
+            <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#information-line"></use></svg>
+            {{ .byline | safeHTML }}
+          </figcaption>
         {{- end -}}
       </figure>
     </div>

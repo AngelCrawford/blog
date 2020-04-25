@@ -212,7 +212,32 @@
     width: 100%;
     z-index: 1;
     opacity: .5;
+    figcaption {
+      svg {
+          width: 20px;
+          height: 20px;
+          fill: $primary;
+          -ms-transform: translate(0px, 6px);
+          -webkit-transform: translate(0px, 6px);
+          -o-transform: translate(0px, 6px);
+          -moz-transform: translate(0px, 6px);  
+      }
+      z-index: 2;
+      position: absolute;
+      font-size: 11px;
+      bottom: 3.5em;
+      left: .75em;
+      color: $text;
+      width: 100%;
+      height: 37px;
+      overflow: hidden;
+    }
   }
+  &:hover figure.image.img-quote figcaption {
+    opacity: 1;
+    transition: .3s;
+  }
+
   .card-content {
     padding: 5rem 3rem;
     z-index: 50;

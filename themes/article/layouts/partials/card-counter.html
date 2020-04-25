@@ -4,19 +4,17 @@
       <a href="{{ .Page.Permalink }}">
         <figure class="image is-3by2">
           <a href="{{ .Page.Permalink }}">
-            {{- range first 1 (.Page.Resources.ByType "image") -}}
-              {{- $img := .Fill "480x320" | images.Filter (images.Sepia "100") -}}
-                <img src="{{ $img.RelPermalink }}" alt="{{ .Title }}">
+            {{- $img := (.Page.Resources.ByType "image").GetMatch "featured*" -}}
+            {{- with $img -}}
+              {{- $resize := .Fill "480x320" | images.Filter (images.Sepia "100") -}}
+                <img src="{{ $resize.RelPermalink }}" alt="{{ .Title }}">
             {{- end -}}
           </a>
-          {{- with .Page.Params.images -}}
-            {{ range first 1 . }}
-              <figcaption>
-                <svg class='remix'>
-                  <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#information-line"></use>
-                </svg> {{ .byline | safeHTML }}
-              </figcaption>
-            {{ end }}
+          {{- range .Page.Params.featured_image -}}
+            <figcaption>
+              <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#information-line"></use></svg>
+              {{ .byline | safeHTML }}
+            </figcaption>
           {{- end -}}
         </figure>
       </a>

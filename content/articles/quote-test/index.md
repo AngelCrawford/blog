@@ -13,6 +13,9 @@ link: https://bulma.io/documentation/modifiers/helpers/
 _build:
   render: false
   list: true
+featured_image:
+- src: ./featured.jpg
+  byline: TEST <a href='#'>test</a>
 ---
 
 There are two hard things in computer science: cache invalidation, naming things, and off-by-one errors.

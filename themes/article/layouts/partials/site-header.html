@@ -1,7 +1,7 @@
-{{ range first 1 (.Resources.ByType "image") }}
-  {{ $fill := .Fill "1700x320" | images.Filter (images.Sepia "80") }}
-  {{ $img := $fill.RelPermalink }} 
-  <header class="header" style="background-image: url('{{ $img }}');">
+{{ $img := (.Resources.ByType "image").GetMatch "featured*" }}
+{{ with $img }}
+   {{ $resize := .Fill "1700x320" | images.Filter (images.Sepia "100") }}
+   <header class="header" style="background-image: url('{{ $resize.RelPermalink }}');">
 {{ end }}
  
     <div class="brand-logo">
@@ -12,15 +12,17 @@
 
     {{ partial "site-navigation.html" .}}
 
-    {{ with .Params.images }}
-      {{ range first 1 . }}
-        <div class="byline page-header">Image by: {{ .byline | safeHTML }}</div>
-      {{ end }}
+    {{ range .Params.featured_image }}
+      <div class="byline page-header">
+        <svg class='remix'>
+          <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#information-line"></use>
+        </svg> {{ .byline | safeHTML }}
+      </div>
     {{ end }}
   </header>
 
   <!-- // TODO: Wenn Artikel Single Page, nicht anzeigen! Das befindet sich bereits in der single.html -->
-  {{ if not .IsHome }}
+  {{ if and (not .IsHome) (not (eq .Section "articles")) }}
     <div class="wrapper">
       <h1 class="title">{{ .Title | default .Site.Title }}</h1>
       {{ with .Params.description }}

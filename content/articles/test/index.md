@@ -13,11 +13,7 @@ authors: jdksaj
 title: "Test 123"
 year: "2020"
 month: "2020/02"
-images: 
-- src: "./799-500x700.jpg"
-  byline: "jdsklajdskl <a href='#'>test</a>"
-- src: "./attachment_85857177-e1574291495328.png"
-  byline: "Test für das Attachment"
+rating: "3.5" # 0-5 with .5 possible, will show a rating on the home page
 icons:
 - src: "windows-line"
   color: "#456987"
@@ -26,6 +22,10 @@ icons:
   color: "tomato"
 - src: "android-line"
   color: "green"
+featured_image:
+- src: ./featured.jpg
+  byline: TEST <a href='#'>test</a>
+  
 ---
 
 {{< details "Genre" "Some, Tags, I Want" >}}
