@@ -23,10 +23,10 @@
 
   <!-- // TODO: Wenn Artikel Single Page, nicht anzeigen! Das befindet sich bereits in der single.html -->
   {{ if and (not .IsHome) (not (eq .Section "articles")) }}
-    <div class="wrapper">
-      <h1 class="title">{{ .Title | default .Site.Title }}</h1>
-      {{ with .Params.description }}
+    <div class="header-wrapper">
+      <h1 class="title {{if not .Params.description}} no-subtitle{{end}}">{{ .Title | default .Site.Title }}</h1>
+      {{- with .Params.description -}}
         <h2 class="subtitle">{{ . | truncate 160 }}</h2>
-      {{ end }}
+      {{- end -}}
     </div>
   {{ end }}

@@ -5,10 +5,10 @@
     <div class="column is-single-top is-9">
       <article class="content box">
 
-        <h1 class="title">{{ .Title | default .Site.Title }}</h1>
-        {{ with .Params.description }}
+        <h1 class="title{{if not .Params.description}} no-subtitle{{end}}">{{ .Title | default .Site.Title }}</h1>
+        {{- with .Params.description -}}
           <h2 class="subtitle">{{ . | truncate 160 }}</h2>
-        {{ end }}
+        {{- end -}}
 
         <div class="details-single has-ribbon">
           {{ if .Params.icons }}
