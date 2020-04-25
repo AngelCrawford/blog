@@ -24,7 +24,23 @@
   <!-- // TODO: Wenn Artikel Single Page, nicht anzeigen! Das befindet sich bereits in der single.html -->
   {{ if and (not .IsHome) (not (eq .Section "articles")) }}
     <div class="header-wrapper">
-      <h1 class="title {{if not .Params.description}} no-subtitle{{end}}">{{ .Title | default .Site.Title }}</h1>
+      <h1 class="title {{if not .Params.description}} no-subtitle{{end}}">
+        
+        {{- if eq .Section "tags" -}}
+          {{ if eq .Kind "taxonomy" }}Tag: {{ end }}
+        {{- else if (eq .Section "series") -}}
+          {{ if eq .Kind "taxonomy" }}Serie: {{ end }}
+        {{- else if (eq .Section "authors") -}}
+          {{ if eq .Kind "taxonomy" }}Autor: {{ end }}
+        {{- else if (eq .Section "categories") -}}
+          {{ if eq .Kind "taxonomy" }}Kategorie: {{ end }}
+        {{- else if (eq .Section "month") -}}
+          Monat:&nbsp;
+        {{- else if (eq .Section "year") -}}
+          Jahr&nbsp;
+        {{- end -}}
+        {{ .Title | default .Site.Title }}
+      </h1>
       {{- with .Params.description -}}
         <h2 class="subtitle">{{ . | truncate 160 }}</h2>
       {{- end -}}
