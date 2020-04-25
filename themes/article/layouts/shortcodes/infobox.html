@@ -1,4 +1,26 @@
 {{ $_hugo_config := `{ "version": 1 }` }}
 <div class="message{{- " " -}}{{- with .Get "theme" -}}is-{{.}}{{- else -}}is-dark{{- end -}}" role="alert">
-	<div class="message-body">{{- .Inner -}}</div>
+	<div class="message-body">
+
+		{{- with .Get "theme" -}}
+			{{ if eq "info" . }}
+				<svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#information-line"></use></svg>
+			{{ else if eq "question" . }}
+				<svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#question-line"></use></svg>
+			{{ else if eq "warning" . }}
+				<svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#error-warning-line"></use></svg>
+			{{ else if eq "success" . }}
+					<svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#check-fill"></use></svg>
+			{{ else if eq "danger" . }}
+				<svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#alert-line"></use></svg>
+			{{ else }}
+				<svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#information-line"></use></svg>
+			{{ end }}
+
+		{{ else }}
+			<svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#bookmark-line"></use></svg>
+		{{end}}
+		
+		{{- .Inner -}}
+	</div>
 </div>

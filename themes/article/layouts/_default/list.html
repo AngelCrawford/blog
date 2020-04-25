@@ -1,25 +1,37 @@
 {{ define "main" }}
 
-  <h1 class="title">Layoutseite: _default/list.html</h1>
+  <div class="header-wrapper-articles">  
+    <h1 class="title {{if not .Params.description}} no-subtitle{{end}}">Articles</h1>
+    {{- with .Params.description -}}
+      <h2 class="subtitle">{{ . | truncate 160 }}</h2>
+    {{- end -}}
+  </div>
 
   <div class="content">
     {{ .Content }}
   </div>
-    
+
+  {{ if eq .Section "authors" }}
+    <div class="author-icons-wrapper">
+      {{ range $.Params.socials }}
+        <a data-tooltip="{{ .name }}" href="{{ .src }}" class="author-icons">
+          <svg class='remix-big-primary'>
+            <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#{{ .icon }}-line"></use>
+          </svg>
+        </a>
+      {{ end }}
+    </div>
+  {{ end }}
+
   <div class="columns is-multiline">
     
-    {{ $paginator := .Paginate (where site.RegularPages "Type" "articles") }}
-    {{ range $paginator.Pages }}
+    {{ $paginator := .Paginator.Pages  }}
+    {{ range $paginator }}
 
-      {{ if eq .Params.format "quote" }}
-        {{ partial "formats/quote-summary.html" . }}
-      {{ else }}
-        {{ partial "formats/article-summary.html" . }}
-      {{ end }}
+      {{ partial "cards" . }}
     {{ end }}
   </div>
 
-  {{ partial "pagination.html" . }}
+  {{ partial "pagination" . }}
 
-  
 {{ end }}

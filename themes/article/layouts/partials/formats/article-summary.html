@@ -50,7 +50,7 @@
   
       <div class="content">
         {{- if .Params.rating -}}
-          <div class="rating">{{ partial "rating" . }}</div>
+          <div class="rating">{{ partial "rating" . }} ({{ .Params.rating }})</div>
         {{- end -}}
 
         {{ if eq .Params.weight 1 }}
