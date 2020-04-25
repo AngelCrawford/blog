@@ -75,8 +75,9 @@ a, a h2 {
   }
 }
 
-p.title, h1.title,
-h2, h1 {
+p.title, h1.title, h1, h1.title,
+h2, h2.title,
+h3, h3.title {
   color: $primary;
 }
 

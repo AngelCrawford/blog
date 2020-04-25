@@ -10,7 +10,7 @@
 			<h2 class="title">{{ .Key }}</h2>
 				
 			{{ range (.Pages.GroupByDate "1") }}
-				<h2 class="title">{{ .Key }}</h2>
+				<h3 class="title">{{ .Key }}</h2>
 				
 				<div class="columns is-mobile is-multiline">
 					{{ range .Pages }}
@@ -27,7 +27,12 @@
 												{{- end -}}
 											</a>
 											{{- with .Params.images -}}
-												{{ range first 1 . }}<figcaption>Byline: {{ .byline | safeHTML }}</figcaption>{{ end }}
+												{{ range first 1 . }}
+													<figcaption>
+														<svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#information-line"></use></svg>
+														{{ .byline | safeHTML }}
+													</figcaption>
+												{{ end }}
 											{{- end -}}
 										</figure>
 									</a>
@@ -36,9 +41,14 @@
 									<div>
 										<a class="title is-5 is-size-6-mobile" href="{{ .Page.Permalink }}">{{ .Page.Title }}</a><br />
 										{{ if isset .Params "tags" }}
-											{{ range .Params.tags }}
-												<a href="/tags/{{ . | urlize }}">{{ . }}</a> ·
-											{{ end }}
+											<div class="tags-wrapper">
+												<svg class='remix-small'>
+													<use xlink:href="/fonts/remixicon/remixicon.symbol.svg#price-tag-3-line"></use>
+												</svg>
+												{{- range .Params.tags -}}
+													<a href="/tags/{{ . | urlize }}" class="hashtags">#{{ . }} </a> 
+												{{- end -}}
+											</div>
 										{{ end }}
 									</div>
 								</div>
