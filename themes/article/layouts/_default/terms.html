@@ -9,22 +9,22 @@
 
     {{- if eq .Section "tags" -}}
       {{- range .Site.Taxonomies.tags.ByCount -}}
-        {{ partial "card-summary" . }}
+        {{ partial "card-counter" . }}
       {{- end -}}
     
     {{ else if (eq .Section "series") }}
       {{- range .Site.Taxonomies.series.ByCount -}}
-        {{ partial "card-summary" . }}
+        {{ partial "card-counter" . }}
       {{- end -}}
 
     {{ else if (eq .Section "authors") }}
       {{- range .Site.Taxonomies.authors.ByCount -}}
-        {{ partial "card-summary" . }}
+        {{ partial "card-counter" . }}
       {{- end -}}
 
     {{- else -}}
       {{- range .Site.Taxonomies.categories.ByCount -}}
-        {{ partial "card-summary" . }}
+        {{ partial "card-counter" . }}
       {{- end -}}
 
     {{- end -}}

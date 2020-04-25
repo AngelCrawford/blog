@@ -14,8 +14,7 @@
               <figcaption>
                 <svg class='remix'>
                   <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#information-line"></use>
-                </svg>
-                Byline: {{ .byline | safeHTML }}
+                </svg> {{ .byline | safeHTML }}
               </figcaption>
             {{ end }}
           {{- end -}}

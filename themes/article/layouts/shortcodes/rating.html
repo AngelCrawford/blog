@@ -4,103 +4,37 @@
 <div class="ratings"><p class="title is-6">{{ $heading }}</p>
   <div class="stars">
     {{ with (eq $stars "0") }}
-      <span class="stars-wrapper">
-        <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#star-line"></use></svg>
-        <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#star-line"></use></svg>
-        <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#star-line"></use></svg>
-        <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#star-line"></use></svg>
-        <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#star-line"></use></svg>
-      </span>
+      {{ partial "ratings/stars-0_0" }}
     {{ end }}
     {{ with (eq $stars "0.5") }}
-      <span class="stars-wrapper">
-        <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#star-half-fill"></use></svg>
-        <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#star-line"></use></svg>
-        <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#star-line"></use></svg>
-        <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#star-line"></use></svg>
-        <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#star-line"></use></svg>
-      </span>
+      {{ partial "ratings/stars-0_5" }}
     {{ end }}
     {{ with (eq $stars "1") }}
-      <span class="stars-wrapper">
-        <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#star-fill"></use></svg>
-        <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#star-line"></use></svg>
-        <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#star-line"></use></svg>
-        <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#star-line"></use></svg>
-        <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#star-line"></use></svg>
-      </span>
+      {{ partial "ratings/stars-1_0" }}
     {{ end }}
     {{ with (eq $stars "1.5") }}
-      <span class="stars-wrapper">
-        <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#star-fill"></use></svg>
-        <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#star-half-fill"></use></svg>
-        <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#star-line"></use></svg>
-        <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#star-line"></use></svg>
-        <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#star-line"></use></svg>
-      </span>
+      {{ partial "ratings/stars-1_5" }}
     {{ end }}
     {{ with (eq $stars "2") }}
-      <span class="stars-wrapper">
-        <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#star-fill"></use></svg>
-        <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#star-fill"></use></svg>
-        <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#star-line"></use></svg>
-        <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#star-line"></use></svg>
-        <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#star-line"></use></svg>
-      </span>
+      {{ partial "ratings/stars-2_0" }}
     {{ end }}
     {{ with (eq $stars "2.5") }}
-      <span class="stars-wrapper">
-        <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#star-fill"></use></svg>
-        <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#star-fill"></use></svg>
-        <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#star-half-fill"></use></svg>
-        <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#star-line"></use></svg>
-        <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#star-line"></use></svg>
-      </span>
+      {{ partial "ratings/stars-2_5" }}
     {{ end }}
     {{ with (eq $stars "3") }}
-      <span class="stars-wrapper">
-        <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#star-fill"></use></svg>
-        <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#star-fill"></use></svg>
-        <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#star-fill"></use></svg>
-        <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#star-line"></use></svg>
-        <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#star-line"></use></svg>
-      </span>
+      {{ partial "ratings/stars-3_0" }}
     {{ end }}
     {{ with (eq $stars "3.5") }}
-      <span class="stars-wrapper">
-        <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#star-fill"></use></svg>
-        <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#star-fill"></use></svg>
-        <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#star-fill"></use></svg>
-        <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#star-half-fill"></use></svg>
-        <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#star-line"></use></svg>
-      </span>
+      {{ partial "ratings/stars-3_5" }}
     {{ end }}
     {{ with (eq $stars "4") }}
-      <span class="stars-wrapper">
-        <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#star-fill"></use></svg>
-        <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#star-fill"></use></svg>
-        <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#star-fill"></use></svg>
-        <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#star-fill"></use></svg>
-        <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#star-line"></use></svg>
-      </span>
+      {{ partial "ratings/stars-4_0" }}
     {{ end }}
     {{ with (eq $stars "4.5") }}
-      <span class="stars-wrapper">
-        <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#star-fill"></use></svg>
-        <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#star-fill"></use></svg>
-        <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#star-fill"></use></svg>
-        <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#star-fill"></use></svg>
-        <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#star-half-fill"></use></svg>
-      </span>
+      {{ partial "ratings/stars-4_5" }}
     {{ end }}
     {{ with (eq $stars "5") }}
-      <span class="stars-wrapper">
-        <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#star-fill"></use></svg>
-        <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#star-fill"></use></svg>
-        <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#star-fill"></use></svg>
-        <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#star-fill"></use></svg>
-        <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#star-fill"></use></svg>
-      </span>
+      {{ partial "ratings/stars-5_0" }}
     {{ end }}
   </div> 
   <span class="star-count">({{ $stars }})</span>

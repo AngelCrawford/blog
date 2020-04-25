@@ -12,9 +12,9 @@
     {{ range $paginator.Pages }}
 
       {{ if eq .Params.format "quote" }}
-        {{ partial "quote-summary.html" . }}
+        {{ partial "formats/quote-summary.html" . }}
       {{ else }}
-        {{ partial "summary.html" . }}
+        {{ partial "formats/article-summary.html" . }}
       {{ end }}
     {{ end }}
   </div>
