@@ -1,5 +1,11 @@
 <nav class="navbar" aria-label="main navigation">
   <div class="navbar-brand">
+
+    <!-- // TODO: Desktop hidden, aber Mobile sichtbar class: "is-hidden-desktop" -->
+    <a class="is-mobile navbar-item {{ if .Page.IsHome }}is-active{{ end }} navbar-logo " href="/" title="{{ .Name }} page">
+      <img src="/images/logo_back.png"><span>{{ .Site.Title }}</span>
+    </a>
+
     <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarHeader">
       <span aria-hidden="true"></span>
       <span aria-hidden="true"></span>

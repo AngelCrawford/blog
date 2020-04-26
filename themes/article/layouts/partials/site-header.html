@@ -1,16 +1,16 @@
-{{ $img := (.Resources.ByType "image").GetMatch "featured*" }}
-{{ with $img }}
-   {{ $resize := .Fill "1700x320" | images.Filter (images.Sepia "100") }}
-   <header class="header" style="background-image: url('{{ $resize.RelPermalink }}');">
-{{ end }}
- 
+    {{ $img := (.Resources.ByType "image").GetMatch "featured*" }}
+    {{ with $img }}
+      {{ $resize := .Fill "1700x320" | images.Filter (images.Sepia "100") }}
+      <header class="header" style="background-image: url('{{ $resize.RelPermalink }}');">
+    {{ end }}
+    
     <div class="brand-logo">
       <a class="brand" href="{{ .Site.BaseURL }}">
         <div class="textlogo" data-heading="{{ .Site.Title | safeHTML }}"><span class="shimmer">{{ .Site.Title | safeHTML }}</span></div>
       </a>
     </div>
 
-    {{ partial "site-navigation.html" .}}
+    {{ partial "site-navigation.html" . }}
 
     {{ range .Params.featured_image }}
       <div class="byline page-header">
