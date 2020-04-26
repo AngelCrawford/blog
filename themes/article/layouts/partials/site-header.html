@@ -24,8 +24,16 @@
   <!-- // TODO: Wenn Artikel Single Page, nicht anzeigen! Das befindet sich bereits in der single.html -->
   {{ if and (not .IsHome) (not (eq .Section "articles")) }}
     <div class="header-wrapper">
-      <h1 class="title {{if not .Params.description}} no-subtitle{{end}}">
-        
+      {{ range .Site.Params.categoryColor }}
+        {{ if eq .name $.Title }}
+          <style>
+            h1.categorie-color {
+              color: {{ .color }};
+            }
+          </style>
+        {{ end }}
+      {{ end }}
+      <h1 class="title categorie-color {{if not .Params.description}} no-subtitle{{end}}">
         {{- if eq .Section "tags" -}}
           {{ if eq .Kind "taxonomy" }}Tag: {{ end }}
         {{- else if (eq .Section "series") -}}
@@ -39,6 +47,7 @@
         {{- else if (eq .Section "year") -}}
           Jahr&nbsp;
         {{- end -}}
+        
         {{ .Title | default .Site.Title }}
       </h1>
       {{- with .Params.description -}}

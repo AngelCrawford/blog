@@ -23,9 +23,17 @@
       {{- end -}}
 
     {{- else -}}
+
+      {{ $categoryColor := .Scratch }}
+      {{ range .Site.Params.categoryColor }}
+        {{ $categoryColor.SetInMap "color" .name .color }}
+      {{ end }}
+      
       {{- range .Site.Taxonomies.categories.ByCount -}}
-        {{ partial "card-counter" . }}
+        {{ partial "card-counter" (dict "context" . "color" $categoryColor) }}
       {{- end -}}
+
+      {{ $categoryColor.Delete "color" }}
 
     {{- end -}}
     
