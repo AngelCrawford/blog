@@ -7,6 +7,7 @@ publishdate: 2020-03-16
 tags:
 - eins
 - zwei
+- quote
 categories: "Movie"
 format: rating # tweet/rating design on the home page
 rating: "3.5" # 0-5 with .5 possible, will show a rating on the home page

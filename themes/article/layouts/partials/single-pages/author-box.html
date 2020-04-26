@@ -1,0 +1,52 @@
+<div class="columns">
+  <div class="column is-9 card-horiz-img">
+
+      <aside class="card is-horizontal">
+        {{ range (.GetTerms "authors") }}
+          <div class="card-image">
+            <!-- // HACK: Is this right? -->
+            <figure class="image is-2by3">
+              <a href="{{ .Permalink }}">
+                {{- range first 1 (.Resources.ByType "image") -}}
+                  {{- $img := .Fill "320x480" | images.Filter (images.Sepia "100") -}}
+                  <img src="{{ $img.RelPermalink }}" alt="{{ $.Title }}">
+                {{- end -}}
+              </a>
+            </figure>
+          </div>
+      
+          <div class="card-content">
+            <div class="card-content-wrapper">
+              <div class="media-content">
+                <a class="title is-4" href="{{ .RelPermalink }}"><h2>{{ .Title }}</h2></a>
+                {{ if .Params.birthdate }}
+                  <span class="heading">
+                    <svg class='remix-small'>
+                      <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#cake-line"></use>
+                    </svg> {{ .Params.birthdate }}
+                  </span>
+                {{ end }}
+              </div>
+          
+              <div class="content">
+                {{ .Content }}
+              </div>
+
+              <footer class="card-footer">
+                {{ range .Params.socials }}
+                  <span class="card-footer-item">
+                    <a data-tooltip="{{ .name }}" href="{{ .src }}">
+                      <svg class='remix-big-primary'>
+                        <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#{{ .icon }}-line"></use>
+                      </svg>
+                    </a>
+                  </span>
+                {{ end }}
+              </footer>
+            </div>
+          </div>
+        {{ end }}
+      </aside>
+
+  </div>
+</div>

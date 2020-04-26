@@ -6,7 +6,6 @@ tags:
 - quote
 categories: ["Kategorie 1"]
 authors: angel
-format: quote
 year: "2020"
 month: "2020/03"
 link: https://bulma.io/documentation/modifiers/helpers/

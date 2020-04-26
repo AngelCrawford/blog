@@ -6,7 +6,7 @@
 
   <div class="columns is-multiline">
 
-    {{ $paginator := .Paginate (where site.RegularPages "Type" "articles") }}
+    {{ $paginator := .Paginate (where site.RegularPages "Type" "in" (slice "articles" "quotes") ) }}
     {{ range $paginator.Pages }}
 
       {{ partial "cards" . }}

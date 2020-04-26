@@ -9,17 +9,17 @@
 
     {{- if eq .Section "tags" -}}
       {{- range .Site.Taxonomies.tags.ByCount -}}
-        {{ partial "card-counter" . }}
+        {{ partial "card-counter" (dict "context" . ) }}
       {{- end -}}
     
     {{ else if (eq .Section "series") }}
       {{- range .Site.Taxonomies.series.ByCount -}}
-        {{ partial "card-counter" . }}
+        {{ partial "card-counter" (dict "context" . ) }}
       {{- end -}}
 
     {{ else if (eq .Section "authors") }}
       {{- range .Site.Taxonomies.authors.ByCount -}}
-        {{ partial "card-counter" . }}
+        {{ partial "card-counter" (dict "context" . ) }}
       {{- end -}}
 
     {{- else -}}

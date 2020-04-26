@@ -6,7 +6,6 @@ tags:
 - eins
 - zwei
 categories: ""
-format: quote
 authors: angel
 year: "{{ now.Format "2006" }}"
 month: "{{ now.Format "2006/01" }}"

@@ -10,7 +10,7 @@
     transition: all .3s ease-out;
     background-color: rgba(#000, .2);
     opacity: .7;
-    margin: .5em;
+    margin: 2em .5em .5em .5em;
     .remix {
       fill: darken($hover, 45%);
       transition: all .3s ease-out;
@@ -29,7 +29,7 @@ a.pagination-next {
   box-shadow: inset 5px 5px 5px rgba(#000, .3), inset -5px -5px 5px rgba($text, .07);
   transition: all .3s ease-out;
   background-color: rgba(#000, .2);
-  margin: .5em;
+  margin: 2em .5em .5em .5em;
 
   &.is-current, &.is-current:hover, &:hover {
     border: 1px solid $primary;

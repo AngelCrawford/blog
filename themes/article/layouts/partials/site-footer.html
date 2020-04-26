@@ -21,13 +21,17 @@
     {{- end -}}
 
     <p>
-      There are currently {{ len (where .Site.RegularPages "Section" "=" "articles") }} <a href="/articles">articles</a> on this site.
+      There are currently {{ len (where .Site.RegularPages "Type" "in" (slice "articles" "quotes") ) }} <a href="/articles">articles</a> on this site.
     </p>
     <p>
       Statistik: <br />
-      {{ $count := len (where (where .Site.RegularPages "Section" "=" "articles") ".Params.format" "==" "quote") }}
+      {{ $count := len (where .Site.RegularPages "Section" "=" "quotes") }}
       {{ i18n "quotes" $count }} <br />
 
+      {{ $countA := len (where .Site.RegularPages "Section" "=" "articles") }}
+      {{ $countA }} Artikel <br />
+
+      Davon: <br />
       {{ $countM := len (where (where .Site.RegularPages "Section" "=" "articles") ".Params.format" "==" "rating") }}
       {{ i18n "movies" $countM }}
     </p>

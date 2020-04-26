@@ -137,97 +137,9 @@
   </div>
 
   {{ if .Params.authors }}
-    <div class="columns">
-      <div class="column is-9 card-horiz-img">
-
-          <aside class="card is-horizontal">
-            {{ range (.GetTerms "authors") }}
-              <div class="card-image">
-                <!-- // HACK: Is this right? -->
-                <figure class="image is-2by3">
-                  <a href="{{ .Permalink }}">
-                    {{- range first 1 (.Resources.ByType "image") -}}
-                      {{- $img := .Fill "320x480" | images.Filter (images.Sepia "100") -}}
-                      <img src="{{ $img.RelPermalink }}" alt="{{ $.Title }}">
-                    {{- end -}}
-                  </a>
-                </figure>
-              </div>
-          
-              <div class="card-content">
-                <div class="card-content-wrapper">
-                  <div class="media-content">
-                    <a class="title is-4" href="{{ .RelPermalink }}"><h2>{{ .Title }}</h2></a>
-                    
-                    <span class="heading">
-                      Birthdate: {{ .Params.birthdate }}
-                    </span>
-                  </div>
-              
-                  <div class="content">
-                    {{ .Content }}
-                  </div>
-                
-                  <footer class="card-footer">
-                    {{ range .Params.socials }}
-                      <span class="card-footer-item">
-                        <a data-tooltip="{{ .name }}" href="{{ .src }}">
-                          <svg class='remix-big-primary'>
-                            <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#{{ .icon }}-line"></use>
-                          </svg>
-                        </a>
-                      </span>
-                    {{ end }}
-                  </footer>
-                </div>
-              </div>
-            {{ end }}
-          </aside>
-
-      </div>
-    </div>
+    {{ partial "single-pages/author-box" . }}
   {{ end }}
 
-  <!-- THANKS: https://www.pakstech.com/blog/hugo-related-pages/ -->
-  {{ if len (where (.Site.RegularPages.Related .) "Type" "articles") }}
-    <div class="columns">
-      <div class="column related-content-single is-9" >
-        <!-- <div class="content">
-          <p class="title is-4">Related content</p>
-        </div> -->
-        <div class="columns">
-          {{- $related := (where (.Site.RegularPages.Related .) "Type" "articles") | first 3 -}}
-          {{- range $related -}}
-            <div class="column is-one-third is-flex">
-              <div class="card">
-                <div class="card-image">
-                  <figure class="image is-3by2">
-                    {{- range first 1 (.Resources.ByType "image") -}}
-                      {{- $img := .Fill "480x320" | images.Filter (images.Sepia "100") -}}
-                      <a href="#">
-                        <img src="{{ $img.RelPermalink }}" alt="{{ $.Title }}">
-                      </a>
-                    {{- end -}}
-                    {{- with .Params.images -}}
-                      {{ range first 1 . }}<figcaption>
-                        <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#information-line"></use></svg>
-                        {{ .byline | safeHTML }}</figcaption>
-                      {{ end }}
-                    {{- end -}}
-                  </figure>
-                </div>
-                <div class="card-content">
-                  <a class="title is-5" href="{{ .Permalink }}">{{ .Title }}</a>
-                  <span class="heading"><time datetime="{{ .PublishDate.Format "2006-01-02T15:04:05Z07:00" }}">
-                    {{ .PublishDate.Day }}. {{ index $.Site.Data.demonths (printf "%d" .PublishDate.Month) }} {{ .PublishDate.Year }}
-                  </time></span>
-                </div>
-              </div>
-            </div>
-          {{- end -}}
-        </div>
-      </div>
-    </div>
-  {{ end }}
+  {{ partial "single-pages/related-articles" . }}
  
 {{ end }}
