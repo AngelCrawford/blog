@@ -68,22 +68,34 @@ header.header {
   @include font-header;
   position: relative;
   font-size: 70px;
+  @media (max-width: 768px) {
+    font-size: 50px;
+  }
+  @media (max-width: 494px) {
+    font-size: 35px;
+  }
   margin: 0;
   top: 25%;
     
   &:after {
     background: none;
-    padding: 0 140px 0 140px;
+    padding: 0 140px;
     content: attr(data-heading);
     left: 0;
     top: 0;
     z-index: -1;
     position: absolute;
     text-shadow: -1px 0 1px #d3b68c, 0 1px 1px #d3b68c, 5px 5px 10px rgba(0, 0, 0, 0.7), -2px -2px 5px rgba(255, 255, 255, 0.3);
+    @media (max-width: 768px) {
+      padding: 0 80px;
+    }
+    @media (max-width: 494px) {
+      padding: 0 60px;
+    }
   }
   
   span.shimmer {
-    padding: 0 140px 0 140px;
+    padding: 0 140px;
     text-align: center;
     background: -webkit-gradient(linear, left top, right top, from(#97856b), to(#97856b), color-stop(0.5, $hover));
     background: -moz-gradient(linear, left top, right top, from(#97856b), to(#97856b), color-stop(0.5, $hover));
@@ -107,6 +119,13 @@ header.header {
     animation-timing-function: linear;
     background-repeat: no-repeat;
     background-position: 0 0;
+    
+    @media (max-width: 768px) {
+      padding: 0 80px;
+    }
+    @media (max-width: 494px) {
+      padding: 0 60px;
+    }
   }
 }
 
@@ -152,6 +171,9 @@ nav.navbar {
   background: rgba(darken($background, 1%), .5);
   // @include font-header;
   font-weight: 600;
+  @media (max-width: 1023px) {
+    margin-top: -3.2em;
+  }
   .navbar-item.field {
     padding-right: 0;
   }

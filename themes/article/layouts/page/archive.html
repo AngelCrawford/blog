@@ -17,6 +17,16 @@
 						<!-- TODO: Do I really need this site?? -->
 						<div class="column is-flex is-half-mobile is-one-third-tablet is-one-quarter-desktop is-one-fifth-widescreen">
 							<div class="card">
+
+								{{ if .GetTerms "categories" }}
+									{{ range first 1 (.GetTerms "categories") }}
+										{{ $catName := .LinkTitle }}
+										<div class="ribbon" style="{{ range .Site.Params.categoryColor }}{{ if eq .name $catName }}background-color: {{ .color }};{{ end }}{{ end }}">
+											<a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a>
+										</div>
+									{{ end }}
+								{{ end }}
+
 								<div class="card-image">
 									<a href="{{ .Page.Permalink }}">
 										<figure class="image is-3by2">

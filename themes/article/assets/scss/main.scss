@@ -47,6 +47,7 @@ $column-gap: 1.5rem;
 @import "05-tooltip";
 @import "06-single";
 @import "07-message";
+@import "08-archive";
 
 
 html, body {
@@ -86,6 +87,9 @@ p.title, h1.title, h1, h1.title,
 h2, h2.title,
 h3, h3.title {
   color: $primary;
+}
+a.title.colored:hover {
+  color: #e3d1b7 !important;
 }
 
 .box {
