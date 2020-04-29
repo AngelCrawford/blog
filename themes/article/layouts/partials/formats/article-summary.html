@@ -1,15 +1,7 @@
-<article class="card {{ if .Resources }}is-horizontal{{else}}no-image{{ end }}">
-  {{ if .GetTerms "categories" }}
-    {{ range first 1 (.GetTerms "categories") }}
-      {{ $catName := .LinkTitle }}
-      <div class="ribbon" style="{{ range .Site.Params.categoryColor }}{{ if eq .name $catName }}background-color: {{ .color }};{{ end }}{{ end }}">
-        <a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a>
-      </div>
-    {{ end }}
-  {{ end }}
+<article class="card is-horizontal {{ if .Resources }}has-image{{else}}no-image{{ end }} has-ribbon">
 
   {{ if .Resources }}
-    <div class="card-image has-ribbon">
+    <div class="card-image">
       <!-- // HACK: Is this right? -->
       <figure class="image is-2by3">
         <a href="{{ .Permalink }}">
@@ -28,140 +20,150 @@
       </figure>
     </div>
   {{ end }}
+  
+  {{ if .GetTerms "categories" }}
+    {{ range first 1 (.GetTerms "categories") }}
+      {{ $catName := .LinkTitle }}
+      <div class="ribbon" style="{{ range .Site.Params.categoryColor }}{{ if eq .name $catName }}background-color: {{ .color }};{{ end }}{{ end }}">
+        <a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a>
+      </div>
+    {{ end }}
+  {{ end }}
 
   <div class="card-content">
-    <div class="card-content-wrapper">
-      <div class="media-content">
+    <div class="media-content">
+
+      <div class="card-title">
         <a class="title is-4" href="{{ .RelPermalink }}"><h2>{{ .Title }}</h2></a>
-
-        <span class="heading">
-          <time datetime="{{ .PublishDate.Format "2006-01-02T15:04:05Z07:00" }}">
-            <svg class='remix-small'>
-              <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#calendar-line"></use>
-            </svg> {{ .PublishDate.Day }}. {{ index $.Site.Data.demonths (printf "%d" .PublishDate.Month) }} {{ .PublishDate.Year }}
-          </time>
-          <time class="updated" datetime="{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}">
-            <svg class='remix-small'>
-              <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#pencil-line"></use>
-            </svg> {{ .Lastmod.Format "02.01.06" }}
-          </time>
-        </span>
       </div>
-  
-      <div class="content">
-        {{- if .Params.rating -}}
-          <div class="rating">{{ partial "rating" . }} ({{ .Params.rating }})</div>
-        {{- end -}}
+      
+      <span class="heading">
+        <time datetime="{{ .PublishDate.Format "2006-01-02T15:04:05Z07:00" }}">
+          <svg class='remix-small'>
+            <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#calendar-line"></use>
+          </svg> {{ .PublishDate.Format "02.01.06" }}
+        </time>
+        <time class="updated" datetime="{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}">
+          <svg class='remix-small'>
+            <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#pencil-line"></use>
+          </svg> {{ .Lastmod.Format "02.01.06" }}
+        </time>
+      </span>
+    </div>
 
-        {{ if eq .Params.weight 1 }}
-          <!-- // FIXME: Wenn ich Content hier verwende, dann wird "summary" im Frontend nicht benutzt -->
-          {{ if .Params.summary }}
-            {{ .Summary | truncate 800 " [...]" }}
-          {{ else }}
-            {{ .Content | truncate 800 " [...]" | markdownify }}
-          {{ end }}
-        {{ else if not .Resources }}
-          {{ .Summary | truncate 500 " [...]" }}
+    <div class="content">
+      {{- if .Params.rating -}}
+        <div class="rating">{{ partial "rating" . }} ({{ .Params.rating }})</div>
+      {{- end -}}
+
+      {{ if eq .Params.weight 1 }}
+        <!-- // FIXME: Wenn ich Content hier verwende, dann wird "summary" im Frontend nicht benutzt -->
+        {{ if .Params.summary }}
+          {{ .Summary | truncate 800 " [...]" }}
         {{ else }}
-          {{ .Summary | truncate 280 " [...]" }}
+          {{ .Content | truncate 800 " [...]" | markdownify }}
         {{ end }}
-        
-        <a class="read-more" href="{{ .RelPermalink }}">{{ i18n "readMore" }}</a>
-        <!-- <a class="read-more" href="{{ .RelPermalink }}"></a> -->
+      {{ else if not .Resources }}
+        {{ .Summary | truncate 500 " [...]" }}
+      {{ else }}
+        {{ .Summary | truncate 280 " [...]" }}
+      {{ end }}
+      
+      <a class="read-more" href="{{ .RelPermalink }}">{{ i18n "readMore" }}</a>
+      <!-- <a class="read-more" href="{{ .RelPermalink }}"></a> -->
 
-        {{- if (.GetTerms "tags") -}}
-          <div class="tags-wrapper">
-            <svg class='remix-small'>
-              <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#price-tag-3-line"></use>
-            </svg>
-            {{- range (.GetTerms "tags") -}}
-              <a href="{{ .RelPermalink }}" class="hashtags">#{{ .LinkTitle }} </a> 
-            {{- end -}}
-          </div>
-        {{- end -}}
-
-      </div>
-
-      <div class="author-img {{ if .Resources }}post-has-image{{ end }}">
-        {{ range (.GetTerms "authors") }}
-          <figure class="image is-48x48">
-            <a href="{{ .Permalink }}">
-              {{- range first 1 (.Resources.ByType "image") -}}
-                {{- $img := .Fill "48x48" | images.Filter images.Grayscale -}}
-                <img class="is-rounded" src="{{ $img.RelPermalink }}" alt="{{ $.Title }}">
-              {{- end -}}
-            </a>
-          </figure>
-        {{ end }}
-      </div>
-    
-      <footer class="card-footer">
-        <span class="card-footer-item">
+      {{- if (.GetTerms "tags") -}}
+        <div class="tags-wrapper">
           <svg class='remix-small'>
-            <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#time-line"></use>
-          </svg> {{ .ReadingTime }} {{ i18n "minutesRead" }}</span>
-        <span class="card-footer-item">
-          
-          {{ if .Params.weight }}
-            <svg class='remix-small'>
-              <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#pushpin-line"></use>
-            </svg>
-          {{ end }}
-          <svg class='remix-small'>
-            <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#article-line"></use>
+            <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#price-tag-3-line"></use>
           </svg>
-
-          {{ if .Params.rating }}
-            <svg class='remix-small'>
-              <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#film-line"></use>
-            </svg>
-          {{ end }}
-          {{ if .Params.series }}
-            <svg class='remix-small'>
-              <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#stack-line"></use>
-            </svg>
-          {{ end }}
-          
-          {{ range (.GetTerms "contains") }}
-            {{ if eq .Title "code" }}
-              <svg class='remix-small'>
-                <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#code-s-slash-fill"></use>
-              </svg>
-            {{ end }}
-            {{ if eq .Title "instagram" }}
-              <svg class='remix-small'>
-                <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#instagram-line"></use>
-              </svg>
-            {{ end }}
-            {{ if eq .Title "twitter" }}
-              <svg class='remix-small'>
-                <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#twitter-line"></use>
-              </svg>
-            {{ end }}
-            {{ if eq .Title "youtube" }}
-              <svg class='remix-small'>
-                <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#youtube-line"></use>
-              </svg>
-            {{ end }}
-            {{ if eq .Title "image" }}
-              <svg class='remix-small'>
-                <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#camera-line"></use>
-              </svg>
-            {{ end }}
-            {{ if eq .Title "gallery" }}
-              <svg class='remix-small'>
-                <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#gallery-line"></use>
-              </svg>
-            {{ end }}
-            {{ if eq .Title "comment" }}
-              <svg class='remix-small'>
-                <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#question-answer-line"></use>
-              </svg>
-            {{ end }}
-          {{ end }}
-        </span>
-      </footer>
+          {{- range (.GetTerms "tags") -}}
+            <a href="{{ .RelPermalink }}" class="hashtags">#{{ .LinkTitle }} </a> 
+          {{- end -}}
+        </div>
+      {{- end -}}
 
     </div>
   </div>
+
+  <footer class="card-footer">
+    <div class="author-img">
+      {{ range (.GetTerms "authors") }}
+        <figure class="image is-48x48">
+          <a href="{{ .Permalink }}">
+            {{- range first 1 (.Resources.ByType "image") -}}
+              {{- $img := .Fill "48x48" | images.Filter images.Grayscale -}}
+              <img class="is-rounded" src="{{ $img.RelPermalink }}" alt="{{ $.Title }}">
+            {{- end -}}
+          </a>
+        </figure>
+      {{ end }}
+    </div>
+
+    <span class="card-footer-item">
+      <svg class='remix-small'>
+        <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#time-line"></use>
+      </svg> {{ .ReadingTime }} {{ i18n "minutesRead" }}
+
+      <svg class='remix-small comments'>
+        <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#question-answer-line"></use>
+      </svg> Kritiken
+    </span>
+
+    <!--  // TODO: Tooltips hinzufügen -->
+    <span class="card-footer-item">
+      {{ if .Params.weight }}
+        <svg class='remix-small'>
+          <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#pushpin-line"></use>
+        </svg>
+      {{ end }}
+      <svg class='remix-small'>
+        <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#article-line"></use>
+      </svg>
+
+      {{ if .Params.rating }}
+        <svg class='remix-small'>
+          <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#film-line"></use>
+        </svg>
+      {{ end }}
+      {{ if .Params.series }}
+        <svg class='remix-small'>
+          <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#stack-line"></use>
+        </svg>
+      {{ end }}
+      
+      {{ range (.GetTerms "contains") }}
+        {{ if eq .Title "code" }}
+          <svg class='remix-small'>
+            <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#code-s-slash-fill"></use>
+          </svg>
+        {{ end }}
+        {{ if eq .Title "instagram" }}
+          <svg class='remix-small'>
+            <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#instagram-line"></use>
+          </svg>
+        {{ end }}
+        {{ if eq .Title "twitter" }}
+          <svg class='remix-small'>
+            <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#twitter-line"></use>
+          </svg>
+        {{ end }}
+        {{ if eq .Title "youtube" }}
+          <svg class='remix-small'>
+            <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#youtube-line"></use>
+          </svg>
+        {{ end }}
+        {{ if eq .Title "image" }}
+          <svg class='remix-small'>
+            <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#camera-line"></use>
+          </svg>
+        {{ end }}
+        {{ if eq .Title "gallery" }}
+          <svg class='remix-small'>
+            <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#gallery-line"></use>
+          </svg>
+        {{ end }}
+      {{ end }}
+    </span>
+  </footer>
 </article>

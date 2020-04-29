@@ -9,11 +9,11 @@ p.title.is-4 {
 
 .content article h2, .content h1, .content h2 {
   @include font-header;
-  color: $primary;
+  color: $accent;
 }
 
 .content article h2, .content h1, .content h2, .content h3, .content h4, .content h5, .content h6 {
-  color: $primary;
+  color: $accent;
 }
 
 h1.title:not(.no-subtitle) {
@@ -170,10 +170,11 @@ section.footnotes {
 .serie-single {
   margin-bottom: 3em;
   font-size: 15px;
+  p.title.is-6 {
+    margin-bottom: .75em;
+  }
   ul {
     li {
-      // text-indent: 10px;
-      // white-space: pre-wrap;
       &:before {
         content: "▪";
         color: $secondary;
@@ -198,6 +199,22 @@ section.footnotes {
       margin-left: 1.2em;
     }
   }
+  ol {
+    margin: 0 0 0 1.3em;
+    padding: 0;
+    li {
+      color: $secondary;
+      &:hover {
+        color: $hover;
+      }
+      &.is-active {
+        color: $text;
+        &:hover {
+          color: $text;
+        }
+      }
+    }
+  }
 }
 
 .series-single-footer {
@@ -212,6 +229,9 @@ section.footnotes {
     -webkit-transform: translate(0px, 4px);
     -o-transform: translate(0px, 4px);
     -moz-transform: translate(0px, 4px);
+  }
+  a:hover .remix {
+    fill: $accent;
   }
 }
 

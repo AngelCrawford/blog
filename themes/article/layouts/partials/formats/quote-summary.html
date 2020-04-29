@@ -1,4 +1,6 @@
-<article class="card quote">
+<article class="card quote is-horizontal {{ if .Resources }}has-image{{else}}no-image{{ end }} has-ribbon">
+
+  
   {{ if .GetTerms "categories" }}
     {{ range first 1 (.GetTerms "categories") }}
       {{ $catName := .LinkTitle }}
@@ -8,58 +10,60 @@
     {{ end }}
   {{ end }}
 
-  <div class="card-content-wrapper">
-
-    <figure class="image img-quote is-4by3">
-      {{- $img := (.Resources.ByType "image").GetMatch "featured*" -}}
-      {{- with $img -}}
-        {{- $resize := .Fill "600x480" | images.Filter (images.Sepia "100") -}}
-          <img src="{{ $resize.RelPermalink }}" alt="{{ $.Title }}">
-      {{- end -}}
-      {{- range .Params.featured_image -}}
-        <figcaption>
-          <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#information-line"></use></svg>
-          {{ .byline | safeHTML }}
-        </figcaption>
-      {{- end -}}
-    </figure>
-
-    <div class="card-content">
-      <h2 class="title">
-        “{{ .Content | markdownify }}”
-      </h2>
-      <div class="heading author">
-        {{ range (.GetTerms "authors") }}
-          <figure class="image is-48x48 is-pulled-right">
-            <a href="{{ .Permalink }}">
-              {{- range first 1 (.Resources.ByType "image") -}}
-                {{- $img := .Fill "48x48" | images.Filter images.Grayscale -}}
-                <img class="is-rounded" src="{{ $img.RelPermalink }}" alt="{{ $.Title }}">
-              {{- end -}}
-            </a>
-          </figure>
-          <a class="subtitle" href="{{ .Permalink }}">{{ .Title }}</a>
-        {{ end }}
-        </div>
+  <div class="card-content">
+    {{ if .Resources }}
+      <div class="card-image">
+        <figure class="image img-quote is-4by3">
+          {{- $img := (.Resources.ByType "image").GetMatch "featured*" -}}
+          {{- with $img -}}
+            {{- $resize := .Fill "600x480" | images.Filter (images.Sepia "100") -}}
+              <img src="{{ $resize.RelPermalink }}" alt="{{ $.Title }}">
+          {{- end -}}
+          {{- range .Params.featured_image -}}
+            <figcaption>
+              <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#information-line"></use></svg>
+              {{ .byline | safeHTML }}
+            </figcaption>
+          {{- end -}}
+        </figure>
+      </div>
+    {{ end }}
+  
+    <h2 class="title">
+      “{{ .Content | markdownify }}”
+    </h2>
+    <div class="heading author">
+      {{ range (.GetTerms "authors") }}
+        <figure class="image is-48x48 is-pulled-right">
+          <a href="{{ .Permalink }}">
+            {{- range first 1 (.Resources.ByType "image") -}}
+              {{- $img := .Fill "48x48" | images.Filter images.Grayscale -}}
+              <img class="is-rounded" src="{{ $img.RelPermalink }}" alt="{{ $.Title }}">
+            {{- end -}}
+          </a>
+        </figure>
+        <a class="subtitle" href="{{ .Permalink }}">{{ .Title }}</a>
+      {{ end }}
     </div>
 
-    <footer class="card-footer">
-      <time class="card-footer-item" datetime="{{ .PublishDate.Format "2006-01-02T15:04:05Z07:00" }}">
-        <svg class='remix-small'>
-          <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#calendar-line"></use>
-        </svg> {{ .PublishDate.Format "02.01.06" }}
-      </time>
-    
-      <time class="card-footer-item" datetime="{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}">
-        <svg class='remix-small'>
-          <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#pencil-line"></use>
-        </svg> {{ .Lastmod.Format "02.01.06" }}
-      </time>
-      {{ range (.GetTerms "tags") }}
-        <a href="{{ .RelPermalink }}" class="card-footer-item hashtags">#{{ .LinkTitle }}</a>
-      {{ end }}
-    </footer>
-    
   </div>
+
+  <footer class="card-footer">
+    <time class="card-footer-item" datetime="{{ .PublishDate.Format "2006-01-02T15:04:05Z07:00" }}">
+      <svg class='remix-small'>
+        <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#calendar-line"></use>
+      </svg> {{ .PublishDate.Format "02.01.06" }}
+    </time>
+  
+    <time class="card-footer-item" datetime="{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}">
+      <svg class='remix-small'>
+        <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#pencil-line"></use>
+      </svg> {{ .Lastmod.Format "02.01.06" }}
+    </time>
+    {{ range (.GetTerms "tags") }}
+      <a href="{{ .RelPermalink }}" class="card-footer-item hashtags">#{{ .LinkTitle }}</a>
+    {{ end }}
+  </footer>
+
 
 </article>

@@ -106,7 +106,7 @@
 
       {{ if ge (len .TableOfContents) 100 }}
         <div class="toc-single">
-          <p class="title is-4">Table of Content</p>
+          <p class="title is-4">Übersicht</p>
           {{ .TableOfContents }}
         </div>
       {{ end }}
@@ -116,29 +116,36 @@
           <p class="title is-4">Serie</p>
           {{- $currentPage := . -}}
           {{- $series_name := index .Params.series 0 -}}
-          <p class="title is-6"><a href="{{.Site.BaseURL}}/series/{{$series_name | urlize}}">{{ $series_name }}</a></p>
-          <ul>
+
+          {{- $.Scratch.Set "series_count" 0 -}}
+          {{- range .Site.RegularPages.ByDate -}}
+            {{- if in .Params.series $series_name -}}
+              {{- $.Scratch.Add "series_count" 1 -}}
+            {{- end -}}
+          {{- end -}}
+
+          <p class="title is-6"><a href="{{.Site.BaseURL}}/series/{{$series_name | urlize}}">{{ $series_name }} ({{ $.Scratch.Get "series_count" }})</a></p>
+          <ol class="series-list">
             {{- range .Site.RegularPages.ByDate -}}
               {{- if in .Params.series $series_name -}}
                 {{- if not (eq $currentPage.RelPermalink .RelPermalink) -}}
-                  <li><a href="{{ .RelPermalink }}" title="{{ .Name }} page"><span class="small">{{ .Lastmod.Format "02.01.06" }}</span> - {{ .Title }}</a></li>
+                  <li><a href="{{ .RelPermalink }}" title="{{ .Name }} page">{{ .Title }}</a></li>
                 {{- else -}}
-                  <li class="is-active">{{ .Lastmod.Format "02.01.06" }} - {{ .Title }}</li>
+                  <li class="is-active">{{ .Title }} </li>
                 {{- end -}}
-                
               {{- end -}}
             {{- end -}}
           </ul>
           
         </div>
       {{ end }}
+
+      {{ if .Params.authors }}
+        {{ partial "single-pages/author-box" . }}
+      {{ end }}
     </div>
 
   </div>
-
-  {{ if .Params.authors }}
-    {{ partial "single-pages/author-box" . }}
-  {{ end }}
 
   {{ partial "single-pages/related-articles" . }}
  
