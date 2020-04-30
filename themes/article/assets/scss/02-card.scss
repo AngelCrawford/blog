@@ -116,6 +116,9 @@ article.card {
 }
 
 article.card.no-image {
+  position: relative;
+  left: -1.5em;
+  min-width: calc(100% + 1.5em);
   display: grid;
   grid-template-rows: 1fr auto;
   grid-template-areas: "content" "footer";
@@ -124,18 +127,14 @@ article.card.no-image {
 
   .ribbon {
     top: 1.3em;
-    // position: relative;
-    // width: auto;
-    // float: left;
-  }
-  .media-content {
-    // margin-left: 8em;
+    right: 0;
+    left: auto;
   }
 }
 
 article.card.has-image {
   display: grid;
-  grid-template-columns: 250px 1fr;
+  grid-template-columns: minmax(100px, 250px) 1fr;
   grid-template-rows: 1fr auto;
   grid-template-areas: "image content" "footer footer";
   .card-image { grid-area: image; }
@@ -205,92 +204,80 @@ article.card.quote {
   grid-template-areas: "content" "footer";
   .card-content { grid-area: content; }
   .card-footer { grid-area: footer; }
-
-  h2 {
-    color: $text;
-  }
+ 
   .card-content {
     width: 100%;
     height: 100%;
+    min-height: 300px;
+    position: relative;
+    
+    a {
+      color: $primary;
+      &:hover {
+        color: $hover;
+      }
+    }
 
     .card-image {
       position: absolute;
       width: 100%;
-      height: calc(100% - 2em - 3px);
-      z-index: 0;
+      height: 100%;
+      z-index: 1;
       figure.image {
         width: 100%;
+        background-color: $background;
+        img {
+          opacity: .5;
+        }
+        figcaption {
+          background: none;
+          border: none;
+        }
+        
+      }
+    }
+
+    .card-content-inline {
+      position: relative;
+      top: 1.5em;
+      left: -1.5em;
+      height: calc(100% - 1.5em - 3px);
+      width: 100%;
+      z-index: 2;
+      padding: 4rem 2rem 3rem 2rem;
+
+      display: flex;
+      flex-direction: column;
+
+      h2 {
+        color: $text;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        flex: 1;
+      }
+
+      .heading.author {
+        height: 48px;
+        display: flex;
+        flex-direction: row-reverse;
+        align-items: center;
+        align-self: flex-end;
+        margin-left:auto;
+        background: linear-gradient(270deg, transparent 0%, rgba(25,25,25,.8) 50%, transparent 100%);
+        transition: all .3s ease-out;
+        figure {
+          margin-left: 1em;
+          img {
+            transition: all .3s ease-out;
+          }
+        }
+        &:hover img {
+          border: 1px solid $primary;
+          box-shadow: 5px 5px 5px rgba(#000, .3),-5px -5px 5px rgba($text, .07);
+        }
       }
     }
   }
-  // figure.image.img-quote {
-    
-  //   figcaption {
-  //     svg {
-  //         width: 20px;
-  //         height: 20px;
-  //         fill: $primary;
-  //         -ms-transform: translate(0px, 6px);
-  //         -webkit-transform: translate(0px, 6px);
-  //         -o-transform: translate(0px, 6px);
-  //         -moz-transform: translate(0px, 6px);  
-  //     }
-  //     z-index: 2;
-  //     position: absolute;
-  //     font-size: 11px;
-  //     bottom: 3.5em;
-  //     left: .75em;
-  //     color: $text;
-  //     width: 100%;
-  //     height: 37px;
-  //     overflow: hidden;
-  //   }
-  // }
-  // &:hover figure.image.img-quote figcaption {
-  //   opacity: 1;
-  //   transition: .3s;
-  // }
-
-  // .card-content {
-  //   padding: 5rem 3rem;
-  //   z-index: 50;
-  //   flex-grow: 1;
-  //   color: #fff;
-  //   display: flex; 
-  //   justify-content: center; 
-  //   flex-direction: column; 
-  //   width: 100%;
-  //   background-color: rgba(darken($background, 1%), .3);
-  //   a {
-  //     color: $primary;
-  //     &:hover {
-  //       color: $hover;
-  //     }
-  //   }
-    // .heading.author {
-    //   text-align: right;
-    //   display: flex;
-    //   flex-direction: row-reverse;
-    //   align-items: center;
-    //   justify-content: right;
-    //   background: linear-gradient(270deg, transparent 0%, rgba(25,25,25,.8) 50%, transparent 100%);
-    //   transition: all .3s ease-out;
-    //   figure {
-    //     margin-left: 1em;
-    //     img {
-    //       transition: all .3s ease-out;
-    //     }
-    //   }
-    //   &:hover img {
-    //     border: 1px solid $primary;
-    //     box-shadow: 5px 5px 5px rgba(#000, .3),-5px -5px 5px rgba($text, .07);
-    //   }
-    // }
-  // }
-  // footer.card-footer {
-  //   color: lighten($secondary, 20%);
-  // }
-  // .heading.date {
-  //   padding: 1.5rem;
-  // }
 }

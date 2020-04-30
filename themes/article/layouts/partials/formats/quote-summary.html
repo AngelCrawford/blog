@@ -28,22 +28,25 @@
         </figure>
       </div>
     {{ end }}
-  
-    <h2 class="title">
-      “{{ .Content | markdownify }}”
-    </h2>
-    <div class="heading author">
-      {{ range (.GetTerms "authors") }}
-        <figure class="image is-48x48 is-pulled-right">
-          <a href="{{ .Permalink }}">
-            {{- range first 1 (.Resources.ByType "image") -}}
-              {{- $img := .Fill "48x48" | images.Filter images.Grayscale -}}
-              <img class="is-rounded" src="{{ $img.RelPermalink }}" alt="{{ $.Title }}">
-            {{- end -}}
-          </a>
-        </figure>
-        <a class="subtitle" href="{{ .Permalink }}">{{ .Title }}</a>
-      {{ end }}
+    
+    <div class="card-content-inline">
+      <h2 class="title">
+        “{{ .Content | markdownify }}”
+      </h2>
+
+      <div class="heading author">
+        {{ range (.GetTerms "authors") }}
+          <figure class="image is-48x48 is-pulled-right">
+            <a href="{{ .Permalink }}">
+              {{- range first 1 (.Resources.ByType "image") -}}
+                {{- $img := .Fill "48x48" | images.Filter images.Grayscale -}}
+                <img class="is-rounded" src="{{ $img.RelPermalink }}" alt="{{ $.Title }}">
+              {{- end -}}
+            </a>
+          </figure>
+          <a class="subtitle" href="{{ .Permalink }}">{{ .Title }}</a>
+        {{ end }}
+      </div>
     </div>
 
   </div>
