@@ -3,6 +3,7 @@ article.card {
   background: $background;
   box-shadow: 5px 5px 5px rgba(#000, .3), -5px -5px 5px rgba($text, .07);
   border-radius: 7px;
+  border: 1px solid rgba($primary, .2);
   
   &:after {
     content: "";
@@ -177,6 +178,8 @@ article.card.has-image {
       img {
         border-radius: 7px;
         box-shadow: 3px 3px 3px rgba(#000, .5), -3px -3px 3px rgba($text, .2);
+        filter: sepia(1);
+        transition: 0.3s;
       }
     }
   }
@@ -184,6 +187,9 @@ article.card.has-image {
   &:hover .card-image figure figcaption {
     opacity: 1;
     transition: .3s;
+  }
+  &:hover .card-image figure img {
+    filter: sepia(0);
   }
 
   .card-content {
@@ -204,6 +210,10 @@ article.card.quote {
   grid-template-areas: "content" "footer";
   .card-content { grid-area: content; }
   .card-footer { grid-area: footer; }
+
+  &:hover .card-image figure img {
+    filter: sepia(1);
+  }
  
   .card-content {
     width: 100%;

@@ -7,7 +7,7 @@
         <a href="{{ .Permalink }}">
           {{- $img := (.Resources.ByType "image").GetMatch "featured*" -}}
           {{- with $img -}}
-            {{- $resize := .Fill "320x480" | images.Filter (images.Sepia "100") -}}
+            {{- $resize := .Fill "320x480" -}}
               <img src="{{ $resize.RelPermalink }}" alt="{{ $.Title }}">
           {{- end -}}
         </a>
@@ -107,7 +107,7 @@
 
       <svg class='remix-small comments'>
         <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#question-answer-line"></use>
-      </svg> 3
+      </svg> Kritiken
     </span>
 
     <!--  // TODO: Tooltips hinzufügen -->
