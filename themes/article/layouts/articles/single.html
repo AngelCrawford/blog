@@ -10,8 +10,8 @@
           <h2 class="subtitle">{{ . | truncate 160 }}</h2>
         {{- end -}}
 
-        <div class="details-single has-ribbon">
-          {{ if .Params.icons }}
+        {{ if .Params.icons }}
+          <div class="details-single has-ribbon">
             <div class="ribbon is-single-page is-primary">
               <svg class="remix-small">
                 <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#bookmark-line"></use>
@@ -26,8 +26,8 @@
                 </span>
               {{ end }}
             </span>
-          {{ end }}
-        </div>
+          </div>
+        {{ end }}
         
         {{ .Content }}
   
