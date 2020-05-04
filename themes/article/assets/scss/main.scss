@@ -13,9 +13,9 @@
 // Colors
 $background   : #2f2f2f;
 $text         : #f2ebe3;
-$hover        : #d2b48a;
+$hover        : #b87333;
 $primary      : #e0b361;
-$accent       : #bd9153;
+$accent       : #b87333;
 $secondary    : #777777;
 
 // Breakpoints
@@ -93,9 +93,12 @@ a.title.colored:hover {
 }
 
 .box {
-  background-color: $background;
-  box-shadow: 5px 5px 5px rgba(#000, .3), -5px -5px 5px rgba($text, .07);
+  background: $background;
+  box-shadow: 5px 5px 5px rgba(#000, .3), -5px -5px 5px rgba($text, .05);
+  border-radius: 7px;
+  border: 1px solid rgba($primary, .2);
   height: 100%;
+  margin-left: -1.5em;
 }
 
 .column {

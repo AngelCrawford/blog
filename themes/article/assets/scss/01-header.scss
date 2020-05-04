@@ -15,8 +15,16 @@ header.header {
     top: 1em;
     left: 1.5em;
     opacity: .1;
-    color: $primary;
+    color: $text;
     font-size: 80%;
+    transition: .3s;
+    svg {
+      transform: translate(0.75em, 7px);
+      -ms-transform: translate(0px, 7px); /* IE 9 */
+      -webkit-transform: translate(0px, 7px); /* Safari and Chrome */
+      -o-transform: translate(0px, 7px); /* Opera */
+      -moz-transform: translate(0px, 7px); /* Firefox */
+    }
   }
   &:hover .byline {
     opacity: 1;
@@ -97,9 +105,9 @@ header.header {
   span.shimmer {
     padding: 0 140px;
     text-align: center;
-    background: -webkit-gradient(linear, left top, right top, from(#97856b), to(#97856b), color-stop(0.5, $hover));
-    background: -moz-gradient(linear, left top, right top, from(#97856b), to(#97856b), color-stop(0.5, $hover));
-    background: gradient(linear, left top, right top, from(#97856b), to(#97856b), color-stop(0.5, $hover));
+    background: -webkit-gradient(linear, left top, right top, from(#97856b), to(#97856b), color-stop(0.5, $text));
+    background: -moz-gradient(linear, left top, right top, from(#97856b), to(#97856b), color-stop(0.5, $text));
+    background: gradient(linear, left top, right top, from(#97856b), to(#97856b), color-stop(0.5, $text));
     -webkit-background-size: 25px 100%;
     -moz-background-size: 25px 100%;
     background-size: 25px 100%; 

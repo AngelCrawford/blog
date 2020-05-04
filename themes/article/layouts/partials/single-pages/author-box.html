@@ -1,16 +1,18 @@
-<aside class="card">
+<aside class="card is-small-authors {{ if .Resources }}has-image{{else}}no-image{{ end }}">
   {{ range (.GetTerms "authors") }}
-    <div class="card-image">
-      <!-- // HACK: Is this right? -->
-      <figure class="image is-3by2">
-        <a href="{{ .Permalink }}">
-          {{- range first 1 (.Resources.ByType "image") -}}
-            {{- $img := .Fill "480x320" | images.Filter (images.Sepia "100") -}}
-            <img src="{{ $img.RelPermalink }}" alt="{{ $.Title }}">
-          {{- end -}}
-        </a>
-      </figure>
-    </div>
+    {{- if .Resources -}}
+      <div class="card-image">
+        <!-- // HACK: Is this right? -->
+        <figure class="image is-3by2">
+          <a href="{{ .Permalink }}">
+            {{- range first 1 (.Resources.ByType "image") -}}
+              {{- $img := .Fill "480x320" -}}
+              <img src="{{ $img.RelPermalink }}" alt="{{ $.Title }}">
+            {{- end -}}
+          </a>
+        </figure>
+      </div>
+    {{- end -}}
 
     <div class="card-content">
       <div class="media-content">

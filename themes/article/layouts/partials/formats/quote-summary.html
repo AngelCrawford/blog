@@ -30,9 +30,7 @@
     {{ end }}
     
     <div class="card-content-inline">
-      <h2 class="title">
-        “{{ .Content | markdownify }}”
-      </h2>
+      <h2 class="title">{{ .Content | markdownify }}</h2>
 
       <div class="heading author">
         {{ range (.GetTerms "authors") }}

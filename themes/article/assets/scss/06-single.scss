@@ -1,5 +1,11 @@
 .is-single-top {
-  margin-top: 1.5rem;
+  margin: 1.5rem 0 0 0;
+  padding: 1rem 1rem 0 2.5rem;
+
+  .content.box {
+    display: flex;
+    flex-direction: column;
+  } 
 }
 
 p.title.is-4 {
@@ -11,7 +17,6 @@ p.title.is-4 {
   @include font-header;
   color: $accent;
 }
-
 .content article h2, .content h1, .content h2, .content h3, .content h4, .content h5, .content h6 {
   color: $accent;
 }
@@ -28,6 +33,11 @@ h2.subtitle {
 
 section.footnotes {
   margin-bottom: 1.5em;
+}
+
+.is-single-information {
+  margin: 1.5rem 0 0 0;
+  padding: 1rem 1rem 0 1.5rem;
 }
 
 .details-single {
@@ -220,8 +230,10 @@ section.footnotes {
 .series-single-footer {
   border-top: 1px solid #222;
   background: rgba(44,44,44,0.7);
-  margin: 0 -1.25rem -1.25rem -1.25rem;
+  margin: auto -1.25rem -1.25rem -1.25rem;
   padding: 1.25rem;
+  position: relative;
+  
   .remix {
     height: 20px;
     width: 20px;
@@ -235,18 +247,8 @@ section.footnotes {
   }
 }
 
-.card-horiz-img {
-  .remix-big-primary {
-    width: 25px;
-    height: 25px;
-    -ms-transform: translate(0px, 4px);
-    -webkit-transform: translate(0px, 4px);
-    -o-transform: translate(0px, 4px);
-    -moz-transform: translate(0px, 4px);
-  }
-}
-
 .related-content-single {
+  padding: 1.5rem 0 0 0;
   a.title {
     color: $primary;
     &:hover {

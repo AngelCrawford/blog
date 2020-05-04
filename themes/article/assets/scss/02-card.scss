@@ -1,7 +1,7 @@
-article.card {
+article.card.is-horizontal, .card {
   width: 100%;
   background: $background;
-  box-shadow: 5px 5px 5px rgba(#000, .3), -5px -5px 5px rgba($text, .07);
+  box-shadow: 5px 5px 5px rgba(#000, .3), -5px -5px 5px rgba($text, .05);
   border-radius: 7px;
   border: 1px solid rgba($primary, .2);
   
@@ -66,7 +66,7 @@ article.card {
     text-transform: uppercase;
     color: $secondary;
     a {
-      color: darken($primary, 10%);
+      color: $primary;
       &:hover {
         color: $hover;
       }
@@ -116,7 +116,7 @@ article.card {
   }
 }
 
-article.card.no-image {
+article.card.is-horizontal.no-image, .card.is-small.no-image {
   position: relative;
   left: -1.5em;
   min-width: calc(100% + 1.5em);
@@ -133,7 +133,7 @@ article.card.no-image {
   }
 }
 
-article.card.has-image {
+article.card.is-horizontal.has-image {
   display: grid;
   grid-template-columns: minmax(100px, 250px) 1fr;
   grid-template-rows: 1fr auto;
@@ -177,9 +177,12 @@ article.card.has-image {
       }
       img {
         border-radius: 7px;
-        box-shadow: 3px 3px 3px rgba(#000, .5), -3px -3px 3px rgba($text, .2);
+        box-shadow: 3px 3px 3px rgba(#000, .5), -3px -3px 3px rgba($text, .1);
         filter: sepia(1);
         transition: 0.3s;
+        &:hover {
+          filter: sepia(0);
+        }
       }
     }
   }
@@ -187,9 +190,6 @@ article.card.has-image {
   &:hover .card-image figure figcaption {
     opacity: 1;
     transition: .3s;
-  }
-  &:hover .card-image figure img {
-    filter: sepia(0);
   }
 
   .card-content {
@@ -203,7 +203,7 @@ article.card.has-image {
   }
 }
 
-article.card.quote {
+article.card.is-horizontal.quote {
   display: grid;
   grid-template-rows: 1fr auto;
   grid-template-columns: 1fr;
@@ -261,11 +261,19 @@ article.card.quote {
 
       h2 {
         color: $text;
-        display: flex;
-        justify-content: center;
-        align-items: center;
         width: 100%;
-        flex: 1;
+        margin: auto 0;
+        text-shadow: 3px 3px 4px rgba(#000, .5);
+        &::before, &::after {
+          font-family: "remixicon";
+          color: $primary;
+        }
+        &::before {
+          content: "\ec35";
+        }
+        &::after {
+          content: "\ec36";
+        }
       }
 
       .heading.author {
@@ -276,6 +284,7 @@ article.card.quote {
         align-self: flex-end;
         margin-left:auto;
         background: linear-gradient(270deg, transparent 0%, rgba(25,25,25,.8) 50%, transparent 100%);
+        text-shadow: 3px 3px 4px rgba(#000, .5);
         transition: all .3s ease-out;
         figure {
           margin-left: 1em;
@@ -288,6 +297,79 @@ article.card.quote {
           box-shadow: 5px 5px 5px rgba(#000, .3),-5px -5px 5px rgba($text, .07);
         }
       }
+    }
+  }
+}
+
+
+.card.is-small.no-image {
+  .ribbon {
+    top: 1.3em;
+    left: 0;
+    right: auto;
+  }
+  .card-content {
+    margin: auto 0;
+  }
+}
+
+.card.is-small.has-image, .card.is-small-count {
+  position: relative;
+  left: -1.5em;
+  min-width: calc(100% + 1.5em);
+  .card-image {
+    figure.image {
+      height: 100%;
+      figcaption {
+        z-index: 2;
+        position: absolute;
+        font-size: 11px;
+        bottom: 0;
+        color: $text;
+        padding: .31em .5em;
+        width: 100%;
+        height: 37px;
+        border-top: 1px solid #222;
+        overflow: hidden;
+        opacity: .7;
+        background-color: rgba(darken($background, 1%), .5);
+        svg {
+          width: 20px;
+          height: 20px;
+          fill: $primary;
+          -ms-transform: translate(0px, 6px);
+          -webkit-transform: translate(0px, 6px);
+          -o-transform: translate(0px, 6px);
+          -moz-transform: translate(0px, 6px);
+        }
+      }
+      img {
+        border-radius: 7px;
+        box-shadow: 0 6px 3px -3px rgba(#000, .3);
+        filter: sepia(1);
+        transition: 0.3s;
+        &:hover {
+          filter: sepia(0);
+        }
+      }
+    }
+  }
+  
+  &:hover .card-image figure figcaption {
+    opacity: 1;
+    transition: .3s;
+  }
+}
+
+
+.card.is-small-authors {
+  img {
+    border-radius: 7px;
+    box-shadow: 0 6px 3px -3px rgba(#000, .3);
+    filter: sepia(1);
+    transition: 0.3s;
+    &:hover {
+      filter: sepia(0);
     }
   }
 }
