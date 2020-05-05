@@ -1,7 +1,6 @@
 ---
 title:  "Movie Rating"
 description: "SEO Description and Subheader for single posts" # Not more than 160 characters!
-longdesc: "Summary for cards, remove for standard summary"
 date: 2020-03-16T20:35:48+01:00
 publishdate: 2020-03-16
 tags:

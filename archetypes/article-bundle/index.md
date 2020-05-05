@@ -1,7 +1,6 @@
 ---
 title: "{{ replace .TranslationBaseName "-" " " | title }}"
 description: "SEO Description and Subheader for single posts" # Not more than 160 characters!
-longdesc: "Summary for cards, remove for standard summary"
 date: {{ .Date }}
 publishdate: {{ now.Format "2006-01-02" }}
 tags:

@@ -13,16 +13,22 @@ p.title.is-4 {
   margin-bottom: .5em;
 }
 
-.content article h2, .content h1, .content h2 {
+.content article h2, .content h2 {
   @include font-header;
   color: $accent;
 }
-.content article h2, .content h1, .content h2, .content h3, .content h4, .content h5, .content h6 {
+.content article h2, .content h2, .content h3, .content h4, .content h5, .content h6 {
   color: $accent;
 }
 
-h1.title:not(.no-subtitle) {
-  padding-bottom: 0.5714em;
+
+.is-single-top article h1.title {
+  // color: darken($background, 3%);
+  // text-shadow: -1px -1px 1px rgba(lighten($primary, 20%), .5), 1px 1px 1px rgba($hover, .6);
+  // @include font-black;
+  &:not(.no-subtitle) {
+    padding-bottom: 0.5714em;
+  }
 }
 h2.subtitle {
   color: $text;

@@ -1,0 +1,12 @@
+{{- $.Scratch.Add "index" slice -}}
+{{- range where .Site.RegularPages "Section" "=" "articles" -}}
+    
+    {{- $img := (.Resources.ByType "image").GetMatch "featured*" -}}
+    {{- with $img -}}
+      {{- $resize := .Fill "320x480" -}}
+        {{ $.Scratch.Set "image" $resize.Permalink }}
+    {{- end -}}
+
+    {{- $.Scratch.Add "index" (dict "title" .Title "tags" .Params.tags "image" ($.Scratch.Get "image") "content" .Summary "permalink" .Permalink) -}}
+{{- end -}}
+{{- $.Scratch.Get "index" | jsonify -}}

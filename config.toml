@@ -25,6 +25,10 @@ googleAnalytics = ""
 [frontmatter]
   lastmod = [":git", "lastmod"]
 
+[outputs]
+  home = ["HTML", "RSS", "JSON"]
+  page = ["HTML", "RSS"]
+
 [taxonomies]
   year = "year"
   month = "month"

@@ -210,6 +210,16 @@ nav.navbar {
     }
   }
 
+  .control.is-loading::after {
+    // border: 2px solid $primary;
+    border: 2px solid $primary;
+    border-top-color: $primary;
+    border-right-color: $primary;
+    border-right-color: transparent;
+    border-top-color: transparent;
+    margin-top: -17px;
+  }
+
   a.navbar-item,
   .navbar-link {
     color: $primary;

@@ -31,13 +31,15 @@
       
       <div class="navbar-item field">
         <p class="control has-icons-right">
-          <input class="input" type="search" placeholder="Search...">
+          <input class="input" type="search" name="searchBox" id="searchBox" placeholder="Search...">
           <span class="icon is-small is-right">
             <svg class='remix'>
               <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#search-2-line"></use>
             </svg>
           </span>
+          <div id="spinner" class="control is-loading"></div>
         </p>
+        <div class="results-wrapper"><div id="results"></div></div>
       </div>
     </div>
     
