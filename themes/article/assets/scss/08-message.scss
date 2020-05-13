@@ -1,7 +1,6 @@
 .message {
   &[class*="is-"] {
     background-color: $background;
-    // box-shadow: inset 5px 5px 5px rgba(#000, .3), inset -5px -5px 5px rgba($text, .07);
     .message-body {
       color: $text;
       border-left-width: 6px;

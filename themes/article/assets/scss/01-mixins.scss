@@ -1,0 +1,20 @@
+// @include box-shadow();
+// @include box-shadow(false, 5px, 5px, 5px, rgba(#000, .3), rgba($text, .05))
+
+@mixin box-shadow($inset: false, $horizOffset: 5px, $vertOffset: 5px, $blur: 5px, $color: rgba(#000, .3), $color2: rgba($text, .05)) {
+  // 5px 5px 5px rgba(#000, .3), -5px -5px 5px rgba($text, .05);
+  -webkit-box-shadow: $horizOffset $vertOffset $blur $color, (-$horizOffset) (-$vertOffset) $blur $color2;
+  -moz-box-shadow: $horizOffset $vertOffset $blur $color, (-$horizOffset) (-$vertOffset) $blur $color2;
+  -ms-box-shadow: $horizOffset $vertOffset $blur $color, (-$horizOffset) (-$vertOffset) $blur $color2;
+  -o-box-shadow: $horizOffset $vertOffset $blur $color, (-$horizOffset) (-$vertOffset) $blur $color2;
+  box-shadow: $horizOffset $vertOffset $blur $color, (-$horizOffset) (-$vertOffset) $blur $color2;
+
+  @if $inset == true {
+    // box-shadow: inset 5px 5px 5px rgba(#000, .3), inset -5px -5px 5px rgba($text, .05);
+    -webkit-box-shadow: inset $horizOffset $vertOffset $blur $color, inset (-$horizOffset) (-$vertOffset) $blur $color2;
+    -moz-box-shadow: inset $horizOffset $vertOffset $blur $color, inset (-$horizOffset) (-$vertOffset) $blur $color2;
+    -ms-box-shadow: inset $horizOffset $vertOffset $blur $color, inset (-$horizOffset) (-$vertOffset) $blur $color2;
+    -o-box-shadow: inset $horizOffset $vertOffset $blur $color, inset (-$horizOffset) (-$vertOffset) $blur $color2;
+    box-shadow: inset $horizOffset $vertOffset $blur $color, inset (-$horizOffset) (-$vertOffset) $blur $color2;
+  }
+}

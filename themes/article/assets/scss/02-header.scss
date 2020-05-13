@@ -201,9 +201,9 @@ nav.navbar {
   input[type=search] {
     background-color: rgba(0, 0, 0, 0.2);
     border: none;
-    box-shadow: 5px 5px 5px rgba(#000, .3), -5px -5px 5px rgba($text, .07);
+    @include box-shadow(false, 5px, 5px, 5px, rgba(#000, .3), rgba($text, .07));
     &:focus {
-      box-shadow: inset 5px 5px 5px rgba(#000, .3), inset -5px -5px 5px rgba($text, .07);
+      @include box-shadow(true, 5px, 5px, 5px, rgba(#000, .3), rgba($text, .07));
       ~ span.icon .remix {
         fill: $hover;
       }
@@ -234,7 +234,7 @@ nav.navbar {
     color: $primary;
     background-color: rgba(0, 0, 0, .2);
     border: 1px solid $primary;
-    box-shadow: 5px 5px 5px rgba(#000, .3), -5px -5px 5px rgba($text, .07);
+    @include box-shadow(false, 5px, 5px, 5px, rgba(#000, .3), rgba($text, .07));
   }
   a.icon {
     margin-left: .5em;
@@ -243,7 +243,7 @@ nav.navbar {
     color: $hover;
     background-color: rgba(0, 0, 0, 0.2);
     border: 1px solid $hover;
-    box-shadow: inset 5px 5px 5px rgba(#000, .3), inset -5px -5px 5px rgba($text, .07);
+    @include box-shadow(true, 5px, 5px, 5px, rgba(#000, .3), rgba($text, .07));
 
     &.icon {
       background-color: transparent;

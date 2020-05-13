@@ -35,20 +35,20 @@ $family-primary: 'Montserrat-Regular';
 $family-secondary: 'Montserrat-Regular';
 
 $column-gap: 1rem 1rem 1rem 2.5rem;
-// $family-code: $family-monospace;
 
 @import "bulma/bulma.sass";
 
 @import "00-fonts";
-@import "01-header";
-@import "02-card";
-@import "03-ribbon";
-@import "04-pagination";
-@import "05-tooltip";
-@import "06-single";
-@import "07-message";
-@import "08-archive";
-@import "09-search";
+@import "01-mixins";
+@import "02-header";
+@import "03-card";
+@import "04-ribbon";
+@import "05-pagination";
+@import "06-tooltip";
+@import "07-single";
+@import "08-message";
+@import "09-archive";
+@import "10-search";
 
 
 html, body {
@@ -98,23 +98,12 @@ a.title.colored:hover {
 
 .box {
   background: $background;
-  box-shadow: 5px 5px 5px rgba(#000, .3), -5px -5px 5px rgba($text, .05);
+  @include box-shadow();
   border-radius: 7px;
   border: 1px solid rgba($primary, .2);
   height: 100%;
   margin-left: -1.5em;
 }
-
-.column {
-  // margin-left: 1.5rem;
-  // margin-right: 0rem;
-  // margin-top: 0rem;
-}
-// .columns [class^="is-"], .columns [class*="is-"] {
-//   padding-left: 1.5rem;
-//   padding-right: 0rem;
-//   padding-top: 0rem;
-// }
 
 hr {
   background-color: #222;

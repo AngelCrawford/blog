@@ -4,7 +4,7 @@
 }
 .ribbon {
   background-color: $primary;
-  box-shadow: 3px 3px 3px rgba(#000, .3), -3px -3px 3px rgba($text, .07);
+  @include box-shadow(false, 3px, 3px, 3px, rgba(#000, .3), rgba($text, .07));
   color: #363636;
   font-size: 1rem;
   justify-content: center;
@@ -60,6 +60,5 @@
 .ribbon:not(.is-single-page):hover {
   background-color: $hover !important;
   font-weight: 600;
-  box-shadow: inset 5px 5px 5px rgba(#000, .3), inset -5px -5px 5px rgba($text, .07);
-  // box-shadow: inset 3px 3px 3px rgba(#000, .3), inset -3px -3px 3px rgba($text, .2);
+  @include box-shadow(true, 5px, 5px, 5px, rgba(#000, .3), rgba($text, .07));
 }
