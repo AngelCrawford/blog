@@ -19,11 +19,7 @@ header.header {
     font-size: 80%;
     transition: .3s;
     svg {
-      transform: translate(0.75em, 7px);
-      -ms-transform: translate(0px, 7px); /* IE 9 */
-      -webkit-transform: translate(0px, 7px); /* Safari and Chrome */
-      -o-transform: translate(0px, 7px); /* Opera */
-      -moz-transform: translate(0px, 7px); /* Firefox */
+      @include translate(0, 7px);
     }
   }
   &:hover .byline {

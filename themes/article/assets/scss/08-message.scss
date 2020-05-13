@@ -64,9 +64,6 @@
     width: 25px;
     height: 25px;
     margin-right: 5px;
-    -ms-transform: translate(0px, 6px);
-    -webkit-transform: translate(0px, 6px);
-    -o-transform: translate(0px, 6px);
-    -moz-transform: translate(0px, 6px);
+    @include translate(0, 6px);
   }
 }

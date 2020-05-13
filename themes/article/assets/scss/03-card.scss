@@ -39,11 +39,7 @@ article.card.is-horizontal, .card {
       padding-left: 1em;
     }
     .remix-small {
-      transform: translate(0.75em, 4px);
-      -ms-transform: translate(0px, 4px); /* IE 9 */
-      -webkit-transform: translate(0px, 4px); /* Safari and Chrome */
-      -o-transform: translate(0px, 4px); /* Opera */
-      -moz-transform: translate(0px, 4px); /* Firefox */
+      @include translate(0, 4px);
     }
   }
   .rating {
@@ -54,11 +50,7 @@ article.card.is-horizontal, .card {
       fill: $secondary;
       width: 18px;
       height: 18px;
-      transform: translate(0.75em, 4px);
-      -ms-transform: translate(0px, 4px); /* IE 9 */
-      -webkit-transform: translate(0px, 4px); /* Safari and Chrome */
-      -o-transform: translate(0px, 4px); /* Opera */
-      -moz-transform: translate(0px, 4px); /* Firefox */
+      @include translate(0, 4px);
     }
   }
   .tags-wrapper {
@@ -75,11 +67,7 @@ article.card.is-horizontal, .card {
     }
     .remix-small {
       margin-right: 0.75em;
-      transform: translate(0.75em, 4px);
-      -ms-transform: translate(0px, 4px); /* IE 9 */
-      -webkit-transform: translate(0px, 4px); /* Safari and Chrome */
-      -o-transform: translate(0px, 4px); /* Opera */
-      -moz-transform: translate(0px, 4px); /* Firefox */
+      @include translate(0, 4px);
     }
   }
 
@@ -176,10 +164,7 @@ article.card.is-horizontal.has-image {
           width: 20px;
           height: 20px;
           fill: $primary;
-          -ms-transform: translate(0px, 6px);
-          -webkit-transform: translate(0px, 6px);
-          -o-transform: translate(0px, 6px);
-          -moz-transform: translate(0px, 6px);
+          @include translate(0, 6px);
         }
       }
       img {
@@ -351,10 +336,7 @@ article.card.is-horizontal.quote {
           width: 20px;
           height: 20px;
           fill: $primary;
-          -ms-transform: translate(0px, 6px);
-          -webkit-transform: translate(0px, 6px);
-          -o-transform: translate(0px, 6px);
-          -moz-transform: translate(0px, 6px);
+          @include translate(0, 6px);
         }
       }
       img {

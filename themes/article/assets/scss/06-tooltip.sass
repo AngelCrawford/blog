@@ -40,7 +40,7 @@ $tooltip-z-index: 9999 !default
 		left: 50%
 		margin-top: $tooltip-arrow-size * -1 + 1
 		margin-bottom: auto
-		transform: translate(-50%, -100%)
+		@include translate(-50%, -100%)
 
 =tooltip-top
 	+tooltip-arrow-top
@@ -66,7 +66,7 @@ $tooltip-z-index: 9999 !default
 		left: 50%
 		margin-top: auto
 		margin-bottom: $tooltip-arrow-size * -1 + 1
-		transform: translate(-50%, 100%)
+		@include translate(-50%, 100%)
 
 =tooltip-bottom
 	+tooltip-arrow-bottom
@@ -91,7 +91,7 @@ $tooltip-z-index: 9999 !default
 		right: auto
 		bottom: 50%
 		left: $tooltip-arrow-size * -2 + 1
-		transform: translate(-100%, 50%)
+		@include translate(-100%, 50%)
 
 =tooltip-left
 	+tooltip-arrow-left
@@ -117,7 +117,7 @@ $tooltip-z-index: 9999 !default
 		bottom: 50%
 		left: auto
 		margin-top: auto
-		transform: translate(100%, 50%)
+		@include translate(100%, 50%)
 
 =tooltip-right
 	+tooltip-arrow-right

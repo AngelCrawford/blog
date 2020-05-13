@@ -62,10 +62,7 @@ section.footnotes {
     height: 18px;
     width: 18px;
     margin-left: 6px;
-    -ms-transform: translate(0px, 3px);
-    -webkit-transform: translate(0px, 3px);
-    -o-transform: translate(0px, 3px);
-    -moz-transform: translate(0px, 3px);
+    @include translate(0, 3px);
   }
 
   .details-icon-wrapper {
@@ -101,10 +98,7 @@ section.footnotes {
     color: $secondary;
   }
   .remix {
-    -ms-transform: translate(0px, 5px);
-    -webkit-transform: translate(0px, 5px);
-    -o-transform: translate(0px, 5px);
-    -moz-transform: translate(0px, 5px);
+    @include translate(0, 5px);
   }
 }
 
@@ -121,19 +115,13 @@ section.footnotes {
     color: $secondary;
     .remix-small {
       margin-right: 5px;
-      -ms-transform: translate(0px, 2px);
-      -webkit-transform: translate(0px, 2px);
-      -o-transform: translate(0px, 2px);
-      -moz-transform: translate(0px, 2px);
+      @include translate(0, 2px);
     }
     .remix {
       fill: $secondary;
       width: 15px;
       height: 15px;
-      -ms-transform: translate(0px, 2px);
-      -webkit-transform: translate(0px, 2px);
-      -o-transform: translate(0px, 2px);
-      -moz-transform: translate(0px, 2px);
+      @include translate(0, 2px);
 
     }
   }
@@ -243,10 +231,7 @@ section.footnotes {
   .remix {
     height: 20px;
     width: 20px;
-    -ms-transform: translate(0px, 4px);
-    -webkit-transform: translate(0px, 4px);
-    -o-transform: translate(0px, 4px);
-    -moz-transform: translate(0px, 4px);
+    @include translate(0, 4px);
   }
   a:hover .remix {
     fill: $accent;
