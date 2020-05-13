@@ -163,6 +163,10 @@ var searchFn = function () {
   $(document).mouseup(function(e) {
     if (!$("#resultsWrapper").is(e.target) && $("#resultsWrapper").has(e.target).length === 0) {
       $("#resultsWrapper").hide();
+      if ($("input#searchBox").val().length === 0) {
+        $("#searchIcons svg.remix.lens").show();
+        $("#searchIcons svg.remix.close").hide();
+      }
     }
   });
 
@@ -174,8 +178,15 @@ var searchFn = function () {
   });
 
   $("#spinnerLoading").hide();
-  $("#searchIcons svg.remix.lens").show();
-  $("#searchIcons svg.remix.close").hide();
+
+  if ($("input#searchBox").val()) {
+    $("#searchIcons svg.remix.lens").hide();
+    $("#searchIcons svg.remix.close").show();
+  } else {
+    $("#searchIcons svg.remix.lens").show();
+    $("#searchIcons svg.remix.close").hide();
+  }
+  
   $("#resultsWrapper").hide();
   var searchHost = {};
 
