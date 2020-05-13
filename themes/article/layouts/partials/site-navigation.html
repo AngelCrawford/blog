@@ -30,16 +30,14 @@
       </div>
       
       <div class="navbar-item field">
-        <p class="control has-icons-right">
+        <div class="searchWithButton">
           <input class="input" type="search" name="searchBox" id="searchBox" placeholder="Search...">
-          <span id="iconLens" class="icon is-small is-right">
-            <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#search-2-line"></use></svg>
-          </span>
-          <div id="spinnerLoading" class="control spinner is-loading"></div>
-          <span id="iconClose" class="icon is-small is-right">
-            <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#close-fill"></use></svg>
-          </span>
-        </p>
+          <button id="searchIcons" class="icon is-small is-right">
+            <svg class='remix lens'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#search-2-line"></use></svg>
+            <svg class='remix close'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#close-fill"></use></svg>
+            <div id="spinnerLoading" class="control spinner is-loading"></div>
+          </button>
+        </div>
         <div id="resultsWrapper"><div id="results"></div></div>
       </div>
     </div>

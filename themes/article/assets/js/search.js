@@ -106,12 +106,14 @@ var searchFn = function () {
     if (term.length < minChars) {
       $("#results").html('<p>Bitte gib\' mehr als drei Zeichen ein.</p>');
       $("#spinnerLoading").hide();
-      $("#iconLens").show();
+      $("#searchIcons svg.remix.lens").hide();
+      $("#searchIcons svg.remix.close").show();
       return;
     }
 
     $("#spinnerLoading").show();
-    $("#iconLens").hide();
+    $("#searchIcons svg.remix.lens").hide();
+    $("#searchIcons svg.remix.close").hide();
     searching = true;
     var startSearch = new Date();
     var terms = term.split(" ");
@@ -137,13 +139,13 @@ var searchFn = function () {
     var endSearch = new Date();
     $("#results").append("<p><small>Die Suche brauchte " + (endSearch - startSearch) + "ms.</small></p>");
     $("#spinnerLoading").hide();
-    $("#iconClose").show();
+    $("#searchIcons svg.remix.lens").hide();
+    $("#searchIcons svg.remix.close").show();
   };
 
   var initSearch = function () {
     $('#searchBox').focus(function()  {
       
-
       $("#searchBox").keyup(function () {
         
         if ( $("#searchBox").val().length === 0 ) {
@@ -155,13 +157,25 @@ var searchFn = function () {
       });
     });
 
-    
     // runSearch();
   };
 
+  $(document).mouseup(function(e) {
+    if (!$("#resultsWrapper").is(e.target) && $("#resultsWrapper").has(e.target).length === 0) {
+      $("#resultsWrapper").hide();
+    }
+  });
+
+  $("#searchIcons svg.remix.close").on("click", function(e) {
+    $("input#searchBox").val("");
+    $("#searchIcons svg.remix.lens").show();
+    $("#searchIcons svg.remix.close").hide();
+    $("#resultsWrapper").hide();
+  });
+
   $("#spinnerLoading").hide();
-  $('#iconClose').hide();
-  $("#iconLens").show();
+  $("#searchIcons svg.remix.lens").show();
+  $("#searchIcons svg.remix.close").hide();
   $("#resultsWrapper").hide();
   var searchHost = {};
 
