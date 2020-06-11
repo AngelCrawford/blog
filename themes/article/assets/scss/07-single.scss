@@ -113,6 +113,7 @@ section.footnotes {
     font-size: 13px;
     letter-spacing: 0;
     color: $secondary;
+    padding-bottom: .4em;
     .remix-small {
       margin-right: 5px;
       @include translate(0, 2px);
@@ -122,7 +123,20 @@ section.footnotes {
       width: 15px;
       height: 15px;
       @include translate(0, 2px);
-
+    }
+  }
+  .series-single {
+    padding-left: 27px;
+    text-indent: -27px;
+    .remix-small {
+      margin-right: 10px;
+    }
+  }
+  .date-single, 
+  .tags-single,
+  .reading-time-single {
+    .remix-small {
+      margin-right: 10px;
     }
   }
   .date-single time:last-of-type .remix-small {

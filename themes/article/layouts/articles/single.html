@@ -81,15 +81,14 @@
         <div class="reading-time-single">
           <svg class='remix-small'>
             <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#time-line"></use>
-          </svg> {{ .ReadingTime }} {{ i18n "minutesRead" }}
+          </svg>{{ .ReadingTime }} {{ i18n "minutesRead" }}
         </div>
 
         {{- if .Params.rating -}}
           <div class="ratings-single">
             <svg class='remix-small'>
               <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#time-line"></use>
-            </svg> 
-            {{ partial "rating" . }} ({{ .Params.rating }})
+            </svg>{{ partial "rating" . }} ({{ .Params.rating }})
           </div>
         {{- end -}}
 
@@ -98,8 +97,7 @@
             {{ $name := index .Params.series 0 }}
             <svg class='remix-small'>
               <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#stack-line"></use>
-            </svg>
-            This post is part of the <a href="{{.Site.BaseURL}}/series/{{$name | urlize}}">{{ $name }}</a> series.
+            </svg>Dieser Artikel gehört zur Serie: <a href="{{.Site.BaseURL}}/series/{{$name | urlize}}">{{ $name }}</a>.
           </div>
         {{ end }}
       </div>
