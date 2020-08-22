@@ -183,6 +183,7 @@ article.card.is-horizontal.has-image {
   &:hover .card-image figure figcaption {
     opacity: 1;
     transition: .3s;
+    background-color: rgba(darken($background, 1%), .7);
   }
 
   .card-content {

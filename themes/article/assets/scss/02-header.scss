@@ -65,7 +65,7 @@ header.header {
 }
 
 .textlogo {
-  background: linear-gradient(to bottom, #b78846 32%, #d8bf9a 50%, #624925 72%);
+  background: linear-gradient(to bottom, #b78846 32%, #ffcb9a 50%, #624925 72%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   color: #000;
@@ -89,7 +89,7 @@ header.header {
     top: 0;
     z-index: -1;
     position: absolute;
-    text-shadow: -1px 0 1px #d3b68c, 0 1px 1px #d3b68c, 5px 5px 10px rgba(0, 0, 0, 0.7), -2px -2px 5px rgba(255, 255, 255, 0.3);
+    text-shadow: -1px 0 1px #ffcb9a, 0 1px 1px #ffcb9a, 5px 5px 10px rgba(0, 0, 0, 0.7), -2px -2px 5px rgba(255, 255, 255, 0.3);
     @media (max-width: 768px) {
       padding: 0 80px;
     }

@@ -1,7 +1,7 @@
 {{- $heading := .Get 0 -}}
 {{- $stars := .Get 1 -}}
 
-<div class="ratings"><p class="title is-6">{{ $heading }}</p>
+<div class="ratings"><p class="title is-5">{{ $heading }}</p>
   <div class="stars">
     {{- with (eq $stars "0") -}}
       {{ partial "ratings/stars-0_0" }}

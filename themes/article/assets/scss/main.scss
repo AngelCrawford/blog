@@ -52,6 +52,7 @@ $column-gap: 1rem 1rem 1rem 2.5rem;
 @import "08-message";
 @import "09-archive";
 @import "10-search";
+@import "11-site";
 
 
 html, body {
@@ -94,9 +95,14 @@ p.title, h1.title, h1, h1.title,
 h2, h2.title,
 h3, h3.title {
   color: $hover;
+  @include font-header;
 }
 a.title.colored:hover {
   color: #e3d1b7 !important;
+}
+
+p {
+  line-height: 1.7;
 }
 
 .box {

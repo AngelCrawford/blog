@@ -6,11 +6,58 @@
     display: flex;
     flex-direction: column;
   } 
+
+  &.has-image {
+    padding: 1rem 1rem 0 4rem;
+    figure.image {
+      float: left;
+      margin: .28em 1em 0 -2.8em;
+      height: 413px;
+      width: 274px;
+      padding: 0;
+      img {
+        border-radius: $radius-large;
+        @include box-shadow(false, 3px, 3px, 3px, rgba(#000, .5), rgba($text, .1));
+      }
+      figcaption {
+        z-index: 2;
+        position: absolute;
+        font-size: 11px;
+        bottom: 0;
+        color: $text;
+        padding: .31em .5em;
+        width: 100%;
+        height: 37px;
+        border-top: 1px solid #222;
+        overflow: hidden;
+        opacity: .7;
+        background-color: rgba(darken($background, 1%), .5);
+        text-align: left;
+        svg {
+          width: 20px;
+          height: 20px;
+          fill: $primary;
+          @include translate(0, 6px);
+        }
+      }
+    }
+  }
 }
 
 p.title.is-4 {
   @include font-header;
   margin-bottom: .5em;
+  color: $accent;
+}
+
+p.title.is-5 {
+  @include font-regular;
+  margin-bottom: .5em;
+  color: $accent;
+}
+
+article.content h1.title {
+  @include font-header;
 }
 
 .content article h2, .content h2 {
@@ -18,12 +65,14 @@ p.title.is-4 {
   color: $hover;
 }
 .content article h2, .content h2, .content h3, .content h4, .content h5, .content h6 {
+  @include font-header;
   color: $hover;
 }
 
 
 .is-single-top article h1.title {
   color: $hover;
+  @include font-header;
   // text-shadow: -1px -1px 1px rgba(lighten($primary, 20%), .5), 1px 1px 1px rgba($hover, .6);
   // @include font-black;
   &:not(.no-subtitle) {
@@ -47,7 +96,8 @@ section.footnotes {
 }
 
 .details-single {
-  margin-top: 2em;
+  margin: 2em 0 1em 0;
+  left: 248px;
 
   span[data-tooltip] {
     display: inline-block;
@@ -66,7 +116,7 @@ section.footnotes {
   }
 
   .details-icon-wrapper {
-    margin-left: 12.4em;
+    margin-left: -3.1em;
   }
 }
 
@@ -88,7 +138,7 @@ section.footnotes {
 .ratings {
   p.title {
     display: inline-block;
-    width: 12.5em;
+    width: 10em;
     color: $secondary;
   }
   .stars {
@@ -156,7 +206,7 @@ section.footnotes {
 
   .categories-single {
     span.tag {
-      background-color: $primary;
+      background-color: $accent;
       @include box-shadow(false, 3px, 3px, 3px, rgba(#000, .3), rgba($text, .07));
       font-size: 1rem;
       text-align: center;
@@ -191,6 +241,7 @@ section.footnotes {
   font-size: 15px;
   p.title.is-6 {
     margin-bottom: .75em;
+    @include font-regular;
   }
   ul {
     li {
