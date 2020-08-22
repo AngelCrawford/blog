@@ -61,7 +61,7 @@ html, body {
   color: $text;
 }
 footer.footer {
-  background-color: darken(#555450, 10%);
+  background: darken($pageBack, 1%);
   a {
     color: $primary;
   }

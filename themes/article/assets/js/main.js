@@ -49,4 +49,26 @@ $(document).ready(function() {
     },2000);
   });
 
+
+  // ***************** Sticky Navbar
+  $(window).scroll(function () {
+    navScroll();
+  });
+
+  navScroll();
+
 });
+
+var navScroll = function () {
+  var theNavigation = $(".navbar");
+  stuck = "is-fixed-top";
+  theHeader = $('.header').height() - 56;
+
+  if ($(this).scrollTop() > theHeader) {
+    theNavigation.addClass(stuck);
+    $(".navbar-logo").css('display', 'flex');
+  } else {
+    theNavigation.removeClass(stuck);
+    $(".navbar-logo").css('display', 'none');
+  }
+}

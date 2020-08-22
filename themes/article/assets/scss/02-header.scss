@@ -38,7 +38,7 @@ header.header {
   // border: 1px solid red;
   height: 360px;
   width: 100%;
-  background: radial-gradient(circle, rgba(25,25,25,1) 10%, transparent 100%);
+  // background: radial-gradient(circle, rgba(25,25,25,1) 10%, transparent 100%);
   a.brand {
     flex: 0 1 auto;
     align-self: auto;
@@ -168,17 +168,25 @@ header.header {
 
 
 // NAVIGATION
+nav.navbar.is-fixed-top {
+  top: 56px;
+  box-shadow: 1px 1px 5px rgba($primary, .4);
+}
+
 nav.navbar {
-  // background: transparent;
   margin-top: -3.5em;
   padding: 0 2.5em;
-  background: rgba(darken($background, 1%), .5);
-  // @include font-header;
+  background: darken($pageBack, 1%);
   font-weight: 600;
+  height: 56px;
   @media (max-width: 1023px) {
-    margin-top: -3.2em;
+    margin-top: -3.5em;
+  }
+  .navbar-brand {
+    height: 56px;
   }
   .navbar-item.navbar-logo {
+    display: none;
     span {
       margin-left: 65px;
     }
