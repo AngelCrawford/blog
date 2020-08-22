@@ -5,6 +5,11 @@
       <img src="/images/logo_back.png"><span>{{ .Site.Title }}</span>
     </a>
 
+    
+    <div class="navbar-item is-hidden-desktop">
+      {{ partialCached "social-follow.html" . }}
+    </div>
+
     <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarHeader">
       <span aria-hidden="true"></span>
       <span aria-hidden="true"></span>
@@ -21,10 +26,45 @@
           {{ .Name }}
         </a>
       {{ end }}
+
+      
+
+      <div class="navbar-item has-dropdown is-hoverable">
+        <div class="navbar-link">
+          More
+        </div>
+        <div id="moreDropdown" class="navbar-dropdown ">
+          <a class="navbar-item " href="http://bulma.io/extensions/">
+            <div class="level is-mobile">
+              <div class="level-left">
+                <div class="level-item">
+                  <p>
+                    <strong>Extensions</strong>
+                    <br>
+                    <small>Side projects to enhance Bulma</small>
+                  </p>
+                </div>
+              </div>
+              <div class="level-right">
+                <div class="level-item">
+                  <span class="icon has-text-info">
+                    <i class="fa fa-plug"></i>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+
+
+
+
+
     </div>
 
     <div class="navbar-end">
-      <div class="navbar-item">
+      <div class="navbar-item is-hidden-touch">
         {{ partialCached "social-follow.html" . }}
       </div>
       
