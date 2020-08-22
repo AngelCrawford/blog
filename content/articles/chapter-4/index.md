@@ -11,7 +11,7 @@ contains:
 - image
 year: "2017"
 month: "2017/04"
-weight: 1
+# weight: 1
 featured_image:
 - src: ./featured.jpg
   byline: TEST <a href='#'>test</a>

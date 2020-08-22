@@ -3,7 +3,7 @@
   position: relative;
 }
 .ribbon {
-  background-color: $primary;
+  background-color: $accent;
   @include box-shadow(false, 3px, 3px, 3px, rgba(#000, .3), rgba($text, .07));
   color: #363636;
   font-size: 1rem;
@@ -51,7 +51,7 @@
     transform: rotate(360deg);
     border-style: solid;
     border-width: 16px 0 16px 16px;
-    border-color: transparent transparent transparent $primary;
+    border-color: transparent transparent transparent $accent;
   }
 }
 

@@ -11,11 +11,13 @@
 //-------------------------------------------------------------------------------
 
 // Colors
+$pageBack     : #2f2f2f;
 $background   : #2f2f2f;
+
 $text         : #f2ebe3;
-$hover        : #b87333;
-$primary      : #e0b361;
-$accent       : #b87333;
+$primary      : #c89666;
+$hover        : darken($primary, 25%);
+$accent       : darken($primary, 25%);
 $secondary    : #777777;
 
 // Breakpoints
@@ -52,7 +54,7 @@ $column-gap: 1rem 1rem 1rem 2.5rem;
 
 
 html, body {
-  background-color: darken($background, 3%);
+  background-color: darken($pageBack, 3%);
   color: $text;
 }
 footer.footer {
