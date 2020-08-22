@@ -77,11 +77,11 @@ article.card.is-horizontal, .card {
     text-transform: uppercase;
     z-index: 5;
     border-top: 1px solid darken($background, 6%);
-    color: $small;
+    color: lighten($small, 10%);
     background: darken($background, 2%);
     .remix-small {
       margin-right: 0.4em;
-      fill: $small;
+      fill:lighten($small, 10%);
       &.comments {
         margin-left: 1em;
       }
