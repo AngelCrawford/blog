@@ -35,13 +35,13 @@
       {{ end }}
       <h1 class="title categorie-color {{if not .Params.description}} no-subtitle{{end}}">
         {{- if eq .Section "tags" -}}
-          {{ if eq .Kind "taxonomy" }}Tag: {{ end }}
+          {{ if eq .Kind "term" }}Tag: {{ end }}
         {{- else if (eq .Section "series") -}}
-          {{ if eq .Kind "taxonomy" }}Serie: {{ end }}
+          {{ if eq .Kind "term" }}Serie: {{ end }}
         {{- else if (eq .Section "authors") -}}
-          {{ if eq .Kind "taxonomy" }}Autor: {{ end }}
+          {{ if eq .Kind "term" }}Autor: {{ end }}
         {{- else if (eq .Section "categories") -}}
-          {{ if eq .Kind "taxonomy" }}Kategorie: {{ end }}
+          {{ if eq .Kind "term" }}Kategorie: {{ end }}
         {{- else if (eq .Section "month") -}}
           Monat:&nbsp;
         {{- else if (eq .Section "year") -}}
