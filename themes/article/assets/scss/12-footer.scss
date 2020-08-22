@@ -1,0 +1,37 @@
+.back-to-top {
+  position: fixed;
+  z-index: 999999;
+  display: none;
+  bottom: 3em;
+  right: 3em;
+  height: 55px;
+  width: 55px;
+  border-radius: 50%;
+  border: 1px solid rgba($primary, .2);
+  color: $primary;
+  font-weight: 600;
+  @include box-shadow(true, 5px, 5px, 5px, rgba(#000, .3), rgba($text, .07));
+  transition: background, border .3s ease-out;
+  background-color: darken($background, 5%);
+  margin: 2em .5em .5em .5em;
+  cursor: pointer;
+  outline: none;
+  .remix {
+    transition: fill .3s ease-out;
+    width: 40px;
+    height: 40px;
+    @include translate(-1px, 2px);
+  }
+ &:hover, &:focus {
+    border: 1px solid $primary;
+    color: $primary;
+    background-color: darken($background, 10%);
+    font-weight: 600;
+    @include box-shadow(false, 5px, 5px, 5px, rgba(#000, .3), rgba($text, .07));
+    color: $hover;
+    border: 1px solid $hover;
+    .remix {
+      fill: $hover;
+    }
+  }
+}
