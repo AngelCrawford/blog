@@ -11,14 +11,15 @@
 //-------------------------------------------------------------------------------
 
 // Colors
-$pageBack     : #2f2f2f;
-$background   : #2f2f2f;
+$background   : #2c3531;
+$pageBack     : darken($background, 5%);
 
-$text         : #f2ebe3;
-$primary      : #c89666;
-$hover        : darken($primary, 25%);
-$accent       : darken($primary, 25%);
-$secondary    : #777777;
+$text         : #d1e8e2;
+$secondary    : #d1e8e2;
+$primary      : #ffcb9a;
+$hover        : darken($primary, 15%);
+$accent       : #116466;
+$small        : #777;
 
 // Breakpoints
 // $bp-smallish        : {{ .Site.Params.breakpoints.bp_smallish | default "1200px" }};
@@ -31,7 +32,7 @@ $secondary    : #777777;
 $easing: ease-out;
 $radius-small: 0px;
 $radius: 0px;
-$radius-large: 0px;
+$radius-large: 7px;
 
 $family-primary: 'Montserrat-Regular';
 $family-secondary: 'Montserrat-Regular';
@@ -92,7 +93,7 @@ a, a h2, ul li a {
 p.title, h1.title, h1, h1.title,
 h2, h2.title,
 h3, h3.title {
-  color: $accent;
+  color: $hover;
 }
 a.title.colored:hover {
   color: #e3d1b7 !important;
@@ -101,7 +102,7 @@ a.title.colored:hover {
 .box {
   background: $background;
   @include box-shadow();
-  border-radius: 7px;
+  border-radius: $radius-large;
   border: 1px solid rgba($primary, .2);
   height: 100%;
   margin-left: -1.5em;

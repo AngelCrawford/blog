@@ -15,15 +15,15 @@ p.title.is-4 {
 
 .content article h2, .content h2 {
   @include font-header;
-  color: $accent;
+  color: $hover;
 }
 .content article h2, .content h2, .content h3, .content h4, .content h5, .content h6 {
-  color: $accent;
+  color: $hover;
 }
 
 
 .is-single-top article h1.title {
-  // color: darken($background, 3%);
+  color: $hover;
   // text-shadow: -1px -1px 1px rgba(lighten($primary, 20%), .5), 1px 1px 1px rgba($hover, .6);
   // @include font-black;
   &:not(.no-subtitle) {
@@ -32,9 +32,9 @@ p.title.is-4 {
 }
 h2.subtitle {
   color: $text;
-  font-size: 1rem;
+  font-size: 1.3rem;
   line-height: 1.5;
-  @include font-regular;
+  @include font-bold;
 }
 
 section.footnotes {
@@ -53,12 +53,12 @@ section.footnotes {
     display: inline-block;
   }
   span.tag.is-primary {
-    color: $background;
+    color: #ffffff;
     font-weight: 600;
   }
 
   .remix-small {
-    fill: $background;
+    fill: #ffffff;
     height: 18px;
     width: 18px;
     margin-left: 6px;
@@ -74,13 +74,13 @@ section.footnotes {
   p.title {
     display: inline-block;
     width: 10em;
-    color: $secondary;
+    color: $text;
   }
   .tags {
     display: inline-block;
     span.tag {
-      color: #fff;
-      background: $secondary;
+      color: #ffffff;
+      background: $small;
     }
   }
 }
@@ -98,6 +98,7 @@ section.footnotes {
     color: $secondary;
   }
   .remix {
+    fill: $small;
     @include translate(0, 5px);
   }
 }
@@ -112,7 +113,7 @@ section.footnotes {
   .ratings-single {
     font-size: 13px;
     letter-spacing: 0;
-    color: $secondary;
+    color: lighten($small, 10%);
     padding-bottom: .4em;
     .remix-small {
       margin-right: 5px;
@@ -164,7 +165,7 @@ section.footnotes {
       padding: 0;
       transition: all .3s ease-out;
       a {
-        color: $text;
+        color: #ffffff;
         font-weight: 600;
         @include font-header;
         padding: 0.3em .75em;
@@ -236,8 +237,8 @@ section.footnotes {
 }
 
 .series-single-footer {
-  border-top: 1px solid #222;
-  background: rgba(44,44,44,0.7);
+  border-top: 1px solid darken($background, 6%);
+  background: darken($background, 2%);
   margin: auto -1.25rem -1.25rem -1.25rem;
   padding: 1.25rem;
   position: relative;
@@ -248,7 +249,7 @@ section.footnotes {
     @include translate(0, 4px);
   }
   a:hover .remix {
-    fill: $accent;
+    fill: $hover;
   }
 }
 
