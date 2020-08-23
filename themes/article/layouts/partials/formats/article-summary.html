@@ -58,6 +58,7 @@
 
       {{ if eq .Params.weight 1 }}
         <!-- // FIXME: Wenn ich Content hier verwende, dann wird "summary" im Frontend nicht benutzt -->
+        <!-- // FIXME: Shortcodes werden ebenfalls mit ausgeben, zwar ohne HTML, aber dennoch -->
         {{ if .Params.summary }}
           {{ .Summary | truncate 800 " [...]" }}
         {{ else }}
@@ -66,7 +67,12 @@
       {{ else if not .Resources }}
         {{ .Summary | truncate 500 " [...]" }}
       {{ else }}
-        {{ .Summary | truncate 280 " [...]" }}
+        {{- with .Params.description -}}
+          <b>{{ . | truncate 160 }}</b>
+          {{ $.Summary | truncate 180 " [...]" }}
+          {{ else }}
+            {{ $.Summary | truncate 300 " [...]" }}
+        {{- end -}}
       {{ end }}
       
       <a class="read-more" href="{{ .RelPermalink }}">{{ i18n "readMore" }}</a>
