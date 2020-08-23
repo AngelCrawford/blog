@@ -56,6 +56,17 @@ $column-gap: 1rem 1rem 1rem 2.5rem;
 @import "12-footer";
 
 
+.navbar-item.is-mega {
+  position: static;
+
+  .is-mega-menu-title {
+    margin-bottom: 0;
+    padding: .375rem 1rem;
+  }
+}
+
+
+
 html, body {
   background-color: darken($pageBack, 3%);
   color: $text;

@@ -1,10 +1,4 @@
-    {{ $img := (.Resources.ByType "image").GetMatch "featured*" }}
-    {{ with $img }}
-      {{ $resize := .Fill "1700x320" | images.Filter (images.Sepia "100") }}
-      <!-- <header class="header" style="background-image: url('{{ $resize.RelPermalink }}');"> -->
-    {{ end }}
-
-    <header class="header">
+  <header class="header">
     
     <div class="brand-logo">
       <a class="brand" href="{{ .Site.BaseURL }}">
@@ -14,18 +8,10 @@
 
     {{ partial "site-navigation.html" . }}
 
-    {{ range .Params.featured_image }}
-      <div class="byline page-header">
-        <svg class='remix'>
-          <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#information-line"></use>
-        </svg> {{ .byline | safeHTML }}
-      </div>
-    {{ end }}
   </header>
 
   <!-- // TODO: Wenn Artikel Single Page, nicht anzeigen! Das befindet sich bereits in der single.html -->
   {{ if and (not .IsHome) (not (eq .Section "articles")) }}
-
     
   <main>
     <div class="header-wrapper {{ if .Resources }}has-image{{else}}no-image{{ end }}">
