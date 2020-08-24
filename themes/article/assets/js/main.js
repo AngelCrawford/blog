@@ -57,6 +57,13 @@ $(document).ready(function() {
 
   navScroll();
 
+
+  // ***************** Comment ReplyTo Button function
+  // Added function to change value onclick
+  function changeValue(elementName, newValue){
+    document.getElementsByName(elementName)[0].value=newValue;
+  };
+
 });
 
 var navScroll = function () {
