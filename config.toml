@@ -138,7 +138,7 @@ googleAnalytics = ""
       "*.disquscdn.com"]
 
   [params.staticman]
-    endpoint = "https://article-static.herokuapp.com/v3/entry"
+    endpoint = "https://article-static.herokuapp.com/v2/entry"
     username = "AngelCrawford"
     repository = "blog"
     branch = "master"
