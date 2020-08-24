@@ -1,5 +1,6 @@
 {{ range $index, $comments := (index $.SiteDataComments_parent $.entryId_parent ) }}
   {{ if eq .reply_to $.parentId }}
+  
     <div id="commentid-{{ ._id }}" class="post-comment reply">
         <div class="arrow-up"></div>
         <div class="post-comment-header">
