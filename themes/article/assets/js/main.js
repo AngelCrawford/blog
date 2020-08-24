@@ -57,13 +57,6 @@ $(document).ready(function() {
 
   navScroll();
 
-
-  // ***************** Comment ReplyTo Button function
-  // Added function to change value onclick
-  function changeValue(elementName, newValue){
-    document.getElementsByName(elementName)[0].value=newValue;
-  };
-
 });
 
 var navScroll = function () {
@@ -79,3 +72,10 @@ var navScroll = function () {
     $(".navbar-logo").css('display', 'none');
   }
 }
+
+// ***************** Comment ReplyTo Button function
+// Added function to change value onclick
+var changeValue = function (elementName, newValue) {
+  document.getElementsByName(elementName)[0].value=newValue;
+  window.location.hash = "#comment-form";
+};
