@@ -1,71 +1,26 @@
-<section class="comment_form">
-  <a id="comment-form"></a>
-  <h3>Say something</h3>
+<form id="comment-form" class="post-new-comment" method="post" action="{{ .Site.Params.staticman.endpoint }}/{{ .Site.Params.staticman.username }}/{{ .Site.Params.staticman.repository }}/{{ .Site.Params.staticman.branch }}/comments">
+  {{ if eq ($.Scratch.Get "hasComments") 0 }}
+      <p>Be the first to leave a comment! 🎉</p>
+  {{ end }}
+  <h3 class="prompt">Say something</h3>
+  <input type="hidden" name="options[redirect]" value="{{ .Permalink }}#comment-submitted">
+  {{/*  <input type="hidden" name="options[redirectError]" value="{{ .Permalink }}#post-error">  */}}
+  {{/*  <input type="hidden" name="options[slug]" value="{{ .File.BaseFileName }}">  */}}
 
-  <form class="post-new-comment" method="POST" action="{{ .Site.Params.staticman.endpoint }}/{{ .Site.Params.staticman.username }}/{{ .Site.Params.staticman.repository }}/{{ .Site.Params.staticman.branch }}/comments">
-    <input type="hidden" name="options[redirect]" value="{{ .Permalink }}#post-submitted">
-    <input type="hidden" name="options[redirectError]" value="{{ .Permalink }}#post-error">
-    <input type="hidden" name="options[entryId]" value="{{ .File.BaseFileName }}">
-    <input type="hidden" name="options[slug]" value="{{ .Permalink }}">
-    <input type="hidden" name="options[origin]" value="{{ .Permalink }}">
-    <input type="hidden" name="options[parent]" value="{{ .File.BaseFileName }}">
-    <input type="hidden" name="fields[reply_to]" value="">
-    <input type="hidden" name="options[reCaptcha][siteKey]" value="{{ .Site.Params.recaptcha_siteKey }}">
-    <input type="hidden" name="options[reCaptcha][secret]" value="{{ .Site.Params.recaptcha_secret }}">
+  <input type="hidden" name="options[entryId]" value="{{ $.Scratch.Get "post_parent" }}">
+  <input type="hidden" name="options[slug]" value="{{ .Permalink }}">
+  <input type="hidden" name="options[origin]" value="{{ .File.BaseFileName }}">
+  <input type="hidden" name="options[parent]" value="{{ $.Scratch.Get "post_parent" }}">
+  <input type="hidden" name="fields[reply_to]" value="">
 
-    <fieldset>
-      <input name="fields[name]" type="text" class="post-comment-field" placeholder="Your name">
-    </fieldset>
+  <input type="text" name="fields[name]" class="post-comment-field" placeholder="Name *" required/>
+  <input type="email" name="fields[email]" class="post-comment-field" placeholder="Email address (will not be public) *" required/>
+  <input type="hidden" id="comment-parent" name="fields[reply_to]" value="">
 
-    <fieldset>
-      <input name="fields[email]" type="email" class="post-comment-field" placeholder="Your email address">
-    </fieldset>
-
-    <fieldset>
-      <textarea name="fields[body]" class="post-comment-field" placeholder="Your message. Feel free to use Markdown." rows="10"></textarea>
-    </fieldset>
-
-    <fieldset>
-      <div class="notify-me">
-        <input type="checkbox" id="comment-form-reply" name="options[subscribe]" value="email">
-        Send me an email when someone comments on this post.
-      </div>
-    </fieldset>
-
-    <fieldset>
-      <div class="g-recaptcha" data-sitekey="{{ .Site.Params.recaptcha_siteKey }}" data-callback="enableBtn"></div>
-
-      <input type="submit" class="post-comment-field btn" value="Submit" id="submit_button">
-    </fieldset>
-
-  </form>
-
-  <script async src='https://www.google.com/recaptcha/api.js' ></script>
+  <textarea name="fields[comment]" class="post-comment-field" placeholder="Comment (markdown is accepted) *" required rows="10"></textarea>
+  <input type="submit" class="post-comment-field btn btn-primary comment-buttons" value="Submit">
+</form>
 
 
-  <script type="text/javascript">
-    document.getElementById("submit_button").disabled = true;
-  </script>
 
-  <script type="text/javascript">
-    function enableBtn(){
-       document.getElementById("submit_button").disabled = false;
-      }
-  </script>
 
-  <div id="post-submitted" class="dialog">
-    <h3>Thank you</h3>
-    <p>Your post has been submitted and will be published once it has been approved.</p>
-    {{ if (.Site.Params.githubPullURL) }}
-      <p><a href="{{ .Site.Params.githubPullURL }}">Click here</a> to see the pull request you generated.</p>
-    {{ end }}
-    <p><a href="#" class="btn">OK</a></p>
-  </div>
-
-  <div id="post-error" class="dialog">
-    <h3>OOPS!</h3>
-    <p>Your post has not been submitted.  Please return to the page and try again.  Thank You!</p>
-    <p><a href="#" class="btn">OK</a></p>
-  </div>
-
-</section>
