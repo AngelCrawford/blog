@@ -4,23 +4,12 @@
   {{ end }}
   <h3 class="prompt">Say something</h3>
   <input type="hidden" name="options[redirect]" value="{{ .Permalink }}#comment-submitted">
-  {{/*  <input type="hidden" name="options[redirectError]" value="{{ .Permalink }}#post-error">  */}}
-  {{/*  <input type="hidden" name="options[slug]" value="{{ .File.BaseFileName }}">  */}}
-
-  <input type="hidden" name="options[entryId]" value="{{ $.Scratch.Get "post_parent" }}">
-  <input type="hidden" name="options[slug]" value="{{ .Permalink }}">
-  <input type="hidden" name="options[origin]" value="{{ .File.BaseFileName }}">
-  <input type="hidden" name="options[parent]" value="{{ $.Scratch.Get "post_parent" }}">
-  <input type="hidden" name="fields[reply_to]" value="">
+  <input type="hidden" name="options[redirectError]" value="{{ .Permalink }}#comment-error">
+  <input type="hidden" name="options[slug]" value="{{ $.File.ContentBaseName }}">
 
   <input type="text" name="fields[name]" class="post-comment-field" placeholder="Name *" required/>
   <input type="email" name="fields[email]" class="post-comment-field" placeholder="Email address (will not be public) *" required/>
   <input type="hidden" id="comment-parent" name="fields[reply_to]" value="">
-
   <textarea name="fields[comment]" class="post-comment-field" placeholder="Comment (markdown is accepted) *" required rows="10"></textarea>
   <input type="submit" class="post-comment-field btn btn-primary comment-buttons" value="Submit">
 </form>
-
-
-
-

@@ -3,9 +3,10 @@
     <h3><a href="#comments">Comments</a></h3>
 
     {{ $.Scratch.Add "hasComments" 0 }}
-    {{ $entryId := .File.BaseFileName }}
+    {{ $slug := $.File.ContentBaseName }}
 
-    {{ range $index, $comments := (index $.Site.Data.comments $entryId ) }}
+     {{ range $index, $comments := (index $.Site.Data.comments $slug ) }}
+
       {{ $.Scratch.Add "hasComments" 1 }}
       {{ if not .reply_to }}
         <div class="post-comment">
@@ -17,14 +18,9 @@
         </div>
         <div class="comment__reply">
           <a id="{{ ._id }}" class="btn-info" href="#comment-form" onclick="changeValue('fields[reply_to]', '{{ ._id }}')">Reply to {{ .name }}</a>
-            </div>
-        {{ partial "comments/comment-replies" (dict "entryId_parent" $entryId "SiteDataComments_parent" $.Site.Data.comments "parentId" ._id "parentName" .name "context" .) }}
+        </div>
+    
       {{ end }}
-    {{ end }}
-
-
-    {{ if eq ($.Scratch.Get "hasComments") 0 }}
-      <p>Nothing yet.</p>
     {{ end }}
 
     {{ partial "comments/comment-form" . }}
