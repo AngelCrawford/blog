@@ -1,24 +1,24 @@
 {{ range $index, $comments := (index $.SiteDataComments_parent $.entryId_parent ) }}
   {{ if eq .reply_to $.parentId }}
-  
-    <div id="commentid-{{ ._id }}" class="post-comment reply">
-        <div class="arrow-up"></div>
-        <div class="post-comment-header">
-            <img class="post-comment-avatar" src="https://www.gravatar.com/avatar/{{ .email }}?s=70&r=pg&d=identicon">
-            <p class="post-comment-info">
-                <span class="post-comment-name">{{ .name }}<br><i><small>In reply to {{ $.parentName }}</i></small></span>
-                <br>
-                <a href="#commentid-{{ ._id }}" title="Permalink to this comment">
-                    <time class="post-time">{{ dateFormat "Monday, Jan 2, 2006 at 15:04 MST" .date }}</time>
-                </a>
-            </p>
+
+    <article id="commentid-{{ ._id }}" class="media post-comment">
+        <figure class="media-left">
+        <p class="image is-64x64"><img src="https://www.gravatar.com/avatar/{{ .email }}?s=70&r=pg&d=mp"></p>
+        </figure>
+
+        <div class="media-content">
+        <div class="content">
+            <p><strong>{{ .name }}</strong> @{{ .website }}<br> <small>In reply to {{ $.parentName }}</i></small>
+            <br>{{ .comment | markdownify }}</p>
+            
+            <small>
+            <button id="{{ ._id }}" class="btn-info" href="#comment-form" onclick="changeValue('fields[reply_to]', '{{ $.parentId }}')">Reply  to thread</button>
+            <a href="#commentid-{{ ._id }}" title="Permalink to this comment">
+                <time class="post-time">{{ (time .date).Add (2 | duration "hour" ) | dateFormat "02.01.06 um 15:04:05 Uhr" }}</time>
+            </a>
+            </small>
         </div>
-        <div class="comment-message">
-            {{ .comment | markdownify }}
-        </div>
-        <div class="comment__reply">
-            <button id="{{ ._id }}" class="btn-info" href="#comment-form" onclick="changeValue('fields[reply_to]', '{{ $.parentId }}')">Reply to thread</button>
-        </div>
-    </div>
+    </article>
+    
   {{ end }}
 {{ end }}

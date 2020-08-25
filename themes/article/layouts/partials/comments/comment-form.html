@@ -1,16 +1,100 @@
 <form id="comment-form" class="post-new-comment" method="post" action="{{ .Site.Params.staticman.endpoint }}/{{ .Site.Params.staticman.username }}/{{ .Site.Params.staticman.repository }}/{{ .Site.Params.staticman.branch }}/comments">
-  {{ if eq ($.Scratch.Get "hasComments") 0 }}
-      <p>Be the first to leave a comment! 🎉</p>
-  {{ end }}
+  
   <h3 class="prompt">Say something</h3>
   <input type="hidden" name="options[redirect]" value="{{ .Permalink }}#comment-submitted">
   <input type="hidden" name="options[redirectError]" value="{{ .Permalink }}#comment-error">
   <input type="hidden" name="options[slug]" value="{{ $.File.ContentBaseName }}">
   <input type="hidden" id="comment-parent" name="fields[reply_to]" value="">
 
-  <input type="text" name="fields[name]" class="post-comment-field" placeholder="Name *" required/>
-  <input type="email" name="fields[email]" class="post-comment-field" placeholder="Email address (will not be public) *" required/>
-  <input type="url" name="fields[website]" class="post-comment-field" placeholder="Website" />
-  <textarea name="fields[comment]" class="post-comment-field" placeholder="Comment (markdown is accepted) *" required rows="10"></textarea>
-  <input type="submit" class="post-comment-field btn btn-primary comment-buttons" value="Submit">
+  <div class="field is-horizontal">
+    <div class="field-label is-normal">
+      <label class="label">Name</label>
+    </div>
+    <div class="field-body">
+      <div class="field">
+        <div class="control has-icons-left has-icons-right">
+          <input type="text" name="fields[name]" class="input is-success" placeholder="Name *" required/>
+          <span class="icon is-small is-left">
+            <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#mail-line"></use></svg>
+          </span>
+          <span class="icon is-small is-right">
+            <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#check-fill"></use></svg>
+          </span>
+        </div>
+        <p class="help is-success">This username is available</p>
+      </div>
+      
+      <div class="field">
+        <div class="control has-icons-left has-icons-right">
+          <input type="email" name="fields[email]" class="input is-danger" placeholder="Email address (will not be public) *" required/>
+          <span class="icon is-small is-left">
+            <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#mail-line"></use></svg>
+          </span>
+          <span class="icon is-small is-right">
+            <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#error-warning-line"></use></svg>
+          </span>
+        </div>
+        <p class="help is-danger">This email is invalid</p>
+      </div>
+
+    </div>
+  </div>
+
+  
+  <div class="field is-horizontal">
+    <div class="field-label is-normal">
+      <label class="label">Webseite</label>
+    </div>
+    <div class="field-body">
+      <div class="field">
+        <div class="control has-icons-left has-icons-right">
+          <input type="url" name="fields[website]" class="input" placeholder="Website" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="field is-horizontal">
+    <div class="field-label is-normal">
+      <label class="label">Nachricht</label>
+    </div>
+    <div class="field-body">
+      <div class="field">
+        <div class="control">
+          <textarea name="fields[comment]" class="textarea" placeholder="Comment (markdown is accepted) *" required rows="10"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="field is-horizontal">
+    <div class="field-label">
+      <!-- Left empty for spacing -->
+    </div>
+    <div class="field-body">
+      <div class="field">
+        <div class="control">
+          <label class="checkbox">
+            <input type="checkbox">
+            I agree to the <a href="#">terms and conditions</a>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- //TODO: Loading spinner im Button, wenn Kommentar gepostet wird, Formular solange disablen -->
+  <div class="field is-horizontal">
+    <div class="field-label">
+      <!-- Left empty for spacing -->
+    </div>
+    <div class="field-body">
+      <div class="field is-grouped is-horizontal">
+        <div class="control">
+          <input type="submit" class="button is-link is-light" value="Submit">
+        </div>
+      </div>
+    </div>
+  </div>
+
 </form>
