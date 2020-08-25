@@ -6,6 +6,7 @@ comments:
     - website
     - comment
     - reply_to
+  allowedOrigins: ["localhost", "example.com"] # TODO: Add your domains
   branch: master
   commitMessage: "New comment in {options.slug}"
   filename: "comment-{@timestamp}"
@@ -23,3 +24,4 @@ comments:
     - comment
   transforms: 
     email: md5
+  name: "Article Time"

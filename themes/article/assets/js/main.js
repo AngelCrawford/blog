@@ -58,9 +58,12 @@ $(document).ready(function() {
   navScroll();
 
   if (window.location.hash == "#comment-submitted") {
-    $('.modal.comment-submitted').addClass("is-active");
+    $('.modal#comment-submitted').addClass("is-active");
   }
-
+  if (window.location.hash == "#comment-error") {
+    $('.modal#comment-error').addClass("is-active");
+  }
+  
 });
 
 var navScroll = function () {

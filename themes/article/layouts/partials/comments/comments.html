@@ -56,7 +56,9 @@
    
       <h3>Thank you!</h3>
       <p>Your comment has been submitted and will be published once it has been approved. &#128522;</p>
-    
+      <p><a href="https://github.com/{{ .Site.Params.staticman.username }}/{{ .Site.Params.staticman.repository }}/pulls" target="_blank">Click here</a> 
+      to see the pull request you generated.</p>
+ 
     </section>
     <footer class="modal-card-foot">
       <button class="button is-success">Save changes</button>
@@ -65,4 +67,49 @@
   </div>
 </div>
 
+<div class="modal comment" id="comment-submitted">
+  <div class="modal-background"></div>
+  <div class="modal-card">
+    <header class="modal-card-head">
+      <p class="modal-card-title">Modal title</p>
+      <button class="delete" aria-label="close"></button>
+    </header>
+    <section class="modal-card-body">
+   
+      
+ 
+    </section>
+    <footer class="modal-card-foot">
+      <button class="button button-close">Cancel</button>
+    </footer>
+  </div>
+</div>
 
+<div class="notification is-primary">
+  <h3>Thank you!</h3>
+  <p>Your comment has been submitted and will be published once it has been approved. &#128522;</p>
+  <p><a href="https://github.com/{{ .Site.Params.staticman.username }}/{{ .Site.Params.staticman.repository }}/pulls" target="_blank">Click here</a> 
+  to see the pull request you generated.</p>
+</div>
+
+<div class="modal comment" id="comment-error">
+  <div class="modal-background"></div>
+  <div class="modal-card">
+    <header class="modal-card-head">
+      <p class="modal-card-title">Modal title</p>
+      <button class="delete" aria-label="close"></button>
+    </header>
+    <section class="modal-card-body">
+   
+      <div id="" class="dialog">
+        <h3>OOPS!</h3>
+        <p>Your comment has not been submitted. Please <a href="{{ .Permalink }}">go back</a> and try again. Thank You!</p>
+        <p>If this error persists, please open an issue by <a href="https://github.com/{{ .Site.Params.staticman.username }}/{{ .Site.Params.staticman.repository }}/issues"> clicking here</a>.</p>
+      </div>
+ 
+    </section>
+    <footer class="modal-card-foot">
+      <button class="button button-close">Close</button>
+    </footer>
+  </div>
+</div>

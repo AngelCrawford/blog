@@ -7,16 +7,17 @@
   height: 55px;
   width: 55px;
   border-radius: 50%;
-  border: 1px solid rgba($primary, .2);
-  color: $primary;
   font-weight: 600;
-  @include box-shadow(true, 5px, 5px, 5px, rgba(#000, .3), rgba($text, .07));
+  background-color: darken($background, 10%);
+  @include box-shadow(false, 5px, 5px, 5px, rgba(#000, .3), rgba($text, .07));
+  border: 1px solid rgba($primary, .2);
+  color: $hover;
   transition: background, border .3s ease-out;
-  background-color: darken($background, 5%);
   margin: 2em .5em .5em .5em;
   cursor: pointer;
   outline: none;
   .remix {
+    fill: $primary;
     transition: fill .3s ease-out;
     width: 40px;
     height: 40px;
@@ -25,11 +26,10 @@
  &:hover, &:focus {
     border: 1px solid $primary;
     color: $primary;
-    background-color: darken($background, 10%);
     font-weight: 600;
-    @include box-shadow(false, 5px, 5px, 5px, rgba(#000, .3), rgba($text, .07));
-    color: $hover;
+    @include box-shadow(true, 5px, 5px, 5px, rgba(#000, .3), rgba($text, .07));
     border: 1px solid $hover;
+    color: $primary;
     .remix {
       fill: $hover;
     }
