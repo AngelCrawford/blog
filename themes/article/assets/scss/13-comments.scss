@@ -1,5 +1,5 @@
 #comments.box {
-  margin: 1.5em 1em;
+  // margin: 1.5em 1em;
 
   strong {
     color: $text;
@@ -7,9 +7,15 @@
 }
 
 #comments-messages.box {
-  margin: 1.5em 1em;
+  // margin: 1.5em 1em;
 }
 
 #comments-form.box {
-  margin: 1.5em 1em;
+  // margin: 1.5em 1em;
+
+  form#comment-form {
+    label {
+      color: $text;
+    }
+  }
 }

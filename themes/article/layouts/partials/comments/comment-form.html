@@ -1,6 +1,6 @@
 <form id="comment-form" class="post-new-comment" method="post" action="{{ .Site.Params.staticman.endpoint }}/{{ .Site.Params.staticman.username }}/{{ .Site.Params.staticman.repository }}/{{ .Site.Params.staticman.branch }}/comments">
   
-  <h3 class="prompt">Say something</h3>
+  <p class="title is-4">Say something</p>
   <input type="hidden" name="options[redirect]" value="{{ .Permalink }}#comment-submitted">
   <input type="hidden" name="options[redirectError]" value="{{ .Permalink }}#comment-error">
   <input type="hidden" name="options[slug]" value="{{ $.File.ContentBaseName }}">
@@ -23,7 +23,14 @@
         </div>
         <p class="help is-success">This username is available</p>
       </div>
-      
+    </div>
+  </div>
+  
+  <div class="field is-horizontal">
+    <div class="field-label is-normal">
+      <label class="label">E-Mail</label>
+    </div>
+    <div class="field-body">     
       <div class="field">
         <div class="control has-icons-left has-icons-right">
           <input type="email" name="fields[email]" class="input is-danger" placeholder="Email address (will not be public) *" required/>
@@ -36,10 +43,8 @@
         </div>
         <p class="help is-danger">This email is invalid</p>
       </div>
-
     </div>
   </div>
-
   
   <div class="field is-horizontal">
     <div class="field-label is-normal">
@@ -73,12 +78,14 @@
     </div>
     <div class="field-body">
       <div class="field">
-        <div class="control">
-          <label class="checkbox">
-            <input type="checkbox">
-            I agree to the <a href="#">terms and conditions</a>
-          </label>
-        </div>
+        <p class="control">
+          <div class="b-checkbox is-primary is-inline">
+              <input id="checkbox" checked type="checkbox">
+              <label for="checkbox">
+                I agree to the <a href="#">terms and conditions</a>
+              </label>
+          </div>
+        </p>
       </div>
     </div>
   </div>
@@ -91,7 +98,7 @@
     <div class="field-body">
       <div class="field is-grouped is-horizontal">
         <div class="control">
-          <input type="submit" class="button is-link is-light" value="Submit">
+          <input type="submit" class="button is-primary" value="Absenden">
         </div>
       </div>
     </div>
