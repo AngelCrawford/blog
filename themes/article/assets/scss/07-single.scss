@@ -98,6 +98,7 @@ section.footnotes {
 .details-single {
   margin: 2em 0 1em 0;
   left: 248px;
+  width: calc(100% - 248px);
 
   span[data-tooltip] {
     display: inline-block;
@@ -160,7 +161,8 @@ section.footnotes {
   .tags-single,
   .reading-time-single,
   .series-single,
-  .ratings-single {
+  .ratings-single,
+  .comments-single {
     font-size: 13px;
     letter-spacing: 0;
     color: lighten($small, 10%);
@@ -182,12 +184,24 @@ section.footnotes {
     .remix-small {
       margin-right: 10px;
     }
+    // text-transform: uppercase;
   }
   .date-single, 
   .tags-single,
   .reading-time-single {
     .remix-small {
       margin-right: 10px;
+    }
+  }
+  .comments-single {
+    .remix-small {
+      margin-right: 7px;
+      @include translate(0, 4px);
+    }
+  }
+  .ratings-single {
+    span.stars-wrapper .remix {
+      // @include translate(0, 4px);
     }
   }
   .date-single time:last-of-type .remix-small {

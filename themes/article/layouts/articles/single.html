@@ -105,10 +105,26 @@
           </svg>{{ .ReadingTime }} {{ i18n "minutesRead" }}
         </div>
 
+        {{ $postSlug := $.File.ContentBaseName }}
+        {{ $comments := index $.Site.Data.comments $postSlug }}
+        {{ $.Scratch.Set "hasComments" 0 }}
+        {{ range $comments }}
+          {{ $.Scratch.Add "hasComments" 1 }}
+        {{ end }}
+        {{ if not (eq ($.Scratch.Get "hasComments") 0) }}
+          <div class="comments-single">
+            <svg class='remix-small'>
+              <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#question-answer-line"></use>
+            </svg>
+            <a href="{{.RelPermalink}}#comments">{{ $.Scratch.Get "hasComments" }} Kritiken</a>
+          </div>
+        {{ end }}
+        {{ $.Scratch.Delete "hasComments" }}
+  
         {{- if .Params.rating -}}
           <div class="ratings-single">
             <svg class='remix-small'>
-              <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#time-line"></use>
+              <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#arrow-right-s-line"></use>
             </svg>{{ partial "rating" . }} ({{ .Params.rating }})
           </div>
         {{- end -}}

@@ -111,9 +111,19 @@
         <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#time-line"></use>
       </svg> {{ .ReadingTime }} {{ i18n "minutesRead" }}
 
-      <svg class='remix-small comments'>
-        <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#question-answer-line"></use>
-      </svg> Kritiken
+      {{ $postSlug := $.File.ContentBaseName }}
+      {{ $comments := index $.Site.Data.comments $postSlug }}
+      {{ $.Scratch.Set "hasComments" 0 }}
+      {{ range $comments }}
+        {{ $.Scratch.Add "hasComments" 1 }}
+      {{ end }}
+      {{ if not (eq ($.Scratch.Get "hasComments") 0) }}
+        <svg class='remix-small comments'>
+          <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#question-answer-line"></use>
+        </svg>{{ $.Scratch.Get "hasComments" }} Kritiken
+      {{ end }}
+      {{ $.Scratch.Delete "hasComments" }}
+
     </span>
 
     <!--  // TODO: Tooltips hinzufügen -->
@@ -170,23 +180,6 @@
           </svg>
         {{ end }}
       {{ end }}
-        
-
-      {{ $comments := readDir "data/comments" }}
-      <!-- //TODO: ReadDir ersetzen? Siehe https://jameskiefer.com/posts/threaded-comments-for-hugo-with-staticman-v3/ -->
-      {{ $.Scratch.Set "hasComments" 0 }}
-      {{ $postSlug := $.File.ContentBaseName }}
-
-      {{ range $comments }}
-        {{ if eq .Name $postSlug }}
-          {{ range $index, $comments := (index $.Site.Data.comments $postSlug ) }}
-            {{ $.Scratch.Add "hasComments" 1 }}
-          {{ end }}
-        {{ end }}
-      {{ end }}
-      <h4>Has comments: {{ $.Scratch.Get "hasComments" }}</h4>
-      {{ $.Scratch.Delete "hasComments" }}
-
 
     </span>
   </footer>
