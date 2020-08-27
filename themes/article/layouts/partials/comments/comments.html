@@ -1,10 +1,10 @@
 
 {{ if and .Site.Params.staticman (not (or .Site.Params.disable_comments .Params.disable_comments)) }}
-  <div class="columns">
+  <!-- <div class="columns">
     <div class="column is-full">
-      <section id="comments-messages" class="box">
+      <section id="comments-messages"> -->
         <!-- //TODO: JavaScript hinzufügen, um die Notification zu schließen! -->
-        <article class="message is-primary" id="comment-submitted">
+        <!-- <article class="message is-primary" id="comment-submitted">
           <div class="message-header">
             <p>Thank you!</p>
             <button class="delete" aria-label="delete"></button>
@@ -22,20 +22,20 @@
             <button class="delete" aria-label="delete"></button>
           </div>
           <div class="message-body">
-            <p>Your comment has not been submitted. Please <a href="{{ .Permalink }}">go back</a> and try again. Thank You!</p>
+            <p>Your comment has not been submitted. Please try again. Thank You!</p>
             <p>If this error persists, please open an issue by <a href="https://github.com/{{ .Site.Params.staticman.username }}/{{ .Site.Params.staticman.repository }}/issues"> clicking here</a>.</p>
           </div>
         </article>
       </section>
     </div>
-  </div>
+  </div> -->
 
   <div class="columns">
 
-    <div class="column is-two-thirds">
-      <section id="comments" class="box">
+    <div class="column is-three-quarter">
+      <section id="comments">
 
-        <p class="title is-4"><a href="#comments">Comments</a></p>
+        <p class="title is-4" id="#comments">Kritiken</p>
     
         {{ $postSlug := $.File.ContentBaseName }}
         {{ $comments := index $.Site.Data.comments $postSlug }}
@@ -44,47 +44,65 @@
         {{ range $comments }}
           {{ if not .reply_to }}  
             {{ $.Scratch.Add "hasComments" 1 }}
-    
-            <article id="commentid-{{ ._id }}" class="media post-comment">
+   
+            {{ $.Scratch.Set "commentName" .name }}
+            <article id="commentid-{{ ._id }}" class='media post-comment {{ range ($.GetTerms "authors") }} {{ if eq ($.Scratch.Get "commentName") .Page.Title }} is-author {{ end }} {{ end }}'>
+              {{ $.Scratch.Delete "commentName" }}
               <figure class="media-left">
-                <p class="image is-120x120"><img class="is-rounded" src="https://www.gravatar.com/avatar/{{ .email }}?s=120&r=pg&d=mp"></p>
+                {{ if .website }}<a href="{{ .website }}" title="Webseite von {{.name}}">{{ end }}
+                  <p class="image is-120x120"><img class="is-rounded" src="https://secure.gravatar.com/avatar/{{ .email }}?s=120&r=pg&d={{ $.Site.Params.staticman.gravatarDefault }}"></p>
+                  <figcaption>{{ $.Scratch.Get "hasComments" }}</figcaption>
+                {{ if .website }}</a>{{ end }}
               </figure>
     
               <div class="media-content">
                 <div class="content">
-                  <h4>{{ $.Scratch.Get "hasComments" }}</h4>
-                  <p><strong>{{ .name }}</strong> {{if .website }} {{ .website }} {{ end }}
+                  <p><strong>{{ .name }}</strong>
                   <br>{{ .comment | markdownify }}</p>
-                  
-                  <small>
-                    <button id="{{ ._id }}" class="btn-info" href="#comment-form" onclick="changeValue('fields[reply_to]', '{{ ._id }}')">Reply to @{{ .name }}</button>
-    
-                    <a href="#commentid-{{ ._id }}" title="Permalink to this comment">
-                      <time class="post-time">{{ (time .date).Add (2 | duration "hour" ) | dateFormat "02.01.06 um 15:04:05 Uhr" }}</time>
-                    </a>
-                  </small>
                 </div>
-                
-                {{ partial "comments/comment-replies" (dict "entryId_parent" $postSlug "SiteDataComments_parent" $.Site.Data.comments "parentId" ._id "parentName" .name "parentCount" ($.Scratch.Get "hasComments") "context" . ) }}
+
+                <div class="media-footer">
+                  <button id="{{ ._id }}" class="button is-primary" href="#comment-form" onclick="changeValue('fields[reply_to]', '{{ ._id }}')">Reply to @{{ .name }}</button>
+  
+                  <a href="#commentid-{{ ._id }}" title="Permalink to this comment">
+                    <time class="post-time">{{ (time .date).Add (2 | duration "hour" ) | dateFormat "02.01.06 um 15:04" }}</time>
+                  </a>
+                </div>
               </div>
             </article>
+            {{ partial "comments/comment-replies" (dict "entryId_parent" $postSlug "SiteDataComments_parent" $.Site.Data.comments "parentId" ._id "parentName" .name "parentCount" ($.Scratch.Get "hasComments") "context" . ) }}
           {{ end }}
         {{ end }}
     
         {{ if eq ($.Scratch.Get "hasComments") 0 }}
-          <h3>Be the first to leave a comment! 🎉</h3>
+          <article class="media no-comment">
+            <figure class="media-left">
+              <p class="image is-120x120"><img class="is-rounded" src="https://secure.gravatar.com/avatar/0000000?s=120&r=pg&d={{ $.Site.Params.staticman.gravatarDefault }}"></p>
+            </figure>
+            <div class="media-content">
+              <div class="content">
+                <p><strong>No comments</strong>
+                <br>Be the first to leave a comment! 🎉</p>
+              </div>
+            </div>
+          </article>
         {{ end }}
     
       </section>
     </div>
+    
+    <div class="column is-one-quarter"></div>
+  </div>
+  <div class="columns">
 
-    <div class="column is-one-thirds">
+    <div class="column is-three-quarter">
 
       <section id="comments-form" class="box">
         {{ partial "comments/comment-form" . }}
       </section>
      
     </div>
+    <div class="column is-one-quarter"></div>
   </div>
 
   

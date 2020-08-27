@@ -92,8 +92,13 @@ article.card.is-horizontal, .card {
       left: calc(50% - 24px);
       bottom: 1em;
       z-index: 55;
+      transition: all .3s ease-out;
+      img {
+        filter: grayscale(1);
+      }
       &:hover img {
         border: 1px solid $primary;
+        filter: none;
         @include box-shadow(false, 5px, 5px, 5px, rgba(#000, .3), rgba($text, .07));
       }
     }
@@ -284,11 +289,13 @@ article.card.is-horizontal.quote {
           margin-left: 1em;
           img {
             transition: all .3s ease-out;
+            filter: grayscale(1);
           }
         }
         &:hover img {
           border: 1px solid $primary;
           @include box-shadow(false, 5px, 5px, 5px, rgba(#000, .3), rgba($text, .07));
+          filter: none;
         }
       }
     }

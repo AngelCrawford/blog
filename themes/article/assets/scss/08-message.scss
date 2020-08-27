@@ -43,12 +43,12 @@
     }
   }
   &.is-danger .message-body {
-    border-color: #d63232;
-    border-right: 1px solid #d63232;
-    border-top: 1px solid #d63232;
-    border-bottom: 1px solid #d63232;
+    border-color: $danger;
+    border-right: 1px solid $danger;
+    border-top: 1px solid $danger;
+    border-bottom: 1px solid $danger;
     .remix {
-      fill: #d63232;
+      fill: $danger;
     }
   }
   &.is-question .message-body {

@@ -98,7 +98,7 @@
         <figure class="image is-48x48">
           <a href="{{ .Permalink }}">
             {{- range first 1 (.Resources.ByType "image") -}}
-              {{- $img := .Fill "48x48" | images.Filter images.Grayscale -}}
+              {{- $img := .Fill "48x48" -}}
               <img class="is-rounded" src="{{ $img.RelPermalink }}" alt="{{ $.Title }}">
             {{- end -}}
           </a>

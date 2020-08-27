@@ -20,6 +20,7 @@ $primary      : #ffcb9a;
 $hover        : darken($primary, 15%);
 $accent       : #116466;
 $small        : #777;
+$danger       : #d63232;
 
 // Breakpoints
 // $bp-smallish        : {{ .Site.Params.breakpoints.bp_smallish | default "1200px" }};

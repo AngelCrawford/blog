@@ -1,6 +1,7 @@
 <form id="comment-form" class="post-new-comment" method="post" action="{{ .Site.Params.staticman.endpoint }}/{{ .Site.Params.staticman.username }}/{{ .Site.Params.staticman.repository }}/{{ .Site.Params.staticman.branch }}/comments">
   
-  <p class="title is-4">Say something</p>
+  <p class="title is-4" id="postcomment">Kritik verfassen</a>
+
   <input type="hidden" name="options[redirect]" value="{{ .Permalink }}#comment-submitted">
   <input type="hidden" name="options[redirectError]" value="{{ .Permalink }}#comment-error">
   <input type="hidden" name="options[slug]" value="{{ $.File.ContentBaseName }}">
@@ -72,15 +73,13 @@
     </div>
   </div>
 
-  <div class="field is-horizontal">
-    <div class="field-label">
-      <!-- Left empty for spacing -->
-    </div>
+  <!-- <div class="field is-horizontal">
+    <div class="field-label"></div>
     <div class="field-body">
       <div class="field">
         <p class="control">
           <div class="b-checkbox is-primary is-inline">
-              <input id="checkbox" checked type="checkbox">
+              <input id="checkbox" type="checkbox">
               <label for="checkbox">
                 I agree to the <a href="#">terms and conditions</a>
               </label>
@@ -88,7 +87,7 @@
         </p>
       </div>
     </div>
-  </div>
+  </div> -->
 
   <!-- //TODO: Loading spinner im Button, wenn Kommentar gepostet wird, Formular solange disablen -->
   <div class="field is-horizontal">

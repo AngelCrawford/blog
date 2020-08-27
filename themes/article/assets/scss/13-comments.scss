@@ -1,16 +1,113 @@
-#comments.box {
+#comments {
   // margin: 1.5em 1em;
+  p.title.is-4 {
+    margin: 1.5em 0 1em -1em;
+  }
 
   strong {
     color: $text;
-  }  
+  }
+
+  article.media {
+    margin-top: 0.75rem;
+    border-top: 0;
+    margin-left: -1.5em;
+    .media-content {
+      background: $background;
+      @include box-shadow();
+      border-radius: $radius-large;
+      border: 1px solid rgba($primary, .2);
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-self: stretch;
+      padding: 1.5em;
+
+      .content {
+        flex: 1;
+      }
+      .media-footer {
+        // margin-bottom: auto;
+      }
+
+      &:after {
+        content: "";
+        width: 20px; 
+        height: 20px;
+        position: absolute;
+        margin-left: -2.6em;
+        margin-top: 1.2em;
+        border-bottom: 20px solid transparent;
+        border-top: 20px solid transparent;
+        border-right: 20px solid $background;
+      }
+    }
+    figure {
+      height: 120px;
+      width: 120px;
+      img {
+        border: 1px solid rgba($primary, .4);
+      }
+      figcaption {
+        color: $primary;
+        @include font-header;
+        font-size: 25px;
+        text-shadow: 3px 3px 4px rgba(#000, 1);
+        text-align: center;
+        margin-top: -.7em;
+        z-index: 99;
+        position: relative;
+      }
+      a img {
+        border: 1px solid $hover;
+        transition: all .3s ease-out;
+        filter: sepia(1);
+        &:hover {
+          border: 1px solid $primary;
+          filter: sepia(0);
+        }
+      }
+    }
+    &.reply {
+      margin-left: 7em;
+    }
+    &.no-comment .media-content {
+      padding: 1.5em 1.5em 2.5em 1.5em;
+    }
+    &.is-author .media-content {
+      background: #3b382f;
+      &:after {
+        border-right: 20px solid #3b382f;
+      }
+    }
+  }
 }
 
-#comments-messages.box {
-  // margin: 1.5em 1em;
+#comments-messages {
+  margin-left: -1.25em;
+  article.message {
+    background: transparent;
+    &.is-primary {
+      border: 1px solid $primary;
+      .message-body {
+        border: none;
+      }
+    }
+    &.is-danger {
+      border: 1px solid $danger;
+      .message-header {
+        background: $danger;
+      }
+      .message-body {
+        border: none;
+      }
+    }
+  }
+  
+  
 }
 
-#comments-form.box {
+#comments-form {
   // margin: 1.5em 1em;
 
   form#comment-form {

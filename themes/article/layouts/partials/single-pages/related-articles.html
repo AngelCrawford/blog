@@ -1,14 +1,14 @@
 <!-- THANKS: https://www.pakstech.com/blog/hugo-related-pages/ -->
 {{ if len (where (.Site.RegularPages.Related .) "Type" "articles") }}
   <div class="columns">
-    <div class="column related-content-single is-9" >
+    <div class="column related-content-single is-full" >
       <!-- <div class="content">
         <p class="title is-4">Related content</p>
       </div> -->
       <div class="columns">
-        {{- $related := (where (.Site.RegularPages.Related .) "Type" "articles") | first 3 -}}
+        {{- $related := (where (.Site.RegularPages.Related .) "Type" "articles") | first 4 -}}
         {{- range $related -}}
-          <div class="column is-one-third is-flex">
+          <div class="column is-one-quarter is-flex">
             <div class="card is-small {{ if .Resources }}has-image{{else}}no-image{{ end }}">
 
               {{ if .GetTerms "categories" }}

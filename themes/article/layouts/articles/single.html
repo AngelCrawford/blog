@@ -102,7 +102,7 @@
         <div class="reading-time-single">
           <svg class='remix-small'>
             <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#time-line"></use>
-          </svg>{{ .ReadingTime }} {{ i18n "minutesRead" }}
+          </svg>{{ .ReadingTime }} {{ i18n "minutesRead" }} zu Lesen
         </div>
 
         {{ $postSlug := $.File.ContentBaseName }}
@@ -111,14 +111,12 @@
         {{ range $comments }}
           {{ $.Scratch.Add "hasComments" 1 }}
         {{ end }}
-        {{ if not (eq ($.Scratch.Get "hasComments") 0) }}
-          <div class="comments-single">
-            <svg class='remix-small'>
-              <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#question-answer-line"></use>
-            </svg>
-            <a href="{{.RelPermalink}}#comments">{{ $.Scratch.Get "hasComments" }} Kritiken</a>
-          </div>
-        {{ end }}
+        <div class="comments-single">
+          <svg class='remix-small'>
+            <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#question-answer-line"></use>
+          </svg>
+          <a href="{{.RelPermalink}}#comments">{{ $.Scratch.Get "hasComments" }} Kritiken</a> (<a href="{{.RelPermalink}}#postcomment">Kritik verfassen</a>)
+        </div>
         {{ $.Scratch.Delete "hasComments" }}
   
         {{- if .Params.rating -}}

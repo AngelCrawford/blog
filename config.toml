@@ -1,5 +1,5 @@
 title = "Article Time"
-baseURL = "/"
+baseURL = "localhost:1313"
 languageCode = "de-DE"
 theme = "article"
 
@@ -142,3 +142,4 @@ googleAnalytics = ""
     username = "AngelCrawford"
     repository = "blog"
     branch = "master"
+    gravatarDefault = "https://raw.githubusercontent.com/AngelCrawford/blog/master/themes/article/static/images/avatar.png"

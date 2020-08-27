@@ -102,8 +102,8 @@
 }
 
 .is-danger input[type="checkbox"]:checked + label::before {
-  background-color: #ff3860;
-  border-color: #ff3860;
+  background-color: $danger;
+  border-color: $danger;
 }
 
 .is-danger input[type="checkbox"]:checked + label::after {

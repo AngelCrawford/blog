@@ -1,24 +1,37 @@
+{{ $hasTotalReplies := 0 }}
+{{ range $index, $comments := (index $.SiteDataComments_parent $.entryId_parent ) }}
+  {{ if eq .reply_to $.parentId }}
+    {{ $hasTotalReplies = add $hasTotalReplies 1 }}
+  {{ end }}
+{{ end }}
+
 {{ $hasReplies := 0 }}
 {{ range $index, $comments := (index $.SiteDataComments_parent $.entryId_parent ) }}
   {{ if eq .reply_to $.parentId }}
     {{ $hasReplies = add $hasReplies 1 }}
-    <article id="commentid-{{ ._id }}" class="media post-comment">
+    <article id="commentid-{{ ._id }}" class="media post-comment reply">
+      
       <figure class="media-left">
-      <p class="image is-64x64"><img src="https://www.gravatar.com/avatar/{{ .email }}?s=70&r=pg&d=mp"></p>
+        {{ if .website }}<a href="{{ .website }}" title="Webseite von {{.name}}">{{ end }}
+          <p class="image is-120x120"><img class="is-rounded" src="https://secure.gravatar.com/avatar/{{ .email }}?s=120&r=pg&d={{ $.Site.Params.staticman.gravatarDefault }}"></p>
+          <figcaption>{{ $.parentCount }}.{{ $hasReplies }}</figcaption>
+        {{ if .website }}</a>{{ end }}
       </figure>
-
+      
       <div class="media-content">
-      <div class="content">
-        <h4>{{ $.parentCount }}.{{ $hasReplies }}</h4>
-        <p><strong>{{ .name }}</strong> {{if .website }} {{ .website }} {{ end }}<br> <small>In reply to {{ $.parentName }}</i></small>
-        <br>{{ .comment | markdownify }}</p>
-        
-        <small>
-          <button id="{{ ._id }}" class="btn-info" href="#comment-form" onclick="changeValue('fields[reply_to]', '{{ $.parentId }}')">Reply to thread</button>
+        <div class="content">
+          <p><strong>{{ .name }}</strong><!-- | in reply to {{ $.parentName }}-->
+          <br>{{ .comment | markdownify }}</p>
+        </div>
+
+        <div class="media-footer">
+          {{ if eq $hasReplies $hasTotalReplies }}
+            <button id="{{ ._id }}" class="button is-primary" href="#comment-form" onclick="changeValue('fields[reply_to]', '{{ $.parentId }}')">Reply to thread</button>
+          {{ end }}
           <a href="#commentid-{{ ._id }}" title="Permalink to this comment">
-              <time class="post-time">{{ (time .date).Add (2 | duration "hour" ) | dateFormat "02.01.06 um 15:04:05 Uhr" }}</time>
+            <time class="post-time">{{ (time .date).Add (2 | duration "hour" ) | dateFormat "02.01.06 um 15:04" }}</time>
           </a>
-        </small>
+        </div>
       </div>
     </article>
     
