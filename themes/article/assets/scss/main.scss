@@ -154,3 +154,21 @@ input[type="search"]::-webkit-search-results-decoration {
   display: none;
   -webkit-appearance: none;
 }
+
+
+// a:not([href^='#']):not([href^='/']):after {
+
+// }
+// a[href*='#']:before {
+//   content: "\eeb7";
+//   font-family: 'remixicon' !important;
+//   font-size: 80%;
+// }
+
+// a[href^='#']:after {
+//   content: "\ecaf";
+//   font-family: 'remixicon' !important;
+// }
+
+// .ri-external-link-line:before { content: "\ecaf"; }
+// .ri-links-fill:before { content: "\eeb7"; }
