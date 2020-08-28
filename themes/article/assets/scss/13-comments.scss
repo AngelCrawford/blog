@@ -1,7 +1,8 @@
 #comments {
-  // margin: 1.5em 1em;
-  p.title.is-4 {
+  scroll-margin-top: 5em;
+  .title.is-4 {
     margin: 1.5em 0 1em -1em;
+    color: $hover;
   }
 
   strong {
@@ -108,7 +109,13 @@
 }
 
 #comments-form {
-  // margin: 1.5em 1em;
+  .title.is-4 {
+    color: $hover;
+  }
+
+  #postcomment {
+    scroll-margin-top: 4em;
+  }
 
   form#comment-form {
     label {

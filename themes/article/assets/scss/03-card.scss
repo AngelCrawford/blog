@@ -81,7 +81,7 @@ article.card.is-horizontal, .card {
     background: darken($background, 2%);
     .remix-small {
       margin-right: 0.4em;
-      fill:lighten($small, 10%);
+      fill: lighten($small, 10%);
       &.comments {
         margin-left: 1em;
       }
@@ -104,7 +104,18 @@ article.card.is-horizontal, .card {
     }
     .card-footer-item {
       padding: .75em 2rem;
-      padding-bottom: calc(0.75em + 3px);  
+      padding-bottom: calc(0.75em + 3px); 
+      div {
+        padding: 0;
+        margin: 0;
+        display: inline-block;
+        svg.remix-small {
+          @include translate(0, 4px);
+        }
+        &::after {
+          margin-left: -7px;
+        }
+      } 
       &:not(:last-child) {
         border-right: 1px solid darken($background, 6%);
       }

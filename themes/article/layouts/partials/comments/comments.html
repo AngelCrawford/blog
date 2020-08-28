@@ -35,7 +35,7 @@
     <div class="column is-three-quarter">
       <section id="comments">
 
-        <p class="title is-4" id="#comments">Kritiken</p>
+        <div class="title is-4" id="#comments">Kritiken <a class="anchor" href="#comments"><div class="anchor-icon"></div></a></div>
     
         {{ $postSlug := $.File.ContentBaseName }}
         {{ $comments := index $.Site.Data.comments $postSlug }}
@@ -48,7 +48,7 @@
             {{ $.Scratch.Set "commentName" .name }}
             <article id="commentid-{{ ._id }}" class='media post-comment {{ range ($.GetTerms "authors") }} {{ if eq ($.Scratch.Get "commentName") .Page.Title }} is-author {{ end }} {{ end }}'>
               <figure class="media-left">
-                {{ if .website }}<a href="{{ .website }}" title="Webseite von {{.name}}">{{ end }}
+                {{ if .website }}<a href="{{ .website }}" title="Webseite von {{.name}}" target="_blank">{{ end }}
                   <p class="image is-120x120"><img class="is-rounded" src="https://secure.gravatar.com/avatar/{{ .email }}?s=120&r=pg&d={{ $.Site.Params.staticman.gravatarDefault }}"></p>
                   <figcaption>{{ $.Scratch.Get "hasComments" }}</figcaption>
                 {{ if .website }}</a>{{ end }}

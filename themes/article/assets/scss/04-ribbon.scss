@@ -8,8 +8,9 @@
   color: #363636;
   font-size: 1rem;
   justify-content: center;
-  text-align: center;
-  white-space: nowrap;
+  max-width: 13em;
+  white-space: inherit;
+  text-align: left;
   position: absolute;
   top: 1.5em;
   font-weight: 400;
@@ -61,10 +62,4 @@
   background-color: $hover !important;
   font-weight: 600;
   @include box-shadow(true, 5px, 5px, 5px, rgba(#000, .3), rgba($text, .07));
-}
-
-article.card .ribbon {
-  max-width: 13em;
-  white-space: inherit;
-  text-align: left;
 }

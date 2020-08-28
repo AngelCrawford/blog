@@ -1,3 +1,13 @@
+a.anchor {
+  display: inline-block;
+  .anchor-icon::after {
+    content: "\eeb7";
+    font-family: "remixicon";
+    display: inline-block;
+    font-size: 75%;
+  }
+}
+
 .is-single-top {
   margin: 1.5rem 0 0 0;
   padding: 1rem 1rem 0 2.5rem;
@@ -5,6 +15,10 @@
   .content.box {
     display: flex;
     flex-direction: column;
+
+    h1, h2, h3, h4, h5, h6 {
+      scroll-margin-top: 3em;
+    }
   } 
 
   &.has-image {

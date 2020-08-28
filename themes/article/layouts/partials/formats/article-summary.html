@@ -76,7 +76,6 @@
       {{ end }}
       
       <a class="read-more" href="{{ .RelPermalink }}">{{ i18n "readMore" }}</a>
-      <!-- <a class="read-more" href="{{ .RelPermalink }}"></a> -->
 
       {{- if (.GetTerms "tags") -}}
         <div class="tags-wrapper">
@@ -123,61 +122,80 @@
         </svg>{{ $.Scratch.Get "hasComments" }} Kritiken
       {{ end }}
       {{ $.Scratch.Delete "hasComments" }}
-
     </span>
 
-    <!--  // TODO: Tooltips hinzufügen -->
     <span class="card-footer-item">
       {{ if .Params.weight }}
-        <svg class='remix-small'>
-          <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#pushpin-line"></use>
-        </svg>
+        <div data-tooltip="Dies ist ein angepinnter Artikel">
+          <svg class='remix-small'>
+            <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#pushpin-line"></use>
+          </svg>
+        </div>
       {{ end }}
-      <svg class='remix-small'>
-        <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#article-line"></use>
-      </svg>
+
+      <div data-tooltip="Dies ist ein Artikel">
+        <svg class='remix-small'>
+          <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#article-line"></use>
+        </svg>
+      </div>
 
       {{ if .Params.rating }}
-        <svg class='remix-small'>
-          <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#film-line"></use>
-        </svg>
+        <div data-tooltip="Mit Bewertung">
+          <svg class='remix-small'>
+            <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#film-line"></use>
+          </svg>
+        </div>
       {{ end }}
       {{ if .Params.series }}
-        <svg class='remix-small'>
-          <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#stack-line"></use>
-        </svg>
+        <div data-tooltip="Teil einer Serie">
+          <svg class='remix-small'>
+            <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#stack-line"></use>
+          </svg>
+        </div>
       {{ end }}
       
       {{ range (.GetTerms "contains") }}
         {{ if eq .Title "code" }}
-          <svg class='remix-small'>
-            <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#code-s-slash-fill"></use>
-          </svg>
+          <div data-tooltip="Mit Code">
+            <svg class='remix-small'>
+              <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#code-s-slash-fill"></use>
+            </svg>
+          </div>
         {{ end }}
         {{ if eq .Title "instagram" }}
-          <svg class='remix-small'>
-            <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#instagram-line"></use>
-          </svg>
+          <div data-tooltip="Mit Instagram Karte">
+            <svg class='remix-small'>
+              <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#instagram-line"></use>
+            </svg>
+          </div>
         {{ end }}
         {{ if eq .Title "twitter" }}
-          <svg class='remix-small'>
-            <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#twitter-line"></use>
-          </svg>
+          <div data-tooltip="Mit Twitter Karte">
+            <svg class='remix-small'>
+              <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#twitter-line"></use>
+            </svg>
+          </div>
         {{ end }}
         {{ if eq .Title "youtube" }}
-          <svg class='remix-small'>
-            <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#youtube-line"></use>
-          </svg>
+          <div data-tooltip="Mit Youtube Video">
+            <svg class='remix-small'>
+              <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#youtube-line"></use>
+            </svg>
+          </div>
         {{ end }}
         {{ if eq .Title "image" }}
-          <svg class='remix-small'>
-            <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#camera-line"></use>
-          </svg>
+          <div data-tooltip="Mit Bild">
+            <svg class='remix-small'>
+              <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#camera-line"></use>
+            </svg>
+          </div>
         {{ end }}
         {{ if eq .Title "gallery" }}
-          <svg class='remix-small'>
-            <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#gallery-line"></use>
-          </svg>
+          <div data-tooltip="Mit Gallerie">
+            <svg class='remix-small'>
+              <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#gallery-line"></use>
+            </svg>
+          </div>
         {{ end }}
       {{ end }}
 

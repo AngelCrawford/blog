@@ -12,7 +12,7 @@
     <article id="commentid-{{ ._id }}" class="media post-comment reply">
       
       <figure class="media-left">
-        {{ if .website }}<a href="{{ .website }}" title="Webseite von {{.name}}">{{ end }}
+        {{ if .website }}<a href="{{ .website }}" title="Webseite von {{.name}}" target="_blank">{{ end }}
           <p class="image is-120x120"><img class="is-rounded" src="https://secure.gravatar.com/avatar/{{ .email }}?s=120&r=pg&d={{ $.Site.Params.staticman.gravatarDefault }}"></p>
           <figcaption>{{ $.parentCount }}.{{ $hasReplies }}</figcaption>
         {{ if .website }}</a>{{ end }}
