@@ -58,13 +58,6 @@ $(document).ready(function() {
   navScroll();
 
   // ***************** Comments
-  $('#comment-send').click(function () {
-    console.log("send");
-    if ($('#comment-website') == "" ) {
-      alert('Submit 1 clicked');
-    }
-  });
-
   var invalidClassName = 'is-danger'
   var inputs = document.querySelectorAll('input, select, textarea')
   inputs.forEach(function (input) {
@@ -92,14 +85,30 @@ $(document).ready(function() {
     })
   });
 
-
+  $('#comment-form').submit(function() {
+      $('#comment-send').addClass("is-loading");
+      $('#comment-name').addClass('is-disabled');
+      $('#comment-email').addClass('is-disabled');
+      $('#comment-website').addClass('is-disabled');
+      $('#comment-message').addClass('is-disabled');
+  });
 
   if (window.location.hash == "#comment-submitted") {
-    $('.modal#comment-submitted').addClass("is-active");
+    $('#comment-submitted').css('display', 'block');
   }
   if (window.location.hash == "#comment-error") {
-    $('.modal#comment-error').addClass("is-active");
+    $('#comment-error').css('display', 'block');
   }
+
+  $('#comment-submitted button.delete').click(function () {
+    $('#comment-submitted').css('display', 'none');
+    window.location.hash = "#postcomment";
+  });
+
+  $('#comment-error button.delete').click(function () {
+    $('#comment-error').css('display', 'none');
+    window.location.hash = "#postcomment";
+  });
   
 });
 

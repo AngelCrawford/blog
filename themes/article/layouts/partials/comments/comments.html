@@ -1,35 +1,5 @@
 
 {{ if and .Site.Params.staticman (not (or .Site.Params.disable_comments .Params.disable_comments)) }}
-  <!-- <div class="columns">
-    <div class="column is-full">
-      <section id="comments-messages"> -->
-        <!-- //TODO: JavaScript hinzufügen, um die Notification zu schließen! -->
-        <!-- <article class="message is-primary" id="comment-submitted">
-          <div class="message-header">
-            <p>Thank you!</p>
-            <button class="delete" aria-label="delete"></button>
-          </div>
-          <div class="message-body">
-            <p>Your comment has been submitted and will be published once it has been approved. &#128522;</p>
-            <p><a href="https://github.com/{{ .Site.Params.staticman.username }}/{{ .Site.Params.staticman.repository }}/pulls" target="_blank">Click here</a> 
-            to see the pull request you generated.</p>
-          </div>
-        </article>
-  
-        <article class="message is-danger" id="comment-error">
-          <div class="message-header">
-            <p>OOPS!</p>
-            <button class="delete" aria-label="delete"></button>
-          </div>
-          <div class="message-body">
-            <p>Your comment has not been submitted. Please try again. Thank You!</p>
-            <p>If this error persists, please open an issue by <a href="https://github.com/{{ .Site.Params.staticman.username }}/{{ .Site.Params.staticman.repository }}/issues"> clicking here</a>.</p>
-          </div>
-        </article>
-      </section>
-    </div>
-  </div> -->
-
   <div class="columns">
 
     <div class="column is-three-quarter">
@@ -118,6 +88,33 @@
     <div class="column is-three-quarter">
 
       <section id="comments-form" class="box">
+
+        <div id="comments-messages">
+          <!-- //TODO: JavaScript hinzufügen, um die Notification zu schließen! -->
+          <article class="message is-primary" id="comment-submitted" style="display: none;">
+            <div class="message-header">
+              <p>Thank you!</p>
+              <button class="delete" aria-label="delete"></button>
+            </div>
+            <div class="message-body">
+              <p>Your comment has been submitted and will be published once it has been approved. &#128522;</p>
+              <p><a href="https://github.com/{{ .Site.Params.staticman.username }}/{{ .Site.Params.staticman.repository }}/pulls" target="_blank">Click here</a> 
+              to see the pull request you generated.</p>
+            </div>
+          </article>
+    
+          <article class="message is-danger" id="comment-error" style="display: none;">
+            <div class="message-header">
+              <p>OOPS!</p>
+              <button class="delete" aria-label="delete"></button>
+            </div>
+            <div class="message-body">
+              <p>Your comment has not been submitted. Please try again. Thank You!</p>
+              <p>If this error persists, please open an issue by <a href="https://github.com/{{ .Site.Params.staticman.username }}/{{ .Site.Params.staticman.repository }}/issues"> clicking here</a>.</p>
+            </div>
+          </article>
+        </div>
+
         {{ partial "comments/comment-form" . }}
       </section>
      
