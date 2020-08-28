@@ -92,6 +92,11 @@
   margin-left: 10px;
 }
 
+.is-danger input[type="checkbox"] + label::before {
+  border-color: $danger;
+  // background: $danger;
+}
+
 .is-primary input[type="checkbox"]:checked + label::before {
   background-color: $hover;
   border-color: $hover;

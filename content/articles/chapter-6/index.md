@@ -37,7 +37,7 @@ sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, 
   <meta name="author" content="Angel Crawford" />
 ```
 
-```go {linenos=table,hl_lines=[8,"15-17"],linenostart=199}
+```go {linenos=table,hl_lines=[8,"15-17"],linenostart=188}
 // If an unknown or empty style is provided, AP style is what you get.
 func GetTitleFunc(style string) func(s string) string {
   switch strings.ToLower(style) {

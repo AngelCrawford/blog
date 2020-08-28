@@ -8,12 +8,12 @@
 
   <div class="field is-horizontal">
     <div class="field-label is-normal">
-      <label class="label">Name</label>
+      <label class="label">Name<svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#asterisk"></use></svg></label>
     </div>
     <div class="field-body">
       <div class="field">
         <div class="control has-icons-left has-icons-right">
-          <input type="text" name="fields[name]" class="input" id="comment-name" placeholder="Name *" required/>
+          <input type="text" name="fields[name]" class="input" id="comment-name" placeholder="Nickname Name" required/>
           <span class="icon is-small is-left">
             <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#user-line"></use></svg>
           </span>
@@ -28,12 +28,12 @@
   
   <div class="field is-horizontal">
     <div class="field-label is-normal">
-      <label class="label">E-Mail</label>
+      <label class="label">E-Mail<svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#asterisk"></use></svg></label>
     </div>
     <div class="field-body">     
       <div class="field">
         <div class="control has-icons-left has-icons-right">
-          <input type="email" name="fields[email]" class="input" id="comment-email" placeholder="Email address (will not be public) *" required/>
+          <input type="email" name="fields[email]" class="input" id="comment-email" placeholder="mail@domain.de -> Wird gehashed, nicht mal ich sehe es ;)" required/>
           <span class="icon is-small is-left">
             <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#mail-line"></use></svg>
           </span>
@@ -53,7 +53,7 @@
     <div class="field-body">
       <div class="field">
         <div class="control has-icons-left has-icons-right">
-          <input type="url" name="fields[website]" class="input" id="comment-website" placeholder="Website" />
+          <input type="url" name="fields[website]" class="input" id="comment-website" placeholder="https://example.de" />
           <span class="icon is-small is-left">
             <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#external-link-line"></use></svg>
           </span>
@@ -64,25 +64,31 @@
 
   <div class="field is-horizontal">
     <div class="field-label is-normal">
-      <label class="label">Nachricht</label>
+      <label class="label">Nachricht<svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#asterisk"></use></svg></label>
     </div>
     <div class="field-body">
       <div class="field">
         <div class="control">
-          <textarea name="fields[comment]" class="textarea" id="comment-message" placeholder="Comment (markdown is accepted) *" required rows="10"></textarea>
+          <textarea name="fields[comment]" class="textarea" id="comment-message" placeholder="Markdown ist erlaubt" required rows="10"></textarea>
         </div>
         <p class="help is-danger" style="display:none;">Bitte ausfüllen.</p>
+        <p class="help is-primary">Kritiken werden moderiert, es kann etwas dauern bis deine Kritik frei geschaltet wird. 
+          Schau Dir solange Deine Kritik an unter: 
+          <a href="https://github.com/{{ .Site.Params.staticman.username }}/{{ .Site.Params.staticman.repository }}/issues" target="_blank">github.com</a>.
+        </p>
+        <p class="help is-primary">Dieses Nachrichten Feld unterstützt <a href="https://markdown.de/" target="_blank">Markdown</a>.</p>
+        <p class="help is-primary">Falls Du mir privat schreiben willst, kannst Du das hier: <a href="#">Kontaktiere mich</a>.</p>
       </div>
     </div>
   </div>
 
-  <!-- <div class="field is-horizontal">
+  <div class="field is-horizontal is-right">
     <div class="field-label"></div>
     <div class="field-body">
       <div class="field">
         <p class="control">
           <div class="b-checkbox is-primary is-inline">
-              <input id="checkbox" type="checkbox">
+              <input id="checkbox" type="checkbox" required>
               <label for="checkbox">
                 I agree to the <a href="#">terms and conditions</a>
               </label>
@@ -90,7 +96,7 @@
         </p>
       </div>
     </div>
-  </div> -->
+  </div> 
 
   <!-- //TODO: Loading spinner im Button, wenn Kommentar gepostet wird, Formular solange disablen -->
   <div class="field is-horizontal">

@@ -46,4 +46,13 @@ icons:
 {{% infobox theme="warning" %}}**Be carefull** is a text{{% /infobox %}}
 {{% infobox theme="danger" %}}**Beware !** is a text{{% /infobox %}}
 
+```go {linenos=table,hl_lines=[8,"15-17"],linenostart=188}
+// If an unknown or empty style is provided, AP style is what you get.
+func GetTitleFunc(style string) func(s string) string {
+  switch strings.ToLower(style) {
+  case "go":
+    return strings.Title
+}
+```
+
 Lorem Ipsum.

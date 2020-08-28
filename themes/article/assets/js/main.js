@@ -70,6 +70,9 @@ $(document).ready(function() {
   inputs.forEach(function (input) {
     // Add a css class on submit when the input is invalid.
     input.addEventListener('invalid', function () {
+      if ( $('input[type="checkbox"]') ) {
+        $('.b-checkbox').addClass('is-danger');
+      }
       input.classList.add(invalidClassName);
       $('.help.is-danger').css('display', 'block');
       $('.icon.is-danger').css('display', 'inline-flex');
@@ -78,13 +81,18 @@ $(document).ready(function() {
     // Remove the class when the input becomes valid.
     // 'input' will fire each time the user types
     input.addEventListener('input', function () {
-      if (input.validity.valid) {
+      if (input.validity.valid) {  
+        if ( $('input[type="checkbox"]') ) {
+          $('.b-checkbox').removeClass('is-danger');
+        }
         input.classList.remove(invalidClassName);
         $('.help.is-danger').css('display', 'none');
         $('.icon.is-danger').css('display', 'none');
       }
     })
-  })
+  });
+
+
 
   if (window.location.hash == "#comment-submitted") {
     $('.modal#comment-submitted').addClass("is-active");

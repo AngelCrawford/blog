@@ -1,10 +1,7 @@
 <!-- THANKS: https://www.pakstech.com/blog/hugo-related-pages/ -->
 {{ if len (where (.Site.RegularPages.Related .) "Type" "articles") }}
   <div class="columns">
-    <div class="column related-content-single is-full" >
-      <!-- <div class="content">
-        <p class="title is-4">Related content</p>
-      </div> -->
+    <div class="column related-content-single is-three-quarter">
       <div class="columns">
         {{- $related := (where (.Site.RegularPages.Related .) "Type" "articles") | first 4 -}}
         {{- range $related -}}
@@ -50,5 +47,6 @@
         {{- end -}}
       </div>
     </div>
+    <div class="column is-one-quarter"></div>
   </div>
 {{ end }}
