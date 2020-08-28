@@ -22,13 +22,58 @@
       display: flex;
       flex-direction: column;
       align-self: stretch;
-      padding: 1.5em;
 
       .content {
         flex: 1;
+        padding: 1.5em;
       }
       .media-footer {
-        // margin-bottom: auto;
+        font-size: 11px;
+        letter-spacing: 1px;
+        z-index: 5;
+        border-top: 1px solid darken($background, 6%);
+        color: lighten($small, 10%);
+        background: darken($background, 2%);
+        line-height: 40px;
+        .comment-anchor {
+          scroll-margin-top: 5em;
+        }
+        .remix-small {
+          margin-right: 0.4em;
+          fill: lighten($small, 10%);
+          @include translate(0, 4px);
+        }
+        .post-time, .comment-anchor, .website {
+          border-right:1px solid darken($background, 6%);
+          height: 100%;
+          display: inline-block;
+          padding: .5em 1.5em;
+        }
+        .website {
+          border: none;
+        }
+        button {
+          margin: .25em;
+          @include font-bold;
+          float: right;
+          color: $primary;
+          border: 1px solid rgba($primary, .5);
+          background-color: rgba(0, 0, 0, 0.2);
+          @include box-shadow(false, 5px, 5px, 5px, rgba(#000, .3), rgba($text, .07));
+          border-radius: 7px;
+          &:hover {
+            color: $hover;
+            @include box-shadow(true, 5px, 5px, 5px, rgba(#000, .3), rgba($text, .07));
+            border: 1px solid rgba($hover, .5);
+            .remix {
+              fill: $hover;
+            }
+          }
+          .remix {
+            fill: $primary;
+            margin-right: 0.4em;
+          }
+        }
       }
 
       &:after {
@@ -36,8 +81,8 @@
         width: 20px; 
         height: 20px;
         position: absolute;
-        margin-left: -2.6em;
-        margin-top: 1.2em;
+        margin-left: -1.1em;
+        margin-top: 2.7em;
         border-bottom: 20px solid transparent;
         border-top: 20px solid transparent;
         border-right: 20px solid $background;
@@ -56,7 +101,7 @@
         text-shadow: 3px 3px 4px rgba(#000, 1);
         text-align: center;
         margin-top: -.7em;
-        z-index: 99;
+        z-index: 9;
         position: relative;
       }
       a img {
@@ -74,11 +119,18 @@
     }
     &.no-comment .media-content {
       padding: 1.5em 1.5em 2.5em 1.5em;
+      &::after {
+        margin-left: -2.5em;
+        margin-top: 1.2em;
+      }
     }
     &.is-author .media-content {
       background: #3b382f;
       &:after {
         border-right: 20px solid #3b382f;
+      }
+      .media-footer {
+        background: darken(#3b382f, 3%);
       }
     }
   }
@@ -105,7 +157,6 @@
     }
   }
   
-  
 }
 
 #comments-form {
@@ -121,5 +172,60 @@
     label {
       color: $text;
     }
+    input, textarea {
+      border-radius: 7px;
+      color: $text;
+      background: $pageBack;
+      @include box-shadow(false, 5px, 5px, 5px, rgba(#000, .3), rgba($text, .07));
+      border: 1px solid rgba($primary, .5);
+      &::placeholder {
+        color: $text;
+      }
+      &:focus {
+        border: 1px solid $hover;
+        @include box-shadow(true, 5px, 5px, 5px, rgba(#000, .3), rgba($text, .07));
+      }
+      &.is-success {
+        border-color: #48c774;
+      }
+      &.is-danger {
+        border-color: $danger;
+      }
+      &:invalid {
+        // border: 1px solid $danger;
+      }
+      &:not(:placeholder-shown) {
+        // border: 1px solid blue;
+      }
+    }
+    span.icon.is-danger {
+      svg {
+        fill: $danger;
+      }
+    }
+  }
+  button {
+    @include font-bold;
+    float: right;
+    color: $primary;
+    border: 1px solid rgba($primary, .5);
+    background-color: rgba(0, 0, 0, 0.2);
+    @include box-shadow(false, 5px, 5px, 5px, rgba(#000, .3), rgba($text, .07));
+    border-radius: 7px;
+    &:hover {
+      color: $hover;
+      @include box-shadow(true, 5px, 5px, 5px, rgba(#000, .3), rgba($text, .07));
+      border: 1px solid rgba($hover, .5);
+      .remix {
+        fill: $hover;
+      }
+    }
+    .remix {
+      fill: $primary;
+      margin-right: 0.4em;
+    }
+  }
+  .field.is-grouped .control {
+    margin-left: auto;
   }
 }

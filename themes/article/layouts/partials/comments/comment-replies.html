@@ -25,12 +25,33 @@
         </div>
 
         <div class="media-footer">
-          {{ if eq $hasReplies $hasTotalReplies }}
-            <button id="{{ ._id }}" class="button is-primary" href="#comment-form" onclick="changeValue('fields[reply_to]', '{{ $.parentId }}')">Reply to thread</button>
-          {{ end }}
-          <a href="#commentid-{{ ._id }}" title="Permalink to this comment">
-            <time class="post-time">{{ (time .date).Add (2 | duration "hour" ) | dateFormat "02.01.06 um 15:04" }}</time>
+          <time class="post-time">
+            <svg class='remix-small'>
+              <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#calendar-line"></use>
+            </svg>{{ (time .date).Add (2 | duration "hour" ) | dateFormat "02.01.06 um 15:04" }}
+          </time>
+
+          <a href="#commentid-{{ ._id }}" class="comment-anchor" title="Permalink to this comment">
+            <svg class='remix-small'>
+              <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#links-fill"></use>
+            </svg>Permalink zur Kritik
           </a>
+
+          {{ if .website }}
+            <a href="{{ .website }}" class="website" target="_blank">
+              <svg class='remix-small'>
+                <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#external-link-line"></use>
+              </svg>Webseite
+            </a>
+          {{ end }}
+
+          {{ if eq $hasReplies $hasTotalReplies }}
+            <button id="{{ ._id }}" class="button is-primary" href="#postcomment" onclick="changeValue('fields[reply_to]', '{{ $.parentId }}')">
+              <svg class='remix'>
+                <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#reply-all-line"></use>
+              </svg>Antworten
+            </button>
+          {{ end }}
         </div>
       </div>
     </article>

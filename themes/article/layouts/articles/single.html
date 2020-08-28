@@ -47,8 +47,7 @@
               </div>
             {{ end }}
             
-            {{/*  {{ .Content }}  */}}
-            {{ .Content | replaceRE "(<h[1-9] id=\"([^\"]+)\".+)(</h[1-9]+>)" `${1}&nbsp;<a class="anchor" href="#${2}"><div class="anchor-icon"></div></a> ${3}` | safeHTML }}
+            {{ .Content | replaceRE "(<h[1-9] id=\"([^\"]+)\".+)(</h[1-9]+>)" "${1}&nbsp;<a class='anchor' href='#${2}'><div class='anchor-icon'></div></a>${3}" | safeHTML }}
           </div>
         </div>
 

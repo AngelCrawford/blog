@@ -57,6 +57,35 @@ $(document).ready(function() {
 
   navScroll();
 
+  // ***************** Comments
+  $('#comment-send').click(function () {
+    console.log("send");
+    if ($('#comment-website') == "" ) {
+      alert('Submit 1 clicked');
+    }
+  });
+
+  var invalidClassName = 'is-danger'
+  var inputs = document.querySelectorAll('input, select, textarea')
+  inputs.forEach(function (input) {
+    // Add a css class on submit when the input is invalid.
+    input.addEventListener('invalid', function () {
+      input.classList.add(invalidClassName);
+      $('.help.is-danger').css('display', 'block');
+      $('.icon.is-danger').css('display', 'inline-flex');
+    })
+
+    // Remove the class when the input becomes valid.
+    // 'input' will fire each time the user types
+    input.addEventListener('input', function () {
+      if (input.validity.valid) {
+        input.classList.remove(invalidClassName);
+        $('.help.is-danger').css('display', 'none');
+        $('.icon.is-danger').css('display', 'none');
+      }
+    })
+  })
+
   if (window.location.hash == "#comment-submitted") {
     $('.modal#comment-submitted').addClass("is-active");
   }
@@ -84,5 +113,5 @@ var navScroll = function () {
 // Added function to change value onclick
 var changeValue = function (elementName, newValue) {
   document.getElementsByName(elementName)[0].value=newValue;
-  window.location.hash = "#comment-form";
+  window.location.hash = "#postcomment";
 };
