@@ -264,14 +264,14 @@ article.card.is-horizontal.quote {
         margin: auto 0;
         text-shadow: 3px 3px 4px rgba(#000, .5);
         &::before, &::after {
-          font-family: "remixicon";
+          font-family: "remixicon" !important;
           color: $primary;
         }
         &::before {
-          content: "\ec35";
+          content: "\ec51";
         }
         &::after {
-          content: "\ec36";
+          content: "\ec52";
         }
       }
 

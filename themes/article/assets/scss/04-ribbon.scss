@@ -40,6 +40,7 @@
   left: -1.5em;
   @include font-bold;
   font-size: .8em;
+  z-index: unset;
   &:after {
     content: "";
     width: 0px;
@@ -60,4 +61,10 @@
   background-color: $hover !important;
   font-weight: 600;
   @include box-shadow(true, 5px, 5px, 5px, rgba(#000, .3), rgba($text, .07));
+}
+
+article.card .ribbon {
+  max-width: 13em;
+  white-space: inherit;
+  text-align: left;
 }

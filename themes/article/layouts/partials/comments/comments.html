@@ -47,14 +47,13 @@
    
             {{ $.Scratch.Set "commentName" .name }}
             <article id="commentid-{{ ._id }}" class='media post-comment {{ range ($.GetTerms "authors") }} {{ if eq ($.Scratch.Get "commentName") .Page.Title }} is-author {{ end }} {{ end }}'>
-              {{ $.Scratch.Delete "commentName" }}
               <figure class="media-left">
                 {{ if .website }}<a href="{{ .website }}" title="Webseite von {{.name}}">{{ end }}
                   <p class="image is-120x120"><img class="is-rounded" src="https://secure.gravatar.com/avatar/{{ .email }}?s=120&r=pg&d={{ $.Site.Params.staticman.gravatarDefault }}"></p>
                   <figcaption>{{ $.Scratch.Get "hasComments" }}</figcaption>
                 {{ if .website }}</a>{{ end }}
               </figure>
-    
+              
               <div class="media-content">
                 <div class="content">
                   <p><strong>{{ .name }}</strong>
@@ -109,3 +108,4 @@
 {{ end }}
 
 {{ $.Scratch.Delete "hasComments" }}
+{{ $.Scratch.Delete "commentName" }}

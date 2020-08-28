@@ -92,12 +92,12 @@
 
 @font-face {
   font-family: "remixicon";
-  src: url('fonts/remixicon/remixicon.eot?t=1588587307205'); /* IE9*/
-  src: url('fonts/remixicon/remixicon.eot?t=1588587307205#iefix') format('embedded-opentype'), /* IE6-IE8 */
-       url("fonts/remixicon/remixicon.woff2?t=1588587307205") format("woff2"),
-       url("fonts/remixicon/remixicon.woff?t=1588587307205") format("woff"),
-       url('fonts/remixicon/remixicon.ttf?t=1588587307205') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
-       url('fonts/remixicon/remixicon.svg?t=1588587307205#remixicon') format('svg'); /* iOS 4.1- */
+  src: url('fonts/remixicon/remixicon.eot?t=1598635979420'); /* IE9*/
+  src: url('fonts/remixicon/remixicon.eot?t=1598635979420#iefix') format('embedded-opentype'), /* IE6-IE8 */
+       url("fonts/remixicon/remixicon.woff2?t=1598635979420") format("woff2"),
+       url("fonts/remixicon/remixicon.woff?t=1598635979420") format("woff"),
+       url('fonts/remixicon/remixicon.ttf?t=1598635979420') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
+       url('fonts/remixicon/remixicon.svg?t=1598635979420#remixicon') format('svg'); /* iOS 4.1- */
   font-display: swap;
 }
 
@@ -125,59 +125,56 @@
 .ri-10x { font-size: 10em; }
 .ri-fw { text-align: center; width: 1.25em; }
 
-.ri-price-tag-3-line:before { content: "\efcd"; }
-.ri-pencil-line:before { content: "\ef8c"; }
-.ri-calendar-line:before { content: "\eb23"; }
-.ri-facebook-circle-line:before { content: "\ec9b"; }
-.ri-twitter-line:before { content: "\f1c9"; }
-.ri-instagram-line:before { content: "\ee27"; }
-.ri-github-line:before { content: "\eda4"; }
-.ri-rss-line:before { content: "\f03f"; }
-.ri-heart-line:before { content: "\eddc"; }
-.ri-star-fill:before { content: "\f11e"; }
-.ri-star-half-fill:before { content: "\f11f"; }
-.ri-star-line:before { content: "\f123"; }
-.ri-spotify-line:before { content: "\f115"; }
-.ri-codepen-line:before { content: "\eba8"; }
-.ri-stack-overflow-line:before { content: "\f11b"; }
-.ri-copyright-line:before { content: "\ebd6"; }
-.ri-error-warning-line:before { content: "\ec81"; }
-.ri-information-line:before { content: "\ee22"; }
-.ri-question-line:before { content: "\efeb"; }
-.ri-close-fill:before { content: "\eb92"; }
-.ri-check-fill:before { content: "\eb74"; }
-.ri-arrow-right-s-line:before { content: "\ea6c"; }
-.ri-arrow-left-s-line:before { content: "\ea62"; }
-.ri-arrow-right-s-fill:before { content: "\ea6b"; }
-.ri-arrow-left-s-fill:before { content: "\ea61"; }
-.ri-arrow-up-s-fill:before { content: "\ea75"; }
-.ri-arrow-down-s-fill:before { content: "\ea4b"; }
-.ri-search-2-line:before { content: "\f06b"; }
-.ri-share-forward-line:before { content: "\f099"; }
-.ri-share-line:before { content: "\f09a"; }
-.ri-share-box-fill:before { content: "\f08f"; }
-.ri-time-line:before { content: "\f19d"; }
-.ri-mail-line:before { content: "\eeb5"; }
-.ri-archive-drawer-line:before { content: "\ea44"; }
-.ri-bookmark-line:before { content: "\eae3"; }
-.ri-question-answer-line:before { content: "\efe9"; }
-.ri-code-s-slash-fill:before { content: "\eba4"; }
-.ri-pushpin-line:before { content: "\efdf"; }
-.ri-gallery-line:before { content: "\ed7e"; }
-.ri-film-line:before { content: "\ed01"; }
-.ri-camera-line:before { content: "\eb2d"; }
-.ri-mv-line:before { content: "\ef37"; }
-.ri-skip-back-line:before { content: "\f0da"; }
-.ri-skip-forward-line:before { content: "\f0de"; }
-.ri-youtube-line:before { content: "\f25d"; }
-.ri-article-line:before { content: "\ea7c"; }
-.ri-stack-line:before { content: "\f119"; }
-.ri-android-line:before { content: "\ea34"; }
-.ri-ubuntu-line:before { content: "\f1cf"; }
-.ri-windows-line:before { content: "\f250"; }
-.ri-alert-line:before { content: "\ea1f"; }
-.ri-cake-line:before { content: "\eb19"; }
-.ri-double-quotes-r:before { content: "\ec36"; }
-.ri-double-quotes-l:before { content: "\ec35"; }
+.ri-price-tag-3-line:before { content: "\f023"; }
+.ri-pencil-line:before { content: "\efe0"; }
+.ri-calendar-line:before { content: "\eb27"; }
+.ri-facebook-circle-line:before { content: "\ecbb"; }
+.ri-twitter-line:before { content: "\f23b"; }
+.ri-instagram-line:before { content: "\ee66"; }
+.ri-github-line:before { content: "\edcb"; }
+.ri-rss-line:before { content: "\f09f"; }
+.ri-heart-line:before { content: "\ee0f"; }
+.ri-star-fill:before { content: "\f186"; }
+.ri-star-half-fill:before { content: "\f187"; }
+.ri-star-line:before { content: "\f18b"; }
+.ri-spotify-line:before { content: "\f17d"; }
+.ri-codepen-line:before { content: "\ebb0"; }
+.ri-stack-overflow-line:before { content: "\f183"; }
+.ri-copyright-line:before { content: "\ebe2"; }
+.ri-error-warning-line:before { content: "\eca1"; }
+.ri-information-line:before { content: "\ee59"; }
+.ri-question-line:before { content: "\f045"; }
+.ri-forbid-2-line:before { content: "\ed93"; }
+.ri-close-fill:before { content: "\eb98"; }
+.ri-check-fill:before { content: "\eb7a"; }
+.ri-arrow-right-s-line:before { content: "\ea6e"; }
+.ri-arrow-left-s-line:before { content: "\ea64"; }
+.ri-arrow-right-s-fill:before { content: "\ea6d"; }
+.ri-arrow-left-s-fill:before { content: "\ea63"; }
+.ri-arrow-up-s-fill:before { content: "\ea77"; }
+.ri-arrow-down-s-fill:before { content: "\ea4d"; }
+.ri-search-2-line:before { content: "\f0cd"; }
+.ri-share-forward-line:before { content: "\f0fd"; }
+.ri-share-line:before { content: "\f0fe"; }
+.ri-share-box-fill:before { content: "\f0f3"; }
+.ri-time-line:before { content: "\f20f"; }
+.ri-mail-line:before { content: "\eef6"; }
+.ri-archive-drawer-line:before { content: "\ea46"; }
+.ri-bookmark-line:before { content: "\eae5"; }
+.ri-question-answer-line:before { content: "\f043"; }
+.ri-code-s-slash-fill:before { content: "\ebac"; }
+.ri-pushpin-line:before { content: "\f039"; }
+.ri-gallery-line:before { content: "\eda5"; }
+.ri-film-line:before { content: "\ed21"; }
+.ri-camera-line:before { content: "\eb31"; }
+.ri-mv-line:before { content: "\ef87"; }
+.ri-skip-back-line:before { content: "\f140"; }
+.ri-skip-forward-line:before { content: "\f144"; }
+.ri-youtube-line:before { content: "\f2d5"; }
+.ri-article-line:before { content: "\ea7e"; }
+.ri-stack-line:before { content: "\f181"; }
 .ri-external-link-line:before { content: "\ecaf"; }
 .ri-links-fill:before { content: "\eeb7"; }
+.ri-double-quotes-l:before { content: "\ec51"; }
+.ri-double-quotes-r:before { content: "\ec52"; }
+.ri-heart-fill:before { content: "\ee0e"; }
