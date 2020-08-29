@@ -16,6 +16,7 @@ header.header {
     position: relative;
     z-index: 1;
     filter: sepia(.4);
+    
   }
 
   &.sky {
@@ -77,6 +78,23 @@ header.header {
   -moz-animation-name: clock alternate 2s both;
   z-index: 1;
   will-change: background-position;
+
+  @-moz-keyframes clock {
+    0% { background-position: 50% 200px; } 
+    100% {background-position: 50% 20px; } 
+  }
+  @-webkit-keyframes clock {
+    0% { background-position: 50% 200px; } 
+    100% {background-position: 50% 20px; } 
+  }
+  @-o-keyframes clock {
+    0% { background-position: 50% 200px; } 
+    100% {background-position: 50% 20px; } 
+  }
+  @keyframes clock {
+    0% { background-position: 50% 200px; } 
+    100% {background-position: 50% 20px; } 
+  }
 }
 
 .textlogo {
@@ -87,14 +105,27 @@ header.header {
   @include font-header;
   position: relative;
   font-size: 70px;
-  @media (max-width: 768px) {
-    font-size: 50px;
-  }
-  @media (max-width: 494px) {
-    font-size: 35px;
-  }
   margin: 0;
   top: 25%;
+  // @media (max-width: 768px) {
+  //   font-size: 50px;
+  // }
+  // @media (max-width: 494px) {
+  //   font-size: 35px;
+  // }
+
+  &:before {
+    content: "";
+    height: 60%;
+    width: 59%;
+    margin-top: 3%;
+    margin-left: 21%;
+    position: absolute;
+    background-color: $text;
+    opacity: .3;
+    z-index: -1;
+    filter: blur(30px);
+  }
     
   &:after {
     background: none;
@@ -135,48 +166,32 @@ header.header {
       animation: shimmer alternate .8s both;
     }
     
-    @media (max-width: 768px) {
-      padding: 0 80px;
-    }
-    @media (max-width: 494px) {
-      padding: 0 60px;
-    }
+    // @media (max-width: 768px) {
+    //   padding: 0 80px;
+    // }
+    // @media (max-width: 494px) {
+    //   padding: 0 60px;
+    // }
+  }
+
+  @-moz-keyframes shimmer {
+    0% { background-position: top left; }
+    100% { background-position: top right; }
+  }
+  @-webkit-keyframes shimmer {
+    0% { background-position: top left; }
+    100% { background-position: top right; }
+  }
+  @-o-keyframes shimmer {
+    0% { background-position: top left; }
+    100% { background-position: top right; }
+  }
+  @keyframes shimmer {
+    0% { background-position: top left; }
+    100% { background-position: top right; }
   }
 }
 
-@-moz-keyframes shimmer {
-  0% { background-position: top left; }
-  100% { background-position: top right; }
-}
-@-webkit-keyframes shimmer {
-  0% { background-position: top left; }
-  100% { background-position: top right; }
-}
-@-o-keyframes shimmer {
-  0% { background-position: top left; }
-  100% { background-position: top right; }
-}
-@keyframes shimmer {
-  0% { background-position: top left; }
-  100% { background-position: top right; }
-}
-
-@-moz-keyframes clock {
-  0% { background-position: 50% 200px; } 
-  100% {background-position: 50% 20px; } 
-}
-@-webkit-keyframes clock {
-  0% { background-position: 50% 200px; } 
-  100% {background-position: 50% 20px; } 
-}
-@-o-keyframes clock {
-  0% { background-position: 50% 200px; } 
-  100% {background-position: 50% 20px; } 
-}
-@keyframes clock {
-  0% { background-position: 50% 200px; } 
-  100% {background-position: 50% 20px; } 
-}
 
 // THANKS: https://codepen.io/matchboxhero/pen/RLebOY
 .bird-wrapper {
@@ -233,19 +248,19 @@ header.header {
       animation-delay: 10.25s;
     }
   }
-}
-@keyframes fly-cycle {
-	100% { background-position: -900px 0; }
-}
-@keyframes fly-right-one {
-	0% { transform: scale(0.25) translateX(-10vw);}
-	10% { transform: translateY(2vh) translateX(10vw) scale(0.3); }
-	20% { transform: translateY(0vh) translateX(30vw) scale(0.4); }
-	30% { transform: translateY(4vh) translateX(50vw) scale(0.5); }
-	40% { transform: translateY(2vh) translateX(70vw) scale(0.5); }
-	50% { transform: translateY(0vh) translateX(90vw) scale(0.5); }	
-	60% { transform: translateY(0vh) translateX(110vw) scale(0.5); }
-	100% { transform: translateY(0vh) translateX(110vw) scale(0.5); }
+  @keyframes fly-cycle {
+    100% { background-position: -900px 0; }
+  }
+  @keyframes fly-right-one {
+    0% { transform: scale(0.25) translateX(-10vw);}
+    10% { transform: translateY(2vh) translateX(10vw) scale(0.3); }
+    20% { transform: translateY(0vh) translateX(30vw) scale(0.4); }
+    30% { transform: translateY(4vh) translateX(50vw) scale(0.5); }
+    40% { transform: translateY(2vh) translateX(70vw) scale(0.5); }
+    50% { transform: translateY(0vh) translateX(90vw) scale(0.5); }	
+    60% { transform: translateY(0vh) translateX(110vw) scale(0.5); }
+    100% { transform: translateY(0vh) translateX(110vw) scale(0.5); }
+  }
 }
 
 // THANKS: https://codepen.io/uchardon/pen/bxbqoG
