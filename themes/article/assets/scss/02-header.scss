@@ -7,6 +7,9 @@ header.header {
   height: 360px;  
   border-bottom: 5px solid #554944;
   box-shadow: none;
+  position: relative;
+  z-index: 3;
+  box-shadow: none;
 
   #city {
     background-image: url("/images/header.svg");
