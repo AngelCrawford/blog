@@ -7,7 +7,17 @@ main {
   /* put on top */
   position: relative;
   z-index: 1;
-  box-shadow: 1px 1px 1px rgba(255, 203, 154, .15);
+  // box-shadow: 1px 1px 1px rgba(255, 203, 154, .15);
+  
+  background-image: url("/images/footer.png");
+  background-repeat: repeat-x;
+  background-position: center calc(100% + 195px);
+  background-size: auto 500px;
+  border-bottom: 5px solid #554944;
+  box-shadow: none;
+
+  padding-bottom: 200px;
+  
 }
 
 footer.footer {
@@ -15,8 +25,11 @@ footer.footer {
   position: sticky;
   bottom: 0;
   left: 0;  
-  background: darken($pageBack, 1%);
-  @include box-shadow(true, 10px, 10px, 15px, rgba(#000, .3), rgba($text, .1));
+  background: #554944;
+  // background-color: darken($pageBack, 1%);
+  // background: darken(#3b382f, 10%);
+  // @include box-shadow(true, 10px, 10px, 15px, rgba(#000, .3), rgba($text, .1));
+  border: none;
   a {
     color: $primary;
   }

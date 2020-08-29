@@ -4,7 +4,39 @@ header.header section.hero .hero-body h2 {
 }
 
 header.header {
-  height: 360px;
+  height: 360px;  
+  border-bottom: 5px solid #554944;
+  box-shadow: none;
+
+  #city {
+    background-image: url("/images/footer.png");
+    background-repeat: repeat-x;
+    background-position: center calc(100% + 150px);
+    background-size: auto 500px;
+  }
+
+  &.sky {
+    // THANKS: https://codepen.io/ellimccale/pen/wxzJMx
+    background: radial-gradient(circle, rgba(#00285c, 1) 0%, rgba(#2c449d, 1) 35%, rgba(#fff, 1) 100%);
+
+    // background: -linear-gradient(top, #c9dbe9 0%, #fff 100%);
+    // background: -moz-linear-gradient(top, #c9dbe9 0%, #fff 100%);
+    // background: -webkit-linear-gradient(top, #c9dbe9 0%, #fff 100%);
+    &.night {
+      background: radial-gradient(circle, rgba(#000000, 1) 0%, rgba(#010010, 1) 35%, rgba(#0c1a37, 1) 100%);
+    }
+    &.dawn {
+      // day start
+      background: radial-gradient(circle, rgba(#0c1a37, 1) 0%, rgba(#2c449d, 1) 35%, rgba(#ce98af, 1) 100%);
+    }
+    &.day {
+      background: radial-gradient(circle, rgba(#2c449d, 1) 0%, rgba(#7f93db, 1) 35%, rgba($text, 1) 100%);
+    }
+    &.dusk {
+      // day evening
+      background: radial-gradient(circle, rgba(#0c1a37, 1) 0%, rgba(#2c449d, 1) 35%, rgba(#ef8d5c, 1) 100%);
+    }
+  }
 }
 
 // LOGO
@@ -18,28 +50,44 @@ header.header {
   // border: 1px solid red;
   height: 360px;
   width: 100%;
-  // background: radial-gradient(circle, rgba(25,25,25,1) 10%, transparent 100%);
   a.brand {
     flex: 0 1 auto;
     align-self: auto;
     height: auto;
     // border: 1px solid orange;
-    top: 9em;
+    top: 120px;
     z-index: 999;
     position: absolute;
   }
+  &:before {
+    content: "";
+    background: $text;
+    // background: linear-gradient(0deg, rgba($text, 0.3) 0%, rgba($text, 1) 100%);
+    background-position: 0 0;
+    filter: blur(4px) contrast(2);
+    position: absolute;
+    opacity: .1;
+    width: 320px;
+    height: 315px;
+    border-radius: 50%;
+    animation: clockshine alternate 2s both;
+    -webkit-animation: clockshine alternate 2s both;
+    -moz-animation-name: clockshine alternate 2s both;
+  }
   &:after {
     content: "";
-    // border: 1px solid green;
     background: url("/images/logo_back.png") no-repeat top center;
     background-size: contain;
     position: absolute;
-    opacity: .2;
-    top: 3em;
+    opacity: .6;
+    top: 0em;
     bottom: 0;
     width: 100%;
     height: 300px;
     display: block;
+    animation: clock alternate 2s both;
+    -webkit-animation: clock alternate 2s both;
+    -moz-animation-name: clock alternate 2s both;
     z-index: 1;
   }
 }
@@ -63,7 +111,7 @@ header.header {
     
   &:after {
     background: none;
-    padding: 0 140px;
+    padding: 0 150px;
     content: attr(data-heading);
     left: 0;
     top: 0;
@@ -79,30 +127,26 @@ header.header {
   }
   
   span.shimmer {
-    padding: 0 140px;
+    padding: 0 150px;
     text-align: center;
-    background: -webkit-gradient(linear, left top, right top, from(#97856b), to(#97856b), color-stop(0.5, $text));
-    background: -moz-gradient(linear, left top, right top, from(#97856b), to(#97856b), color-stop(0.5, $text));
-    background: gradient(linear, left top, right top, from(#97856b), to(#97856b), color-stop(0.5, $text));
-    -webkit-background-size: 25px 100%;
-    -moz-background-size: 25px 100%;
-    background-size: 25px 100%; 
+    background: -webkit-gradient(linear, left top, right top, from($primary), to($primary), color-stop(.5, #fff));
+    background: -moz-gradient(linear, left top, right top, from($primary), to($primary), color-stop(.5, #fff));
+    background: gradient(linear, left top, right top, from($primary), to($primary), color-stop(.5, #fff));
+    -webkit-background-size: 125px 100%;
+    -moz-background-size: 125px 100%;
+    background-size: 125px 100%;
     -webkit-background-clip: text;
     -moz-background-clip: text;
     background-clip: text;
-    -webkit-animation-name: shimmer;
-    -moz-animation-name: shimmer;
-    animation-name: shimmer;
-    -webkit-animation-duration: 2s;
-    -moz-animation-duration: 2s;
-    animation-duration: 2s;
-    -webkit-animation-iteration-count: infinite;
-    -moz-animation-iteration-count: infinite;
-    animation-iteration-count: infinite; 
-    animation-direction: alternate;
-    animation-timing-function: linear;
     background-repeat: no-repeat;
     background-position: 0 0;
+
+    // Wird per JS getriggert
+    &.shimmer-animation {
+      -webkit-animation: shimmer alternate .8s both;
+      -moz-animation-name: shimmer alternate .8s both;
+      animation: shimmer alternate .8s both;
+    }
     
     @media (max-width: 768px) {
       padding: 0 80px;
@@ -114,36 +158,54 @@ header.header {
 }
 
 @-moz-keyframes shimmer {
-  0% {
-    background-position: top left;
-  }
-  100% {
-    background-position: top right;
-  }
+  0% { background-position: top left; }
+  100% { background-position: top right; }
 }
 @-webkit-keyframes shimmer {
-  0% {
-    background-position: top left;
-  }
-  100% {
-    background-position: top right;
-  }
+  0% { background-position: top left; }
+  100% { background-position: top right; }
 }
 @-o-keyframes shimmer {
-  0% {
-    background-position: top left;
-  }
-  100% {
-    background-position: top right;
-  }
+  0% { background-position: top left; }
+  100% { background-position: top right; }
 }
 @keyframes shimmer {
-  0% {
-    background-position: top left;
-  }
-  100% {
-    background-position: top right;
-  }
+  0% { background-position: top left; }
+  100% { background-position: top right; }
+}
+
+@-moz-keyframes clock {
+  0% { background-position: 50% 300px; } 
+  100% {background-position: 50% 20px; } 
+}
+@-webkit-keyframes clock {
+  0% { background-position: 50% 300px; } 
+  100% {background-position: 50% 20px; } 
+}
+@-o-keyframes clock {
+  0% { background-position: 50% 300px; } 
+  100% {background-position: 50% 20px; } 
+}
+@keyframes clock {
+  0% { background-position: 50% 300px; } 
+  100% {background-position: 50% 20px; } 
+}
+
+@-moz-keyframes clockshine {
+  0% { bottom: 200px; } 
+  100% { bottom: 495px; } 
+}
+@-webkit-keyframes clockshine {
+  0% { bottom: 200px; } 
+  100% { bottom: 495px; } 
+}
+@-o-keyframes clockshine {
+  0% { bottom: 200px; } 
+  100% { bottom: 495px; } 
+}
+@keyframes clockshine {
+  0% { bottom: 200px; } 
+  100% { bottom: 495px; } 
 }
 
 

@@ -1,9 +1,10 @@
+<button class="back-to-top" title="Zurück zum Seitenanfang">
+  <svg class='remix'>
+    <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#arrow-up-s-fill"></use>
+  </svg>
+</button>
+
 <footer class="footer">
-  <button class="back-to-top" title="Zurück zum Seitenanfang">
-    <svg class='remix'>
-      <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#arrow-up-s-fill"></use>
-    </svg>
-  </button>
 
   <div class="content has-text-centered">
     <a href="{{ .Site.BaseURL }}" >
@@ -27,7 +28,7 @@
     {{- end -}}
 
     <p>
-      There are currently {{ len (where .Site.RegularPages "Type" "in" (slice "articles" "quotes") ) }} <a href="/articles">articles</a> on this site.
+      There are currently {{ len (where .Site.RegularPages "Type" "in" (slice "articles" "quotes") ) }} <a href="/">articles</a> on this site.
     </p>
     <p>
       Statistik: <br />

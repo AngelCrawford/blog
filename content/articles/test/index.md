@@ -22,6 +22,8 @@ icons:
   color: "tomato"
 - src: "android-line"
   color: "green"
+- src: "apple-line"
+  color: "white"
 featured_image:
 - src: ./featured.jpg
   byline: TEST <a href='#'>test</a>

@@ -1,14 +1,18 @@
-  <header class="header">
+  <header class="header sky">
+    <div id="city">
+     
+      <div class="brand-logo">
+        <a class="brand" href="{{ .Site.BaseURL }}">
+          <div class="textlogo" data-heading="{{ .Site.Title | safeHTML }}"><span class="shimmer">{{ .Site.Title | safeHTML }}</span></div>
+        </a>
+      </div>
     
-    <div class="brand-logo">
-      <a class="brand" href="{{ .Site.BaseURL }}">
-        <div class="textlogo" data-heading="{{ .Site.Title | safeHTML }}"><span class="shimmer">{{ .Site.Title | safeHTML }}</span></div>
-      </a>
     </div>
 
     {{ partial "site-navigation.html" . }}
 
   </header>
+
   <main>
   {{ if and (not .IsHome) (not (eq .Section "articles")) }}
   

@@ -28,27 +28,26 @@ $(document).ready(function() {
     return false;
   });
 
-  // ***************** Logo Animation
-  setTimeout(function(){
-    $(".shimmer").css("animation-play-state", "paused");
-  },2000);
-
-  window.setInterval(function(){
-    if ($(".shimmer").css("animation-play-state", "paused")) {
-      $(".shimmer").css("animation-play-state", "running");
-      setTimeout(function(){
-        $(".shimmer").css("animation-play-state", "paused");
-      },2000);
-    } 
-  }, 20000);
+  // ***************** Logo Animation and Header
   
-  $(".shimmer").hover(function() {
-    $(".shimmer").css("animation-play-state", "running");    
+  if (!$("span.shimmer").hasClass("shimmer-animation")) {
     setTimeout(function(){
-      $(".shimmer").css("animation-play-state", "paused");
-    },2000);
+      // $("span.shimmer").toggleClass("shimmer-animation");
+      $("span.shimmer").addClass("shimmer-animation").delay(900).queue(function(next){
+        $("span.shimmer").removeClass("shimmer-animation");
+          next();
+      });
+    },1900);
+  }
+
+  $("span.shimmer").mouseenter(function() {
+    $("span.shimmer").addClass("shimmer-animation").delay(900).queue(function(next){
+      $("span.shimmer").removeClass("shimmer-animation");
+        next();
+    }); 
   });
 
+  dayNightSky();
 
   // ***************** Sticky Navbar
   $(window).scroll(function () {
@@ -131,3 +130,42 @@ var changeValue = function (elementName, newValue) {
   document.getElementsByName(elementName)[0].value=newValue;
   window.location.hash = "#postcomment";
 };
+
+// Sky Background Function
+var dayNightSky = function() {
+  // Get the current hour; JS runs on the 24-hour clock
+  var hour = new Date().getHours();
+  var $sky = $("header.sky");
+
+  var timeBlocks = [
+    // { // TEST BLOCK
+    //   start: 0, end: 24, class: "day",
+    // },
+    { // Night starts at 21:00 and ends at 24:00
+      start: 21, end: 24, class: "night",
+    },
+    { // Night starts again at 00:00 and ends at 5:00
+      start: 0, end: 5, class: "night",
+    },
+    { // Dawn starts at 6:00 and ends at 10:00
+      start: 6, end: 10, class: "dawn",
+    },
+    { // Day starts at 11:00 and ends at 16:00
+      start: 11, end: 16, class: "day",
+    },
+    { // Dusk starts at 17:00 and ends at 20:00
+      start: 17, end: 20, class: "dusk",
+    }
+  ]
+
+  // Start by looping through the objects in the timeBlocks array
+  for ( var i = 0; i < timeBlocks.length; i++ ) {
+    // Select the current timeBlock
+    var timeOfDay = timeBlocks[i];
+    // Check if the current hour is within each timeBlock
+    if ( timeOfDay.start <= hour && hour <= timeOfDay.end ) {
+      // If it is, add the relevant class to #sky
+      $sky.addClass(timeOfDay.class);
+    }
+  }
+}
