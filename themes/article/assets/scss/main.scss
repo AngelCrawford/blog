@@ -62,15 +62,6 @@ html, body {
   background-color: darken($pageBack, 3%);
   color: $text;
 }
-footer.footer {
-  background: darken($pageBack, 1%);
-  a {
-    color: $primary;
-  }
-  a:hover {
-    color: darken($primary, 15%);
-  }
-}
 
 .header-wrapper {
   padding: 3.6em 1.5rem 0 2.5em;
