@@ -9,16 +9,17 @@ header.header {
   box-shadow: none;
 
   #city {
-    background-image: url("/images/footer.png");
+    background-image: url("/images/header.svg");
     background-repeat: repeat-x;
-    background-position: center calc(100% + 150px);
-    background-size: auto 500px;
+    background-position: center calc(100% - 52px);
+    background-size: auto 85%;
+    position: relative;
+    z-index: 1;
+    filter: sepia(.4);
   }
 
   &.sky {
-    // THANKS: https://codepen.io/ellimccale/pen/wxzJMx
     background: radial-gradient(circle, rgba(#00285c, 1) 0%, rgba(#2c449d, 1) 35%, rgba(#fff, 1) 100%);
-
     // background: -linear-gradient(top, #c9dbe9 0%, #fff 100%);
     // background: -moz-linear-gradient(top, #c9dbe9 0%, #fff 100%);
     // background: -webkit-linear-gradient(top, #c9dbe9 0%, #fff 100%);
@@ -30,7 +31,7 @@ header.header {
       background: radial-gradient(circle, rgba(#0c1a37, 1) 0%, rgba(#2c449d, 1) 35%, rgba(#ce98af, 1) 100%);
     }
     &.day {
-      background: radial-gradient(circle, rgba(#2c449d, 1) 0%, rgba(#7f93db, 1) 35%, rgba($text, 1) 100%);
+      background: radial-gradient(circle, rgba(#32bafa, 1) 0%, rgba(#b8e7fd, 1) 35%, rgba($text, 1) 100%);
     }
     &.dusk {
       // day evening
@@ -59,37 +60,23 @@ header.header {
     z-index: 999;
     position: absolute;
   }
-  &:before {
-    content: "";
-    background: $text;
-    // background: linear-gradient(0deg, rgba($text, 0.3) 0%, rgba($text, 1) 100%);
-    background-position: 0 0;
-    filter: blur(4px) contrast(2);
-    position: absolute;
-    opacity: .1;
-    width: 320px;
-    height: 315px;
-    border-radius: 50%;
-    animation: clockshine alternate 2s both;
-    -webkit-animation: clockshine alternate 2s both;
-    -moz-animation-name: clockshine alternate 2s both;
-  }
-  &:after {
-    content: "";
-    background: url("/images/logo_back.png") no-repeat top center;
-    background-size: contain;
-    position: absolute;
-    opacity: .6;
-    top: 0em;
-    bottom: 0;
-    width: 100%;
-    height: 300px;
-    display: block;
-    animation: clock alternate 2s both;
-    -webkit-animation: clock alternate 2s both;
-    -moz-animation-name: clock alternate 2s both;
-    z-index: 1;
-  }
+}
+
+.clock-logo {
+  background: url("/images/logo_back.png") no-repeat top center;
+  background-size: contain;
+  position: absolute;
+  opacity: .6;
+  top: 0em;
+  bottom: 0;
+  width: 100%;
+  height: 300px;
+  display: block;
+  animation: clock alternate 2s both;
+  -webkit-animation: clock alternate 2s both;
+  -moz-animation-name: clock alternate 2s both;
+  z-index: 1;
+  will-change: background-position;
 }
 
 .textlogo {
@@ -175,39 +162,121 @@ header.header {
 }
 
 @-moz-keyframes clock {
-  0% { background-position: 50% 300px; } 
+  0% { background-position: 50% 200px; } 
   100% {background-position: 50% 20px; } 
 }
 @-webkit-keyframes clock {
-  0% { background-position: 50% 300px; } 
+  0% { background-position: 50% 200px; } 
   100% {background-position: 50% 20px; } 
 }
 @-o-keyframes clock {
-  0% { background-position: 50% 300px; } 
+  0% { background-position: 50% 200px; } 
   100% {background-position: 50% 20px; } 
 }
 @keyframes clock {
-  0% { background-position: 50% 300px; } 
+  0% { background-position: 50% 200px; } 
   100% {background-position: 50% 20px; } 
 }
 
-@-moz-keyframes clockshine {
-  0% { bottom: 200px; } 
-  100% { bottom: 495px; } 
+// THANKS: https://codepen.io/matchboxhero/pen/RLebOY
+.bird-wrapper {
+  .bird {
+    background-image: url("/images/bird-cells-news.svg");
+    background-size: auto 100%;
+    width: 88px;
+    height: 125px;
+    will-change: background-position;
+    animation-name: fly-cycle;
+    animation-timing-function: steps(10);
+    animation-iteration-count: infinite;
+    &--one {
+      animation-duration: 1s;
+      animation-delay: -0.5s;
+    }
+    &--two {
+      animation-duration: 0.9s;
+      animation-delay: -0.75s;
+    }
+    &--three {
+      animation-duration: 1.25s;
+      animation-delay: -0.25s;
+    }
+    &--four {
+      animation-duration: 1.1s;
+      animation-delay: -0.5s;
+    }
+  }
+
+  .bird-container {
+    position: absolute;
+    top: 15px;
+    left: -10%;
+    transform: scale(0) translateX(-10vw);
+    will-change: transform;
+    animation-name: fly-right-one;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    &--one {
+      animation-duration: 15s;
+      animation-delay: 0;
+    }
+    &--two {
+      animation-duration: 16s;
+      animation-delay: 1s;
+    }
+    &--three {
+      animation-duration: 14.6s;
+      animation-delay: 9.5s;
+    }
+    &--four {
+      animation-duration: 16s;
+      animation-delay: 10.25s;
+    }
+  }
 }
-@-webkit-keyframes clockshine {
-  0% { bottom: 200px; } 
-  100% { bottom: 495px; } 
+@keyframes fly-cycle {
+	100% { background-position: -900px 0; }
 }
-@-o-keyframes clockshine {
-  0% { bottom: 200px; } 
-  100% { bottom: 495px; } 
-}
-@keyframes clockshine {
-  0% { bottom: 200px; } 
-  100% { bottom: 495px; } 
+@keyframes fly-right-one {
+	0% { transform: scale(0.25) translateX(-10vw);}
+	10% { transform: translateY(2vh) translateX(10vw) scale(0.3); }
+	20% { transform: translateY(0vh) translateX(30vw) scale(0.4); }
+	30% { transform: translateY(4vh) translateX(50vw) scale(0.5); }
+	40% { transform: translateY(2vh) translateX(70vw) scale(0.5); }
+	50% { transform: translateY(0vh) translateX(90vw) scale(0.5); }	
+	60% { transform: translateY(0vh) translateX(110vw) scale(0.5); }
+	100% { transform: translateY(0vh) translateX(110vw) scale(0.5); }
 }
 
+// THANKS: https://codepen.io/uchardon/pen/bxbqoG
+.wave-wrapper {
+  position: absolute;
+  width: 20em;
+  top: 260px;
+  left: calc(50% - 14em);
+  filter: sepia(.2);
+  will-change: transform;
+  svg {
+    width:100%;
+  }
+  .wave {
+    animation: wave 3s linear;
+    animation-iteration-count:infinite;
+    fill: #4478e3;
+  }
+  #wave2 {
+    animation-duration:5s;
+    animation-direction: reverse;
+    opacity: .6
+  }
+  #wave3 {
+    animation-duration: 7s;
+    opacity:.3;
+  }
+  @keyframes wave {
+    to {transform: translateX(-100%);}
+  }
+}
 
 // NAVIGATION
 nav.navbar.is-fixed-top {
@@ -381,7 +450,6 @@ nav.navbar {
   .navbar-item.has-dropdown:hover .container .navbar-link {
     border: none;
   }
-
 
   .navbar-item.has-dropdown .navbar-dropdown {
     background-color: darken($pageBack, 4%);

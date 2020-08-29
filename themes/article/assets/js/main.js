@@ -131,31 +131,21 @@ var changeValue = function (elementName, newValue) {
   window.location.hash = "#postcomment";
 };
 
-// Sky Background Function
+// ***************** Sky Background Function
+// THANKS: https://codepen.io/ellimccale/pen/wxzJMx
 var dayNightSky = function() {
   // Get the current hour; JS runs on the 24-hour clock
   var hour = new Date().getHours();
   var $sky = $("header.sky");
 
   var timeBlocks = [
-    // { // TEST BLOCK
-    //   start: 0, end: 24, class: "day",
-    // },
-    { // Night starts at 21:00 and ends at 24:00
-      start: 21, end: 24, class: "night",
-    },
-    { // Night starts again at 00:00 and ends at 5:00
-      start: 0, end: 5, class: "night",
-    },
-    { // Dawn starts at 6:00 and ends at 10:00
-      start: 6, end: 10, class: "dawn",
-    },
-    { // Day starts at 11:00 and ends at 16:00
-      start: 11, end: 16, class: "day",
-    },
-    { // Dusk starts at 17:00 and ends at 20:00
-      start: 17, end: 20, class: "dusk",
-    }
+    // TEST BLOCK
+    // { start: 0, end: 24, class: "day" },
+    { start: 23, end: 24, class: "night" },
+    { start: 0, end: 5, class: "night" },
+    { start: 6, end: 10, class: "dawn" },
+    { start: 11, end: 18, class: "day" },
+    { start: 19, end: 23, class: "dusk" }
   ]
 
   // Start by looping through the objects in the timeBlocks array
