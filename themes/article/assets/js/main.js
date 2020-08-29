@@ -63,24 +63,22 @@ $(document).ready(function() {
   inputs.forEach(function (input) {
     // Add a css class on submit when the input is invalid.
     input.addEventListener('invalid', function () {
-      if ( $('input[type="checkbox"]') ) {
-        $('.b-checkbox').addClass('is-danger');
-      }
       input.classList.add(invalidClassName);
-      $('.help.is-danger').css('display', 'block');
-      $('.icon.is-danger').css('display', 'inline-flex');
+
+      $('#' + input.id).parent().next('.help.is-danger').css('display', 'block');
+      $('#' + input.id).parent().children('.icon.is-right.is-danger').css('display', 'inline-flex');
+      $('#' + input.id).parent().addClass('is-danger');
     })
 
     // Remove the class when the input becomes valid.
     // 'input' will fire each time the user types
     input.addEventListener('input', function () {
-      if (input.validity.valid) {  
-        if ( $('input[type="checkbox"]') ) {
-          $('.b-checkbox').removeClass('is-danger');
-        }
+      if (input.validity.valid) {
         input.classList.remove(invalidClassName);
-        $('.help.is-danger').css('display', 'none');
-        $('.icon.is-danger').css('display', 'none');
+        
+        $('#' + input.id).parent().next('.help.is-danger').css('display', 'none');
+        $('#' + input.id).parent().children('.icon.is-right.is-danger').css('display', 'none');
+        $('#' + input.id).parent().removeClass('is-danger');
       }
     })
   });
@@ -91,6 +89,7 @@ $(document).ready(function() {
       $('#comment-email').addClass('is-disabled');
       $('#comment-website').addClass('is-disabled');
       $('#comment-message').addClass('is-disabled');
+      $('.b-checkbox').addClass('is-disabled');      
   });
 
   if (window.location.hash == "#comment-submitted") {

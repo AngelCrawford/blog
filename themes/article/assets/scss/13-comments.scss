@@ -170,6 +170,7 @@
 }
 
 #comments-messages {
+  scroll-margin-top: 1em;
   margin: 0em 0em 2em 0em;
   article.message {
     background: transparent;
@@ -232,34 +233,37 @@
       &.is-danger {
         border-color: $danger;
       }
-      &:invalid {
-        // border: 1px solid $danger;
-      }
-      &:not(:placeholder-shown) {
-        // border: 1px solid blue;
-      }
       &.is-disabled {
         background-color: darken($pageBack, 5%);
         border: 1px solid rgba($primary, .2);
         @include box-shadow(true, 5px, 5px, 5px, rgba(#000, .3), rgba($text, .07));
         opacity: .3;
-        color: darken($text, 40%);  
+        color: darken($text, 40%);
         & ~ .icon svg.remix {
           opacity: .2;
         }
       }
-      
     }
+    .b-checkbox.is-disabled {
+      label {
+        opacity: .3;
+      }
+    }
+
     .help.is-primary {
       color: $text;
     }
-    span.icon.is-danger {
-      svg {
-        fill: $danger;
+    span.icon {
+      svg.remix {
+        fill: $primary;
+      }
+      &.is-danger {
+        svg {
+          fill: $danger;
+        }
       }
     }
     .field.is-horizontal.is-right {
-      // float: right;
       text-align: right;
     }
   }

@@ -41,7 +41,7 @@
             <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#error-warning-line"></use></svg>
           </span>
         </div>
-        <p class="help is-danger" style="display:none;">Bitte ausfüllen.</p>
+        <p class="help is-danger" style="display:none;">Bitte ausfüllen im Format "mail@domain.de".</p>
       </div>
     </div>
   </div>
@@ -61,6 +61,22 @@
       </div>
     </div>
   </div>
+
+  {{/*  <div class="field is-horizontal">
+    <div class="field-label"></div>
+    <div class="field-body">
+      <div class="field">
+        <p class="control">
+          <div class="b-checkbox is-primary is-inline">
+            <input id="checkbox-mail" type="checkbox">
+            <label for="checkbox-mail">
+              Ja, ich möchte über neue Kritiken per E-Mail benachrichtig werden!
+            </label>
+          </div>
+        </p>
+      </div>
+    </div>
+  </div>   */}}
 
   <div class="field is-horizontal">
     <div class="field-label is-normal">
@@ -88,11 +104,12 @@
       <div class="field">
         <p class="control">
           <div class="b-checkbox is-primary is-inline">
-              <input id="checkbox" type="checkbox" required>
-              <label for="checkbox">
-                I agree to the <a href="#">terms and conditions</a>
-              </label>
+            <input id="checkbox" class="comment-checkbox" type="checkbox" required>
+            <label for="checkbox">
+              I agree to the <a href="#">terms and conditions</a>
+            </label>
           </div>
+          <p class="help is-danger" style="display:none;">Bitte akzeptieren!</p>
         </p>
       </div>
     </div>
