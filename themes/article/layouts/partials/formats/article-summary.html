@@ -1,6 +1,6 @@
 <article class="card is-horizontal {{ if .Resources }}has-image{{else}}no-image{{ end }} has-ribbon">
 
-  {{ if .Resources }}
+  {{- if .Resources -}}
     <div class="card-image">
       <!-- // HACK: Is this right? -->
       <figure class="image is-2by3">
@@ -19,16 +19,16 @@
         {{- end -}}
       </figure>
     </div>
-  {{ end }}
+  {{- end -}}
   
-  {{ if .GetTerms "categories" }}
-    {{ range first 1 (.GetTerms "categories") }}
-      {{ $catName := .LinkTitle }}
+  {{- if .GetTerms "categories" -}}
+    {{- range first 1 (.GetTerms "categories") -}}
+      {{- $catName := .LinkTitle -}}
       <div class="ribbon" style="{{ range .Site.Params.categoryColor }}{{ if eq .name $catName }}background-color: {{ .color }};{{ end }}{{ end }}">
-        <a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a>
+        <a href="{{ .RelPermalink }}">{{- .LinkTitle -}}</a>
       </div>
-    {{ end }}
-  {{ end }}
+    {{- end -}}
+  {{- end -}}
 
   <div class="card-content">
     <div class="media-content">
@@ -56,24 +56,24 @@
         <div class="rating">{{ partial "rating" . }} ({{ .Params.rating }})</div>
       {{- end -}}
 
-      {{ if eq .Params.weight 1 }}
+      {{- if eq .Params.weight 1 -}}
         <!-- // FIXME: Wenn ich Content hier verwende, dann wird "summary" im Frontend nicht benutzt -->
         <!-- // FIXME: Shortcodes werden ebenfalls mit ausgeben, zwar ohne HTML, aber dennoch -->
-        {{ if .Params.summary }}
+        {{- if .Params.summary -}}
           {{ .Summary | truncate 800 " [...]" }}
-        {{ else }}
+        {{- else -}}
           {{ .Content | truncate 800 " [...]" | markdownify }}
-        {{ end }}
-      {{ else if not .Resources }}
+        {{- end -}}
+      {{- else if not .Resources -}}
         {{ .Summary | truncate 500 " [...]" }}
-      {{ else }}
+      {{- else -}}
         {{- with .Params.description -}}
           <b>{{ . | truncate 160 }}</b>
           {{ $.Summary | truncate 180 " [...]" }}
-          {{ else }}
+          {{- else -}}
             {{ $.Summary | truncate 300 " [...]" }}
         {{- end -}}
-      {{ end }}
+      {{- end -}}
       
       <a class="read-more" href="{{ .RelPermalink }}">{{ i18n "readMore" }}</a>
 
@@ -93,7 +93,7 @@
 
   <footer class="card-footer">
     <div class="author-img">
-      {{ range (.GetTerms "authors") }}
+      {{- range (.GetTerms "authors") -}}
         <figure class="image is-48x48">
           <a href="{{ .Permalink }}">
             {{- range first 1 (.Resources.ByType "image") -}}
@@ -102,7 +102,7 @@
             {{- end -}}
           </a>
         </figure>
-      {{ end }}
+      {{- end -}}
     </div>
 
     <span class="card-footer-item">
@@ -110,28 +110,28 @@
         <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#time-line"></use>
       </svg> {{ .ReadingTime }} {{ i18n "minutesRead" }}
 
-      {{ $postSlug := $.File.ContentBaseName }}
-      {{ $comments := index $.Site.Data.comments $postSlug }}
-      {{ $.Scratch.Set "hasComments" 0 }}
-      {{ range $comments }}
-        {{ $.Scratch.Add "hasComments" 1 }}
-      {{ end }}
+      {{- $postSlug := $.File.ContentBaseName -}}
+      {{- $comments := index $.Site.Data.comments $postSlug -}}
+      {{- $.Scratch.Set "hasComments" 0 -}}
+      {{- range $comments -}}
+        {{- $.Scratch.Add "hasComments" 1 -}}
+      {{- end -}}
       {{ if not (eq ($.Scratch.Get "hasComments") 0) }}
         <svg class='remix-small comments'>
           <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#question-answer-line"></use>
         </svg>{{ $.Scratch.Get "hasComments" }} Kritiken
-      {{ end }}
-      {{ $.Scratch.Delete "hasComments" }}
+      {{- end -}}
+      {{- $.Scratch.Delete "hasComments" -}}
     </span>
 
     <span class="card-footer-item">
-      {{ if .Params.weight }}
+      {{- if .Params.weight -}}
         <div data-tooltip="Dies ist ein angepinnter Artikel">
           <svg class='remix-small'>
             <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#pushpin-line"></use>
           </svg>
         </div>
-      {{ end }}
+      {{- end -}}
 
       <div data-tooltip="Dies ist ein Artikel">
         <svg class='remix-small'>
@@ -139,65 +139,65 @@
         </svg>
       </div>
 
-      {{ if .Params.rating }}
+      {{- if .Params.rating -}}
         <div data-tooltip="Mit Bewertung">
           <svg class='remix-small'>
             <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#film-line"></use>
           </svg>
         </div>
-      {{ end }}
-      {{ if .Params.series }}
+      {{- end -}}
+      {{- if .Params.series -}}
         <div data-tooltip="Teil einer Serie">
           <svg class='remix-small'>
             <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#stack-line"></use>
           </svg>
         </div>
-      {{ end }}
+      {{- end -}}
       
-      {{ range (.GetTerms "contains") }}
-        {{ if eq .Title "code" }}
+      {{- range (.GetTerms "contains") -}}
+        {{- if eq .Title "code" -}}
           <div data-tooltip="Mit Code">
             <svg class='remix-small'>
               <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#code-s-slash-fill"></use>
             </svg>
           </div>
-        {{ end }}
-        {{ if eq .Title "instagram" }}
+        {{- end -}}
+        {{- if eq .Title "instagram" -}}
           <div data-tooltip="Mit Instagram Karte">
             <svg class='remix-small'>
               <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#instagram-line"></use>
             </svg>
           </div>
-        {{ end }}
-        {{ if eq .Title "twitter" }}
+        {{- end -}}
+        {{- if eq .Title "twitter" -}}
           <div data-tooltip="Mit Twitter Karte">
             <svg class='remix-small'>
               <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#twitter-line"></use>
             </svg>
           </div>
-        {{ end }}
-        {{ if eq .Title "youtube" }}
+        {{- end -}}
+        {{- if eq .Title "youtube" -}}
           <div data-tooltip="Mit Youtube Video">
             <svg class='remix-small'>
               <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#youtube-line"></use>
             </svg>
           </div>
-        {{ end }}
-        {{ if eq .Title "image" }}
+        {{- end -}}
+        {{- if eq .Title "image" -}}
           <div data-tooltip="Mit Bild">
             <svg class='remix-small'>
               <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#camera-line"></use>
             </svg>
           </div>
-        {{ end }}
-        {{ if eq .Title "gallery" }}
+        {{- end -}}
+        {{- if eq .Title "gallery" -}}
           <div data-tooltip="Mit Gallerie">
             <svg class='remix-small'>
               <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#gallery-line"></use>
             </svg>
           </div>
-        {{ end }}
-      {{ end }}
+        {{- end -}}
+      {{- end -}}
 
     </span>
   </footer>

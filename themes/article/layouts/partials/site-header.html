@@ -9,10 +9,9 @@
     {{ partial "site-navigation.html" . }}
 
   </header>
-
-  {{ if and (not .IsHome) (not (eq .Section "articles")) }}
-    
   <main>
+  {{ if and (not .IsHome) (not (eq .Section "articles")) }}
+  
     <div class="header-wrapper {{ if .Resources }}has-image{{else}}no-image{{ end }}">
       {{ if .Resources }}
         <figure class="image is-3by2">

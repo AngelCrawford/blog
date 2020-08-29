@@ -5,7 +5,7 @@
     <div class="column is-three-quarter">
       <section id="comments">
 
-        <div class="title is-4" id="#comments">Kritiken <a class="anchor" href="#comments"><div class="anchor-icon"></div></a></div>
+        <h2 class="title is-4">Kritiken <a class="anchor" href="#comments"><div class="anchor-icon"></div></a></h2>
     
         {{ $postSlug := $.File.ContentBaseName }}
         {{ $comments := index $.Site.Data.comments $postSlug }}
@@ -20,22 +20,22 @@
               <figure class="media-left">
                 {{ if .website }}<a href="{{ .website }}" title="Webseite von {{.name}}" target="_blank">{{ end }}
                   <p class="image is-120x120"><img class="is-rounded" src="https://secure.gravatar.com/avatar/{{ .email }}?s=120&r=pg&d={{ $.Site.Params.staticman.gravatarDefault }}"></p>
-                  <figcaption>{{ $.Scratch.Get "hasComments" }}</figcaption>
                 {{ if .website }}</a>{{ end }}
+                <figcaption>{{ $.Scratch.Get "hasComments" }}</figcaption>
               </figure>
               
               <div class="media-content">
                 <div class="content">
-                  <p><strong>{{ .name }}</strong>
-                  <br>{{ .comment | markdownify }}</p>
+                  <h4><strong>{{ .name }}</strong></h4>
+                  <p>{{ .comment | markdownify }}</p>
                 </div>
 
                 <div class="media-footer">
-                  <time class="post-time">
+                  <div class="comment-time">
                     <svg class='remix-small'>
                       <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#calendar-line"></use>
-                    </svg>{{ (time .date).Add (2 | duration "hour" ) | dateFormat "02.01.06 um 15:04" }}
-                  </time>
+                    </svg><time datetime='{{ (time .date).Add (2 | duration "hour" ) | dateFormat "2006-01-02T15:04:05Z07:00" }}' class="post-time">{{ (time .date).Add (2 | duration "hour" ) | dateFormat "02.01.06 um 15:04" }}</time>
+                  </div>
 
                   <a href="#commentid-{{ ._id }}" class="comment-anchor" title="Permalink to this comment">
                     <svg class='remix-small'>
@@ -90,10 +90,9 @@
       <section id="comments-form" class="box">
 
         <div id="comments-messages">
-          <!-- //TODO: JavaScript hinzufügen, um die Notification zu schließen! -->
           <article class="message is-primary" id="comment-submitted" style="display: none;">
             <div class="message-header">
-              <p>Thank you!</p>
+              <h2 class="title is-5">Thank you!</h2>
               <button class="delete" aria-label="delete"></button>
             </div>
             <div class="message-body">
@@ -105,7 +104,7 @@
     
           <article class="message is-danger" id="comment-error" style="display: none;">
             <div class="message-header">
-              <p>OOPS!</p>
+              <h2 class="title is-5">Oops!</h2>
               <button class="delete" aria-label="delete"></button>
             </div>
             <div class="message-body">

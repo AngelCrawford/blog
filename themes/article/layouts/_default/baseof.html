@@ -13,7 +13,6 @@
     <meta name="viewport" content="width=device-width,minimum-scale=1">
     {{ hugo.Generator }}
 
-    
     {{ with .Site.Params.author }}<meta name="author" content="{{ . }}" />{{ end }}
     {{ with .Site.Params.description }}<meta name="description" content="{{ . }}" />{{ end }}
     {{ with .Site.Params.keywords }}<meta name="keywords" content="{{ . }}" />{{ end }}
@@ -25,13 +24,12 @@
     <meta property="og:url" content="{{ .Permalink }}" />
     <meta name="twitter:card" content="summary_large_image" />
     {{ with .Site.Params.seo.twitterHandle }}<meta name="twitter:site" content="@{{ . }}" />{{ end }}
-    {{ range first 1 (.Resources.ByType "image") }}
+    {{- range first 1 (.Resources.ByType "image") }}
       {{- $img := .Fill "400x300" | images.Filter images.Grayscale -}}
       <meta property="og:image" content="{{ $img.RelPermalink | absURL }}" />
       <meta name="twitter:image" content="{{ $img.RelPermalink | absURL }}" />
-    {{ end }}
+    {{ end -}}
     <meta name="twitter:description" content="{{ with .Description }}{{ . }}{{ else }}{{if .IsPage}}{{ .Summary }}{{ else }}{{ with .Site.Params.description }}{{ . }}{{ end }}{{ end }}{{ end -}}"/>
-
 
     {{- $iso8601 := "2006-01-02T15:04:05-07:00" -}}
     {{- if .IsPage }}

@@ -2,7 +2,7 @@
   <div class="navbar-brand">
 
     <a class="is-mobile navbar-item {{ if .Page.IsHome }}is-active{{ end }} navbar-logo " href="/" title="{{ .Name }} page">
-      <img src="/images/logo_back.png"><span>{{ .Site.Title }}</span>
+      <img src="/images/logo_back.png" alt="Logo"><span>{{ .Site.Title }}</span>
     </a>
 
     
@@ -20,30 +20,28 @@
   <div class="navbar-menu" id="navbarHeader">
       
     <div class="navbar-start">
-      {{ $currentPage := . }}
-      {{ range .Site.Menus.main }}
+      {{- $currentPage := . -}}
+      {{- range .Site.Menus.main -}}
 
-        {{ if .HasChildren }}
+        {{- if .HasChildren -}}
           <div class="navbar-item has-dropdown is-hoverable is-mega">
             <a class="navbar-link {{ if or ($currentPage.IsMenuCurrent "main" .) ($currentPage.HasMenuCurrent "main" .) }} is-active{{ end }}" href="{{ .URL }}">
-              {{ .Name }}
+              {{- .Name -}}
             </a>
             <div id="blogDropdown" class="navbar-dropdown">
 
               <div class="container is-fluid">
                 <div class="columns is-multiline">
-                    {{ range .Children }}
-                      {{ $.Scratch.Set "CatName" .Name }}
-
+                    {{- range .Children -}}
+                      {{- $.Scratch.Set "CatName" .Name -}}
                       <div class="column is-4">
-                        
 
                         <a class="navbar-link is-arrowless" href="">
                           <div class="navbar-content">
                             <!-- TODO: Wenn neuer Artikel, Batch mit "new" hinzufügen. -->
                             
-                            {{ with $.Site.GetPage .URL }}
-                              {{ if .Resources }}
+                            {{- with $.Site.GetPage .URL -}}
+                              {{- if .Resources -}}
                                 <figure class="image is-2by3">
                                   {{- $img := (.Resources.ByType "image").GetMatch "featured*" -}}
                                   {{- with $img -}}
@@ -51,8 +49,8 @@
                                       <img src="{{ $resize.RelPermalink }}" alt="{{ $.Title }}">
                                   {{- end -}}
                                 </figure>
-                              {{ end }}
-                            {{ end }}
+                              {{- end -}}
+                            {{- end -}}
 
                             <p class="title is-5" style='color: 
                             {{- range $.Site.Params.categoryColor -}}
@@ -61,17 +59,17 @@
                               {{- end -}}
                             {{- end -}}'>{{ .Name }}</p>
                             
-                            {{ with $.Site.GetPage .URL }}
+                            {{- with $.Site.GetPage .URL -}}
                               {{ .Content | truncate "200" }}
-                            {{ end }}
+                            {{- end -}}
 
                           </div>
                         </a>
 
                       </div>
-                    {{ end }}
+                    {{- end -}}
 
-                    {{ $.Scratch.Delete "CatName" }}
+                    {{- $.Scratch.Delete "CatName" -}}
     
                 </div>
               </div>
@@ -79,14 +77,14 @@
             </div>
           </div>
 
-        {{ else }}
+        {{- else -}}
 
           <a class="navbar-item {{ if or ($currentPage.IsMenuCurrent "main" .) ($currentPage.HasMenuCurrent "main" .) }} is-active{{ end }}" href="{{ .URL }}" title="{{ .Name }} page">
-            {{ .Name }}
+            {{- .Name -}}
           </a>
-        {{ end }}
+        {{- end -}}
         
-      {{ end }}
+      {{- end -}}
 
       <div class="navbar-item has-dropdown is-hoverable">
         <div class="navbar-link">
