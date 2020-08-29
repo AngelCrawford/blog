@@ -116,10 +116,11 @@
       {{- range $comments -}}
         {{- $.Scratch.Add "hasComments" 1 -}}
       {{- end -}}
-      {{ if not (eq ($.Scratch.Get "hasComments") 0) }}
+      {{ $CountComments := $.Scratch.Get "hasComments" }}
+      {{ if not (eq ($CountComments) 0) }}
         <svg class='remix-small comments'>
           <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#question-answer-line"></use>
-        </svg>{{ $.Scratch.Get "hasComments" }} Kritiken
+        </svg>{{ $CountComments }} {{ i18n "comments" $CountComments }}
       {{- end -}}
       {{- $.Scratch.Delete "hasComments" -}}
     </span>

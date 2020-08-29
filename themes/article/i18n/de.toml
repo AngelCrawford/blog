@@ -7,6 +7,10 @@ other = "weiterlesen"
 [words]
 other = "Wörter"
 
+[comments]
+one = "Reaktion"
+other = "Reaktionen"
+
 [quotes]
 one = "1 Kurz-Artikel"
 other = "{{.Count}} Kurz-Artikel"

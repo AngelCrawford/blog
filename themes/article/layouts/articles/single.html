@@ -1,4 +1,4 @@
-{{ define "main" }}
+{{- define "main" -}}
  
   <div class="columns">
 
@@ -105,19 +105,19 @@
           </svg>{{ .ReadingTime }} {{ i18n "minutesRead" }} zu Lesen
         </div>
 
-        {{ $postSlug := $.File.ContentBaseName }}
-        {{ $comments := index $.Site.Data.comments $postSlug }}
-        {{ $.Scratch.Set "hasComments" 0 }}
-        {{ range $comments }}
-          {{ $.Scratch.Add "hasComments" 1 }}
-        {{ end }}
+        {{- $postSlug := $.File.ContentBaseName -}}
+        {{- $comments := index $.Site.Data.comments $postSlug -}}
+        {{- $.Scratch.Set "hasComments" 0 -}}
+        {{- range $comments -}}
+          {{- $.Scratch.Add "hasComments" 1 -}}
+        {{- end -}}
         <div class="comments-single">
           <svg class='remix-small'>
             <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#question-answer-line"></use>
           </svg>
-          <a href="{{.RelPermalink}}#comments">{{ $.Scratch.Get "hasComments" }} Kritiken</a> (<a href="{{.RelPermalink}}#postcomment">Kritik verfassen</a>)
+          <a href="{{.RelPermalink}}#comments">{{ $.Scratch.Get "hasComments" }} {{ i18n "comments" ($.Scratch.Get "hasComments") }}</a> (<a href="{{.RelPermalink}}#postcomment">Reaktion verfassen</a>)
         </div>
-        {{ $.Scratch.Delete "hasComments" }}
+        {{- $.Scratch.Delete "hasComments" -}}
   
         {{- if .Params.rating -}}
           <div class="ratings-single">
@@ -127,24 +127,24 @@
           </div>
         {{- end -}}
 
-        {{ if .Params.series }}
+        {{- if .Params.series -}}
           <div class="series-single">
             {{ $name := index .Params.series 0 }}
             <svg class='remix-small'>
               <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#stack-line"></use>
             </svg>Dieser Artikel gehört zur Serie: <a href="{{.Site.BaseURL}}/series/{{$name | urlize}}">{{ $name }}</a>.
           </div>
-        {{ end }}
+        {{- end -}}
       </div>
 
-      {{ if ge (len .TableOfContents) 100 }}
+      {{- if ge (len .TableOfContents) 100 -}}
         <div class="toc-single">
           <p class="title is-4">Übersicht</p>
           {{ .TableOfContents }}
         </div>
-      {{ end }}
+      {{- end -}}
       
-      {{ if .Params.series }}
+      {{- if .Params.series -}}
         <div class="serie-single">
           <p class="title is-4">Serie</p>
           {{- $currentPage := . -}}
@@ -171,11 +171,11 @@
           </ul>
           
         </div>
-      {{ end }}
+      {{- end -}}
 
-      {{ if .Params.authors }}
+      {{- if .Params.authors -}}
         {{ partial "single-pages/author-box" . }}
-      {{ end }}
+      {{- end -}}
     </div>
 
   </div>
@@ -184,4 +184,4 @@
 
   {{ partial "comments/comments" . }}
  
-{{ end }}
+{{- end -}}

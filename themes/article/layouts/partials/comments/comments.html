@@ -1,21 +1,20 @@
-
-{{ if and .Site.Params.staticman (not (or .Site.Params.disable_comments .Params.disable_comments)) }}
+{{- if and .Site.Params.staticman (not (or .Site.Params.disable_comments .Params.disable_comments)) -}}
   <div class="columns">
 
     <div class="column is-three-quarter">
       <section id="comments">
 
-        <h2 class="title is-4">Kritiken <a class="anchor" href="#comments"><div class="anchor-icon"></div></a></h2>
+        <h2 class="title is-4">Reaktionen <a class="anchor" href="#comments"><div class="anchor-icon"></div></a></h2>
     
-        {{ $postSlug := $.File.ContentBaseName }}
-        {{ $comments := index $.Site.Data.comments $postSlug }}
-        {{ $.Scratch.Set "hasComments" 0 }}
+        {{- $postSlug := $.File.ContentBaseName -}}
+        {{- $comments := index $.Site.Data.comments $postSlug -}}
+        {{- $.Scratch.Set "hasComments" 0 -}}
          
-        {{ range $comments }}
-          {{ if not .reply_to }}  
-            {{ $.Scratch.Add "hasComments" 1 }}
+        {{- range $comments -}}
+          {{- if not .reply_to -}}
+            {{- $.Scratch.Add "hasComments" 1 -}}
    
-            {{ $.Scratch.Set "commentName" .name }}
+            {{- $.Scratch.Set "commentName" .name -}}
             <article id="commentid-{{ ._id }}" class='media post-comment {{ range ($.GetTerms "authors") }} {{ if eq ($.Scratch.Get "commentName") .Page.Title }} is-author {{ end }} {{ end }}'>
               <figure class="media-left">
                 {{ if .website }}<a href="{{ .website }}" title="Webseite von {{.name}}" target="_blank">{{ end }}
@@ -43,13 +42,13 @@
                     </svg>Permalink zur Kritik
                   </a>
 
-                  {{ if .website }}
+                  {{- if .website -}}
                     <a href="{{ .website }}" class="website" target="_blank">
                       <svg class='remix-small'>
                         <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#external-link-line"></use>
                       </svg>Webseite
                     </a>
-                  {{ end }}
+                  {{- end -}}
 
                   <button data-tooltip="Antworte @{{.name}}" id="{{ ._id }}" class="button is-primary" href="#postcomment" onclick="changeValue('fields[reply_to]', '{{ ._id }}')">
                     <svg class='remix'>
@@ -61,22 +60,22 @@
               </div>
             </article>
             {{ partial "comments/comment-replies" (dict "entryId_parent" $postSlug "SiteDataComments_parent" $.Site.Data.comments "parentId" ._id "parentName" .name "parentCount" ($.Scratch.Get "hasComments") "context" . ) }}
-          {{ end }}
-        {{ end }}
+          {{- end -}}
+        {{- end -}}
     
-        {{ if eq ($.Scratch.Get "hasComments") 0 }}
+        {{- if eq ($.Scratch.Get "hasComments") 0 -}}
           <article class="media no-comment">
             <figure class="media-left">
               <p class="image is-120x120"><img class="is-rounded" src="https://secure.gravatar.com/avatar/0000000?s=120&r=pg&d={{ $.Site.Params.staticman.gravatarDefault }}"></p>
             </figure>
             <div class="media-content">
               <div class="content">
-                <p><strong>Keine Kritiken vorhanden</strong>
-                <br>Pinne was zum Thema an und verfasse eine Kritik.</p>
+                <p><strong>Keine Reaktionen vorhanden</strong>
+                <br>Pinne was zum Thema an und verfasse eine Reaktion.</p>
               </div>
             </div>
           </article>
-        {{ end }}
+        {{- end -}}
     
       </section>
     </div>
@@ -122,7 +121,7 @@
   </div>
 
   
-{{ end }}
+{{- end -}}
 
-{{ $.Scratch.Delete "hasComments" }}
-{{ $.Scratch.Delete "commentName" }}
+{{- $.Scratch.Delete "hasComments" -}}
+{{- $.Scratch.Delete "commentName" -}}

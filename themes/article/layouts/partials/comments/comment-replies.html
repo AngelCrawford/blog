@@ -1,14 +1,14 @@
-{{ $hasTotalReplies := 0 }}
-{{ range $index, $comments := (index $.SiteDataComments_parent $.entryId_parent ) }}
-  {{ if eq .reply_to $.parentId }}
-    {{ $hasTotalReplies = add $hasTotalReplies 1 }}
-  {{ end }}
-{{ end }}
+{{- $hasTotalReplies := 0 -}}
+{{- range $index, $comments := (index $.SiteDataComments_parent $.entryId_parent ) -}}
+  {{- if eq .reply_to $.parentId -}}
+    {{- $hasTotalReplies = add $hasTotalReplies 1 -}}
+  {{- end -}}
+{{- end -}}
 
-{{ $hasReplies := 0 }}
-{{ range $index, $comments := (index $.SiteDataComments_parent $.entryId_parent ) }}
-  {{ if eq .reply_to $.parentId }}
-    {{ $hasReplies = add $hasReplies 1 }}
+{{- $hasReplies := 0 -}}
+{{- range $index, $comments := (index $.SiteDataComments_parent $.entryId_parent ) -}}
+  {{- if eq .reply_to $.parentId -}}
+    {{- $hasReplies = add $hasReplies 1 -}}
     <article id="commentid-{{ ._id }}" class="media post-comment reply">
       
       <figure class="media-left">
@@ -37,24 +37,24 @@
             </svg>Permalink zur Kritik
           </a>
 
-          {{ if .website }}
+          {{- if .website -}}
             <a href="{{ .website }}" class="website" target="_blank">
               <svg class='remix-small'>
                 <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#external-link-line"></use>
               </svg>Webseite
             </a>
-          {{ end }}
+          {{- end -}}
 
-          {{ if eq $hasReplies $hasTotalReplies }}
+          {{- if eq $hasReplies $hasTotalReplies -}}
             <button id="{{ ._id }}" class="button is-primary" href="#postcomment" onclick="changeValue('fields[reply_to]', '{{ $.parentId }}')">
               <svg class='remix'>
                 <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#reply-all-line"></use>
               </svg>Antworten
             </button>
-          {{ end }}
+          {{- end -}}
         </div>
       </div>
     </article>
     
-  {{ end }}
-{{ end }}
+  {{- end -}}
+{{- end -}}

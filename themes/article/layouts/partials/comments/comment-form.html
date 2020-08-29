@@ -1,4 +1,4 @@
-<h2 class="title is-4" id="postcomment">Kritik verfassen <a class="anchor" href="#postcomment"><div class="anchor-icon"></div></a></h2>
+<h2 class="title is-4" id="postcomment">Reaktion verfassen <a class="anchor" href="#postcomment"><div class="anchor-icon"></div></a></h2>
 
 <form id="comment-form" class="post-new-comment" method="post" action="{{ .Site.Params.staticman.endpoint }}/{{ .Site.Params.staticman.username }}/{{ .Site.Params.staticman.repository }}/{{ .Site.Params.staticman.branch }}/comments">
   <input type="hidden" name="options[redirect]" value="{{ .Permalink }}#comment-submitted">
@@ -70,7 +70,7 @@
           <div class="b-checkbox is-primary is-inline">
             <input id="checkbox-mail" type="checkbox">
             <label for="checkbox-mail">
-              Ja, ich möchte über neue Kritiken per E-Mail benachrichtig werden!
+              Ja, ich möchte über neue Reaktionen per E-Mail benachrichtig werden!
             </label>
           </div>
         </p>
@@ -88,8 +88,8 @@
           <textarea name="fields[comment]" class="textarea" id="comment-message" placeholder="Markdown ist erlaubt" required rows="10"></textarea>
         </div>
         <p class="help is-danger" style="display:none;">Bitte ausfüllen.</p>
-        <p class="help is-primary">Kritiken werden moderiert, es kann etwas dauern bis deine Kritik frei geschaltet wird. 
-          Schau Dir solange Deine Kritik an unter: 
+        <p class="help is-primary">Reaktioen werden moderiert, es kann etwas dauern bis Deine frei geschaltet wird. 
+          Schau Dir solange Deine Reaktion an unter: 
           <a href="https://github.com/{{ .Site.Params.staticman.username }}/{{ .Site.Params.staticman.repository }}/issues" target="_blank">github.com</a>.
         </p>
         <p class="help is-primary">Dieses Nachrichten Feld unterstützt <a href="https://markdown.de/" target="_blank">Markdown</a>.</p>
