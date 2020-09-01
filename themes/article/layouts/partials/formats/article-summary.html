@@ -67,15 +67,16 @@
       {{- else if not .Resources -}}
         {{ .Summary | truncate 500 " [...]" }}
       {{- else -}}
-        {{- with .Params.description -}}
+        <!-- {{- with .Params.description -}}
           <b>{{ . | truncate 160 }}</b>
           {{ $.Summary | truncate 180 " [...]" }}
-          {{- else -}}
-            {{ $.Summary | truncate 300 " [...]" }}
-        {{- end -}}
+        {{- else -}} -->
+        <!-- {{- end -}} -->
+
+        {{ .Summary | truncate 270 " [...]" | markdownify }}
       {{- end -}}
       
-      <a class="read-more" href="{{ .RelPermalink }}">{{ i18n "readMore" }}</a>
+      <a class="read-more" href="{{ .RelPermalink }}"> {{ i18n "readMore" }}</a>
 
       {{- if (.GetTerms "tags") -}}
         <div class="tags-wrapper">

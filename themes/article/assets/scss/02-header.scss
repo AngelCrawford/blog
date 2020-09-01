@@ -18,8 +18,7 @@ header.header {
     background-size: auto 85%;
     position: relative;
     z-index: 1;
-    filter: sepia(.4);
-    
+    filter: sepia(0.4);
   }
 
   &.sky {
@@ -195,7 +194,6 @@ header.header {
   }
 }
 
-
 // THANKS: https://codepen.io/matchboxhero/pen/RLebOY
 .bird-wrapper {
   .bird {
@@ -212,16 +210,8 @@ header.header {
       animation-delay: -0.5s;
     }
     &--two {
-      animation-duration: 0.9s;
-      animation-delay: -0.75s;
-    }
-    &--three {
       animation-duration: 1.25s;
       animation-delay: -0.25s;
-    }
-    &--four {
-      animation-duration: 1.1s;
-      animation-delay: -0.5s;
     }
   }
 
@@ -239,16 +229,8 @@ header.header {
       animation-delay: 0;
     }
     &--two {
-      animation-duration: 16s;
-      animation-delay: 1s;
-    }
-    &--three {
       animation-duration: 14.6s;
       animation-delay: 9.5s;
-    }
-    &--four {
-      animation-duration: 16s;
-      animation-delay: 10.25s;
     }
   }
   @keyframes fly-cycle {
@@ -261,39 +243,48 @@ header.header {
     30% { transform: translateY(4vh) translateX(50vw) scale(0.5); }
     40% { transform: translateY(2vh) translateX(70vw) scale(0.5); }
     50% { transform: translateY(0vh) translateX(90vw) scale(0.5); }	
-    60% { transform: translateY(0vh) translateX(110vw) scale(0.5); }
-    100% { transform: translateY(0vh) translateX(110vw) scale(0.5); }
+    60% { transform: translateY(0vh) translateX(110vw) scale(0.4); }
+    100% { transform: translateY(0vh) translateX(110vw) scale(0.4); }
   }
 }
 
 // THANKS: https://codepen.io/uchardon/pen/bxbqoG
-.wave-wrapper {
+.wave-wrapper,
+.wave-wrapper-two {
   position: absolute;
   width: 20em;
   top: 260px;
   left: calc(50% - 14em);
   filter: sepia(.2);
+  opacity: .7;
   will-change: transform;
   svg {
     width:100%;
   }
   .wave {
-    animation: wave 3s linear;
+    animation: wave 4s linear;
     animation-iteration-count:infinite;
     fill: #4478e3;
   }
-  #wave2 {
-    animation-duration:5s;
+  #wave2,
+  #wave5 {
+    animation-duration: 6s;
     animation-direction: reverse;
-    opacity: .6
+    opacity: .6;
   }
-  #wave3 {
-    animation-duration: 7s;
-    opacity:.3;
+  #wave3,
+  #wave6 {
+    animation-duration: 8s;
+    opacity: .3;
   }
   @keyframes wave {
     to {transform: translateX(-100%);}
   }
+}
+
+// TODO: Diese Welle ist nicht responsiv
+.wave-wrapper-two {
+  left: 0;
 }
 
 // NAVIGATION

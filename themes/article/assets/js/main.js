@@ -142,10 +142,10 @@ var dayNightSky = function() {
     // TEST BLOCK
     // { start: 0, end: 24, class: "day" },
     { start: 23, end: 24, class: "night" },
-    { start: 0, end: 5, class: "night" },
-    { start: 6, end: 10, class: "dawn" },
-    { start: 11, end: 18, class: "day" },
-    { start: 19, end: 23, class: "dusk" }
+    { start: 0, end: 6, class: "night" },
+    { start: 7, end: 10, class: "dawn" },
+    { start: 11, end: 17, class: "day" },
+    { start: 18, end: 22, class: "dusk" }
   ]
 
   // Start by looping through the objects in the timeBlocks array
