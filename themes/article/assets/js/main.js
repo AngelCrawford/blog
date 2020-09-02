@@ -140,7 +140,7 @@ var dayNightSky = function() {
 
   var timeBlocks = [
     // TEST BLOCK
-    // { start: 0, end: 24, class: "day" },
+    // { start: 0, end: 24, class: "dawn" },
     { start: 23, end: 24, class: "night" },
     { start: 0, end: 6, class: "night" },
     { start: 7, end: 10, class: "dawn" },
@@ -157,5 +157,11 @@ var dayNightSky = function() {
       // If it is, add the relevant class to #sky
       $sky.addClass(timeOfDay.class);
     }
+  }
+
+  if ( $("header.sky").hasClass("night") ) {
+    $(".sky-stars-wrapper").css("display", "block");
+  } else {
+    $(".sky-stars-wrapper").css("display", "none");
   }
 }
