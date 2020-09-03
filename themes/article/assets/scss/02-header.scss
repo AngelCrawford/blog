@@ -351,6 +351,9 @@ nav.navbar {
   }
   .navbar-brand {
     height: 56px;
+    &:hover {
+      background-color: darken($pageBack, 3%);
+    }
   }
   .navbar-item.navbar-logo {
     display: none;
@@ -362,7 +365,8 @@ nav.navbar {
       width: 60px;
       max-height: 60px;
       position: absolute;
-      top: 2px;
+      top: -1px;
+      left: .9em;
       opacity: .5;
     }
   }
@@ -409,8 +413,11 @@ nav.navbar {
   a.navbar-item,
   .navbar-link {
     color: $primary;
-    border: 1px solid transparent;
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
     transition: all .3s ease-out;
+    padding-left: 1.5em;
+    padding-right: 1.5em;
   }
   .is-active, 
   a.navbar-item.is-active, 
@@ -418,32 +425,46 @@ nav.navbar {
   a.navbar-item.is-active:not(:focus):not(:hover), 
   .navbar-link.is-active:not(:focus):not(:hover) {
     color: $primary;
-    background-color: rgba(0, 0, 0, .2);
-    border: 1px solid $primary;
-    @include box-shadow(false, 5px, 5px, 5px, rgba(#000, .3), rgba($text, .07));
+    background-color: darken($pageBack, 3%);
+    border-top: 5px solid $primary;
+    border-top-left-radius: 7px;
+    border-top-right-radius: 7px;
+    // @include box-shadow(true, 5px, 5px, 5px, rgba(#000, .3), rgba($text, .07));
   }
   a.icon {
     margin-left: .5em;
   }
-  a:hover {
+  a:hover,
+  .navbar-link:hover {
     color: $hover;
-    background-color: rgba(0, 0, 0, 0.2);
-    border: 1px solid $hover;
-    @include box-shadow(true, 5px, 5px, 5px, rgba(#000, .3), rgba($text, .07));
+    background-color: darken($pageBack, 3%);
+    border-top: 5px solid $hover;
+    border-top-left-radius: 7px;
+    border-top-right-radius: 7px;
+    // @include box-shadow(false, 5px, 5px, 5px, rgba(#000, .3), rgba($text, .07));
 
     &.icon {
       background-color: transparent;
-      border: none;
+      // border: none;
       box-shadow: none;
       .remix {
         fill: $hover;
       }
     }
   }
+  .navbar-end {
+    .navbar-item.has-no-hover-border a:hover {
+      border-top: none;
+    }
+  }
 
   // Dropdown
-
   .navbar-item.has-dropdown {
+    a, .navbar-link {
+      padding-right: 2.5em;
+      border-left: 1px solid transparent;
+      border-right: 1px solid transparent;
+    }
     .container {
       padding: 0;
       margin: 0;
@@ -504,7 +525,7 @@ nav.navbar {
   }
 
   .navbar-item.has-dropdown .navbar-dropdown {
-    background-color: darken($pageBack, 4%);
+    background-color: darken($pageBack, 3%);
     border: 1px solid $hover;
     margin: -1px 0 0 0;
     padding: 0;
@@ -513,9 +534,11 @@ nav.navbar {
   .navbar-item.has-dropdown:hover .navbar-link, 
   .navbar-item.has-dropdown.is-active .navbar-link {
     color: $hover;
-    background-color: darken($pageBack, 4%);
-    border: 1px solid $hover;
-    border-bottom: 1px solid darken($pageBack, 4%);
+    background-color: darken($pageBack, 3%);
+    border-left: 1px solid $hover;
+    border-right: 1px solid $hover;
+    border-top: 5px solid $hover;
+    border-bottom: 5px solid darken($pageBack, 3%);
     z-index: 999999;
     box-shadow: none;
   }

@@ -1,6 +1,6 @@
 main {
   /* make sure to cover the screen */
-  min-height: 100vh;
+  min-height: calc(100vh - 360px);
   background-color: darken($pageBack, 3%);
 
   /* put on top */

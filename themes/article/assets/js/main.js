@@ -2,6 +2,8 @@
 
 $(document).ready(function() {
 
+
+  // ***************** Navigation
   // Check for click events on the navbar burger icon
   $(".navbar-burger").click(function() {
 
@@ -110,6 +112,8 @@ $(document).ready(function() {
   
 });
 
+
+// ***************** Navigation Scroll
 var navScroll = function () {
   var theNavigation = $(".navbar");
   stuck = "is-fixed-top";
@@ -122,6 +126,8 @@ var navScroll = function () {
     theNavigation.removeClass(stuck);
     $(".navbar-logo").css('display', 'none');
   }
+
+  // $(".navbar-logo").css('display', 'flex');
 }
 
 // ***************** Comment ReplyTo Button function

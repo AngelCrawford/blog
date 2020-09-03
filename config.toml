@@ -66,12 +66,27 @@ googleAnalytics = ""
     keywords = "Webcard, Profil Karte, Angel Crawford"
 
   # TODO: Soziale Medien einfügen
-  [params.social]
-    facebook = "#"
-    twitter = "#"
-    instagram = "#"
-    github = "#"
-    rss = "/index.xml"
+  # TODO: isHeader zum funktionieren bringen
+  [[params.social]]
+    [params.social.facebook]
+      link = "#"
+      isHeader = false
+  [[params.social]]
+    [params.social.twitter]
+      link = "#"
+      isHeader = false
+  [[params.social]]
+    [params.social.instagram]
+      link = "#"
+      isHeader = false
+  [[params.social]]
+    [params.social.github]
+      link = "#"
+      isHeader = false
+  [[params.social]]
+    [params.social.rss]
+      link = "/index.xml"
+      isHeader = true
 
   [[params.categoryColor]]
     name = "Movie"
