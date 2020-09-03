@@ -140,7 +140,7 @@ var dayNightSky = function() {
 
   var timeBlocks = [
     // TEST BLOCK
-    // { start: 0, end: 24, class: "dawn" },
+    // { start: 0, end: 24, class: "night" },
     { start: 23, end: 24, class: "night" },
     { start: 0, end: 6, class: "night" },
     { start: 7, end: 10, class: "dawn" },

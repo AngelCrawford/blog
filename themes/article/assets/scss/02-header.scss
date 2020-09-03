@@ -66,10 +66,10 @@ header.header {
 }
 
 .clock-logo {
-  background: url("/images/logo_back.png") no-repeat top center;
+  background: url("/images/clock.png") no-repeat top center;
   background-size: contain;
   position: absolute;
-  opacity: .6;
+  opacity: .8;
   top: 0em;
   bottom: 0;
   width: 100%;
@@ -124,30 +124,30 @@ header.header {
     margin-left: 21%;
     position: absolute;
     background-color: $text;
-    opacity: .3;
+    opacity: .4;
     z-index: -1;
     filter: blur(30px);
   }
     
   &:after {
     background: none;
-    padding: 0 150px;
+    padding: 0 130px;
     content: attr(data-heading);
     left: 0;
     top: 0;
     z-index: -1;
     position: absolute;
     text-shadow: -1px 0 1px #ffcb9a, 0 1px 1px #ffcb9a, 5px 5px 10px rgba(0, 0, 0, 0.7), -2px -2px 5px rgba(255, 255, 255, 0.3);
-    @media (max-width: 768px) {
-      padding: 0 80px;
-    }
-    @media (max-width: 494px) {
-      padding: 0 60px;
-    }
+    // @media (max-width: 768px) {
+    //   padding: 0 80px;
+    // }
+    // @media (max-width: 494px) {
+    //   padding: 0 60px;
+    // }
   }
   
   span.shimmer {
-    padding: 0 150px;
+    padding: 0 130px;
     text-align: center;
     background: -webkit-gradient(linear, left top, right top, from($primary), to($primary), color-stop(.5, #fff));
     background: -moz-gradient(linear, left top, right top, from($primary), to($primary), color-stop(.5, #fff));
