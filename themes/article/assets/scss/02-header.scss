@@ -329,6 +329,18 @@ header.header {
   }
 }
 
+// THANKS: https://codepen.io/nicooprat/pen/ALANqj
+#hotairballoon {
+  // width: 35px;
+  position: absolute;
+  top: 130px;
+  left: calc(50% + 360px);
+  background: url("/images/hotairballoon.svg") no-repeat;
+  width: 40px;
+  height: 40px;
+  transform: rotate(10deg)
+}
+
 
 // NAVIGATION
 nav.navbar.is-fixed-top {

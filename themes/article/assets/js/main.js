@@ -146,12 +146,12 @@ var dayNightSky = function() {
 
   var timeBlocks = [
     // TEST BLOCK
-    // { start: 0, end: 24, class: "night" },
-    { start: 23, end: 24, class: "night" },
-    { start: 0, end: 6, class: "night" },
-    { start: 7, end: 10, class: "dawn" },
-    { start: 11, end: 17, class: "day" },
-    { start: 18, end: 22, class: "dusk" }
+    { start: 0, end: 24, class: "dusk" },
+    // { start: 23, end: 24, class: "night" },
+    // { start: 0, end: 6, class: "night" },
+    // { start: 7, end: 10, class: "dawn" },
+    // { start: 11, end: 17, class: "day" },
+    // { start: 18, end: 22, class: "dusk" }
   ]
 
   // Start by looping through the objects in the timeBlocks array
@@ -170,4 +170,11 @@ var dayNightSky = function() {
   } else {
     $(".sky-stars-wrapper").css("display", "none");
   }
+  
+  if ( $("header.sky").hasClass("day") || $("header.sky").hasClass("dusk") ) {
+    $("#hotairballoon").css("display", "block");
+  } else {
+    $("hotairballoon").css("display", "none");
+  }
+  
 }
