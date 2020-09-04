@@ -49,7 +49,9 @@ $(document).ready(function() {
     }); 
   });
 
-  dayNightSky();
+  // Call every hour
+  setInterval(dayNightSky(), 60*60*1000);
+  
 
   // ***************** Sticky Navbar
   $(window).scroll(function () {
@@ -140,18 +142,33 @@ var changeValue = function (elementName, newValue) {
 // ***************** Sky Background Function
 // THANKS: https://codepen.io/ellimccale/pen/wxzJMx
 var dayNightSky = function() {
-  // Get the current hour; JS runs on the 24-hour clock
+  
+  // var hour = 7;
   var hour = new Date().getHours();
   var $sky = $("header.sky");
 
+  var location = {lat:"53.551086", long:"9.993682"};
+  var now = new Date();
+  now.setHours(now.getHours() + 2);
+  var times = SunCalc.getTimes(now, location.lat, location.long);
+  
+  var dawnStart = times.nauticalDawn.getHours();
+  var dawnEnd = times.sunriseEnd.getHours();
+  var dayStart = times.sunriseEnd.getHours() + 1;
+  var dayEnd = times.sunset.getHours();
+  var duskStart = times.nauticalDusk.getHours();
+  var duskEnd = times.night.getHours();
+  var nightStart = times.night.getHours() + 1;
+  var nightEnd = times.nightEnd.getHours();
+
   var timeBlocks = [
     // TEST BLOCK
-    { start: 0, end: 24, class: "dusk" },
-    // { start: 23, end: 24, class: "night" },
-    // { start: 0, end: 6, class: "night" },
-    // { start: 7, end: 10, class: "dawn" },
-    // { start: 11, end: 17, class: "day" },
-    // { start: 18, end: 22, class: "dusk" }
+    // { start: 0, end: 24, class: "dusk" },
+    { start: nightStart, end: 24, class: "night" },
+    { start: 0, end: nightEnd, class: "night" },
+    { start: dawnStart, end: dawnEnd, class: "dawn" },
+    { start: dayStart, end: dayEnd, class: "day" },
+    { start: duskStart, end: duskEnd, class: "dusk" }
   ]
 
   // Start by looping through the objects in the timeBlocks array
@@ -176,5 +193,8 @@ var dayNightSky = function() {
   } else {
     $("hotairballoon").css("display", "none");
   }
-  
+
+  // console.log(hour);
+  // console.log(SunCalc.getTimes(now, location.lat, location.long));
+
 }
