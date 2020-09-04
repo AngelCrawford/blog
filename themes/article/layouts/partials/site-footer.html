@@ -42,6 +42,13 @@
       {{ $countM := len (where (where .Site.RegularPages "Section" "=" "articles") ".Params.format" "==" "rating") }}
       {{ i18n "movies" $countM }}
     </p>
+
+    <p>
+      <!-- TODO: MUSS im Footer bleiben, nur noch schön machen -->
+      Header SVG by:<br />
+      <a href="https://www.shutterstock.com/g/pixelliebe">pixelliebe</a>/<a href="https://www.shutterstock.com/image-vector/hamburg-skyline-471775031">shutterstock.com</a><br />
+      <a href="https://www.shutterstock.com/g/pixelliebe">pixelliebe</a>/<a href="https://www.shutterstock.com/image-vector/kiel-skyline-german-city-581455954">shutterstock.com</a>
+    </p>
   </div>
  
 </footer>
