@@ -68,25 +68,35 @@ googleAnalytics = ""
   # TODO: Soziale Medien einfügen
   # TODO: isHeader zum funktionieren bringen
   [[params.social]]
-    [params.social.facebook]
-      link = "#"
-      isHeader = false
+    name = "Facebook"
+    link = "#"
+    icon = "facebook-circle-line"
+    isHeader = false
+    isFooter = true
   [[params.social]]
-    [params.social.twitter]
-      link = "#"
-      isHeader = false
+    name = "Twitter"
+    link = "#"
+    icon = "twitter-line"
+    isHeader = false
+    isFooter = true
   [[params.social]]
-    [params.social.instagram]
-      link = "#"
-      isHeader = false
+    name = "Instagram"
+    link = "#"
+    icon = "instagram-line"
+    isHeader = false
+    isFooter = true
   [[params.social]]
-    [params.social.github]
-      link = "#"
-      isHeader = false
+    name = "Github"
+    link = "#"
+    icon = "github-line"
+    isHeader = false
+    isFooter = true
   [[params.social]]
-    [params.social.rss]
-      link = "/index.xml"
-      isHeader = true
+    name = "RSS"
+    link = "/index.xml"
+    icon = "rss-line"
+    isHeader = true
+    isFooter = true
 
   [[params.categoryColor]]
     name = "Movie"

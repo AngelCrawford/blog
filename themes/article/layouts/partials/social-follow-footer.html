@@ -1,0 +1,9 @@
+{{ range .Site.Params.social }}
+  {{ if .isFooter }}
+    <a href="{{ .link }}" target="_blank" data-tooltip="{{ .name }}" class="icon" title="{{ .name }} link" rel="noopener" aria-label="follow on {{ .name }}——Opens in a new window">
+      <svg class='remix'>
+        <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#{{ .icon }}"></use>
+      </svg>
+    </a>
+  {{ end }}
+{{ end }}
