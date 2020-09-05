@@ -13,29 +13,36 @@ footer.footer {
   margin: 0;
   padding: 0;
 
-  &:before {
-    content: "";
-    height: 100%;
-    width: 100%;
-    // border: 1px solid green;
-    position: absolute;
-    background-image: url("/images/header.svg");
-    background-repeat: repeat-x;
-    background-position: center calc(100% + 2px);
-    background-size: auto 300px;
-    overflow: hidden;
-    transform: rotate(180deg);
-    opacity: .5;
-    filter: sepia(1) blur(.2em);
-  }
-
   background-color: darken($pageBack, 5%);
   @include box-shadow(true, 10px, 10px, 15px, rgba(#000, .3), rgba($text, .1));
 
   /* place on the bottom */
   position: sticky;
   bottom: 0;
-  left: 0; 
+  left: 0;
+  top: 0;
+
+  &:before,
+  &:after {
+    content: "";
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    background-image: url("/images/header.svg");
+    background-repeat: repeat-x;
+    background-size: auto 300px;
+    overflow: hidden;
+    opacity: .4;
+  }
+  &:before {
+    background-position: center calc(90% + -30px);
+    transform: rotate(180deg) scaleX(-1);
+    filter: sepia(.6) blur(.1em) url("#turbulence");
+  }
+  &:after {
+    bottom: 90%;
+    background-position: 50% calc(100% + -5px);
+  }
   
   .content {
     padding: 3em;
