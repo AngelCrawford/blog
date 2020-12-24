@@ -155,13 +155,22 @@ input[type="search"]::-webkit-search-results-decoration {
 }
 
 
-// a:not([href^='#']):not([href^='/']):after {
+// External Links
+// a:not([href^='#']):not([href^='/']):after
+a:not([href*='yourdomain.com']):not([href^='#']):not([href^='/']):after {
+  content: "\ecaf";
+  font-family: 'remixicon' !important;
+  font-size: 80%;
+  padding-left: 5px;
+}
 
-// }
-// a[href*='#']:before {
+// Internal Links
+// a:not([href*='#']):after,
+// a:not(.anchor):after {
 //   content: "\eeb7";
 //   font-family: 'remixicon' !important;
 //   font-size: 80%;
+//   padding-left: 5px;
 // }
 
 // .ri-external-link-line:before { content: "\ecaf"; }

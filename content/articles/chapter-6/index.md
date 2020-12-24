@@ -7,6 +7,7 @@ tags:
 - Flex
 - Position
 - Tree
+summary: "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr"
 series: ["Seriennummer"]
 categories: "Allgemein"
 authors: angel
@@ -29,6 +30,14 @@ icons:
 
 ## Headline
 Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, 
+
+[Ein Test](/articles/2020/02/test-123/ "Link Title")
+
+[Angel Crawford](https://angel-crawford.de/ "Profil von Angel Crawford")
+
+https://github.com/gohugoio/hugo/issues/7228
+
+https://www.facebook.com/
 
 ## headline 2
 sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.

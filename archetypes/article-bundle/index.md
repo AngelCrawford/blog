@@ -1,6 +1,7 @@
 ---
 title: "{{ replace .TranslationBaseName "-" " " | title }}"
 description: "SEO Description and Subheader for single posts" # Not more than 160 characters!
+summary: "" # if content has shortcodes, than the excerpt will render it. BUT WE DON'T WANT THIS! Use summary instead!
 date: {{ .Date }}
 publishdate: {{ now.Format "2006-01-02" }}
 tags:
@@ -33,6 +34,9 @@ icons:
 
 <!-- Konsole: hugo new --kind article-bundle articles/my-post -->
 
+[Ein Test](/articles/2020/02/test-123/ "Link Title")
+[Angel Crawford](https://angel-crawford.de/ "Profil von Angel Crawford")
+
 {{< rating "Storyline" "0" >}}
 {{< rating "Storyline" "3.5" >}}
 {{< rating "Storyline" "5" >}}
@@ -45,6 +49,11 @@ icons:
 {{% infobox theme="success" %}}**Yeahhh !** is a text{{% /infobox %}}
 {{% infobox theme="warning" %}}**Be carefull** is a text{{% /infobox %}}
 {{% infobox theme="danger" %}}**Beware !** is a text{{% /infobox %}}
+{{% infobox theme="question" %}}**Question !** is a text{{% /infobox %}}
+
+```html
+  <meta name="author" content="Angel Crawford" />
+```
 
 ```go {linenos=table,hl_lines=[8,"15-17"],linenostart=188}
 // If an unknown or empty style is provided, AP style is what you get.
@@ -56,3 +65,5 @@ func GetTitleFunc(style string) func(s string) string {
 ```
 
 Lorem Ipsum.
+
+![Example image](/images/social.jpg)

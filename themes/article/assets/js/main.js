@@ -115,6 +115,27 @@ $(document).ready(function() {
 });
 
 
+// ***************** Add Favicons to external links
+$(function() {  
+  /* You can replace this with your site's domain */
+  var basedomain = location.hostname.split('.').slice(-2).join('.');
+  // console.log(basedomain);
+
+	/* Select all external links */
+	$( 'a[href^="//"],a[href^="http"]' ).not( '[href*="' + basedomain + '"]' ).each(function() {
+
+    /* Add the favicon as a background gradient */
+		$(this).css({
+			'background': 'url(https://www.google.com/s2/favicons?domain=' + this.href + ') left center no-repeat',
+			'padding-left': '21px',
+			'background-size': '16px 16px'
+		});
+
+	});
+});
+
+
+
 // ***************** Navigation Scroll
 var navScroll = function () {
   var theNavigation = $(".navbar");
