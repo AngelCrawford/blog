@@ -61,7 +61,7 @@ footer.footer {
   position: fixed;
   z-index: 999999;
   display: none;
-  bottom: 3em;
+  bottom: 4em;
   right: 3em;
   height: 55px;
   width: 55px;
@@ -88,7 +88,6 @@ footer.footer {
     font-weight: 600;
     @include box-shadow(true, 5px, 5px, 5px, rgba(#000, .3), rgba($text, .07));
     border: 1px solid $hover;
-    color: $primary;
     .remix {
       fill: $hover;
     }

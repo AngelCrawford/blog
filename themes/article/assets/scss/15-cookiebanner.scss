@@ -1,0 +1,149 @@
+#cookie-banner {
+  padding: 2em 2em 1em 2em;
+  width: 100%;
+  // height: 220px;
+  text-align: center;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  background-color: darken($background, 10%);
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  border-top: 1px solid $hover;
+
+  p {
+    color: $text;
+    strong {
+      color: $primary;
+    }
+    a {
+      opacity: .5;
+      &:hover {
+        opacity: 1;
+      }
+    }
+  }
+
+  div {
+    padding-top: 1em;
+  }
+
+  button {
+    margin: .25em;
+    // @include font-bold;
+    float: right;
+    color: $primary;
+    border: 1px solid rgba($primary, .2);
+    @include box-shadow(false, 5px, 5px, 5px, rgba($text, .1), rgba($text, .05));
+    border-radius: 7px;
+
+    &:first-of-type {
+      margin-left: 1em;
+    }
+
+    &#consent-cookies {
+      background-color: rgba($accent, 0.2);
+      &:hover .remix {
+        fill: $accent;
+      }
+      .remix {
+        fill: $accent;
+        margin-right: 0.4em;
+      }
+    }
+
+    &#reject-cookies {
+      background-color: rgba($danger, 0.2);
+      &:hover .remix {
+        fill: $danger;
+      }
+      .remix {
+        fill: $danger;
+        margin-right: 0.4em;
+      }
+    }
+
+    &:hover {
+      color: $hover;
+      @include box-shadow(true, 5px, 5px, 5px, rgba(#000, .6), rgba($text, .1));
+      border: 1px solid rgba($hover, .5);
+    }
+  }
+
+  #cookie-banner-opener {
+    position: absolute;
+    right: 3em;
+    top: -50px;
+    height: 50px;
+    width: 50px;
+    background-color: darken($background, 10%);
+    padding-top: 0;
+    cursor: pointer;
+    border-top-left-radius: $radius-large;
+    border-top-right-radius: $radius-large;
+
+    &:after {
+      font-family: 'remixicon';
+      font-size: 35px;
+    }
+  }
+
+  &.opened {
+    #cookie-banner-opener {
+      border-top: 1px solid $hover;
+      border-left: 1px solid $hover;
+      border-right: 1px solid $hover;
+      
+      &:after {
+        content: "\ea77";
+        color: $primary;
+      }
+
+      &:hover {
+        border-top: 1px solid $hover;
+        border-left: 1px solid $hover;
+        border-right: 1px solid $hover;
+        
+        &:after {
+          content: "\ea4d";
+          color: $hover;
+        }
+      }
+    }
+  }
+
+  &.closed,
+  &.opened.closed {
+    // bottom: -220px;
+    visibility: hidden;
+
+    #cookie-banner-opener {
+      visibility: visible;
+      top: unset;
+      bottom: 0;
+      border-top: 1px solid rgba($primary, .2);
+      border-left: 1px solid rgba($primary, .2);
+      border-right: 1px solid rgba($primary, .2);
+
+      &:after {
+        content: "\ea4d";
+        color: $primary;
+      }
+  
+      &:hover {
+        border-top: 1px solid $hover;
+        border-left: 1px solid $hover;
+        border-right: 1px solid $hover;
+        
+        &:after {
+          content: "\ea77";
+          color: $hover;
+        }
+      }
+    }
+  }
+
+}

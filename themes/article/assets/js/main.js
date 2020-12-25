@@ -112,32 +112,57 @@ $(document).ready(function() {
     window.location.hash = "#postcomment";
   });
   
-});
+}); // Close $(document).ready(function()
 
 
-// ***************** Add Favicons to external links
-$(function() {  
-  /* You can replace this with your site's domain */
-  var basedomain = location.hostname.split('.').slice(-2).join('.');
-  // console.log(basedomain);
+// ***************** Cookie Functions getCookie() and setCookie()
+function getCookie(cname) {
+  // var name = cname + "=";
+  // var decodedCookie = decodeURIComponent(document.cookie);
+  // var ca = decodedCookie.split(';');
 
-	/* Select all external links */
-	$( 'a[href^="//"],a[href^="http"]' ).not( '[href*="' + basedomain + '"]' ).each(function() {
+  // for(var i = 0; i < ca.length; i++) {
+  //   var c = ca[i];
+  //   while (c.charAt(0) == ' ') {
+  //     c = c.substring(1);
+  //   }
+  //   if (c.indexOf(name) == 0) {
+  //     return c.substring(name.length, c.length);
+  //   }
+  // }
+  // return "";
 
-    /* Add the favicon as a background gradient */
-		$(this).css({
-			'background': 'url(https://www.google.com/s2/favicons?domain=' + this.href + ') left center no-repeat',
-			'padding-left': '21px',
-			'background-size': '16px 16px'
-		});
+  var n__nameEQ = cname + "=";
+  var ca = document.cookie.split(';');
+  for(var i=0;i < ca.length;i++)
+  {
+      var c = ca[i];
 
-	});
-});
+      while (c.charAt(0)==' ') 
+      {  c = c.substring(1,c.length);  }
 
+      if (c.indexOf(n__nameEQ) == 0) 
+      {  return c.substring(n__nameEQ.length,c.length);  }
+  }
+  return false;
+
+
+}
+
+function setCookie(cname, cvalue, exdays) {
+  var d = new Date();
+  d.setTime(d.getTime() + (exdays*24*60*60*1000));
+  var expires = "expires="+ d.toUTCString();
+  document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/;SameSite=strict";
+}
+
+function deleteCookie(cname) {
+  document.cookie = cname + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;"; 
+}
 
 
 // ***************** Navigation Scroll
-var navScroll = function () {
+function navScroll() {
   var theNavigation = $(".navbar");
   stuck = "is-fixed-top";
   theHeader = $('.header').height() - 56;
@@ -155,14 +180,14 @@ var navScroll = function () {
 
 // ***************** Comment ReplyTo Button function
 // Added function to change value onclick
-var changeValue = function (elementName, newValue) {
+function changeValue(elementName, newValue) {
   document.getElementsByName(elementName)[0].value=newValue;
   window.location.hash = "#postcomment";
 };
 
 // ***************** Sky Background Function
 // THANKS: https://codepen.io/ellimccale/pen/wxzJMx
-var dayNightSky = function() {
+function dayNightSky() {
   
   // var hour = 7;
   var hour = new Date().getHours();

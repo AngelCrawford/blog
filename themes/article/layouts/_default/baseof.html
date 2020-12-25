@@ -96,7 +96,9 @@
     {{- $sunCalc := resources.Get "js/suncalc.js" -}}
     {{- $main := resources.Get "js/main.js" -}}
     {{- $search := resources.Get "js/search.js" -}}
-    {{- $script := slice $jQuery $sunCalc $main $search | resources.Concat "js/bundle.js" | resources.Minify | resources.Fingerprint -}}
+    {{- $gdpr := resources.Get "js/gdpr.js" -}}
+    
+    {{- $script := slice $jQuery $sunCalc $main $search $gdpr | resources.Concat "js/bundle.js" | resources.Minify | resources.Fingerprint -}}
     <script src="{{ $script.Permalink }}"></script>
 
     <link type="text/plain" rel="author" href="humans.{{ .Site.Language }}.txt" />

@@ -18,7 +18,16 @@
             <article id="commentid-{{ ._id }}" class='media post-comment {{ range ($.GetTerms "authors") }} {{ if eq ($.Scratch.Get "commentName") .Page.Title }} is-author {{ end }} {{ end }}'>
               <figure class="media-left">
                 {{ if .website }}<a href="{{ .website }}" title="Webseite von {{.name}}" target="_blank">{{ end }}
-                  <p class="image is-120x120"><img class="is-rounded" src="https://secure.gravatar.com/avatar/{{ .email }}?s=120&r=pg&d={{ $.Site.Params.staticman.gravatarDefault }}"></p>
+                  <p class="image is-120x120">
+                    <script>
+                      if (getCookie('cookies-consent') == 'false' || !getCookie('cookies-consent') ) {
+                        document.write('<img class="is-rounded" src="/images/avatar.png">');
+                      } else {
+                        document.write('<img class="is-rounded" src="https://secure.gravatar.com/avatar/{{ .email }}?s=120&r=pg&d={{ $.Site.Params.staticman.gravatarDefault }}">');
+                      }
+                    </script>
+                  </p>
+
                 {{ if .website }}</a>{{ end }}
                 <figcaption>{{ $.Scratch.Get "hasComments" }}</figcaption>
               </figure>
@@ -59,14 +68,16 @@
                 </div>
               </div>
             </article>
-            {{ partial "comments/comment-replies" (dict "entryId_parent" $postSlug "SiteDataComments_parent" $.Site.Data.comments "parentId" ._id "parentName" .name "parentCount" ($.Scratch.Get "hasComments") "context" . ) }}
+            {{ partial "comments/comment-replies" (dict "entryId_parent" $postSlug "SiteDataComments_parent" $.Site.Data.comments "parentId" ._id "parentName" .name "parentCount" ($.Scratch.Get "hasComments") "gravatarDefault" $.Site.Params.staticman.gravatarDefault "context" . ) }}
           {{- end -}}
         {{- end -}}
     
         {{- if eq ($.Scratch.Get "hasComments") 0 -}}
           <article class="media no-comment">
             <figure class="media-left">
-              <p class="image is-120x120"><img class="is-rounded" src="https://secure.gravatar.com/avatar/0000000?s=120&r=pg&d={{ $.Site.Params.staticman.gravatarDefault }}"></p>
+              <p class="image is-120x120">
+                <img class="is-rounded" src="/images/avatar.png">
+              </p>
             </figure>
             <div class="media-content">
               <div class="content">
