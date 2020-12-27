@@ -13,13 +13,9 @@
       
       <figure class="media-left">
         {{ if .website }}<a href="{{ .website }}" title="Webseite von {{.name}}" target="_blank">{{ end }}
-          <p class="image is-120x120">
+          <p class="image is-120x120">          
             <script>
-              if (getCookie('cookies-consent') == 'false' || !getCookie('cookies-consent') ) {
-                document.write('<img class="is-rounded" src="/images/avatar.png">');
-              } else {
-                document.write('<img class="is-rounded" src="https://secure.gravatar.com/avatar/{{ .email }}?s=120&r=pg&d={{ $.Site.Params.staticman.gravatarDefault }}">');
-              }
+              setGravatars('{{ .email }}', '{{ $.Site.Params.staticman.gravatarDefault }}');
             </script>
           </p>
         {{ if .website }}</a>{{ end }}

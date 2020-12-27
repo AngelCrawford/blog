@@ -3,7 +3,7 @@ $(document).ready(function() {
   var cookieBanner = document.querySelector('#cookie-banner');
   var hasCookieConsent = getCookie('cookies-consent');
 
-  console.log(hasCookieConsent);
+  // console.log(hasCookieConsent);
 
   if (!hasCookieConsent) {
     cookieBanner.classList.remove('closed');
@@ -12,10 +12,13 @@ $(document).ready(function() {
   } 
   if (hasCookieConsent == 'false') {
     cookieBanner.classList.add('closed');
+    $('#reject-cookies').attr('disabled', true);
+    $('#reject-cookies').removeAttr('data-tooltip');
   }
   if (hasCookieConsent == 'true') {
     cookieBanner.classList.add('closed');
     getFavForExternalLinks();
+    $('#consent-cookies').attr('disabled', true);
   }
 
   var consentCta = cookieBanner.querySelector('#consent-cookies');
@@ -50,7 +53,17 @@ $(document).ready(function() {
 
 });
 
-// Gravtar Images are loaded over an if/else statement directly in the comments pages
+
+// ***************** Load Gravatar Images, if cookie is true, else load internal avatar
+function setGravatars(email, defaultImage) {
+  if (getCookie('cookies-consent') == 'false' || !getCookie('cookies-consent') ) {
+    document.write('<img class="is-rounded" src="/images/avatar.png">');
+  } else {
+    //src="https://secure.gravatar.com/avatar/{{ .email }}?s=120&r=pg&d={{ $.Site.Params.staticman.gravatarDefault }}">
+    document.write('<img class="is-rounded" src="https://secure.gravatar.com/avatar/' + email + '?s=120&r=pg&d=' + defaultImage + '">');
+  }
+}
+
 
 // ***************** Add Favicons to external links
 // THANKS: https://codepen.io/angel_crawford/pen/VwKrvEW

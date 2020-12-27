@@ -71,6 +71,12 @@
       @include box-shadow(true, 5px, 5px, 5px, rgba(#000, .6), rgba($text, .1));
       border: 1px solid rgba($hover, .5);
     }
+
+    &:disabled {
+      color: $primary;
+      border: 1px solid rgba($primary, .2);
+      @include box-shadow(false, 5px, 5px, 5px, rgba($text, .1), rgba($text, .05));
+    }
   }
 
   #cookie-banner-opener {
