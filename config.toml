@@ -43,6 +43,24 @@ googleAnalytics = ""
   year = "/articles/:slug/"
   month = "/articles/:slug/"
 
+[imaging]
+  # Default JPEG quality setting. Default is 75.
+  quality = 75
+
+  # Default background color.
+  # Hugo will preserve transparency for target formats that supports it,
+  # but will fall back to this color for JPEG.
+  # Expects a standard HEX color string with 3 or 6 digits.
+  # See https://www.google.com/search?q=color+picker
+  bgColor = "#ffffff"
+
+  [imaging.exif]
+    # Hugo extracts the "photo taken" date/time into .Date by default.
+    disableDate = true
+
+    # Hugo extracts the "photo taken where" (GPS latitude and longitude) into
+    disableLatLong = true
+
 [related]
   threshold = 0 
   includeNewer = true

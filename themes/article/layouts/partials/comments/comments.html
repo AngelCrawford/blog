@@ -17,9 +17,9 @@
             {{- $.Scratch.Set "commentName" .name -}}
             <article id="commentid-{{ ._id }}" class='media post-comment {{ range ($.GetTerms "authors") }} {{ if eq ($.Scratch.Get "commentName") .Page.Title }} is-author {{ end }} {{ end }}'>
               <figure class="media-left">
-                {{ if .website }}<a href="{{ .website }}" title="Webseite von {{.name}}" target="_blank">{{ end }}
-                  <p class="image is-120x120" id="gravatar-comments">
-                    <script>
+                {{ if .website }}<a href="{{ .website }}" title="Webseite von {{.name}}" target="_blank" rel="noreferrer">{{ end }}
+                  <p class="image is-120x120 addGravatarOrAvatarJS">
+                    <script type="text/javascript">
                       setGravatars('{{ .email }}', '{{ $.Site.Params.staticman.gravatarDefault }}');
                     </script>
                   </p>
@@ -30,7 +30,7 @@
               
               <div class="media-content">
                 <div class="content">
-                  <h4><strong>{{ .name }}</strong></h4>
+                  <p class="is-4">{{ .name }}</p>
                   <p>{{ .comment | markdownify }}</p>
                 </div>
 
@@ -48,7 +48,7 @@
                   </a>
 
                   {{- if .website -}}
-                    <a href="{{ .website }}" class="website" target="_blank">
+                    <a href="{{ .website }}" class="website" target="_blank" rel="noreferrer">
                       <svg class='remix-small'>
                         <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#external-link-line"></use>
                       </svg>Webseite
@@ -103,7 +103,7 @@
             </div>
             <div class="message-body">
               <p>Your comment has been submitted and will be published once it has been approved. &#128522;</p>
-              <p><a href="https://github.com/{{ .Site.Params.staticman.username }}/{{ .Site.Params.staticman.repository }}/pulls" target="_blank">Click here</a> 
+              <p><a href="https://github.com/{{ .Site.Params.staticman.username }}/{{ .Site.Params.staticman.repository }}/pulls" target="_blank" rel="noreferrer">Click here</a> 
               to see the pull request you generated.</p>
             </div>
           </article>

@@ -57,11 +57,17 @@ $(document).ready(function() {
 // ***************** Load Gravatar Images, if cookie is true, else load internal avatar
 function setGravatars(email, defaultImage) {
   if (getCookie('cookies-consent') == 'false' || !getCookie('cookies-consent') ) {
-    document.write('<img class="is-rounded" src="/images/avatar.png">');
+    document.write('<img class="is-rounded" src="/images/avatar.png" width="120" height="120" alt="Avatar Image">');
   } else {
     //src="https://secure.gravatar.com/avatar/{{ .email }}?s=120&r=pg&d={{ $.Site.Params.staticman.gravatarDefault }}">
-    document.write('<img class="is-rounded" src="https://secure.gravatar.com/avatar/' + email + '?s=120&r=pg&d=' + defaultImage + '">');
+    document.write('<img class="is-rounded" src="https://secure.gravatar.com/avatar/' + email + '?s=120&r=pg&d=' + defaultImage + '" width="120" height="120" alt="Gravatar Image">');
   }
+}
+
+document.write=function(s){
+  var scripts = document.getElementsByTagName('script');
+  var lastScript = scripts[scripts.length-1];
+  lastScript.insertAdjacentHTML("beforebegin", s);
 }
 
 

@@ -8,7 +8,7 @@
 
   <div class="field is-horizontal">
     <div class="field-label is-normal">
-      <label class="label">Name<svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#asterisk"></use></svg></label>
+      <label for="comment-name" class="label">Name<svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#asterisk"></use></svg></label>
     </div>
     <div class="field-body">
       <div class="field">
@@ -28,7 +28,7 @@
   
   <div class="field is-horizontal">
     <div class="field-label is-normal">
-      <label class="label">E-Mail<svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#asterisk"></use></svg></label>
+      <label for="comment-email" class="label">E-Mail<svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#asterisk"></use></svg></label>
     </div>
     <div class="field-body">     
       <div class="field">
@@ -48,7 +48,7 @@
   
   <div class="field is-horizontal">
     <div class="field-label is-normal">
-      <label class="label">Webseite</label>
+      <label for="comment-website" class="label">Webseite</label>
     </div>
     <div class="field-body">
       <div class="field">
@@ -80,7 +80,7 @@
 
   <div class="field is-horizontal">
     <div class="field-label is-normal">
-      <label class="label">Nachricht<svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#asterisk"></use></svg></label>
+      <label for="comment-message" class="label">Nachricht<svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#asterisk"></use></svg></label>
     </div>
     <div class="field-body">
       <div class="field">
@@ -90,9 +90,9 @@
         <p class="help is-danger" style="display:none;">Bitte ausfüllen.</p>
         <p class="help is-primary">Reaktioen werden moderiert, es kann etwas dauern bis Deine frei geschaltet wird. 
           Schau Dir solange Deine Reaktion an unter: 
-          <a href="https://github.com/{{ .Site.Params.staticman.username }}/{{ .Site.Params.staticman.repository }}/issues" target="_blank">github.com</a>.
+          <a href="https://github.com/{{ .Site.Params.staticman.username }}/{{ .Site.Params.staticman.repository }}/issues" target="_blank" rel="noreferrer">github.com</a>.
         </p>
-        <p class="help is-primary">Dieses Nachrichten Feld unterstützt <a href="https://markdown.de/" target="_blank">Markdown</a>.</p>
+        <p class="help is-primary">Dieses Nachrichten Feld unterstützt <a href="https://markdown.de/" target="_blank" rel="noreferrer">Markdown</a>.</p>
         <p class="help is-primary">Falls Du mir privat schreiben willst, kannst Du das hier: <a href="#">Kontaktiere mich</a>.</p>
       </div>
     </div>

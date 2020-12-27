@@ -92,7 +92,7 @@
     <link rel="stylesheet" href="{{ $style.Permalink }}">
 
     <!-- Scripts -->
-    {{- $jQuery := resources.Get "js/jquery-3.4.1.js" -}}
+    {{- $jQuery := resources.Get "js/jquery-3.5.1.js" -}}
     {{- $sunCalc := resources.Get "js/suncalc.js" -}}
     {{- $main := resources.Get "js/main.js" -}}
     {{- $search := resources.Get "js/search.js" -}}
@@ -100,7 +100,12 @@
     
     {{- $script := slice $jQuery $sunCalc $main $search $gdpr | resources.Concat "js/bundle.js" | resources.Minify | resources.Fingerprint -}}
     <script src="{{ $script.Permalink }}"></script>
-
+    
+    <link rel="preload" as="font" href="/fonts/remixicon/remixicon.woff2" crossorigin="anonymous">
+    <link rel="preload" as="font" href="/fonts/Montserrat_Alternates/MontserratAlternates-Regular.ttf" crossorigin="anonymous">
+    <link rel="preload" as="font" href="/fonts/Montserrat/Montserrat-Regular.ttf" crossorigin="anonymous">
+    <link rel="preload" as="font" href="/fonts/Montserrat/Montserrat-Bold.ttf" crossorigin="anonymous">
+    
     <link type="text/plain" rel="author" href="humans.{{ .Site.Language }}.txt" />
   </head>
 
@@ -108,12 +113,12 @@
     
     {{ block "header" . }}{{ partial "site-header.html" . }}{{ end }}
 
-      
         <div class="wrapper">
           {{ block "main" . }}{{ end }}
         </div>
       </main><!-- Wird in site-header geöffnet -->
     
     {{ block "footer" . }}{{ partial "site-footer.html" . }}{{ end }}
+    
   </body>
 </html>

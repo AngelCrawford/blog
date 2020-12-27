@@ -17,7 +17,7 @@
           {{- $img := (.Resources.ByType "image").GetMatch "featured*" -}}
           {{- with $img -}}
             {{- $resize := .Fill "600x480" -}}
-            <img src="{{ $resize.RelPermalink }}" alt="{{ $.Title }}">
+            <img src="{{ $resize.RelPermalink }}" alt="{{ $.Title }}" width="480" height="600">
           {{- end -}}
           {{- range .Params.featured_image -}}
             <figcaption>
@@ -38,7 +38,7 @@
             <a href="{{ .Permalink }}">
               {{- range first 1 (.Resources.ByType "image") -}}
                 {{- $img := .Fill "48x48" -}}
-                <img class="is-rounded" src="{{ $img.RelPermalink }}" alt="{{ $.Title }}">
+                <img class="is-rounded" src="{{ $img.RelPermalink }}" alt="{{ $.Title }}" width="48" height="48">
               {{- end -}}
             </a>
           </figure>

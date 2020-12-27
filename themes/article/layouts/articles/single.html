@@ -10,7 +10,7 @@
               {{- $img := (.Resources.ByType "image").GetMatch "featured*" -}}
               {{- with $img -}}
                 {{- $resize := .Fill "320x480" -}}
-                  <img src="{{ $resize.RelPermalink }}" alt="{{ $.Title }}">
+                  <img src="{{ $resize.RelPermalink }}" alt="{{ $.Title }}" height="480" width="320">
               {{- end -}}
 
               {{- range .Params.featured_image -}}

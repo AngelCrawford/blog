@@ -177,3 +177,10 @@ a:not([href*='yourdomain.com']):not([href^='#']):not([href^='/']):not(figure a):
 
 // .ri-external-link-line:before { content: "\ecaf"; }
 // .ri-links-fill:before { content: "\eeb7"; }
+
+
+.visible-hidden {
+  position: absolute !important;
+  top: -9999px !important;
+  right: -9999px !important;
+}
