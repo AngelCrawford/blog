@@ -1,4 +1,6 @@
 .message {
+  display: grid;
+  
   &[class*="is-"] {
     background-color: $background;
     .message-body {

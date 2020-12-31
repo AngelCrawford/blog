@@ -16,7 +16,7 @@ a.anchor {
     display: flex;
     flex-direction: column;
 
-    div {
+    & > div {
       padding-bottom: 1em;
     }
 
