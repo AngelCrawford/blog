@@ -23,9 +23,7 @@ header.header {
 
   &.sky {
     background: radial-gradient(circle, rgba(#00285c, 1) 0%, rgba(#2c449d, 1) 35%, rgba(#fff, 1) 100%);
-    // background: -linear-gradient(top, #c9dbe9 0%, #fff 100%);
-    // background: -moz-linear-gradient(top, #c9dbe9 0%, #fff 100%);
-    // background: -webkit-linear-gradient(top, #c9dbe9 0%, #fff 100%);
+
     &.night {
       background: radial-gradient(circle, rgba(#000000, 1) 0%, rgba(#010010, 1) 35%, rgba(#0c1a37, 1) 100%);
     }
@@ -166,6 +164,7 @@ header.header {
       -webkit-animation: shimmer alternate .8s both;
       -moz-animation-name: shimmer alternate .8s both;
       animation: shimmer alternate .8s both;
+      will-change: background-position;
     }
     
     // @media (max-width: 768px) {

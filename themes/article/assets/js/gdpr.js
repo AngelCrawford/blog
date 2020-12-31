@@ -54,20 +54,59 @@ $(document).ready(function() {
 });
 
 
-// ***************** Load Gravatar Images, if cookie is true, else load internal avatar
-function setGravatars(email, defaultImage) {
-  if (getCookie('cookies-consent') == 'false' || !getCookie('cookies-consent') ) {
-    document.write('<img class="is-rounded" src="/images/avatar.png" width="120" height="120" alt="Avatar Image">');
-  } else {
-    //src="https://secure.gravatar.com/avatar/{{ .email }}?s=120&r=pg&d={{ $.Site.Params.staticman.gravatarDefault }}">
-    document.write('<img class="is-rounded" src="https://secure.gravatar.com/avatar/' + email + '?s=120&r=pg&d=' + defaultImage + '" width="120" height="120" alt="Gravatar Image">');
+// ***************** Cookie Functions getCookie() and setCookie()
+function getCookie(cname) {
+  var name = cname + "=";
+  var decodedCookie = decodeURIComponent(document.cookie);
+  var ca = decodedCookie.split(';');
+
+  for(var i = 0; i < ca.length; i++) {
+    var c = ca[i];
+    while (c.charAt(0) == ' ') {
+      c = c.substring(1);
+    }
+    if (c.indexOf(name) == 0) {
+      return c.substring(name.length, c.length);
+    }
   }
+  return false;
 }
 
-document.write=function(s){
-  var scripts = document.getElementsByTagName('script');
-  var lastScript = scripts[scripts.length-1];
-  lastScript.insertAdjacentHTML("beforebegin", s);
+function setCookie(cname, cvalue, exdays) {
+  var d = new Date();
+  d.setTime(d.getTime() + (exdays*24*60*60*1000));
+  var expires = "expires="+ d.toUTCString();
+  document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/;SameSite=strict";
+}
+
+function deleteCookie(cname) {
+  document.cookie = cname + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;"; 
+}
+
+
+// ***************** Load Gravatar Images, if cookie is true, else load internal avatar
+function setGravatars(email, defaultImage) {
+  // get the "last" script on the page
+  var getScript = document.getElementsByTagName('script');
+  getScript = getScript[getScript.length - 1];
+
+  // create an image
+  var createImg = document.createElement('img');
+  createImg.className = 'is-rounded';
+  createImg.width = '120';
+  createImg.height = '120';
+
+  if (getCookie('cookies-consent') == 'false' || !getCookie('cookies-consent') ) {
+    // <img class="is-rounded" src="/images/avatar.png" width="120" height="120" alt="Avatar Image">
+    createImg.src= "/images/avatar.png";
+
+  } else {
+    // <img class="is-rounded" src="https://secure.gravatar.com/avatar/' + email + '?s=120&r=pg&d=' + defaultImage + '" width="120" height="120" alt="Gravatar Image">
+    createImg.src= "https://secure.gravatar.com/avatar/" + email + "?s=120&r=pg&d=" + defaultImage;
+  }
+
+  // place before the closing script tag
+  getScript.parentNode.insertBefore(createImg, getScript);
 }
 
 
@@ -76,7 +115,7 @@ document.write=function(s){
 function getFavForExternalLinks() {
   /* You can replace this with your site's domain */
   var basedomain = location.hostname.split('.').slice(-2).join('.');
-  var selectLinks = 'a[href^="//"]:not(figure a):not(a.website):not(span.card-footer-item a), a[href^="http"]:not(figure a):not(a.website):not(span.card-footer-item a)';
+  var selectLinks = 'a[href^="//"]:not(figure a):not(a.website):not(span.card-footer-item a), a[href^="http"]:not(figure a):not(a.website):not(span.card-footer-item a):not(nav.pagination a)';
   // console.log(basedomain);
 
 	/* Select all external links */

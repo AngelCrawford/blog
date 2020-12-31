@@ -1,148 +1,113 @@
 // Bulma Navbar Header Toggle
 
-$(document).ready(function() {
+// ***************** Navigation
+// Check for click events on the navbar burger icon
+$(".navbar-burger").click(function() {
 
+    // Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
+    $(".navbar-burger").toggleClass("is-active");
+    $(".navbar-menu").toggleClass("is-active");
+});
 
-  // ***************** Navigation
-  // Check for click events on the navbar burger icon
-  $(".navbar-burger").click(function() {
-
-      // Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
-      $(".navbar-burger").toggleClass("is-active");
-      $(".navbar-menu").toggleClass("is-active");
-  });
-
-  // ***************** Back to Top Button
-  // Funktion für das Scroll-Verhalten
-  $(window).scroll(function () {
-    if ($(this).scrollTop() > 100) { // Wenn 100 Pixel gescrolled wurde
-      $('.back-to-top').fadeIn();
-    } else {
-      $('.back-to-top').fadeOut();
-    }
-  });
-
-  $('.back-to-top').click(function () { // Klick auf den Button
-    $('html').animate({
-      scrollTop: 0
-    }, 800);
-    return false;
-  });
-
-  // ***************** Logo Animation and Header
-  
-  if (!$("span.shimmer").hasClass("shimmer-animation")) {
-    setTimeout(function(){
-      // $("span.shimmer").toggleClass("shimmer-animation");
-      $("span.shimmer").addClass("shimmer-animation").delay(900).queue(function(next){
-        $("span.shimmer").removeClass("shimmer-animation");
-          next();
-      });
-    },1900);
+// ***************** Back to Top Button
+// Funktion für das Scroll-Verhalten
+$(window).scroll(function () {
+  if ($(this).scrollTop() > 100) { // Wenn 100 Pixel gescrolled wurde
+    $('.back-to-top').fadeIn();
+  } else {
+    $('.back-to-top').fadeOut();
   }
+});
 
-  $("span.shimmer").mouseenter(function() {
+$('.back-to-top').click(function () { // Klick auf den Button
+  $('html').animate({
+    scrollTop: 0
+  }, 800);
+  return false;
+});
+
+// ***************** Logo Animation and Header
+
+if (!$("span.shimmer").hasClass("shimmer-animation")) {
+  setTimeout(function(){
+    // $("span.shimmer").toggleClass("shimmer-animation");
     $("span.shimmer").addClass("shimmer-animation").delay(900).queue(function(next){
       $("span.shimmer").removeClass("shimmer-animation");
         next();
-    }); 
-  });
+    });
+  },1900);
+}
 
-  // Call every hour, or every page reload
-  setInterval(dayNightSky(), 60*60*1000);
-  
+$("span.shimmer").mouseenter(function() {
+  $("span.shimmer").addClass("shimmer-animation").delay(900).queue(function(next){
+    $("span.shimmer").removeClass("shimmer-animation");
+      next();
+  }); 
+});
 
-  // ***************** Sticky Navbar
-  // $(window).scroll(function () {
-  //   navScroll();
-  // });
-
-  // navScroll();
-
-  // ***************** Comments
-  var invalidClassName = 'is-danger'
-  var inputs = document.querySelectorAll('input, select, textarea')
-  inputs.forEach(function (input) {
-    // Add a css class on submit when the input is invalid.
-    input.addEventListener('invalid', function () {
-      input.classList.add(invalidClassName);
-
-      $('#' + input.id).parent().next('.help.is-danger').css('display', 'block');
-      $('#' + input.id).parent().children('.icon.is-right.is-danger').css('display', 'inline-flex');
-      $('#' + input.id).parent().addClass('is-danger');
-    })
-
-    // Remove the class when the input becomes valid.
-    // 'input' will fire each time the user types
-    input.addEventListener('input', function () {
-      if (input.validity.valid) {
-        input.classList.remove(invalidClassName);
-        
-        $('#' + input.id).parent().next('.help.is-danger').css('display', 'none');
-        $('#' + input.id).parent().children('.icon.is-right.is-danger').css('display', 'none');
-        $('#' + input.id).parent().removeClass('is-danger');
-      }
-    })
-  });
-
-  $('#comment-form').submit(function() {
-      $('#comment-send').addClass("is-loading");
-      $('#comment-name').addClass('is-disabled');
-      $('#comment-email').addClass('is-disabled');
-      $('#comment-website').addClass('is-disabled');
-      $('#comment-message').addClass('is-disabled');
-      $('.b-checkbox').addClass('is-disabled');      
-  });
-
-  if (window.location.hash == "#comment-submitted") {
-    $('#comment-submitted').css('display', 'block');
-  }
-  if (window.location.hash == "#comment-error") {
-    $('#comment-error').css('display', 'block');
-  }
-
-  $('#comment-submitted button.delete').click(function () {
-    $('#comment-submitted').css('display', 'none');
-    window.location.hash = "#postcomment";
-  });
-
-  $('#comment-error button.delete').click(function () {
-    $('#comment-error').css('display', 'none');
-    window.location.hash = "#postcomment";
-  });
-  
-}); // Close $(document).ready(function()
+// Call every hour, or every page reload
+setInterval(dayNightSky(), 60*60*1000);
 
 
-// ***************** Cookie Functions getCookie() and setCookie()
-function getCookie(cname) {
-  var name = cname + "=";
-  var decodedCookie = decodeURIComponent(document.cookie);
-  var ca = decodedCookie.split(';');
+// ***************** Sticky Navbar
+// $(window).scroll(function () {
+//   navScroll();
+// });
 
-  for(var i = 0; i < ca.length; i++) {
-    var c = ca[i];
-    while (c.charAt(0) == ' ') {
-      c = c.substring(1);
+// navScroll();
+
+// ***************** Comments
+var invalidClassName = 'is-danger'
+var inputs = document.querySelectorAll('input, select, textarea')
+inputs.forEach(function (input) {
+  // Add a css class on submit when the input is invalid.
+  input.addEventListener('invalid', function () {
+    input.classList.add(invalidClassName);
+
+    $('#' + input.id).parent().next('.help.is-danger').css('display', 'block');
+    $('#' + input.id).parent().children('.icon.is-right.is-danger').css('display', 'inline-flex');
+    $('#' + input.id).parent().addClass('is-danger');
+  })
+
+  // Remove the class when the input becomes valid.
+  // 'input' will fire each time the user types
+  input.addEventListener('input', function () {
+    if (input.validity.valid) {
+      input.classList.remove(invalidClassName);
+      
+      $('#' + input.id).parent().next('.help.is-danger').css('display', 'none');
+      $('#' + input.id).parent().children('.icon.is-right.is-danger').css('display', 'none');
+      $('#' + input.id).parent().removeClass('is-danger');
     }
-    if (c.indexOf(name) == 0) {
-      return c.substring(name.length, c.length);
-    }
-  }
-  return false;
+  })
+});
+
+$('#comment-form').submit(function() {
+    $('#comment-send').addClass("is-loading");
+    $('#comment-name').addClass('is-disabled');
+    $('#comment-email').addClass('is-disabled');
+    $('#comment-website').addClass('is-disabled');
+    $('#comment-message').addClass('is-disabled');
+    $('.b-checkbox').addClass('is-disabled');      
+});
+
+if (window.location.hash == "#comment-submitted") {
+  $('#comment-submitted').css('display', 'block');
+}
+if (window.location.hash == "#comment-error") {
+  $('#comment-error').css('display', 'block');
 }
 
-function setCookie(cname, cvalue, exdays) {
-  var d = new Date();
-  d.setTime(d.getTime() + (exdays*24*60*60*1000));
-  var expires = "expires="+ d.toUTCString();
-  document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/;SameSite=strict";
-}
+$('#comment-submitted button.delete').click(function () {
+  $('#comment-submitted').css('display', 'none');
+  window.location.hash = "#postcomment";
+});
 
-function deleteCookie(cname) {
-  document.cookie = cname + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;"; 
-}
-
+$('#comment-error button.delete').click(function () {
+  $('#comment-error').css('display', 'none');
+  window.location.hash = "#postcomment";
+});
+  
 
 // ***************** Navigation Scroll
 function navScroll() {
@@ -234,7 +199,7 @@ function isTimeBetween(startTimeAsArray, endTimeAsArray) {
 
   // We've got the two start times as an array of hours/minutes values.
   var dateObj = new Date(); 
-  // var now = [0, 0]; // For testing purpose, set now time here
+  // var now = [15, 0]; // For testing purpose, set now time here
   var now = [dateObj.getHours(), dateObj.getMinutes()]; // Gets the current Hours/Minutes
 
   // If startTime is bigger than endTime
