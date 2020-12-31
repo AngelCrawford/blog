@@ -115,6 +115,7 @@ var searchFn = function () {
     $("#searchIcons svg.remix.lens").hide();
     $("#searchIcons svg.remix.close").hide();
     searching = true;
+    $("#results").show();
     var startSearch = new Date();
     var terms = term.split(" ");
     var termsTree = [];

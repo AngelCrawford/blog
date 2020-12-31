@@ -17,6 +17,7 @@
   border-radius: $radius-large;
   border: 1px solid rgba($primary, .2);
   overflow: auto;
+  display: none;
 
   &:after {
     content: "";

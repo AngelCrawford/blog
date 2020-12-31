@@ -66,4 +66,4 @@ func GetTitleFunc(style string) func(s string) string {
 
 Lorem Ipsum.
 
-![Example image](/images/social.jpg)
+![Alt Attribute Description for Screen Readers](image-in-same-folder.jpg 'Title and Image Descirption, shown on the frontpage <a href="#">Testlink</a>')

@@ -16,8 +16,44 @@ a.anchor {
     display: flex;
     flex-direction: column;
 
+    div {
+      padding-bottom: 1em;
+    }
+
     h1, h2, h3, h4, h5, h6 {
       scroll-margin-top: 3em;
+    }
+
+    figure {
+      position: relative;
+      figcaption {
+        z-index: 2;
+        position: absolute;
+        font-size: 11px;
+        bottom: 0;
+        color: $text;
+        padding: .31em .5em;
+        width: 100%;
+        height: auto;
+        border-top: 1px solid #222;
+        overflow: hidden;
+        line-height: 40px;
+        opacity: .7;
+        background-color: rgba(darken($background, 1%), .5);
+        svg {
+          width: 20px;
+          height: 20px;
+          fill: $primary;
+          @include translate(0, 6px);
+        }
+      }
+      img {
+        border-radius: $radius-large;
+        @include box-shadow(false, 3px, 3px, 3px, rgba(#000, .5), rgba($text, .1));
+      }
+      &:hover figcaption {
+        opacity: 1;
+      }
     }
   } 
 

@@ -199,7 +199,7 @@ function isTimeBetween(startTimeAsArray, endTimeAsArray) {
 
   // We've got the two start times as an array of hours/minutes values.
   var dateObj = new Date(); 
-  // var now = [15, 0]; // For testing purpose, set now time here
+  // var now = [23, 0]; // For testing purpose, set now time here
   var now = [dateObj.getHours(), dateObj.getMinutes()]; // Gets the current Hours/Minutes
 
   // If startTime is bigger than endTime

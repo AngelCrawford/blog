@@ -1,0 +1,34 @@
+<!-- {{ if .Title }}
+  <figure>
+    <img src="{{ .Destination | safeURL }}" alt="{{ .Text }}">
+    <figcaption>{{ .Title }}</figcaption>
+  </figure>
+{{ else }}
+  <img src="{{ .Destination | safeURL }}" alt="{{ .Text }}">
+{{ end }} -->
+
+{{ $image := .Page.Resources.GetMatch .Destination }}
+
+{{ $tiny := $image.Resize "500x" }}
+{{ $small := $image.Resize "800x" }}
+{{ $medium := $image.Resize "1200x" }}
+{{ $large := $image.Resize "1500x" }}
+<figure>
+    <img 
+    srcset="{{ $tiny.RelPermalink | safeURL }} 500w,
+            {{ $small.RelPermalink | safeURL }} 800w,
+            {{ $medium.RelPermalink | safeURL }} 1200w,
+            {{ $large.RelPermalink | safeURL }} 1500w"
+
+    src="{{ .Destination | safeURL }}" 
+    
+    {{ with .Text }} alt="{{ . }}" {{ end }}
+    {{ with .Title }} title="{{ . }}" {{ end }}
+    loading="lazy" />
+    {{ with .Title}} 
+      <figcaption>
+        <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#information-line"></use></svg>
+        {{ . | markdownify }}
+      </figcaption> 
+    {{ end }}
+</figure>
