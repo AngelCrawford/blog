@@ -1,7 +1,6 @@
 ---
 title: "{{ replace .TranslationBaseName "-" " " | title }}"
 date: {{ .Date }}
-publishdate: {{ now.Format "2006-01-02" }}
 tags:
 - eins
 - zwei

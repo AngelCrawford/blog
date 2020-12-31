@@ -46,6 +46,8 @@ footer.footer {
   
   .content {
     padding: 3em;
+    position: relative;
+    z-index: 5;
   }
 
   border: none;

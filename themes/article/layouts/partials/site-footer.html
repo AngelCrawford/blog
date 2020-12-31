@@ -17,9 +17,9 @@
   </svg>
 
   <div class="content has-text-centered">
-    <a href="{{ .Site.BaseURL }}" >
-      &copy; {{ now.Format "2006" }} {{ .Site.Title }}
-    </a>
+    &copy; 2020 - {{ dateFormat "2006" now }} | <abbr title='Build Date: {{ readFile "buildDate.txt" }}'>v{{ readFile "version.txt" }}</abbr>
+    | <span>{{ .Site.Copyright | safeHTML }}</span>
+
     <div>{{ partialCached "social-follow-footer.html" . }}</div>
 
     {{- if .Site.Menus.footer -}}

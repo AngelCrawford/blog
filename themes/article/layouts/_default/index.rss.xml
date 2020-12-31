@@ -1,0 +1,52 @@
+{{- $pctx := . -}}
+{{- if .IsHome -}}{{ $pctx = .Site }}{{- end -}}
+{{- $pages := slice -}}
+{{- if or $.IsHome $.IsSection -}}
+  {{- $pages = $pctx.RegularPages -}}
+{{- else -}}
+  {{- $pages = $pctx.Pages -}}
+{{- end -}}
+{{- $limit := .Site.Config.Services.RSS.Limit -}}
+{{- if ge $limit 1 -}}
+  {{- $pages = $pages | first $limit -}}
+{{- end -}}
+{{- printf "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\"?>" | safeHTML }}
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>{{ .Site.Title }}</title>
+    <link>{{ .Permalink }}</link>
+    <description>Aktuelle Artikel - RSS Feed - {{ .Site.Title }}</description>
+    {{- with .Site.LanguageCode -}}<language>{{.}}</language>{{- end -}}
+    <managingEditor>{{- with $.Site.Author.name -}}{{.}}{{- end -}}</managingEditor>
+    <webMaster>{{- with $.Site.Author.name -}}{{.}}{{- end -}}</webMaster>
+    {{- with .Site.Copyright -}}<copyright>{{- . -}}</copyright>{{- end -}}
+    <lastBuildDate>{{ .Site.LastChange.Format "Mon, 02 Jan 2006 15:04:05 -0700" | safeHTML }}</lastBuildDate>
+    {{- with .OutputFormats.Get "RSS" -}}
+    {{ printf "<atom:link href=%q rel=\"self\" type=%q />" .Permalink .MediaType | safeHTML }}
+    {{- end -}}
+    {{ range (where .Site.RegularPages "Type" "in" (slice "articles" "quotes") ) }}
+    <item>
+      <title>{{ .Title }}</title>
+      {{ with .Permalink }}<link>{{ . }}</link>{{ end }}
+      <pubDate>{{ .Date.Format "Mon, 02 Jan 2006 15:04:05 -0700" | safeHTML }}</pubDate>
+      {{ $list := .GetTerms "authors" }}
+      {{ $len := len $list }}
+      <author>
+        {{- range $index, $element := (.GetTerms "authors") -}}
+          {{ $newIndex := add $index 1 }}
+          {{- .Title -}}
+          {{- if eq $newIndex $len -}}{{- else -}}, {{ end -}}
+        {{- end -}}
+      </author>
+      {{- with .Permalink -}}<guid>{{- . -}}</guid>{{- end -}}
+      <description>{{- $summarySplits := split .Content "<!--start-summary-->" -}}
+        {{- if ge (len $summarySplits) 2 -}}
+          {{- index $summarySplits 1 | markdownify | plainify -}}
+        {{- else -}}
+          {{- .Content | safeHTML -}}
+        {{- end -}}
+      </description>
+    </item>
+    {{ end }}
+  </channel>
+</rss>
