@@ -128,76 +128,76 @@
 
     <span class="card-footer-item">
       {{- if .Params.weight -}}
-        <div data-tooltip="Dies ist ein angepinnter Artikel">
+        <span data-tooltip="Dies ist ein angepinnter Artikel">
           <svg class='remix-small'>
             <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#pushpin-line"></use>
           </svg>
-        </div>
+        </span>
       {{- end -}}
 
-      <div data-tooltip="Dies ist ein Artikel">
+      <span data-tooltip="Dies ist ein Artikel">
         <svg class='remix-small'>
           <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#article-line"></use>
         </svg>
-      </div>
+      </span>
 
       {{- if .Params.rating -}}
-        <div data-tooltip="Mit Bewertung">
+        <span data-tooltip="Mit Bewertung">
           <svg class='remix-small'>
             <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#film-line"></use>
           </svg>
-        </div>
+        </span>
       {{- end -}}
       {{- if .Params.series -}}
-        <div data-tooltip="Teil einer Serie">
+        <span data-tooltip="Teil einer Serie">
           <svg class='remix-small'>
             <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#stack-line"></use>
           </svg>
-        </div>
+        </span>
       {{- end -}}
       
       {{- range (.GetTerms "contains") -}}
         {{- if eq .Title "code" -}}
-          <div data-tooltip="Mit Code">
+          <span data-tooltip="Mit Code">
             <svg class='remix-small'>
               <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#code-s-slash-fill"></use>
             </svg>
-          </div>
+          </span>
         {{- end -}}
         {{- if eq .Title "instagram" -}}
-          <div data-tooltip="Mit Instagram Karte">
+          <span data-tooltip="Mit Instagram Karte">
             <svg class='remix-small'>
               <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#instagram-line"></use>
             </svg>
-          </div>
+          </span>
         {{- end -}}
         {{- if eq .Title "twitter" -}}
-          <div data-tooltip="Mit Twitter Karte">
+          <span data-tooltip="Mit Twitter Karte">
             <svg class='remix-small'>
               <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#twitter-line"></use>
             </svg>
-          </div>
+          </span>
         {{- end -}}
         {{- if eq .Title "youtube" -}}
-          <div data-tooltip="Mit Youtube Video">
+          <span data-tooltip="Mit Youtube Video">
             <svg class='remix-small'>
               <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#youtube-line"></use>
             </svg>
-          </div>
+          </span>
         {{- end -}}
         {{- if eq .Title "image" -}}
-          <div data-tooltip="Mit Bild">
+          <span data-tooltip="Mit Bild">
             <svg class='remix-small'>
               <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#camera-line"></use>
             </svg>
-          </div>
+          </span>
         {{- end -}}
         {{- if eq .Title "gallery" -}}
-          <div data-tooltip="Mit Gallerie">
+          <span data-tooltip="Mit Gallerie">
             <svg class='remix-small'>
               <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#gallery-line"></use>
             </svg>
-          </div>
+          </span>
         {{- end -}}
       {{- end -}}
 

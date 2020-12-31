@@ -95,6 +95,7 @@ function setGravatars(email, defaultImage) {
   createImg.className = 'is-rounded';
   createImg.width = '120';
   createImg.height = '120';
+  createImg.alt = 'User Avatar';
 
   if (getCookie('cookies-consent') == 'false' || !getCookie('cookies-consent') ) {
     // <img class="is-rounded" src="/images/avatar.png" width="120" height="120" alt="Avatar Image">
