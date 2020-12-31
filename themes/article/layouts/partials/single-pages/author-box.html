@@ -7,7 +7,7 @@
           <a href="{{ .Permalink }}">
             {{- range first 1 (.Resources.ByType "image") -}}
               {{- $img := .Fill "480x320" -}}
-              <img src="{{ $img.RelPermalink }}" alt="{{ $.Title }}">
+              <img src="{{ $img.RelPermalink }}" alt="{{ $.Title }}" loading="lazy">
             {{- end -}}
           </a>
         </figure>

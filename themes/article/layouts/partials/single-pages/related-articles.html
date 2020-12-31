@@ -22,7 +22,7 @@
                     {{- range first 1 (.Resources.ByType "image") -}}
                       {{- $img := .Fill "480x320" -}}
                       <a href="#">
-                        <img src="{{ $img.RelPermalink }}" alt="{{ $.Title }}">
+                        <img src="{{ $img.RelPermalink }}" alt="{{ $.Title }}" loading="lazy">
                       </a>
                     {{- end -}}
                     {{- with .Params.featured_image -}}
