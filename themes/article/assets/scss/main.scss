@@ -15,6 +15,7 @@ $background   : #2c3531;
 $pageBack     : darken($background, 5%);
 
 $text         : #d1e8e2;
+
 $secondary    : #d1e8e2;
 $primary      : #ffcb9a;
 $hover        : darken($primary, 15%);
@@ -22,12 +23,10 @@ $accent       : #116466;
 $small        : #777;
 $danger       : #d63232;
 
-// .st0{fill:#23678A;}
-// .st1{fill:#777;}
-// .st2{fill:#00344A;}
-// .st3{fill:#024D6D;}
-// .st4{fill:#001027;}
-// .st8{fill:#DB358B;}
+$info         : #70b7ff;
+$success      : #66b28c;
+$warning      : #ffa347;
+$question     : #4ca6a6;
 
 
 // Breakpoints
@@ -47,6 +46,9 @@ $family-primary: 'Montserrat-Regular';
 $family-secondary: 'Montserrat-Regular';
 
 $column-gap: 1rem 1rem 1rem 2.5rem;
+
+$card-radius: 7px;
+$card-overflow: unset;
 
 @import "bulma/bulma.sass";
 
