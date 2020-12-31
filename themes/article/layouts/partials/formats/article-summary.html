@@ -62,18 +62,21 @@
         {{- if .Params.summary -}}
           {{ .Summary | truncate 800 " [...]" }}
         {{- else -}}
-          {{ .Content | truncate 800 " [...]" | markdownify }}
+          {{ .Content | markdownify | truncate 800 " [...]" }}
         {{- end -}}
       {{- else if not .Resources -}}
         {{ .Summary | truncate 500 " [...]" }}
       {{- else -}}
-        <!-- {{- with .Params.description -}}
-          <b>{{ . | truncate 160 }}</b>
-          {{ $.Summary | truncate 180 " [...]" }}
-        {{- else -}} -->
-        <!-- {{- end -}} -->
 
-        {{ .Summary | truncate 270 " [...]" | markdownify }}
+        {{ $summarySplits := split .Content "<!--start-summary-->" }}
+        {{ if ge (len $summarySplits) 2 }}
+          <!-- If that start-summary special comment is present, output only the part after that comment as Summary. -->
+          {{ index $summarySplits 1 | plainify | truncate 270 " [...]" }}
+        {{ else }}
+          <!-- Print the whole Summary if start-summary special comment is not found. -->
+          {{ .Summary| markdownify | truncate 270 " [...]" }}
+        {{ end }}
+        
       {{- end -}}
       
       <a class="read-more" href="{{ .RelPermalink }}"> {{ i18n "readMore" }}</a>

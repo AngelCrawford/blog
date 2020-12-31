@@ -1,6 +1,5 @@
 <article class="card quote is-horizontal {{ if .Resources }}has-image{{else}}no-image{{ end }} has-ribbon">
-
-  
+ 
   {{ if .GetTerms "categories" }}
     {{ range first 1 (.GetTerms "categories") }}
       {{ $catName := .LinkTitle }}
