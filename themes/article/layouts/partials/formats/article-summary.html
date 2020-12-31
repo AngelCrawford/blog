@@ -93,16 +93,37 @@
   </div>
 
   <footer class="card-footer">
-    <div class="author-img">
-      {{- range (.GetTerms "authors") -}}
-        <figure class="image is-48x48">
-          <a href="{{ .Permalink }}">
-            {{- range first 1 (.Resources.ByType "image") -}}
-              {{- $img := .Fill "48x48" -}}
-              <img class="is-rounded" src="{{ $img.RelPermalink }}" alt="{{ $.Title }}" width="48" height="48" loading="lazy">
-            {{- end -}}
-          </a>
-        </figure>
+    {{ $list := .GetTerms "authors" }}
+    {{ $len := len $list }}
+    <div class="author-img {{- if gt $len 1 }} more-authors{{ end -}}">
+
+      {{- if gt $len 1 -}}
+        <div class="author-opener">{{ $len }}</div>
+        <div class="more-authors-img">
+          {{- range first 3 (.GetTerms "authors") -}}
+            <figure class="image is-48x48">
+              <a href="{{ .Permalink }}">
+                {{- range first 1 (.Resources.ByType "image") -}}
+                  {{- $img := .Fill "48x48" -}}
+                  <img class="is-rounded" src="{{ $img.RelPermalink }}" alt="{{ $.Title }}" width="48" height="48" loading="lazy">
+                {{- end -}}
+              </a>
+            </figure>
+          {{- end -}}
+        </div>
+        
+      {{- else -}}
+        {{- range first 1 (.GetTerms "authors") -}}
+          <figure class="image is-48x48">
+            <a href="{{ .Permalink }}">
+              {{- range first 1 (.Resources.ByType "image") -}}
+                {{- $img := .Fill "48x48" -}}
+                <img class="is-rounded" src="{{ $img.RelPermalink }}" alt="{{ $.Title }}" width="48" height="48" loading="lazy">
+              {{- end -}}
+            </a>
+          </figure>
+        {{- end -}}
+      
       {{- end -}}
     </div>
 

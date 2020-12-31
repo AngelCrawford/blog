@@ -1,5 +1,9 @@
-<aside class="card is-small-authors {{ if .Resources }}has-image{{else}}no-image{{ end }}">
-  {{ range (.GetTerms "authors") }}
+{{ $list := .GetTerms "authors" }}
+{{ $len := len $list }}
+
+{{ range (.GetTerms "authors") }}
+  <aside class="card is-small-authors {{ if .Resources }}has-image{{else}}no-image{{ end }}">
+  
     {{- if .Resources -}}
       <div class="card-image">
         <!-- // HACK: Is this right? -->
@@ -25,11 +29,15 @@
           </span>
         {{ end }}
       </div>
-  
+    
       <div class="content">
-        {{ .Content | truncate 210 " [...]" | markdownify }}
+        {{- if le $len 1 -}}
+          <!-- Show only for one Author -->
+          {{ .Content | truncate 210 " [...]" | markdownify }}
+        {{ end }}
         <a class="read-more" href="{{ .RelPermalink }}">{{ i18n "readMore" }}</a>
       </div>
+      
     </div>
 
     <footer class="card-footer">
@@ -44,5 +52,5 @@
       {{ end }}
     </footer>
     
-  {{ end }}
-</aside>
+  </aside>
+{{ end }}

@@ -95,11 +95,71 @@ article.card.is-horizontal, .card {
       transition: all .3s ease-out;
       img {
         filter: grayscale(1);
+        
+        &:hover {
+          border: 1px solid $primary;
+          filter: none;
+          @include box-shadow(false, 5px, 5px, 5px, rgba(#000, .3), rgba($text, .07));
+        }
       }
-      &:hover img {
-        border: 1px solid $primary;
-        filter: none;
-        @include box-shadow(false, 5px, 5px, 5px, rgba(#000, .3), rgba($text, .07));
+      &.more-authors {
+        display: inline-block;
+
+        .author-opener {
+          background: darken($background, 6%);
+          width: 48px;
+          height: 48px;
+          color: $primary;
+          font-size: 1.5em;
+          @include font-header;
+          text-align: center;
+          display: inline-block;
+          border-radius: 50%;
+          line-height: 48px;
+          cursor: pointer;
+          border: 1px solid darken($background, 6%);
+          &:hover {
+            border: 1px solid $primary;
+          }
+        }
+
+        .more-authors-img {
+          background: darken($background, 8%);
+          display: inline-block;
+          margin-left: 10px;
+          margin-bottom: -24px;
+          position: relative;
+          height: 62px;
+          bottom: -18px;
+          padding: 7px;
+          @include box-shadow(false, 5px, 5px, 5px, rgba(#000, .3), rgba($text, .07));
+          display: none;
+
+          &:before {
+            content:"";
+            border-style: solid;
+            border-width: 10px 15px 10px 0;
+            border-color: transparent darken($background, 8%) transparent transparent;
+            position: absolute;
+            left: -15px;
+            top: 21px;
+          }
+
+          figure {
+            margin-right: 10px;
+            display: inline-block;
+            border: none;
+            &:last-of-type {
+              margin-right: 0;
+            }
+          }
+        }
+
+        .author-opener:hover + .more-authors-img,
+        .more-authors-img:hover {
+          display: inline-block;
+        }
+
       }
     }
     .card-footer-item {
@@ -383,6 +443,10 @@ article.card.is-horizontal.quote {
   width: 100%;
   min-width: 100%;
   margin-left: 0;
+  margin-bottom: 2em;
+  &:last-of-type {
+    margin-bottom: 0;
+  }
   img {
     border-radius: $radius-large;
     @include box-shadow(false, 3px, 3px, 3px, rgba(#000, .3), rgba($text, .05));
@@ -394,5 +458,8 @@ article.card.is-horizontal.quote {
   }
   svg:hover {
     fill: $hover;
+  }
+  &:hover img {
+    filter: sepia(0);
   }
 }

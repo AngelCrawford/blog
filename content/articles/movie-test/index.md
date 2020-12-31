@@ -10,7 +10,9 @@ tags:
 categories: "Movie"
 format: rating # tweet/rating design on the home page
 rating: "3.5" # 0-5 with .5 possible, will show a rating on the home page
-authors: angel
+authors: 
+- angel
+- jdksaj
 year: "2020"
 month: "2020/03"
 featured_image:

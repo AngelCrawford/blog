@@ -20,7 +20,7 @@ series: [""]
 weight: 1 # makes the post sticky, remove if not wanted
 format: rating # rating design on the home page
 rating: "0.5" # 0-5 with .5 possible, will show a rating on the home page
-authors: angel
+authors: angel # if more than one, write like tags
 year: "{{ now.Format "2006" }}"
 month: "{{ now.Format "2006/01" }}"
 featured_image:
