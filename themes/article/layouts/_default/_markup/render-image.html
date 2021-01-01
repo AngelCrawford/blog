@@ -11,11 +11,10 @@
             {{ $medium.RelPermalink | safeURL }} 1200w,
             {{ $large.RelPermalink | safeURL }} 1500w"
 
-    src="{{ .Destination | safeURL }}" 
-    
+    src="{{ $medium.RelPermalink | safeURL }}" 
+    loading="lazy" 
     {{ with .Text }} alt="{{ . }}" {{ end }}
-    {{ with .Title }} title="{{ . }}" {{ end }}
-    loading="lazy" />
+    {{ with .Title }} title="{{ . }}" {{ end }} />
     {{ with .Title}} 
       <figcaption>
         <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#information-line"></use></svg>

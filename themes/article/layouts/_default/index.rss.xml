@@ -16,21 +16,21 @@
     <title>{{ .Site.Title }}</title>
     <link>{{ .Permalink }}</link>
     <description>Aktuelle Artikel - RSS Feed - {{ .Site.Title }}</description>
-    {{- with .Site.LanguageCode -}}<language>{{.}}</language>{{- end -}}
-    <managingEditor>{{- with $.Site.Author.name -}}{{.}}{{- end -}}</managingEditor>
-    <webMaster>{{- with $.Site.Author.name -}}{{.}}{{- end -}}</webMaster>
-    {{- with .Site.Copyright -}}<copyright>{{- . -}}</copyright>{{- end -}}
+    {{ with .Site.LanguageCode -}}<language>{{.}}</language>{{- end }}
+    <managingEditor>{{- with $.Site.Author -}}{{.email}} ({{.name}}){{- end -}}</managingEditor>
+    <webMaster>{{ with $.Site.Author -}}{{.email}} ({{.name}}){{- end }}</webMaster>
+    {{ with .Site.Copyright -}}<copyright>{{- . | plainify -}}</copyright>{{- end }}
     <lastBuildDate>{{ .Site.LastChange.Format "Mon, 02 Jan 2006 15:04:05 -0700" | safeHTML }}</lastBuildDate>
-    {{- with .OutputFormats.Get "RSS" -}}
+    {{ with .OutputFormats.Get "RSS" -}}
     {{ printf "<atom:link href=%q rel=\"self\" type=%q />" .Permalink .MediaType | safeHTML }}
-    {{- end -}}
-    {{ range (where .Site.RegularPages "Type" "in" (slice "articles" "quotes") ) }}
+    {{- end }}
+    {{- range (where .Site.RegularPages "Type" "in" (slice "articles") ) }}
     <item>
       <title>{{ .Title }}</title>
       {{ with .Permalink }}<link>{{ . }}</link>{{ end }}
       <pubDate>{{ .Date.Format "Mon, 02 Jan 2006 15:04:05 -0700" | safeHTML }}</pubDate>
-      {{ $list := .GetTerms "authors" }}
-      {{ $len := len $list }}
+      {{- $list := .GetTerms "authors" -}}
+      {{- $len := len $list }}
       <author>
         {{- range $index, $element := (.GetTerms "authors") -}}
           {{ $newIndex := add $index 1 }}
@@ -38,15 +38,67 @@
           {{- if eq $newIndex $len -}}{{- else -}}, {{ end -}}
         {{- end -}}
       </author>
-      {{- with .Permalink -}}<guid>{{- . -}}</guid>{{- end -}}
-      <description>{{- $summarySplits := split .Content "<!--start-summary-->" -}}
+      {{ with .Permalink -}}<guid>{{- . -}}</guid>{{- end }}
+      <!-- THANKS: https://discourse.gohugo.io/t/page-bundle-relative-image-path-in-rss-feed-wrong/27050/5 -->
+      <description>
+        {{ $html := htmlUnescape .Content -}}
+
+        {{- $summarySplits := split $html "<!--start-summary-->" -}}
         {{- if ge (len $summarySplits) 2 -}}
-          {{- index $summarySplits 1 | markdownify | plainify -}}
-        {{- else -}}
-          {{- .Content | safeHTML -}}
+          {{- $html = index $summarySplits 1 -}}
         {{- end -}}
+
+        {{- $hrefs := findRE "href=\"([^\"]*)\"" $html -}}
+        {{- range $href := $hrefs -}}
+          {{- $absHref := strings.TrimPrefix "href=\"" $href -}}
+          {{- $absHref = strings.TrimSuffix "\"" $absHref -}}
+          {{- $absHref = printf "href=\"%s\"" ($absHref | absURL) -}}
+          {{- $html = replace $html $href $absHref -}}
+        {{- end -}}
+
+        {{- $srcs := findRE "src=\"([^\"]*)\"" $html -}}
+        {{- range $src := $srcs -}}
+          {{- $absSrc := strings.TrimPrefix "src=\"" $src -}}
+          {{- $absSrc = strings.TrimSuffix "\"" $absSrc -}}
+          {{- $absSrc = printf "src=\"%s\"" ($absSrc | absURL) -}}
+          {{- $html = replace $html $src $absSrc -}}
+        {{- end -}}
+
+        {{- $srcset := findRE "srcset=\"([^\"]*)\"" $html -}}
+        {{- range $set := $srcset -}}
+          {{- $parts := strings.TrimPrefix "srcset=\"" $set -}}
+          {{- $parts = strings.TrimSuffix "\"" $parts  -}}
+          {{- $parts = split $parts "," -}}
+          {{- $newSrcset := slice -}}
+          {{- range $part := $parts -}}
+            {{- $part = $part | replaceRE "^\\s*(.*)\\s*$" "$1" -}}
+            {{- $lg := split $part " " -}}
+            {{- $href := index $lg 0 | absURL -}}
+            {{- $size := index $lg 1 -}}
+            {{- $newSrcset = $newSrcset | append (printf "%s %s" $href $size) -}}
+          {{- end -}}
+          {{- $newSrcset = delimit $newSrcset ", " -}}
+          {{- $newSrcset = printf "srcset=\"%s\"" $newSrcset -}}
+          {{- $html = replace $html $set $newSrcset -}}
+        {{- end -}}
+
+        {{- $html }}
       </description>
+
+      {{ if .Resources -}}
+        {{- $img := (.Resources.ByType "image").GetMatch "featured*" -}}
+        {{- with $img -}}
+          {{- $resize := .Fill "320x480" -}}
+          <enclosure url="{{ $resize.Permalink }}" type="image/jpg" />    
+        {{- end -}}
+      {{- end }}
+      
+      {{ if .GetTerms "categories" -}}
+        {{- range first 1 (.GetTerms "categories") -}}
+          <category>{{- .LinkTitle -}}</category>
+        {{- end -}}
+      {{- end }}
     </item>
-    {{ end }}
+    {{- end -}}
   </channel>
 </rss>

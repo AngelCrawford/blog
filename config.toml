@@ -1,11 +1,12 @@
 title = "Article Time"
-baseURL = "localhost:1313"
+baseURL = "http://localhost:1313"
 languageCode = "de-DE"
 theme = "article"
 
 # SEO: Robots Metatag testen
 enableRobotsTXT = true
 enableGitInfo = true
+lastmod = [":git", "lastmod", "date"] 
 
 DefaultContentLanguage = "de"
 Paginate = 6 # this is set low for demonstrating with dummy content. Set to a higher number
@@ -14,6 +15,7 @@ googleAnalytics = ""
 copyright = "Design/Programmierung: <a href=\"https://angel-crawford.de/\">Angel Crawford</a>"
 [Author]
   name = "Angel Crawford"
+  email = "email@mail.de"
 
 [sitemap]
   changefreq = "weekly"
@@ -24,9 +26,6 @@ copyright = "Design/Programmierung: <a href=\"https://angel-crawford.de/\">Angel
   [markup.goldmark]
     [markup.goldmark.renderer]
       unsafe = true
-
-[frontmatter]
-  lastmod = [":git", "lastmod"]
 
 [outputs]
   home = ["HTML", "RSS", "JSON"]
