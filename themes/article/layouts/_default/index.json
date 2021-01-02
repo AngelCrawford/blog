@@ -1,4 +1,5 @@
 {{- $.Scratch.Add "index" slice -}}
+
 {{- range where .Site.RegularPages "Section" "=" "articles" -}}
     
     {{- $img := (.Resources.ByType "image").GetMatch "featured*" -}}
@@ -7,6 +8,17 @@
         {{ $.Scratch.Set "image" $resize.Permalink }}
     {{- end -}}
 
-    {{- $.Scratch.Add "index" (dict "title" .Title "tags" .Params.tags "image" ($.Scratch.Get "image") "content" .Summary "permalink" .Permalink) -}}
+    {{- $.Scratch.Set "hasComments" 0 -}}
+
+    {{- $postSlug := .File.ContentBaseName -}}
+    {{- $comments := index $.Site.Data.comments $postSlug -}}
+  
+    {{- range $comments -}}
+      {{- $.Scratch.Add "hasComments" 1 -}}
+    {{- end -}}
+  
+    {{ $hasCommentsCount := $.Scratch.Get "hasComments" }}
+
+    {{- $.Scratch.Add "index" (dict "title" .Title "tags" .Params.tags "image" ($.Scratch.Get "image") "content" .Summary "commentsCount" $hasCommentsCount "permalink" .Permalink) -}}
 {{- end -}}
 {{- $.Scratch.Get "index" | jsonify -}}

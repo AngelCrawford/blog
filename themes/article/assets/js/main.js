@@ -13,13 +13,13 @@ $(".navbar-burger").click(function() {
 // Funktion für das Scroll-Verhalten
 $(window).scroll(function () {
   if ($(this).scrollTop() > 100) { // Wenn 100 Pixel gescrolled wurde
-    $('.back-to-top').fadeIn();
+    $('#back-to-top').fadeIn();
   } else {
-    $('.back-to-top').fadeOut();
+    $('#back-to-top').fadeOut();
   }
 });
 
-$('.back-to-top').click(function () { // Klick auf den Button
+$('#back-to-top').click(function () { // Klick auf den Button
   $('html').animate({
     scrollTop: 0
   }, 800);

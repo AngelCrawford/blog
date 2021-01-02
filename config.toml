@@ -11,7 +11,7 @@ DefaultContentLanguage = "de"
 Paginate = 6 # this is set low for demonstrating with dummy content. Set to a higher number
 googleAnalytics = ""
 # summaryLength = 45
-copyright = "Design/Programmierung: <a href=\"https://angel-crawford.de/\">Angel Crawford</a>"
+copyright = "Design/Programmierung: <a href=\"https://angel-crawford.de/\" target=\"_blank\">Angel Crawford</a>"
 [Author]
   name = "Angel Crawford"
   email = "email@mail.de"

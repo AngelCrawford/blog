@@ -12,7 +12,6 @@ main {
 footer.footer {
   margin: 0;
   padding: 0;
-
   background-color: darken($pageBack, 5%);
   @include box-shadow(true, 10px, 10px, 15px, rgba(#000, .3), rgba($text, .1));
 
@@ -21,6 +20,10 @@ footer.footer {
   bottom: 0;
   left: 0;
   top: 0;
+
+  > svg {
+    position: absolute;
+  }
 
   &:before,
   &:after {
@@ -35,31 +38,194 @@ footer.footer {
     opacity: .4;
   }
   &:before {
-    background-position: center calc(90% + -30px);
+    background-position: center calc(90% + -5px);
     transform: rotate(180deg) scaleX(-1);
     filter: sepia(.6) blur(.1em) url("#turbulence");
   }
   &:after {
     bottom: 90%;
-    background-position: 50% calc(100% + -5px);
+    background-position: 50% calc(100% + -30px);
   }
   
   .content {
-    padding: 3em;
+    padding: 0 3em;
+    margin: 0;
     position: relative;
     z-index: 5;
+
+    .content-wrapper {
+      padding: 0 3em;
+      margin: 0;
+      position: relative;
+      z-index: 5;
+    }
   }
 
-  border: none;
-  a {
-    color: $primary;
+  .slogan {
+    color: $text;
+    background: linear-gradient(270deg, transparent 0%, rgba(25,25,25,1) 50%, transparent 100%);
+    text-shadow: 3px 3px 4px rgba(#000, .5);
+    font-size: 1.7rem;
+    padding: .5em 0;
+    display: inline-block;
+    margin: 1rem 0 1rem 0;
+
+    &::before, &::after {
+      font-family: "remixicon" !important;
+      color: $primary;
+    }
+    &::before {
+      content: "\ec51";
+    }
+    &::after {
+      content: "\ec52";
+    }
   }
-  a:hover {
-    color: darken($primary, 15%);
+
+  .footer-box {
+    padding: 1.25rem 2rem 1.25rem 1.25rem !important;
+    margin: 0 1.25rem;
+    
+    .title.is-4 {
+      text-align: center;
+      overflow: hidden;
+      text-align: center;
+      margin-bottom: 1em;
+      color: $accent;
+      
+      &:before,
+      &:after {
+        background: rgba($primary, .4);
+        content: "";
+        display: inline-block;
+        height: 1px;
+        position: relative;
+        vertical-align: middle;
+        width: 50%;
+      }
+      
+      &:before {
+        right: 0.5em;
+        margin-left: -50%;
+      }
+      
+      &:after {
+        left: 0.5em;
+        margin-right: -50%;
+      }
+    }
   }
+
+  .social {
+    .logo {
+      opacity: .4;
+    }
+    .icons {
+      margin-top: -50px;
+      font-size: 2em;
+
+      .icon, .remix {
+        height: 2rem;
+        width: 2rem;
+      }
+    }
+  }
+
+  .widgets {
+    .box {
+      background-color: transparent;
+      border: none;
+      box-shadow: none;
+      padding: 0;
+      margin: 0 0 2rem 0;
+    }
+    
+    .title.is-4 {
+      color: $accent;
+      margin-bottom: .4em;
+    }
+
+    .archive.box .year {
+      opacity: .4;
+    }
+  }
+
+  .stats {
+    ul {
+      margin: 0;
+      width: 100%;
+  
+      li {
+        display: flex;
+        width: 100%;
+        @include font-regular;
+        padding: .1em 0;
+        
+        .variable-number {
+          order: 1;
+        }
+        .variable {
+          order: 3;
+          padding-left: 0.3em;
+        }
+    
+        &::after {
+          content: "";
+          flex-grow: 1;
+          order: 2;
+          background-image: radial-gradient(circle, rgba($primary, .5) 1px, transparent 1px);
+          background-position-y: calc(100% - 5px);
+          background-size: 1ex 3px;
+          background-repeat: repeat-x;
+          height: auto;
+        }
+      }
+
+      ul {
+        padding-left: 2em;
+      }
+    }
+  }
+
+  .navi {
+    ul {
+      list-style: none;
+      margin: 0;
+
+      li {
+        line-height: 1.5em;
+        display: inline-block;
+        font-size: 80%;
+          
+        &:first-of-type:before {
+          content: ""; 
+        }
+        &:before {
+          content: "|";
+          color: $accent;
+          padding: 0 .2em;
+        }
+      }
+    }
+  }
+
+  .copyright {
+    padding: 0 0 1.5em 0;
+    font-size: 80%;
+    color: $small;
+
+    a {
+      color: rgba($primary, .6);
+
+      &:hover {
+        color: rgba($hover, .6);
+      }
+    }
+  }
+
 }
 
-.back-to-top {
+#back-to-top {
   position: fixed;
   z-index: 999999;
   display: none;

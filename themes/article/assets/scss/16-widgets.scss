@@ -1,0 +1,133 @@
+.widget.box {
+  padding: 1.25rem 1.5rem 0 1.25rem;
+  margin: 42px 0 1.25rem 1.25rem;
+  height: unset !important;
+  
+  .title.is-4 {
+    text-align: center;
+    overflow: hidden;
+    text-align: center;
+    margin-bottom: .5em;
+    
+    &:before,
+    &:after {
+      background: rgba($primary, .5);
+      content: "";
+      display: inline-block;
+      height: 1px;
+      position: relative;
+      vertical-align: middle;
+      width: 50%;
+    }
+    
+    &:before {
+      right: 0.5em;
+      margin-left: -50%;
+    }
+    
+    &:after {
+      left: 0.5em;
+      margin-right: -50%;
+    }
+  }
+
+  .columns {
+    .column {
+      padding: 0;
+      margin: 0;
+    }
+  }
+
+}
+
+.widget.archive.box {
+  .columns {
+    border-bottom: 1px solid rgba($primary, .5);
+
+    &:last-of-type {
+      border-bottom: none;
+    }
+  }
+
+  .year {
+    @include font-header;
+    color: $accent;
+    font-size: 5em;
+    letter-spacing: -5px;
+    min-width: 183px;
+    opacity: .6;
+  }
+
+  ul {
+    margin: 0;
+    padding: 1em 0 1em 1.5rem;
+    width: 100%;
+
+    li {
+      display: flex;
+      width: 130px;
+      @include font-regular;
+      
+      .month-name {
+        order: 1;
+      }
+      .month-number {
+        order: 3;
+        padding-left: 0.3em;
+      }
+  
+      &::after {
+        content: "";
+        flex-grow: 1;
+        order: 2;
+        background-image: radial-gradient(circle, rgba($primary, .5) 1px, transparent 1px);
+        background-position-y: calc(100% - 5px);
+        background-size: 1ex 3px;
+        background-repeat: repeat-x;
+        height: auto;
+      }
+    }
+  }
+
+  a.button.is-primary {
+    margin-bottom: 1em;
+  }
+
+}
+
+.widget.mostloved.box {
+  .title.is-4 {
+    margin-bottom: 1em;
+  }
+
+  ul {
+    margin: 0;
+    width: 100%;
+
+    li {
+      display: flex;
+      width: 100%;
+      @include font-regular;
+      padding: .1em 0;
+      
+      .variable-number {
+        order: 1;
+      }
+      .variable {
+        order: 3;
+        padding-left: 0.3em;
+      }
+  
+      &::after {
+        content: "";
+        flex-grow: 1;
+        order: 2;
+        background-image: radial-gradient(circle, rgba($primary, .5) 1px, transparent 1px);
+        background-position-y: calc(100% - 5px);
+        background-size: 1ex 3px;
+        background-repeat: repeat-x;
+        height: auto;
+      }
+    }
+  }
+}

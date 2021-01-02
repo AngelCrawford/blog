@@ -12,9 +12,9 @@ one = "Reaktion"
 other = "Reaktionen"
 
 [quotes]
-one = "1 Zitat"
-other = "{{.Count}} Zitate"
+one = "Zitate"
+other = "Zitate"
 
 [movies]
-one = "1 Artikel mit Bewertung"
-other = "{{.CountM}} Artikel mit Bewertungen"
+one = "Artikel mit Bewertung"
+other = "Artikel mit Bewertungen"

@@ -1,4 +1,4 @@
-<button class="back-to-top" title="Zurück zum Seitenanfang">
+<button id="back-to-top" title="Zurück zum Seitenanfang">
   <svg class='remix'>
     <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#arrow-up-s-fill"></use>
   </svg>
@@ -17,11 +17,64 @@
   </svg>
 
   <div class="content has-text-centered">
-    &copy; 2020 - {{ dateFormat "2006" now }} | <abbr title='Build Date: {{ readFile "buildDate.txt" }}'>v{{ readFile "version.txt" }}</abbr>
-    | <span>{{ .Site.Copyright | safeHTML }}</span>
+    <div class="slogan">
+      Du willst schreiben - ohne einen eignen Blog zu veröffentlichen?<br />
+      Be a part of Article Time!
+    </div>
+  </div>
 
-    <div>{{ partial "social-follow.html" (dict "context" . "isFooter" true "isHeader" false ) }}</div>
+  <div class="content content-wrapper">
+    <div class="columns">
 
+      <div class="column footer-box social">
+        <p class="title is-4">Article Time</p>
+        <div class="has-text-centered logo"><img src="/images/clock.png" width="150" alt="Logo" title="Logo" /></div>
+        <div class="icons has-text-centered">{{ partial "social-follow.html" (dict "context" . "isFooter" true "isHeader" false ) }}</div>
+      </div>
+  
+      <div class="column footer-box widgets">
+        {{ partial "widget-mostloved.html" . }}
+      </div>
+
+      
+      <div class="column footer-box stats">
+        <p class="title is-4">Statistik</p>
+        <p>Momentan befinden sich {{ len (where .Site.RegularPages "Type" "in" (slice "articles" "quotes") ) }} <a href="/">Artikel</a> auf dieser Seite.</p>
+        <ul>
+
+          <li>
+            {{- $count := len (where .Site.RegularPages "Section" "quotes") -}}
+            <span class="variable">{{ $count }}</span>
+            <span class="variable-number">{{ i18n "quotes" $count }}</span>
+          </li>
+           
+          <li>
+            {{ $countA := len (where .Site.RegularPages "Section" "articles") }}
+            <span class="variable">{{ $countA }}</span>
+            <span class="variable-number"> Einfache Artikel</span>
+          </li>
+
+          <ul>   
+            <li>
+              {{ $countM := len (where (where .Site.RegularPages "Section" "articles") ".Params.format" "==" "rating") }}
+              <span class="variable">{{ $countM }}</span>
+              <span class="variable-number">{{ i18n "movies" $countM }}</span>
+            </li>
+          </ul>
+          
+        </li>
+      </div>
+
+      <div class="column footer-box widgets">
+        {{ if not (eq .RelPermalink "/archive/") }}
+          {{ partial "widget-archive.html" (dict "context" . "archiveTitle" "Archiv") }}
+        {{ end }}
+      </div>
+  
+    </div>
+  </div>
+
+  <div class="content has-text-centered navi">
     {{- if .Site.Menus.footer -}}
       <ul>
         {{- $currentPage := . -}}
@@ -36,28 +89,17 @@
         {{- end -}}
       </ul>
     {{- end -}}
+  </div>
 
-    <p>
-      There are currently {{ len (where .Site.RegularPages "Type" "in" (slice "articles" "quotes") ) }} <a href="/">articles</a> on this site.
-    </p>
-    <p>
-      Statistik: <br />
-      {{ $count := len (where .Site.RegularPages "Section" "quotes") }}
-      {{ i18n "quotes" $count }} <br />
-
-      {{ $countA := len (where .Site.RegularPages "Section" "articles") }}
-      {{ $countA }} Artikel <br />
-
-      Davon: <br />
-      {{ $countM := len (where (where .Site.RegularPages "Section" "articles") ".Params.format" "==" "rating") }}
-      {{ i18n "movies" $countM }}
-    </p>
+  <div class="content has-text-centered copyright">
+    &copy; 2020 - {{ dateFormat "2006" now }} | <abbr title='Build Date: {{ readFile "buildDate.txt" }}'>v{{ readFile "version.txt" }}</abbr>
+    | <span>{{ .Site.Copyright | safeHTML }}</span>
 
     <p>
       <!-- MUSS im Footer bleiben, nur noch schön machen -->
-      Header SVG by:<br />
-      <a href="https://www.shutterstock.com/g/pixelliebe">pixelliebe</a>/<a href="https://www.shutterstock.com/image-vector/hamburg-skyline-471775031">shutterstock.com</a><br />
-      <a href="https://www.shutterstock.com/g/pixelliebe">pixelliebe</a>/<a href="https://www.shutterstock.com/image-vector/kiel-skyline-german-city-581455954">shutterstock.com</a>
+      Header SVGs von: <a href="https://www.shutterstock.com/g/pixelliebe">pixelliebe</a> | 
+      <a href="https://www.shutterstock.com/image-vector/hamburg-skyline-471775031">shutterstock.com</a>
+      | <a href="https://www.shutterstock.com/image-vector/kiel-skyline-german-city-581455954">shutterstock.com</a>
     </p>
   </div>
  

@@ -1,0 +1,28 @@
+<div class="widget mostloved box">
+  <p class="title is-4">Beliebte Artikel</p>
+
+  <div class="columns is-vcentered">
+    <div class="column">
+      <ul>
+          
+        {{- $file := printf "%s%s" .Site.BaseURL "index.json" -}}
+        {{- $data := getJSON $file -}}
+        {{- range first 5 (sort $data ".commentsCount" "desc") -}}
+
+          {{- if not (eq (.commentsCount) (float 0) ) -}}
+
+            {{ $strCommentsCount := string .commentsCount }}
+            <li>
+              <span class="variable"><a href="{{ .permalink }}#comments" alt="{{ .title }}" title="{{ .title }}">{{ $strCommentsCount }} {{ i18n "comments" $strCommentsCount }}</a></span>
+              <span class="variable-number"><a href="{{ .permalink }}" alt="{{ .title }}" title="{{ .title }}">{{ .title }}</a></span>
+            </li>
+
+          {{- end -}}
+        {{- end -}}
+
+      </ul>
+    </div>
+
+  </div>
+
+</div>

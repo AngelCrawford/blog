@@ -1,16 +1,47 @@
+{{ range $index, $element := where .Site.Pages "Section" "articles" }}
+  {{- $.Scratch.Set "hasComments" 0 -}}
 
+  {{- $postSlug := .File.ContentBaseName -}}
+  {{- $comments := index $.Site.Data.comments $postSlug -}}
 
+  {{- range $comments -}}
+    {{- $.Scratch.Add "hasComments" 1 -}}
+  {{- end -}}
 
+  {{ $CountComments := $.Scratch.Get "hasComments" }}
 
-{{- else -}}
-  
-  {{ if ge (len $summarySplits) 2 }}
-    <!-- If that start-summary special comment is present, output only the part after that comment as Summary. -->
-    {{ index $summarySplits 1 | plainify | truncate 270 " [...]" }}
-  {{ else }}
-    <!-- Print the whole Summary if start-summary special comment is not found. -->
-    {{ .Summary| markdownify | truncate 270 " [...]" }}
-  {{ end }}
-  
+  {{ if not (eq ($CountComments) 0) }}
+
+    <li>{{ $index }}
+      <span class="variable"><a href="{{ .RelPermalink }}/#comments" alt="{{ .Title }}" title="{{ .Title }}">{{ $CountComments }} {{ i18n "comments" $CountComments }}</a></span>
+      <span class="variable-number"><a href="{{ .RelPermalink }}" alt="{{ .Title }}" title="{{ .Title }}">{{ .Title }}</a></span>
+    </li>
+  {{- end -}}
+
+  {{- $.Scratch.Delete "hasComments" -}}
+{{ end }}
+
+-----
+
+{{- $.Scratch.Set "mostLoved" slice -}}
+{{- range where .Site.RegularPages "Section" "=" "articles" -}}
+
+  {{- $.Scratch.Set "hasComments" 0 -}}
+
+  {{- $postSlug := $.File.ContentBaseName -}}
+  {{- $comments := index $.Site.Data.comments $postSlug -}}
+
+  {{- range $comments -}}
+    {{- $.Scratch.Add "hasComments" 1 -}}
+  {{- end -}}
+
+  {{ $hasCommentsCount := $.Scratch.Get "hasComments" }}
+    
+  {{ if not (eq ($hasCommentsCount) 0) }}
+    {{- $.Scratch.Add "mostLoved" (dict "title" .Title "commentsCount" $hasCommentsCount "permalink" .Permalink) -}}
+  {{- end -}}
+
 {{- end -}}
 
+{{- $.Scratch.Delete "hasComments" -}}
+{{- $.Scratch.Get "mostLoved" | jsonify -}}
