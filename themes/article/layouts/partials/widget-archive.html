@@ -1,13 +1,13 @@
 <!-- Design is in the 09-archive.scss -->
 <div class="widget-archive box">
-  <p class="title is-4">From the Archive</p>
+  <p class="title is-4">{{ .archiveTitle }}</p>
 
-  {{ if not (eq .RelPermalink "/archive/") }}
+  {{ if not (eq .context.RelPermalink "/archive/") }}
 
-    {{ range where .Site.Pages "Section" "articles" }}
+    {{ range where .context.Site.Pages "Section" "articles" }}
       {{ range first 1 (.Pages.GroupByDate "2006") }}
 
-        {{ $.Scratch.Set "yearIndexArchive" .Key }}
+        {{ $.context.Scratch.Set "yearIndexArchive" .Key }}
 
         <div class="columns is-vcentered">
           <div class="column year">
@@ -20,7 +20,7 @@
                 {{ $list := .Pages }}
                 {{ $len := (len $list) }}
                 <li>
-                  <span class="month-name"><a href='{{ $.Site.Params.baseurl }}/archive/#{{ .Key }}-{{ $.Scratch.Get "yearIndexArchive" }}'>{{ .Key }}</a></span>
+                  <span class="month-name"><a href='{{ $.Site.Params.baseurl }}/archive/#{{ .Key }}-{{ $.context.Scratch.Get "yearIndexArchive" }}'>{{ .Key }}</a></span>
                   <span class="month-number">{{ $len }}</span>
                 </li>
               {{ end }}
@@ -29,15 +29,15 @@
         </div>
       
       {{ end }}
-      {{ $.Scratch.Delete "yearIndexArchive" }}
+      {{ $.context.Scratch.Delete "yearIndexArchive" }}
     {{ end }}
     
   {{ else }}
 
-    {{ range where .Site.Pages "Section" "articles" }}
+    {{ range where .context.Site.Pages "Section" "articles" }}
       {{ range (.Pages.GroupByDate "2006") }}
 
-        {{ $.Scratch.Set "yearIndexArchive" .Key }}
+        {{ $.context.Scratch.Set "yearIndexArchive" .Key }}
 
         <div class="columns is-vcentered">
           <div class="column year">
@@ -50,7 +50,7 @@
                 {{ $list := .Pages }}
                 {{ $len := (len $list) }}
                 <li>
-                  <span class="month-name"><a href='{{ $.Site.Params.baseurl }}/archive/#{{ .Key }}-{{ $.Scratch.Get "yearIndexArchive" }}'>{{ .Key }}</a></span>
+                  <span class="month-name"><a href='{{ $.Site.Params.baseurl }}/archive/#{{ .Key }}-{{ $.context.Scratch.Get "yearIndexArchive" }}'>{{ .Key }}</a></span>
                   <span class="month-number">{{ $len }}</span>
                 </li>
               {{ end }}
@@ -59,13 +59,13 @@
         </div>
       
       {{ end }}
-      {{ $.Scratch.Delete "yearIndexArchive" }}
+      {{ $.context.Scratch.Delete "yearIndexArchive" }}
     {{ end }}
 
   {{ end }}
 
 
-  {{ if not (eq .RelPermalink "/archive/") }}
+  {{ if not (eq .context.RelPermalink "/archive/") }}
     <a href="/archive" class="button is-primary">
       <svg class='remix'>
         <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#bookmark-line"></use>
