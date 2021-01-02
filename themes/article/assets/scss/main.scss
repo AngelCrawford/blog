@@ -19,7 +19,7 @@ $text         : #d1e8e2;
 $secondary    : #d1e8e2;
 $primary      : #ffcb9a;
 $hover        : darken($primary, 15%);
-$accent       : #116466;
+$accent       : lighten(#116466, 7%);
 $small        : #777;
 $danger       : #d63232;
 
@@ -76,10 +76,10 @@ html, body {
 }
 
 .header-wrapper {
-  padding: 3.6em 1.5rem 0 2.5em;
+  padding: 42px 0 10px 0;
 }
 .header-wrapper-articles {
-  padding: 1rem 0 1.5rem 0;
+  padding: 1rem 0 0 0;
 }
 .wrapper {
   padding: 1.5rem 1.5rem 2.7rem 1.5rem;
@@ -139,7 +139,32 @@ iframe {
   margin: 1em auto !important;
 }
 
+figure.image::after {
+  content: "";
+  display: table;
+  clear: both;
+}
 
+a.button.is-primary {
+  @include font-bold;
+  color: $primary;
+  border: 1px solid rgba($primary, .5);
+  background-color: rgba(0, 0, 0, 0.2) !important;
+  @include box-shadow(false, 5px, 5px, 5px, rgba(#000, .3), rgba($text, .07));
+  border-radius: $radius-large;
+  &:hover {
+    color: $hover;
+    @include box-shadow(true, 5px, 5px, 5px, rgba(#000, .3), rgba($text, .07));
+    border: 1px solid rgba($hover, .5);
+    .remix {
+      fill: $hover;
+    }
+  }
+  .remix {
+    fill: $primary;
+    margin-right: 0.4em;
+  }
+}
 
 /* clears the 'X' from Internet Explorer */
 input[type=search]::-ms-clear,
@@ -161,7 +186,7 @@ input[type="search"]::-webkit-search-results-decoration {
 
 // External Links
 // a:not([href^='#']):not([href^='/']):after
-a:not([href*='yourdomain.com']):not([href^='#']):not([href^='/']):not(figure a):not(a.website):not(span.card-footer-item a):not(#remove-cookies):not(nav.pagination a):not(.author-icons-wrapper a):not(.card.is-small-count a):not(.card.is-small a):after {
+a:not([href*='yourdomain.com']):not([href^='#']):not([href^='/']):not(figure a):not(a.website):not(span.card-footer-item a):not(#remove-cookies):not(nav.pagination a):not(.author-icons-wrapper a):not(.card.is-small-count a):not(.card.is-small a):not(.serie-single a):not(.series-single a):not(.series-single-footer a):not(.categories-single a):after {
   content: "\ecaf";
   font-family: 'remixicon' !important;
   font-size: 80%;

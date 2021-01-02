@@ -7,7 +7,8 @@
     {{- end -}}
   </div>
 
-  <div class="content">
+  <div class="content is-clearfix">
+    {{ partial "content-header" . }}
     {{ .Content }}
   </div>
 

@@ -1,6 +1,7 @@
 {{ define "main" }}
  
-  <div class="content content-wrapper">
+  <div class="content content-wrapper is-clearfix">
+    {{ partial "content-header" . }}
     {{ .Content }}
   </div>
 

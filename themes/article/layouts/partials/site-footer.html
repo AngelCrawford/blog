@@ -42,14 +42,14 @@
     </p>
     <p>
       Statistik: <br />
-      {{ $count := len (where .Site.RegularPages "Section" "=" "quotes") }}
+      {{ $count := len (where .Site.RegularPages "Section" "quotes") }}
       {{ i18n "quotes" $count }} <br />
 
-      {{ $countA := len (where .Site.RegularPages "Section" "=" "articles") }}
+      {{ $countA := len (where .Site.RegularPages "Section" "articles") }}
       {{ $countA }} Artikel <br />
 
       Davon: <br />
-      {{ $countM := len (where (where .Site.RegularPages "Section" "=" "articles") ".Params.format" "==" "rating") }}
+      {{ $countM := len (where (where .Site.RegularPages "Section" "articles") ".Params.format" "==" "rating") }}
       {{ i18n "movies" $countM }}
     </p>
 

@@ -109,11 +109,12 @@
   <body>
     
     {{ block "header" . }}{{ partial "site-header.html" . }}{{ end }}
-
+      
+      <main>
         <div class="wrapper">
           {{ block "main" . }}{{ end }}
         </div>
-      </main><!-- Wird in site-header geöffnet -->
+      </main>
     
     {{ block "footer" . }}{{ partial "site-footer.html" . }}{{ end }}
      

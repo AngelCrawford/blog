@@ -1,0 +1,64 @@
+{{ if and (not .IsHome) (not (eq .Section "articles")) }}
+
+  <div class="header-wrapper {{ if .Resources }}has-image{{else}}no-image{{ end }}">
+    {{ if .Resources }}
+      <figure class="image is-3by2">
+        {{- $img := (.Resources.ByType "image").GetMatch "featured*" -}}
+        {{- with $img -}}
+          {{- $resize := .Fill "300x200" -}}
+            <img src="{{ $resize.RelPermalink }}" alt="{{ $.Title }}" width="480" height="320">
+        {{- end -}}
+  
+        {{- range .Params.featured_image -}}
+          <figcaption>
+            <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#information-line"></use></svg>
+            {{ .byline | safeHTML }}
+          </figcaption>
+        {{- end -}}
+      </figure>
+    {{ end }}
+
+    {{ range .Site.Params.categoryColor }}
+      {{ if eq .name $.Title }}
+        <style>
+          h1.categorie-color {
+            color: {{ .color }};
+          }
+        </style>
+      {{ end }}
+    {{ end }}
+    <h1 class="title categorie-color {{if not .Params.description}} no-subtitle{{end}}">
+      {{- if eq .Section "tags" -}}
+        {{ if eq .Kind "term" }}Tag: {{ end }}
+      {{- else if (eq .Section "series") -}}
+        {{ if eq .Kind "term" }}Serie: {{ end }}
+      {{- else if (eq .Section "authors") -}}
+        {{ if eq .Kind "term" }}Autor: {{ end }}
+      {{- else if (eq .Section "categories") -}}
+        {{ if eq .Kind "term" }}Kategorie: {{ end }}
+      {{- else if (eq .Section "month") -}}
+        Monat:&nbsp;
+      {{- else if (eq .Section "year") -}}
+        Jahr&nbsp;
+      {{- end -}}
+      
+      {{ .Title | default .Site.Title }}
+    </h1>
+    
+    {{- with .Params.description -}}
+      <h2 class="subtitle">{{ . | truncate 160 }}</h2>
+    {{- end -}}
+  </div>
+
+  {{ if eq .Section "authors" }}
+    <div class="author-icons-wrapper">
+      {{ range $.Params.socials }}
+        <a data-tooltip="{{ .name }}" href="{{ .src }}" class="author-icons" target="_blank" rel="noreferrer">
+          <svg class='remix-big-primary'>
+            <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#{{ .icon }}-line"></use>
+          </svg>
+        </a>
+      {{ end }}
+    </div>
+  {{ end }}
+{{ end }}

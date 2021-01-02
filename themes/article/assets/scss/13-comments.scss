@@ -1,8 +1,30 @@
 #comments {
   scroll-margin-top: 5em;
   .title.is-4 {
-    margin: 1.5em 0 1em -1em;
-    color: $hover;
+    margin: 1.5em 0 1.5em -1em;
+    color: $hover;  overflow: hidden;
+    text-align: center;
+    
+    &:before,
+    &:after {
+      background: rgba($primary, .4);
+      content: "";
+      display: inline-block;
+      height: 1px;
+      position: relative;
+      vertical-align: middle;
+      width: 50%;
+    }
+    
+    &:before {
+      right: 0.5em;
+      margin-left: -50%;
+    }
+    
+    &:after {
+      left: 0.5em;
+      margin-right: -50%;
+    }
   }
 
   strong {

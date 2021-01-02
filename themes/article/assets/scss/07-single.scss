@@ -34,12 +34,12 @@ a.anchor {
         color: $text;
         padding: .31em .5em;
         width: 100%;
-        height: auto;
+        height: 45px;
         border-top: 1px solid #222;
         overflow: hidden;
-        line-height: 40px;
         opacity: .7;
         background-color: rgba(darken($background, 1%), .5);
+        font-style: normal;
         svg {
           width: 20px;
           height: 20px;
@@ -99,6 +99,29 @@ a.anchor {
   @include font-header;
   margin-bottom: .5em;
   color: $accent;
+  overflow: hidden;
+  text-align: center;
+  
+  &:before,
+  &:after {
+    background: rgba($primary, .4);
+    content: "";
+    display: inline-block;
+    height: 1px;
+    position: relative;
+    vertical-align: middle;
+    width: 50%;
+  }
+  
+  &:before {
+    right: 0.5em;
+    margin-left: -50%;
+  }
+  
+  &:after {
+    left: 0.5em;
+    margin-right: -50%;
+  }
 }
 
 .is-single-information p.title.is-5 {

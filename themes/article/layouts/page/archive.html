@@ -1,71 +1,99 @@
 {{ define "main" }}
 	
-	<div class="content content-wrapper">
-		{{ .Content }}
+{{ if (eq .RelPermalink "/archive/") }}
+<div class="content content-wrapper">
+	<div class="columns">
+		
+		<div class="column">
+			{{ partial "content-header" . }}
+			{{ .Content }}
+		</div>
+
+		<div class="column is-narrow">
+			{{ partial "widget-archive.html" . }}
+		</div>
+
 	</div>
+</div>
+{{ end }}
 
-	{{ range where .Site.Pages "Section" "articles" }}
-		{{ range (.Pages.GroupByDate "2006") }}
-			<h2 class="title">{{ .Key }}</h2>
-				
-			{{ range (.Pages.GroupByDate "1") }}
-				<h3 class="title">{{ .Key }}</h2>
-				
-				<div class="columns is-mobile is-multiline">
-					{{ range .Pages }}
-						<div class="column is-flex is-half-mobile is-one-third-tablet is-one-quarter-desktop is-one-fifth-widescreen">
-							<div class="card is-small {{ if .Resources }}has-image{{else}}no-image{{ end }} ">
+	<div class="content-archive-wrapper">
 
-								{{ if .GetTerms "categories" }}
-									{{ range first 1 (.GetTerms "categories") }}
-										{{ $catName := .LinkTitle }}
-										<div class="ribbon" style="{{ range .Site.Params.categoryColor }}{{ if eq .name $catName }}background-color: {{ .color }};{{ end }}{{ end }}">
-											<a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a>
-										</div>
-									{{ end }}
-								{{ end }}
-								{{- if .Resources -}}
-									<div class="card-image">
-										<figure class="image is-3by2">
-											<a href="{{ .Page.Permalink }}">
-												{{- $img := (.Resources.ByType "image").GetMatch "featured*" -}}
-												{{- with $img -}}
-													{{- $resize := .Fill "300x200" -}}
-														<img src="{{ $resize.RelPermalink }}" alt="{{ .Title }}" loading="lazy" width="480" height="320">
-												{{- end -}}
-											</a>
-											{{- range .Params.featured_image -}}
-												<figcaption>
-													<svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#information-line"></use></svg>
-													{{ .byline | safeHTML }}
-												</figcaption>
-											{{- end -}}
-										</figure>
-									</div>
-								{{- end -}}
-								<div class="card-content">
-									<div>
-										<a class="title is-5 is-size-6-mobile" href="{{ .Page.Permalink }}">{{ .Page.Title }}</a><br />
-										{{ if isset .Params "tags" }}
-											<div class="tags-wrapper">
-												<svg class='remix-small'>
-													<use xlink:href="/fonts/remixicon/remixicon.symbol.svg#price-tag-3-line"></use>
-												</svg>
-												{{- range .Params.tags -}}
-													<a href="/tags/{{ . | urlize }}" class="hashtags">#{{ . }} </a> 
-												{{- end -}}
+		{{ range where .Site.Pages "Section" "articles" }}
+			{{ range (.Pages.GroupByDate "2006") }}
+				<h2 class="title">{{ .Key }}</h2>
+
+				{{ $.Scratch.Set "yearIndexArchive" .Key }}
+					
+				{{ range (.Pages.GroupByDate "January") }}
+					
+					<h3 class="title" id='{{ .Key }}-{{ $.Scratch.Get "yearIndexArchive" }}'>{{ .Key }}</h3>
+					
+					<div class="columns is-mobile is-multiline">
+						{{ range .Pages }}
+
+							<div class="column is-flex is-half-mobile is-one-third-tablet is-one-quarter-desktop is-one-fifth-widescreen">
+								<div class="card is-small {{ if .Resources }}has-image{{else}}no-image{{ end }} ">
+
+									{{ if .GetTerms "categories" }}
+										{{ range first 1 (.GetTerms "categories") }}
+											{{ $catName := .LinkTitle }}
+											<div class="ribbon" style="{{ range .Site.Params.categoryColor }}{{ if eq .name $catName }}background-color: {{ .color }};{{ end }}{{ end }}">
+												<a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a>
 											</div>
 										{{ end }}
+									{{ end }}
+									{{- if .Resources -}}
+										<div class="card-image">
+											<a href="{{ .Page.Permalink }}">
+												<figure class="image is-3by2">
+													<a href="{{ .Page.Permalink }}">
+														{{- $img := (.Resources.ByType "image").GetMatch "featured*" -}}
+														{{- with $img -}}
+															{{- $resize := .Fill "480x320" -}}
+																<img src="{{ $resize.RelPermalink }}" alt="{{ .Title }}" loading="lazy">
+														{{- end -}}
+													</a>
+													{{- range .Params.featured_image -}}
+														<figcaption>
+															<svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#information-line"></use></svg>
+															{{ .byline | safeHTML }}
+														</figcaption>
+													{{- end -}}
+												</figure>
+											</a>
+										</div>
+									{{- end -}}
+									<div class="card-content">
+										<div>
+											<a class="title is-5 is-size-6-mobile" href="{{ .Page.Permalink }}">{{ .Page.Title }}</a>
+											<span class="heading">
+												<time datetime="{{ .PublishDate.Format "2006-01-02T15:04:05Z07:00" }}">
+													<svg class='remix-small'>
+														<use xlink:href="/fonts/remixicon/remixicon.symbol.svg#calendar-line"></use>
+													</svg> {{ .Date.Format "02.01.06" }}
+												</time>
+												{{ if not ( eq (.Date.Format "02.01.06") (.Lastmod.Format "02.01.06") ) }}
+												<time class="updated" datetime="{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}">
+													<svg class='remix-small'>
+														<use xlink:href="/fonts/remixicon/remixicon.symbol.svg#pencil-line"></use>
+													</svg> {{ .Lastmod.Format "02.01.06" }}
+												</time>
+												{{ end }}
+											</span>
+										</div>
 									</div>
 								</div>
 							</div>
-						</div>
 
-					{{ end }}
-				</div>
+						{{ end }}
+					</div>
 
+				{{ end }}
 			{{ end }}
 		{{ end }}
-	{{ end }}
+
+		{{ $.Scratch.Delete "yearIndexArchive" }}
+	</div>
 
 {{ end }}

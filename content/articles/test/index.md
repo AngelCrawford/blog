@@ -10,7 +10,7 @@ contains:
 - code
 - gallery
 authors: jdksaj
-weight: 1
+# weight: 1
 title: "Test 123"
 year: "2020"
 month: "2020/02"
