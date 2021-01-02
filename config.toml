@@ -3,7 +3,6 @@ baseURL = "http://localhost:1313"
 languageCode = "de-DE"
 theme = "article"
 
-# SEO: Robots Metatag testen
 enableRobotsTXT = true
 enableGitInfo = true
 lastmod = [":git", "lastmod", "date"] 
@@ -83,38 +82,36 @@ copyright = "Design/Programmierung: <a href=\"https://angel-crawford.de/\">Angel
     twitterHandle = "crawford_ftw" #Twitter name, to bind shared cards to your profile
     keywords = "Webcard, Profil Karte, Angel Crawford"
 
-  # TODO: Soziale Medien einfügen
-  # TODO: isHeader zum funktionieren bringen
   [[params.social]]
     name = "Facebook"
     link = "#"
     icon = "facebook-circle-line"
-    isHeader = false
-    isFooter = true
+    inHeader = false
+    inFooter = true
   [[params.social]]
     name = "Twitter"
     link = "#"
     icon = "twitter-line"
-    isHeader = false
-    isFooter = true
+    inHeader = false
+    inFooter = true
   [[params.social]]
     name = "Instagram"
     link = "#"
     icon = "instagram-line"
-    isHeader = false
-    isFooter = true
+    inHeader = false
+    inFooter = true
   [[params.social]]
     name = "Github"
     link = "#"
     icon = "github-line"
-    isHeader = false
-    isFooter = true
+    inHeader = false
+    inFooter = true
   [[params.social]]
     name = "RSS"
     link = "/index.xml"
     icon = "rss-line"
-    isHeader = true
-    isFooter = true
+    inHeader = true
+    inFooter = true
 
   [[params.categoryColor]]
     name = "Movie"

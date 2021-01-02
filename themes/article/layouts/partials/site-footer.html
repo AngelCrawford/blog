@@ -20,7 +20,7 @@
     &copy; 2020 - {{ dateFormat "2006" now }} | <abbr title='Build Date: {{ readFile "buildDate.txt" }}'>v{{ readFile "version.txt" }}</abbr>
     | <span>{{ .Site.Copyright | safeHTML }}</span>
 
-    <div>{{ partialCached "social-follow-footer.html" . }}</div>
+    <div>{{ partial "social-follow.html" (dict "context" . "isFooter" true "isHeader" false ) }}</div>
 
     {{- if .Site.Menus.footer -}}
       <ul>

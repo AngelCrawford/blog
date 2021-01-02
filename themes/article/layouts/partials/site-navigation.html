@@ -7,7 +7,7 @@
 
     
     <div class="navbar-item is-hidden-desktop">
-      {{ partialCached "social-follow-header.html" . }}
+      {{ partial "social-follow.html" (dict "context" . "isHeader" true "isFooter" false ) }}
     </div>
 
     <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarHeader">
@@ -117,7 +117,7 @@
 
     <div class="navbar-end">
       <div class="navbar-item is-hidden-touch has-no-hover-border">
-        {{ partialCached "social-follow-header.html" . }}
+        {{ partial "social-follow.html" (dict "context" . "isHeader" true "isFooter" false ) }}
       </div>
       
       <div class="navbar-item field">
