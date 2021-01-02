@@ -161,7 +161,7 @@ input[type="search"]::-webkit-search-results-decoration {
 
 // External Links
 // a:not([href^='#']):not([href^='/']):after
-a:not([href*='yourdomain.com']):not([href^='#']):not([href^='/']):not(figure a):not(a.website):not(span.card-footer-item a):not(#remove-cookies):not(nav.pagination a):not(.author-icons-wrapper a):after {
+a:not([href*='yourdomain.com']):not([href^='#']):not([href^='/']):not(figure a):not(a.website):not(span.card-footer-item a):not(#remove-cookies):not(nav.pagination a):not(.author-icons-wrapper a):not(.card.is-small-count a):not(.card.is-small a):after {
   content: "\ecaf";
   font-family: 'remixicon' !important;
   font-size: 80%;

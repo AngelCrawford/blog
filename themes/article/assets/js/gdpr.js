@@ -117,7 +117,7 @@ function setGravatars(email, defaultImage) {
 function getFavForExternalLinks() {
   /* You can replace this with your site's domain */
   var basedomain = location.hostname.split('.').slice(-2).join('.');
-  var selectLinks = 'a[href^="//"]:not(figure a):not(a.website):not(span.card-footer-item a):not(nav.pagination a):not(.author-icons-wrapper a), a[href^="http"]:not(figure a):not(a.website):not(span.card-footer-item a):not(nav.pagination a):not(.author-icons-wrapper a)';
+  var selectLinks = 'a[href^="//"]:not(figure a):not(a.website):not(span.card-footer-item a):not(nav.pagination a):not(.author-icons-wrapper a), a[href^="http"]:not(figure a):not(a.website):not(span.card-footer-item a):not(nav.pagination a):not(.author-icons-wrapper a):not(.card.is-small-count a):not(.card.is-small a)';
   // console.log(basedomain);
 
 	/* Select all external links */

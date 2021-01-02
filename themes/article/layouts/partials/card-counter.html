@@ -5,21 +5,21 @@
 
     {{- if .context.Page.Resources -}}
       <div class="card-image">
-        <a href="{{ .context.Page.Permalink }}">
-          <figure class="image is-3by2">
+        <figure class="image is-3by2">
+          <a href="{{ .context.Page.Permalink }}">
             {{- $img := (.context.Page.Resources.ByType "image").GetMatch "featured*" -}}
             {{- with $img -}}
-              {{- $resize := .Fill "480x320" | images.Filter (images.Sepia "100") -}}
+              {{- $resize := .Fill "300x200" | images.Filter (images.Sepia "100") -}}
                 <img src="{{ $resize.RelPermalink }}" alt="{{ .Title }}" width="480" height="320" loading="lazy">
             {{- end -}}
-            {{- range .context.Page.Params.featured_image -}}
-              <figcaption>
-                <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#information-line"></use></svg>
-                {{ .byline | safeHTML }}
-              </figcaption>
-            {{- end -}}
-          </figure>
-        </a>
+          </a>
+          {{- range .context.Page.Params.featured_image -}}
+            <figcaption>
+              <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#information-line"></use></svg>
+              {{ .byline | safeHTML }}
+            </figcaption>
+          {{- end -}}
+        </figure>
       </div>
     {{- end -}}
     <div class="card-content has-text-centered">

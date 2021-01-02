@@ -16,24 +16,27 @@
                   </div>
                 {{ end }}
               {{ end }}
+
               {{- if .Resources -}}
                 <div class="card-image">
                   <figure class="image is-3by2">
-                    {{- range first 1 (.Resources.ByType "image") -}}
-                      {{- $img := .Fill "480x320" -}}
-                      <a href="#">
-                        <img src="{{ $img.RelPermalink }}" alt="{{ $.Title }}" loading="lazy">
-                      </a>
-                    {{- end -}}
-                    {{- with .Params.featured_image -}}
-                      {{ range first 1 . }}<figcaption>
+                    <a href="{{ .Page.Permalink }}">
+                      {{- $img := (.Resources.ByType "image").GetMatch "featured*" -}}
+                      {{- with $img -}}
+                        {{- $resize := .Fill "300x200" -}}
+                          <img src="{{ $resize.RelPermalink }}" alt="{{ .Title }}" loading="lazy" width="480" height="320">
+                      {{- end -}}
+                    </a>
+                    {{- range .Params.featured_image -}}
+                      <figcaption>
                         <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#information-line"></use></svg>
-                        {{ .byline | safeHTML }}</figcaption>
-                      {{ end }}
+                        {{ .byline | safeHTML }}
+                      </figcaption>
                     {{- end -}}
                   </figure>
                 </div>
               {{- end -}}
+
               <div class="card-content">
                 <a class="title is-5" href="{{ .Permalink }}">{{ .Title }}</a>
                 <span class="heading"><time datetime="{{ .PublishDate.Format "2006-01-02T15:04:05Z07:00" }}">

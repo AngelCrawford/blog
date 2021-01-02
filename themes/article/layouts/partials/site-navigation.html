@@ -41,11 +41,12 @@
                             
                             {{- with $.Site.GetPage .URL -}}
                               {{- if .Resources -}}
-                                <figure class="image is-2by3">
+                                <figure class="image is-3by2">
                                   {{- $img := (.Resources.ByType "image").GetMatch "featured*" -}}
                                   {{- with $img -}}
-                                    {{- $resize := .Fill "320x480" -}}
-                                      <img src="{{ $resize.RelPermalink }}" alt="{{ $.Title }}">
+                                    <!-- // rework! -->
+                                    {{- $resize := .Fill "300x200" -}}
+                                      <img src="{{ $resize.RelPermalink }}" alt="{{ $.Title }}" width="480" height="320">
                                   {{- end -}}
                                 </figure>
                               {{- end -}}
