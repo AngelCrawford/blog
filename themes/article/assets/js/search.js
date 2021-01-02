@@ -1,7 +1,4 @@
 "use strict";
-
-// TODO: Lupe als Button ausstatten, damit man auch durch Klick auf die Lupe die Suche starten kann
-// TODO: disabled State für Input und Button anpassen!!
 // THANKS: https://blog.jeremylikness.com/blog/dynamic-search-in-a-static-hugo-website/
 
 var searchFn = function () {

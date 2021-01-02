@@ -1,6 +1,5 @@
 #!/bin/bash
 
-# TODO: Testen ob das mit dem neuen Projekt auch funktioniert
 Red="\033[0;31m"          # Red
 Green="\033[0;32m"        # Green
 Color_Off="\033[0m"       # Text Reset

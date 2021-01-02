@@ -2,7 +2,6 @@
 
   {{- if .Resources -}}
     <div class="card-image">
-      <!-- // HACK: Is this right? -->
       <figure class="image is-2by3">
         <a href="{{ .Permalink }}">
           {{- $img := (.Resources.ByType "image").GetMatch "featured*" -}}
@@ -58,27 +57,27 @@
         <div class="rating">{{ partial "rating" . }} ({{ .Params.rating }})</div>
       {{- end -}}
 
-      {{- if eq .Params.weight 1 -}}
-        <!-- // FIXME: Wenn ich Content hier verwende, dann wird "summary" im Frontend nicht benutzt -->
-        <!-- // FIXME: Shortcodes werden ebenfalls mit ausgeben, zwar ohne HTML, aber dennoch -->
-        {{- if .Params.summary -}}
-          {{ .Summary | truncate 800 " [...]" }}
-        {{- else -}}
-          {{ .Content | markdownify | truncate 800 " [...]" }}
-        {{- end -}}
-      {{- else if not .Resources -}}
-        {{ .Summary | truncate 500 " [...]" }}
-      {{- else -}}
+      {{ $summarySplits := split .Content "<!--start-summary-->" }}
+      {{ $newContent := "" }}
 
-        {{ $summarySplits := split .Content "<!--start-summary-->" }}
-        {{ if ge (len $summarySplits) 2 }}
-          <!-- If that start-summary special comment is present, output only the part after that comment as Summary. -->
-          {{ index $summarySplits 1 | plainify | truncate 270 " [...]" }}
-        {{ else }}
-          <!-- Print the whole Summary if start-summary special comment is not found. -->
-          {{ .Summary| markdownify | truncate 270 " [...]" }}
-        {{ end }}
-        
+      {{ if ge (len $summarySplits) 2 }}
+        <!-- If content has comment "start-summary", then split from there -->
+        {{ $newContent = index $summarySplits 1 | plainify }}
+      {{ else }}
+        <!-- If content has .Params.Summary, it will be used before the auto created Summary -->
+        {{ $newContent = .Summary | markdownify }}
+      {{ end }}
+
+      <!-- If article has no image, show more content instead -->
+      {{- if not .Resources -}}
+        {{ $newContent | truncate 600 " [...]" }}
+
+      <!-- If article is fixed, show more content -->
+      {{- else if eq .Params.weight 1 -}}
+        {{ $newContent | truncate 800 " [...]" }}
+
+      {{ else }}
+        {{ $newContent | truncate 270 " [...]" }}
       {{- end -}}
       
       <a class="read-more" href="{{ .RelPermalink }}"> {{ i18n "readMore" }}</a>

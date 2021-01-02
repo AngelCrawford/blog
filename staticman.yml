@@ -6,7 +6,7 @@ comments:
     - website
     - comment
     - reply_to
-  allowedOrigins: ["localhost", "example.com"] # TODO: Add your domains
+  allowedOrigins: ["localhost", "example.com"]
   branch: master
   commitMessage: "New comment in {options.slug}"
   filename: "comment-{@timestamp}"

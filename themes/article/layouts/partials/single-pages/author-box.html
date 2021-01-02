@@ -6,7 +6,6 @@
   
     {{- if .Resources -}}
       <div class="card-image">
-        <!-- // HACK: Is this right? -->
         <figure class="image is-3by2">
           <a href="{{ .Permalink }}">
             {{- range first 1 (.Resources.ByType "image") -}}

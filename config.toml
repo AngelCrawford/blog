@@ -80,8 +80,6 @@ copyright = "Design/Programmierung: <a href=\"https://angel-crawford.de/\">Angel
   description = "The last theme you'll ever need. Maybe. dsds"
 
   [params.seo]
-    # SEO: Keywords bestimmen
-    # TODO: Author, wenn Autoren bestimmt werden, dass hier weg nehmen, an die SEO Sachen im Header denken
     twitterHandle = "crawford_ftw" #Twitter name, to bind shared cards to your profile
     keywords = "Webcard, Profil Karte, Angel Crawford"
 
