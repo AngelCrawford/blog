@@ -3,7 +3,10 @@ title: "Tags"
 featured_image:
 - src: ./featured.jpg
   byline: TEST <a href='#'>test</a>
-menu: "main"
+menu: 
+  main:
+    params:
+      isMegaMenu: false
 description: "The last theme you'll ever need. Maybe."
 ---
 

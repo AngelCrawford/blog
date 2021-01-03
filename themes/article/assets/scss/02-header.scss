@@ -547,10 +547,11 @@ nav.navbar {
             }
           }
 
-          p.title.is-5 {
+          p a.title.is-5 {
             @include font-header;
             margin-bottom: .5em;
             font-size: 1.25rem;
+            color: $primary;
           }
 
           a.read-more {

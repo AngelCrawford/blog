@@ -24,57 +24,81 @@
       {{- range .Site.Menus.main -}}
 
         {{- if .HasChildren -}}
-          <div class="navbar-item has-dropdown is-hoverable is-mega">
-            <a class="navbar-link {{ if or ($currentPage.IsMenuCurrent "main" .) ($currentPage.HasMenuCurrent "main" .) }} is-active{{ end }}" href="{{ .URL }}">
-              {{- .Name -}}
-            </a>
-            <div id="blogDropdown" class="navbar-dropdown">
 
-              <div class="container is-fluid">
-                <div class="columns is-multiline">
-                  {{- range .Children -}}
-                    {{- $.Scratch.Set "CatName" .Name -}}
-                    <div class="column is-6">
+          {{- range .Params }}
+              {{ $.Scratch.Set "isMegaMenue" . }}
+          {{ end }}
 
-                      <div class="navbar-content">
-                        
-                        {{- with $.Site.GetPage .URL -}}
-                          {{- if .Resources -}}
-                            <figure class="image">
-                              <a href="{{ .Page.Permalink }}">
-                                {{- $img := (.Page.Resources.ByType "image").GetMatch "featured*" -}}
-                                {{- with $img -}}
-                                  {{- $resize := .Fill "200x150" -}}
-                                    <img src="{{ $resize.RelPermalink }}" alt="{{ .Title }}" width="200" height="150" loading="lazy">
-                                {{- end -}}
-                              </a>
-                            </figure>
-                          {{- end -}}
-                        {{- end -}}
 
-                        <p><a href="{{ .Page.Permalink }}" class="title is-5 is-size-6-mobile colored" style='color: 
-                          {{- range $.Site.Params.categoryColor -}}
-                            {{- if eq ($.Scratch.Get "CatName") .name -}}
-                              {{- .color -}}
+          {{ if eq ($.Scratch.Get "isMegaMenue") true }}
+
+            <div class="navbar-item has-dropdown is-hoverable is-mega">
+              <a class="navbar-link {{ if or ($currentPage.IsMenuCurrent "main" .) ($currentPage.HasMenuCurrent "main" .) }} is-active{{ end }}" href="{{ .URL }}">
+                {{- .Name -}}
+              </a>
+              <div class="navbar-dropdown">
+
+                <div class="container is-fluid">
+                  <div class="columns is-multiline">
+                    {{- range .Children -}}
+                      {{- $.Scratch.Set "CatName" .Name -}}
+                      <div class="column is-4">
+
+                        <div class="navbar-content">
+                          
+                          {{- with $.Site.GetPage .URL -}}
+                            {{- if .Resources -}}
+                              <figure class="image">
+                                <a href="{{ .Page.Permalink }}">
+                                  {{- $img := (.Page.Resources.ByType "image").GetMatch "featured*" -}}
+                                  {{- with $img -}}
+                                    {{- $resize := .Fill "200x150" -}}
+                                      <img src="{{ $resize.RelPermalink }}" alt="{{ .Title }}" width="200" height="150" loading="lazy">
+                                  {{- end -}}
+                                </a>
+                              </figure>
                             {{- end -}}
-                          {{- end -}}'>{{ .Name }}</a></p>
-                        
-                        {{- with $.Site.GetPage .URL -}}
-                          {{ .Content | markdownify | truncate 200 " [...]" }}
-                          <a class="read-more" href="{{ .RelPermalink }}"> {{ i18n "readMore" }}</a>
-                        {{- end -}}
+                          {{- end -}}
+
+                          <p><a href="{{ .Page.Permalink }}" class="title is-5 is-size-6-mobile colored" style='color: 
+                            {{- range $.Site.Params.categoryColor -}}
+                              {{- if eq ($.Scratch.Get "CatName") .name -}}
+                                {{- .color -}}
+                              {{- end -}}
+                            {{- end -}}'>{{ .Name }}</a></p>
+                          
+                          {{- with $.Site.GetPage .URL -}}
+                            {{ .Content | markdownify | truncate 140 " [...]" }}
+                            <a class="read-more" href="{{ .RelPermalink }}"> {{ i18n "readMore" }}</a>
+                          {{- end -}}
+
+                        </div>
 
                       </div>
+                    {{- end -}}
 
-                    </div>
-                  {{- end -}}
-
-                  {{- $.Scratch.Delete "CatName" -}}
+                    {{- $.Scratch.Delete "CatName" -}}
+                  </div>
                 </div>
+      
               </div>
-    
             </div>
-          </div>
+          
+          {{ else }}
+
+            <div class="navbar-item has-dropdown is-hoverable">
+              <a class="navbar-link {{ if or ($currentPage.IsMenuCurrent "main" .) ($currentPage.HasMenuCurrent "main" .) }} is-active{{ end }}" href="{{ .URL }}">
+                {{- .Name -}}
+              </a>
+              <div class="navbar-dropdown">
+                {{- range .Children -}}
+                  <a class="navbar-item " href="{{ .Page.Permalink }}">{{ .Name }}</a>
+                {{- end -}}
+              </div>
+            </div>
+
+          {{ end }}
+          {{ $.Scratch.Delete "isMegaMenue" }}
 
         {{- else -}}
 
@@ -84,34 +108,6 @@
         {{- end -}}
         
       {{- end -}}
-
-      <div class="navbar-item has-dropdown is-hoverable">
-        <div class="navbar-link">
-          More
-        </div>
-        <div id="moreDropdown" class="navbar-dropdown ">
-          <a class="navbar-item " href="http://bulma.io/extensions/">
-            <div class="level is-mobile">
-              <div class="level-left">
-                <div class="level-item">
-                  <p>
-                    <strong>Extensions</strong>
-                    <br>
-                    <small>Side projects to enhance Bulma</small>
-                  </p>
-                </div>
-              </div>
-              <div class="level-right">
-                <div class="level-item">
-                  <svg class='remix-small'>
-                    <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#calendar-line"></use>
-                  </svg>
-                </div>
-              </div>
-            </div>
-          </a>
-        </div>
-      </div>
 
     </div>
 
