@@ -1,18 +1,20 @@
 #resultsWrapper {
   position: absolute;
   height: 400px;
-  width: 60vw;
+  min-width: 600px;
+  width: 100%;
   top: 56px;
   right: 0;
   z-index: 9999;
 }
 #results {
   height: 100%;
-  padding: 1em;
+  width: 100%;
+  padding: 1.5em;
   margin-top: 20px;
   border: 1px solid blue;
   @include font-regular;
-  background: lighten($background, 7%);
+  background-color: darken($pageBack, 7%);
   @include box-shadow(false, 5px, 5px, 5px, rgba(#000, .3), rgba($text, .05));
   border-radius: $radius-large;
   border: 1px solid rgba($primary, .2);
@@ -28,36 +30,142 @@
     right: 15%;
     border-left: 20px solid transparent;
     border-right: 20px solid transparent;
-    border-bottom: 20px solid lighten($background, 7%);
+    border-bottom: 20px solid darken($pageBack, 7%);
     z-index: 55;
   }
 
-  a.title {
-    color: $primary;
-    font-size: 24px;
-    line-height: 27px;
-    &:hover {
-      border: none;
-      box-shadow: none;
-      background: none;
-      color: $hover;
+  .column {
+    font-size: 1rem;
+    color: $text;
+    font-weight: normal;
+    padding: 2em 0 1.75rem 0;
+    border-bottom: 1px solid rgba($primary, .2);
+
+    figure.image {
+      float: left;
+      margin: 0 1.5em 0em 0;
+      width: 200px;
+      max-height: 100%;
+
+      a {
+        img {
+          width: 200px;
+          height: 150px;
+          max-height: 100%;
+          border-radius: $radius-large;
+          @include box-shadow(false, 3px, 3px, 3px, rgba(#000, .5), rgba($text, .1));
+          filter: sepia(1);
+          
+          &:hover, &:focus {
+            filter: sepia(0);
+          }
+        }
+      }
+    }
+
+    a.title.is-5 {
+      @include font-header;
+      margin-bottom: .5em;
+      font-size: 1.25rem;
+      color: $primary;
+      display: block;
+      &:hover {
+        color: $hover;
+      }
+    }
+
+    a.read-more {
+      font-size: 1rem;
+      font-weight: normal;
+    }
+
+    span.heading {
+      margin-bottom: 1em;
+      span {
+        width: 7px;
+        display: inline-block;
+      }
+      .remix-small {
+        @include translate(-3px, 5px);
+      }
+    }
+
+  }
+
+  h2.title {
+    text-align: center;
+    color: $hover;
+    overflow: hidden;
+    padding: 0 4.5rem;
+    margin-bottom: 0.2em;
+    
+    &:before,
+    &:after {
+      background: rgba($primary, .5);
+      content: "";
+      display: inline-block;
+      height: 1px;
+      position: relative;
+      vertical-align: middle;
+      width: 50%;
+    }
+    
+    &:before {
+      right: .5em;
+      margin-left: -50%;
+    }
+    
+    &:after {
+      left: .5em;
+      margin-right: -50%;
     }
   }
-
-  .image {
-    padding: 1em 0;
+  h3 {
+    color: $accent;
+    text-align: center;
+    font-size: 20px;
   }
 
-  img {
-    width: 100%;
-    height: 100%;
-    max-height: 100%;
-    border-radius: $radius-large;
-    @include box-shadow(false, 3px, 3px, 3px, rgba(#000, .5), rgba($text, .1));
-    filter: sepia(1);
-    transition: 0.3s;
-    &:hover {
-      filter: sepia(0);
+  .search-bottom {
+    padding: 1em 0;
+    margin-top: 1em;
+  }
+}
+
+@media screen and (max-width: 1023px) {
+  #results {
+    margin-top: 50px;
+    &:after {
+      left: 5%;
+      top: 32px;
+    }
+  }
+}
+
+@media screen and (max-width: 700px) {
+  #resultsWrapper, #result {
+    min-width: 500px;
+  }
+}
+
+@media screen and (max-width: 580px) {
+  #resultsWrapper, #result {
+    min-width: unset;
+  }
+
+  #results {
+    .column {    
+      figure.image {
+        float: unset;
+        margin: 0 auto 1.5em auto;
+      }
+    }
+
+    h2.title {
+      font-size: 18px;
+    }
+    h3 {
+      font-size: 16px;
     }
   }
 }

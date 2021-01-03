@@ -381,6 +381,7 @@ nav.navbar {
     position: relative;
     z-index: 555;
     background-color: rgba(0, 0, 0, 0.2);
+    color: $text;
     @include box-shadow(false, 5px, 5px, 5px, rgba(#000, .3), rgba($text, .07));
     &:focus {
       @include box-shadow(true, 5px, 5px, 5px, rgba(#000, .3), rgba($text, .07));
@@ -411,6 +412,21 @@ nav.navbar {
     border-right-color: transparent;
     border-top-color: transparent;
     margin-top: -17px;
+  }
+
+  .navbar-burger {
+    height: 100%;
+    &:hover,
+    &.is-active {
+      background-color: darken($pageBack, 7%);
+    }
+    &:hover span {
+      background-color: $hover;
+    }
+    span {
+      height: 2px;
+      background-color: $primary;
+    }
   }
 
 
@@ -584,6 +600,21 @@ nav.navbar {
   
 
   @media screen and (max-width: 1023px) {
+    
+    .navbar-item.field {
+      padding: 1.5em 1em;
+    }
+    .searchWithButton {
+      width: 100%;
+    }
+    input[type=search] {
+      background-color: $pageBack;
+    }
+    button#searchIcons {
+      top: calc(12px + 1em);
+      right: 1.5em;
+    }
+
     .navbar-item {
       &.has-dropdown {
         .navbar-dropdown {

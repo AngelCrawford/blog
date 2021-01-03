@@ -26,15 +26,19 @@ var searchFn = function () {
     results.sort(function (a, b) { return b.weight - a.weight; });
       for (var i = 0; i < results.length && i < limit; i += 1) {
         var result = results[i].item;
-        var openAnchor = "<a href=\"" + result.permalink + "\" " + "alt=\"" + result.showTitle + "\" class=\"title\">";
+        var openAnchor = "<a href=\"" + result.permalink + "\" " + "alt=\"" + result.showTitle + "\" class=\"title is-5\">";
         var resultPane = "<div class=\"columns\">" +
-          "<div class=\"column is-one-quarter image\">" + openAnchor + "<img src=\"" + result.image + "\"></a></div>" +
-          "<div class=\"column\">" + openAnchor + result.showTitle + "</a>" + 
-          "<div class=\"content\">" + result.showContent.substr(0, 300) + 
-          "<div class=\"tags-wrapper\">" + 
-          "<svg class=\"remix-small\"><use xlink:href=\"/fonts/remixicon/remixicon.symbol.svg#price-tag-3-line\"></use></svg>" + 
-          result.tags + "</div></div>" +
-          "</div>";
+          "<div class=\"column is-full\"><figure class=\"image\">" + openAnchor + 
+          "<img src=\"" + result.image + "\" width=\"200\" height=\"150\" loading=\"lazy\" alt=\"" + result.title + "\" title=\"" + result.title + "\">" +
+          "</a></figure>" + openAnchor + result.showTitle + "</a>" + 
+          "<span class=\"heading\">" + 
+          "<span></span><svg class=\"remix-small\"><use xlink:href=\"/fonts/remixicon/remixicon.symbol.svg#price-tag-3-line\"></use></svg>" + result.tags + 
+          "<span></span><svg class=\"remix-small\"><use xlink:href=\"/fonts/remixicon/remixicon.symbol.svg#calendar-line\"></use></svg>" + result.publishedOn + 
+          "<span></span><svg class=\"remix-small\"><use xlink:href=\"/fonts/remixicon/remixicon.symbol.svg#pencil-line\"></use></svg>" + result.updatedOn + 
+          "</span>" + 
+          "<div class=\"content\">" + result.showContent.substr(0, 260) + " [...]" + 
+          "<a href=\"" + result.permalink + "\" " + "alt=\"" + result.showTitle + "\" class=\"read-more\"> weiterlesen</a>" +
+          "</div></div>";
         $("#results").append(resultPane);
       }
   };
@@ -79,7 +83,7 @@ var searchFn = function () {
       }
     });
     if (results.length) {
-      var resultsMessage = results.length + " Ergebnisse gefunden.";
+      var resultsMessage = "<h2 class=\"title\">" + results.length + " Ergebnisse</h2><h3>für \"" + $("#searchBox").val().trim() + "\"</h3>";
       if (results.length > limit) {
         resultsMessage += " Showing first " + limit + " results.";
       }
@@ -87,7 +91,7 @@ var searchFn = function () {
         render(results);
       }
     else {
-      $("#results").html('<p>Keine Ergebnisse gefunden.</p>');
+      $("#results").html('<h2 class=\"title\">Kein Ergebnis</h2>');
     }
   };
   
@@ -101,7 +105,7 @@ var searchFn = function () {
     }
     lastTerm = term;
     if (term.length < minChars) {
-      $("#results").html('<p>Bitte gib\' mehr als drei Zeichen ein.</p>');
+      $("#results").html('<h2 class=\"title\">Zu wenig Zeichen<h2><h3>Bitte gib\' mehr als drei Zeichen ein.</h3>');
       $("#spinnerLoading").hide();
       $("#searchIcons svg.remix.lens").hide();
       $("#searchIcons svg.remix.close").show();
@@ -135,7 +139,7 @@ var searchFn = function () {
     search(termsTree);
     searching = false;
     var endSearch = new Date();
-    $("#results").append("<p><small>Die Suche brauchte " + (endSearch - startSearch) + "ms.</small></p>");
+    $("#results").append("<div class=\"search-bottom\">Die Suche brauchte " + (endSearch - startSearch) + "ms.</div>");
     $("#spinnerLoading").hide();
     $("#searchIcons svg.remix.lens").hide();
     $("#searchIcons svg.remix.close").show();
@@ -207,6 +211,8 @@ var searchFn = function () {
         res.tags = newTags_1;
         res.permalink = result.permalink;
         res.image = result.image;
+        res.publishedOn = result.publishedOn;
+        res.updatedOn = result.updatedOn;
         searchHost.index.push(res);
         dup[result.permalink] = true;
       }

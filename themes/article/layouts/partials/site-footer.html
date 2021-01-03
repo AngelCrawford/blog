@@ -66,9 +66,7 @@
       </div>
 
       <div class="column footer-box widgets">
-        {{ if not (eq .RelPermalink "/archive/") }}
-          {{ partial "widget-archive.html" (dict "context" . "archiveTitle" "Archiv") }}
-        {{ end }}
+        {{ partial "widget-archive.html" (dict "context" . "archiveTitle" "Archiv") }}
       </div>
   
     </div>

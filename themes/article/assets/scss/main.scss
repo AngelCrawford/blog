@@ -104,6 +104,9 @@ h3, h3.title {
   color: $hover;
   @include font-header;
 }
+.content h1:not(:first-child) {
+  margin-top: unset;
+}
 
 a.title.colored {  
   @include font-header;

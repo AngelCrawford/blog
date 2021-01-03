@@ -16,9 +16,18 @@
     {{- range $comments -}}
       {{- $.Scratch.Add "hasComments" 1 -}}
     {{- end -}}
-  
+
+    {{ $summarySplits := split .Content "<!--start-summary-->" }}
+    {{ $newContent := "" }}
+
+    {{ if ge (len $summarySplits) 2 }}
+      {{ $newContent = index $summarySplits 1 | plainify }}
+    {{ else }}
+      {{ $newContent = .Summary | markdownify }}
+    {{ end }}
+
     {{ $hasCommentsCount := $.Scratch.Get "hasComments" }}
 
-    {{- $.Scratch.Add "index" (dict "title" .Title "tags" .Params.tags "image" ($.Scratch.Get "image") "content" .Summary "commentsCount" $hasCommentsCount "permalink" .Permalink) -}}
+    {{- $.Scratch.Add "index" (dict "title" .Title "tags" .Params.tags "image" ($.Scratch.Get "image") "content" $newContent "commentsCount" $hasCommentsCount "permalink" .Permalink "publishedOn" (.Date.Format "02.01.06") "updatedOn" (.Lastmod.Format "02.01.06") ) -}}
 {{- end -}}
 {{- $.Scratch.Get "index" | jsonify -}}
