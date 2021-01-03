@@ -104,8 +104,13 @@ h3, h3.title {
   color: $hover;
   @include font-header;
 }
-a.title.colored:hover {
-  color: #e3d1b7 !important;
+
+a.title.colored {  
+  @include font-header;
+  
+  &:hover {
+    color: $hover !important;
+  }
 }
 
 p {

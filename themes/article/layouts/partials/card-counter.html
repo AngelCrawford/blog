@@ -9,16 +9,16 @@
           <a href="{{ .context.Page.Permalink }}">
             {{- $img := (.context.Page.Resources.ByType "image").GetMatch "featured*" -}}
             {{- with $img -}}
-              {{- $resize := .Fill "300x200" | images.Filter (images.Sepia "100") -}}
+              {{- $resize := .Fill "300x200" -}}
                 <img src="{{ $resize.RelPermalink }}" alt="{{ .Title }}" width="480" height="320" loading="lazy">
             {{- end -}}
+            {{- range .context.Page.Params.featured_image -}}
+              <figcaption>
+                <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#information-line"></use></svg>
+                {{ .byline | safeHTML }}
+              </figcaption>
+            {{- end -}}
           </a>
-          {{- range .context.Page.Params.featured_image -}}
-            <figcaption>
-              <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#information-line"></use></svg>
-              {{ .byline | safeHTML }}
-            </figcaption>
-          {{- end -}}
         </figure>
       </div>
     {{- end -}}

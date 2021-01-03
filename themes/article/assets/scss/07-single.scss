@@ -396,6 +396,7 @@ section.footnotes {
   padding: 1.5rem 0 0 0;
   a.title {
     color: $primary;
+    @include font-header;
     &:hover {
       color: $hover;
     }

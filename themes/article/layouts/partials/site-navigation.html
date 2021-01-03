@@ -32,45 +32,44 @@
 
               <div class="container is-fluid">
                 <div class="columns is-multiline">
-                    {{- range .Children -}}
-                      {{- $.Scratch.Set "CatName" .Name -}}
-                      <div class="column is-4">
+                  {{- range .Children -}}
+                    {{- $.Scratch.Set "CatName" .Name -}}
+                    <div class="column is-6">
 
-                        <a class="navbar-link is-arrowless" href="{{ .URL }}">
-                          <div class="navbar-content">
-                            
-                            {{- with $.Site.GetPage .URL -}}
-                              {{- if .Resources -}}
-                                <figure class="image is-3by2">
-                                  {{- $img := (.Resources.ByType "image").GetMatch "featured*" -}}
-                                  {{- with $img -}}
-                                    <!-- // rework! -->
-                                    {{- $resize := .Fill "300x200" -}}
-                                      <img src="{{ $resize.RelPermalink }}" alt="{{ $.Title }}" width="480" height="320">
-                                  {{- end -}}
-                                </figure>
-                              {{- end -}}
+                      <div class="navbar-content">
+                        
+                        {{- with $.Site.GetPage .URL -}}
+                          {{- if .Resources -}}
+                            <figure class="image">
+                              <a href="{{ .Page.Permalink }}">
+                                {{- $img := (.Page.Resources.ByType "image").GetMatch "featured*" -}}
+                                {{- with $img -}}
+                                  {{- $resize := .Fill "200x150" -}}
+                                    <img src="{{ $resize.RelPermalink }}" alt="{{ .Title }}" width="200" height="150" loading="lazy">
+                                {{- end -}}
+                              </a>
+                            </figure>
+                          {{- end -}}
+                        {{- end -}}
+
+                        <p><a href="{{ .Page.Permalink }}" class="title is-5 is-size-6-mobile colored" style='color: 
+                          {{- range $.Site.Params.categoryColor -}}
+                            {{- if eq ($.Scratch.Get "CatName") .name -}}
+                              {{- .color -}}
                             {{- end -}}
-
-                            <p class="title is-5" style='color: 
-                            {{- range $.Site.Params.categoryColor -}}
-                              {{- if eq ($.Scratch.Get "CatName") .name -}}
-                                {{- .color -}}
-                              {{- end -}}
-                            {{- end -}}'>{{ .Name }}</p>
-                            
-                            {{- with $.Site.GetPage .URL -}}
-                              {{ .Content | truncate "200" }}
-                            {{- end -}}
-
-                          </div>
-                        </a>
+                          {{- end -}}'>{{ .Name }}</a></p>
+                        
+                        {{- with $.Site.GetPage .URL -}}
+                          {{ .Content | markdownify | truncate 200 " [...]" }}
+                          <a class="read-more" href="{{ .RelPermalink }}"> {{ i18n "readMore" }}</a>
+                        {{- end -}}
 
                       </div>
-                    {{- end -}}
 
-                    {{- $.Scratch.Delete "CatName" -}}
-    
+                    </div>
+                  {{- end -}}
+
+                  {{- $.Scratch.Delete "CatName" -}}
                 </div>
               </div>
     

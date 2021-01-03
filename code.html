@@ -1,47 +1,34 @@
-{{ range $index, $element := where .Site.Pages "Section" "articles" }}
-  {{- $.Scratch.Set "hasComments" 0 -}}
 
-  {{- $postSlug := .File.ContentBaseName -}}
-  {{- $comments := index $.Site.Data.comments $postSlug -}}
 
-  {{- range $comments -}}
-    {{- $.Scratch.Add "hasComments" 1 -}}
-  {{- end -}}
+.navbar-end {
+  .navbar-item.has-no-hover-border a:hover {
+    border-top: none;
+  }
+}
 
-  {{ $CountComments := $.Scratch.Get "hasComments" }}
+.navbar-item.has-dropdown:focus .navbar-link, 
+.navbar-item.has-dropdown:hover .navbar-link, 
+.navbar-item.has-dropdown.is-active .navbar-link {
+  color: $hover;
+  background-color: darken($pageBack, 3%);
+  border-left: 1px solid $hover;
+  border-right: 1px solid $hover;
+  border-top: 5px solid $hover;
+  border-bottom: 5px solid darken($pageBack, 3%);
+  z-index: 999999;
+  box-shadow: none;
+}
+.navbar-link:not(.is-arrowless)::after {
+  border-color: $primary;
+  transform: rotate(135deg);
+  margin-top: -0.2em;
+  transition: 0.1s transform linear;
+}
+.navbar-link:not(.is-arrowless):hover::after,
+.navbar-item.has-dropdown:hover .navbar-link:not(.is-arrowless)::after {
+  border-color: $hover;
+  transform: rotate(-45deg);
+  margin-top: -0.375em;
+}  
 
-  {{ if not (eq ($CountComments) 0) }}
-
-    <li>{{ $index }}
-      <span class="variable"><a href="{{ .RelPermalink }}/#comments" alt="{{ .Title }}" title="{{ .Title }}">{{ $CountComments }} {{ i18n "comments" $CountComments }}</a></span>
-      <span class="variable-number"><a href="{{ .RelPermalink }}" alt="{{ .Title }}" title="{{ .Title }}">{{ .Title }}</a></span>
-    </li>
-  {{- end -}}
-
-  {{- $.Scratch.Delete "hasComments" -}}
-{{ end }}
-
------
-
-{{- $.Scratch.Set "mostLoved" slice -}}
-{{- range where .Site.RegularPages "Section" "=" "articles" -}}
-
-  {{- $.Scratch.Set "hasComments" 0 -}}
-
-  {{- $postSlug := $.File.ContentBaseName -}}
-  {{- $comments := index $.Site.Data.comments $postSlug -}}
-
-  {{- range $comments -}}
-    {{- $.Scratch.Add "hasComments" 1 -}}
-  {{- end -}}
-
-  {{ $hasCommentsCount := $.Scratch.Get "hasComments" }}
-    
-  {{ if not (eq ($hasCommentsCount) 0) }}
-    {{- $.Scratch.Add "mostLoved" (dict "title" .Title "commentsCount" $hasCommentsCount "permalink" .Permalink) -}}
-  {{- end -}}
-
-{{- end -}}
-
-{{- $.Scratch.Delete "hasComments" -}}
-{{- $.Scratch.Get "mostLoved" | jsonify -}}
+// #blogDropdown {display: block;}
