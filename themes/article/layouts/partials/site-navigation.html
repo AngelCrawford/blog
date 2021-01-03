@@ -4,7 +4,6 @@
     <a class="is-mobile navbar-item {{ if .Page.IsHome }}is-active{{ end }} navbar-logo " href="/" title="{{ .Name }} page">
       <img src="/images/clock.png" alt="Logo"><span>{{ .Site.Title }}</span>
     </a>
-
     
     <div class="navbar-item is-hidden-desktop">
       {{ partial "social-follow.html" (dict "context" . "isHeader" true "isFooter" false ) }}
@@ -17,7 +16,7 @@
     </a>
   </div>
 
-  <div class="navbar-menu" id="navbarHeader">
+  <div class="navbar-menu is-active" id="navbarHeader">
       
     <div class="navbar-start">
       {{- $currentPage := . -}}
@@ -60,20 +59,19 @@
                             {{- end -}}
                           {{- end -}}
 
-                          <p><a href="{{ .Page.Permalink }}" class="title is-5 is-size-6-mobile colored" style='color: 
+                          <a href="{{ .Page.Permalink }}" class="title is-5 colored" style='color: 
                             {{- range $.Site.Params.categoryColor -}}
                               {{- if eq ($.Scratch.Get "CatName") .name -}}
                                 {{- .color -}}
                               {{- end -}}
-                            {{- end -}}'>{{ .Name }}</a></p>
+                            {{- end -}}'>{{ .Name }}</a>
                           
                           {{- with $.Site.GetPage .URL -}}
-                            {{ .Content | markdownify | truncate 140 " [...]" }}
+                            <span class="inner-content">{{ .Content | markdownify | truncate 140 " [...]" }}</span>
                             <a class="read-more" href="{{ .RelPermalink }}"> {{ i18n "readMore" }}</a>
                           {{- end -}}
 
                         </div>
-
                       </div>
                     {{- end -}}
 
@@ -128,6 +126,7 @@
         </div>
         <div id="resultsWrapper"><div id="results"></div></div>
       </div>
+
     </div>
     
   </div>

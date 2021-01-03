@@ -422,13 +422,10 @@ nav.navbar {
     &.is-active,
     &:hover, &:focus {
       color: $accent;
-      background-color: darken($pageBack, 7%) !important;
+      background-color: darken($pageBack, 7%);
     }
     &:hover, &:focus {
       color: $hover;
-    }
-
-    &.is-active {
     }
   }
   
@@ -438,10 +435,14 @@ nav.navbar {
     .navbar-link {
       color: $primary;
       background-color: transparent;
-    
+      padding-left: 1.5em;
+
       &::after {
         margin-left: .5em;
-        border-color: $primary;
+        border: 3px solid $primary;
+        border-bottom: none;
+        border-left: none;
+        margin-top: -2px;
       }
       &.is-active,
       &:hover, &:focus {
@@ -467,11 +468,10 @@ nav.navbar {
         color: $accent;
     
         &::after {
-          border-color: $accent;
-          margin-top: -2px;
-          border: 3px solid $accent;
-          border-bottom: none;
-          border-left: none;
+          border: 3px solid $primary;
+          border-top: none;
+          border-right: none;
+          margin-top: -5px;
         }
       }
     }
@@ -480,9 +480,10 @@ nav.navbar {
         color: $hover;
     
         &::after {
-          border: 3px solid $hover;
-          border-bottom: none;
-          border-left: none;
+          border: 3px solid $accent;
+          border-top: none;
+          border-right: none;
+          margin-top: -5px;
         }
       }
     }
@@ -490,9 +491,23 @@ nav.navbar {
     .navbar-dropdown {
       background-color: darken($pageBack, 7%);
       border: 1px solid rgba($primary, .2);
-      padding: 1.25rem;
       width: calc(100% -4rem);
       min-width: unset;
+
+
+      > .navbar-item {
+        padding: 1rem 1.5rem;
+        
+        &::before {
+          content: "•";
+          color: $accent;
+          padding-right: .5em;
+        }
+
+        &:hover {
+          background-color: darken($pageBack, 5%);
+        }
+      }
     }
 
     &.is-mega {
@@ -514,8 +529,8 @@ nav.navbar {
             padding: 0;
 
             .column {
-              padding: 1.25rem;
               margin: 0;
+              padding: 0;
             }
           }
         }
@@ -524,6 +539,7 @@ nav.navbar {
           font-size: 1rem;
           color: $text;
           font-weight: normal;
+          padding: 1.25rem;
 
           figure.image {
             float: left;
@@ -547,11 +563,12 @@ nav.navbar {
             }
           }
 
-          p a.title.is-5 {
+          a.title.is-5 {
             @include font-header;
             margin-bottom: .5em;
             font-size: 1.25rem;
             color: $primary;
+            display: block;
           }
 
           a.read-more {
@@ -565,4 +582,79 @@ nav.navbar {
     }
   }
   
+
+  @media screen and (max-width: 1023px) {
+    .navbar-item {
+      &.has-dropdown {
+        .navbar-dropdown {
+          display: none;
+        }
+      }
+    }
+
+    .navbar-brand:hover {
+      background-color: transparent;
+    }
+
+    .navbar-burger:hover {
+      background-color: darken($pageBack, 7%);
+    }
+
+    .navbar-menu {
+      background-color: darken($pageBack, 7%);
+      border: 1px solid rgba($primary, .2);
+      padding: 0;
+    }
+
+    a.navbar-link,
+    a.navbar-item {
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid rgba($primary, .05);
+    }
+
+    .navbar-item.has-dropdown.is-mega {
+      .navbar-dropdown {
+        border: none;
+        margin: 0;
+        background-color: darken($pageBack, 5%);
+
+        .navbar-content {
+          padding: 0;
+          figure,
+          span.inner-content,
+          .read-more {
+            display: none;
+          }
+
+          a.title.is-5 {
+            font-size: 15px;
+            padding: 1em 1.5em;
+            display: block;
+            text-align: center;
+
+            &:hover {
+              background-color: darken($pageBack, 7%);
+            }
+          }
+        }
+      }
+    }
+
+    .navbar-item.has-dropdown {
+      .navbar-dropdown {
+        border: none;
+        margin: 0;
+        padding: 0;
+        background-color: darken($pageBack, 5%);
+      }
+      .navbar-item {
+        border: none;
+        display: block;
+        &:hover {
+          background-color: darken($pageBack, 7%) !important;
+        }
+      }
+    }
+  }
+
 }
