@@ -31,6 +31,8 @@ a.pagination-next {
   transition: all .3s ease-out;
   background-color: rgba(#000, .2);
   margin: 2em .5em .5em .5em;
+  flex-grow: 0;
+  flex-shrink: 0;
 
   &.is-current, &.is-current:hover, &:hover {
     border: 1px solid $primary;
@@ -48,4 +50,8 @@ a.pagination-next {
       fill: $hover;
     }
   }
+}
+
+.pagination.is-centered .pagination-next {
+  order: 3;
 }

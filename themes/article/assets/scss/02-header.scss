@@ -4,12 +4,16 @@ header.header section.hero .hero-body h2 {
 }
 
 header.header {
-  height: 360px;  
+  height: 360px;
   border-bottom: 5px solid #554944;
   box-shadow: none;
   position: relative;
   z-index: 3;
   box-shadow: none;
+
+  @media (max-width: 505px) {
+    height: 250px;
+  }
 
   #city {
     background-image: url("/images/header.svg");
@@ -19,6 +23,10 @@ header.header {
     position: relative;
     z-index: 1;
     filter: sepia(0.4);
+
+    @media (max-width: 505px) {
+      background-size: auto 60%;
+    }
   }
 
   &.sky {
@@ -39,6 +47,7 @@ header.header {
       background: radial-gradient(ellipse at bottom, rgba(#0c1a37, 1) 0%, rgba(#2c449d, 1) 50%, rgba(#ef8d5c, 1) 100%);
     }
   }
+  
 }
 
 // LOGO
@@ -60,6 +69,13 @@ header.header {
     top: 120px;
     z-index: 999;
     position: absolute;
+    @media (max-width: 505px) {
+      top: 80px;
+    }
+  }
+
+  @media (max-width: 505px) {
+    height: 250px;
   }
 }
 
@@ -78,6 +94,14 @@ header.header {
   -moz-animation-name: clock alternate 2s both;
   z-index: 1;
   will-change: background-position;
+
+  @media (max-width: 730px) {
+    background-size: 210px;
+  }
+  @media (max-width: 505px) {
+    background-size: 150px;
+    height: 195px;
+  }
 
   @-moz-keyframes clock {
     0% { background-position: 50% 200px; } 
@@ -107,12 +131,12 @@ header.header {
   font-size: 70px;
   margin: 0;
   top: 25%;
-  // @media (max-width: 768px) {
-  //   font-size: 50px;
-  // }
-  // @media (max-width: 494px) {
-  //   font-size: 35px;
-  // }
+  @media (max-width: 730px) {
+    font-size: 50px;
+  }
+  @media (max-width: 505px) {
+    font-size: 35px;
+  }
 
   &:before {
     content: "";
@@ -136,12 +160,12 @@ header.header {
     z-index: -1;
     position: absolute;
     text-shadow: -1px 0 1px #ffcb9a, 0 1px 1px #ffcb9a, 5px 5px 10px rgba(0, 0, 0, 0.7), -2px -2px 5px rgba(255, 255, 255, 0.3);
-    // @media (max-width: 768px) {
-    //   padding: 0 80px;
-    // }
-    // @media (max-width: 494px) {
-    //   padding: 0 60px;
-    // }
+    @media (max-width: 730px) {
+      padding: 0 90px;
+    }
+    @media (max-width: 505px) {
+      padding: 0 50px;
+    }
   }
   
   span.shimmer {
@@ -167,12 +191,18 @@ header.header {
       will-change: background-position;
     }
     
-    // @media (max-width: 768px) {
-    //   padding: 0 80px;
-    // }
-    // @media (max-width: 494px) {
-    //   padding: 0 60px;
-    // }
+    @media (max-width: 730px) {
+      padding: 0 90px;
+      -webkit-background-size: 80px 100%;
+      -moz-background-size: 80px 100%;
+      background-size: 80px 100%;
+    }
+    @media (max-width: 505px) {
+      padding: 0 50px;
+      -webkit-background-size: 40px 100%;
+      -moz-background-size: 40px 100%;
+      background-size: 40px 100%;
+    }
   }
 
   @-moz-keyframes shimmer {
@@ -223,6 +253,10 @@ header.header {
     animation-name: fly-right-one;
     animation-timing-function: linear;
     animation-iteration-count: infinite;
+
+    @media (max-width: 505px) {
+      top: -30px;
+    }
     &--one {
       animation-duration: 15s;
       animation-delay: 0;
@@ -257,6 +291,10 @@ header.header {
   filter: sepia(.2);
   opacity: .7;
   will-change: transform;
+  @media (max-width: 505px) {
+    top: 155px;
+    height: 50px;
+  }
   svg {
     width:100%;
   }
@@ -289,6 +327,10 @@ header.header {
   height: 290px;
   position: absolute;
   overflow: hidden;
+
+  @media (max-width: 505px) {
+    height: 195px;
+  }
 
   // n is number of stars required
   @function multiple-box-shadow ($n) {
