@@ -33,7 +33,7 @@ featured_image:
 
 {{< details "Genre" "Some, Tags, I Want" >}}
 
-{{< details "Info" "Some, Tags, I Want" >}}
+{{< details "Info" "Some, Tags, I Want with longgggggg text and so on" >}}
 
 {{< rating "Gesamt" "4" >}}
 

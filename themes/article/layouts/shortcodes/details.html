@@ -2,10 +2,10 @@
 {{- $items := split (.Get 1) "," -}}
 
 <div class="details-tags">
-  <p class="title is-5">{{ $heading }}</p>
-  <div class="tags">
-    {{- range $items -}}
-      <span class="tag is-primary">{{ . }}</span>
+  <div class="title is-5">{{ $heading }}</div>
+  <ul class="tags">
+    {{- range first 3 $items -}}
+      <li class="tag is-primary">{{ . }}</li>
     {{- end -}}
-  </div>
+  </ul>
 </div>

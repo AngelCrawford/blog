@@ -15,16 +15,16 @@ contains:
 # weight: 0 # 1 = makes the post sticky
 # format: rating # rating design on the home page
 # rating: "0.5" # 0-5 with .5 possible, will show a rating on the home page
-# icons:
-# - src: "windows-line"
-#   color: "#456987"
-#   tooltip: "Some Tooltip info"
-# - src: "ubuntu-line"
-#   color: "tomato"
-# - src: "android-line"
-#   color: "green"
-# - src: "apple-line"
-#   color: "white"
+icons:
+- src: "windows-line"
+  color: "#456987"
+  tooltip: "Some Tooltip info"
+- src: "ubuntu-line"
+  color: "tomato"
+  tooltip: "Some Tooltip info"
+- src: "android-line"
+  color: "green"
+  tooltip: "Some Tooltip info"
 authors: angel # if more than one, write like tags
 year: "2020"
 month: "2020/12"

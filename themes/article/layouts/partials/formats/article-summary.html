@@ -54,7 +54,7 @@
 
     <div class="content">
       {{- if .Params.rating -}}
-        <div class="rating">{{ partial "rating" . }} ({{ .Params.rating }})</div>
+        <div class="rating">{{ partial "rating" . }} <span>({{ .Params.rating }})</span></div>
       {{- end -}}
 
       {{ $summarySplits := split .Content "<!--start-summary-->" }}
