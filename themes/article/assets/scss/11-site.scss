@@ -6,6 +6,17 @@
     height: 215px;
     width: 320px;
     padding: 0;
+
+    @media (max-width: 777px) {
+      float: unset;
+      margin: 0 auto 2em auto;
+    }
+
+    @media (max-width: 394px) {
+      width: 250px;
+      height: 167px;
+    }
+
     img {
       border-radius: $radius-large;
       @include box-shadow(false, 3px, 3px, 3px, rgba(#000, .5), rgba($text, .1));

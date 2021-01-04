@@ -2,6 +2,10 @@
   padding: 1.25rem 1.5rem 0 1.25rem;
   margin: 42px 0 1.25rem 1.25rem;
   height: unset !important;
+
+  @media (max-width: 1023px) {
+    margin-left: 0;
+  }
   
   .title.is-4 {
     text-align: center;
@@ -40,6 +44,19 @@
 
 }
 
+.column.is-fixed-width {
+  width: 398px;
+  flex-shrink: 0;
+  flex-grow: 0;
+
+  @media (max-width: 487px) {
+    width: 340px;
+  }
+  @media (max-width: 419px) {
+    width: 280px;
+  }
+}
+
 .widget.archive.box {
   .columns {
     border-bottom: 1px solid rgba($primary, .5);
@@ -56,11 +73,20 @@
     letter-spacing: -5px;
     min-width: 183px;
     opacity: .6;
+
+    @media (max-width: 487px) {
+      font-size: 4em;
+      min-width: 150px;
+    }
+    @media (max-width: 419px) {
+      font-size: 2.5em;
+      min-width: 80px;
+    }
   }
 
   ul {
     margin: 0;
-    padding: 1em 0 1em 1.5rem;
+    padding: 1em 0 1em 1em;
     width: 100%;
 
     li {
