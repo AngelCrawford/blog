@@ -84,6 +84,13 @@ html, body {
 }
 .wrapper {
   padding: 1.5rem 1.5rem 2.7rem 1.5rem;
+
+  @media (max-width: 566px) {
+    padding: 0.5rem 0.5rem 1.7rem 0.5rem;
+  }
+  @media (max-width: 380px) {
+    padding: 0 0 1.7rem 0;
+  }
 }
 .content-wrapper {
   padding: 0 1em 0 1em;

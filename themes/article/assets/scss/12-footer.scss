@@ -53,11 +53,24 @@ footer.footer {
     position: relative;
     z-index: 5;
 
+    @media (max-width: 566px) {
+      padding: 0 1.5rem;
+    }
+    @media (max-width: 380px) {
+      padding: 1rem;
+    }
+
     .content-wrapper {
-      padding: 0 3em;
       margin: 0;
       position: relative;
       z-index: 5;
+    }
+
+    .column {
+      @media (max-width: 768px) {
+        padding: 0 !important;
+        margin: 0 0 3rem 0;
+      }
     }
   }
 
@@ -69,6 +82,13 @@ footer.footer {
     padding: .5em 0;
     display: inline-block;
     margin: 1rem 0 1rem 0;
+
+    @media (max-width: 566px) {
+      font-size: 1.5rem;
+    }
+    @media (max-width: 380px) {
+      font-size: 1.2rem;
+    }
 
     &::before, &::after {
       font-family: "remixicon" !important;
@@ -84,7 +104,7 @@ footer.footer {
 
   .footer-box {
     padding: 1.25rem 2rem 1.25rem 1.25rem !important;
-    margin: 0 1.25rem;
+    // margin: 0 1.25rem;
     
     .title.is-4 {
       text-align: center;

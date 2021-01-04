@@ -13,7 +13,13 @@
 
             {{ $strCommentsCount := string .commentsCount }}
             <li>
-              <span class="variable"><a href="{{ .permalink }}#comments" alt="{{ .title }}" title="{{ .title }}">{{ $strCommentsCount }} {{ i18n "comments" $strCommentsCount }}</a></span>
+              <span class="variable">
+                <a href="{{ .permalink }}#comments" alt="{{ .title }}" title="{{ .title }}">
+                  <svg class='remix-small comments'>
+                    <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#question-answer-line"></use>
+                  </svg>{{ $strCommentsCount }}
+                </a>
+              </span>
               <span class="variable-number"><a href="{{ .permalink }}" alt="{{ .title }}" title="{{ .title }}">{{ .title }}</a></span>
             </li>
 

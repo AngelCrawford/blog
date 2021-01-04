@@ -24,20 +24,20 @@
   </div>
 
   <div class="content content-wrapper">
-    <div class="columns">
+    <div class="columns is-multiline">
 
-      <div class="column footer-box social">
+      <div class="column footer-box social is-one-quarter-fullhd is-one-third-widescreen is-one-third-desktop is-half-tablet is-full-mobile">
         <p class="title is-4">Article Time</p>
         <div class="has-text-centered logo"><img src="/images/clock.png" width="150" alt="Logo" title="Logo" /></div>
         <div class="icons has-text-centered">{{ partial "social-follow.html" (dict "context" . "isFooter" true "isHeader" false ) }}</div>
       </div>
   
-      <div class="column footer-box widgets">
+      <div class="column footer-box widgets is-one-quarter-fullhd is-one-third-widescreen is-one-third-desktop is-half-tablet is-full-mobile">
         {{ partial "widget-mostloved.html" . }}
       </div>
 
       
-      <div class="column footer-box stats">
+      <div class="column footer-box stats is-one-quarter-fullhd is-one-third-widescreen is-one-third-desktop is-half-tablet is-full-mobile">
         <p class="title is-4">Statistik</p>
         <p>Momentan befinden sich {{ len (where .Site.RegularPages "Type" "in" (slice "articles" "quotes") ) }} <a href="/">Artikel</a> auf dieser Seite.</p>
         <ul>
@@ -65,7 +65,7 @@
         </li>
       </div>
 
-      <div class="column footer-box widgets">
+      <div class="column footer-box widgets is-one-quarter-fullhd is-one-third-widescreen is-one-third-desktop is-half-tablet is-full-mobile">
         {{ partial "widget-archive.html" (dict "context" . "archiveTitle" "Archiv") }}
       </div>
   

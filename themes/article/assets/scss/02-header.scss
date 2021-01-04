@@ -393,6 +393,12 @@ nav.navbar {
   @media (max-width: 1023px) {
     margin-top: -3.5em;
   }
+  @media (max-width: 566px) {
+    padding: 0 1em;
+  }
+  @media (max-width: 380px) {
+    padding: 0 0.5em;
+  }
   .navbar-brand {
     height: 56px;
     &:hover {
