@@ -146,7 +146,7 @@
       {{ if not (eq ($CountComments) 0) }}
         <svg class='remix-small comments'>
           <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#question-answer-line"></use>
-        </svg>{{ $CountComments }} {{ i18n "comments" $CountComments }}
+        </svg>{{ $CountComments }}
       {{- end -}}
       {{- $.Scratch.Delete "hasComments" -}}
     </span>

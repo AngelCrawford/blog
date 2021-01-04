@@ -50,6 +50,7 @@ a.anchor {
       img {
         border-radius: $radius-large;
         @include box-shadow(false, 3px, 3px, 3px, rgba(#000, .5), rgba($text, .1));
+        object-fit: cover;
       }
       &:hover figcaption {
         opacity: 1;
@@ -69,6 +70,7 @@ a.anchor {
         border-radius: $radius-large;
         @include box-shadow(false, 3px, 3px, 3px, rgba(#000, .5), rgba($text, .1));
         z-index: 1;
+        object-fit: cover;
       }
       figcaption {
         z-index: 2;

@@ -619,6 +619,7 @@ nav.navbar {
                 border-radius: $radius-large;
                 @include box-shadow(false, 3px, 3px, 3px, rgba(#000, .5), rgba($text, .1));
                 filter: sepia(1);
+                object-fit: cover;
                 
                 &:hover, &:focus {
                   filter: sepia(0);

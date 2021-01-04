@@ -251,6 +251,7 @@ article.card.is-horizontal.has-image {
         @include box-shadow(false, 3px, 3px, 3px, rgba(#000, .5), rgba($text, .1));
         filter: sepia(1);
         transition: 0.3s;
+        object-fit: cover;
         &:hover {
           filter: sepia(0);
         }
@@ -430,6 +431,7 @@ article.card.is-horizontal.quote {
         @include box-shadow(false, 3px, 3px, 3px, rgba(#000, .3), rgba($text, .05));
         filter: sepia(1);
         transition: 0.3s;
+        object-fit: cover;
         &:hover {
           filter: sepia(0);
         }
@@ -466,5 +468,77 @@ article.card.is-horizontal.quote {
   }
   &:hover img {
     filter: sepia(0);
+  }
+}
+
+
+@media (min-width: 1217px) and (max-width: 1509px) {
+  .column.is-half-custom-cards {
+    width: 50%;
+  }
+}
+
+@media (max-width: 566px) {
+  .column {
+    padding: 1rem;
+  }
+  article.card.is-horizontal.no-image,
+  .card.is-small.has-image, 
+  .card.is-small-count.has-image,
+  .card.is-small.no-image, 
+  .card.is-small-count.no-image {
+    width: 100%;
+    min-width: 100%;
+    margin-left: 0;
+  }
+
+  article.card.is-horizontal.has-image:not(.quote) {
+    position: relative;
+    display: unset;
+    grid-template-columns: unset;
+    grid-template-rows: unset;
+    grid-template-areas: unset;
+
+    .card-image {
+      height: auto;
+
+      figure.image {
+        height: 250px;
+        margin-left: unset;
+        margin-top: unset;
+        padding-top: 0;
+      }
+    }
+
+    .ribbon {
+      left: -1px;
+    }
+  }
+
+  article.card.is-horizontal.has-image.quote {
+    figure.image {
+      height: calc(100% - 3px);
+      margin-left: 0;
+      margin-top: 0;
+    }
+
+    .ribbon {
+      left: -1px;
+    }
+
+    .card-content {
+      position: unset;
+
+    }
+
+    .card-content-inline {
+      left: 0;
+      height: calc(100% - 3px);
+    }
+  }
+
+  article.card.is-horizontal .card-footer .card-footer-item, 
+  .card .card-footer .card-footer-item {
+    padding: .75em;
   }
 }
