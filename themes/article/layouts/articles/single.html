@@ -1,8 +1,8 @@
 {{- define "main" -}}
  
-  <div class="columns">
+  <div class="columns is-multiline">
 
-    <div class="column is-single-top is-9 {{ if .Resources }}has-image{{else}}no-image{{ end }}">
+    <div class="column is-single-content {{ if .Resources }}has-image{{else}}no-image{{ end }} is-9-fullhd is-9-widescreen is-9-desktop is-full-tablet is-full-mobile">
       <article class="content box">
         <div>
           {{ if .Resources }}
@@ -29,13 +29,13 @@
             {{- end -}}
 
             {{ if .Params.icons }}
-              <div class="details-single has-ribbon">
+              <div class="details-icons has-ribbon">
                 <div class="ribbon is-single-page is-primary">
                   <svg class="remix-small">
                     <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#bookmark-line"></use>
                   </svg> Details
                 </div>
-                <span class="details-icon-wrapper">
+                <span class="details-icons-wrapper">
                   {{ range .Params.icons }}
                     <span {{ if .tooltip }}data-tooltip="{{ .tooltip }}"{{ end }}>
                       <svg class="remix-big" style="fill: {{ .color }};">
@@ -47,138 +47,146 @@
               </div>
             {{ end }}
             
-            {{ .Content | replaceRE "(<h[1-9] id=\"([^\"]+)\".+)(</h[1-9]+>)" "${1}&nbsp;<a class='anchor' href='#${2}'><div class='anchor-icon'></div></a>${3}" | safeHTML }}
+            {{ partial "single-pages/headline-hash.html" .Content }}
           </div>
         </div>
 
-
         {{ if .Params.series }}
-          <div class="series-single-footer">
-            {{ partial "series-footer" . }}
+          <div class="series-footer">
+            {{ partial "single-pages/series-footer" . }}
           </div>
         {{ end }}
       </article>
     </div>
     
-    <div class="column is-single-information is-3">
-      <div class="single-information">
-        <p class="title is-4">Information</p>
-        
-        {{- if .Params.categories -}}
-          <div class="categories-single">
-            {{ range first 1 (.GetTerms "categories") }}
-              {{ $catName := .LinkTitle }}
-              <span class="tag" style="{{ range .Site.Params.categoryColor }}{{ if eq .name $catName }}background-color: {{ .color }};{{ end }}{{ end }}">
-                <a href="{{ .Permalink }}">{{ .LinkTitle }}</a>
-              </span>
-            {{- end -}}
-          </div>
-        {{- end -}}
+    <section class="column informations is-3-fullhd is-3-widescreen is-3-desktop is-full-tablet is-full-mobile">
+      <div class="columns is-multiline">
 
-        <div class="date-single">
-          <time datetime="{{ .PublishDate.Format "2006-01-02T15:04:05Z07:00" }}">
-            <svg class='remix-small'>
-              <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#calendar-line"></use>
-            </svg>{{ .PublishDate.Day }}. {{ index $.Site.Data.demonths (printf "%d" .PublishDate.Month) }} {{ .PublishDate.Year }}
-          </time>
-          <time class="updated" datetime="{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}">
-            <svg class='remix-small'>
-              <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#pencil-line"></use>
-            </svg> {{ .Lastmod.Format "02.01.06" }}
-          </time>
-        </div>
-
-        {{- if .Params.tags -}}
-          <div class="tags-single">
-            <svg class='remix-small'>
-              <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#price-tag-3-line"></use>
-            </svg>
-            {{- range (.GetTerms "tags") -}}
-              <a href="{{ .RelPermalink }}" class="hashtags">#{{ .LinkTitle }} </a> 
-            {{- end -}}
-          </div>
-        {{- end -}}
-
-        <div class="reading-time-single">
-          <svg class='remix-small'>
-            <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#time-line"></use>
-          </svg>{{ .ReadingTime }} {{ i18n "minutesRead" }} zu Lesen
-        </div>
-
-        {{- $postSlug := $.File.ContentBaseName -}}
-        {{- $comments := index $.Site.Data.comments $postSlug -}}
-        {{- $.Scratch.Set "hasComments" 0 -}}
-        {{- range $comments -}}
-          {{- $.Scratch.Add "hasComments" 1 -}}
-        {{- end -}}
-        <div class="comments-single">
-          <svg class='remix-small'>
-            <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#question-answer-line"></use>
-          </svg>
-          <a href="{{.RelPermalink}}#comments">{{ $.Scratch.Get "hasComments" }} {{ i18n "comments" ($.Scratch.Get "hasComments") }}</a> (<a href="{{.RelPermalink}}#postcomment">Reaktion verfassen</a>)
-        </div>
-        {{- $.Scratch.Delete "hasComments" -}}
-  
-        {{- if .Params.rating -}}
-          <div class="ratings-single">
-            <svg class='remix-small'>
-              <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#arrow-right-s-line"></use>
-            </svg>{{ partial "rating" . }} ({{ .Params.rating }})
-          </div>
-        {{- end -}}
-
-        {{- if .Params.series -}}
-          <div class="series-single">
-            {{ $name := index .Params.series 0 }}
-            <svg class='remix-small'>
-              <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#stack-line"></use>
-            </svg>Dieser Artikel gehört zur Serie: <a href="{{.Site.BaseURL}}/series/{{$name | urlize}}">{{ $name }}</a>.
-          </div>
-        {{- end -}}
-      </div>
-
-      {{- if ge (len .TableOfContents) 100 -}}
-        <div class="toc-single">
-          <p class="title is-4">Übersicht</p>
-          {{ .TableOfContents }}
-        </div>
-      {{- end -}}
       
-      {{- if .Params.series -}}
-        <div class="serie-single">
-          <p class="title is-4">Serie</p>
-          {{- $currentPage := . -}}
-          {{- $series_name := index .Params.series 0 -}}
-
-          {{- $.Scratch.Set "series_count" 0 -}}
-          {{- range .Site.RegularPages.ByDate -}}
-            {{- if in .Params.series $series_name -}}
-              {{- $.Scratch.Add "series_count" 1 -}}
-            {{- end -}}
+        <div class="information-section column is-full">
+          <p class="title is-4">Information</p>
+          
+          {{- if .Params.categories -}}
+            <div class="category-line">
+              {{ range first 1 (.GetTerms "categories") }}
+                {{ $catName := .LinkTitle }}
+                <span class="tag" style="{{ range .Site.Params.categoryColor }}{{ if eq .name $catName }}background-color: {{ .color }};{{ end }}{{ end }}">
+                  <a href="{{ .Permalink }}">{{ .LinkTitle }}</a>
+                </span>
+              {{- end -}}
+            </div>
           {{- end -}}
 
-          <p class="title is-6"><a href="{{.Site.BaseURL}}/series/{{$series_name | urlize}}">{{ $series_name }} ({{ $.Scratch.Get "series_count" }})</a></p>
-          <ol class="series-list">
+          <div class="date-line">
+            <time datetime="{{ .PublishDate.Format "2006-01-02T15:04:05Z07:00" }}">
+              <svg class='remix-small'>
+                <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#calendar-line"></use>
+              </svg>{{ .PublishDate.Day }}. {{ index $.Site.Data.demonths (printf "%d" .PublishDate.Month) }} {{ .PublishDate.Year }}
+            </time>
+          </div>
+          <div class="date-line">
+            <time class="updated" datetime="{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}">
+              <svg class='remix-small'>
+                <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#pencil-line"></use>
+              </svg>{{ .Lastmod.Day }}. {{ index $.Site.Data.demonths (printf "%d" .Lastmod.Month) }} {{ .Lastmod.Year }}
+            </time>
+          </div>
+
+          {{- if .Params.tags -}}
+            <div class="tags-line">
+              <svg class='remix-small'>
+                <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#price-tag-3-line"></use>
+              </svg>
+              {{- range (.GetTerms "tags") -}}
+                <a href="{{ .RelPermalink }}" class="hashtags">#{{ .LinkTitle }} </a> 
+              {{- end -}}
+            </div>
+          {{- end -}}
+
+          <div class="reading-time-line">
+            <svg class='remix-small'>
+              <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#time-line"></use>
+            </svg>{{ .ReadingTime }} {{ i18n "minutesRead" }} zu Lesen
+          </div>
+
+          {{- $postSlug := $.File.ContentBaseName -}}
+          {{- $comments := index $.Site.Data.comments $postSlug -}}
+          {{- $.Scratch.Set "hasComments" 0 -}}
+          {{- range $comments -}}
+            {{- $.Scratch.Add "hasComments" 1 -}}
+          {{- end -}}
+          <div class="comments-line">
+            <svg class='remix-small'>
+              <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#question-answer-line"></use>
+            </svg>
+            <a href="{{.RelPermalink}}#comments">{{ $.Scratch.Get "hasComments" }} {{ i18n "comments" ($.Scratch.Get "hasComments") }}</a> (<a href="{{.RelPermalink}}#postcomment">Verfassen</a>)
+          </div>
+          {{- $.Scratch.Delete "hasComments" -}}
+    
+          {{- if .Params.rating -}}
+            <div class="rating-line">
+              <svg class='remix-small'>
+                <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#arrow-right-s-line"></use>
+              </svg>{{ partial "rating" . }} ({{ .Params.rating }})
+            </div>
+          {{- end -}}
+
+          {{- if .Params.series -}}
+            <div class="serie-line">
+              {{ $name := index .Params.series 0 }}
+              <svg class='remix-small'>
+                <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#stack-line"></use>
+              </svg>Dieser Artikel gehört zur Serie: <a href="{{.Site.BaseURL}}/series/{{$name | urlize}}">{{ $name }}</a>.
+            </div>
+          {{- end -}}
+        </div>
+
+        {{- if ge (len .TableOfContents) 100 -}}
+          <div class="toc-section column is-full">
+            <p class="title is-4">Übersicht</p>
+            {{ .TableOfContents }}
+          </div>
+        {{- end -}}
+        
+        {{- if .Params.series -}}
+          <div class="serie-section column is-full">
+            <p class="title is-4">Serie</p>
+            {{- $currentPage := . -}}
+            {{- $series_name := index .Params.series 0 -}}
+
+            {{- $.Scratch.Set "series_count" 0 -}}
             {{- range .Site.RegularPages.ByDate -}}
               {{- if in .Params.series $series_name -}}
-                {{- if not (eq $currentPage.RelPermalink .RelPermalink) -}}
-                  <li><a href="{{ .RelPermalink }}" title="{{ .Name }} page">{{ .Title }}</a></li>
-                {{- else -}}
-                  <li class="is-active">{{ .Title }} </li>
-                {{- end -}}
+                {{- $.Scratch.Add "series_count" 1 -}}
               {{- end -}}
             {{- end -}}
-          </ol>
-          
-        </div>
-      {{- end -}}
 
-      {{- if .Params.authors -}}
-        {{ partial "single-pages/author-box" . }}
-      {{- end -}}
-    </div>
+            <p class="title is-6"><a href="{{.Site.BaseURL}}/series/{{$series_name | urlize}}">{{ $series_name }} ({{ $.Scratch.Get "series_count" }})</a></p>
+            <ol class="series-list">
+              {{- range .Site.RegularPages.ByDate -}}
+                {{- if in .Params.series $series_name -}}
+                  {{- if not (eq $currentPage.RelPermalink .RelPermalink) -}}
+                    <li><a href="{{ .RelPermalink }}" title="{{ .Name }} page">{{ .Title }}</a></li>
+                  {{- else -}}
+                    <li class="is-active">{{ .Title }} </li>
+                  {{- end -}}
+                {{- end -}}
+              {{- end -}}
+            </ol>
+            
+          </div>
+        {{- end -}}
 
-  </div>
+        {{- if .Params.authors -}}
+          <div class="author-section column is-full">
+            {{ partial "single-pages/author-box" . }}
+          </div>
+        {{- end -}}
+        
+      </div><!-- children columns -->
+    </section><!-- parent column -->
+
+  </div><!-- parents columns -->
 
   {{ partial "single-pages/related-articles" . }}
 

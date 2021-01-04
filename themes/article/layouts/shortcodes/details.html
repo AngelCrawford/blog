@@ -1,7 +1,7 @@
 {{- $heading := .Get 0 -}}
 {{- $items := split (.Get 1) "," -}}
 
-<div class="details-single-iconless">
+<div class="details-tags">
   <p class="title is-5">{{ $heading }}</p>
   <div class="tags">
     {{- range $items -}}

@@ -1,18 +1,16 @@
+{{ $classes := "" }}
+
 {{- if and (eq .Params.weight 1) (not (eq "quotes" .Page.Type)) -}}
-  
-  <div class="column is-pinned is-full-fullhd is-full-desktop is-full-tablet is-full-mobile is-flex">
-    {{ partial "formats/article-summary.html" . }}
-  </div>
-  
+  {{ $classes = "is-two-thirds-fullhd is-full-widescreen is-full-desktop is-full-tablet is-full-mobile" }}
 {{- else -}}
-
-  <div class="column is-one-third-fullhd is-half-custom-cards is-half-widescreen is-half-desktop is-full-tablet is-full-mobile is-flex">
-
-    {{- if eq "quotes" .Page.Type -}}
-      {{ partial "formats/quote-summary.html" . }}
-    {{- else -}}
-      {{ partial "formats/article-summary.html" . }}
-    {{- end -}}
-  </div>
-
+  {{ $classes = "is-one-third-fullhd is-half-custom-cards is-half-widescreen is-half-desktop is-full-tablet is-full-mobile" }}
 {{- end -}}
+
+<div class="column {{ $classes }} is-flex">
+  {{- if eq "quotes" .Page.Type -}}
+    {{ partial "formats/quote-summary.html" . }}
+  {{- else -}}
+    {{ partial "formats/article-summary.html" . }}
+  {{- end -}}
+</div>
+
