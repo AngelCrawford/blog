@@ -1,37 +1,16 @@
 #comments {
   scroll-margin-top: 5em;
-  .title.is-4 {
-    margin: 1.5em 0 1.5em -1em;
-    color: $hover;  overflow: hidden;
-    text-align: center;
-    
-    &:before,
-    &:after {
-      background: rgba($primary, .4);
-      content: "";
-      display: inline-block;
-      height: 1px;
-      position: relative;
-      vertical-align: middle;
-      width: 50%;
-    }
-    
-    &:before {
-      right: 0.5em;
-      margin-left: -50%;
-    }
-    
-    &:after {
-      left: 0.5em;
-      margin-right: -50%;
-    }
-  }
 
   strong {
     color: $text;
   }
+  @media (max-width: 566px) {
+    h2.title.is-4 {
+      margin-left: 0;
+    }
+  }
 
-  article.media {
+  article.post-comment {
     margin-top: 0.75rem;
     border-top: 0;
     margin-left: -1.5em;
@@ -62,35 +41,39 @@
         color: lighten($small, 10%);
         background: darken($background, 2%);
         line-height: 40px;
-        .comment-anchor {
-          scroll-margin-top: 5em;
-        }
-        .remix-small {
-          margin-right: 0.4em;
-          fill: lighten($small, 10%);
-          @include translate(0, 4px);
-        }
-        .comment-anchor, .website {
+        overflow: hidden;
+
+        .footer-item {
           border-right: 1px solid darken($background, 6%);
           height: 100%;
           display: inline-block;
           padding: .5em 1.5em;
-        }
-        .comment-time {
-          display: inline-block;
-          padding: .5em 1.5em;
-          border-right: 1px solid darken($background, 6%);
-          .post-time {
-            height: 100%;
-            display: inline-block;
+
+          .remix-small {
+            margin-right: 0.4em;
+            fill: $primary;
+            @include translate(0, 4px);
+
+            &:hover {
+              fill: $hover;
+            }
           }
         }
-        .website {
-          border: none;
+
+        .comment-time {
+          .remix-small {
+            fill: lighten($small, 10%);
+          }
         }
+
+        .comment-anchor {
+          scroll-margin-top: 5em;
+        }
+     
         button {
-          margin: .25em;
+          margin: 10px 10px 0 0;
           @include font-bold;
+          font-size: 13px;
           float: right;
           color: $primary;
           border: 1px solid rgba($primary, .5);
@@ -128,10 +111,10 @@
       height: 120px;
       width: 120px;
       img {
-        border: 1px solid rgba($primary, .4);
+        border: 1px solid $primary;
       }
       figcaption {
-        color: $primary;
+        color: $hover;
         @include font-header;
         font-size: 25px;
         text-shadow: 3px 3px 4px rgba(#000, 1);
@@ -145,7 +128,7 @@
         transition: all .3s ease-out;
         filter: sepia(1);
         &:hover {
-          border: 1px solid $primary;
+          border: 1px solid $hover;
           filter: sepia(0);
         }
       }
@@ -344,5 +327,70 @@
   }
   .field.is-grouped .control {
     margin-left: auto;
+  }
+}
+
+#comments article.post-comment {
+  @media (max-width: 815px) {
+    &.reply {
+      margin-left: 3em;
+    }
+  }
+
+  @media (max-width: 650px) {
+    &.reply {
+      margin-left: -1.5em;
+    }
+  }
+
+  @media (max-width: 590px) {
+    .media-content .media-footer button span {
+      display: none; 
+      .remix {
+        margin-right: 0;
+      }
+    }
+  }
+
+  @media (max-width: 566px) {
+    margin-left: 0;
+    &.reply {
+      margin-left: 0;
+    }
+
+    figure {
+      height: 60px;
+      width: 60px;
+    }
+
+    .media-content::after {
+      margin-top: 10px;
+    }
+  }
+
+  @media (max-width: 450px) {
+    figure {
+      height: 40px;
+      width: 40px;
+    }
+
+    .media-content::after {
+      margin-top: 4px;
+      border-bottom: 15px solid transparent;
+      border-top: 15px solid transparent;
+      border-right: 15px solid $background;
+    }
+  }
+
+  @media (max-width: 405px) {
+    .media-content .media-footer .footer-item {
+      padding: .5em .7em;
+    }
+  }
+}
+
+#comments-form {
+  @media (max-width: 566px) {
+    margin-left: 0;
   }
 }

@@ -1,11 +1,12 @@
 <!-- THANKS: https://www.pakstech.com/blog/hugo-related-pages/ -->
 {{ if len (where (.Site.RegularPages.Related .) "Type" "articles") }}
   <div class="columns">
-    <aside class="column related-articles is-9">
-      <div class="columns">
+    <aside class="column related-articles is-9-fullhd is-9-widescreen is-9-desktop is-full-tablet is-full-mobile">
+      <h2 class="title is-4">Ähnliche Artikel</h2>
+      <div class="columns is-multiline">
         {{- $related := (where (.Site.RegularPages.Related .) "Type" "articles") | first 4 -}}
         {{- range $related -}}
-          <div class="column is-one-quarter is-flex">
+          <div class="column is-3-fullhd is-3-widescreen is-4-desktop is-4-tablet is-full-mobile is-flex">
             <div class="card is-small {{ if .Resources }}has-image{{else}}no-image{{ end }}">
 
               {{ if .GetTerms "categories" }}

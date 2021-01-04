@@ -1,7 +1,7 @@
 {{- if and .Site.Params.staticman (not (or .Site.Params.disable_comments .Params.disable_comments)) -}}
   <div class="columns">
 
-    <div class="column is-three-quarter">
+    <div class="column is-9-fullhd is-9-widescreen is-9-desktop is-full-tablet is-full-mobile">
       <section id="comments">
 
         <h2 class="title is-4">Reaktionen <a class="anchor" href="#comments"><div class="anchor-icon"></div></a></h2>
@@ -35,30 +35,30 @@
                 </div>
 
                 <div class="media-footer">
-                  <div class="comment-time">
+                  <div class="comment-time footer-item">
                     <svg class='remix-small'>
                       <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#calendar-line"></use>
-                    </svg><time datetime='{{ (time .date).Add (2 | duration "hour" ) | dateFormat "2006-01-02T15:04:05Z07:00" }}' class="post-time">{{ (time .date).Add (2 | duration "hour" ) | dateFormat "02.01.06 um 15:04" }}</time>
+                    </svg><time datetime='{{ (time .date).Add (2 | duration "hour" ) | dateFormat "2006-01-02T15:04:05Z07:00" }}' class="post-time">{{ (time .date).Add (2 | duration "hour" ) | dateFormat "02.01.06" }}</time>
                   </div>
 
-                  <a href="#commentid-{{ ._id }}" class="comment-anchor" title="Permalink to this comment">
+                  <a href="#commentid-{{ ._id }}" class="comment-anchor footer-item" title="Permalink to this comment" data-tooltip="Permalink zur Kritik">
                     <svg class='remix-small'>
                       <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#links-fill"></use>
-                    </svg>Permalink zur Kritik
+                    </svg>
                   </a>
 
                   {{- if .website -}}
-                    <a href="{{ .website }}" class="website" target="_blank" rel="noreferrer">
+                    <a href="{{ .website }}" class="website footer-item" target="_blank" rel="noreferrer" data-tooltip="Webseite">
                       <svg class='remix-small'>
                         <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#external-link-line"></use>
-                      </svg>Webseite
+                      </svg>
                     </a>
                   {{- end -}}
-
+                  
                   <button data-tooltip="Antworte @{{.name}}" id="{{ ._id }}" class="button is-primary" href="#postcomment" onclick="changeValue('fields[reply_to]', '{{ ._id }}')">
                     <svg class='remix'>
                       <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#reply-line"></use>
-                    </svg>Antworten
+                    </svg><span>Antworten</span>
                   </button>
   
                 </div>
@@ -91,7 +91,7 @@
   </div>
   <div class="columns">
 
-    <div class="column is-three-quarter">
+    <div class="column is-9-fullhd is-9-widescreen is-9-desktop is-full-tablet is-full-mobile">
 
       <section id="comments-form" class="box">
 
