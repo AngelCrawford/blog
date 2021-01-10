@@ -1,4 +1,4 @@
-{{- $stars := .Params.rating -}}
+{{- $stars := . -}}
 
 <ul class="stars">
   {{- with (eq $stars "0") -}}

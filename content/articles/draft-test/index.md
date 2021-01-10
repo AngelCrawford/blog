@@ -27,10 +27,19 @@ icons:
   color: "green"
 - src: "apple-line"
   color: "white"
----
+stickers:
+- heading: "Genre"
+  tags:
+  - tag: "Some"
+  - tag: "Tag"
+  - tag: "I Want"
+- heading: "Info"
+  tags:
+  - tag: "Some Tag"
+  - tag: "Long Tag I want for testing purpose"
+  - tag: "Anything"
 
-{{< rating "Storyline" "3.5" >}}
-{{< details "Genre" "Some, Tags, I Want" >}}
+---
 
 {{% infobox theme="warning" %}}**Be carefull** is a text{{% /infobox %}}
 

@@ -4,7 +4,7 @@
 {{ $small := $image.Resize "800x" }}
 {{ $medium := $image.Resize "1200x" }}
 {{ $large := $image.Resize "1500x" }}
-<figure>
+<figure class="content-image">
     <img 
     srcset="{{ $tiny.RelPermalink | safeURL }} 500w,
             {{ $small.RelPermalink | safeURL }} 800w,

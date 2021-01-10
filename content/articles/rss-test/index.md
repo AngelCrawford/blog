@@ -31,13 +31,24 @@ month: "2020/12"
 featured_image:
 - src: ./featured.jpg
   byline: TEST <a href='#'>test</a>
+stickers:
+- heading: "Genre"
+  tags:
+  - tag: "Some"
+  - tag: "Tag"
+  - tag: "I Want"
+- heading: "Info"
+  tags:
+  - tag: "Some Tag"
+  - tag: "Long Tag I want for testing purpose"
+  - tag: "Anything"
 
 ---
 
-{{< rating "Storyline" "5" >}}
-{{< details "Genre" "Some, Tags, I Want" >}}
 
-{{% infobox theme="success" %}}**Yeahhh !** is a text{{% /infobox %}}
+{{% infobox theme="success" %}}**Yeahhh!** is a text{{% /infobox %}}
+
+![](20210109_215313.png)
 
 <!--start-summary-->
 ## Eine Überschrift

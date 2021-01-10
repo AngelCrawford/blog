@@ -1,4 +1,5 @@
 ---
+title: "Test 123"
 date: 2020-02-10T10:58:08-04:00
 publishdate: 2020-02-13T10:58:08-04:00
 description: "One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin. One morning, when Gregor Samsa woke"
@@ -11,10 +12,8 @@ contains:
 - gallery
 authors: jdksaj
 weight: 1
-title: "Test 123"
 year: "2020"
 month: "2020/02"
-rating: "3.5" # 0-5 with .5 possible, will show a rating on the home page
 icons:
 - src: "windows-line"
   color: "#456987"
@@ -28,18 +27,19 @@ icons:
 featured_image:
 - src: ./featured.jpg
   byline: TEST <a href='#'>test</a>
-  
+stickers:
+- heading: "Genre"
+  tags:
+  - tag: "Some"
+  - tag: "Tag"
+  - tag: "I Want"
+- heading: "Info"
+  tags:
+  - tag: "Some Tag"
+  - tag: "Long Tag I want for testing purpose"
+  - tag: "Anything"
+
 ---
-
-{{< details "Genre" "Some, Tags, I Want" >}}
-
-{{< details "Info" "Some, Tags, I Want with longgggggg text and so on" >}}
-
-{{< rating "Gesamt" "4" >}}
-
-{{< rating "Storyline" "2.5" >}}
-
-{{< rating "Schauspieler" "5" >}}
 
 ## Introduction
 

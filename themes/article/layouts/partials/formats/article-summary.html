@@ -53,8 +53,13 @@
     </div>
 
     <div class="content">
-      {{- if .Params.rating -}}
-        <div class="rating">{{ partial "rating" . }} <span>({{ .Params.rating }})</span></div>
+
+      {{- if .Params.ratings -}}
+        <div class="rating">
+          {{ range first 1 .Params.ratings }}
+            {{ with .number }}{{ partial "ratings" . }}{{ end }} <span>({{ .number }})</span>
+          {{ end }}
+        </div>
       {{- end -}}
 
       {{ $summarySplits := split .Content "<!--start-summary-->" }}
@@ -158,18 +163,18 @@
             <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#pushpin-line"></use>
           </svg>
         </span>
+      {{ else }}
+        <span data-tooltip="Dies ist ein Artikel">
+          <svg class='remix-small'>
+            <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#article-line"></use>
+          </svg>
+        </span>
       {{- end -}}
 
-      <span data-tooltip="Dies ist ein Artikel">
-        <svg class='remix-small'>
-          <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#article-line"></use>
-        </svg>
-      </span>
-
-      {{- if .Params.rating -}}
+      {{- if .Params.ratings -}}
         <span data-tooltip="Mit Bewertung">
           <svg class='remix-small'>
-            <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#film-line"></use>
+            <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#star-fill"></use>
           </svg>
         </span>
       {{- end -}}
