@@ -41,7 +41,7 @@
                     </svg><time datetime='{{ (time .date).Add (2 | duration "hour" ) | dateFormat "2006-01-02T15:04:05Z07:00" }}' class="post-time">{{ (time .date).Add (2 | duration "hour" ) | dateFormat "02.01.06" }}</time>
                   </div>
 
-                  <a href="#commentid-{{ ._id }}" class="comment-anchor footer-item" title="Permalink to this comment" data-tooltip="Permalink zur Kritik">
+                  <a href="#commentid-{{ ._id }}" class="comment-anchor footer-item" title="Permalink zur Reaktion" data-tooltip="Permalink zur Reaktion">
                     <svg class='remix-small'>
                       <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#links-fill"></use>
                     </svg>
@@ -98,13 +98,12 @@
         <div id="comments-messages">
           <article class="message is-primary" id="comment-submitted" style="display: none;">
             <div class="message-header">
-              <h2 class="title is-5">Thank you!</h2>
+              <h2 class="title is-5">Danke schön!</h2>
               <button class="delete" aria-label="delete"></button>
             </div>
             <div class="message-body">
-              <p>Your comment has been submitted and will be published once it has been approved. &#128522;</p>
-              <p><a href="https://github.com/{{ .Site.Params.staticman.username }}/{{ .Site.Params.staticman.repository }}/pulls" target="_blank" rel="noreferrer">Click here</a> 
-              to see the pull request you generated.</p>
+              <p>Deine Reaktion wurde eingereicht und wird veröffentlich, sobald sie genehmigt wurde.</p>
+              <p>Schau Dir solange Deine Reaktion an unter: <a href="https://github.com/{{ .Site.Params.staticman.username }}/{{ .Site.Params.staticman.repository }}/pulls" target="_blank" rel="noreferrer">github.com</a>.</p>
             </div>
           </article>
     
@@ -114,8 +113,8 @@
               <button class="delete" aria-label="delete"></button>
             </div>
             <div class="message-body">
-              <p>Your comment has not been submitted. Please try again. Thank You!</p>
-              <p>If this error persists, please open an issue by <a href="https://github.com/{{ .Site.Params.staticman.username }}/{{ .Site.Params.staticman.repository }}/issues"> clicking here</a>.</p>
+              <p>Deine Reaktion wurde nicht eingereicht. Bitte versuche es noch einmal. Danke schön!</p>
+              <p>Sollte dieser Fehler bestehen bleiben, bitte hier eine neue Fehlermeldung hinzufügen <a href="https://github.com/{{ .Site.Params.staticman.username }}/{{ .Site.Params.staticman.repository }}/issues"> github.com</a>.</p>
             </div>
           </article>
         </div>

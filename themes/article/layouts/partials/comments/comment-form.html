@@ -13,7 +13,7 @@
     <div class="field-body">
       <div class="field">
         <div class="control has-icons-left has-icons-right">
-          <input type="text" name="fields[name]" class="input" id="comment-name" placeholder="Nickname Name" required/>
+          <input type="text" name="fields[name]" class="input" id="comment-name" placeholder="Nickname/Vorname" required/>
           <span class="icon is-small is-left">
             <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#user-line"></use></svg>
           </span>
@@ -33,7 +33,7 @@
     <div class="field-body">     
       <div class="field">
         <div class="control has-icons-left has-icons-right">
-          <input type="email" name="fields[email]" class="input" id="comment-email" placeholder="mail@domain.de -> Nicht öffentlich" required/>
+          <input type="email" name="fields[email]" class="input" id="comment-email" placeholder="mail@domain.de (nicht öffentlich)" required/>
           <span class="icon is-small is-left">
             <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#mail-line"></use></svg>
           </span>
@@ -88,25 +88,21 @@
           <textarea name="fields[comment]" class="textarea" id="comment-message" placeholder="Markdown ist erlaubt" required rows="10"></textarea>
         </div>
         <p class="help is-danger" style="display:none;">Bitte ausfüllen.</p>
-        <p class="help is-primary">Reaktioen werden moderiert, es kann etwas dauern bis Deine frei geschaltet wird. 
-          Schau Dir solange Deine Reaktion an unter: 
-          <a href="https://github.com/{{ .Site.Params.staticman.username }}/{{ .Site.Params.staticman.repository }}/issues" target="_blank" rel="noreferrer">github.com</a>.
-        </p>
+        <p class="help is-primary">Reaktioen werden moderiert, es kann etwas dauern bis Deine frei geschaltet wird.</p>
         <p class="help is-primary">Dieses Nachrichten Feld unterstützt <a href="https://markdown.de/" target="_blank" rel="noreferrer">Markdown</a>.</p>
-        <p class="help is-primary">Falls Du mir privat schreiben willst, kannst Du das hier: <a href="#">Kontaktiere mich</a>.</p>
+        <p class="help is-primary">Falls Du mir privat schreiben willst, kannst Du das hier: <a href="/kontakt">Kontaktiere mich</a>.</p>
       </div>
     </div>
   </div>
 
-  <div class="field is-horizontal is-right">
+  <div class="field is-horizontal checkbox">
     <div class="field-label"></div>
     <div class="field-body">
       <div class="field">
         <div class="control">
-          <div class="b-checkbox is-primary is-inline">
+          <div class="b-checkbox is-primary">
             <input id="checkbox" class="comment-checkbox" type="checkbox" required>
-            <label for="checkbox">
-              I agree to the <a href="#">terms and conditions</a>
+            <label for="checkbox">Meine Daten in diesem Browser speichern, bis ich wieder kommentiere. Mehr Informationen in der <a href="/datenschutz">Datenschutzerklärung.</a>
             </label>
           </div>
           <p class="help is-danger" style="display:none;">Bitte akzeptieren!</p>

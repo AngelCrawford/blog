@@ -426,16 +426,15 @@ section.informations {
           font-weight: 600;
           @include font-header;
           padding: 0.3em .75em;
-          transition: all .3s ease-out;
+          // transition: all .3s ease-out;
           display: inline-block;
           width: 100%;
           &:hover {
-            color: $background;
+            color: #ffffff;
           }
         }
         &:hover {
-          color: $background;
-          background-color: $hover !important;
+          background-color: $small !important;
           @include box-shadow(true, 5px, 5px, 5px, rgba(#000, .3), rgba($text, .07));
         }
       }    

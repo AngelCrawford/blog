@@ -57,9 +57,9 @@
   }
 }
 
-.ribbon:not(.is-single-page):hover {
-  color: #ffffff;
-  background-color: $hover !important;
+.ribbon:hover {
+  color: $pageBack !important;
+  background-color: $small !important;
   font-weight: 600;
   @include box-shadow(true, 5px, 5px, 5px, rgba(#000, .3), rgba($text, .07));
 }
