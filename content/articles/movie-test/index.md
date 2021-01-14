@@ -42,7 +42,7 @@ stickers:
     color: "#456987"
   - tag: "Long Tag I want for testing purpose"
   - tag: "Anything"
-- heading: "More"
+- heading: "More and really long heading"
   tags:
   - tag: "Some Tag"
     color: "tomato"

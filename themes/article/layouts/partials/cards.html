@@ -1,7 +1,7 @@
 {{ $classes := "" }}
 
 {{- if and (eq .Params.weight 1) (not (eq "quotes" .Page.Type)) -}}
-  {{ $classes = "is-two-thirds-fullhd is-full-widescreen is-full-desktop is-full-tablet is-full-mobile" }}
+  {{ $classes = "is-pinned is-one-third-fullhd is-half-custom-cards is-half-widescreen is-half-desktop is-full-tablet is-full-mobile" }}
 {{- else -}}
   {{ $classes = "is-one-third-fullhd is-half-custom-cards is-half-widescreen is-half-desktop is-full-tablet is-full-mobile" }}
 {{- end -}}

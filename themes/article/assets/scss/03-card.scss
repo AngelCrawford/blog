@@ -58,10 +58,12 @@ article.card.is-horizontal, .card {
           @include translate(0, 4px);
         }
       }
-    }
-    span {
-      color: $small;
-      font-size: 13px;
+      li.star-count {
+        color: $small;
+        font-size: 13px;
+        padding-left: .5em;
+        padding-top: 0;
+      }
     }
   }
   .tags-wrapper {

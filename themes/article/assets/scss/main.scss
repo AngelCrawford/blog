@@ -111,8 +111,49 @@ h3, h3.title {
   color: $hover;
   @include font-header;
 }
-.content h1:not(:first-child) {
+.content h1:not(:first-child),
+.content h2:not(:first-child) {
   margin-top: unset;
+}
+h2.subtitle {
+  margin-top: 1em;
+  color: $text;
+}
+h1.title:not(.is-spaced) + .subtitle {
+  margin-top: 1em;
+  font-size: 1.3rem;
+  line-height: 1.5;
+  @include font-bold;
+}
+.content.box h1.title:not(.is-spaced) + .subtitle {
+  margin-top: -1.25rem;
+}
+
+body.type-is-authors.kind-is-term h2.subtitle,
+body.type-is-tags.kind-is-term h2.subtitle,
+body.type-is-categories.kind-is-term h2.subtitle {
+  margin-top: 1em;
+  color: $text;
+  font-size: 1.3rem;
+  line-height: 1.5;
+  @include font-bold;
+}
+body.type-is-authors.kind-is-term h2,
+body.type-is-authors.kind-is-term h3,
+body.type-is-authors.kind-is-term h4,
+body.type-is-authors.kind-is-term h5,
+body.type-is-authors.kind-is-term h6,
+body.type-is-tags.kind-is-term h2,
+body.type-is-tags.kind-is-term h3,
+body.type-is-tags.kind-is-term h4,
+body.type-is-tags.kind-is-term h5,
+body.type-is-tags.kind-is-term h6,
+body.type-is-categories.kind-is-term h2,
+body.type-is-categories.kind-is-term h3,
+body.type-is-categories.kind-is-term h4,
+body.type-is-categories.kind-is-term h5,
+body.type-is-categories.kind-is-term h6 {
+  color: $hover;
 }
 
 a.title.colored {  

@@ -30,43 +30,48 @@
 
             <div class="details-wrapper">
               {{- if .Params.icons -}}
-                <div class="details-icons">
+                <div class="details-icons details-item">
                   <div class="title is-5">
                     <div class="details-ribbon">
                       <svg class="remix-small"><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#bookmark-line"></use></svg> Details
                     </div>
                   </div>
-                  <ul>
-                    {{- range .Params.icons -}}
-                      <li {{ if .tooltip }}data-tooltip="{{ .tooltip }}"{{ end }}>
-                        <svg class="remix-big" style="fill: {{ .color }};"><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#{{ .src }}"></use></svg>
-                      </li>
-                    {{- end -}}
-                  </ul>
+                  <div class="list-items">
+                    <ul>
+                      {{- range .Params.icons -}}
+                        <li {{ if .tooltip }}data-tooltip="{{ .tooltip }}"{{ end }}>
+                          <svg class="remix-big" style="fill: {{ .color }};"><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#{{ .src }}"></use></svg>
+                        </li>
+                      {{- end -}}
+                    </ul>
+                  </div>
                 </div>
               {{- end -}}
 
               {{- if .Params.ratings -}}
                 {{- range .Params.ratings -}}
-                  <div class="details-ratings">
+                  <div class="details-ratings details-item">
                     <div class="title is-5">{{- .heading -}}</div>
-                    {{- with .number -}}
-                      {{- partial "ratings" . -}} 
-                    {{ end }}
-                    <span class="star-count">({{- .number -}})</span>
+                    <div class="list-items">
+                      {{- with .number -}}
+                        {{- partial "ratings" . -}}
+                      {{- end -}}
+                    </div>
                   </div>
                 {{- end -}}
               {{- end -}}
 
               {{- if .Params.stickers -}}
                 {{- range .Params.stickers -}}
-                  <div class="details-tags">
+                  <div class="details-tags details-item">
                     <div class="title is-5">{{- .heading -}}</div>
-                    <ul class="tags">
-                      {{- range .tags -}}
-                        <li class="tag" style="background:{{ with .color }}{{ . }}{{ else }}#777777{{ end }}">{{- with .tag -}}{{- . -}}{{- end -}}</li>
-                      {{- end -}}
-                    </ul>
+                    <div class="list-items">
+                      <ul class="tags">
+                        {{- range .tags -}}
+                          <li class="tag" style="background:{{ with .color }}{{ . }}{{ else }}#777777{{ end }}">{{- with .tag -}}{{- . -}}{{- end -}}</li>
+                        {{- end -}}
+                      </ul>
+                    </div>
                   </div>
                 {{- end -}}
               {{- end -}}
@@ -154,7 +159,7 @@
                 <svg class='remix-small'>
                   <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#arrow-right-s-line"></use>
                 </svg>
-                {{- with .number -}}{{- partial "ratings" . -}}{{- end -}} ({{- .number -}})
+                {{- with .number -}}{{- partial "ratings" . -}}{{- end -}}
               {{- end -}}
             </div>
           {{- end -}}

@@ -57,7 +57,7 @@
       {{- if .Params.ratings -}}
         <div class="rating">
           {{ range first 1 .Params.ratings }}
-            {{ with .number }}{{ partial "ratings" . }}{{ end }} <span>({{ .number }})</span>
+            {{ with .number }}{{ partial "ratings" . }}{{ end }}
           {{ end }}
         </div>
       {{- end -}}
@@ -76,10 +76,6 @@
       <!-- If article has no image, show more content instead -->
       {{- if not .Resources -}}
         {{ $newContent | truncate 600 " [...]" }}
-
-      <!-- If article is fixed, show more content -->
-      {{- else if eq .Params.weight 1 -}}
-        {{ $newContent | truncate 800 " [...]" }}
 
       {{ else }}
         {{ $newContent | truncate 270 " [...]" }}
@@ -174,7 +170,7 @@
       {{- if .Params.ratings -}}
         <span data-tooltip="Mit Bewertung">
           <svg class='remix-small'>
-            <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#star-fill"></use>
+            <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#star-line"></use>
           </svg>
         </span>
       {{- end -}}

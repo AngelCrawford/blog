@@ -106,7 +106,7 @@
     <link type="text/plain" rel="author" href="humans.{{ .Site.Language }}.txt" />
   </head>
 
-  <body>
+  <body class='type-is-{{ .Type }} kind-is-{{ .Kind }}'>
     
     {{ block "header" . }}{{ partial "site-header.html" . }}{{ end }}
       
