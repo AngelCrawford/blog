@@ -17,6 +17,10 @@ month: "2020/12"
 featured_image:
 - src: ./featured.jpg
   byline: Lorem Picsum <a href='https://picsum.photos/'>https://picsum.photos/</a>
+comments:
+  enabled: true
+  deactivatedOn: YYYY-MM-DD
+  message: "Reaktionen wurden entfernt weil...."
 icons:
 - src: "windows-line"
   color: "#456987"

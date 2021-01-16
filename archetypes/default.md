@@ -23,6 +23,10 @@ month: "{{ now.Format "2006/01" }}"
 featured_image:
 - src: ./featured.jpg
   byline: TEST <a href='#'>test</a>
+comments:
+  enabled: true # set to enable comments
+  deactivatedOn: YYYY-MM-DD # if set, will show the Date in the header of the message box
+  message: "Reaktionen wurden entfernt weil...." # if set, will show the message in the body of the message box
 icons:
 - src: "windows-line"
   color: "#456987"

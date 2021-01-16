@@ -145,12 +145,16 @@
           {{- range $comments -}}
             {{- $.Scratch.Add "hasComments" 1 -}}
           {{- end -}}
-          <div class="comments-line">
-            <svg class='remix-small'>
-              <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#question-answer-line"></use>
-            </svg>
-            <a href="{{.RelPermalink}}#comments">{{ $.Scratch.Get "hasComments" }} {{ i18n "comments" ($.Scratch.Get "hasComments") }}</a> (<a href="{{.RelPermalink}}#postcomment">Verfassen</a>)
-          </div>
+          
+          {{- if or (ne ($.Scratch.Get "hasComments") 0) .Params.comments.enabled -}}
+            <div class="comments-line">
+              <svg class='remix-small'>
+                <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#question-answer-line"></use>
+              </svg>
+              <a href="{{.RelPermalink}}#comments">{{ $.Scratch.Get "hasComments" }} {{ i18n "comments" ($.Scratch.Get "hasComments") }}</a>&nbsp;
+              {{- if .Params.comments.enabled -}} (<a href="{{.RelPermalink}}#postcomment">Verfassen</a>){{- end -}}
+            </div>
+          {{- end -}}
           {{- $.Scratch.Delete "hasComments" -}}
 
           {{- if .Params.ratings -}}

@@ -31,6 +31,10 @@ month: "2020/12"
 featured_image:
 - src: ./featured.jpg
   byline: TEST <a href='#'>test</a>
+comments:
+  enabled: false
+  deactivatedOn: YYYY-MM-DD
+  message: "Reaktionen wurden entfernt weil...."
 stickers:
 - heading: "Genre"
   tags:

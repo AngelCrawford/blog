@@ -1,19 +1,27 @@
-{{- if and .Site.Params.staticman (not (or .Site.Params.disable_comments .Params.disable_comments)) -}}
+{{- $postSlug := $.File.ContentBaseName -}}
+{{- $comments := index $.Site.Data.comments $postSlug -}}
+{{- $.Scratch.Set "commentsCount" 0 -}}
+{{- range $comments -}}
+  {{- $.Scratch.Add "commentsCount" 1 -}}
+{{ end }}
+
+{{ $.Scratch.Get "commentsCount" }}
+
+
+{{- if and .Site.Params.staticman (not .Site.Params.disable_comments) -}}
   <div class="columns">
 
     <div class="column is-9-fullhd is-9-widescreen is-9-desktop is-full-tablet is-full-mobile">
       <section id="comments">
 
-        <h2 class="title is-4">Reaktionen <a class="anchor" href="#comments"><div class="anchor-icon"></div></a></h2>
-    
-        {{- $postSlug := $.File.ContentBaseName -}}
-        {{- $comments := index $.Site.Data.comments $postSlug -}}
+        {{- if or (ne ($.Scratch.Get "commentsCount") 0) .Params.comments.enabled -}}
+          <h2 class="title is-4">Reaktionen <a class="anchor" href="#comments"><div class="anchor-icon"></div></a></h2>
+        {{- end -}}
+
         {{- $.Scratch.Set "hasComments" 0 -}}
-         
         {{- range $comments -}}
           {{- if not .reply_to -}}
             {{- $.Scratch.Add "hasComments" 1 -}}
-   
             {{- $.Scratch.Set "commentName" .name -}}
             <article id="commentid-{{ ._id }}" class='media post-comment {{ range ($.GetTerms "authors") }} {{ if eq ($.Scratch.Get "commentName") .Page.Title }} is-author {{ end }} {{ end }}'>
               <figure class="media-left">
@@ -68,7 +76,7 @@
           {{- end -}}
         {{- end -}}
     
-        {{- if eq ($.Scratch.Get "hasComments") 0 -}}
+        {{- if and (eq ($.Scratch.Get "hasComments") 0) .Params.comments.enabled -}}
           <article class="media no-comment post-comment">
             <figure class="media-left">
               <p class="image is-120x120">
@@ -89,45 +97,50 @@
     
     <div class="column is-one-quarter"></div>
   </div>
-  <div class="columns">
 
-    <div class="column is-9-fullhd is-9-widescreen is-9-desktop is-full-tablet is-full-mobile">
+  {{- if .Params.comments.enabled -}}
 
-      <section id="comments-form" class="box">
+    <div class="columns">
 
-        <div id="comments-messages">
-          <article class="message is-primary" id="comment-submitted" style="display: none;">
-            <div class="message-header">
-              <h2 class="title is-5">Danke schön!</h2>
-              <button class="delete" aria-label="delete"></button>
-            </div>
-            <div class="message-body">
-              <p>Deine Reaktion wurde eingereicht und wird veröffentlich, sobald sie genehmigt wurde.</p>
-              <p>Schau Dir solange Deine Reaktion an unter: <a href="https://github.com/{{ .Site.Params.staticman.username }}/{{ .Site.Params.staticman.repository }}/pulls" target="_blank" rel="noreferrer">github.com</a>.</p>
-            </div>
-          </article>
-    
-          <article class="message is-danger" id="comment-error" style="display: none;">
-            <div class="message-header">
-              <h2 class="title is-5">Oops!</h2>
-              <button class="delete" aria-label="delete"></button>
-            </div>
-            <div class="message-body">
-              <p>Deine Reaktion wurde nicht eingereicht. Bitte versuche es noch einmal. Danke schön!</p>
-              <p>Sollte dieser Fehler bestehen bleiben, bitte hier eine neue Fehlermeldung hinzufügen <a href="https://github.com/{{ .Site.Params.staticman.username }}/{{ .Site.Params.staticman.repository }}/issues"> github.com</a>.</p>
-            </div>
-          </article>
-        </div>
+      <div class="column is-9-fullhd is-9-widescreen is-9-desktop is-full-tablet is-full-mobile">
 
-        {{ partial "comments/comment-form" . }}
-      </section>
-     
+        <section id="comments-form" class="box">
+
+          <div id="comments-messages">
+            <article class="message is-primary" id="comment-submitted" style="display: none;">
+              <div class="message-header">
+                <h2 class="title is-5">Danke schön!</h2>
+                <button class="delete" aria-label="delete"></button>
+              </div>
+              <div class="message-body">
+                <p>Deine Reaktion wurde eingereicht und wird veröffentlich, sobald sie genehmigt wurde.</p>
+                <p>Schau Dir solange Deine Reaktion an unter: <a href="https://github.com/{{ .Site.Params.staticman.username }}/{{ .Site.Params.staticman.repository }}/pulls" target="_blank" rel="noreferrer">github.com</a>.</p>
+              </div>
+            </article>
+      
+            <article class="message is-danger" id="comment-error" style="display: none;">
+              <div class="message-header">
+                <h2 class="title is-5">Oops!</h2>
+                <button class="delete" aria-label="delete"></button>
+              </div>
+              <div class="message-body">
+                <p>Deine Reaktion wurde nicht eingereicht. Bitte versuche es noch einmal. Danke schön!</p>
+                <p>Sollte dieser Fehler bestehen bleiben, bitte hier eine neue Fehlermeldung hinzufügen <a href="https://github.com/{{ .Site.Params.staticman.username }}/{{ .Site.Params.staticman.repository }}/issues"> github.com</a>.</p>
+              </div>
+            </article>
+          </div>
+
+          {{ partial "comments/comment-form" . }}
+        </section>
+      
+      </div>
+      <div class="column is-one-quarter"></div>
     </div>
-    <div class="column is-one-quarter"></div>
-  </div>
 
+  {{- end -}}
   
 {{- end -}}
 
 {{- $.Scratch.Delete "hasComments" -}}
+{{- $.Scratch.Delete "commentsCount" -}}
 {{- $.Scratch.Delete "commentName" -}}
