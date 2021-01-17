@@ -274,3 +274,43 @@ a:not([href*='yourdomain.com']):not([href^='#']):not([href^='/']):not(figure a):
   top: -9999px !important;
   right: -9999px !important;
 }
+
+details {
+  color: $text;
+  margin: 1em;
+  border: 1px solid rgba($primary, .2);
+  
+  strong {
+    color: $text;
+  }
+
+  summary {
+    color: $primary;
+    padding: .5em;
+
+    &:hover {
+      color: $hover;
+      cursor: pointer;
+    }
+
+    &::marker {
+      color: $accent;
+    }
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  summary ~ * {
+    padding: 1em;
+  }
+}
+
+details[open] {
+  border: 1px solid rgba($primary, .7);
+
+  summary {
+    color: $hover;
+  }
+}

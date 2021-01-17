@@ -126,13 +126,13 @@ aside.related-articles,
       font-size: 1em;
       line-height: 1.7em;
       &::marker {
-        color: $small;
+        color: $accent;
       }
     }
   }
   ol {
     li::marker {
-      color: $small;
+      color: $accent;
     }
 
     ol {
