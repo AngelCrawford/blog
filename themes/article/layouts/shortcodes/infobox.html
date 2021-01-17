@@ -1,7 +1,14 @@
 {{ $_hugo_config := `{ "version": 1 }` }}
-<div class="message{{- " " -}}{{- with .Get "theme" -}}is-{{.}}{{- else -}}is-dark{{- end -}}" role="alert">
-	<div class="message-body">
+<div class="content-shortcode message{{- " " -}}{{- with .Get "theme" -}}is-{{.}}{{- else -}}is-primary{{- end -}}" role="alert">
 
+	{{- with .Get "title" -}}
+		<div class="message-header">
+			<h2 class="title is-5">{{ . }}</h2>
+		</div>
+	{{- end -}}
+
+	<div class="message-body">
+		
 		{{- with .Get "theme" -}}
 			{{ if eq "info" . }}
 				<svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#information-line"></use></svg>

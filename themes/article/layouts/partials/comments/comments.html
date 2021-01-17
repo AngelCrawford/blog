@@ -5,9 +5,6 @@
   {{- $.Scratch.Add "commentsCount" 1 -}}
 {{- end -}}
 
-CommentsCount: {{ $.Scratch.Get "commentsCount" }} | 
-Enabled: {{ .Params.comments.enabled }}
-
 {{- if and .Site.Params.staticman (not .Site.Params.disable_comments) -}}
   <div class="columns">
 

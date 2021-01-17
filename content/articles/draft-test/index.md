@@ -45,7 +45,7 @@ stickers:
 
 ---
 
-{{% infobox theme="warning" %}}**Be carefull** is a text{{% /infobox %}}
+{{% infobox theme="warning" title="test" %}}**Be carefull** is a text{{% /infobox %}}
 
 ```html
   <meta name="author" content="Angel Crawford" />

@@ -63,11 +63,22 @@ stickers:
 ![Alt Attribute Description for Screen Readers](image-in-same-folder.jpg "Title and Image Descirption, shown on the frontpage <a href='#'>Testlink</a>")
 
 {{% infobox %}}**this** is a text{{% /infobox %}}
+{{% infobox title="This is a header" %}}**this** is a text{{% /infobox %}}
+
 {{% infobox theme="info" %}}**this** is a text{{% /infobox %}}
+{{% infobox title="This is a header" theme="info" %}}**this** is a text{{% /infobox %}}
+
 {{% infobox theme="success" %}}**Yeahhh !** is a text{{% /infobox %}}
+{{% infobox title="This is a header" theme="success" %}}**Yeahhh !** is a text{{% /infobox %}}
+
 {{% infobox theme="warning" %}}**Be carefull** is a text{{% /infobox %}}
+{{% infobox title="This is a header" theme="warning" %}}**Be carefull** is a text{{% /infobox %}}
+
 {{% infobox theme="danger" %}}**Beware !** is a text{{% /infobox %}}
+{{% infobox title="This is a header" theme="danger" %}}**Beware !** is a text{{% /infobox %}}
+
 {{% infobox theme="question" %}}**Question !** is a text{{% /infobox %}}
+{{% infobox title="This is a header" theme="question" %}}**Question !** is a text{{% /infobox %}}
 
 <!--start-summary-->
 ## Eine Überschrift

@@ -8,7 +8,7 @@
       border-left-width: 6px;
     }
   }
-  &.is-dark .message-body {
+  &.is-primary .message-body {
     border-color: $primary;
     border-right: 1px solid $primary;
     border-top: 1px solid $primary;
@@ -53,15 +53,21 @@
       fill: $danger;
     }
   }
-  &.is-question .message-body {
-    border-color: $question;
-    border-right: 1px solid $question;
-    border-top: 1px solid $question;
-    border-bottom: 1px solid $question;
-    .remix {
-      fill: $question;
+  &.is-question {
+    .message-header {
+      background-color: $question;
+    }
+    .message-body {
+      border-color: $question;
+      border-right: 1px solid $question;
+      border-top: 1px solid $question;
+      border-bottom: 1px solid $question;
+      .remix {
+        fill: $question;
+      }
     }
   }
+  
   .message-body {
     display: flex;
     flex-direction: row;
@@ -85,5 +91,13 @@
 
   .message-header button.delete {
     border-radius: 50% !important;
+  }
+}
+
+.message.content-shortcode {
+
+  .message-header h2.title.is-5 {
+    color: $background;
+    margin: 0;
   }
 }
