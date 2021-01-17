@@ -66,6 +66,12 @@ setInterval(dayNightSky(), 60*60*1000);
 
 // navScroll();
 
+
+// ***************** Spoiler
+$('.spoiler').click(function () {
+  $(this).toggleClass('visible');
+});
+
 // ***************** Comments
 var invalidClassName = 'is-danger'
 var inputs = document.querySelectorAll('input, select, textarea')
