@@ -3,10 +3,10 @@
 {{- $.Scratch.Set "commentsCount" 0 -}}
 {{- range $comments -}}
   {{- $.Scratch.Add "commentsCount" 1 -}}
-{{ end }}
+{{- end -}}
 
-{{ $.Scratch.Get "commentsCount" }}
-
+CommentsCount: {{ $.Scratch.Get "commentsCount" }} | 
+Enabled: {{ .Params.comments.enabled }}
 
 {{- if and .Site.Params.staticman (not .Site.Params.disable_comments) -}}
   <div class="columns">
@@ -16,6 +16,26 @@
 
         {{- if or (ne ($.Scratch.Get "commentsCount") 0) .Params.comments.enabled -}}
           <h2 class="title is-4">Reaktionen <a class="anchor" href="#comments"><div class="anchor-icon"></div></a></h2>
+        {{- end -}}
+
+        {{- if eq .Params.comments.enabled false -}}
+          <div id="comments-deactivated-message">
+            <article class="message is-primary">
+              <div class="message-header">
+                <h2 class="title is-5">Reaktionen wurden{{ if .Params.comments.deactivatedOn }} am {{ .Params.comments.deactivatedOn }}{{ end }} deaktiviert</h2>
+              </div>
+              <div class="message-body">
+                <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#information-line"></use></svg>
+                <p>
+                  {{- with .Params.comments.message -}}
+                    {{ . }}
+                  {{- else -}}
+                    Der Autor des Artikels hat die Möglichkeit zum Verfassen einer Reaktion deaktiviert.
+                  {{- end -}}
+                </p>
+              </div>
+            </article>
+          </div>
         {{- end -}}
 
         {{- $.Scratch.Set "hasComments" 0 -}}
@@ -107,14 +127,17 @@
         <section id="comments-form" class="box">
 
           <div id="comments-messages">
-            <article class="message is-primary" id="comment-submitted" style="display: none;">
+            <article class="message is-success" id="comment-submitted" style="display: none;">
               <div class="message-header">
                 <h2 class="title is-5">Danke schön!</h2>
                 <button class="delete" aria-label="delete"></button>
               </div>
               <div class="message-body">
-                <p>Deine Reaktion wurde eingereicht und wird veröffentlich, sobald sie genehmigt wurde.</p>
-                <p>Schau Dir solange Deine Reaktion an unter: <a href="https://github.com/{{ .Site.Params.staticman.username }}/{{ .Site.Params.staticman.repository }}/pulls" target="_blank" rel="noreferrer">github.com</a>.</p>
+                <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#check-fill"></use></svg>
+                <p>
+                  Deine Reaktion wurde eingereicht und wird veröffentlich, sobald sie genehmigt wurde.<br />
+                  Schau Dir solange Deine Reaktion an unter: <a href="https://github.com/{{ .Site.Params.staticman.username }}/{{ .Site.Params.staticman.repository }}/pulls" target="_blank" rel="noreferrer">github.com</a>.
+                </p>
               </div>
             </article>
       
@@ -124,8 +147,11 @@
                 <button class="delete" aria-label="delete"></button>
               </div>
               <div class="message-body">
-                <p>Deine Reaktion wurde nicht eingereicht. Bitte versuche es noch einmal. Danke schön!</p>
-                <p>Sollte dieser Fehler bestehen bleiben, bitte hier eine neue Fehlermeldung hinzufügen <a href="https://github.com/{{ .Site.Params.staticman.username }}/{{ .Site.Params.staticman.repository }}/issues"> github.com</a>.</p>
+                <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#alert-line"></use></svg>
+                <p>
+                  Deine Reaktion wurde nicht eingereicht. Bitte versuche es noch einmal. Danke schön!<br />
+                  Sollte dieser Fehler bestehen bleiben, bitte hier eine neue Fehlermeldung hinzufügen <a href="https://github.com/{{ .Site.Params.staticman.username }}/{{ .Site.Params.staticman.repository }}/issues"> github.com</a>.
+                </p>
               </div>
             </article>
           </div>

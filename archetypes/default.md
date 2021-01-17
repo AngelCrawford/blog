@@ -25,8 +25,8 @@ featured_image:
   byline: TEST <a href='#'>test</a>
 comments:
   enabled: true # set to enable comments
-  deactivatedOn: YYYY-MM-DD # if set, will show the Date in the header of the message box
-  message: "Reaktionen wurden entfernt weil...." # if set, will show the message in the body of the message box
+  deactivatedOn: YYYY-MM-DD # if set, will show the Date in the header of the message box, otherwise the infobox header will not show a date
+  message: "Reaktionen wurden entfernt weil...." # if set, will show the message in the body of the message box, otherwise  the infobox will show a default text
 icons:
 - src: "windows-line"
   color: "#456987"

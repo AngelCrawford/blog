@@ -23,6 +23,8 @@
       display: flex;
       flex-direction: column;
       align-self: stretch;
+      flex-wrap: wrap-reverse;
+      overflow: visible;
 
       .content {
         flex: 1;
@@ -41,6 +43,7 @@
         color: lighten($small, 10%);
         background: darken($background, 2%);
         line-height: 40px;
+        overflow: visible;
 
         .footer-item {
           border-right: 1px solid darken($background, 6%);
@@ -187,7 +190,8 @@
   }
 }
 
-#comments-messages {
+#comments-messages,
+#comments-deactivated-message {
   scroll-margin-top: 1em;
   margin: 0;
   
@@ -200,24 +204,17 @@
     background: transparent;
     // display: block !important;
     margin-bottom: 2em;
-
-    &.is-primary {
-      border: 1px solid $primary;
-      .message-body {
-        border: none;
-      }
-    }
-    &.is-danger {
-      border: 1px solid $danger;
-      .message-header {
-        background: $danger;
-      }
-      .message-body {
-        border: none;
-      }
-    }
   }
   
+}
+
+#comments-deactivated-message {
+  margin-left: -1.5em;
+  margin-bottom: 3em;
+
+  @media (max-width: 566px) {
+    margin-left: 0;
+  }
 }
 
 #comments-form {
