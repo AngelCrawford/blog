@@ -1,5 +1,5 @@
 title = "Article Time"
-baseURL = "http://localhost:1313"
+baseURL = "http://localhost:1313/"
 languageCode = "de-DE"
 theme = "article"
 
