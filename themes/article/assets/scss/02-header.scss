@@ -223,6 +223,49 @@ header.header {
   }
 }
 
+// THANKS: https://codepen.io/bennettfeely/pen/mEjio
+#santahat {
+  .front, .back {
+    position: absolute;
+    width: 4.5rem;
+    height: 3.9rem;
+    top: 22px; 
+    left: calc(50% - 228px);
+    transform: rotate(-15deg);
+
+    @media (max-width: 730px) {
+      width: 3.5rem;
+      height: 3rem;
+      top: 15px; 
+      left: calc(50% - 165px);
+    }
+    @media (max-width: 505px) {
+      width: 2.5rem;
+      height: 2.4rem;
+      top: 9px; 
+      left: calc(50% - 117px);
+    }
+  }
+
+  .front { 
+    z-index: 9; 
+  }
+  .back {
+    z-index: -100;
+    animation: counter-wiggle 4s ease-in-out;
+    -webkit-animation: counter-wiggle 4s ease-in-out;
+    transform-origin: 1.5rem 2rem;
+  }
+  .santa-hat-piece {
+    fill: firebrick;
+  }
+  
+  @keyframes counter-wiggle {
+    33%{ transform: rotate(-20deg); }
+    66%{ transform: rotate(10deg); }
+  }
+}
+
 // THANKS: https://codepen.io/matchboxhero/pen/RLebOY
 .bird-wrapper {
   .bird {
