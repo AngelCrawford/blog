@@ -201,7 +201,21 @@ function dayNightSky() {
   if ( $("header.sky").hasClass("day") || $("header.sky").hasClass("dusk") ) {
     $("#hotairballoon").css("display", "block");
   } else {
-    $("hotairballoon").css("display", "none");
+    $("#hotairballoon").css("display", "none");
+  }
+
+  var dateObject = new Date();
+  var month = dateObject.getMonth() + 1;
+  var day = dateObject.getDate();
+
+  var xmasStart = dateObject.getFullYear() + "-12-01";
+  var xmasEnd = dateObject.getFullYear() + "-12-27";
+  var nowDate = dateObject.getFullYear() + "-" + (month < 10 ? '0' : '') + month + "-" + (day < 10 ? '0' : '') + day;
+
+  if (nowDate >= xmasStart && nowDate <= xmasEnd) {
+    $("#santahat").css("display", "block");
+  } else {
+    $("#santahat").css("display", "none");
   }
 
 }
