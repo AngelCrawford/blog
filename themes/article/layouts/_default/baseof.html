@@ -122,8 +122,9 @@
     {{- $sunCalc := resources.Get "js/suncalc.js" -}}
     {{- $main := resources.Get "js/main.js" -}}
     {{- $search := resources.Get "js/search.js" -}}
+    {{- $firework := resources.Get "js/firework.js" -}}
     
-    {{- $script := slice $sunCalc $main $search | resources.Concat "js/footerBundle.js" | resources.Minify | resources.Fingerprint -}}
+    {{- $script := slice $sunCalc $main $search $firework | resources.Concat "js/footerBundle.js" | resources.Minify | resources.Fingerprint -}}
     <script src="{{ $script.Permalink }}"></script>
 
   </body>
