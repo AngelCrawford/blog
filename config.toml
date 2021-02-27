@@ -178,8 +178,9 @@ copyright = "Design/Programmierung: <a href=\"https://angel-crawford.de/\" targe
       "*.disquscdn.com"]
 
   [params.staticman]
-    endpoint = "https://article-static.herokuapp.com/v3/entry/github"
+    endpoint = "https://articletime-staticman.herokuapp.com/v3/entry/github"
     username = "AngelCrawford"
     repository = "blog"
     branch = "master"
     gravatarDefault = "https://raw.githubusercontent.com/AngelCrawford/blog/master/themes/article/static/images/avatar.png"
+    # https://articletime-staticman.herokuapp.com/v3/entry/github/AngelCrawford/blog/master/comments
