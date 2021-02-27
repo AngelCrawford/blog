@@ -6,6 +6,11 @@
   <input type="hidden" name="options[slug]" value="{{ $.File.ContentBaseName }}">
   <input type="hidden" id="comment-parent" name="fields[reply_to]" value="">
 
+  <div class="form-info">
+    <p><b>Reaktionen werden moderiert.</b> Deine Reaktion wird von einem Menschen überprüft, bevor sie auf dieser Seite veröffentlicht wird.</p>
+    <p>Falls Du mir privat schreiben willst, kannst Du das hier: <a href="/kontakt">Kontaktiere mich</a>.</p>
+  </div>
+
   <div class="field is-horizontal">
     <div class="field-label is-normal">
       <label for="comment-name" class="label">Name<svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#asterisk"></use></svg></label>
@@ -40,6 +45,7 @@
           <span class="icon is-small is-right is-danger" style="display:none;">
             <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#error-warning-line"></use></svg>
           </span>
+          <span class="small-info">Deine E-Mail-Adresse wird nicht öffentlich angezeigt oder an Dritte weitergegeben. Sie wird lediglich zum Anzeigen Deines <a href="https://de.gravatar.com/support/what-is-gravatar/" target="_blank">Gravatars</a> verwendet.</span>
         </div>
         <p class="help is-danger" style="display:none;">Bitte ausfüllen im Format "mail@domain.de".</p>
       </div>
@@ -88,9 +94,7 @@
           <textarea name="fields[comment]" class="textarea" id="comment-message" placeholder="Markdown ist erlaubt" required rows="10"></textarea>
         </div>
         <p class="help is-danger" style="display:none;">Bitte ausfüllen.</p>
-        <p class="help is-primary">Reaktioen werden moderiert, es kann etwas dauern bis Deine frei geschaltet wird.</p>
-        <p class="help is-primary">Dieses Nachrichten Feld unterstützt <a href="https://markdown.de/" target="_blank" rel="noreferrer">Markdown</a>.</p>
-        <p class="help is-primary">Falls Du mir privat schreiben willst, kannst Du das hier: <a href="/kontakt">Kontaktiere mich</a>.</p>
+        <span class="small-info">Dieses Nachrichten Feld unterstützt <a href="https://markdown.de/" target="_blank" rel="noreferrer">Markdown</a>.</span>
       </div>
     </div>
   </div>
@@ -109,7 +113,7 @@
         </div>
       </div>
     </div>
-  </div> 
+  </div>
 
   <div class="field is-horizontal">
     <div class="field-label">

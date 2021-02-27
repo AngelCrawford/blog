@@ -245,7 +245,7 @@
       @include box-shadow(false, 5px, 5px, 5px, rgba(#000, .3), rgba($text, .07));
       border: 1px solid rgba($primary, .5);
       &::placeholder {
-        color: $text;
+        color: rgba($text, 0.4);
       }
       &:focus {
         border: 1px solid $hover;
@@ -274,8 +274,21 @@
       }
     }
 
+    .form-info {
+      border: 1px solid rgba($primary, .2);
+      padding: 1em;
+      margin: 0.5em 0 1.5em 0;
+      background: $pageBack;
+    }
+
     .help.is-primary {
       color: $text;
+    }
+    span.small-info {
+      display: block;
+      font-size: .75rem;
+      margin-top: 0.25rem;
+      color: rgba($text, 0.7);
     }
     span.icon {
       svg.remix {
