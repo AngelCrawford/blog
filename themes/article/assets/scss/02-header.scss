@@ -225,6 +225,8 @@ header.header {
 
 // THANKS: https://codepen.io/bennettfeely/pen/mEjio
 #santahat {
+  display: none;
+
   .front, .back {
     position: absolute;
     width: 4.5rem;

@@ -1,14 +1,3 @@
-// when animating on canvas, it is best to use requestAnimationFrame instead of setTimeout or setInterval
-// not supported in all browsers though and sometimes needs a prefix, so we need a shim
-window.requestAnimFrame = (function() {
-	return window.requestAnimationFrame ||
-				window.webkitRequestAnimationFrame ||
-				window.mozRequestAnimationFrame ||
-				function(callback) {
-					window.setTimeout( callback, 1000 / 60 );
-				};
-})();
-
 // now we will setup our basic variables for the demo
 var canvas = document.getElementById('firework'),
 		ctx = canvas.getContext('2d'),
@@ -21,23 +10,15 @@ var canvas = document.getElementById('firework'),
 		particles = [],
 		// starting hue
 		hue = 120,
-		// when launching fireworks with a click, too many get launched at once without a limiter, one launch per 5 loop ticks
-		limiterTotal = 5,
-		limiterTick = 0,
 		// this will time the auto launches of fireworks, one launch per 80 loop ticks
 		timerTotal = 75,
-		timerTick = 0,
-		mousedown = false,
-		// mouse x coordinate,
-		mx,
-		// mouse y coordinate
-		my;
+		timerTick = 0;
 		
 // set canvas dimensions
 canvas.width = cw;
 canvas.height = ch;
 
-// now we are going to setup our function placeholders for the entire demo
+var animateId;
 
 // get a random number within a range
 function random( min, max ) {
@@ -194,13 +175,22 @@ function createParticles( x, y ) {
 	}
 }
 
+var currentTime = new Date();
+var stopTime = new Date(currentTime.getTime() + 12000);
+
 // main demo loop
 function loop() {
 	// this function will run endlessly with requestAnimationFrame
-	requestAnimFrame( loop );
-	
+	animateId = requestAnimationFrame(loop);
+
+	// this will stop the loop after x seconds
+	var currentTime = new Date();
+	if (currentTime >= stopTime) {
+		cancelAnimationFrame(animateId);
+	}
+		
 	// increase the hue to get different colored fireworks over time
-	hue += 0.7;
+	hue += 0.9;
 	
 	// normally, clearRect() would be used to clear the canvas
 	// we want to create a trailing effect though
@@ -227,46 +217,27 @@ function loop() {
 		particles[ i ].update( i );
 	}
 	
-	// launch fireworks automatically to random coordinates, when the mouse isn't down
+	// launch fireworks automatically to random coordinates
 	if( timerTick >= timerTotal ) {
-		if( !mousedown ) {
-			// start the firework at the bottom middle of the screen, then set the random target coordinates, the random y coordinates will be set within the range of the top half of the screen
-			fireworks.push( new Firework( cw / 2, ch, random( 0, cw ), random( 0, ch / 2 ) ) );
-			timerTick = 0;
-		}
+		// start the firework at the bottom middle of the screen, then set the random target coordinates, the random y coordinates will be set within the range of the top half of the screen
+		fireworks.push( new Firework( cw / 2, ch, random( 0, cw ), random( 0, ch / 2 ) ) );
+		timerTick = 0;
 	} else {
 		timerTick++;
 	}
-	
-	// limit the rate at which fireworks get launched when mouse is down
-	if( limiterTick >= limiterTotal ) {
-		if( mousedown ) {
-			// start the firework at the bottom middle of the screen, then set the current mouse coordinates as the target
-			fireworks.push( new Firework( cw / 500, ch, mx, my ) );
-			limiterTick = 0;
-		}
-	} else {
-		limiterTick++;
-	}
+
 }
 
-// mouse event bindings
-// update the mouse coordinates on mousemove
-canvas.addEventListener( 'mousemove', function(e) {
-	mx = e.pageX - canvas.offsetLeft;
-	my = e.pageY - canvas.offsetTop;
-});
+// once the window loads, we are ready for some fireworks! but only on new years eve!
 
-// toggle mousedown state and prevent canvas from being selected
-canvas.addEventListener( 'mousedown', function(e) {
-	e.preventDefault();
-	mousedown = true;
-});
+var dateObject = new Date();
+var month = dateObject.getMonth() + 1;
+var day = dateObject.getDate();
 
-canvas.addEventListener( 'mouseup', function( e ) {
-	e.preventDefault();
-	mousedown = false;
-});
+var xmasStart = dateObject.getFullYear() + "-01-01";
+var xmasEnd = dateObject.getFullYear() + "-01-07";
+var nowDate = dateObject.getFullYear() + "-" + (month < 10 ? '0' : '') + month + "-" + (day < 10 ? '0' : '') + day;
 
-// once the window loads, we are ready for some fireworks!
-window.onload = loop;
+if (nowDate >= xmasStart && nowDate <= xmasEnd) {
+	window.onload = loop;
+}
