@@ -1,3 +1,5 @@
+// THANKS: https://codepen.io/zystvan/details/LEbNRp
+
 // now we will setup our basic variables for the demo
 var canvas = document.getElementById('firework'),
 		ctx = canvas.getContext('2d'),
@@ -229,12 +231,11 @@ function loop() {
 }
 
 // once the window loads, we are ready for some fireworks! but only on new years eve!
-
 var dateObject = new Date();
 var month = dateObject.getMonth() + 1;
 var day = dateObject.getDate();
 
-var xmasStart = dateObject.getFullYear() + "-01-01";
+var xmasStart = dateObject.getFullYear() + "-12-31";
 var xmasEnd = dateObject.getFullYear() + "-01-07";
 var nowDate = dateObject.getFullYear() + "-" + (month < 10 ? '0' : '') + month + "-" + (day < 10 ? '0' : '') + day;
 

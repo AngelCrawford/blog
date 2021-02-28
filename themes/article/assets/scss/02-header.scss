@@ -276,6 +276,31 @@ header.header {
   left: 0;
 }
 
+// THANKS: https://codepen.io/uchardon/pen/eGjJap?editors=0100
+#ghosty {
+  position: absolute;
+  top: -40px;
+  left: -30px;
+  width: 400px;
+  z-index: -1;
+  display: none;
+
+  svg#ghost {
+    -webkit-filter: url("#disfilter");
+    filter: url("#disfilter") blur(3px);
+    animation: ghost 2.5s forwards 1;
+    animation-iteration-count: 1;
+    animation-delay: 2.5s;
+    opacity: 0;
+  }
+  @keyframes ghost {
+    0% { opacity: 0; }
+    50% { opacity: 1; }
+    100% { opacity: 0; }
+  }
+}
+
+
 // THANKS: https://codepen.io/matchboxhero/pen/RLebOY
 .bird-wrapper {
   .bird {
