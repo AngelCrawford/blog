@@ -1,34 +1,58 @@
+{{ range first 5 (where .Site.RegularPages "Section" "articles") }}
+        
+{{- $postSlug := .File.ContentBaseName -}}
+{{- $comments := index $.Site.Data.comments $postSlug -}}
+{{- $.Scratch.Set "countingComments" 0 -}}
+
+{{- range $comments -}}
+  {{- $.Scratch.Add "countingComments" 1 -}}
+{{- end -}}
+
+{{ $CountComments := $.Scratch.Get "countingComments" }}
+
+{{- if not (eq $CountComments 0 ) -}}
 
 
-.navbar-end {
-  .navbar-item.has-no-hover-border a:hover {
-    border-top: none;
-  }
-}
+  <li>
+    <span class="variable">
+      <a href="{{ .Permalink }}#comments" alt="{{ .Title }}" title="{{ .Title }}">
+        <svg class='remix-small comments'>
+          <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#question-answer-line"></use>
+        </svg>{{ $CountComments }}
+      </a>
+    </span>
+    <span class="variable-number"><a href="{{ .Permalink }}" alt="{{ .Title }}" title="{{ .Title }}">{{ .Title }}</a></span>
+  </li>
 
-.navbar-item.has-dropdown:focus .navbar-link, 
-.navbar-item.has-dropdown:hover .navbar-link, 
-.navbar-item.has-dropdown.is-active .navbar-link {
-  color: $hover;
-  background-color: darken($pageBack, 3%);
-  border-left: 1px solid $hover;
-  border-right: 1px solid $hover;
-  border-top: 5px solid $hover;
-  border-bottom: 5px solid darken($pageBack, 3%);
-  z-index: 999999;
-  box-shadow: none;
-}
-.navbar-link:not(.is-arrowless)::after {
-  border-color: $primary;
-  transform: rotate(135deg);
-  margin-top: -0.2em;
-  transition: 0.1s transform linear;
-}
-.navbar-link:not(.is-arrowless):hover::after,
-.navbar-item.has-dropdown:hover .navbar-link:not(.is-arrowless)::after {
-  border-color: $hover;
-  transform: rotate(-45deg);
-  margin-top: -0.375em;
-}  
+{{- end -}}
 
-// #blogDropdown {display: block;}
+{{- $.Scratch.Delete "countingComments" -}}
+
+{{ end }}
+
+
+
+
+
+
+
+
+
+{{- range first 5 (sort $getFile .commentsCount "desc") -}}
+
+{{- if not (eq (.commentsCount) (float 0) ) -}}
+
+  {{ $strCommentsCount := string .commentsCount }}
+  <li>
+    <span class="variable">
+      <a href="{{ .permalink }}#comments" alt="{{ .title }}" title="{{ .title }}">
+        <svg class='remix-small comments'>
+          <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#question-answer-line"></use>
+        </svg>{{ $strCommentsCount }}
+      </a>
+    </span>
+    <span class="variable-number"><a href="{{ .permalink }}" alt="{{ .title }}" title="{{ .title }}">{{ .title }}</a></span>
+  </li>
+
+{{- end -}}
+{{- end -}}

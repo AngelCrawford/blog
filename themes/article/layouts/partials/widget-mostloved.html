@@ -5,26 +5,33 @@
     <div class="column">
       <ul>
           
-        {{- $file := printf "%s%s" .Site.BaseURL "index.json" -}}
-        {{- $data := getJSON $file -}}
-        {{- range first 5 (sort $data ".commentsCount" "desc") -}}
+    
+        {{- $getFile := getJSON (printf "%s%s" .Site.BaseURL "index.json") -}}
 
-          {{- if not (eq (.commentsCount) (float 0) ) -}}
+        {{ range $getFile }}
 
-            {{ $strCommentsCount := string .commentsCount }}
-            <li>
-              <span class="variable">
-                <a href="{{ .permalink }}#comments" alt="{{ .title }}" title="{{ .title }}">
-                  <svg class='remix-small comments'>
-                    <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#question-answer-line"></use>
-                  </svg>{{ $strCommentsCount }}
-                </a>
-              </span>
-              <span class="variable-number"><a href="{{ .permalink }}" alt="{{ .title }}" title="{{ .title }}">{{ .title }}</a></span>
-            </li>
+          {{ range first 5 (sort . ".commentsCount" "desc") }}
+            {{- if not (eq (.commentsCount) (float 0) ) -}}
 
-          {{- end -}}
-        {{- end -}}
+              {{ $strCommentsCount := string .commentsCount }}
+              <li>
+                <span class="variable">
+                  <a href="{{ .permalink }}#comments" alt="{{ .title }}" title="{{ .title }}">
+                    <svg class='remix-small comments'>
+                      <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#question-answer-line"></use>
+                    </svg>{{ $strCommentsCount }}
+                  </a>
+                </span>
+                <span class="variable-number"><a href="{{ .permalink }}" alt="{{ .title }}" title="{{ .title }}">{{ .title }}</a></span>
+              </li>
+
+            {{- end -}}
+
+          {{ end }}
+        {{ end }}
+
+
+
 
       </ul>
     </div>
