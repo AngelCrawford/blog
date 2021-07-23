@@ -227,6 +227,44 @@ function dayNightSky() {
 
 }
 
+// ***************** Widget Most Loved
+$.getJSON("/index.json", function( data ) {
+  var items = [];
+  var counter = 0;
+
+  data.sort(compare);
+
+  $.each(data, function(key, val) {
+    
+    if (counter == 5) {
+      return false
+    }
+
+    if (val.commentsCount == 0) {
+      return false
+    }
+
+    items.push("<li><span class='variable'><a href='" + val.permalink + "#comments' alt='" + val.title + "' title='" 
+      + val.title + "'><svg class='remix-small comments'><use xlink:href='/fonts/remixicon/remixicon.symbol.svg#question-answer-line'></use></svg>"
+      + val.commentsCount + "</a></span><span class='variable-number'><a href='" + val.permalink + "' alt='" 
+      + val.title + "' title='" + val.title + "'>" + val.title + "</a></span></li>" );
+
+    counter++;
+  });
+
+  $("<ul/>", {
+    html: items.join("")
+  }).appendTo( ".widget.mostloved.box" );
+});
+
+
+function compare(a, b) {
+  if (a.commentsCount < b.commentsCount)
+    return 1;
+  if (a.commentsCount > b.commentsCount)
+    return -1;
+  return 0;
+}
 
 function isTimeBetween(startTimeAsArray, endTimeAsArray) {
   // THANKS: https://stackoverflow.com/a/25958232

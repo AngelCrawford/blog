@@ -248,8 +248,7 @@ input[type="search"]::-webkit-search-results-decoration {
 
 
 // External Links
-// a:not([href^='#']):not([href^='/']):after
-a:not([href*='yourdomain.com']):not([href^='#']):not([href^='/']):not(figure a):not(a.website):not(span.card-footer-item a):not(#remove-cookies):not(nav.pagination a):not(.author-icons-wrapper a):not(.card.is-small-count a):not(.card.is-small a):not(.serie-single a):not(.series-single a):not(.series-single-footer a):not(.categories-single a):after {
+a[href*='http']::after {
   content: "\ecaf";
   font-family: 'remixicon' !important;
   font-size: 80%;
@@ -257,16 +256,15 @@ a:not([href*='yourdomain.com']):not([href^='#']):not([href^='/']):not(figure a):
 }
 
 // Internal Links
-// a:not([href*='#']):after,
-// a:not(.anchor):after {
-//   content: "\eeb7";
-//   font-family: 'remixicon' !important;
-//   font-size: 80%;
-//   padding-left: 5px;
-// }
-
-// .ri-external-link-line:before { content: "\ecaf"; }
-// .ri-links-fill:before { content: "\eeb7"; }
+a[href*='localhost:1313']::after,
+a[href^='#']::after,
+a[href^='/']::after {
+  // content: "\eeb7";
+  content: "";
+  // font-family: 'remixicon' !important;
+  // font-size: 80%;
+  // padding-left: 5px;
+}
 
 
 .visible-hidden {
