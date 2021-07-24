@@ -84,7 +84,7 @@ copyright = "Design/Programmierung: <a href=\"https://angel-crawford.de/\" targe
 
   [[params.social]]
     name = "Facebook"
-    link = "#"
+    link = "https://facebook.com"
     icon = "facebook-circle-line"
     inHeader = false
     inFooter = true

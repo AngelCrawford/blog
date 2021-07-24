@@ -253,6 +253,7 @@ a[href*='http']::after {
   font-family: 'remixicon' !important;
   font-size: 80%;
   padding-left: 5px;
+  color: rgba($primary, .5);
 }
 
 // Internal Links

@@ -59,15 +59,15 @@
                             {{- end -}}
                           {{- end -}}
 
-                          <a href="{{ .Page.Permalink }}" class="title is-5 colored" style='color: 
+                          <a href="{{ .Page.Permalink }}" class="title is-5 colored" style="
                             {{- range $.Site.Params.categoryColor -}}
                               {{- if eq ($.Scratch.Get "CatName") .name -}}
-                                {{- .color -}}
+                                color: {{- .color -}}
                               {{- end -}}
-                            {{- end -}}'>{{ .Name }}</a>
+                            {{- end -}}">{{ .Name }}</a>
                           
                           {{- with $.Site.GetPage .URL -}}
-                            <span class="inner-content">{{ .Content | markdownify | truncate 140 " [...]" }}</span>
+                            <div class="inner-content">{{ .Content | markdownify | truncate 140 " [...]" }}</div>
                             <a class="read-more" href="{{ .RelPermalink }}"> {{ i18n "readMore" }}</a>
                           {{- end -}}
 

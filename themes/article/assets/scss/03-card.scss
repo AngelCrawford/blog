@@ -1,3 +1,10 @@
+body.type-is-authors.kind-is-term a.title h2,
+body.type-is-tags.kind-is-term a.title h2,
+body.type-is-categories.kind-is-term a.title h2,
+body.type-is-page.kind-is-page a.title h2 {
+  color: $primary;
+}
+
 article.card.is-horizontal, .card {
   width: calc(100% - 1.5em);
   margin-left: 1.5em;
