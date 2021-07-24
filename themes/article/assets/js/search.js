@@ -36,7 +36,7 @@ var searchFn = function () {
           "<span></span><svg class=\"remix-small\"><use xlink:href=\"/fonts/remixicon/remixicon.symbol.svg#calendar-line\"></use></svg>" + result.publishedOn + 
           "<span></span><svg class=\"remix-small\"><use xlink:href=\"/fonts/remixicon/remixicon.symbol.svg#pencil-line\"></use></svg>" + result.updatedOn + 
           "</span>" + 
-          "<div class=\"content\">" + result.showContent.substr(0, 260) + " [...]" + 
+          "<div class=\"content\">" + result.showContent.substr(0, 250) + " [...]" + 
           "<a href=\"" + result.permalink + "\" " + "alt=\"" + result.showTitle + "\" class=\"read-more\"> weiterlesen</a>" +
           "</div></div>";
         $("#results").append(resultPane);
