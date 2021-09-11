@@ -8,9 +8,9 @@ header.header {
   border-bottom: none;
   box-shadow: none;
 
-  // @media (max-width: 505px) {
-  //   height: 250px;
-  // }
+  @media (max-width: 505px) {
+    height: 197px;
+  }
 
   #city {
     background-image: url("/images/header.svg");
@@ -467,7 +467,7 @@ nav.navbar {
   position: relative;
 
   @media (max-width: 1023px) {
-    margin-top: -3.5em;
+    // margin-top: -3.5em;
   }
   @media (max-width: 566px) {
     padding: 0 1em;
@@ -512,6 +512,9 @@ nav.navbar {
       ~ span.icon .remix {
         fill: $hover;
       }
+    }
+    &::placeholder {
+      color: rgba($small, .7);
     }
   }
   .searchWithButton {
@@ -560,6 +563,8 @@ nav.navbar {
     padding-right: 1.5em;
 
     &.is-active,
+    &.is-active:not(:focus):not(:hover), 
+    &.navbar-link.is-active:not(:focus):not(:hover),
     &:hover, &:focus {
       color: $accent;
       background-color: darken($pageBack, 7%);

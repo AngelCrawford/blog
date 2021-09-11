@@ -163,13 +163,13 @@ var searchFn = function () {
   };
 
   $(document).mouseup(function(e) {
-    if (!$("#resultsWrapper").is(e.target) && $("#resultsWrapper").has(e.target).length === 0) {
+    // if (!$("#resultsWrapper").is(e.target) && $("#resultsWrapper").has(e.target).length === 0) {
       $("#resultsWrapper").hide();
-      if ($("input#searchBox").val().length === 0) {
+      // if ($("input#searchBox").val().length === 0) {
         $("#searchIcons svg.remix.lens").show();
         $("#searchIcons svg.remix.close").hide();
-      }
-    }
+      // }
+    // }
   });
 
   $("#searchIcons svg.remix.close").on("click", function(e) {
