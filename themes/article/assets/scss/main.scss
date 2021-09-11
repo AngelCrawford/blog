@@ -134,8 +134,8 @@ h3, h3.title {
   color: $hover;
   @include font-header;
 }
-.content h1:not(:first-child),
-.content h2:not(:first-child) {
+.content:not(article) h1:not(:first-child),
+.content:not(article) h2:not(:first-child) {
   margin-top: unset;
 }
 h2.subtitle {

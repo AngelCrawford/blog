@@ -12,7 +12,6 @@ $(".navbar-burger").click(function() {
 
 $(".navbar-item.has-dropdown").click(function () { 
   $(this).children('.navbar-dropdown').toggle();
-
 });
 
 if ($(window).width() <= 1023) {
