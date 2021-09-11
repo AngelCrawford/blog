@@ -76,6 +76,29 @@ html, body {
   scroll-behavior: smooth;
 }
 
+.reveal-wrapper {
+  /* make sure to cover the screen */
+  min-height: 100vh;
+  background-color: darken($pageBack, 3%);
+
+  /* put on top */
+  position: relative;
+  z-index: 1;
+}
+
+main {
+  box-shadow: none;
+}
+footer.footer {
+  /* place on the bottom */
+  position: sticky;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  z-index: 0;
+}
+
 .header-wrapper {
   padding: 42px 0 10px 0;
 }

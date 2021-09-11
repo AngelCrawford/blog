@@ -1,25 +1,8 @@
-main {
-  /* make sure to cover the screen */
-  min-height: calc(100vh - 360px);
-  background-color: darken($pageBack, 3%);
-
-  /* put on top */
-  position: relative;
-  z-index: 1;
-  box-shadow: none;
-}
-
 footer.footer {
   margin: 0;
   padding: 0;
   background-color: darken($pageBack, 5%);
   @include box-shadow(true, 10px, 10px, 15px, rgba(#000, .3), rgba($text, .1));
-
-  /* place on the bottom */
-  position: sticky;
-  bottom: 0;
-  left: 0;
-  top: 0;
 
   > svg {
     position: absolute;
