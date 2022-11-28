@@ -279,6 +279,10 @@ a[href*='http']::after {
   color: rgba($primary, .5);
 }
 
+.post-comment figure a::after {
+  display: none;
+}
+
 // Internal Links
 a[href*='localhost:1313']::after,
 a[href^='#']::after,
