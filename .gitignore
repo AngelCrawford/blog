@@ -1,6 +1,6 @@
 # Hugo default output directory
-/themes/ananke
 /resources
+/public
 .vscode/
 
 ## OS Files
@@ -9,3 +9,5 @@ Thumbs.db
 ehthumbs.db
 Desktop.ini
 $RECYCLE.BIN/
+frontmatter.json
+.frontmatter/

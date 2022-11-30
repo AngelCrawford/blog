@@ -1,8 +1,0 @@
-{{ $_hugo_config := `{ "version": 1 }` }}
-
-<div data-tooltip="Klicken zum Öffnen">
-  <details>
-    <summary>{{- with .Get "title" -}}{{ . }}{{- end -}}</summary>
-    {{- .Inner -}}
-  </details>
-</div>
