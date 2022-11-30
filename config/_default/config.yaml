@@ -1,0 +1,5 @@
+title: Article Time
+languageCode: de-DE
+
+enableGitInfo: true
+lastmod: ["lastmod", ":git", "date"] 
