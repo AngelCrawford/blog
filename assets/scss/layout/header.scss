@@ -64,31 +64,39 @@ header.hero {
         }
 
         .title {
+            position: relative;
+            z-index: 9999;
+
             h1.textlogo {
                 background: linear-gradient(to bottom, #b78846 32%, #ffcb9a 50%, #624925 72%);
                 -webkit-background-clip: text;
                 -webkit-text-fill-color: transparent;
+                -moz-background-clip: text;
+                -moz-text-fill-color: transparent;
                 color: #000;
-                @include font-header;
+                @include font-header-bold;
                 position: relative;
                 font-size: 70px;
                 margin: 0;
               
                 &:before {
                     content: "";
-                    height: 60%;
-                    width: 59%;
+                    width: 500px;
                     position: absolute;
-                    border: 1px solid red;
                     background-color: #d1e8e2;
                     opacity: 1;
-                    z-index: 3;
+                    z-index: -1;
+                    margin: 0 auto;
                     filter: blur(30px);
+                    top: 0;
+                    bottom: 0;
+                    left: calc(50% - 250px);
                 }
                     
                 &:after {
-                    content: attr(data-heading);
                     background: none;
+                    padding: 0 130px;
+                    content: attr(data-heading);
                     left: 0;
                     top: 0;
                     z-index: -1;
@@ -115,7 +123,7 @@ header.hero {
                 
                     // Wird per JS getriggert
                     &.shimmer-animation {
-                        @include animation(shimmer, 8s);
+                        @include animation(shimmer, .8s);
                         will-change: background-position;
                     }
     

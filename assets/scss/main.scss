@@ -4,11 +4,13 @@
  * Template URI: https://angel-crawford.de
 */
 
+@import "base/variables";
+@import "base/fonts";
+
+
 @import "src/bulma/bulma.sass";
 
 
-@import "base/variables";
-@import "base/fonts";
 @import "base/icons";
 @import "base/mixins";
 
