@@ -1,57 +1,3 @@
-@font-face {
-  font-family: 'Montserrat Alternates';
-  src: local('Montserrat Alternates'), url('fonts/Montserrat_Alternates/MontserratAlternates-Regular.ttf') format('truetype');
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Montserrat-Light';
-  src: local('Montserrat'), local('Montserrat-Light'), url('fonts/Montserrat/Montserrat-Light.ttf') format('truetype');
-  font-display: swap;
-}
-@font-face {
-  font-family: 'Montserrat-Regular';
-  src: local('Montserrat'), local('Montserrat-Regular'), url('fonts/Montserrat/Montserrat-Regular.ttf') format('truetype');
-  font-display: swap;
-}
-@font-face {
-  font-family: 'Montserrat-Bold';
-  src: local('Montserrat'), local('Montserrat-Bold'), url('fonts/Montserrat/Montserrat-Bold.ttf') format('truetype');
-  font-display: swap;
-}
-@font-face {
-  font-family: 'Montserrat-Black';
-  src: local('Montserrat'), local('Montserrat-Black'), url('fonts/Montserrat/Montserrat-Black.ttf') format('truetype');
-  font-display: swap;
-}
-
-@mixin font-family($family, $weight) {
- @if $family {
-   font-family: $family, Helvetica, Arial, Verdana, sans-serif;
- } else {
-   font-family: Helvetica, Arial, Verdana, sans-serif;
- }
- @if $weight { font-weight: $weight; }
-}
-
-@mixin font-header {
-  @include font-family('Montserrat Alternates', 600);
-}
-
-@mixin font-light {
-  @include font-family('Montserrat-Light', 200);
-}
-@mixin font-regular {
-  @include font-family('Montserrat-Regular', 300);
-}
-@mixin font-bold {
-  @include font-family('Montserrat-Bold', 500);
-}
-@mixin font-black {
-  @include font-family('Montserrat-Black', 900);
-}
-
-
 // THANKS: https://remixicon.com
 /*
 * https://remixicon.com
@@ -60,52 +6,22 @@
 * Released under the Apache License Version 2.0
 */
 
-.remix {
-  width: 24px;
-  height: 24px;
-  // fill: $primary;
-  display: inline-block;
-  &:hover {
-    // fill: $hover;
-  }
-}
-.remix-small {
-  width: 16px;
-  height: 16px;
-  fill: #777777;
-  display: inline-block;
-}
-.remix-big {
-  width: 40px;
-  height: 40px;
-  display: inline-block;
-}
-.remix-big-primary {
-  width: 40px;
-  height: 40px;
-  // fill: $primary;
-  display: inline-block;
-  &:hover {
-    // fill: $hover;
-  }
-}
-
 @font-face {
-  font-family: "remixicon";
-  src: url('fonts/remixicon/remixicon.eot'); /* IE9*/
-  src: url('fonts/remixicon/remixicon.eot#iefix') format('embedded-opentype'), /* IE6-IE8 */
-       url("fonts/remixicon/remixicon.woff2") format("woff2"),
-       url("fonts/remixicon/remixicon.woff") format("woff"),
-       url('fonts/remixicon/remixicon.ttf') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
-       url('fonts/remixicon/remixicon.svg#remixicon') format('svg'); /* iOS 4.1- */
-  font-display: swap;
+    font-family: "remixicon";
+    src: url('fonts/remixicon/remixicon.eot'); /* IE9*/
+    src: url('fonts/remixicon/remixicon.eot#iefix') format('embedded-opentype'), /* IE6-IE8 */
+            url("fonts/remixicon/remixicon.woff2") format("woff2"),
+            url("fonts/remixicon/remixicon.woff") format("woff"),
+            url('fonts/remixicon/remixicon.ttf') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
+            url('fonts/remixicon/remixicon.svg#remixicon') format('svg'); /* iOS 4.1- */
+    font-display: swap;
 }
 
 [class^="ri-"], [class*="ri-"] {
-  font-family: 'remixicon' !important;
-  font-style: normal;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+    font-family: 'remixicon' !important;
+    font-style: normal;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 .ri-lg { font-size: 1.3333em; line-height: 0.75em; vertical-align: -.0667em; }

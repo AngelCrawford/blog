@@ -1,0 +1,132 @@
+header.hero {
+
+    &.has-sky {
+        &.is-night {
+          background: radial-gradient(circle, rgba(#000000, 1) 0%, rgba(#010010, 1) 35%, rgba(#0c1a37, 1) 100%);
+        }
+        &.is-dawn {
+          // day start
+          background: radial-gradient(ellipse at bottom, rgba(#0c1a37, 1) 0%, rgba(#2c449d, 1) 50%, rgba(#ce98af, 1) 100%);
+        }
+        &.is-day {
+          background: radial-gradient(circle, rgba(#32bafa, 1) 0%, rgba(#b8e7fd, 1) 35%, rgba(#d1e8e2, 1) 100%);
+        }
+        &.is-dusk {
+          // day evening
+          background: radial-gradient(ellipse at bottom, rgba(#0c1a37, 1) 0%, rgba(#2c449d, 1) 50%, rgba(#ef8d5c, 1) 100%);
+        }
+    }
+
+    .hero-body {
+        position: relative;
+
+        .clock-logo {
+            background: url("/images/clock.png") no-repeat top center;
+            background-size: contain;
+            position: absolute;
+            opacity: .8;
+            top: 0;
+            left: 0;
+
+            width: 100%;
+            height: 100%;
+
+            z-index: 1;
+            @include animation(clock, 2s);
+            will-change: background-position;
+            
+            @include keyframes(clock) {
+                0% { background-position: 50% 200px; } 
+                100% {background-position: 50% 20px; } 
+            }
+        }
+
+        // LOGO
+        .brand-logo {
+            display: -ms-flexbox;
+            display: -webkit-flex;
+            display: flex;
+            // -webkit-justify-content: center;
+            // justify-content: center;
+            // width: auto;
+            // border: 1px solid red;
+            // height: 360px;
+            width: 100%;
+                a.brand {
+                flex: 0 1 auto;
+                align-self: auto;
+                height: auto;
+                // border: 1px solid orange;
+                top: 120px;
+                z-index: 999;
+                position: absolute;
+            }
+        }
+
+        .title {
+            h1.textlogo {
+                background: linear-gradient(to bottom, #b78846 32%, #ffcb9a 50%, #624925 72%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                color: #000;
+                @include font-header;
+                position: relative;
+                font-size: 70px;
+                margin: 0;
+              
+                &:before {
+                    content: "";
+                    height: 60%;
+                    width: 59%;
+                    position: absolute;
+                    border: 1px solid red;
+                    background-color: #d1e8e2;
+                    opacity: 1;
+                    z-index: 3;
+                    filter: blur(30px);
+                }
+                    
+                &:after {
+                    content: attr(data-heading);
+                    background: none;
+                    left: 0;
+                    top: 0;
+                    z-index: -1;
+                    width: 100%;
+                    position: absolute;
+                    text-shadow: -1px 0 1px #ffcb9a, 0 1px 1px #ffcb9a, 5px 5px 10px rgba(0, 0, 0, 0.7), -2px -2px 5px rgba(255, 255, 255, 0.3);
+                }
+    
+                
+                span.shimmer {
+                    padding: 0 130px;
+                    text-align: center;
+                    background: -webkit-gradient(linear, left top, right top, from(#ffcb9a), to(#ffcb9a), color-stop(.5, #fff));
+                    background: -moz-gradient(linear, left top, right top, from(#ffcb9a), to(#ffcb9a), color-stop(.5, #fff));
+                    background: gradient(linear, left top, right top, from(#ffcb9a), to(#ffcb9a), color-stop(.5, #fff));
+                    -webkit-background-size: 125px 100%;
+                    -moz-background-size: 125px 100%;
+                    background-size: 125px 100%;
+                    -webkit-background-clip: text;
+                    -moz-background-clip: text;
+                    background-clip: text;
+                    background-repeat: no-repeat;
+                    background-position: 0 0;
+                
+                    // Wird per JS getriggert
+                    &.shimmer-animation {
+                        @include animation(shimmer, 8s);
+                        will-change: background-position;
+                    }
+    
+                }
+    
+                @include keyframes(shimmer) {
+                    0% { background-position: top left; }
+                    100% { background-position: top right; }
+                }
+            }
+          
+        }
+    }
+}

@@ -3,10 +3,15 @@
     {{- partial "head.html" . -}}
 
     <body>
+        <header class="hero is-medium has-sky is-day">
+            {{- partial "header" . -}}
+        </header>
 
+        <nav class="navbar" role="navigation" aria-label="main navigation">
+            {{ partial "navbar" . }}
+        </nav>
 
-        <div class="reveal-wrapper">
-            {{- partialCached "header.html" . -}}
+        <section class="section">
 
             <main>
 
@@ -20,8 +25,8 @@
                 </div>
             </main>
             
-            {{- partialCached "footer.html" . -}}
-        </div>
+            {{- partial "footer" . -}}
+        </section>
 
         <!-- Footer Scripts -->
         {{- $sunCalc := resources.Get "js/suncalc.js" -}}

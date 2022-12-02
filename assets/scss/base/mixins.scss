@@ -26,10 +26,26 @@
   transform: translate($horiz, $vert);
 }
 
-@mixin button($variant: primary) {
-  border-radius: $radius-large;
-  // @include box-shadow(false, 5px, 5px, 5px, rgba($text, .1), rgba($text, .05));
-  // border: 1px solid rgba($primary, .2);
-  // color: $primary;
-  margin: .25em;
+@mixin animation($animation, $time) {
+  animation: $animation alternate $time both;
+  -webkit-animation: $animation alternate $time both;
+  -moz-animation-name: $animation alternate $time both;
+}
+
+@mixin keyframes($name) {
+  @-webkit-keyframes #{$name} {
+      @content;
+  }
+  @-moz-keyframes #{$name} {
+      @content;
+  }
+  @-ms-keyframes #{$name} {
+      @content;
+  }
+  @-o-keyframes #{$name} {
+      @content;
+  }
+  @keyframes #{$name} {
+      @content;
+  }
 }
