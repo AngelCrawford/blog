@@ -26,10 +26,10 @@
   transform: translate($horiz, $vert);
 }
 
-@mixin animation($animation, $time) {
-  animation: $animation alternate $time both;
-  -webkit-animation: $animation alternate $time both;
-  -moz-animation-name: $animation alternate $time both;
+@mixin animation($animation, $time, $style: both) {
+  animation: $animation alternate $time $style;
+  -webkit-animation: $animation alternate $time $style;
+  -moz-animation-name: $animation alternate $time $style;
 }
 
 @mixin keyframes($name) {

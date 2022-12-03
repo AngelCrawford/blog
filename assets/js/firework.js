@@ -235,10 +235,13 @@ var dateObject = new Date();
 var month = dateObject.getMonth() + 1;
 var day = dateObject.getDate();
 
-var xmasStart = dateObject.getFullYear() + "-12-31";
-var xmasEnd = dateObject.getFullYear() + "-01-07";
+var newYearStart = dateObject.getFullYear() + "-12-27";
+var newYearEnd = dateObject.getFullYear() + "-12-31";
+var newYearStart2 = dateObject.getFullYear() + "-01-01";
+var newYearEnd2 = dateObject.getFullYear() + "-01-06";
 var nowDate = dateObject.getFullYear() + "-" + (month < 10 ? '0' : '') + month + "-" + (day < 10 ? '0' : '') + day;
+// var nowDate = "2022-01-01";
 
-if (nowDate >= xmasStart && nowDate <= xmasEnd) {
+if ( (nowDate >= newYearStart && nowDate <= newYearEnd) || (nowDate >= newYearStart2 && nowDate <= newYearEnd2) ) {
 	window.onload = loop;
 }
