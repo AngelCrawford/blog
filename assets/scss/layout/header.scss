@@ -2,6 +2,8 @@ header.hero {
     position: relative;
 
     &.has-sky {
+        background: radial-gradient(ellipse at bottom, rgba(#0c1a37, 1) 0%, rgba(#2c449d, 1) 50%, rgba(#ef8d5c, 1) 100%);
+
         &.is-night {
           background: radial-gradient(circle, rgba(#000000, 1) 0%, rgba(#010010, 1) 35%, rgba(#0c1a37, 1) 100%);
         }
@@ -128,6 +130,7 @@ header.hero {
         width: 100%;
         bottom: 0;
         top: 0;
+        overflow: hidden;
 
         // THANKS: https://codepen.io/nicooprat/pen/ALANqj
         #hotairballoon {
@@ -393,7 +396,6 @@ header.hero {
     header.hero #hero-animations .bird-wrapper .bird {
         transform: scale(.5);
     }
-
 }
 
 

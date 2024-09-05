@@ -1,0 +1,49 @@
+aside.menu {
+
+    a.logo {
+        display: flex;
+        align-items: center;
+
+        img {
+            width: 70px;
+            height: 70px;
+            margin: 1em;
+        }
+        span {
+        }
+    }
+
+    ul.menu-list li.is-mega {
+
+        & > a {
+            display: flex;
+            align-items: center;
+
+            &::after {
+                content: "\ea6e";
+                font-family: "remixicon";
+                width: auto;
+                margin-left: auto;
+            }
+        }
+
+        & > ul {
+            display: none;
+            padding-left: 0;
+
+            li a {
+                margin: 0;
+            }
+
+        }
+
+        &:hover a ~ ul {
+            display: block;
+            position: absolute;
+            margin-left: 16.66666674%;
+            margin-top: -36px;
+        }
+    }
+
+
+}
