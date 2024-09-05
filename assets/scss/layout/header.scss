@@ -99,9 +99,9 @@ header.hero {
                     background: -webkit-gradient(linear, left top, right top, from(#ffcb9a), to(#ffcb9a), color-stop(.5, #fff));
                     background: -moz-gradient(linear, left top, right top, from(#ffcb9a), to(#ffcb9a), color-stop(.5, #fff));
                     background: gradient(linear, left top, right top, from(#ffcb9a), to(#ffcb9a), color-stop(.5, #fff));
-                    -webkit-background-size: 125px 100%;
-                    -moz-background-size: 125px 100%;
-                    background-size: 125px 100%;
+                    -webkit-background-size: 50px 100%;
+                    -moz-background-size: 50px 100%;
+                    background-size: 50px 100%;
                     -webkit-background-clip: text;
                     -moz-background-clip: text;
                     background-clip: text;
@@ -258,6 +258,7 @@ header.hero {
                 animation-iteration-count: infinite;
 
                 &--one {
+                    margin-top: 150px;
                     animation-duration: 1s;
                     animation-delay: -0.5s;		
                 }
@@ -282,8 +283,8 @@ header.hero {
                     animation-delay: 0;
                 }
                 &--two {
-                    animation-duration: 16s;
-                    animation-delay: 1s;
+                    animation-duration: 17s;
+                    animation-delay: 4s;
                 }
             }
             @include keyframes(fly-cycle) {
@@ -301,27 +302,6 @@ header.hero {
             }
         }
         
-        // THANKS: https://codepen.io/uchardon/pen/bxbqoG
-        .wave-wrapper {
-            position: absolute;
-            width: 20em;
-            bottom: -30px;
-            left: calc(50% - 15.5em);
-            filter: sepia(.2);
-            opacity: .7;
-
-            .wave {
-                fill: #4478e3;
-            }
-            #wave2 {
-                transform: translateX(-30%);
-                opacity: .6;
-            }
-            #wave3 {
-                transform: translateX(-60%);
-                opacity: .3;
-            }
-        }
     }
 }
 
