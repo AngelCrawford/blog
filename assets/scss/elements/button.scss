@@ -1,0 +1,17 @@
+.button {
+    outline: none;
+    cursor: pointer;
+    transition: background, border .3s ease-out;
+    font-weight: 600;
+    @include box-shadow(false, 5px, 5px, 5px, rgba(#000, .3), rgba($text, .07));
+
+    &.is-round {
+        height: 55px;
+        width: 55px;
+        border-radius: 50%;
+    }
+    
+    &:hover, &:focus {
+        @include box-shadow(true, 5px, 5px, 5px, rgba(#000, .3), rgba($text, .07));
+    }
+}

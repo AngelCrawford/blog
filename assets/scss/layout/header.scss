@@ -1,0 +1,429 @@
+header.hero {
+    position: relative;
+
+    &.has-sky {
+        &.is-night {
+          background: radial-gradient(circle, rgba(#000000, 1) 0%, rgba(#010010, 1) 35%, rgba(#0c1a37, 1) 100%);
+        }
+        &.is-dawn {
+          // day start
+          background: radial-gradient(ellipse at bottom, rgba(#0c1a37, 1) 0%, rgba(#2c449d, 1) 50%, rgba(#ce98af, 1) 100%);
+        }
+        &.is-day {
+          background: radial-gradient(circle, rgba(#32bafa, 1) 0%, rgba(#b8e7fd, 1) 35%, rgba(#d1e8e2, 1) 100%);
+        }
+        &.is-dusk {
+          // day evening
+          background: radial-gradient(ellipse at bottom, rgba(#0c1a37, 1) 0%, rgba(#2c449d, 1) 50%, rgba(#ef8d5c, 1) 100%);
+        }
+    }
+
+    #city {
+        background-image: url("/images/header/city.svg");
+        background-repeat: repeat-x;
+        background-position: center bottom;
+        background-size: auto 85%;
+        position: relative;
+        z-index: 2;
+        filter: sepia(0.4);
+        position: absolute;
+        height: 100%;
+        width: 100%;
+    }
+
+    .hero-body {
+        position: relative;
+
+        .clock-logo {
+            background: url("/images/header/clock.png") no-repeat top center;
+            background-size: contain;
+            position: absolute;
+            opacity: .8;
+            top: 0;
+            left: 0;
+
+            width: 100%;
+            height: 100%;
+
+            z-index: 1;
+            @include animation(clock, 2s);
+            will-change: background-position;
+            
+            @include keyframes(clock) {
+                0% { background-position: 50% 200px; } 
+                100% {background-position: 50% 20px; } 
+            }
+        }
+
+        // Text Logo
+        .title {
+            position: relative;
+            z-index: 9999;
+
+            h1.textlogo {
+                background: linear-gradient(to bottom, #b78846 32%, #ffcb9a 50%, #624925 72%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                -moz-background-clip: text;
+                -moz-text-fill-color: transparent;
+                @include font-header-bold;
+                position: relative;
+                font-size: 70px;
+              
+                &:before {
+                    content: "";
+                    width: 500px;
+                    position: absolute;
+                    background-color: #d1e8e2;
+                    opacity: .4;
+                    z-index: -1;
+                    filter: blur(30px);
+                    top: 0;
+                    bottom: 0;
+                    left: calc(50% - 250px);
+                }
+                    
+                &:after {
+                    content: attr(data-heading);
+                    left: 0;
+                    z-index: -1;
+                    width: 100%;
+                    position: absolute;
+                    text-shadow: -1px 0 1px #ffcb9a, 0 1px 1px #ffcb9a, 5px 5px 10px rgba(0, 0, 0, 0.7), -2px -2px 5px rgba(255, 255, 255, 0.3);
+                }
+    
+                span.shimmer {
+                    padding: 0 130px;
+                    background: -webkit-gradient(linear, left top, right top, from(#ffcb9a), to(#ffcb9a), color-stop(.5, #fff));
+                    background: -moz-gradient(linear, left top, right top, from(#ffcb9a), to(#ffcb9a), color-stop(.5, #fff));
+                    background: gradient(linear, left top, right top, from(#ffcb9a), to(#ffcb9a), color-stop(.5, #fff));
+                    -webkit-background-size: 125px 100%;
+                    -moz-background-size: 125px 100%;
+                    background-size: 125px 100%;
+                    -webkit-background-clip: text;
+                    -moz-background-clip: text;
+                    background-clip: text;
+                    background-repeat: no-repeat;
+                
+                    // Wird per JS getriggert
+                    &.shimmer-animation {
+                        @include animation(shimmer, .8s);
+                        will-change: background-position;
+                    }
+    
+                }
+    
+                @include keyframes(shimmer) {
+                    0% { background-position: top left; }
+                    100% { background-position: top right; }
+                }
+            }
+          
+        }
+    }
+
+    #hero-animations {
+        position: absolute;
+        height: 100%;
+        width: 100%;
+        bottom: 0;
+        top: 0;
+
+        // THANKS: https://codepen.io/nicooprat/pen/ALANqj
+        #hotairballoon {
+            position: absolute;
+            top: 130px;
+            left: calc(50% + 360px);
+            background: url("/images/header/hotairballoon.svg") no-repeat;
+            width: 40px;
+            height: 40px;
+            transform: rotate(10deg)
+        }
+
+        #stars {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+                
+            // n is number of stars required
+            @function multiple-box-shadow ($n) {
+              $value: '#{random(2000)}px #{random(270)}px #FFF';
+                @for $i from 2 through $n {
+                  $value: '#{$value} , #{random(2000)}px #{random(270)}px #FFF'
+                }
+              @return unquote($value);
+            }
+            $shadows-small: multiple-box-shadow(100);
+            $shadows-medium: multiple-box-shadow(80);
+            $shadows-big: multiple-box-shadow(30);
+          
+            #sky-stars-1,
+            #sky-stars-2,
+            #sky-stars-3 {
+              background: transparent;
+              opacity: .2;
+            }
+          
+            #sky-stars-1 {
+              width: 1px;
+              height: 1px;
+              box-shadow: $shadows-small;
+            }
+            
+            #sky-stars-2 {
+              width: 2px;
+              height: 2px;
+              box-shadow: $shadows-medium;
+            }
+            
+            #sky-stars-3 {
+              width: 3px;
+              height: 3px;
+              box-shadow: $shadows-big;
+            }
+        }
+
+        #firework {
+            width: 100%;
+            height: 80%;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        // THANKS: https://codepen.io/bennettfeely/pen/mEjio
+        #santahat {
+            .front, .back {
+                position: absolute;
+                z-index: 99999;
+                width: 4.5rem;
+                height: 3.9rem;
+                top: calc(50% - 37px);
+                left: calc(50% - 233px);
+                transform: rotate(-15deg);
+            }
+            .back {
+                @include animation(counter-wiggle, 4s, ease-in-out);
+                transform-origin: 1.5rem 2rem;
+            }
+            .santa-hat-piece {
+                fill: firebrick;
+            }
+            
+            @include keyframes(counter-wiggle) {
+                33% { transform: rotate(-20deg); }
+                66% { transform: rotate(10deg); }
+            }
+        }
+
+        // THANKS: https://codepen.io/uchardon/pen/eGjJap?editors=0100
+        #ghosty {
+            position: absolute;
+            top: calc(50% - 80px);
+            left: calc(50% - 400px);
+            width: 400px;
+            z-index: 4;
+        
+            svg#ghost {
+                -webkit-filter: url("#disfilter");
+                filter: url("#disfilter") blur(3px);
+                @include animation(ghost, 2.5s, forwards);
+                // animation: ghost 2.5s forwards 1;
+                animation-iteration-count: 1;
+                animation-delay: 2.5s;
+                opacity: 0;
+            }
+
+            @include keyframes(ghost) {
+                0% { opacity: 0; }
+                50% { opacity: 1; }
+                100% { opacity: 0; }
+            }
+        }
+
+        // THANKS: https://codepen.io/matchboxhero/pen/RLebOY
+        .bird-wrapper {
+            .bird {
+                background-image: url("/images/header/birds.svg");
+                background-size: auto 100%;
+                width: 88px;
+                height: 125px;
+                will-change: background-position;
+                animation-name: fly-cycle;
+                animation-timing-function: steps(10);
+                animation-iteration-count: infinite;
+
+                &--one {
+                    animation-duration: 1s;
+                    animation-delay: -0.5s;		
+                }
+                &--two {
+                    animation-duration: 0.8s;
+                    animation-delay: -0.75s;
+                }
+            }
+        
+            .bird-container {
+                position: absolute;
+                top: 15px;
+                left: -10%;
+                transform: scale(0) translateX(-10vw);
+                will-change: transform;
+                animation-name: fly-right-one;
+                animation-timing-function: linear;
+                animation-iteration-count: infinite;
+
+                &--one {
+                    animation-duration: 15s;
+                    animation-delay: 0;
+                }
+                &--two {
+                    animation-duration: 16s;
+                    animation-delay: 1s;
+                }
+            }
+            @include keyframes(fly-cycle) {
+                100% { background-position: -900px 0; }
+            }
+            @include keyframes(fly-right-one) {
+                0% { transform: scale(0.25) translateX(-10vw);}
+                10% { transform: translateY(2vh) translateX(10vw) scale(0.3); }
+                20% { transform: translateY(0vh) translateX(30vw) scale(0.35); }
+                30% { transform: translateY(4vh) translateX(50vw) scale(0.4); }
+                40% { transform: translateY(2vh) translateX(70vw) scale(0.4); }
+                50% { transform: translateY(0vh) translateX(90vw) scale(0.4); }	
+                60% { transform: translateY(0vh) translateX(110vw) scale(0.35); }
+                100% { transform: translateY(0vh) translateX(110vw) scale(0.35); }
+            }
+        }
+        
+        // THANKS: https://codepen.io/uchardon/pen/bxbqoG
+        .wave-wrapper {
+            position: absolute;
+            width: 20em;
+            bottom: -30px;
+            left: calc(50% - 15.5em);
+            filter: sepia(.2);
+            opacity: .7;
+
+            .wave {
+                fill: #4478e3;
+            }
+            #wave2 {
+                transform: translateX(-30%);
+                opacity: .6;
+            }
+            #wave3 {
+                transform: translateX(-60%);
+                opacity: .3;
+            }
+        }
+    }
+}
+
+
+@include tablet-only {
+    // Between 769px and 1023px
+    .hero.is-medium .hero-body {
+        padding: 3rem 1.5rem;
+    }
+
+    header.hero #hero-animations #hotairballoon {
+        top: 50px;
+        left: calc(50% + 160px);
+        height: 30px;
+        width: 30px;
+    }
+
+    header.hero #hero-animations .wave-wrapper {
+        bottom: -45px;
+    }
+
+    header.hero #hero-animations .bird-wrapper .bird {
+        transform: scale(.7);
+    }
+}
+
+@include mobile {
+    // Mobile Up to 768px
+    .hero.is-medium .hero-body {
+        padding: 3rem .5rem;
+    }
+
+    header.hero #hero-animations #hotairballoon {
+        top: 50px;
+        left: calc(50% + 160px);
+        height: 30px;
+        width: 30px;
+    }
+
+    header.hero #hero-animations .wave-wrapper {
+        bottom: -45px;
+    }
+
+    header.hero #hero-animations .bird-wrapper .bird {
+        transform: scale(.7);
+    }
+}
+
+    
+@media (max-width: 730px) {
+    header.hero .hero-body .title h1.textlogo {
+        font-size: 50px;
+        
+        &::after {
+            padding: 0 90px;
+        }
+        span.shimmer {
+            padding: 0 90px;
+            -webkit-background-size: 80px 100%;
+            -moz-background-size: 80px 100%;
+            background-size: 80px 100%;
+        }
+    }
+
+    header.hero #hero-animations #santahat .front, 
+    header.hero #hero-animations #santahat .back {
+        height: 3rem;
+        top: calc(50% - 30px);
+        left: calc(50% - 170px);
+    }
+
+    header.hero #hero-animations .bird-wrapper .bird {
+        transform: scale(.5);
+    }
+
+}
+
+
+@media (max-width: 505px) {
+    header.hero .hero-body .title h1.textlogo {
+        font-size: 37px;
+        
+        &::after {
+            padding: 0 50px;
+        }
+        span.shimmer {
+            padding: 0 50px;
+            -webkit-background-size: 40px 100%;
+            -moz-background-size: 40px 100%;
+            background-size: 40px 100%;
+        }
+    }
+
+    header.hero #hero-animations #santahat .front, 
+    header.hero #hero-animations #santahat .back {
+        height: 2.4rem;
+        top: calc(50% - 23px);
+        left: calc(50% - 127px);
+    }
+
+    header.hero #hero-animations #hotairballoon {
+        top: 70px;
+        left: calc(50% + 140px);
+        height: 20px;
+        width: 20px;
+    }
+}
+ 

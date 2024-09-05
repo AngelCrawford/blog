@@ -1,6 +1,7 @@
 # Hugo default output directory
 /resources
 /public
+/themes
 .vscode/
 
 ## OS Files

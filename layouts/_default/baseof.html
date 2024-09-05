@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="de">
+    {{- partial "head.html" . -}}
+
+    <body>
+        <header class="hero is-medium has-sky">
+            {{- partial "header" . -}}
+        </header>
+
+        <nav class="navbar" role="navigation" aria-label="main navigation">
+            {{ partial "navbar" . }}
+        </nav>
+
+        <section class="section">
+
+            <main>
+
+                <div class="container">
+                    <h1 class="title">Hello World</h1>
+                    <p class="subtitle">My first website with <strong>Bulma</strong>!</p>
+                </div>
+
+                <div class="wrapper">
+                    {{- block "main" . }}{{- end }}
+                </div>
+            </main>
+            
+            {{- partial "footer" . -}}
+        </section>
+
+        <!-- Footer Scripts -->
+        {{- $sunCalc := resources.Get "js/suncalc.js" -}}
+        {{- $main := resources.Get "js/main.js" -}}
+        {{- $search := resources.Get "js/search.js" -}}
+        {{- $firework := resources.Get "js/firework.js" -}}
+        
+        {{- $script := slice $sunCalc $main $search $firework | resources.Concat "js/footerBundle.js" | resources.Minify | resources.Fingerprint -}}
+        <script async defer src="{{ $script.Permalink }}"></script>
+
+    </body>
+    
+</html>

@@ -1,0 +1,118 @@
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, minimum-scale=1">
+    {{ hugo.Generator }}
+    
+    <title>{{- if .IsHome }}{{ .Site.Title }}{{ else }}{{ block "title" . }}{{ .Site.Title }}{{ with .Params.Title }} | {{ . }}{{ end }}{{ end }}{{ end -}}</title>
+
+    <!-- Robots -->
+    {{- with .Params.robotsdisallow -}}
+        <meta name="robots" content="noindex, nofollow, noarchive">
+    {{- else -}}
+        <meta name="robots" content="index, follow, archive">
+    {{- end -}}
+
+    {{- if hugo.IsProduction -}}
+    <!-- Security -->
+    <!-- FIXME: EINBLENDEN BEI PRODUCTION! Muss unter umständen immer mal wieder angepasst werden -->
+    <!-- THANKS: https://blog.jeremylikness.com/blog/create-content-security-policy-csp-in-hugo/ -->
+    <meta name="referrer" content="always" />
+    {{ printf `<meta http-equiv="Content-Security-Policy" content="default-src %s; form-action %s; frame-src %s; img-src %s; object-src %s; style-src %s; script-src %s">` (delimit .Site.Params.csp.default " ") (delimit .Site.Params.csp.formaction " ") (delimit .Site.Params.csp.framesrc " ") (delimit .Site.Params.csp.imgsrc " ") (delimit .Site.Params.csp.objectsrc " ") (delimit .Site.Params.csp.stylesrc " ") (delimit .Site.Params.csp.scriptsrc " ") | safeHTML }}
+    {{- end }}
+
+    <!-- Styles -->
+    {{- $sassOptions := (dict "targetPath" "style.css" "outputStyle" "compressed" "enableSourceMap" true ) -}}
+    {{- $sass := resources.Get "scss/main.scss" | resources.ExecuteAsTemplate "style.css" . -}}
+    {{- $style := $sass | resources.ToCSS $sassOptions | resources.Fingerprint -}}
+    <link rel="stylesheet" href="{{ $style.Permalink }}" media="all">
+
+    <!-- Scripts -->
+    {{- $jQuery := resources.Get "js/jquery-3.6.1.js" -}}
+    {{- $gdpr := resources.Get "js/gdpr.js" -}}
+    {{- $script := slice $jQuery $gdpr | resources.Concat "js/bundle.js" | resources.Minify | resources.Fingerprint -}}
+    <script src="{{ $script.Permalink }}"></script>
+   
+    <!-- Fonts -->
+    <link rel="preload" as="font" href="/fonts/remixicon/remixicon.woff2" crossorigin="anonymous">
+    <link rel="preload" as="font" href="/fonts/Montserrat_Alternates/MontserratAlternates-Regular.ttf" crossorigin="anonymous">
+    <link rel="preload" as="font" href="/fonts/Montserrat/Montserrat-Regular.ttf" crossorigin="anonymous">
+    <link rel="preload" as="font" href="/fonts/Montserrat/Montserrat-Bold.ttf" crossorigin="anonymous">
+
+    <!-- Favicon -->
+    <link rel="icon" href="/images/favicon/favicon.svg" type="image/svg+xml">
+    <link rel="icon" href="/images/favicon/favicon.ico"><!-- 32×32 -->
+    <link rel="apple-touch-icon" href="/images/favicon/apple-touch-icon.png"><!-- 180×180 -->
+    <link rel="mask-icon" href="/images/favicon/safari-pinned-tab.svg" color="#000000">
+    <meta name="theme-color" content="#000000">
+    <link rel="manifest" href="/images/favicon/site.webmanifest">
+
+    <!-- SEO -->
+    <!-- FIXME: Author filling -->
+    {{- with .Params.author }}<meta name="author" content="{{ . }}" />{{ end -}}
+    {{ with .Params.description }}<meta name="description" content="{{ . }}" />{{ end }}
+    {{ with .Params.keywords }}<meta name="keywords" content="{{ . }}" />{{ end }}
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="{{ .Title }}" />
+    <meta property="og:description" content="{{ with .Description }}{{ . }}{{ else }}{{ .Summary }}{{ end }}" />
+    <meta property="og:type" content="{{ if .IsPage }}article{{ else }}website{{ end }}" />
+    <meta property="og:url" content="{{ .Permalink }}" />
+    <meta property="og:site_name" content="{{ with .Params.title }}{{ . }}{{ end }}" />
+    
+    {{- $iso8601 := "2006-01-02T15:04:05-07:00" }}
+    {{ if not .Lastmod.IsZero }}<meta property="og:updated_time" {{ .Lastmod.Format $iso8601 | printf "content=%q" | safeHTMLAttr }} />{{ end -}}
+
+    <!-- If it is part of a series, link to related articles -->
+    <!-- FIXME: Series Twitter -->
+    {{- if .Params.series -}}
+        {{- $currentPage := . -}}
+        {{- $series_name := index .Params.series 0 -}}
+        {{- range .Site.RegularPages.ByDate -}}
+    {{- if in .Params.series $series_name -}}<meta property="og:see_also" content="{{ .Permalink }}" />{{- end -}}
+        {{- end -}}
+    {{- end }}
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta property="twitter:description" content="{{ with .Description }}{{ . }}{{ else }}{{ .Summary }}{{ end }}" />
+    <!-- FIXME: Twitter SEO Handle -->
+    {{- with .Site.Params.seo.twitterHandle }}<meta name="twitter:site" content="@{{ . }}" />{{ end -}}
+
+    <!-- Social Images -->
+    <!-- FIXME: Social Media Images and Grayscale -->
+    {{- range first 1 (.Resources.ByType "image") }}
+        {{- $img := .Fill "400x300" | images.Filter images.Grayscale -}}
+    <meta property="og:image" content="{{ $img.RelPermalink | absURL }}" />
+    <meta name="twitter:image" content="{{ $img.RelPermalink | absURL }}" />
+    {{ end -}}
+
+    <!-- Article Info -->
+    {{ if not .PublishDate }}<meta property="article:published_time" {{ .PublishDate.Format $iso8601 | printf "content=%q" | safeHTMLAttr }} />
+    {{- else if not .Date.IsZero -}}<meta property="article:published_time" {{ .Date.Format $iso8601 | printf "content=%q" | safeHTMLAttr }} />
+    {{ end }}
+    {{- if not .Lastmod.IsZero }}<meta property="article:modified_time" {{ .Lastmod.Format $iso8601 | printf "content=%q" | safeHTMLAttr }} />{{ end }}
+
+    {{- with .Params.tags -}}
+        {{- range first 6 . }}
+    <meta property="article:tag" content="{{ . }}" />
+        {{- end -}}
+    {{- end -}}
+
+    <!-- FIXME: Autoren richtig anzeigen und Namen füllen -->
+    {{- range (.Page.GetTerms "authors") -}}
+        {{- range .Params.socials }}
+            {{ if eq .name "facebook"}}<meta property="article:author" content="{{ .src }}" />{{ end }}
+            {{- if eq .name "twitter"}}<meta property="twitter:creator" content="@{{ .username }}" />{{ end }}
+        {{ end -}}
+        <meta property="article:section" content="{{ $.Section }}" />
+    {{- end -}}
+
+    <!-- RSS -->
+    {{ with .OutputFormats.Get "rss" -}}
+      {{ printf `<link rel="%s" type="%s" href="%s" title="%s" />` .Rel .MediaType.Type .Permalink $.Site.Title | safeHTML }}
+    {{ end -}}
+
+    <!-- TODO: Humans.txt -->
+    <link type="text/plain" rel="author" href="humans.txt" />
+</head>

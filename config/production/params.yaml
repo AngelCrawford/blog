@@ -1,0 +1,8 @@
+csp:
+  default: []
+  formaction: ["'self'", "*.twitter.com"]
+  framesrc: ["'self'", "https://player.vimeo.com", "www.youtube.com", "www.youtube-nocookie.com", "*.twitter.com", "jsfiddle.net", "www.instagram.com", "https://www.google.com"]
+  imgsrc: ["'self'"]
+  objectsrc: ["'none'"]
+  stylesrc: ["'self'", "'unsafe-inline'", "*.twitter.com", "*.twimg.com"]
+  scriptsrc: ["'self'", "*.twitter.com", "jsfiddle.net", "www.instagram.com"]
