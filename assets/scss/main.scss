@@ -3,18 +3,35 @@
  * Author URI: https://angel-crawford.de
  * Template URI: https://angel-crawford.de
 */
+@charset "utf-8";
 
-@import "base/variables";
-@import "base/fonts";
+// ================================ VARIABLES ================================
+// Set your brand colors
+$purple: #8A4D76;
+$pink: #fa7c91;
+$brown: #757763;
+$beige-light: #D0D1CD;
+$beige-lighter: #EFF0EB;
 
+// Update Bulma's global variables
+$family-sans-serif: "Montserrat-Regular", BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
 
-@import "src/bulma-1.0.2/bulma";
+$family-secondary: "Montserrat Alternates", BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
 
-@import "base/icons";
-@import "base/mixins";
+@use "base/fonts";
 
-@import "layout/header";
-@import "layout/sidebar";
-@import "layout/footer";
+@use "src/bulma" with (
+  $primary: $purple,
+  $link: $pink,
+  $family-primary: $family-sans-serif,
+  $family-secondary: $family-secondary,
+);
 
-@import "elements/button";
+@use "base/icons";
+@use "base/mixins";
+
+@use "layout/header";
+@use "layout/sidebar";
+@use "layout/footer";
+
+@use "elements/button";

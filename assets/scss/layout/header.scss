@@ -1,3 +1,12 @@
+@use "base/mixins" as *;
+@use "base/fonts" as *;
+@use "src/bulma/utilities/mixins";
+
+@include mixins.mobile {
+  // Styles applied
+  // below $tablet
+}
+
 header.hero {
     position: relative;
 
@@ -48,13 +57,13 @@ header.hero {
             height: 100%;
 
             z-index: 1;
-            @include animation(clock, 2s);
             will-change: background-position;
             
             @include keyframes(clock) {
                 0% { background-position: 50% 200px; } 
                 100% {background-position: 50% 20px; } 
             }
+            @include animation(clock, 2s);
         }
 
         // Text Logo
@@ -68,7 +77,6 @@ header.hero {
                 -webkit-text-fill-color: transparent;
                 -moz-background-clip: text;
                 -moz-text-fill-color: transparent;
-                @include font-header-bold;
                 position: relative;
                 font-size: 70px;
               
@@ -119,6 +127,8 @@ header.hero {
                     0% { background-position: top left; }
                     100% { background-position: top right; }
                 }
+                
+                @include font-header-bold;
             }
           
         }
@@ -207,8 +217,8 @@ header.hero {
                 transform: rotate(-15deg);
             }
             .back {
-                @include animation(counter-wiggle, 4s, ease-in-out);
                 transform-origin: 1.5rem 2rem;
+                @include animation(counter-wiggle, 4s, ease-in-out);
             }
             .santa-hat-piece {
                 fill: firebrick;
@@ -231,11 +241,11 @@ header.hero {
             svg#ghost {
                 -webkit-filter: url("#disfilter");
                 filter: url("#disfilter") blur(3px);
-                @include animation(ghost, 2.5s, forwards);
                 // animation: ghost 2.5s forwards 1;
                 animation-iteration-count: 1;
                 animation-delay: 2.5s;
                 opacity: 0;
+                @include animation(ghost, 2.5s, forwards);
             }
 
             @include keyframes(ghost) {
@@ -306,9 +316,9 @@ header.hero {
 }
 
 
-@include tablet-only {
+@include mixins.tablet-only {
     // Between 769px and 1023px
-    .hero.is-medium .hero-body {
+    header.hero.is-medium .hero-body {
         padding: 3rem 1.5rem;
     }
 
@@ -328,9 +338,9 @@ header.hero {
     }
 }
 
-@include mobile {
+@include mixins.mobile {
     // Mobile Up to 768px
-    .hero.is-medium .hero-body {
+    header.hero.is-medium .hero-body {
         padding: 3rem .5rem;
     }
 

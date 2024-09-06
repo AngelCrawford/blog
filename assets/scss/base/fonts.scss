@@ -33,11 +33,11 @@
 
 @mixin font-family($family, $weight: '') {
  @if $family {
-   font-family: $family, Helvetica, Arial, Verdana, sans-serif;
+   & {font-family: $family, Helvetica, Arial, Verdana, sans-serif;}
  } else {
-   font-family: Helvetica, Arial, Verdana, sans-serif;
+   & {font-family: Helvetica, Arial, Verdana, sans-serif;}
  }
- @if $weight { font-weight: $weight; }
+ @if $weight { & {font-weight: $weight;} }
 }
 
 @mixin font-header {
