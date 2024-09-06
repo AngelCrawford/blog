@@ -15,6 +15,35 @@ aside.menu {
         }
     }
 
+    ul.menu-list li.toggle-parent {
+
+        > a::after,
+        &.sub-is-open > a::after {
+            font-family: "remixicon";
+            font-size: 1.2em;
+            line-height: 1;
+            font-weight: 900;
+            float: right;
+        }
+
+        > a::after {
+            content: "\ea6e";
+        }
+
+        &.sub-is-open > a::after {
+            content: "\ea4d";
+        }
+
+
+        ul.toggle-parent-sublist {
+            display: none;
+
+            &.is-open {
+                display: block;
+            }
+        }
+    }
+
     ul.menu-list li.is-mega {
 
         & > a {

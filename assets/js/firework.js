@@ -13,7 +13,7 @@ var canvas = document.getElementById('firework'),
 		// starting hue
 		hue = 120,
 		// this will time the auto launches of fireworks, one launch per 80 loop ticks
-		timerTotal = 75,
+		timerTotal = 80,
 		timerTick = 0;
 		
 // set canvas dimensions

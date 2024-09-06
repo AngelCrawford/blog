@@ -9,16 +9,26 @@ $(".navbar-burger").click(function() {
   $(".navbar-menu").toggleClass("is-active");
 });
 
+// $(".navbar-item.has-dropdown").click(function () { 
+//   $(this).children('.navbar-dropdown').toggle();
+// });
 
-$(".navbar-item.has-dropdown").click(function () { 
-  $(this).children('.navbar-dropdown').toggle();
+
+$("ul.menu-list li.toggle-parent").click(function () { 
+  $(this).children('ul.toggle-parent-sublist').toggleClass("is-open");
+  $(this).toggleClass("sub-is-open");  
 });
 
-
-if ($(window).width() <= 1023) {
-  $(".navbar-item.has-dropdown a.navbar-link").removeAttr("href");
-  $('.navbar-item.has-dropdown .navbar-dropdown').css("display", "none");
+if ( $('ul.menu-list li.toggle-parent a.is-active') ) {
+  $('ul.menu-list li.toggle-parent a.is-active ~ ul.toggle-parent-sublist').addClass("is-open");
+  $('ul.menu-list li.toggle-parent a.is-active').parent().addClass("sub-is-open");
 }
+
+
+// if ($(window).width() <= 1023) {
+//   $(".navbar-item.has-dropdown a.navbar-link").removeAttr("href");
+//   $('.navbar-item.has-dropdown .navbar-dropdown').css("display", "none");
+// }
 
 // ***************** Back to Top Button
 // Funktion für das Scroll-Verhalten
@@ -218,7 +228,7 @@ function dayNightSky() {
     $("#santahat").css("display", "none");
   }
 
-  var halloweenStart = dateObject.getFullYear() + "-10-07";
+  var halloweenStart = dateObject.getFullYear() + "-08-07";
   var halloweenEnd = dateObject.getFullYear() + "-10-31";
   if (nowDate >= halloweenStart && nowDate <= halloweenEnd) {
     $("#ghosty").css("display", "block");

@@ -9,9 +9,8 @@ Now I want to stick on to one project - a custom theme for my private blog.
 * [My Twitter Profile](https://twitter.com/crawford_ftw)
 
 # To-Do
-- [ ] Nachdenken ob ich doch `npm` installieren will? Für Bulma und JavaScript
-- [ ] Chocolatey Package manager für Windows installieren
-- [ ] DartSass Compiler installieren -> Damit ich Bulma in Version 1.0.2 nutzen kann
+- [ ] Dart Sass: Sass's behavior for declarations that appear after nested rules will be changing to match the behavior specified by CSS in an upcoming version. To keep the existing behavior, move the declaration above the nested rule. To opt into the new behavior, wrap the declaration in `& {}`.
+- [ ] Add clouds to day sky
 
 
 # Includes
