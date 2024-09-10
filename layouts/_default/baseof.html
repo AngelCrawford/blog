@@ -4,8 +4,11 @@
 
     <body>
         <header class="hero is-medium has-sky">
-            {{- partial "header" . -}}
+            {{- partial "hero" . -}}
         </header>
+        <nav>
+            {{- partial "navigation" -}}
+        </nav>
 
         <main class="columns is-gapless">
                 
@@ -16,13 +19,13 @@
                 </aside>
             </div>
 
-            <div class="column">
+            {{/*  <div class="column">
                 <a class="navbar-burger" role="button" data-target="navMenu" aria-label="menu" aria-expanded="false">
                     <span aria-hidden="true"></span>
                     <span aria-hidden="true"></span>
                     <span aria-hidden="true"></span>
                     <span aria-hidden="true"></span>
-                </a>
+                </a>  */}}
 
                 <div class="container is-fluid">
                     {{- block "main" . }}{{- end }}

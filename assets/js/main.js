@@ -228,7 +228,7 @@ function dayNightSky() {
     $("#santahat").css("display", "none");
   }
 
-  var halloweenStart = dateObject.getFullYear() + "-08-07";
+  var halloweenStart = dateObject.getFullYear() + "-10-07";
   var halloweenEnd = dateObject.getFullYear() + "-10-31";
   if (nowDate >= halloweenStart && nowDate <= halloweenEnd) {
     $("#ghosty").css("display", "block");

@@ -1,55 +1,44 @@
 ---
-title: Test 123
+title: "Test 123"
 date: 2020-02-10T10:58:08-04:00
 publishdate: 2020-02-13T10:58:08-04:00
-description: One morning, when Gregor Samsa woke from troubled dreams, he found himself
-  transformed in his bed into a horrible vermin. One morning, when Gregor Samsa
-  woke
-summary: "SUMMARY: One morning, when Gregor Samsa woke from troubled dreams, he found
-  himself transformed in his bed into a horrible vermin. One morning, when
-  Gregor Samsa woke from troubled dreams, he found himself transformed in his
-  bed into a horrible vermin. One morning, when Gregor Samsa woke from troubled
-  dreams, he found himself transformed in his bed into a horrible vermin. One
-  morning, when Gregor Samsa woke from troubled dreams, he found himself
-  transformed in his bed into a horrible vermin."
-tags:
-  - scene
-categories: Eine Sehr Lange Kategorie zum testen
-series:
-  - Seriennummer
+description: "One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin. One morning, when Gregor Samsa woke"
+summary: "SUMMARY: One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin. One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin. One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin. One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin."
+tags: ["scene"]
+categories: "Eine Sehr Lange Kategorie zum testen"
+series: ["Seriennummer"]
 contains:
-  - code
-  - gallery
+- code
+- gallery
 authors: jdksaj
 weight: 1
 year: "2020"
-month: 2020/02
-keywords: "test, noch ein test, resting"
+month: "2020/02"
 icons:
-  - src: windows-line
-    color: "#456987"
-    tooltip: Some Tooltip info
-  - src: ubuntu-line
-    color: tomato
-  - src: android-line
-    color: green
-  - src: apple-line
-    color: white
+- src: "windows-line"
+  color: "#456987"
+  tooltip: "Some Tooltip info"
+- src: "ubuntu-line"
+  color: "tomato"
+- src: "android-line"
+  color: "green"
+- src: "apple-line"
+  color: "white"
 featured_image:
-  - src: ./featured.jpg
-    byline: TEST <a href='#'>test</a>
+- src: ./featured.jpg
+  byline: TEST <a href='#'>test</a>
 stickers:
-  - heading: Genre
-    tags:
-      - tag: Some
-      - tag: Tag
-      - tag: I Want
-  - heading: Info
-    tags:
-      - tag: Some Tag
-      - tag: Long Tag I want for testing purpose
-      - tag: Anything
-lastmod: 2022-11-29T22:47:00.859Z
+- heading: "Genre"
+  tags:
+  - tag: "Some"
+  - tag: "Tag"
+  - tag: "I Want"
+- heading: "Info"
+  tags:
+  - tag: "Some Tag"
+  - tag: "Long Tag I want for testing purpose"
+  - tag: "Anything"
+
 ---
 
 ## Introduction
@@ -67,58 +56,6 @@ He lay on his armour-like back, and if he lifted his head a little he could see 
   </a>
 </div>
 ```
-
-## Headline
-Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, 
-
-[Ein Test](/articles/2020/02/test-123/ "Link Title")
-
-[Angel Crawford](https://angel-crawford.de/ "Profil von Angel Crawford")
-
-https://github.com/gohugoio/hugo/issues/7228
-
-https://www.facebook.com/
-
-## headline 2
-sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-
-```html
-  <meta name="author" content="Angel Crawford" />
-```
-
-```go {linenos=table,hl_lines=[8,"15-17"],linenostart=188}
-// If an unknown or empty style is provided, AP style is what you get.
-func GetTitleFunc(style string) func(s string) string {
-  switch strings.ToLower(style) {
-  case "go":
-    return strings.Title
-}
-```
-
-
-```html
-  <meta name="author" content="Angel Crawford" />
-```
-
-* listeneintrag 1
-* listeneintrag 2
-
-> A collection of textile samples lay spread out on the table - Samsa was a travelling salesman - and above it there hung a picture that he had recently cut out of an illustrated magazine and housed in a nice, gilded frame. It showed a lady fitted out with a fur hat and fur boa who sat upright, raising a heavy fur muff that covered the whole of her lower arm towards the viewer. Gregor then turned to look out the window at the dull weather. Drops Samsa woke
-> 
-> *Quelle: some name*
-
-```go {linenos=table,hl_lines=[8,"15-17"],linenostart=188}
-// If an unknown or empty style is provided, AP style is what you get.
-func GetTitleFunc(style string) func(s string) string {
-  switch strings.ToLower(style) {
-  case "go":
-    return strings.Title
-}
-```
-<!--start-summary-->
-## Eine Überschrift
-A collection of textile samples lay spread out on the table - Samsa was a travelling salesman - and above it there hung a picture that he had recently cut out of an illustrated magazine and housed in a nice, gilded frame. It showed a lady fitted out with a fur hat and fur boa who sat upright, raising a heavy fur muff that covered the whole of her lower arm towards the viewer. Gregor then turned to look out the window at the dull weather. Drops Samsa woke
-
 
 ### My Subheading with really really long text, want to test it with the mobile sidebar
 A collection of textile samples lay spread out on the table - Samsa was a travelling salesman - and above it there hung a picture that he had recently cut out of an illustrated magazine and housed in a nice, gilded frame. It showed a lady fitted out with a fur hat and fur boa who sat upright, raising a heavy fur muff that covered the whole of her lower arm towards the viewer. Gregor then turned to look out the window at the dull weather. Drops
