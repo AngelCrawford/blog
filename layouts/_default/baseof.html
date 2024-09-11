@@ -5,38 +5,36 @@
     <body>
         <header class="hero is-medium has-sky">
             {{- partial "hero" . -}}
-        </header>
-        <nav>
-            {{- partial "navigation" -}}
-        </nav>
 
-        <main class="columns is-gapless">
-                
-            <div class="column is-2 toggle-sidebar">
-                <aside class="menu" id="navMenu">
-                    {{/*  {{ partial "navbar" . }}  */}}
-                    {{ partial "sidebar" . }}
-                </aside>
+            <div class="button is-link toggle-sidebar">
+                <svg class="icon ri-2x" style="fill:red;">
+                    <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#stack-line"></use>
+                </svg>
             </div>
+        </header>
 
-            {{/*  <div class="column">
-                <a class="navbar-burger" role="button" data-target="navMenu" aria-label="menu" aria-expanded="false">
-                    <span aria-hidden="true"></span>
-                    <span aria-hidden="true"></span>
-                    <span aria-hidden="true"></span>
-                    <span aria-hidden="true"></span>
-                </a>  */}}
+        <div class="columns is-gapless is-multiline" style="min-height:calc(100vw - 300px)">
+            <!--  TODO: Mobile Navigation mit position absolute  -->
+            <aside class="column is-narrow sidebar has-background-dark">
+            
+                <div class="menu block" id="navMenu">
+                    {{ partial "sidebar" . }}
+                </div>
+            </aside>
 
-                <div class="container is-fluid">
+            <main class="column">
+
+                <div>
                     {{- block "main" . }}{{- end }}
                 </div>
-        
-                <footer>
-                    {{- partial "footer" . -}}
-                </footer>
-            </div>
+            </main>
 
-        </main>
+        </div>
+            
+        
+        <footer class="footer">
+            {{- partial "footer" . -}}
+        </footer>
 
         <!-- Footer Scripts -->
         {{- $sunCalc := resources.Get "js/suncalc.js" -}}

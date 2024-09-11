@@ -1,17 +1,9 @@
-// Bulma Navbar Header Toggle
 
 // ***************** Navigation
 // Check for click events on the navbar burger icon
-$(".navbar-burger").click(function() {
-
-  // Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
-  $(".navbar-burger").toggleClass("is-active");
-  $(".navbar-menu").toggleClass("is-active");
+$(".button.toggle-sidebar").click(function() {
+  $("aside.sidebar").toggleClass("is-opened");
 });
-
-// $(".navbar-item.has-dropdown").click(function () { 
-//   $(this).children('.navbar-dropdown').toggle();
-// });
 
 
 $("ul.menu-list li.toggle-parent").click(function () { 

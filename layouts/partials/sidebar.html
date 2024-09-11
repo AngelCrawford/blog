@@ -1,7 +1,3 @@
-<a class="logo " href="/" title="{{ .Name }} page">
-    <img src="/images/header/clock.png" alt="Logo" /><span>{{ .Site.Title }}</span>
-</a>
-
 <ul class="menu-list">
 
     {{- $currentPage := . -}}
@@ -14,6 +10,11 @@
                     {{- .Name -}}
                 </a>
                 <ul class="toggle-parent-sublist">
+                    <li>
+                        <a class="navbar-item {{ if ($currentPage.IsMenuCurrent "main" .) }} is-active{{ end }}" href="{{ .Page.Permalink }}">
+                            Alle&nbsp;{{- .Name -}}
+                        </a>
+                    </li>
                     {{- range .Children -}}
                         <li>
                             <a class="navbar-item {{ if or ($currentPage.IsMenuCurrent "main" .) ($currentPage.HasMenuCurrent "main" .) }} is-active{{ end }}" href="{{ .Page.Permalink }}">{{ .Name }}</a>

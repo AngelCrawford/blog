@@ -21,8 +21,8 @@ $family-secondary: "Montserrat Alternates", BlinkMacSystemFont, -apple-system, "
 @use "base/fonts";
 
 @use "src/bulma" with (
-  $primary: $purple,
-  $link: $pink,
+  // $primary: $purple,
+  // $link: $pink,
   $family-primary: $family-sans-serif,
   $family-secondary: $family-secondary,
 );
