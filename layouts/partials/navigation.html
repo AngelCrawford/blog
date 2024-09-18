@@ -1,38 +1,45 @@
-<nav class="navbar is-primary">
+<nav class="navbar is-primary" role="navigation" aria-label="main navigation">
+
+    <input id="menu-switch" name="menu-switch" type="checkbox" />
+
     <div class="navbar-brand">
-        <a class="navbar-item" href="/">Site name</a>
-
-
-        <input id="menu-switch" name="menu-switch" type="checkbox" />
-        
-        <label for="menu-switch" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+        {{/*  <a class="navbar-item" href="/">Site name</a>  */}}
+        <label for="menu-switch" class="navbar-burger" role="button" aria-expanded="false">
+            <span aria-hidden="true"></span>
             <span aria-hidden="true"></span>
             <span aria-hidden="true"></span>
             <span aria-hidden="true"></span>
         </label>
     </div>
 
-
-
-  
-  
     <div class="navbar-menu">
-      <div class="navbar-start">
-        <a class="navbar-item" href="https://bulma.io/"> Home </a>
-        <div class="navbar-item has-dropdown is-hoverable">
-          <a class="navbar-link" href="https://bulma.io/documentation/overview/start/"> Docs </a>
-          <div class="navbar-dropdown">
-            <a class="navbar-item" href="https://bulma.io/documentation/overview/start/"> Overview </a>
-            <a class="navbar-item" href="https://bulma.io/documentation/overview/modifiers/"> Modifiers </a>
-            <hr class="navbar-divider">
-            <a class="navbar-item" href="https://bulma.io/documentation/columns/basics/"> Columns </a>
-            <a class="navbar-item is-selected" href="https://bulma.io/documentation/layout/container/"> Layout </a>
-            <a class="navbar-item" href="https://bulma.io/documentation/form/general/"> Form </a>
-            <a class="navbar-item" href="https://bulma.io/documentation/elements/box/"> Elements </a>
-            <a class="navbar-item" href="https://bulma.io/documentation/components/breadcrumb/"> Components </a>
-          </div>
+        <div class="navbar-start">
+          
+
+            {{- $currentPage := . -}}
+            {{- range .Site.Menus.main -}}
+
+                {{- if .HasChildren -}}
+
+                    <div class="navbar-item has-dropdown is-hoverable">
+                        <a class="navbar-link {{ if or ($currentPage.IsMenuCurrent "main" .) ($currentPage.HasMenuCurrent "main" .) }}is-active{{ end }}" href="{{ .Page.Permalink }}">
+                            {{- .Name -}}
+                        </a>
+                        <div class="navbar-dropdown">
+                            {{- range .Children -}}
+                                <a class="navbar-item {{ if or ($currentPage.IsMenuCurrent "main" .) ($currentPage.HasMenuCurrent "main" .) }} is-active{{ end }}" href="{{ .Page.Permalink }}">{{ .Name }}</a>
+                            {{- end -}}
+                        </div>
+                    </div>
+
+                {{- else -}}
+                    <a class="navbar-item {{ if or ($currentPage.IsMenuCurrent "main" .) ($currentPage.HasMenuCurrent "main" .) }} is-active{{ end }}" href="{{ .URL }}" title="{{ .Name }} page">
+                        {{- .Name -}}
+                    </a>
+                {{- end -}}
+                        
+            {{- end -}}
         </div>
-      </div>
   
       <div class="navbar-end">
         <div class="navbar-item">
