@@ -12,3 +12,6 @@ Desktop.ini
 $RECYCLE.BIN/
 frontmatter.json
 .frontmatter/
+
+# windsurf rules
+.windsurfrules

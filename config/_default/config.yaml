@@ -3,3 +3,8 @@ languageCode: de-DE
 
 enableGitInfo: true
 lastmod: ["lastmod", ":git", "date"] 
+
+markup:
+  goldmark:
+    renderer:
+      unsafe : true

@@ -1,3 +1,5 @@
+@use "sass:string";
+@use "sass:math";
 @use "base/mixins" as *;
 @use "base/fonts" as *;
 @use "src/bulma/utilities/mixins";
@@ -164,11 +166,11 @@ header.hero {
                 
             // n is number of stars required
             @function multiple-box-shadow ($n) {
-              $value: '#{random(2000)}px #{random(270)}px #FFF';
+              $value: '#{math.random(2000)}px #{math.random(270)}px #FFF';
                 @for $i from 2 through $n {
-                  $value: '#{$value} , #{random(2000)}px #{random(270)}px #FFF'
+                  $value: '#{$value} , #{math.random(2000)}px #{math.random(270)}px #FFF'
                 }
-              @return unquote($value);
+              @return string.unquote($value);
             }
             $shadows-small: multiple-box-shadow(100);
             $shadows-medium: multiple-box-shadow(80);
@@ -444,4 +446,3 @@ header.hero {
         width: 20px;
     }
 }
- 
