@@ -13,13 +13,11 @@
         <meta name="robots" content="index, follow, archive">
     {{- end -}}
 
-    {{- if hugo.IsProduction -}}
     <!-- Security -->
     <!-- FIXME: EINBLENDEN BEI PRODUCTION! Muss unter umständen immer mal wieder angepasst werden -->
     <!-- THANKS: https://blog.jeremylikness.com/blog/create-content-security-policy-csp-in-hugo/ -->
     <meta name="referrer" content="always" />
-    {{ printf `<meta http-equiv="Content-Security-Policy" content="default-src %s; form-action %s; frame-src %s; img-src %s; object-src %s; style-src %s; script-src %s">` (delimit .Site.Params.csp.default " ") (delimit .Site.Params.csp.formaction " ") (delimit .Site.Params.csp.framesrc " ") (delimit .Site.Params.csp.imgsrc " ") (delimit .Site.Params.csp.objectsrc " ") (delimit .Site.Params.csp.stylesrc " ") (delimit .Site.Params.csp.scriptsrc " ") | safeHTML }}
-    {{- end }}
+    {{ printf `<meta http-equiv="Content-Security-Policy" content="default-src %s; form-action %s; frame-src %s; img-src %s; object-src %s; style-src %s; script-src %s; script-src-elem %s;">` (delimit .Site.Params.csp.default " ") (delimit .Site.Params.csp.formaction " ") (delimit .Site.Params.csp.framesrc " ") (delimit .Site.Params.csp.imgsrc " ") (delimit .Site.Params.csp.objectsrc " ") (delimit .Site.Params.csp.stylesrc " ") (delimit .Site.Params.csp.scriptsrc " ") (delimit .Site.Params.csp.scriptsrcelem " ") | safeHTML }}
 
     <!-- Styles -->
     {{- $opts := (dict "targetPath" "style.css" "transpiler" "dartsass" "enableSourceMap" true ) -}}
@@ -27,12 +25,11 @@
         <link rel="stylesheet" href="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}" media="all">
     {{- end -}}
 
-
-
     <!-- Scripts -->
     {{- $jQuery := resources.Get "js/jquery-3.6.1.js" -}}
     {{- $gdpr := resources.Get "js/gdpr.js" -}}
-    {{- $script := slice $jQuery $gdpr | resources.Concat "js/bundle.js" | resources.Minify | resources.Fingerprint -}}
+    {{/*  {{- $script := slice $jQuery $gdpr | resources.Concat "js/bundle.js" | resources.Minify | resources.Fingerprint -}}  */}}
+    {{- $script := slice $jQuery | resources.Concat "js/bundle.js" | resources.Minify | resources.Fingerprint -}}    
     <script src="{{ $script.Permalink }}"></script>
    
     <!-- Fonts -->

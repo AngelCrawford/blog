@@ -160,28 +160,39 @@ function dayNightSky() {
   
   var $sky = $("header.hero.has-sky");
 
-  var location = {lat:"53.551086", long:"9.993682"};
-  var now = new Date();
-  var times = SunCalc.getTimes(now, location.lat, location.long);
-  // console.log(SunCalc.getTimes(now, location.lat, location.long));
+  var sunset = SunriseSunsetJS.getSunset(53.551086, -2.5920);
+  var sunrise = SunriseSunsetJS.getSunrise(53.551086, -2.5920);
+  // console.log("Sunrise: ", sunrise);
+  // console.log("Sunset: ", sunset);
+  
+  var nightStart = new Date(sunset.getTime() + (60 * 60 * 1000));
+  var nightEnd = new Date(sunrise.getTime() - (60 * 60 * 1000));
+  var nightStartTime = [nightStart.getHours(), nightStart.getMinutes()];
+  var nightEndTime = [nightEnd.getHours(), nightEnd.getMinutes()];
 
-  var nightStart = [ times.night.getHours(), times.night.getMinutes() + 1 ];
-  var nightEnd = [ times.nightEnd.getHours(), times.nightEnd.getMinutes() ];
+  // Dawn is the period when the sky lightens before the sun rises
+  var dawnStart = new Date(sunrise.getTime() - (59 * 60 * 1000));
+  var dawnEnd = new Date(sunrise.getTime() + (59 * 60 * 1000));
+  var dawnStartTime = [dawnStart.getHours(), dawnStart.getMinutes()];
+  var dawnEndTime = [dawnEnd.getHours(), dawnEnd.getMinutes()];
 
-  var dawnStart = [ times.nightEnd.getHours(), times.nightEnd.getMinutes() + 1 ];
-  var dawnEnd = [ times.sunrise.getHours(), times.sunrise.getMinutes() ];
+  var dayStart = new Date(sunrise.getTime() + (60 * 60 * 1000));
+  var dayEnd = new Date(sunset.getTime() - (60 * 60 * 1000));
+  var dayStartTime = [dayStart.getHours(), dayStart.getMinutes()];
+  var dayEndTime = [dayEnd.getHours(), dayEnd.getMinutes()];
 
-  var dayStart = [ times.sunrise.getHours(), times.sunrise.getMinutes() + 1 ];
-  var dayEnd = [ times.sunset.getHours(), times.sunset.getMinutes() ];
+  // Dusk is the period when the sky darkens after the sun sets
+  var duskStart = new Date(sunset.getTime() - (59 * 60 * 1000));
+  var duskEnd = new Date(sunset.getTime() + (59 * 60 * 1000));
+  var duskStartTime = [duskStart.getHours(), duskStart.getMinutes()];
+  var duskEndTime = [duskEnd.getHours(), duskEnd.getMinutes()];
 
-  var duskStart = [ times.sunset.getHours(), times.sunset.getMinutes() + 1 ];
-  var duskEnd = [ times.night.getHours(), times.night.getMinutes() ];
 
   var timeBlocks = [
-    { start: nightStart, end: nightEnd, class: "is-night" },
-    { start: dawnStart, end: dawnEnd, class: "is-dawn" },
-    { start: dayStart, end: dayEnd, class: "is-day" },
-    { start: duskStart, end: duskEnd, class: "is-dusk" }
+    { start: nightStartTime, end: nightEndTime, class: "is-night" },
+    { start: dawnStartTime, end: dawnEndTime, class: "is-dawn" },
+    { start: dayStartTime, end: dayEndTime, class: "is-day" },
+    { start: duskStartTime, end: duskEndTime, class: "is-dusk" }
   ]
 
   // Start by looping through the objects in the timeBlocks array
@@ -190,8 +201,12 @@ function dayNightSky() {
     var timeOfDay = timeBlocks[i];
     // console.log("Time of Day: ", timeOfDay);
 
+    // console.log(timeOfDay.start);
+    // console.log(timeOfDay.end);
+
     if ( isTimeBetween(timeOfDay.start, timeOfDay.end) ) {
       $sky.addClass(timeOfDay.class);
+      // console.log("Time of Day: ", timeOfDay);
     }
   }
 
@@ -270,47 +285,26 @@ function compare(a, b) {
 }
 
 function isTimeBetween(startTimeAsArray, endTimeAsArray) {
-  // THANKS: https://stackoverflow.com/a/25958232
-
   var startTime = startTimeAsArray;
   var endTime = endTimeAsArray;
-
-  // We've got the two start times as an array of hours/minutes values.
+  
   var dateObj = new Date(); 
-  // var now = [23, 0]; // For testing purpose, set now time here
-  var now = [dateObj.getHours(), dateObj.getMinutes()]; // Gets the current Hours/Minutes
-
-  // If startTime is bigger than endTime
-  if ( endTime[0] < startTime[0] && now[0] < startTime[0] ) {
-    startTime[0] -= 24; // This is something I came up with because I do a lot of math.
-  } else if ( startTime[0] > endTime[0] ) {
-    endTime[0] += 24;
+  var now = [dateObj.getHours(), dateObj.getMinutes()];
+  
+  function to_minutes(time_array) {
+    return time_array[0] * 60 + time_array[1];
   }
-
-  // the time strings converted to a string format. Made comparisons easier.
-  var startString = to_hm_string(startTime);
-  var endString = to_hm_string(endTime);
-  var nowString = to_hm_string(now);
-
-  // console.log("Now:", nowString, "Start:", startString, "End:", endString);
-
-  var status = (startString <= nowString && nowString <= endString) ? true : false;
-  // console.log(status);
-  return status;
-}
-
-// Numbers to String, if startTime bigger than endTime, set startTime to minus
-// startTime(18:18) endTime(06:26) = startTime(-06:18) endTime(06:26)
-function to_hm_string(timearr){ 
-  var hours = "";
-  var minutes = timearr[1];
-
-  if ( Math.abs(timearr[0]) < 10 ) {
-    hours = "0";
+  
+  var start_minutes = to_minutes(startTime);
+  var end_minutes = to_minutes(endTime);
+  var now_minutes = to_minutes(now);
+  
+  // Handle times that cross midnight
+  if (end_minutes < start_minutes) {
+    // If now is after start OR now is before end, it's between
+    return now_minutes >= start_minutes || now_minutes <= end_minutes;
+  } else {
+    // Normal case: check if now is between start and end
+    return now_minutes >= start_minutes && now_minutes <= end_minutes;
   }
-  hours = ( timearr[0] < 0 ) ? "-" + hours + Math.abs(timearr[0]) : hours + timearr[0];
-  minutes = (minutes < 10 ? '0' : '') + minutes;
-
-  // console.log(hours + ":" + minutes);
-  return hours + ":" + minutes;
 }

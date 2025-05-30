@@ -1,0 +1,9 @@
+csp:
+  default: ["'self'"]
+  formaction: ["'self'"]
+  framesrc: ["'self'"]
+  imgsrc: ["'self'"]
+  objectsrc: ["'none'"]
+  stylesrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"]
+  scriptsrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", "http://localhost:1313/livereload"]
+  scriptsrcelem: ["'self'", "'unsafe-inline'", "'unsafe-eval'", "http://localhost:1313/livereload"]
