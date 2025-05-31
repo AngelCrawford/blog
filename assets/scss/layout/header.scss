@@ -1,13 +1,10 @@
 @use "sass:string";
 @use "sass:math";
+@use "sass:color";
+@use "../variables" as *;
 @use "base/mixins" as *;
 @use "base/fonts" as *;
 @use "src/bulma/utilities/mixins";
-
-@include mixins.mobile {
-  // Styles applied
-  // below $tablet
-}
 
 header.hero {
     position: relative;
@@ -77,8 +74,9 @@ header.hero {
             top: calc(50% - 20px);
 
             h1.textlogo {
-                background: linear-gradient(to bottom, #b78846 32%, #ffcb9a 50%, #624925 72%);
+                background: linear-gradient(to bottom, $gold-light 32%, $gold 50%, $gold-dark 72%);
                 -webkit-background-clip: text;
+                background-clip: text;
                 -webkit-text-fill-color: transparent;
                 -moz-background-clip: text;
                 -moz-text-fill-color: transparent;
@@ -86,11 +84,12 @@ header.hero {
                 font-size: 70px;
               
                 &:before {
+                    // Background glow
                     content: "";
                     width: 500px;
                     position: absolute;
-                    background-color: #d1e8e2;
-                    opacity: .4;
+                    background-color: color.scale($gold-light, $lightness: 20%);
+                    opacity: .3;
                     z-index: -1;
                     filter: blur(30px);
                     top: 0;
@@ -99,19 +98,20 @@ header.hero {
                 }
                     
                 &:after {
+                    // Background Drop Line
                     content: attr(data-heading);
                     left: 0;
                     z-index: -1;
                     width: 100%;
                     position: absolute;
-                    text-shadow: -1px 0 1px #ffcb9a, 0 1px 1px #ffcb9a, 5px 5px 10px rgba(0, 0, 0, 0.7), -2px -2px 5px rgba(255, 255, 255, 0.3);
+                    text-shadow: -1px 0 1px color.scale($gold-light, $lightness: 10%), 0 1px 1px color.scale($gold-light, $lightness: 10%), 5px 5px 10px rgba(0, 0, 0, 0.7), -2px -2px 5px rgba(255, 255, 255, 0.3);
                 }
     
                 span.shimmer {
                     padding: 0 130px;
-                    background: -webkit-gradient(linear, left top, right top, from(#ffcb9a), to(#ffcb9a), color-stop(.5, #fff));
-                    background: -moz-gradient(linear, left top, right top, from(#ffcb9a), to(#ffcb9a), color-stop(.5, #fff));
-                    background: gradient(linear, left top, right top, from(#ffcb9a), to(#ffcb9a), color-stop(.5, #fff));
+                    background: -webkit-gradient(linear, left top, right top, from(color.scale($gold-light, $lightness: 10%)), to($gold-light), color-stop(.5, #fff));
+                    background: -moz-gradient(linear, left top, right top, from(color.scale($gold-light, $lightness: 10%)), to($gold-light), color-stop(.5, #fff));
+                    background: gradient(linear, left top, right top, from(color.scale($gold-light, $lightness: 10%)), to($gold-light), color-stop(.5, #fff));
                     -webkit-background-size: 50px 100%;
                     -moz-background-size: 50px 100%;
                     background-size: 50px 100%;

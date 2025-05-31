@@ -201,9 +201,6 @@ function dayNightSky() {
     var timeOfDay = timeBlocks[i];
     // console.log("Time of Day: ", timeOfDay);
 
-    // console.log(timeOfDay.start);
-    // console.log(timeOfDay.end);
-
     if ( isTimeBetween(timeOfDay.start, timeOfDay.end) ) {
       $sky.addClass(timeOfDay.class);
       // console.log("Time of Day: ", timeOfDay);
