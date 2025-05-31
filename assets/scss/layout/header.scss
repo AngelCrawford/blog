@@ -1,10 +1,8 @@
 @use "sass:string";
 @use "sass:math";
 @use "sass:color";
-@use "../variables" as *;
-@use "base/mixins" as *;
-@use "base/fonts" as *;
-@use "src/bulma/utilities/mixins";
+@use "vars/helpers";
+@use "src/bulma/utilities/mixins" as mixins;
 
 header.hero {
     position: relative;
@@ -60,11 +58,11 @@ header.hero {
             z-index: 1;
             will-change: background-position;
             
-            @include keyframes(clock) {
+            @include helpers.keyframes(clock) {
                 0% { background-position: 50% 200px; } 
                 100% {background-position: 50% 20px; } 
             }
-            @include animation(clock, 2s);
+            @include helpers.animation(clock, 2s);
         }
 
         // Text Logo
@@ -74,7 +72,7 @@ header.hero {
             top: calc(50% - 20px);
 
             h1.textlogo {
-                background: linear-gradient(to bottom, $gold-light 32%, $gold 50%, $gold-dark 72%);
+                background: linear-gradient(to bottom, helpers.$gold-light 32%, helpers.$gold 50%, helpers.$gold-dark 72%);
                 -webkit-background-clip: text;
                 background-clip: text;
                 -webkit-text-fill-color: transparent;
@@ -88,7 +86,7 @@ header.hero {
                     content: "";
                     width: 500px;
                     position: absolute;
-                    background-color: color.scale($gold-light, $lightness: 20%);
+                    background-color: color.scale(helpers.$gold-light, $lightness: 20%);
                     opacity: .3;
                     z-index: -1;
                     filter: blur(30px);
@@ -104,14 +102,14 @@ header.hero {
                     z-index: -1;
                     width: 100%;
                     position: absolute;
-                    text-shadow: -1px 0 1px color.scale($gold-light, $lightness: 10%), 0 1px 1px color.scale($gold-light, $lightness: 10%), 5px 5px 10px rgba(0, 0, 0, 0.7), -2px -2px 5px rgba(255, 255, 255, 0.3);
+                    text-shadow: -1px 0 1px color.scale(helpers.$gold-light, $lightness: 10%), 0 1px 1px color.scale(helpers.$gold-light, $lightness: 10%), 5px 5px 10px rgba(0, 0, 0, 0.7), -2px -2px 5px rgba(255, 255, 255, 0.3);
                 }
     
                 span.shimmer {
                     padding: 0 130px;
-                    background: -webkit-gradient(linear, left top, right top, from(color.scale($gold-light, $lightness: 10%)), to($gold-light), color-stop(.5, #fff));
-                    background: -moz-gradient(linear, left top, right top, from(color.scale($gold-light, $lightness: 10%)), to($gold-light), color-stop(.5, #fff));
-                    background: gradient(linear, left top, right top, from(color.scale($gold-light, $lightness: 10%)), to($gold-light), color-stop(.5, #fff));
+                    background: -webkit-gradient(linear, left top, right top, from(color.scale(helpers.$gold-light, $lightness: 10%)), to(helpers.$gold-light), color-stop(.5, #fff));
+                    background: -moz-gradient(linear, left top, right top, from(color.scale(helpers.$gold-light, $lightness: 10%)), to(helpers.$gold-light), color-stop(.5, #fff));
+                    background: gradient(linear, left top, right top, from(color.scale(helpers.$gold-light, $lightness: 10%)), to(helpers.$gold-light), color-stop(.5, #fff));
                     -webkit-background-size: 50px 100%;
                     -moz-background-size: 50px 100%;
                     background-size: 50px 100%;
@@ -122,18 +120,18 @@ header.hero {
                 
                     // Wird per JS getriggert
                     &.shimmer-animation {
-                        @include animation(shimmer, .8s);
+                        @include helpers.animation(shimmer, .8s);
                         will-change: background-position;
                     }
     
                 }
     
-                @include keyframes(shimmer) {
+                @include helpers.keyframes(shimmer) {
                     0% { background-position: top left; }
                     100% { background-position: top right; }
                 }
                 
-                @include font-header-bold;
+                @include helpers.font-header-bold;
             }
           
         }
@@ -223,13 +221,13 @@ header.hero {
             }
             .back {
                 transform-origin: 1.5rem 2rem;
-                @include animation(counter-wiggle, 4s, ease-in-out);
+                @include helpers.animation(counter-wiggle, 4s, ease-in-out);
             }
             .santa-hat-piece {
                 fill: firebrick;
             }
             
-            @include keyframes(counter-wiggle) {
+            @include helpers.keyframes(counter-wiggle) {
                 33% { transform: rotate(-20deg); }
                 66% { transform: rotate(10deg); }
             }
@@ -250,10 +248,10 @@ header.hero {
                 animation-iteration-count: 1;
                 animation-delay: 2.5s;
                 opacity: 0;
-                @include animation(ghost, 2.5s, forwards);
+                @include helpers.animation(ghost, 2.5s, forwards);
             }
 
-            @include keyframes(ghost) {
+            @include helpers.keyframes(ghost) {
                 0% { opacity: 0; }
                 50% { opacity: 1; }
                 100% { opacity: 0; }
@@ -302,10 +300,10 @@ header.hero {
                     animation-delay: 4s;
                 }
             }
-            @include keyframes(fly-cycle) {
+            @include helpers.keyframes(fly-cycle) {
                 100% { background-position: -900px 0; }
             }
-            @include keyframes(fly-right-one) {
+            @include helpers.keyframes(fly-right-one) {
                 0% { transform: scale(0.25) translateX(-10vw);}
                 10% { transform: translateY(2vh) translateX(10vw) scale(0.3); }
                 20% { transform: translateY(0vh) translateX(30vw) scale(0.35); }

@@ -6,21 +6,25 @@ $(".button.toggle-sidebar").click(function() {
 });
 
 
-$("ul.menu-list li.toggle-parent").click(function () { 
-  $(this).children('ul.toggle-parent-sublist').toggleClass("is-open");
-  $(this).toggleClass("sub-is-open");  
+// ***************** Navigation Scroll
+function navScroll() {
+  var theNavigation = $(".navbar");
+  stuck = "is-fixed-top";
+  theHeader = 300;
+
+  console.log(theHeader);
+
+  if ($(window).scrollTop() > theHeader) {
+    theNavigation.addClass(stuck);
+  } else {
+    theNavigation.removeClass(stuck);
+  }
+}
+$(window).on('scroll',function() { 
+  navScroll();
 });
 
-if ( $('ul.menu-list li.toggle-parent a.is-active') ) {
-  $('ul.menu-list li.toggle-parent a.is-active ~ ul.toggle-parent-sublist').addClass("is-open");
-  $('ul.menu-list li.toggle-parent a.is-active').parent().addClass("sub-is-open");
-}
 
-
-// if ($(window).width() <= 1023) {
-//   $(".navbar-item.has-dropdown a.navbar-link").removeAttr("href");
-//   $('.navbar-item.has-dropdown .navbar-dropdown').css("display", "none");
-// }
 
 // ***************** Back to Top Button
 // Funktion für das Scroll-Verhalten
@@ -60,14 +64,6 @@ $("span.shimmer").mouseenter(function() {
 
 // Call every hour, or every page reload
 setInterval(dayNightSky(), 60*60*1000);
-
-
-// // ***************** Sticky Navbar
-// // $(window).scroll(function () {
-// //   navScroll();
-// // });
-
-// // navScroll();
 
 
 // // ***************** Spoiler
@@ -127,24 +123,6 @@ setInterval(dayNightSky(), 60*60*1000);
 //   window.location.hash = "#postcomment";
 // });
   
-
-// // ***************** Navigation Scroll
-// function navScroll() {
-//   var theNavigation = $(".navbar");
-//   stuck = "is-fixed-top";
-//   theHeader = $('.header').height() - 56;
-
-//   if ($(this).scrollTop() > theHeader) {
-//     theNavigation.addClass(stuck);
-//     $(".navbar-logo").css('display', 'flex');
-//   } else {
-//     theNavigation.removeClass(stuck);
-//     $(".navbar-logo").css('display', 'none');
-//   }
-
-//   // $(".navbar-logo").css('display', 'flex');
-// }
-
 
 // // ***************** Comment ReplyTo Button function
 // // Added function to change value onclick

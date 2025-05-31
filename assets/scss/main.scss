@@ -4,28 +4,34 @@
  * Template URI: https://angel-crawford.de
 */
 @charset "utf-8";
+@use "vars/helpers";
 
-@use "variables" as *;
-@use "base/fonts";
-
-@use "src/bulma" with (
-  $text: hsl(44, 24%, 91%),
-  $link: hsl(227, 93%, 28%),
-  $primary: hsl(38, 47%, 39%),
+@forward "src/bulma" with (
+  $text: helpers.$light,
+  $link: helpers.$gold-dark,
+  $primary: helpers.$gold,
   // $info: hsl(271, 41%, 60%),
   // $success: hsl(271, 41%, 60%),
   // $warning: hsl(271, 41%, 60%),
   // $danger: hsl(271, 41%, 60%),
 
-  $family-primary: $family-sans-serif,
-  $family-secondary: $family-secondary,
+  $family-primary: helpers.$family-sans-serif,
+  $family-secondary: helpers.$family-secondary,
+
+  // NAVBAR
+  $navbar-burger-color: helpers.$gold,
+  $navbar-dropdown-border-color: helpers.$gold,
+  $navbar-dropdown-arrow: helpers.$gold,
+
+  
+  $navbar-dropdown-background-color: helpers.$blue-dark
 );
 
-@use "base/icons";
-@use "base/mixins";
-
+// ***************************** OWN STUFF *****************************
+// // Layout
 @use "layout/header";
 @use "layout/navigation";
 @use "layout/footer";
 
+// // Elements
 @use "elements/button";

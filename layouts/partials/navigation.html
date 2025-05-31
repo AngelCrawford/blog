@@ -1,9 +1,9 @@
-<nav class="navbar is-black has-shadow" role="navigation" aria-label="main navigation">
+<nav class="navbar has-shadow" role="navigation" aria-label="main navigation">
 
     <input id="menu-switch" name="menu-switch" type="checkbox" />
 
     <div class="navbar-brand">
-        {{/*  <a class="navbar-item" href="/">Site name</a>  */}}
+        <a class="navbar-item" href="/"><img src="{{ .Site.BaseURL }}images/clock.png" alt="Logo">{{ .Site.Title }}</a>
         <label for="menu-switch" class="navbar-burger" role="button" aria-expanded="false">
             <span aria-hidden="true"></span>
             <span aria-hidden="true"></span>

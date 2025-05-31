@@ -1,0 +1,46 @@
+@forward 'fonts';
+@forward 'colors';
+@forward 'icons';
+
+// @include box-shadow(false, 5px, 5px, 5px, rgba(#000, .3), rgba($text, .05))
+@mixin animation($animation, $time, $style: both) {
+    animation: $animation alternate $time $style;
+    -webkit-animation: $animation alternate $time $style;
+    -moz-animation-name: $animation alternate $time $style;
+  }
+  
+  @mixin box-shadow($inset: false, $horizOffset: 5px, $vertOffset: 5px, $blur: 5px, $color: rgba(#000, .3), $color2: rgba($text, .05)) {
+    @if $inset == true {
+      & {
+        -webkit-box-shadow: inset $horizOffset $vertOffset $blur $color, inset (-$horizOffset) (-$vertOffset) $blur $color2;
+        -moz-box-shadow: inset $horizOffset $vertOffset $blur $color, inset (-$horizOffset) (-$vertOffset) $blur $color2;
+        -ms-box-shadow: inset $horizOffset $vertOffset $blur $color, inset (-$horizOffset) (-$vertOffset) $blur $color2;
+        -o-box-shadow: inset $horizOffset $vertOffset $blur $color, inset (-$horizOffset) (-$vertOffset) $blur $color2;
+        box-shadow: inset $horizOffset $vertOffset $blur $color, inset (-$horizOffset) (-$vertOffset) $blur $color2;
+      }
+    } else {
+      & {
+        -webkit-box-shadow: $horizOffset $vertOffset $blur $color, (-$horizOffset) (-$vertOffset) $blur $color2;
+        -moz-box-shadow: $horizOffset $vertOffset $blur $color, (-$horizOffset) (-$vertOffset) $blur $color2;
+        -ms-box-shadow: $horizOffset $vertOffset $blur $color, (-$horizOffset) (-$vertOffset) $blur $color2;
+        -o-box-shadow: $horizOffset $vertOffset $blur $color, (-$horizOffset) (-$vertOffset) $blur $color2;
+        box-shadow: $horizOffset $vertOffset $blur $color, (-$horizOffset) (-$vertOffset) $blur $color2;
+      }
+    }
+  }
+  
+  @mixin translate($horiz, $vert) {
+    -webkit-transform: translate($horiz, $vert); /* Safari and Chrome */
+    -moz-transform: translate($horiz, $vert); /* Firefox */
+    -ms-transform: translate($horiz, $vert); /* IE 9 */
+    -o-transform: translate($horiz, $vert); /* Opera */
+    transform: translate($horiz, $vert);
+  }
+  
+  @mixin keyframes($name) {
+    @-webkit-keyframes #{$name} { @content; }
+    @-moz-keyframes #{$name} { @content; }
+    @-ms-keyframes #{$name} { @content; }
+    @-o-keyframes #{$name} { @content; }
+    @keyframes #{$name} { @content; }
+  }
