@@ -1,0 +1,49 @@
+@use "sass:color";
+@use "vars/helpers";
+
+main {
+    background-color: helpers.$dark;
+}
+
+nav.navbar {
+    background-color: color.adjust(helpers.$dark, $lightness: -2%);
+    // @include helpers.box-shadow(true, 1px, 1px, 2px, rgba(color.adjust(helpers.$dark, $lightness: -20%), 1), rgba(helpers.$light, .1));
+
+    a.navbar-item, a.navbar-link {
+        color: helpers.$gold;
+
+        &:hover {
+            color: helpers.$gold-light;
+            background-color: color.adjust(helpers.$dark, $lightness: -5%);
+            @include helpers.box-shadow(true, 1px, 1px, 4px, rgba(color.adjust(helpers.$dark, $lightness: -20%), .8), rgba(helpers.$light, 0.14));
+        }
+
+        &.is-active {
+            color: helpers.$gold-light;
+            background-color: helpers.$dark;
+
+            &::after {
+                border-color: helpers.$gold;
+            }
+
+            &:hover {
+                color: helpers.$gold;
+                background-color: color.adjust(helpers.$dark, $lightness: -5%);
+            }
+        }
+
+        &::after {
+            border-color: helpers.$gold-dark;
+        }
+    }
+
+    .navbar-dropdown {
+        background-color: color.adjust(helpers.$dark, $lightness: -5%);
+        border: 1px solid rgba(helpers.$gold-light, .1);
+        @include helpers.box-shadow(false, 1px, 1px, 3px, rgba(helpers.$light, 0.05), rgba(color.adjust(helpers.$dark, $lightness: -20%), .8));
+
+        a.navbar-item {
+            background-color: color.adjust(helpers.$dark, $lightness: -5%);
+        }
+    }
+}

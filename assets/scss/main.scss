@@ -9,7 +9,7 @@
 @forward "src/bulma" with (
   $text: helpers.$light,
   $link: helpers.$gold-dark,
-  $primary: helpers.$gold,
+  $primary: helpers.$gold-light,
   // $info: hsl(271, 41%, 60%),
   // $success: hsl(271, 41%, 60%),
   // $warning: hsl(271, 41%, 60%),
@@ -19,16 +19,18 @@
   $family-secondary: helpers.$family-secondary,
 
   // NAVBAR
-  $navbar-burger-color: helpers.$gold,
-  $navbar-dropdown-border-color: helpers.$gold,
+  $navbar-burger-color: helpers.$gold-light,
+  $navbar-dropdown-border-color: helpers.$gold-light,
   $navbar-dropdown-arrow: helpers.$gold,
 
   
-  $navbar-dropdown-background-color: helpers.$blue-dark
+  // $navbar-dropdown-background-color: helpers.$light
 );
 
 // ***************************** OWN STUFF *****************************
 // // Layout
+@use "theme";
+
 @use "layout/header";
 @use "layout/navigation";
 @use "layout/footer";

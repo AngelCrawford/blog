@@ -1,9 +1,9 @@
-<nav class="navbar has-shadow" role="navigation" aria-label="main navigation">
+<nav class="navbar" role="navigation" aria-label="main navigation">
 
     <input id="menu-switch" name="menu-switch" type="checkbox" />
 
     <div class="navbar-brand">
-        <a class="navbar-item" href="/"><img src="{{ .Site.BaseURL }}images/clock.png" alt="Logo">{{ .Site.Title }}</a>
+        <a class="navbar-item {{ if .IsHome }}is-active{{ end }}" href="/"><img src="{{ .Site.BaseURL }}images/clock.png" alt="Logo">{{ .Site.Title }}</a>
         <label for="menu-switch" class="navbar-burger" role="button" aria-expanded="false">
             <span aria-hidden="true"></span>
             <span aria-hidden="true"></span>
@@ -40,7 +40,7 @@
             {{- end -}}
         </div>
   
-      <div class="navbar-end">
+      {{/*  <div class="navbar-end">
         <div class="navbar-item">
           <div class="field is-grouped">
             <p class="control">
@@ -68,6 +68,6 @@
             </p>
           </div>
         </div>
-      </div>
+      </div>  */}}
     </div>
   </nav>

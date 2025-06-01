@@ -1,3 +1,5 @@
+@use "vars/helpers";
+
 // Burger Menu design
 input#menu-switch {
     display: none;
@@ -16,4 +18,21 @@ input#menu-switch:checked + .navbar-brand .navbar-burger span:nth-child(4) {
 
 input#menu-switch:checked ~ .navbar-menu {
     display: block;
+}
+
+nav.navbar {
+
+    .navbar-link:hover::after {
+        width: .5em;
+        height: .5em;
+        transform: rotate(135deg);
+        top: 57%;
+        transition: transform .15s ease-in-out;
+    }
+
+    .navbar-link::after {
+        width: .5em;
+        height: .5em;
+        transition: transform .15s ease-in-out;
+    }
 }
