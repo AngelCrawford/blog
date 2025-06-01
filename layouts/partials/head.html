@@ -14,8 +14,8 @@
     {{- end -}}
 
     <!-- Security -->
-    <!-- FIXME: EINBLENDEN BEI PRODUCTION! Muss unter umständen immer mal wieder angepasst werden -->
-    <!-- THANKS: https://blog.jeremylikness.com/blog/create-content-security-policy-csp-in-hugo/ -->
+    <!-- TODO: EINBLENDEN BEI PRODUCTION! Muss unter umständen immer mal wieder angepasst werden -->
+    <!-- THANKS: Content Security Policy (CSP) in Hugo - https://blog.jeremylikness.com/blog/create-content-security-policy-csp-in-hugo/ -->
     <meta name="referrer" content="always" />
     {{ printf `<meta http-equiv="Content-Security-Policy" content="default-src %s; form-action %s; frame-src %s; img-src %s; object-src %s; style-src %s; script-src %s; script-src-elem %s;">` (delimit .Site.Params.csp.default " ") (delimit .Site.Params.csp.formaction " ") (delimit .Site.Params.csp.framesrc " ") (delimit .Site.Params.csp.imgsrc " ") (delimit .Site.Params.csp.objectsrc " ") (delimit .Site.Params.csp.stylesrc " ") (delimit .Site.Params.csp.scriptsrc " ") (delimit .Site.Params.csp.scriptsrcelem " ") | safeHTML }}
 
@@ -47,7 +47,7 @@
     <link rel="manifest" href="/images/favicon/site.webmanifest">
 
     <!-- SEO -->
-    <!-- FIXME: Author filling -->
+    <!-- TODO: Author filling -->
     {{- with .Params.author }}<meta name="author" content="{{ . }}" />{{ end -}}
     {{ with .Params.description }}<meta name="description" content="{{ . }}" />{{ end }}
     {{ with .Params.keywords }}<meta name="keywords" content="{{ . }}" />{{ end }}
@@ -63,7 +63,7 @@
     {{ if not .Lastmod.IsZero }}<meta property="og:updated_time" {{ .Lastmod.Format $iso8601 | printf "content=%q" | safeHTMLAttr }} />{{ end -}}
 
     <!-- If it is part of a series, link to related articles -->
-    <!-- FIXME: Series Twitter -->
+    <!-- TODO: Series Twitter -->
     {{- if .Params.series -}}
         {{- $currentPage := . -}}
         {{- $series_name := index .Params.series 0 -}}
@@ -75,11 +75,11 @@
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta property="twitter:description" content="{{ with .Description }}{{ . }}{{ else }}{{ .Summary }}{{ end }}" />
-    <!-- FIXME: Twitter SEO Handle -->
+    <!-- TODO: Twitter SEO Handle -->
     {{- with .Site.Params.seo.twitterHandle }}<meta name="twitter:site" content="@{{ . }}" />{{ end -}}
 
     <!-- Social Images -->
-    <!-- FIXME: Social Media Images and Grayscale -->
+    <!-- TODO: Social Media Images and Grayscale -->
     {{- range first 1 (.Resources.ByType "image") }}
         {{- $img := .Fill "400x300" | images.Filter images.Grayscale -}}
     <meta property="og:image" content="{{ $img.RelPermalink | absURL }}" />
@@ -98,7 +98,7 @@
         {{- end -}}
     {{- end -}}
 
-    <!-- FIXME: Autoren richtig anzeigen und Namen füllen -->
+    <!-- TODO: Autoren richtig anzeigen und Namen füllen -->
     {{- range (.Page.GetTerms "authors") -}}
         {{- range .Params.socials }}
             {{ if eq .name "facebook"}}<meta property="article:author" content="{{ .src }}" />{{ end }}

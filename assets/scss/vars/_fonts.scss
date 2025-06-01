@@ -2,15 +2,16 @@
 $family-sans-serif: "Montserrat-Regular", BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
 $family-secondary: "Montserrat Alternates", BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
 
+// THANKS: Google Fonts Montserrat und Montserrat Alternates
 @font-face {
     font-family: 'Montserrat Alternates';
-    src: local('Montserrat Alternates'), url('/fonts/Montserrat_Alternates/MontserratAlternates-Regular.ttf') format('truetype');
+    src: local('Montserrat Alternates'), url('/fonts/Montserrat/MontserratAlternates-Regular.ttf') format('truetype');
     font-display: swap;
 }
   
 @font-face {
     font-family: 'Montserrat Alternates Bold';
-    src: local('Montserrat Alternates'), url('/fonts/Montserrat_Alternates/MontserratAlternates-Medium.ttf') format('truetype');
+    src: local('Montserrat Alternates'), url('/fonts/Montserrat/MontserratAlternates-Medium.ttf') format('truetype');
     font-display: swap;
 }
   
@@ -26,20 +27,15 @@ $family-secondary: "Montserrat Alternates", BlinkMacSystemFont, -apple-system, "
 }
 @font-face {
     font-family: 'Montserrat-Bold';
-    src: local('Montserrat'), local('Montserrat-Bold'), url('/fonts/Montserrat/Montserrat-Bold.ttf') format('truetype');
-    font-display: swap;
-}
-@font-face {
-    font-family: 'Montserrat-Black';
-    src: local('Montserrat'), local('Montserrat-Black'), url('/fonts/Montserrat/Montserrat-Black.ttf') format('truetype');
+    src: local('Montserrat'), local('Montserrat-Bold'), url('/fonts/Montserrat/Montserrat-SemiBold.ttf') format('truetype');
     font-display: swap;
 }
   
 @mixin font-family($family, $weight: '') {
    @if $family {
-     & {font-family: $family, Helvetica, Arial, Verdana, sans-serif;}
-   } else {
-     & {font-family: Helvetica, Arial, Verdana, sans-serif;}
+     & {font-family: $family, BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif;}
+   } @else {
+     & {font-family: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif;}
    }
    @if $weight { & {font-weight: $weight;} }
 }
@@ -53,15 +49,13 @@ $family-secondary: "Montserrat Alternates", BlinkMacSystemFont, -apple-system, "
 }
 
 @mixin font-light {
-    @include font-family('Montserrat-Light', 200);
+    @include font-family('Montserrat-Light', 400);
 }
 @mixin font-regular {
-    @include font-family('Montserrat-Regular', 300);
+    @include font-family('Montserrat-Regular', 400);
 }
 @mixin font-bold {
-    @include font-family('Montserrat-Bold', 500);
-}
-@mixin font-black {
-    @include font-family('Montserrat-Black', 900);
+    @include font-family('Montserrat-Bold', 700);
+    letter-spacing: .035em;
 }
   

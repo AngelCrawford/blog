@@ -1,5 +1,5 @@
 "use strict";
-// THANKS: https://blog.jeremylikness.com/blog/dynamic-search-in-a-static-hugo-website/
+// THANKS: Dynamic Search in a Static Hugo Website - https://blog.jeremylikness.com/blog/dynamic-search-in-a-static-hugo-website/
 
 var searchFn = function () {
   var lastTerm = "You are likely to be eaten by a grue.";

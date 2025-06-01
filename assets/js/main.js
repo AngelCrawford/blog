@@ -133,7 +133,7 @@ setInterval(dayNightSky(), 60*60*1000);
 
 
 // // ***************** Sky Background Function
-// // THANKS: https://codepen.io/ellimccale/pen/wxzJMx
+// // THANKS: Sky Background - https://codepen.io/ellimccale/pen/wxzJMx
 function dayNightSky() {
   
   var $sky = $("header.hero.has-sky");

@@ -112,8 +112,8 @@ function setGravatars(email, defaultImage) {
 }
 
 
-// ***************** Add Favicons to external links
-// THANKS: https://codepen.io/angel_crawford/pen/VwKrvEW
+// ***************** Add Icons to external links
+// THANKS: Icons for external links - https://codepen.io/angel_crawford/pen/VwKrvEW
 function getFavForExternalLinks() {
   /* You can replace this with your site's domain */
   var basedomain = location.hostname.split('.').slice(-2).join('.');
@@ -123,7 +123,7 @@ function getFavForExternalLinks() {
 	/* Select all external links */
 	$(selectLinks).not( '[href*="' + basedomain + '"]' ).each(function() {
 
-    /* Add the favicon as a background gradient */
+    /* Add the icon as a background gradient */
 		$(this).css({
 			'background': 'url(https://www.google.com/s2/favicons?domain=' + this.href + ') left center no-repeat',
 			'padding-left': '21px',
