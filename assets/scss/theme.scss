@@ -9,7 +9,7 @@ nav.navbar {
     background-color: color.adjust(helpers.$dark, $lightness: -2%);
     // @include helpers.box-shadow(true, 1px, 1px, 2px, rgba(color.adjust(helpers.$dark, $lightness: -20%), 1), rgba(helpers.$light, .1));
 
-    a.navbar-item, a.navbar-link {
+    a.navbar-item {
         color: helpers.$gold;
 
         &:hover {
@@ -22,21 +22,45 @@ nav.navbar {
             color: helpers.$gold-light;
             background-color: helpers.$dark;
 
+            &:hover {
+                color: helpers.$gold-light;
+                background-color: color.adjust(helpers.$dark, $lightness: -5%);
+            }
+        }
+    }
+
+    .navbar-item.has-dropdown a.navbar-link {
+        color: helpers.$gold;
+
+        &::after {
+            border-color: helpers.$gold-dark;
+        }
+
+        &:hover {
+            color: helpers.$gold-light;
+            background-color: color.adjust(helpers.$dark, $lightness: -5%);
+            @include helpers.box-shadow(true, 1px, 1px, 4px, rgba(color.adjust(helpers.$dark, $lightness: -20%), .8), rgba(helpers.$light, 0.14));
+
+            &::after {
+                border-color: helpers.$gold;
+            }
+        }
+
+        &.is-active {
+            color: helpers.$gold-light;
+            background-color: helpers.$dark;
+
             &::after {
                 border-color: helpers.$gold;
             }
 
             &:hover {
-                color: helpers.$gold;
+                color: helpers.$gold-light;
                 background-color: color.adjust(helpers.$dark, $lightness: -5%);
             }
         }
-
-        &::after {
-            border-color: helpers.$gold-dark;
-        }
     }
-
+    
     .navbar-dropdown {
         background-color: color.adjust(helpers.$dark, $lightness: -5%);
         border: 1px solid rgba(helpers.$gold-light, .1);
@@ -44,6 +68,44 @@ nav.navbar {
 
         a.navbar-item {
             background-color: color.adjust(helpers.$dark, $lightness: -5%);
+            box-shadow: none;
+            color: helpers.$gold;
+            font-weight: 400;
+
+            &.is-active, &:hover {
+                color: helpers.$gold-light;
+            }
+        }
+    }
+    
+    // CSS-only solution to highlight the parent navbar-item when hovering over dropdown items
+    .navbar-item.has-dropdown {
+        // This is the key - when the entire dropdown container is hovered
+        &:hover {
+            background-color: color.adjust(helpers.$dark, $lightness: -5%);
+            
+            // Style the navbar-link when the dropdown container is hovered
+            > .navbar-link, > .navbar-link.is-active {
+                background-color: color.adjust(helpers.$dark, $lightness: -5%);
+                color: helpers.$gold-light;
+                @include helpers.box-shadow(true, 1px, 1px, 4px, rgba(color.adjust(helpers.$dark, $lightness: -20%), .8), rgba(helpers.$light, 0.14));
+    
+                &::after {
+                    border-color: helpers.$gold;
+                }
+            }
+        }
+        
+        // Make sure the dropdown stays visible when hovering over it
+        .navbar-dropdown:hover {
+            display: block;
+        }
+    }
+    
+    // This ensures the dropdown remains visible when moving from link to dropdown
+    .navbar-dropdown {
+        &:hover {
+            display: block;
         }
     }
 }

@@ -30,8 +30,9 @@
         {{- $main := resources.Get "js/main.js" -}}
         {{- $search := resources.Get "js/search.js" -}}
         {{- $firework := resources.Get "js/firework.js" -}}
-        
-        {{- $script := slice $sunCalc $main $search $firework | resources.Concat "js/footerBundle.js" | resources.Minify | resources.Fingerprint -}}
+        {{- $navbar := resources.Get "js/navbar.js" -}}
+        {{- $header := resources.Get "js/header.js" -}}
+        {{- $script := slice $sunCalc $main $search $firework $navbar $header | resources.Concat "js/footerBundle.js" | resources.Minify | resources.Fingerprint -}}
         <script async defer src="{{ $script.Permalink }}"></script>
 
     </body>

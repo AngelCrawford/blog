@@ -1,4 +1,5 @@
 @use "vars/helpers";
+@use "sass:color";
 
 // Burger Menu design
 input#menu-switch {
@@ -22,21 +23,34 @@ input#menu-switch:checked ~ .navbar-menu {
 
 nav.navbar {
 
-    .navbar-item {
+    .navbar-item.has-dropdown {
         @include helpers.font-bold;
-    }
 
-    .navbar-link:hover::after {
-        width: .5em;
-        height: .5em;
-        transform: rotate(135deg);
-        top: 57%;
-        transition: transform .15s ease-in-out;
-    }
+        .navbar-link:hover::after {
+            width: .5em;
+            height: .5em;
+            transform: rotate(135deg);
+            top: 57%;
+            transition: transform .15s ease-in-out;
+        }
 
-    .navbar-link::after {
-        width: .5em;
-        height: .5em;
-        transition: transform .15s ease-in-out;
+        .navbar-link::after {
+            width: .5em;
+            height: .5em;
+            transition: transform .15s ease-in-out;
+        }
+
+        // This is the key - when the entire dropdown container is hovered
+        &:hover {
+            background-color: color.adjust(helpers.$dark, $lightness: -5%);
+
+            > .navbar-link::after {
+                width: .5em;
+                height: .5em;
+                transform: rotate(135deg);
+                top: 57%;
+                transition: transform .15s ease-in-out;
+            }
+        }
     }
 }
