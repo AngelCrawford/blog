@@ -5,6 +5,7 @@
 */
 @charset "utf-8";
 @use "vars/helpers";
+@use "sass:color";
 
 @forward "src/bulma" with (
   $text: helpers.$light,
@@ -29,12 +30,39 @@
 );
 
 // ***************************** OWN STUFF *****************************
-// // Layout
-@use "theme";
-
 @use "layout/header";
 @use "layout/navigation";
 @use "layout/footer";
 
 // // Elements
 @use "elements/button";
+@use "elements/card";
+@use "elements/ribbon";
+
+
+main {
+  background-color: helpers.$dark;
+
+  &.content h1.title {
+    background: linear-gradient(to bottom, helpers.$gold 32%, helpers.$gold-light 50%, helpers.$gold-dark 80%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    -moz-background-clip: text;
+    -moz-text-fill-color: transparent;
+    position: relative;
+    font-size: 70px;
+    width: 100%;
+    @include helpers.font-header;
+          
+    &:after {
+        // Background Drop Line
+        content: attr(data-heading);
+        left: 0;
+        overflow: visible;
+        z-index: -1;
+        position: absolute;
+        text-shadow: -1px 0 1px color.scale(helpers.$gold-light, $lightness: 10%), 0 1px 1px color.scale(helpers.$gold-light, $lightness: 10%), 5px 5px 10px rgba(0, 0, 0, 0.7), -2px -2px 5px rgba(255, 255, 255, 0.3);
+    }
+  }
+}

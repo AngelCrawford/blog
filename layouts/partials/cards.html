@@ -1,0 +1,93 @@
+<div class="cell">
+    <article class="card is-horizontal {{ if .Resources }}has-image{{else}}no-image{{ end }} has-ribbon {{ if eq .Params.weight 1 }}is-fixed{{ end }}">
+
+        {{- if .GetTerms "categories" -}}
+        {{- range first 1 (.GetTerms "categories") -}}
+            {{- $catName := .LinkTitle -}}
+            <div class="ribbon" style="{{ range .Site.Params.categoryColor }}{{ if eq .name $catName }}background-color: {{ .color }};{{ end }}{{ end }}">
+            <a href="{{ .RelPermalink }}">{{- .LinkTitle -}}</a>
+            </div>
+        {{- end -}}
+        {{- end -}}
+
+        {{- if .Resources -}}
+        <div class="card-image">
+          <figure class="image is-2by3">
+            <a href="{{ .Permalink }}">
+              {{- $img := (.Resources.ByType "image").GetMatch "featured*" -}}
+              {{- with $img -}}
+                {{- $resize := .Fill "320x480" -}}
+                  <img src="{{ $resize.RelPermalink }}" alt="{{ $.Title }}" width="480" height="320" loading="lazy">
+              {{- end -}}
+            </a>
+            {{- range .Params.featured_image -}}
+              <figcaption>
+                <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#information-line"></use></svg>
+                {{ .byline | safeHTML }}
+              </figcaption>
+            {{- end -}}
+          </figure>
+        </div>
+      {{- end -}}
+
+      
+        <div class="card-content">
+            <h3 class="title is-5"><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
+      
+            <p class="subtitle">
+              <time datetime="{{ .PublishDate.Format "2006-01-02T15:04:05Z07:00" }}">
+                <svg class='remix-small'>
+                  <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#calendar-line"></use>
+                </svg> {{ .Date.Format "02.01.06" }}
+              </time>
+              {{ if not ( eq (.Date.Format "02.01.06") (.Lastmod.Format "02.01.06") ) }}
+              <time class="updated" datetime="{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}">
+                <svg class='remix-small'>
+                  <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#pencil-line"></use>
+                </svg> {{ .Lastmod.Format "02.01.06" }}
+              </time>
+              {{ end }}
+            </p>
+            
+            <div class="content">
+                
+                {{ $summarySplits := split .Content "<!--start-summary-->" }}
+                {{ $newContent := "" }}
+          
+                {{ if ge (len $summarySplits) 2 }}
+                  <!-- If content has comment "start-summary", then split from there -->
+                  {{ $newContent = index $summarySplits 1 | plainify }}
+                {{ else }}
+                  <!-- If content has .Params.Summary, it will be used before the auto created Summary -->
+                  {{ $newContent = .Summary | markdownify }}
+                {{ end }}
+          
+                <!-- If article has no image, show more content instead -->
+                {{- if not .Resources -}}
+                  {{ $newContent | truncate 700 " [...]" }}
+          
+                {{ else }}
+                  {{ $newContent | truncate 330 " [...]" }}
+                {{- end -}}
+      
+                <a class="read-more" href="{{ .RelPermalink }}"> weiterlesen</a>
+          
+                {{- if (.GetTerms "tags") -}}
+                  <div class="tags-wrapper">
+                    <svg class='remix-small'>
+                      <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#price-tag-3-line"></use>
+                    </svg>
+                    {{- range (.GetTerms "tags") -}}
+                      <a href="{{ .RelPermalink }}">#{{ .LinkTitle }} </a> 
+                    {{- end -}}
+                  </div>
+                {{- end -}}
+            </div>
+        </div>
+
+        <footer class="card-footer">
+            <a href="{{ .RelPermalink }}" class="card-footer-item">Read More</a>
+            <a href="{{ .RelPermalink }}" class="card-footer-item">Read More</a>
+        </footer>
+    </article>
+</div>

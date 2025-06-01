@@ -1,5 +1,29 @@
 {{ define "main" }}
-<h1>{{ .Title }}</h1>
+<h1 class="title is-1" data-heading="{{ .Title }}">{{ .Title }}</h1>
 
-{{ .Content }}
+<p>{{ if .Summary }}{{ .Summary }}{{ end }}</p>
+
+<div class="fixed-grid has-1-cols-mobile has-2-cols-tablet has-3-cols-desktop has-3-cols-widescreen has-3-cols-fullhd">
+    <div class="grid is-column-gap-6 is-row-gap-4">
+
+        {{/* Get all articles */}}
+        {{ $articlePages := where .Site.RegularPages "Section" "articles" }}
+        
+        {{/* First show articles with weight parameter, sorted by weight */}}
+        {{ range (where $articlePages "Params.weight" "gt" 0).ByWeight }}
+            {{ partial "cards" . }}
+        {{ end }}
+        
+        {{/* Then show the rest of the articles sorted by publish date */}}
+        {{ range (where $articlePages "Params.weight" "le" 0).ByPublishDate.Reverse }}
+            {{ partial "cards" . }}
+        {{ end }}
+        
+        {{/* Finally show articles without weight parameter */}}
+        {{ range (where $articlePages "Params.weight" "eq" nil).ByPublishDate.Reverse }}
+            {{ partial "cards" . }}
+        {{ end }}
+
+    </div>
+</div>
 {{ end }}

@@ -1,0 +1,72 @@
+@use "vars/helpers";
+
+// .ribbon {
+//     position: absolute;
+//     // top: 1rem;
+//     left: 0;
+//     background-color: helpers.$gold;
+//     color: helpers.$dark;
+//     padding: 0.5rem 1rem;
+//     // font-weight: bold;
+//     z-index: 1;
+//     font-size: 80%;
+    
+//     a {
+//         color: inherit;
+//         text-decoration: none;
+//     }
+// }
+
+
+// THANKS: https://codepen.io/wikiki/pen/XagrqJ
+.has-ribbon {
+    position: relative;
+}
+
+.ribbon {
+    max-width: 13em;
+    position: absolute;
+    font-size: 90%;
+    z-index: 2;
+    transition: all .3s ease-out;
+    
+    a:hover {
+        color: helpers.$light;
+        background-color: helpers.$gold;
+        @include helpers.box-shadow(true, 3px, 3px, 5px, rgba(#000, .3), rgba(helpers.$light, .4));
+    }
+}
+  .ribbon a, .is-single-page {
+    color: helpers.$light;
+    background-color: helpers.$gold-dark;
+    display: block;
+    @include helpers.font-header;
+    padding: 0.3em 0.75em;
+    transition: all .3s ease-out;
+    @include helpers.box-shadow(false, 3px, 3px, 5px, rgba(#000, .2), rgba(helpers.$light, .05));
+  }
+  
+//   .is-single-page {
+//     color: helpers.$gold;
+//     border: none;
+//     text-transform: uppercase;
+//     font-weight: 600;
+//     top: .3em;
+//     left: -1.5em;
+//     @include helpers.font-bold;
+//     font-size: .8em;
+//     z-index: unset;
+//     &:after {
+//       content: "";
+//       width: 0px;
+//       height: 0px;
+//       position: absolute;
+//       margin-left: 9px;
+//       margin-top: -4px;
+//       -webkit-transform: rotate(360deg);
+//       transform: rotate(360deg);
+//       border-style: solid;
+//       border-width: 16px 0 16px 16px;
+//       border-color: transparent transparent transparent helpers.$gold;
+//     }
+//   }

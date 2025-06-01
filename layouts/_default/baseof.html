@@ -1,28 +1,20 @@
 <!DOCTYPE html>
 <html lang="de" data-theme="dark">
-    {{- partial "head.html" . -}}
+    {{- partial "_base/head" . -}}
 
     <body>
         <header class="hero is-medium has-sky">
-            {{- partial "hero" . -}}
+            {{- partial "_base/hero" . -}}
         </header>
 
-        {{ partial "navigation" . }}
+        {{ partial "_base/navigation" . }}
 
-
-        <div class="columns is-gapless is-multiline" style="min-height:calc(100vw - 300px)">
-            <main class="column">
-
-                <div>
-                    {{- block "main" . }}{{- end }}
-                </div>
-            </main>
-
-        </div>
-            
+        <main class="content section">
+            {{- block "main" . }}{{- end }}
+        </main>
         
         <footer class="footer">
-            {{- partial "footer" . -}}
+            {{- partial "_base/footer" . -}}
         </footer>
 
         <!-- Footer Scripts -->

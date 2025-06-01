@@ -9,8 +9,9 @@ Now I want to stick on to one project - a custom theme for my private blog.
 * [My Twitter Profile](https://twitter.com/crawford_ftw)
 
 # To-Do
-- [ ] Dart Sass: Sass's behavior for declarations that appear after nested rules will be changing to match the behavior specified by CSS in an upcoming version. To keep the existing behavior, move the declaration above the nested rule. To opt into the new behavior, wrap the declaration in `& {}`.
 - [ ] Add clouds to day sky
+- [ ] Mega Menu, yes or no? Can't devide if needed.
+  - [ ] Do I even need the dropdowns? Because I want the user to open the site!
 
 
 # Includes
