@@ -1,0 +1,7 @@
+categoryColor:
+  - name: "Movie"
+    color: "#537fbd"
+  - name: "Kategorie 1"
+    color: "green"
+  - name: "Allgemein"
+    color: "#cb282e"

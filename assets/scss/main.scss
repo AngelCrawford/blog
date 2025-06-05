@@ -40,7 +40,7 @@
 
 
 main {
-  background-color: helpers.$dark;
+  background-color: color.adjust(helpers.$dark, $lightness: -2%);
 
   &.content h1.title {
     font-size: 40px;

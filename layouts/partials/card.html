@@ -1,11 +1,11 @@
 <div class="cell">
-    <article class="card is-horizontal {{ if .Resources }}has-image{{else}}no-image{{ end }} has-ribbon {{ if eq .Params.weight 1 }}is-fixed{{ end }}">
+    <article class="card is-horizontal {{ if .Resources }}has-image{{else}}no-image{{ end }} has-ribbon {{ if eq .Params.weight 1 }}is-fixed{{ end }} {{ if eq .Params.format "quote" }}is-quote{{ end }}">
 
         {{- if .GetTerms "categories" -}}
         {{- range first 1 (.GetTerms "categories") -}}
             {{- $catName := .LinkTitle -}}
-            <div class="ribbon" style="{{ range .Site.Params.categoryColor }}{{ if eq .name $catName }}background-color: {{ .color }};{{ end }}{{ end }}">
-            <a href="{{ .RelPermalink }}">{{- .LinkTitle -}}</a>
+            <div class="ribbon">
+              <a href="{{ .RelPermalink }}" style="{{- range .Site.Params.categoryColor -}}{{- if eq .name $catName -}}background-color: {{ .color }};{{- end -}}{{- end -}}">{{- .LinkTitle -}}</a>
             </div>
         {{- end -}}
         {{- end -}}
@@ -13,13 +13,13 @@
         {{- if .Resources -}}
         <div class="card-image">
           <figure class="image is-2by3">
-            <a href="{{ .Permalink }}">
+            {{- if not (eq .Params.format "quote") }}<a href="{{ .Permalink }}">{{- end -}}
               {{- $img := (.Resources.ByType "image").GetMatch "featured*" -}}
               {{- with $img -}}
                 {{- $resize := .Fill "320x480" -}}
                   <img src="{{ $resize.RelPermalink }}" alt="{{ $.Title }}" width="480" height="320" loading="lazy">
               {{- end -}}
-            </a>
+            {{- if not (eq .Params.format "quote") }}</a>{{- end -}}
             {{- range .Params.featured_image -}}
               <figcaption>
                 <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#information-line"></use></svg>
@@ -50,42 +50,75 @@
             </p>
             
             <div class="content">
-                
-                {{ $summarySplits := split .Content "<!--start-summary-->" }}
-                {{ $newContent := "" }}
-          
-                {{ if ge (len $summarySplits) 2 }}
-                  <!-- If content has comment "start-summary", then split from there -->
-                  {{ $newContent = index $summarySplits 1 | plainify }}
-                {{ else }}
-                  <!-- If content has .Params.Summary, it will be used before the auto created Summary -->
-                  {{ $newContent = .Summary | markdownify }}
-                {{ end }}
-          
-                <!-- If article has no image, show more content instead -->
-                {{- if not .Resources -}}
-                  {{ $newContent | truncate 700 " [...]" }}
-          
-                {{ else }}
-                  {{ $newContent | truncate 330 " [...]" }}
-                {{- end -}}
-      
-                <a class="read-more" href="{{ .RelPermalink }}"> weiterlesen</a>
-          
-                {{- if (.GetTerms "tags") -}}
-                  <div class="tags-wrapper">
-                    <svg class='remix-small'>
-                      <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#price-tag-3-line"></use>
-                    </svg>
-                    {{- range (.GetTerms "tags") -}}
-                      <a href="{{ .RelPermalink }}">#{{ .LinkTitle }} </a> 
-                    {{- end -}}
-                  </div>
-                {{- end -}}
+
+              {{ $summarySplits := split .Content "<!--more-->" }}
+              {{ $newContent := "" }}
+        
+              {{ if ge (len $summarySplits) 2 }}
+                <!-- If content has comment "more", then split from there -->
+                {{ $newContent = index $summarySplits 1 | plainify }}
+              {{ else }}
+                <!-- If content has .Params.Summary, it will be used before the auto created Summary -->
+                {{ $newContent = .Summary | plainify }}
+              {{ end }}
+        
+              <!-- If article has no image, show more content instead -->
+              {{- if not .Resources -}}
+                {{ $newContent | truncate 800 " ... " }}
+              {{ else }}
+                {{ $newContent | truncate 330 " ... " }}
+              {{- end -}}
+              {{- if not (eq .Params.format "quote") }}<a class="read-more" href="{{ .RelPermalink }}">mehr</a>{{- end -}}
+
+              {{- if (.GetTerms "tags") -}}
+                <div class="tags-wrapper">
+                  <svg class='remix-small'>
+                    <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#price-tag-3-line"></use>
+                  </svg>
+                  {{- range (.GetTerms "tags") -}}
+                    <a href="{{ .RelPermalink }}">#{{ .LinkTitle }} </a> 
+                  {{- end -}}
+                </div>
+              {{- end -}}
             </div>
         </div>
 
+        {{/*  BUG: Not working with format quote, because of the render_build: false */}}
         <footer class="card-footer">
+          {{ $list := .GetTerms "authors" }}
+          {{ $len := len $list }}
+
+          <div class="author-img {{- if gt $len 1 }} more-authors{{ end -}}">
+            {{- if gt $len 1 -}}
+              <div class="author-opener">{{ $len }}</div>
+              <div class="more-authors-img">
+                {{- range first 3 (.GetTerms "authors") -}}
+                  <figure class="image is-48x48">
+                    <a href="{{ .Permalink }}">
+                      {{- range first 1 (.Resources.ByType "image") -}}
+                        {{- $img := .Fill "48x48" -}}
+                        <img class="is-rounded" src="{{ $img.RelPermalink }}" alt="{{ $.Title }}" width="48" height="48" loading="lazy">
+                      {{- end -}}
+                    </a>
+                  </figure>
+                {{- end -}}
+              </div>
+              
+            {{- else -}}
+              {{- range first 1 (.GetTerms "authors") -}}
+                <figure class="image is-48x48">
+                  <a href="{{ .Permalink }}">
+                    {{- range first 1 (.Resources.ByType "image") -}}
+                      {{- $img := .Fill "48x48" -}}
+                      <img class="is-rounded" src="{{ $img.RelPermalink }}" alt="{{ $.Title }}" width="48" height="48" loading="lazy">
+                    {{- end -}}
+                  </a>
+                </figure>
+              {{- end -}}
+            
+            {{- end -}}
+          </div>
+          
             <a href="{{ .RelPermalink }}" class="card-footer-item">Read More</a>
             <a href="{{ .RelPermalink }}" class="card-footer-item">Read More</a>
         </footer>

@@ -11,7 +11,6 @@ tags:
 categories: "Allgemein"
 contains:
 - code
-authors: angel
 year: "2020"
 month: "2020/12"
 featured_image:

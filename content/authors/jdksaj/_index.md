@@ -1,5 +1,6 @@
 ---
 title: "HJKHJ Udsanhjs"
+slug: "jdksaj"
 image: "jdksaj.jpg"
 wikipedia: "https://en.wikipedia.org/wiki/Bruce_Willis"
 socials:

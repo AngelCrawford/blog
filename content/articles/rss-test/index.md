@@ -11,6 +11,7 @@ categories: "Allgemein"
 contains:
 - image
 - gallery
+authors: ["angel"]
 # series: [""]
 # weight: 0 # 1 = makes the post sticky
 # format: rating # rating design on the home page
@@ -25,7 +26,6 @@ icons:
 - src: "android-line"
   color: "green"
   tooltip: "Some Tooltip info"
-authors: angel # if more than one, write like tags
 year: "2020"
 month: "2020/12"
 featured_image:

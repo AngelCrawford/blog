@@ -4,7 +4,6 @@ tags:
 - scene
 - quote
 series: ["Seriennummer"]
-authors: angel
 title: "Chapter IV: Master Jacques Coppenole"
 categories: ["quote"]
 contains:

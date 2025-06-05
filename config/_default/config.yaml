@@ -4,6 +4,12 @@ languageCode: de-DE
 enableGitInfo: true
 lastmod: ["lastmod", ":git", "date"] 
 
+taxonomies:
+  category: categories
+  tag: tags
+  author: authors
+  series: series
+
 markup:
   goldmark:
     renderer:

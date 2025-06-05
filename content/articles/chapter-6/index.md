@@ -11,7 +11,6 @@ summary: "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonu
 series: ["Seriennummer"]
 description: "The last theme you'll ever need. Maybe."
 categories: "Allgemein"
-authors: angel
 title: "Chapter VI: Esmeralda"
 year: "2017"
 month: "2017/04"
