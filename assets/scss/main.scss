@@ -24,7 +24,6 @@
   $navbar-burger-color: helpers.$gold-light,
   $navbar-dropdown-border-color: helpers.$gold-light,
   $navbar-dropdown-arrow: helpers.$gold,
-
   
   // $navbar-dropdown-background-color: helpers.$light
 );
@@ -44,25 +43,37 @@ main {
   background-color: helpers.$dark;
 
   &.content h1.title {
-    background: linear-gradient(to bottom, helpers.$gold 32%, helpers.$gold-light 50%, helpers.$gold-dark 80%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    -moz-background-clip: text;
-    -moz-text-fill-color: transparent;
-    position: relative;
-    font-size: 70px;
-    width: 100%;
+    font-size: 40px;
     @include helpers.font-header;
-          
-    &:after {
-        // Background Drop Line
-        content: attr(data-heading);
-        left: 0;
-        overflow: visible;
-        z-index: -1;
-        position: absolute;
-        text-shadow: -1px 0 1px color.scale(helpers.$gold-light, $lightness: 10%), 0 1px 1px color.scale(helpers.$gold-light, $lightness: 10%), 5px 5px 10px rgba(0, 0, 0, 0.7), -2px -2px 5px rgba(255, 255, 255, 0.3);
+    position: relative;
+    letter-spacing: .03em;
+
+    &::before {
+      content: attr(data-heading);
+      position: absolute;
+      top: 0;
+      left: 0;
+      text-shadow: -1px 0 1px color.scale(helpers.$gold-light, $lightness: 20%),
+                  0 1px 1px color.scale(helpers.$gold-light, $lightness: 20%),
+                  5px 5px 10px rgba(0, 0, 0, .5),
+                  -2px -2px 5px rgba(255, 255, 255, 0.3);
+      color: helpers.$dark;
+      z-index: 1;
+    }
+
+    &::after {
+      content: attr(data-heading);
+      position: absolute;
+      top: 0;
+      left: 0;
+      background: linear-gradient(to bottom, helpers.$gold 32%, helpers.$gold-light 50%, helpers.$gold-dark 80%);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -moz-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      -moz-text-fill-color: transparent;
+      color: helpers.$dark;
+      z-index: 2;
     }
   }
 }

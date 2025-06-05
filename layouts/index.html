@@ -1,7 +1,7 @@
 {{ define "main" }}
 <h1 class="title is-1" data-heading="{{ .Title }}">{{ .Title }}</h1>
 
-<p>{{ if .Summary }}{{ .Summary }}{{ end }}</p>
+{{ if .Summary }}<p>{{ .Summary }}</p>{{ end }}
 
 <div class="fixed-grid has-1-cols-mobile has-2-cols-tablet has-3-cols-desktop has-3-cols-widescreen has-3-cols-fullhd">
     <div class="grid is-column-gap-6 is-row-gap-4">
@@ -11,17 +11,17 @@
         
         {{/* First show articles with weight parameter, sorted by weight */}}
         {{ range (where $articlePages "Params.weight" "gt" 0).ByWeight }}
-            {{ partial "cards" . }}
+            {{ partial "card" . }}
         {{ end }}
         
         {{/* Then show the rest of the articles sorted by publish date */}}
         {{ range (where $articlePages "Params.weight" "le" 0).ByPublishDate.Reverse }}
-            {{ partial "cards" . }}
+            {{ partial "card" . }}
         {{ end }}
         
         {{/* Finally show articles without weight parameter */}}
         {{ range (where $articlePages "Params.weight" "eq" nil).ByPublishDate.Reverse }}
-            {{ partial "cards" . }}
+            {{ partial "card" . }}
         {{ end }}
 
     </div>

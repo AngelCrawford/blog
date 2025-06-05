@@ -29,7 +29,7 @@ icons:
   color: "#aaa"
 featured_image:
 - src: ./featured.jpg
-  byline: TEST <a href='#'>So ein dummer TEST</a>
+  byline: TEST <a href='#'>So ein dummer TEST</a> und noch mehr testing!
 ratings:
 - heading: "Gesamt"
   number: "3.5" # 0-5 with .5 possible, will show a rating on the home page

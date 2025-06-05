@@ -42,6 +42,7 @@ $family-secondary: "Montserrat Alternates", BlinkMacSystemFont, -apple-system, "
   
 @mixin font-header {
     @include font-family('Montserrat Alternates', 600);
+    // letter-spacing: .03em;
 }
 
 @mixin font-header-bold {

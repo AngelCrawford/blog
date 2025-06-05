@@ -110,6 +110,7 @@ article.card.is-horizontal {
       font-size: 80%;
       color: helpers.$gold-dark;
       background: color.adjust(helpers.$dark, $lightness: -1%);
+      border-color: rgba(helpers.$gold, .2);
       // .remix-small {
       //   margin-right: 0.4em;
       //   fill: color.adjust(helpers.$gold, $lightness: 10%);
@@ -194,9 +195,8 @@ article.card.is-horizontal {
       //   }
       // }
       
-      // .card-footer-item {
-      //   padding: .75em 2rem;
-      //   padding-bottom: calc(0.75em + 3px); 
+      .card-footer-item {
+        border-color: rgba(helpers.$gold, .2);
       //   div {
       //     padding: 0;
       //     margin: 0;
@@ -211,7 +211,7 @@ article.card.is-horizontal {
       //   &:not(:last-child) {
       //     border-right: 1px solid color.adjust(helpers.$dark, $lightness: -6%);
       //   }
-      // }
+      }
     }
   }
   
@@ -265,7 +265,9 @@ article.card.is-horizontal {
           position: absolute;
           font-size: 80%;
           display: flex;
+          flex-direction: column;
           align-items: center;
+          display: inline-block;
           padding: .5em;
           bottom: 0;
           color: helpers.$light;
@@ -284,8 +286,8 @@ article.card.is-horizontal {
             width: 16px;
             height: 16px;
             fill: helpers.$gold;
-            margin-right: 5px;
-            @include helpers.translate(0, -1px);
+            margin-right: 3px;
+            @include helpers.translate(0, 3px);
           }
         }
         img {

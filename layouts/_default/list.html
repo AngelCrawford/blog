@@ -1,15 +1,14 @@
 {{ define "main" }}
-<h1>{{ .Title }}</h1>
+<h1 class="title is-1" data-heading="{{ .Title }}">{{ .Title }}</h1>
 
-<p>{{ .Summary }}</p>
+{{ if .Summary }}<p>{{ .Summary }}</p>{{ end }}
 
     {{ range .Pages.ByPublishDate.Reverse }}
-    <p>
+
         <h3><a class="title" href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
 
         <a class="summary" href="{{ .RelPermalink }}">
             <p>{{ .Summary }}</p>
         </a>
-    </p>
     {{ end }}
 {{ end }}
