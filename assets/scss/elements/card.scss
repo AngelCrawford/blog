@@ -26,7 +26,7 @@ article.card.is-horizontal {
       transition: width .2s ease-out;
     }
 
-    &:not(.is-quote):hover {
+    &:not(.is-log):hover {
       @include helpers.box-shadow(false, 5px, 5px, 5px, rgba(#000, .55), rgba(helpers.$light, .1));
       transform: scale(1.01);
 
@@ -35,18 +35,27 @@ article.card.is-horizontal {
       }
     }
 
-    &:not(.is-quote) .title a, &:not(.is-quote) a.read-more {
+    &:not(.is-log) .card-content {
+      display: flex;
+      flex-direction: column;
+
+      .content {
+        flex: 1;
+      }
+    }
+
+    &:not(.is-log) .title a, &:not(.is-log) a.read-more {
       color: helpers.$gold-light;
       &:hover {
         color: helpers.$gold;
       }
     }
 
-    &:not(.is-quote) .title a {
+    &:not(.is-log) .title a {
       @include helpers.font-header-bold;
     }
 
-    &:not(.is-quote) .subtitle {
+    &:not(.is-log) .subtitle {
       color: color.scale(helpers.$dark, $lightness: 50%);
       font-size: 80%;
 
@@ -63,7 +72,7 @@ article.card.is-horizontal {
       }
     }
 
-    // &:not(.is-quote) .rating {
+    // &:not(.is-log) .rating {
     //   ul {
     //     list-style: none;
     //     margin: 0 0 .7em 0;
@@ -87,7 +96,7 @@ article.card.is-horizontal {
     //   }
     // }
      
-    &:not(.is-quote) .tags-wrapper {
+    .tags-wrapper {
       margin-top: 1em;
       font-size: 75%;
       text-transform: uppercase;
@@ -126,6 +135,7 @@ article.card.is-horizontal {
         left: calc(50% - 24px);
         bottom: 1.4em;
         transition: all .3s ease-out;
+        z-index: 2;
         img {
           filter: grayscale(1);
           @include helpers.box-shadow(false, 3px, 3px, 5px, rgba(#000, .3), rgba(helpers.$light, .05));
@@ -141,7 +151,7 @@ article.card.is-horizontal {
   
           .author-opener {
             background: color.adjust(helpers.$dark, $lightness: -4%);
-            @include helpers.box-shadow(false, 3px, 3px, 5px, rgba(#000, .3), rgba(helpers.$light, .05));
+            @include helpers.box-shadow(true, 3px, 3px, 5px, rgba(#000, .3), rgba(helpers.$light, .05));
             width: 48px;
             height: 48px;
             color: helpers.$gold;
@@ -154,7 +164,8 @@ article.card.is-horizontal {
             cursor: pointer;
             border: 1px solid helpers.$dark;
             &:hover {
-              border: 1px solid helpers.$gold;
+              color: helpers.$gold-dark;
+              @include helpers.box-shadow(false, 3px, 3px, 5px, rgba(#000, .3), rgba(helpers.$light, .05));
             }
           }
   
@@ -251,7 +262,7 @@ article.card.is-horizontal.has-image {
       transition: filter 0.3s ease;
     }
     
-    &:not(.is-quote):hover .card-image figure img {
+    &:not(.is-log):hover .card-image figure img {
       filter: sepia(0);
     }
   
@@ -303,7 +314,7 @@ article.card.is-horizontal.has-image {
     }
 }
 
-article.card.is-horizontal.is-quote {
+article.card.is-horizontal.is-log {
     display: grid;
     grid-template-rows: 1fr auto;
     grid-template-columns: 1fr;

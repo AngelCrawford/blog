@@ -28,8 +28,8 @@ icons:
   tooltip: "Some Tooltip info"
 year: "2020"
 month: "2020/12"
-featured_image:
-- src: ./featured.jpg
+cover:
+- src: ./cover.jpg
   byline: TEST <a href='#'>test</a>
 comments:
   enabled: false

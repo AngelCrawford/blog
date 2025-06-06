@@ -3,12 +3,13 @@
     {{ if .Resources }}{{ $cssClasses = add $cssClasses " has-image" }}{{ end }}
     {{ if .GetTerms "categories" }}{{ $cssClasses = add $cssClasses " has-ribbon" }}{{ end }}
     {{ if eq .Params.weight 1 }}{{ $cssClasses = add $cssClasses " is-fixed" }}{{ end }}
-    {{ if eq .Params.format "quote" }}{{ $cssClasses = add $cssClasses " is-quote" }}{{ end }}
+    {{ if eq .Params.format "log" }}{{ $cssClasses = add $cssClasses " is-log" }}{{ end }}
     <article class="{{ $cssClasses }}">
 
         <!-- TODO: Quote in Log umbenennen, siehe Issue #59 -->
-        <!-- TODO: Footer generell weiter machen, Quote erhält ebenfalls ein Icon -->
         <!-- TODO: Quote ohne Image ebenfalls erstellen? -->
+
+        <!-- TODO: Footer generell weiter machen, Quote erhält ebenfalls ein Icon -->
         <!-- TODO: Issue #137, Struktur für Formate umbauen, vllt auch das Kartendesign "flüßiger" aufbauen? -->
 
         {{- if .GetTerms "categories" -}}
@@ -24,17 +25,22 @@
             <div class="card-image">
                 <figure class="image is-2by3">
                     {{- if not (eq .Params.format "quote") }}<a href="{{ .Permalink }}">{{- end -}}
-                    {{- $img := (.Resources.ByType "image").GetMatch "featured*" -}}
+                    {{- $img := (.Resources.ByType "image").GetMatch "cover*" -}}
                     {{- with $img -}}
-                        {{- $resize := .Fill "320x480" -}}
-                        <img src="{{ $resize.RelPermalink }}" alt="{{ $.Title }}" width="480" height="320" loading="lazy">
+                        {{ if eq .Params.format "log" }}
+                            {{- $resize := .Fill "320x480" -}}
+                            <img src="{{ $resize.RelPermalink }}" alt="{{ $.Title }}" width="480" height="320" loading="lazy">
+                        {{ else }}
+                            {{- $resize := .Fill "600x480" -}}
+                            <img src="{{ $resize.RelPermalink }}" alt="{{ $.Title }}" width="600" height="480" loading="lazy">
+                        {{ end }}
                     {{- end -}}
                     {{- if not (eq .Params.format "quote") }}</a>{{- end -}}
-                    {{- range .Params.featured_image -}}
-                    <figcaption>
-                        <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#information-line"></use></svg>
-                        {{ .byline | safeHTML }}
-                    </figcaption>
+                    {{- range .Params.cover -}}
+                        <figcaption>
+                            <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#information-line"></use></svg>
+                            {{ .byline | safeHTML }}
+                        </figcaption>
                     {{- end -}}
                 </figure>
             </div>
@@ -77,8 +83,10 @@
                 {{ else }}
                     {{ $newContent | truncate 330 " ... " }}
                 {{- end -}}
-                {{- if not (eq .Params.format "quote") }}<a class="read-more" href="{{ .RelPermalink }}">mehr</a>{{- end -}}
-
+                {{- if not (eq .Params.format "log") }}<a class="read-more" href="{{ .RelPermalink }}">mehr</a>{{- end -}}
+            </div>
+            
+            {{ if ne .Params.format "log" }}
                 {{- if (.GetTerms "tags") -}}
                     <div class="tags-wrapper">
                         <svg class='remix-small'>
@@ -89,13 +97,12 @@
                         {{- end -}}
                     </div>
                 {{- end -}}
-            </div>
+            {{- end -}}
         </div>
 
         <footer class="card-footer">
             {{ $list := .GetTerms "authors" }}
             {{ $len := len $list }}
-            <!-- BUG: Not working with format quote, because of the render_build: false -->
             <div class="author-img {{- if gt $len 1 }} more-authors{{ end -}}">
                 {{- if gt $len 1 -}}
                     <div class="author-opener">{{ $len }}</div>

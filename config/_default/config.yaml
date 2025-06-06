@@ -14,3 +14,16 @@ markup:
   goldmark:
     renderer:
       unsafe : true
+
+permalinks:
+  articles: "/:section/:year/:month/:slug/"
+  year: "/articles/:slug/"
+  month: "/articles/:slug/"
+
+
+imaging:
+  quality: 75
+  bgColor: "#ffffff"
+  exif:
+    disableDate: true
+    disableLatLong: true

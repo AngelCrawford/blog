@@ -13,8 +13,8 @@ contains:
 - code
 year: "2020"
 month: "2020/12"
-featured_image:
-- src: ./featured.jpg
+cover:
+- src: ./cover.jpg
   byline: Lorem Picsum <a href='https://picsum.photos/'>https://picsum.photos/</a>
 comments:
   enabled: true

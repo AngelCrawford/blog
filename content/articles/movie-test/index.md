@@ -11,8 +11,8 @@ categories: "Movie"
 format: rating # tweet/rating design on the home page
 year: "2020"
 month: "2020/03"
-featured_image:
-- src: ./featured.jpg
+cover:
+- src: ./cover.jpg
   byline: TEST <a href='#'>test</a>
 icons:
 - src: "windows-line"
