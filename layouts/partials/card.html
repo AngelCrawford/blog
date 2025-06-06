@@ -1,6 +1,12 @@
 <div class="cell">
     <article class="card is-horizontal {{ if .Resources }}has-image{{else}}no-image{{ end }} has-ribbon {{ if eq .Params.weight 1 }}is-fixed{{ end }} {{ if eq .Params.format "quote" }}is-quote{{ end }}">
 
+      {{/*  TODO: Quote in Log umbenennen, siehe Issue #59 */}}
+      {{/*  TODO: Footer generell weiter machen, Quote erhält ebenfalls ein Icon */}}
+      {{/*  TODO: Quote ohne Image ebenfalls erstellen? */}}
+      {{/*  TODO: Issue #137, Struktur für Formate umbauen, vllt auch das Kartendesign "flüßiger" aufbauen? */}}
+
+
         {{- if .GetTerms "categories" -}}
         {{- range first 1 (.GetTerms "categories") -}}
             {{- $catName := .LinkTitle -}}
