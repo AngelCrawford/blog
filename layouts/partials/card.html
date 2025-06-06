@@ -5,10 +5,6 @@
     {{ if eq .Params.weight 1 }}{{ $cssClasses = add $cssClasses " is-fixed" }}{{ end }}
     {{ if eq .Params.format "log" }}{{ $cssClasses = add $cssClasses " is-log" }}{{ end }}
     <article class="{{ $cssClasses }}">
-
-        <!-- TODO: Quote in Log umbenennen, siehe Issue #59 -->
-        <!-- TODO: Quote ohne Image ebenfalls erstellen? -->
-
         <!-- TODO: Footer generell weiter machen, Quote erhält ebenfalls ein Icon -->
         <!-- TODO: Issue #137, Struktur für Formate umbauen, vllt auch das Kartendesign "flüßiger" aufbauen? -->
 

@@ -229,7 +229,7 @@ article.card.is-horizontal {
     }
 }
 
-article.card.is-horizontal:not(.has-image), article.card.is-small:not(.has-image) {
+article.card.is-horizontal:not(.has-image):not(.is-log), article.card.is-small:not(.has-image) {
     // position: relative;
     width: calc(100% + 1.5em);
     min-width: calc(100% + 1.5em);
@@ -322,30 +322,32 @@ article.card.is-horizontal.is-log {
     .card-content { grid-area: content; }
     .card-footer { grid-area: footer; }
   
-    // &:hover .card-image figure.image img, 
-    &:hover .card-image figure.image figcaption {
-      opacity: 1;
-    }
+    &.has-image {
+      // &:hover .card-image figure.image img, 
+      &:hover .card-image figure.image figcaption {
+        opacity: 1;
+      }
 
-    .card-image {
-      grid-area: content;
-      position: absolute;
-      width: calc(100% - 1.5em);
-      height: 100%;
-      z-index: 1;
-      figure.image {
-        width: calc(100% + 1.5em);
-        background-color: helpers.$dark;
-        border-radius: var(--bulma-card-radius);
-        img {
-          opacity: .5;
-          // overflow: visible;
+      .card-image {
+        grid-area: content;
+        position: absolute;
+        width: calc(100% - 1.5em);
+        height: 100%;
+        z-index: 1;
+        figure.image {
+          width: calc(100% + 1.5em);
+          background-color: helpers.$dark;
+          border-radius: var(--bulma-card-radius);
+          img {
+            opacity: .5;
+            // overflow: visible;
+          }
+          figcaption {
+            opacity: .5;
+            transition: opacity .3s ease;
+          }
+          
         }
-        figcaption {
-          opacity: .5;
-          transition: opacity .3s ease;
-        }
-        
       }
     }
    
@@ -390,6 +392,30 @@ article.card.is-horizontal.is-log {
           content: "\ec52";
           margin-left: 5px;
         }
+      }
+    }
+
+    &:not(.has-image) .ribbon {
+      top: 3em;
+      left: -1.66em;
+    }
+
+    &:not(.has-image) .card-content {
+      &::before {
+        content: "";
+        position: absolute;
+        width: 100%;
+        height: calc(100% - 1.5em);
+        left: 0;
+        top: 1.5em;
+        background-color: color.adjust(helpers.$dark, $lightness: -2%);
+        border-radius: var(--bulma-card-radius);
+        z-index: 1;
+        @include helpers.box-shadow(false, 5px, 5px, 3px, rgba(#000, .5), rgba(helpers.$light, .05));
+      }
+
+      .content {
+        background: linear-gradient(270deg, transparent 0%, rgb(0, 0, 0, .5) 50%, transparent 100%);
       }
     }
 }
