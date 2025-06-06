@@ -6,10 +6,8 @@ format: quote
 tags:
 - quote
 categories: ["Kategorie 1"]
-authors: ["angel"]
 year: "2020"
 month: "2020/03"
-link: https://bulma.io/documentation/modifiers/helpers/
 _build:
   render: false
   list: true

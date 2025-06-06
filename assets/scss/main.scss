@@ -29,9 +29,9 @@
 );
 
 // ***************************** OWN STUFF *****************************
-@use "layout/header";
-@use "layout/navigation";
-@use "layout/footer";
+@use "base/hero";
+@use "base/navigation";
+@use "base/footer";
 
 // // Elements
 @use "elements/button";

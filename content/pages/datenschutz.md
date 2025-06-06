@@ -4,7 +4,7 @@ tagline: "Datenschutzerklärung"
 robotsdisallow: true
 type: page
 menu:
-  footer:
+  main:
     weight: 20
 ---
 

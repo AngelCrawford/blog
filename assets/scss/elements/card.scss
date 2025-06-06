@@ -35,18 +35,18 @@ article.card.is-horizontal {
       }
     }
 
-    .title a, a.read-more {
+    &:not(.is-quote) .title a, &:not(.is-quote) a.read-more {
       color: helpers.$gold-light;
       &:hover {
         color: helpers.$gold;
       }
     }
 
-    .title a {
+    &:not(.is-quote) .title a {
       @include helpers.font-header-bold;
     }
 
-    .subtitle {
+    &:not(.is-quote) .subtitle {
       color: color.scale(helpers.$dark, $lightness: 50%);
       font-size: 80%;
 
@@ -63,7 +63,7 @@ article.card.is-horizontal {
       }
     }
 
-    // .rating {
+    // &:not(.is-quote) .rating {
     //   ul {
     //     list-style: none;
     //     margin: 0 0 .7em 0;
@@ -87,7 +87,7 @@ article.card.is-horizontal {
     //   }
     // }
      
-    .tags-wrapper {
+    &:not(.is-quote) .tags-wrapper {
       margin-top: 1em;
       font-size: 75%;
       text-transform: uppercase;
@@ -216,9 +216,9 @@ article.card.is-horizontal {
       //   }
       }
     }
-  }
-  
-  article.card.is-horizontal.no-image, article.card.is-small.no-image {
+}
+
+article.card.is-horizontal:not(.has-image), article.card.is-small:not(.has-image) {
     // position: relative;
     width: calc(100% + 1.5em);
     min-width: calc(100% + 1.5em);
@@ -235,9 +235,9 @@ article.card.is-horizontal {
       right: -3px;
       left: auto;
     }
-  }
-  
-  article.card.is-horizontal.has-image {
+}
+
+article.card.is-horizontal.has-image {
     display: grid;
     grid-template-columns: minmax(100px, 250px) 1fr;
     grid-template-rows: 1fr auto;
@@ -301,9 +301,9 @@ article.card.is-horizontal {
         }
       }
     }
-  }
-  
-  article.card.is-horizontal.is-quote {
+}
+
+article.card.is-horizontal.is-quote {
     display: grid;
     grid-template-rows: 1fr auto;
     grid-template-columns: 1fr;
@@ -379,42 +379,16 @@ article.card.is-horizontal {
           content: "\ec52";
           margin-left: 5px;
         }
-
-  
-        // .heading.author {
-        //   height: 48px;
-        //   display: flex;
-        //   flex-direction: row-reverse;
-        //   align-items: center;
-        //   align-self: flex-end;
-        //   margin-left:auto;
-        //   background: linear-gradient(270deg, transparent 0%, rgba(25,25,25,.8) 50%, transparent 100%);
-        //   text-shadow: 3px 3px 4px rgba(#000, .5);
-        //   transition: all .3s ease-out;
-        //   figure {
-        //     margin-left: 1em;
-        //     img {
-        //       transition: all .3s ease-out;
-        //       filter: grayscale(1);
-        //     }
-        //   }
-        //   &:hover img {
-        //     border: 1px solid helpers.$gold;
-        //     @include helpers.box-shadow(false, 5px, 5px, 5px, rgba(#000, .3), rgba(helpers.$light, .07));
-        //     filter: none;
-        //   }
-        // }
       }
     }
-  }
-  
-  
-  // article.card.is-small.no-image, article.card.is-small-count.no-image {
-  //   position: relative;
-  //   margin-left: -1.5em;
-  //   width: calc(100% + 1.5em);
-  //   min-width: calc(100% + 1.5em);
-  //   min-height: 300px;
+}
+
+// article.card.is-small.no-image, article.card.is-small-count.no-image {
+//   position: relative;
+//   margin-left: -1.5em;
+//   width: calc(100% + 1.5em);
+//   min-width: calc(100% + 1.5em);
+//   min-height: 300px;
   //   display: flex;
   //   .ribbon {
   //     top: 1.3em;
@@ -425,12 +399,12 @@ article.card.is-horizontal {
   //     margin: auto 0;
   //     width: 100%;
   //   }
-  // }
+// }
   
-  // article.card.is-small.has-image, article.card.is-small-count.has-image {
-  //   position: relative;
-  //   width: calc(100% + 1.5em);
-  //   min-width: calc(100% + 1.5em);
+// article.card.is-small.has-image, article.card.is-small-count.has-image {
+//   position: relative;
+//   width: calc(100% + 1.5em);
+//   min-width: calc(100% + 1.5em);
   //   margin-left: -1.5em;
   //   .card-image {
   //     figure.image {

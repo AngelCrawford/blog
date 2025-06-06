@@ -1,11 +1,13 @@
 ---
-title: Archive
-image: "https://i.picsum.photos/id/369/700/200.jpg"
-omit_header_text: true
+title: Kontakt
 description: We'd love to hear from you
 type: page
-layout: archive
-menu: "main"
+featured_image:
+- src: ./featured.jpg
+  byline: TEST <a href='#'>test</a>
+menu:
+  main:
+    weight: 30
 
 ---
 
