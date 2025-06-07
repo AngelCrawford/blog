@@ -9,9 +9,8 @@
 
         {{- if .GetTerms "categories" -}}
             {{- range first 1 (.GetTerms "categories") -}}
-                {{- $catName := .LinkTitle -}}
                 <div class="ribbon">
-                    <a href="{{ .RelPermalink }}" style="{{- range .Site.Params.categoryColor -}}{{- if eq .name $catName -}}background-color: {{ .color }};{{- end -}}{{- end -}}">{{- .LinkTitle -}}</a>
+                    <a href="{{ .RelPermalink }}" style="{{if .Params.categoryColor }}background-color:{{.Params.categoryColor }}{{end}}">{{- .LinkTitle -}}</a>
                 </div>
             {{- end -}}
         {{- end -}}
@@ -21,7 +20,7 @@
                 <figure class="image is-2by3">
                     {{- $img := (.Resources.ByType "image").GetMatch "cover*" -}}
                     {{- with $img -}}
-                        {{- if not (eq $.Params.format "log") }}<a href="{{ .Permalink }}">{{- end -}}
+                        {{- if not (eq $.Params.format "log") }}<a href="{{ $.Permalink }}">{{- end -}}
                             {{ if eq $.Params.format "log" }}
                                 <!-- Resize to a width of 600px and a height of 480px -->
                                 {{ $image := $img.Process "fill 600x480 webp" }}
@@ -47,13 +46,13 @@
             <h3 class="title is-5"><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
             
             <p class="subtitle">
-                <time datetime="{{ .PublishDate.Format "2006-01-02T15:04:05Z07:00" }}">
+                <time datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}" title="Veröffentlichungsdatum">
                     <svg class='remix-small'>
                         <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#calendar-line"></use>
                     </svg> {{ .Date.Format "02.01.06" }}
                 </time>
                 {{ if not ( eq (.Date.Format "02.01.06") (.Lastmod.Format "02.01.06") ) }}
-                    <time class="updated" datetime="{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}">
+                    <time class="updated" datetime="{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}" title="Letztes Bearbeitungsdatum">
                         <svg class='remix-small'>
                             <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#pencil-line"></use>
                         </svg> {{ .Lastmod.Format "02.01.06" }}
@@ -61,26 +60,13 @@
                 {{ end }}
             </p>
                 
-            <div class="content">
-
-                {{ $summarySplits := split .Content "<!--more-->" }}
-                {{ $newContent := "" }}
-            
-                {{ if ge (len $summarySplits) 2 }}
-                    <!-- If content has comment "more", then split from there -->
-                    {{ $newContent = index $summarySplits 1 | plainify }}
-                {{ else }}
-                    <!-- If content has .Params.Summary, it will be used before the auto created Summary -->
-                    {{ $newContent = .Summary | plainify }}
-                {{ end }}
-            
+            <div class="content">            
                 <!-- If article has no image, show more content instead -->
                 {{- if not .Resources -}}
-                    {{ $newContent | truncate 800 " ... " }}
+                    {{ .Summary | plainify | truncate 1000 }}
                 {{ else }}
-                    {{ $newContent | truncate 330 " ... " }}
+                    {{ .Summary | plainify | truncate 400 }}
                 {{- end -}}
-                {{- if not (eq .Params.format "log") }}<a class="read-more" href="{{ .RelPermalink }}">mehr</a>{{- end -}}
             </div>
             
             {{ if ne .Params.format "log" }}
@@ -128,6 +114,11 @@
                     {{- end -}}
                 {{- end -}}
             </div>
+            {{- if not (eq .Params.format "log") }}<a class="read-more" href="{{ .RelPermalink }}">
+                <svg class='remix-small'>
+                    <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#arrow-right-s-line"></use>
+                </svg>
+            </a>{{- end -}}
             
             <a href="{{ .RelPermalink }}" class="card-footer-item">Read More</a>
             <a href="{{ .RelPermalink }}" class="card-footer-item">Read More</a>

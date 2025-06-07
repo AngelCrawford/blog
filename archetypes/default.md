@@ -11,7 +11,6 @@ draft: true
 title: Chapter I: The Grand Hall
 
 date: 2017-04-09T10:58:08-04:00
-publishdate: 2020-12-31
 lastmod: 2022-11-29T22:33:55.556Z
 draft: false # true/false, auf false setzen wenn publiziert werden soll
 

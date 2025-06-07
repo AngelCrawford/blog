@@ -1,9 +1,7 @@
 ---
 title: "Movie"
 description: "The last theme you'll ever need. Maybe."
-featured_image:
-- src: ./featured.jpg
-  byline: TEST <a href='#'>test</a>
+categoryColor: "#537fbd"
 menu: 
   main:
     name: 'Movie'

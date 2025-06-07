@@ -1,9 +1,7 @@
 ---
 title: "Allgemein"
 description: "The last theme you'll ever need. Maybe."
-featured_image:
-- src: ./featured.jpg
-  byline: TEST <a href='#'>test</a>
+categoryColor: "#cb282e"
 menu: 
   main:
     name: 'Allgemein'

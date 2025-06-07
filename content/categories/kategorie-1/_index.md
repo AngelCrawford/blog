@@ -1,9 +1,7 @@
 ---
 title: "Kategorie 1"
 description: "The last theme you'll ever need. Maybe."
-featured_image:
-- src: ./featured.jpg
-  byline: TEST <a href='#'>test</a>
+categoryColor: "green"
 menu: 
   main:
     name: 'Kategorie 1'
