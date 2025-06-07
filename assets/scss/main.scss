@@ -35,12 +35,15 @@
 
 // // Elements
 @use "elements/button";
-@use "elements/card";
 @use "elements/ribbon";
+
+// Layout
+@use "layout/lists";
+@use "layout/card";
 
 body.kind-is-home,
 // /categories or /tags
-body.kind-is-taxonomy,
+// body.kind-is-taxonomy,
 // /categories/some-category or /tags/some-tag
 body.kind-is-term {
 
@@ -78,8 +81,8 @@ main {
       position: absolute;
       top: 0;
       left: 0;
-      text-shadow: -1px 0 1px color.scale(helpers.$gold-light, $lightness: 20%),
-                  0 1px 1px color.scale(helpers.$gold-light, $lightness: 20%),
+      text-shadow: -1px 0 1px rgba(color.scale(helpers.$gold-light, $lightness: 20%), .7),
+                  0 1px 1px rgba(color.scale(helpers.$gold-light, $lightness: 20%), .7),
                   5px 5px 10px rgba(0, 0, 0, .5),
                   -2px -2px 5px rgba(255, 255, 255, 0.3);
       color: helpers.$dark;
@@ -100,6 +103,11 @@ main {
       color: helpers.$dark;
       z-index: 2;
     }
+  }
+
+  .subtitle {
+    @include helpers.font-header;
+    margin-top:.3em;
   }
 
   &.section {

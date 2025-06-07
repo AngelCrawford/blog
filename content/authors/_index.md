@@ -1,5 +1,8 @@
 ---
 title: "Authors"
+translation: 
+  singular: "Autor"
+  plural: "Autoren"
 menu: 
   main:
     params:

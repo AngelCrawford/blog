@@ -1,12 +1,57 @@
 {{ define "main" }}
-<h1 class="title is-1" data-heading="{{ .Title }}">{{ .Title }}</h1>
 
-{{ if .Summary }}<p>{{ .Summary }}</p>{{ end }}
+    <div class="box {{ if .Resources -}} has-image{{- end -}}">
+        <article class="media">
+            {{- if .Resources -}}
+                <div class="media-left">
+                    <figure class="image is-4by3">
+                        {{- $img := (.Resources.ByType "image").GetMatch "cover*" -}}
+                        {{- with $img -}}
 
-<div class="grid is-column-gap-7 is-row-gap-4 is-col-min-19 is-multiline">
-    {{ range .Pages.ByPublishDate.Reverse }}
-        {{ partial "card" . }}
-    {{ end }}
-</div>
+                            {{ $image := $img.Process "fill 480x320 webp" }}
+                            <img src="{{ $image.RelPermalink }}" alt="{{ $.Title }}" width="480" height="320" loading="lazy">
+
+                            {{ with .Exif }}{{ with .Tags.ImageDescription  }}
+                                <figcaption>
+                                    <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ $.Site.Params.remixicon_version}}#information-line"></use></svg>
+                                    {{ . | safeHTML }}
+                                </figcaption>
+                            {{ end }}{{ end }}
+                        {{- end -}}
+                    </figure>
+                </div>
+            {{- end -}}
+
+            {{ $pagename := .Title }}
+
+            {{ if eq .Kind "term" }}
+                {{ if .Parent.Params.translation.singular }}
+                    {{ $pagename = printf "%s%s %s" .Parent.Params.translation.singular ": " .Title }}
+                {{ else }}
+                    {{ $pagename = .Title }}
+                {{ end }}
+            {{ else if eq .Kind "taxonomy" }}
+                {{ if .Params.translation.plural }}
+                    {{ $pagename = .Params.translation.plural }}
+                {{ else }}
+                    {{ $pagename = .Title }}
+                {{ end }}
+            {{ else }}
+                {{ $pagename = .Title }}
+            {{ end }}
+
+            <div class="media-content">
+                <h1 class="title is-1" data-heading="{{ $pagename }}">{{ $pagename }}</h1>
+                {{ with .Params.subtitle }}<p class="subtitle">{{ . }}</p>{{ end }}
+                {{ if .Summary }}<p>{{ .Summary }}</p>{{ end }}
+            </div>
+        </article>
+    </div>
+
+    <div class="grid {{if eq .Kind "taxonomy"}} is-column-gap-4 {{else}} is-column-gap-7 {{end}} is-row-gap-4 {{if eq .Kind "taxonomy"}} is-col-min-13 {{else}} is-col-min-19 {{end}} is-multiline {{if eq .Kind "taxonomy"}} is-small {{end}}">
+        {{ range .Pages.ByPublishDate.Reverse }}
+            {{ partial "card" . }}
+        {{ end }}
+    </div>
 
 {{ end }}

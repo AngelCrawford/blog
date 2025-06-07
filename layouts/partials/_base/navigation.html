@@ -21,7 +21,7 @@
 
                     <div class="navbar-item has-dropdown is-hoverable">
                         <a class="navbar-link {{ if or ($currentPage.IsMenuCurrent "main" .) ($currentPage.HasMenuCurrent "main" .) }}is-active{{ end }}" href="{{ .Page.Permalink }}">
-                            {{- .Name -}}
+                          {{ if and .Page.Aliases (gt (len .Page.Aliases) 0) }}{{ index .Page.Aliases 0 }}{{ else }}{{ .Name }}{{ end }}
                         </a>
                         <div class="navbar-dropdown">
                             {{- range .Children -}}
@@ -32,7 +32,7 @@
 
                 {{- else -}}
                     <a class="navbar-item {{ if or ($currentPage.IsMenuCurrent "main" .) ($currentPage.HasMenuCurrent "main" .) }} is-active{{ end }}" href="{{ .URL }}" title="{{ .Name }} page">
-                        {{- .Name -}}
+                      {{ if and .Page.Aliases (gt (len .Page.Aliases) 0) }}{{ index .Page.Aliases 0 }}{{ else }}{{ .Name }}{{ end }}
                     </a>
                 {{- end -}}
                         

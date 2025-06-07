@@ -1,0 +1,70 @@
+@use "vars/helpers";
+@use "sass:color";
+
+main.content.section {
+
+    .box {
+        background: color.adjust(helpers.$dark, $lightness: -2%);
+        @include helpers.box-shadow(false, 5px, 5px, 5px, rgba(#000, .5), rgba(helpers.$light, .05));
+        border: 1px solid rgba(helpers.$gold, .2);
+        margin-bottom: 2rem;
+
+        &.has-image {
+            margin-left: 1.5em;
+            width: calc(100% - 1.5em);
+
+            .media-left figure.image {
+                margin-left: -3em;
+                figcaption {
+                    position: absolute;
+                    font-size: 80%;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    display: inline-block;
+                    padding: .5em;
+                    bottom: 0;
+                    color: helpers.$light;
+                    width: 100%;
+                    border-top: 1px solid rgba(color.adjust(helpers.$dark, $lightness: -10%), .5);
+                    background-color: rgba(color.adjust(helpers.$dark, $lightness: -7%), .7);
+                    border-radius: 0 0 var(--bulma-card-radius) var(--bulma-card-radius);
+                    svg {
+                        width: 16px;
+                        height: 16px;
+                        fill: helpers.$gold;
+                        margin-right: 3px;
+                        @include helpers.translate(0, 3px);
+                    }
+                    a {
+                        color: helpers.$gold;
+                        &:hover {
+                            color: helpers.$gold-light;
+                        }
+                    }
+                }
+                img {
+                    @include helpers.box-shadow(false, 5px, 5px, 3px, rgba(#000, .5), rgba(helpers.$light, .05));
+                    border-radius: 0.75rem;
+                    object-fit: cover;
+                }
+            }
+        }
+    }
+
+    .media-left, .media-right {
+        width: 320px;
+    }                
+    
+    .media-content {
+        padding: .25em 1em;
+        a {
+            color: helpers.$gold;
+            &:hover {
+                color: helpers.$gold-light;
+            }
+        }
+    }
+
+}
+

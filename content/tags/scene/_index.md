@@ -1,9 +1,7 @@
 ---
 title: "scene"
 description: "The last theme you'll ever need. Maybe."
-featured_image:
-- src: ./featured.jpg
-  byline: TEST <a href='#'>test</a>
+date: 2020-06-07
 menu: 
   main:
     name: 'Scene'

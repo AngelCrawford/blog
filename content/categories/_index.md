@@ -1,7 +1,10 @@
 ---
 title: "Categories"
+subtitle: "The last theme you'll ever need. Maybe."
+translation: 
+  singular: "Kategorie"
+  plural: "Kategorien"
 image: 'https://i.picsum.photos/id/124/700/200.jpg'
-description: "The last theme you'll ever need. Maybe."
 menu: 
   main:
     params:

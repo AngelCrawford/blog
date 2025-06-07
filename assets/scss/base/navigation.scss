@@ -116,7 +116,7 @@ nav.navbar {
         }
 
         &.is-active {
-            color: helpers.$gold-light;
+            color: helpers.$gold-dark;
             background-color: color.adjust(helpers.$dark, $lightness: -2%);
 
             &::after {

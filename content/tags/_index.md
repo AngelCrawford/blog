@@ -1,8 +1,8 @@
 ---
 title: "Tags"
-featured_image:
-- src: ./featured.jpg
-  byline: TEST <a href='#'>test</a>
+translation: 
+  singular: "Tag"
+  plural: "Tags"
 menu: 
   main:
     params:

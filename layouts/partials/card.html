@@ -1,4 +1,4 @@
-<div class="cell">
+<div class="cell {{ if .Resources }} {{ if eq .Kind "term" }} is-row-span-2 {{ end }} {{ end }}">
     {{ $cssClasses := "card is-horizontal" }}
     {{ if .Resources }}{{ $cssClasses = add $cssClasses " has-image" }}{{ end }}
     {{ if .GetTerms "categories" }}{{ $cssClasses = add $cssClasses " has-ribbon" }}{{ end }}
@@ -27,6 +27,11 @@
                                 <picture>
                                     <img src="{{ $image.RelPermalink }}" alt="{{ $.Title }}" width="600" height="480" loading="lazy">
                                 </picture>
+                            {{ else if eq $.Kind "term" }}
+                                {{ $image := $img.Process "fill 480x320 webp" }}
+                                <picture>
+                                    <img src="{{ $image.RelPermalink }}" alt="{{ $.Title }}" width="480" height="320" loading="lazy">
+                                </picture>
                             {{ else }}
                                 {{ $portraitImage := $img.Process "fill 320x480 webp" }}
                                 {{ $landscapeImage := $img.Process "fill 480x320 webp" }}
@@ -50,7 +55,7 @@
         {{- end -}}
 
         <div class="card-content">
-            <h3 class="title is-5"><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
+            <h3 class="title is-5"><a href="{{ .RelPermalink }}" style="{{if .Params.categoryColor }}color:{{.Params.categoryColor }};{{end}}">{{ .Title }}</a></h3>
             
             <p class="subtitle">
                 <time datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}" title="Veröffentlichungsdatum">
@@ -67,13 +72,17 @@
                 {{ end }}
             </p>
                 
-            <div class="content">            
-                <!-- If article has no image, show more content instead -->
-                {{- if not .Resources -}}
-                    {{ .Summary | plainify | truncate 1000 }}
+            <div class="content">
+                {{ if ne .Kind "term" }}
+                    <!-- If article has no image, show more content instead -->
+                    {{- if not .Resources -}}
+                        {{ .Summary | plainify | truncate 1000 }}
+                    {{ else }}
+                        {{ .Summary | plainify | truncate 500 }}
+                    {{- end -}}
                 {{ else }}
-                    {{ .Summary | plainify | truncate 500 }}
-                {{- end -}}
+                    {{ len .Pages }} Artikel
+                {{ end }}
             </div>
             
             {{ if ne .Params.format "log" }}

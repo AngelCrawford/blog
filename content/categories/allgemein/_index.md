@@ -1,6 +1,6 @@
 ---
 title: "Allgemein"
-description: "The last theme you'll ever need. Maybe."
+subtitle: "The last theme you'll ever need. Maybe."
 categoryColor: "#cb282e"
 menu: 
   main:
