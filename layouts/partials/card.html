@@ -119,8 +119,28 @@
                     <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#arrow-right-s-line"></use>
                 </svg>
             </a>{{- end -}}
-            
-            <a href="{{ .RelPermalink }}" class="card-footer-item">Read More</a>
+            <div class="card-footer-item">
+                {{- if .Params.weight -}}
+                    <!-- TODO: Add tooltip -->
+                    <span data-tooltip="Dies ist ein angepinnter Artikel">
+                        <svg class='remix-small'>
+                            <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#pushpin-line"></use>
+                        </svg>
+                    </span>
+                {{- else if eq .Params.format "log" -}}
+                    <span data-tooltip="Dies ist ein Log">
+                        <svg class='remix-small'>
+                            <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#lightbulb-flash-line"></use>
+                        </svg>
+                    </span>
+                {{ else }}
+                    <span data-tooltip="Dies ist ein Artikel">
+                        <svg class='remix-small'>
+                            <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#article-line"></use>
+                        </svg>
+                    </span>
+                {{- end -}}
+            </div>
             <a href="{{ .RelPermalink }}" class="card-footer-item">Read More</a>
         </footer>
     </article>
