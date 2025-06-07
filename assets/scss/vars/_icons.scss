@@ -8,12 +8,13 @@
 
 @font-face {
     font-family: "remixicon";
-    src: url('fonts/remixicon/remixicon.eot?t=1749297697659'); /* IE9*/
-    src: url('fonts/remixicon/remixicon.eot?t=1749297697659#iefix') format('embedded-opentype'), /* IE6-IE8 */
-         url("fonts/remixicon/remixicon.woff2?t=1749297697659") format("woff2"),
-         url("fonts/remixicon/remixicon.woff?t=1749297697659") format("woff"),
-         url('fonts/remixicon/remixicon.ttf?t=1749297697659') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
-         url('fonts/remixicon/remixicon.svg?t=1749297697659#remixicon') format('svg'); /* iOS 4.1- */
+    // Change the remixicon_version in config.toml to update the icons
+    src: url('fonts/remixicon/remixicon.eot?t={{ .Site.Params.remixicon_version}}'); /* IE9*/
+    src: url('fonts/remixicon/remixicon.eot?t={{ .Site.Params.remixicon_version}}#iefix') format('embedded-opentype'), /* IE6-IE8 */
+         url("fonts/remixicon/remixicon.woff2?t={{ .Site.Params.remixicon_version}}") format("woff2"),
+         url("fonts/remixicon/remixicon.woff?t={{ .Site.Params.remixicon_version}}") format("woff"),
+         url('fonts/remixicon/remixicon.ttf?t={{ .Site.Params.remixicon_version}}') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
+         url('fonts/remixicon/remixicon.svg?t={{ .Site.Params.remixicon_version}}#remixicon') format('svg'); /* iOS 4.1- */
     font-display: swap;
 }
 

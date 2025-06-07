@@ -100,7 +100,7 @@ $('#back-to-top').click(function () { // Klick auf den Button
 //     }
 
 //     items.push("<li><span class='variable'><a href='" + val.permalink + "#comments' alt='" + val.title + "' title='" 
-//       + val.title + "'><svg class='remix-small comments'><use xlink:href='/fonts/remixicon/remixicon.symbol.svg#question-answer-line'></use></svg>"
+//       + val.title + "'><svg class='remix-small comments'><use xlink:href='/fonts/remixicon/remixicon.symbol.svg?t={{ .Site.Params.remixicon_version}}#question-answer-line'></use></svg>"
 //       + val.commentsCount + "</a></span><span class='variable-number'><a href='" + val.permalink + "' alt='" 
 //       + val.title + "' title='" + val.title + "'>" + val.title + "</a></span></li>" );
 
