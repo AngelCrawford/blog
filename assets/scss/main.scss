@@ -38,6 +38,31 @@
 @use "elements/card";
 @use "elements/ribbon";
 
+body.kind-is-home,
+// /categories or /tags
+body.kind-is-taxonomy,
+// /categories/some-category or /tags/some-tag
+body.kind-is-term {
+
+  @media (min-width: 641px) {
+    .section {
+      .grid {
+        padding-left: 1.5em;
+        padding-right: 0;
+        margin-top: var(--bulma-block-spacing);
+      }
+    }
+  }
+
+  @media (max-width: 640px) {
+    .section {
+      .grid {
+        padding: 0;
+        margin-top: var(--bulma-block-spacing);
+      }
+    }
+  }
+}
 
 main {
   background-color: color.adjust(helpers.$dark, $lightness: -2%);
@@ -74,6 +99,12 @@ main {
       -moz-text-fill-color: transparent;
       color: helpers.$dark;
       z-index: 2;
+    }
+  }
+
+  &.section {
+    @media screen and (min-width: 560px) and (max-width: 1024px) {
+      padding: var(--bulma-section-padding-desktop);
     }
   }
 }
