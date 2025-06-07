@@ -4,7 +4,8 @@ date: {{ .Date }}
 draft: true
 ---
 
-
+<!-- Images erhalten ihre figcaption über die EXIF data in der Datei - Image > Properties > Details > Title (kann HTML) -->
+<!-- Das Header Bild MUSS "cover" heißen, Hugo übernimmt das formatieren zu .webp und die Bilder werden in die richtige Größe gesetzt -->
 
 ```html
 title: Chapter I: The Grand Hall
@@ -46,11 +47,6 @@ comments:
   enabled: true
   deactivatedOn: YYYY-MM-DD
   message: "Reaktionen wurden entfernt weil...."
-
-featured_image:
-  - src: ./featured.jpg
-    byline: TEST <a href='#'>test</a>
-	
 
 ratings:
 	- heading: "Gesamt"

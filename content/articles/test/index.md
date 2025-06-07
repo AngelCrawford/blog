@@ -27,9 +27,6 @@ icons:
   color: "green"
 - src: "apple-line"
   color: "white"
-cover:
-- src: ./cover.jpg
-  byline: TEST <a href='#'>test</a>
 stickers:
 - heading: "Genre"
   tags:

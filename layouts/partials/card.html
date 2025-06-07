@@ -6,7 +6,6 @@
     {{ if eq .Params.format "log" }}{{ $cssClasses = add $cssClasses " is-log" }}{{ end }}
     <article class="{{ $cssClasses }}">
         <!-- TODO: Footer generell weiter machen, Quote erhält ebenfalls ein Icon -->
-        <!-- TODO: Issue #137, Struktur für Formate umbauen, vllt auch das Kartendesign "flüßiger" aufbauen? -->
 
         {{- if .GetTerms "categories" -}}
             {{- range first 1 (.GetTerms "categories") -}}
@@ -20,23 +19,25 @@
         {{- if .Resources -}}
             <div class="card-image">
                 <figure class="image is-2by3">
-                    {{- if not (eq .Params.format "quote") }}<a href="{{ .Permalink }}">{{- end -}}
                     {{- $img := (.Resources.ByType "image").GetMatch "cover*" -}}
                     {{- with $img -}}
-                        {{ if eq .Params.format "log" }}
-                            {{- $resize := .Fill "320x480" -}}
-                            <img src="{{ $resize.RelPermalink }}" alt="{{ $.Title }}" width="480" height="320" loading="lazy">
-                        {{ else }}
-                            {{- $resize := .Fill "600x480" -}}
-                            <img src="{{ $resize.RelPermalink }}" alt="{{ $.Title }}" width="600" height="480" loading="lazy">
-                        {{ end }}
-                    {{- end -}}
-                    {{- if not (eq .Params.format "quote") }}</a>{{- end -}}
-                    {{- range .Params.cover -}}
-                        <figcaption>
-                            <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#information-line"></use></svg>
-                            {{ .byline | safeHTML }}
-                        </figcaption>
+                        {{- if not (eq $.Params.format "log") }}<a href="{{ .Permalink }}">{{- end -}}
+                            {{ if eq $.Params.format "log" }}
+                                <!-- Resize to a width of 600px and a height of 480px -->
+                                {{ $image := $img.Process "fill 600x480 webp" }}
+                                <img src="{{ $image.RelPermalink }}" alt="{{ $.Title }}" width="600" height="480" loading="lazy">
+                            {{ else }}
+                                {{ $image := $img.Process "fill 320x480 webp" }}
+                                <img src="{{ $image.RelPermalink }}" alt="{{ $.Title }}" width="320" height="480" loading="lazy">
+                            {{ end }}
+                        {{- if not (eq $.Params.format "log") }}</a>{{- end -}}
+
+                        {{ with .Exif }}{{ with .Tags.ImageDescription  }}
+                            <figcaption>
+                                <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#information-line"></use></svg>
+                                {{ . | safeHTML }}
+                            </figcaption>
+                        {{ end }}{{ end }}
                     {{- end -}}
                 </figure>
             </div>

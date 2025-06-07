@@ -12,11 +12,6 @@ authors: ["angel"]
 build:
   list: always
   render: link
-cover:
-  - src: ./20210109_215313.jpg
-    byline: TEST für mehr Bilder
-  - src: ./cover.jpg
-    byline: TEST <a href='#'>test</a>
 ---
 
 There are two hard things in computer science: cache invalidation, naming things, and off-by-one errors.
