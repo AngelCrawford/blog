@@ -1,7 +1,6 @@
 <div class="widget archive box">
-    <p class="title is-4">{{ .archiveTitle }}</p>
+    <p class="title is-5">{{ .archiveTitle }}</p>
     <ul>
-    
       {{ range where .context.Site.Pages "Section" "articles" }}
           {{ range (.Pages.GroupByDate "2006") }}
     
@@ -9,13 +8,12 @@
                 {{ $list := .Pages }}
                 {{ $len := (len $list) }}
                 <li>
-                  <span class="month-name"><a href='{{ $.Site.Params.baseurl }}/pages/archive/#{{ $.context.Scratch.Get "yearIndexArchive" }}'>{{ .Key }}</a></span>
-                  <span class="month-number">{{ $len }} Artikel</span>
+                  <span class="name"><a href='{{ $.Site.Params.baseurl }}/pages/archive/#{{ $.context.Scratch.Get "yearIndexArchive" }}'>{{ .Key }}</a></span>
+                  <span class="number">{{ $len }} Artikel</span>
                 </li>
           
           {{ end }}
         {{ $.context.Scratch.Delete "yearIndexArchive" }}
       {{ end }}
-
     </ul>
 </div>

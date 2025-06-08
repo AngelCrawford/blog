@@ -1,14 +1,17 @@
 @use "vars/helpers";
 @use "sass:color";
 
-.content {
-    h2.archive-title {    
+body.layout-is-archive {
+    h2 {    
         text-align: center;
         overflow: hidden;
         @include helpers.font-header-bold;
         color: helpers.$gold;
-        margin-top: 2em;
-        margin-bottom: 1em;
+        margin-top: 0;
+
+        &:not(:first-child) {
+            margin-top: 2.5em;
+        }
         
         &:before,
         &:after {

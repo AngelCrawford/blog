@@ -1,28 +1,30 @@
 {{ define "main" }}
 <h1 class="title is-1" data-heading="{{ .Title }}">{{ .Title }}</h1>
 
-{{ if .Summary }}<p>{{ .Summary }}</p>{{ end }}
+{{ if .Summary }}{{ .Summary }}{{ end }}
 
-<div class="grid is-column-gap-7 is-row-gap-4 is-col-min-19 is-multiline">
+    <div class="fixed-grid has-1-cols-mobile has-1-cols-tablet has-2-cols-desktop has-2-cols-widescreen has-3-cols-fullhd">
+        <div class="grid is-column-gap-7 is-row-gap-4">
 
-    {{/* Get all articles */}}
-    {{ $articlePages := where .Site.RegularPages "Section" "articles" }}
-    
-    {{/* First show articles with weight parameter, sorted by weight */}}
-    {{ range (where $articlePages "Params.weight" "gt" 0).ByWeight }}
-        {{ partial "card" . }}
-    {{ end }}
-    
-    {{/* Then show the rest of the articles sorted by publish date */}}
-    {{ range (where $articlePages "Params.weight" "le" 0).ByPublishDate.Reverse }}
-        {{ partial "card" . }}
-    {{ end }}
-    
-    {{/* Finally show articles without weight parameter */}}
-    {{ range (where $articlePages "Params.weight" "eq" nil).ByPublishDate.Reverse }}
-        {{ partial "card" . }}
-    {{ end }}
+            {{/* Get all articles */}}
+            {{ $articlePages := where .Site.RegularPages "Section" "articles" }}
+            
+            {{/* First show articles with weight parameter, sorted by weight */}}
+            {{ range (where $articlePages "Params.weight" "gt" 0).ByWeight }}
+                {{ partial "card" . }}
+            {{ end }}
+            
+            {{/* Then show the rest of the articles sorted by publish date */}}
+            {{ range (where $articlePages "Params.weight" "le" 0).ByPublishDate.Reverse }}
+                {{ partial "card" . }}
+            {{ end }}
+            
+            {{/* Finally show articles without weight parameter */}}
+            {{ range (where $articlePages "Params.weight" "eq" nil).ByPublishDate.Reverse }}
+                {{ partial "card" . }}
+            {{ end }}
 
-</div>
+        </div>
+    </div>
 
 {{ end }}

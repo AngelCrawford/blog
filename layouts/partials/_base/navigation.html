@@ -21,7 +21,20 @@
 
                     <div class="navbar-item has-dropdown is-hoverable">
                         <a class="navbar-link {{ if or ($currentPage.IsMenuCurrent "main" .) ($currentPage.HasMenuCurrent "main" .) }}is-active{{ end }}" href="{{ .Page.Permalink }}">
-                          {{ if and .Page.Aliases (gt (len .Page.Aliases) 0) }}{{ index .Page.Aliases 0 }}{{ else }}{{ .Name }}{{ end }}
+                          <!-- Get the translation name, if there is one -->
+                          {{ if .Page }}
+                            {{ if .Page.Params.translation }}
+                                {{ if .Page.Params.translation.plural }}
+                                    {{ .Page.Params.translation.plural }}
+                                {{ else }}
+                                    {{ .Name }}
+                                {{ end }}
+                            {{ else }}
+                                {{ .Name }}
+                            {{ end }}
+                          {{ else }}
+                              {{ .Name }}
+                          {{ end }}
                         </a>
                         <div class="navbar-dropdown">
                             {{- range .Children -}}
@@ -32,7 +45,7 @@
 
                 {{- else -}}
                     <a class="navbar-item {{ if or ($currentPage.IsMenuCurrent "main" .) ($currentPage.HasMenuCurrent "main" .) }} is-active{{ end }}" href="{{ .URL }}" title="{{ .Name }} page">
-                      {{ if and .Page.Aliases (gt (len .Page.Aliases) 0) }}{{ index .Page.Aliases 0 }}{{ else }}{{ .Name }}{{ end }}
+                      {{ .Name }}
                     </a>
                 {{- end -}}
                         

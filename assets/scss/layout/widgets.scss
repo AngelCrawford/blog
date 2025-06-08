@@ -5,7 +5,7 @@
     padding-bottom: 0;
     background-color: helpers.$dark !important;
 
-    .title.is-4 {
+    .title {
       text-align: center;
       overflow: hidden;
       text-align: center;
@@ -32,18 +32,11 @@
         left: 0.5em;
         margin-right: -50%;
       }
-    }
-  
-    .columns {
-        // margin: 0;
-      .column {
-        // padding: 0;
-      }
-    }
-  
+    } 
 }
 
 .widget.archive.box {
+    // max-width: 18em;
 
     ul {
         margin: 0;
@@ -54,7 +47,7 @@
             display: flex;
             @include helpers.font-regular;
         
-            .month-name {
+            .name {
                 order: 1;
 
                 a {
@@ -65,7 +58,7 @@
                     }
                 }
             }
-            .month-number {
+            .number {
                 order: 3;
                 padding-left: 0.3em;
                 color: color.scale(helpers.$dark, $lightness: 40%);

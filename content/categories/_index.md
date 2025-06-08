@@ -2,8 +2,8 @@
 title: "Categories"
 subtitle: "The last theme you'll ever need. Maybe."
 translation: 
-  singular: "Kategorie"
-  plural: "Kategorien"
+  singular: "Rubrik"
+  plural: "Rubriken"
 image: 'https://i.picsum.photos/id/124/700/200.jpg'
 menu: 
   main:

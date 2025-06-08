@@ -1,57 +1,52 @@
 {{ define "main" }}
-	<div class="columns is-5">
-		<div class="column">
-			<div class="box {{ if .Resources -}} has-image{{- end -}}">
-				<article class="media">
-					{{- if .Resources -}}
-						<div class="media-left">
-							<figure class="image is-4by3">
-								{{- $img := (.Resources.ByType "image").GetMatch "cover*" -}}
-								{{- with $img -}}
-		
-									{{ $image := $img.Process "fill 480x320 webp" }}
-									<img src="{{ $image.RelPermalink }}" alt="{{ $.Title }}" width="480" height="320" loading="lazy">
-		
-									{{ with .Exif }}{{ with .Tags.ImageDescription  }}
-										<figcaption>
-											<svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ $.Site.Params.remixicon_version}}#information-line"></use></svg>
-											{{ . | safeHTML }}
-										</figcaption>
-									{{ end }}{{ end }}
-								{{- end -}}
-							</figure>
-						</div>
-					{{- end -}}
-		
-					<div class="media-content">
-						<h1 class="title is-1" data-heading="{{ .Params.translation.singular }}">{{ .Params.translation.singular }}</h1>
-						{{ with .Params.subtitle }}<p class="subtitle">{{ . }}</p>{{ end }}
-						{{ if .Summary }}<p>{{ .Summary }}</p>{{ end }}
-					</div>
-				</article>
-			</div>
+	<div class="columns is-multiline">
+		<div class="column is-9">
+			<article class="box {{ if .Resources -}} has-image{{- end -}}">
+				{{- if .Resources -}}
+					<figure class="image is-4by3">
+						{{- $img := (.Resources.ByType "image").GetMatch "cover*" -}}
+						{{- with $img -}}
 
+							{{ $image := $img.Process "fill 480x320 webp" }}
+							<img src="{{ $image.RelPermalink }}" alt="{{ $.Title }}" width="480" height="320" loading="lazy">
+
+							{{ with .Exif }}{{ with .Tags.ImageDescription  }}
+								<figcaption>
+									<svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ $.Site.Params.remixicon_version}}#information-line"></use></svg>
+									{{ . | safeHTML }}
+								</figcaption>
+							{{ end }}{{ end }}
+						{{- end -}}
+					</figure>
+				{{- end -}}
+	
+				<div class="box-content">
+					<h1 class="title is-1" data-heading="{{ .Params.translation.singular }}">{{ .Params.translation.singular }}</h1>
+					{{ with .Params.subtitle }}<p class="subtitle">{{ . }}</p>{{ end }}
+					{{ if .Summary }}<p>{{ .Summary }}</p>{{ end }}
+				</div>
+			</article>
+		</div>
+		<div class="column is-3">
+			{{ partial "widgets/archive" (dict "context" . "archiveTitle" "Übersicht") }}
+		</div>
+
+		<div class="column is-9">
 			{{ range where .Site.Pages "Section" "articles" }}
 				{{ range (.Pages.GroupByDate "2006") }}
 		
-					{{ $.Scratch.Set "yearIndexArchive" .Key }}
-						<h2 class="title is-2 archive-title" data-heading="{{ .Key }}" id='{{ $.Scratch.Get "yearIndexArchive" }}'>{{ .Key }}</h2>
-						
-						<div class="fixed-grid has-4-cols-mobile has-4-cols-tablet has-4-cols-desktop has-4-cols-widescreen has-4-cols-fullhd">
-							<div class="grid is-column-gap-4 is-row-gap-4 is-small is-archive">
-								{{ range .Pages.ByPublishDate.Reverse }}
-									{{ partial "card" . }}
-								{{ end }}
-							</div>
+					{{ $.Store.Set "yearIndexArchive" .Key }}
+					<h2 class="title is-2" data-heading="{{ .Key }}" id='{{ $.Store.Get "yearIndexArchive" }}'>{{ .Key }}</h2>
+					
+					<div class="fixed-grid has-1-cols-mobile has-2-cols-tablet has-3-cols-desktop has-4-cols-widescreen has-4-cols-fullhd">
+						<div class="grid is-column-gap-4 is-row-gap-4 is-medium">
+							{{ range .Pages.ByPublishDate.Reverse }}
+								{{ partial "card" . }}
+							{{ end }}
 						</div>
+					</div>
 				{{ end }}
 			{{ end }}
 		</div>
-		<div class="column is-2">
-			{{ partial "widgets/archive" (dict "context" . "archiveTitle" "Übersicht") }}
-		</div>
 	</div>
-
-
-
 {{ end }}

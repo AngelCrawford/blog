@@ -8,6 +8,9 @@ article.card.is-horizontal {
     height: 100%;
     transition: transform border .2s ease-out;
     color: color.adjust(helpers.$light, $lightness: 0.5%);
+    max-width: 733.5px;
+    margin-left: auto;
+    margin-right: auto;
 
     &.is-fixed {
       @include helpers.box-shadow(false, 5px, 5px, 5px, rgba(#000, .55), rgba(helpers.$light, .1));
@@ -267,11 +270,6 @@ article.card.is-horizontal {
 }
 
 article.card.is-horizontal:not(.has-image):not(.is-log) {
-    // position: relative;
-    width: calc(100% + 1.5em);
-    min-width: calc(100% + 1.5em);
-    // min-height: 300px;
-    margin-left: -1.5em;
     display: grid;
     grid-template-rows: 1fr auto;
     grid-template-areas: "content" "footer";
@@ -476,53 +474,8 @@ article.card.is-horizontal.is-log {
     }
 }
 
-.is-small:not(.is-archive) article.card.is-horizontal {
-  display: block;
-
-  .card-content .subtitle, 
-  .card-footer,
-  .ribbon {
-    display: none;
-  }
-
-  .card-content .title {
-    padding-bottom: .2em;
-    flex: 1;
-  }
-  
-  .card-content .title,
-  .card-content .content {
-    text-align: center;
-    line-height: 1.5;
-    flex: 1;
-    align-content: center;
-    margin: 0;
-
-    a:hover {
-      color: helpers.$gold !important;
-    }
-  }
-
-  &.has-image {
-    .card-image {
-      figure.image {
-        height: 230px;
-        margin-left: unset;
-        margin-top: unset;
-        width: 100%;
-      }
-    }
-  }
-
-  &:not(.has-image) {
-    margin-left: unset;
-    width: 100%;
-    min-width: 100%;
-    min-height: unset;
-  }
-}
-
-.is-small.is-archive article.card.is-horizontal {
+// Archive
+.is-medium article.card.is-horizontal {
   display: inline-flex;
   flex-direction: column;
   width: 100%;
@@ -542,10 +495,10 @@ article.card.is-horizontal.is-log {
     display: grid;
     min-height: 350px;
 
-    figure {
-      margin-top: unset;
-      margin-left: unset;
-      height: 100%;
+    figure.image {
+        margin-left: 0em;
+        margin-top: unset;
+        height: 100%;
     }
 
     .card-content {
@@ -609,10 +562,54 @@ article.card.is-horizontal.is-log {
       min-height: unset;
     }
   }
-
 }
 
+// Taxonomies
+.is-small article.card.is-horizontal {
+  display: block;
+
+  .card-content .subtitle, 
+  .card-footer,
+  .ribbon {
+    display: none;
+  }
+
+  .card-content .title {
+    padding-bottom: .2em;
+    flex: 1;
+  }
   
+  .card-content .title,
+  .card-content .content {
+    text-align: center;
+    line-height: 1.5;
+    flex: 1;
+    align-content: center;
+    margin: 0;
+
+    a:hover {
+      color: helpers.$gold !important;
+    }
+  }
+
+  &.has-image {
+    .card-image {
+      figure.image {
+        height: 230px;
+        margin-left: unset;
+        margin-top: unset;
+        width: 100%;
+      }
+    }
+  }
+
+  &:not(.has-image) {
+    margin-left: unset;
+    width: 100%;
+    min-width: 100%;
+    min-height: unset;
+  }
+}
 // .is-small article.card.authors {
 
 // }
@@ -646,7 +643,7 @@ article.card.is-horizontal.is-log {
     }
   }
   
-  article.card.is-horizontal.is-log {
+  .grid:not(.is-medium) article.card.is-horizontal.is-log {
     // display: block;
     &.has-image {
       .card-image {

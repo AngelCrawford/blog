@@ -45,7 +45,11 @@
 
 *, html {
   scroll-behavior: smooth !important;
-  scroll-padding-top: 150px;
+  scroll-padding-top: 130px;
+}
+
+body {
+  background-color: color.adjust(helpers.$dark, $lightness: -2%);
 }
 
 body.kind-is-home,
@@ -76,12 +80,20 @@ body.kind-is-term {
 
 main {
   background-color: color.adjust(helpers.$dark, $lightness: -2%);
+  max-width: 2560px;
+  margin: 0 auto;
 
   &.content h1.title {
     font-size: 40px;
     @include helpers.font-header;
     position: relative;
     letter-spacing: .03em;
+    display: inline-block;
+
+    &:first-child:last-child {
+      padding-bottom: 0;
+      margin-bottom: 0;
+    }
 
     &::before {
       content: attr(data-heading);
