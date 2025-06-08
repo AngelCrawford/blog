@@ -3,7 +3,7 @@
 
 main.content.section {
 
-    .box {
+    :not(.column) .box {
         background: color.adjust(helpers.$dark, $lightness: -2%);
         @include helpers.box-shadow(false, 5px, 5px, 5px, rgba(#000, .5), rgba(helpers.$light, .05));
         border: 1px solid rgba(helpers.$gold, .2);

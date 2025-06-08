@@ -1,8 +1,11 @@
 ---
-title: Archiv
+title: Archive
+translation: 
+  singular: "Archiv"
 image: "https://i.picsum.photos/id/369/700/200.jpg"
 description: We'd love to hear from you
 type: page
+layout: archive
 menu: "main"
 
 ---

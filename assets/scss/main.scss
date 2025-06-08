@@ -40,6 +40,13 @@
 // Layout
 @use "layout/lists";
 @use "layout/card";
+@use "layout/pages";
+@use "layout/widgets";
+
+*, html {
+  scroll-behavior: smooth !important;
+  scroll-padding-top: 150px;
+}
 
 body.kind-is-home,
 // /categories or /tags

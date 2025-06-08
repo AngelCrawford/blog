@@ -154,7 +154,7 @@ article.card.is-horizontal {
         color: helpers.$gold-light;
         padding-left: 0.4em;
         &:hover {
-          color: helpers.$gold-light;
+          color: helpers.$gold;
         }
       }
       .remix-small {
@@ -266,7 +266,7 @@ article.card.is-horizontal {
     }
 }
 
-article.card.is-horizontal:not(.has-image):not(.is-log), article.card.is-small:not(.has-image) {
+article.card.is-horizontal:not(.has-image):not(.is-log) {
     // position: relative;
     width: calc(100% + 1.5em);
     min-width: calc(100% + 1.5em);
@@ -476,7 +476,7 @@ article.card.is-horizontal.is-log {
     }
 }
 
-.is-small article.card.is-horizontal, .is-small article.card.count.is-horizontal {
+.is-small:not(.is-archive) article.card.is-horizontal {
   display: block;
 
   .card-content .subtitle, 
@@ -520,6 +520,96 @@ article.card.is-horizontal.is-log {
     min-width: 100%;
     min-height: unset;
   }
+}
+
+.is-small.is-archive article.card.is-horizontal {
+  display: inline-flex;
+  flex-direction: column;
+  width: 100%;
+
+  &.has-image .ribbon {
+    margin-left: 1.5em;
+    margin-top: -1.5em;
+    z-index: 10;
+  }
+  &:not(.has-image).is-log .ribbon {
+    margin-left: 1.5em;
+    margin-top: -1.5em;
+    z-index: 10;
+  }
+
+  &.is-log {
+    display: grid;
+    min-height: 350px;
+
+    figure {
+      margin-top: unset;
+      margin-left: unset;
+      height: 100%;
+    }
+
+    .card-content {
+      height: 100%;
+      margin-top: -1.5em;
+      margin-left: 1.5em;
+
+      .content {
+        font-size: 1.2em;
+
+        &::before,
+        &::after {
+          font-size: 15px;
+        }
+      }
+    }
+
+    .card-footer time.updated {
+      display: none;
+    }
+    
+  }
+
+  &:not(.is-log) {
+
+    .card-content {
+      height: fit-content;
+      flex: 1;
+      justify-content: center;
+
+      .content {
+        display: none;
+      }
+
+      .title,
+      .content {
+        align-content: center;
+        margin: 0;
+
+        a:hover {
+          color: helpers.$gold !important;
+        }
+      }
+    }
+
+    &.has-image {
+      .card-image {
+        figure.image {
+          height: 230px;
+          margin-left: unset;
+          margin-top: unset;
+          width: 100%;
+        }
+      }
+    }
+
+    &:not(.has-image) {
+      margin-left: unset;
+      width: 100%;
+      min-width: 100%;
+      min-height: unset;
+    }
+  }
+
 }
 
   
