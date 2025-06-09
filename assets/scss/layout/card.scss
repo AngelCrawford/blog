@@ -171,7 +171,6 @@ article.card.is-horizontal {
   
     .card-footer {
       font-size: 80%;
-      color: helpers.$gold-dark;
       background: helpers.$dark;
       border-color: rgba(helpers.$gold-dark, .5);
     
@@ -403,7 +402,7 @@ article.card.is-horizontal.is-log {
         }
       }
       
-      h3.title, p.subtitle {
+      h2.title, p.subtitle {
         display: none;
       }
 

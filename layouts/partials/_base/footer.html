@@ -21,7 +21,7 @@
 
     <div class="column is-3 social">
         <p class="title is-5">Article Time</p>
-        <div class="has-text-centered logo"><img src="/images/header/clock.png" width="150" alt="Logo" title="Logo" /></div>
+        <div class="has-text-centered logo"><img src="/images/header/clock_small.webp" width="150" height="150" alt="Logo" title="Logo" /></div>
         <div class="icons has-text-centered">Social Follow</div>
     </div>
 
@@ -38,12 +38,11 @@
                 <span class="variable">{{ $countA }}</span>
                 <span class="variable-number">Einfache Artikel</span>
             </li>
-
             <ul>
                 <li>
-                {{ $countM := len (where (where .Site.RegularPages "Section" "articles") ".Params.format" "==" "log") }}
-                <span class="variable">{{ $countM }}</span>
-                <span class="variable-number">Log Artikel</span>
+                    {{ $countM := len (where (where .Site.RegularPages "Section" "articles") ".Params.format" "==" "log") }}
+                    <span class="variable">{{ $countM }}</span>
+                    <span class="variable-number">Log Artikel</span>
                 </li>
             </ul>
         </ul>
