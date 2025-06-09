@@ -1,7 +1,7 @@
 // ***************** Back to Top Button
 // Funktion für das Scroll-Verhalten
 $(window).scroll(function () {
-  if ($(this).scrollTop() > 100) { // Wenn 100 Pixel gescrolled wurde
+  if ($(this).scrollTop() > 800) { // Wenn x Pixel gescrolled wurde
     $('#back-to-top').fadeIn();
   } else {
     $('#back-to-top').fadeOut();
@@ -13,6 +13,24 @@ $('#back-to-top').click(function () { // Klick auf den Button
     scrollTop: 0
   }, 800);
   return false;
+});
+
+
+// ***************** Footer Reveal Effect
+// Function to adjust body padding based on footer height
+function adjustBodyPadding() {
+  const footerHeight = $('footer.footer').outerHeight();
+  $('body main.content.section').css('margin-bottom', footerHeight + 'px');
+}
+
+// Run on page load
+$(document).ready(function() {
+  adjustBodyPadding();
+  
+  // Also run when window is resized to handle responsive changes
+  $(window).on('resize', function() {
+    adjustBodyPadding();
+  });
 });
 
 

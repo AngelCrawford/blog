@@ -36,8 +36,6 @@
 }
 
 .widget.archive.box {
-    // max-width: 18em;
-
     ul {
         margin: 0;
         padding: 1em 0 1.5em 0em;
@@ -45,7 +43,6 @@
 
         li {
             display: flex;
-            @include helpers.font-regular;
         
             .name {
                 order: 1;

@@ -1,19 +1,84 @@
-<button id="back-to-top" class="button is-round is-primary is-outlined" title="Zurück zum Seitenanfang">
-    <svg class="icon ri-2x">
-        <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ .Site.Params.remixicon_version}}#arrow-up-s-fill"></use>
-    </svg>
-</button>
+<div class="footer-bg"></div>
 
+<svg>
+    <filter id="turbulence" x="0" y="0" width="100%" height="100%">
+    <feTurbulence id="sea-filter" numOctaves="2" seed="2" baseFrequency="0.02 0.05"></feTurbulence>
+    <feDisplacementMap in2="" scale="20" in="SourceGraphic"></feDisplacementMap>
+    <animate xlink:href="#sea-filter" attributeName="baseFrequency" dur="200s" keyTimes="0;0.8;1" values="0.02 0.06;0.04 0.08;0.02 0.06" repeatCount="indefinite"/>
+    </filter>
+</svg>
 
+<div class="columns is-multiline">
+    <div class="column is-12">
 
-<div class="content has-text-centered">
+        <div class="has-text-centered">
+            <div class="title is-3 slogan">
+                Du willst schreiben - ohne einen eignen Blog zu veröffentlichen?<br />
+                Be a part of Article Time!
+            </div>
+        </div>
+    </div>
+
+    <div class="column is-3 social">
+        <p class="title is-5">Article Time</p>
+        <div class="has-text-centered logo"><img src="/images/header/clock.png" width="150" alt="Logo" title="Logo" /></div>
+        <div class="icons has-text-centered">Social Follow</div>
+    </div>
+
+    <div class="column is-3">
+        <p class="title is-5">Most Loved Widgets</p>
+    </div>
+
+    <div class="column is-3 stats">
+        <p class="title is-5">Statistik</p>
+        <p>Momentan befinden sich {{ len (where .Site.RegularPages "Section" "articles") }} <a href="/" title="Artikel">Artikel</a> auf dieser Seite.</p>
+        <ul>             
+            <li>
+                {{ $countA := len (where .Site.RegularPages "Section" "articles") }}
+                <span class="variable">{{ $countA }}</span>
+                <span class="variable-number">Einfache Artikel</span>
+            </li>
+
+            <ul>
+                <li>
+                {{ $countM := len (where (where .Site.RegularPages "Section" "articles") ".Params.format" "==" "log") }}
+                <span class="variable">{{ $countM }}</span>
+                <span class="variable-number">Log Artikel</span>
+                </li>
+            </ul>
+        </ul>
+    </div>
+
+    <div class="column is-3">
+        {{ partial "widgets/archive" (dict "context" . "archiveTitle" "Archiv") }}
+    </div>
+</div>
+  
+
+<div class="has-text-centered navi">
+    {{- if .Site.Menus.footer -}}
+    <ul>
+        {{- $currentPage := . -}}
+        {{- range .Site.Menus.footer -}}
+        <li>
+            {{- if not (eq $currentPage.RelPermalink .URL) -}}
+                <a href="{{ .URL }}" title="{{ .Name }} page">{{ .Name }}</a>
+            {{- else -}}
+                <span class="is-active">{{ .Name }}</span>
+            {{- end -}}
+        </li>
+        {{- end -}}
+    </ul>
+    {{- end -}}
+</div>
+
+<div class="copyright has-text-centered">
+    &copy; 2020 - {{ dateFormat "2006" now }} | <abbr title='Build Date: {{ readFile "buildDate.txt" }}'>v{{ readFile "version.txt" }}</abbr>
+    | <span>{{ .Site.Copyright | safeHTML }}</span>
+
     <p>
-    <strong>Bulma</strong> by <a href="https://jgthms.com">Jeremy Thomas</a>.
-    The source code is licensed
-    <a href="https://opensource.org/license/mit">MIT</a>. The
-    website content is licensed
-    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0//"
-        >CC BY NC SA 4.0</a
-    >.
+        Header SVGs von: <a href="https://www.shutterstock.com/g/pixelliebe">pixelliebe</a> | 
+        <a href="https://www.shutterstock.com/image-vector/hamburg-skyline-471775031">shutterstock.com</a>
+        | <a href="https://www.shutterstock.com/image-vector/kiel-skyline-german-city-581455954">shutterstock.com</a>
     </p>
 </div>

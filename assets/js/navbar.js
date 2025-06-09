@@ -4,8 +4,6 @@ function navScroll() {
     stuck = "is-fixed-top";
     theHeader = 300;
   
-    console.log(theHeader);
-  
     if ($(window).scrollTop() > theHeader) {
       theNavigation.addClass(stuck);
     } else {

@@ -12,9 +12,15 @@
         <main class="content section">
             {{- block "main" . }}{{- end }}
         </main>
+
+        <button id="back-to-top" class="button is-round is-primary is-outlined" title="Zurück zum Seitenanfang">
+            <svg class="icon ri-2x">
+                <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ .Site.Params.remixicon_version}}#arrow-up-s-fill"></use>
+            </svg>
+        </button>
         
         <footer class="footer">
-            {{- partial "_base/footer" . -}}
+            {{ block "footer" . }}{{ partial "_base/footer" . }}{{ end }}
         </footer>
 
         <!-- Footer Scripts -->

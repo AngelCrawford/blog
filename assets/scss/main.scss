@@ -124,6 +124,10 @@ main {
     }
   }
 
+  &.content.section {
+    margin-bottom: 0;
+  }
+
   .subtitle {
     @include helpers.font-header;
     margin-top:.3em;
@@ -132,6 +136,39 @@ main {
   &.section {
     @media screen and (min-width: 560px) and (max-width: 1024px) {
       padding: var(--bulma-section-padding-desktop);
+    }
+  }
+}
+
+
+
+#back-to-top {
+  display: none;
+  position: fixed;
+  z-index: 999999;
+  bottom: 3em;
+  right: 3em;
+  height: 55px;
+  width: 55px;
+  border-radius: 50%;
+  background-color: helpers.$dark;
+  @include helpers.box-shadow(false, 3px, 3px, 3px, rgba(#000, .3), rgba(helpers.$light, .07));
+  border: 1px solid rgba(helpers.$gold, .2);
+  color: helpers.$gold;
+  transition: background, border .3s ease-out;
+  cursor: pointer;
+  svg {
+    fill: helpers.$gold;
+    transition: fill .3s ease-out;
+    width: 40px;
+    height: 40px;
+  }
+ &:hover, &:focus {
+    border: 1px solid helpers.$gold-dark;
+    color: helpers.$gold-light;
+    @include helpers.box-shadow(true, 3px, 3px, 3px, rgba(#000, .3), rgba(helpers.$light, .07));
+    svg {
+      fill: helpers.$gold-light;
     }
   }
 }
