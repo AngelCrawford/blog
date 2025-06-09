@@ -59,7 +59,3 @@ outputs:
     - JSON
   page:
     - HTML
-
-# Build statistics
-build:
-  writeStats: true
