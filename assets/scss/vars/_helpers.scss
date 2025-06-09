@@ -1,6 +1,8 @@
 @forward 'fonts';
 @forward 'colors';
 @forward 'icons';
+@use 'colors' as c;
+@use "sass:color";
 
 // @include box-shadow(false, 5px, 5px, 5px, rgba(#000, .3), rgba($text, .05))
 @mixin animation($animation, $time, $style: both) {
@@ -9,7 +11,7 @@
     -moz-animation-name: $animation alternate $time $style;
 }
 
-@mixin box-shadow($inset: false, $horizOffset: 5px, $vertOffset: 5px, $blur: 5px, $color: rgba(#000, .3), $color2: rgba($text, .05)) {
+@mixin box-shadow($inset: false, $horizOffset: 5px, $vertOffset: 5px, $blur: 5px, $color: rgba(#000, .3), $color2: rgba(c.$light, .05)) {
   // Calculate negative offsets
   $negHorizOffset: $horizOffset * -1;
   $negVertOffset: $vertOffset * -1;
@@ -43,4 +45,51 @@
   @-ms-keyframes #{$name} { @content; }
   @-o-keyframes #{$name} { @content; }
   @keyframes #{$name} { @content; }
+}
+
+@mixin round-button($inset: true, $size: 48px, $color: $gold, $border: $gold-dark) {
+  border-radius: 50%;
+  width: $size;
+  height: $size;
+  color: $color;
+  border: 1px solid rgba($border, .5);
+
+  display: inline-flex;
+  align-content: center;
+  align-items: center;
+  justify-content: center;
+  justify-content: center;
+  box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
+  background: color.adjust(c.$dark, $lightness: -4%);
+  transition: color .3s ease-out;
+  cursor: pointer;
+
+  @if $inset == true {
+    @include box-shadow(true, 3px, 3px, 5px, rgba(#000, .3), rgba(c.$light, .05));
+  } @else {
+    @include box-shadow(false, 3px, 3px, 5px, rgba(#000, .3), rgba(c.$light, .05));
+  }
+
+  svg {
+    fill: c.$gold;
+    width: calc($size - 13px);
+    height: calc($size - 13px);
+    transition: fill .3s ease-out;
+  }
+
+  &:hover, &:focus {
+    border: 1px solid $border;
+    color: c.$gold-light;
+
+    @if $inset == true {
+      @include box-shadow(false, 3px, 3px, 5px, rgba(#000, .3), rgba(c.$light, .05));
+      @include translate(0, -2px);
+    } @else {
+      @include box-shadow(true, 3px, 3px, 5px, rgba(#000, .3), rgba(c.$light, .05));
+      @include translate(0, 2px);
+    }
+    svg {
+      fill: c.$gold-light;
+    }
+  }
 }

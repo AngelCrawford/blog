@@ -1,7 +1,7 @@
 ---
 title: "Allgemein"
 subtitle: "The last theme you'll ever need. Maybe."
-categoryColor: "#cb282e"
+categoryColor: "#a52828"
 menu: 
   main:
     name: 'Allgemein'

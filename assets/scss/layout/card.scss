@@ -6,7 +6,7 @@ article.card.is-horizontal {
     @include helpers.box-shadow(false, 5px, 5px, 5px, rgba(#000, .5), rgba(helpers.$light, .05));
     border: 1px solid rgba(helpers.$gold, .2);
     height: 100%;
-    transition: transform border .2s ease-out;
+    // transition: transform border .2s ease-out;
     color: color.adjust(helpers.$light, $lightness: 0.5%);
     max-width: 733.5px;
     margin-left: auto;
@@ -47,15 +47,12 @@ article.card.is-horizontal {
       }
     }
 
-    &:not(.is-log) .title a, &:not(.is-log) a.read-more {
+    &:not(.is-log) .title a {
       color: helpers.$gold-light;
+      @include helpers.font-header-bold;
       &:hover {
         color: helpers.$gold;
       }
-    }
-
-    &:not(.is-log) .title a {
-      @include helpers.font-header-bold;
     }
 
     &:not(.is-log) .subtitle {
@@ -119,34 +116,11 @@ article.card.is-horizontal {
     //   }
     // }
 
-    a.read-more {
+    button.round-button {
       position: absolute;
       bottom: 1.5em;
       right: 1.5em;
       z-index: 3;
-      color: helpers.$gold;
-      display: inline-block;
-      background: color.adjust(helpers.$dark, $lightness: -4%);
-      @include helpers.box-shadow(true, 3px, 3px, 5px, rgba(#000, .3), rgba(helpers.$light, .05));
-      border-radius: 50%;
-      width: 48px;
-      height: 48px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border: 1px solid color.adjust(helpers.$dark, $lightness: 2%);
-      svg {
-        fill: helpers.$gold;
-        width: 35px;
-        height: 35px;
-        // @include helpers.translate(1px, 1px);
-      }
-      &:hover {
-        @include helpers.box-shadow(false, 3px, 3px, 5px, rgba(#000, .3), rgba(helpers.$light, .05));
-        svg {
-          fill: helpers.$gold-light;
-        }
-      }
     }
      
     .tags-wrapper {
@@ -194,23 +168,10 @@ article.card.is-horizontal {
           display: inline-block;
   
           .author-opener {
+            @include helpers.round-button(true, 48px, helpers.$gold, color.adjust(helpers.$dark, $lightness: 5%));
             background: color.adjust(helpers.$dark, $lightness: -4%);
-            @include helpers.box-shadow(true, 3px, 3px, 5px, rgba(#000, .3), rgba(helpers.$light, .05));
-            width: 48px;
-            height: 48px;
-            color: helpers.$gold;
             font-size: 1.3em;
-            @include helpers.font-header;
-            text-align: center;
-            display: inline-block;
-            border-radius: 50%;
-            line-height: 48px;
-            cursor: pointer;
-            border: 1px solid helpers.$dark;
-            &:hover {
-              color: helpers.$gold-light;
-              @include helpers.box-shadow(false, 3px, 3px, 5px, rgba(#000, .3), rgba(helpers.$light, .05));
-            }
+            @include helpers.font-header;            
           }
   
           .more-authors-img {
@@ -254,11 +215,12 @@ article.card.is-horizontal {
       }
       
       .card-footer-item {
-        // display: inline-block;
         color: color.scale(helpers.$dark, $lightness: 40%);
         padding: .75em 1.5em;
+        span svg {
+          @include helpers.translate(0, 5px);
+        }
         svg.remix-small {
-          // @include helpers.translate(0, 4px);
           width: 20px;
           height: 20px;
           fill: color.scale(helpers.$dark, $lightness: 40%);
@@ -609,6 +571,7 @@ article.card.is-horizontal.is-log {
     min-height: unset;
   }
 }
+
 // .is-small article.card.authors {
 
 // }

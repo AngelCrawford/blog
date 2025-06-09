@@ -131,21 +131,23 @@
                 {{- end -}}
             </div>
 
-            {{- if not (eq .Params.format "log") }}<a class="read-more" title="Weiterlesen" href="{{ .RelPermalink }}">
-                <svg class='remix-small'>
-                    <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ .Site.Params.remixicon_version}}#arrow-right-s-line"></use>
-                </svg>
-            </a>{{- end -}}
+            {{- if not (eq .Params.format "log") }}
+                <button class="round-button inset" title="Weiterlesen" href="{{ .RelPermalink }}">
+                    <svg class='remix-small'>
+                        <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ .Site.Params.remixicon_version}}#arrow-right-s-line"></use>
+                    </svg>
+                </button>
+            {{- end -}}
 
             <div class="card-footer-item log-date">
                 {{- if eq .Params.format "log" -}}
-                    <time datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}" title="Veröffentlichungsdatum">
+                    <time datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}" data-tooltip="Veröffentlichungsdatum" title="Veröffentlichungsdatum">
                         <svg class='remix-small'>
                             <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ .Site.Params.remixicon_version}}#calendar-line"></use>
                         </svg> {{ .Date.Format "02.01.06" }}
                     </time>
                     {{ if not ( eq (.Date.Format "02.01.06") (.Lastmod.Format "02.01.06") ) }}
-                        <time class="updated" datetime="{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}" title="Letztes Bearbeitungsdatum">
+                        <time class="updated" datetime="{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}" data-tooltip="Letztes Bearbeitungsdatum" title="Letztes Bearbeitungsdatum">
                             <svg class='remix-small'>
                                 <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ .Site.Params.remixicon_version}}#pencil-line"></use>
                             </svg> {{ .Lastmod.Format "02.01.06" }}
@@ -154,28 +156,30 @@
                 {{- else -}}
                     {{ $readingTime := div (float .WordCount) .Site.Params.reading_speed }}
                     {{ $readingTime = math.Ceil $readingTime }}
-                    <svg class='remix-small'>
-                        <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ .Site.Params.remixicon_version}}#timer-line"></use>
-                    </svg> {{ $readingTime }} Min.
+                    <span data-tooltip="{{ $readingTime }} Minuten Lesezeit">
+                        <svg class='remix-small'>
+                            <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ .Site.Params.remixicon_version}}#timer-line"></use>
+                        </svg> {{ $readingTime }} Min.
+                    </span>
                 {{- end -}}
             </div>
 
             <div class="card-footer-item">
                 {{- if .Params.weight -}}
                     <!-- TODO: Add tooltip -->
-                    <span data-tooltip="Dies ist ein angepinnter Artikel">
+                    <span data-tooltip="Angepinnter Artikel">
                         <svg class='remix-small'>
                             <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ .Site.Params.remixicon_version}}#pushpin-line"></use>
                         </svg>
                     </span>
                 {{- else if eq .Params.format "log" -}}
-                    <span data-tooltip="Dies ist ein Log">
+                    <span data-tooltip="Log">
                         <svg class='remix-small'>
                             <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ .Site.Params.remixicon_version}}#lightbulb-flash-line"></use>
                         </svg>
                     </span>
                 {{ else }}
-                    <span data-tooltip="Dies ist ein Artikel">
+                    <span data-tooltip="Normaler Artikel">
                         <svg class='remix-small'>
                             <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ .Site.Params.remixicon_version}}#article-line"></use>
                         </svg>

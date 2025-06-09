@@ -2,7 +2,7 @@
 @use "sass:color";
 
 body.layout-is-archive {
-    h2 {    
+    .column > h2 {    
         text-align: center;
         overflow: hidden;
         @include helpers.font-header-bold;

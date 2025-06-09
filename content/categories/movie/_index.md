@@ -1,7 +1,7 @@
 ---
 title: "Movie"
 description: "The last theme you'll ever need. Maybe."
-categoryColor: "#537fbd"
+categoryColor: "#285fa5"
 menu: 
   main:
     name: 'Movie'

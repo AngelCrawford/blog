@@ -1,16 +1,13 @@
-.button {
+@use "vars/helpers";
+@use "sass:color";
+
+button {
     // transition: background, border .3s ease-out;
     font-weight: 600;
     // @include box-shadow(false, 5px, 5px, 5px, rgba(#000, .3), rgba($text, .07));
 
     svg {
         fill: hsl(var(--bulma-button-h),var(--bulma-button-s),var(--bulma-button-l));
-    }
-
-    &.is-round {
-        height: 55px;
-        width: 55px;
-        border-radius: 50%;
     }
     
     // &:hover, &:focus {
@@ -20,4 +17,10 @@
     &.is-primary {
         svg {fill: hsl(var(--bulma-button-h),var(--bulma-button-s),var(--bulma-button-l));}
     }
+
+    &.round-button {
+      @include helpers.round-button(false, 48px, helpers.$gold, color.adjust(helpers.$dark, $lightness: 5%));
+    }
+
+
 }

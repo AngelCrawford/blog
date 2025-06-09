@@ -1,7 +1,7 @@
 ---
 title: "Kategorie 1"
 description: "The last theme you'll ever need. Maybe."
-categoryColor: "green"
+categoryColor: "#1d7a7a"
 menu: 
   main:
     name: 'Kategorie 1'
