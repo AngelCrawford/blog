@@ -1,4 +1,7 @@
 
+{{ partialCached "_base/hero-content" . .Kind }}
+
+{{ define "partials/_base/hero-content" }}
 <div id="city"></div>
 
 <div id="hero-animations">
@@ -102,3 +105,5 @@
         </a>
     </div>
 </div>
+
+{{ end }}

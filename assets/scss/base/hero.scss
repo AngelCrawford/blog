@@ -61,11 +61,11 @@ header.hero {
             z-index: 1;
             will-change: background-position;
             
-            @include helpers.keyframes(clock) {
+            @include animations.keyframes(clock) {
                 0% { background-position: 50% 200px; } 
                 100% {background-position: 50% 20px; } 
             }
-            @include helpers.animation(clock, 2s);
+            @include animations.animation(clock, 2s);
         }
 
         // Text Logo
@@ -124,13 +124,13 @@ header.hero {
                 
                     // Wird per JS getriggert
                     &.shimmer-animation {
-                        @include helpers.animation(shimmer, .8s);
+                        @include animations.animation(shimmer, .8s);
                         will-change: background-position;
                     }
     
                 }
     
-                @include helpers.keyframes(shimmer) {
+                @include animations.keyframes(shimmer) {
                     0% { background-position: top left; }
                     100% { background-position: top right; }
                 }
@@ -223,13 +223,13 @@ header.hero {
             }
             .back {
                 transform-origin: 1.5rem 2rem;
-                @include helpers.animation(counter-wiggle, 4s, ease-in-out);
+                @include animations.animation(counter-wiggle, 4s, ease-in-out);
             }
             .santa-hat-piece {
                 fill: firebrick;
             }
             
-            @include helpers.keyframes(counter-wiggle) {
+            @include animations.keyframes(counter-wiggle) {
                 33% { transform: rotate(-20deg); }
                 66% { transform: rotate(10deg); }
             }
@@ -250,10 +250,10 @@ header.hero {
                 animation-iteration-count: 1;
                 animation-delay: 2.5s;
                 opacity: 0;
-                @include helpers.animation(ghost, 2.5s, forwards);
+                @include animations.animation(ghost, 2.5s, forwards);
             }
 
-            @include helpers.keyframes(ghost) {
+            @include animations.keyframes(ghost) {
                 0% { opacity: 0; }
                 50% { opacity: 1; }
                 100% { opacity: 0; }
@@ -302,10 +302,10 @@ header.hero {
                     animation-delay: 4s;
                 }
             }
-            @include helpers.keyframes(fly-cycle) {
+            @include animations.keyframes(fly-cycle) {
                 100% { background-position: -900px 0; }
             }
-            @include helpers.keyframes(fly-right-one) {
+            @include animations.keyframes(fly-right-one) {
                 0% { transform: scale(0.25) translateX(-10vw);}
                 10% { transform: translateY(2vh) translateX(10vw) scale(0.3); }
                 20% { transform: translateY(0vh) translateX(30vw) scale(0.35); }

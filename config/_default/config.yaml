@@ -21,6 +21,28 @@ permalinks:
   year: "/articles/:slug/"
   month: "/articles/:slug/"
 
+# Server configuration with caching headers
+server:
+  headers:
+    # Cache static assets for 1 year (31536000 seconds)
+    "/**/*.{css,js,woff,woff2,ttf,png,jpg,jpeg,gif,webp,svg,ico}":
+      Cache-Control: "public, max-age=31536000, immutable"
+    
+    # Cache HTML for 1 hour (3600 seconds)
+    "/**/*.html":
+      Cache-Control: "public, max-age=3600"
+    
+    # Cache RSS and sitemap for 1 hour
+    "/**/*.{xml,json}":
+      Cache-Control: "public, max-age=3600"
+    
+    # Set security headers for all responses
+    "/**":
+      X-Content-Type-Options: "nosniff"
+      X-Frame-Options: "DENY"
+      X-XSS-Protection: "1; mode=block"
+      Referrer-Policy: "strict-origin-when-cross-origin"
+      Permissions-Policy: "camera=(), microphone=(), geolocation=(), interest-cohort=()"
 
 imaging:
   quality: 75
@@ -28,3 +50,16 @@ imaging:
   exif:
     disableDate: true
     disableLatLong: true
+
+# Output configuration
+outputs:
+  home:
+    - HTML
+    - RSS
+    - JSON
+  page:
+    - HTML
+
+# Build statistics
+build:
+  writeStats: true

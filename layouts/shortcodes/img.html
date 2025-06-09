@@ -1,0 +1,59 @@
+{{/* 
+  Image Shortcode with Lazy Loading and Responsive Sizes
+  
+  Parameters:
+  - src: Image source path (required)
+  - alt: Alt text (required)
+  - caption: Optional caption text
+  - class: Optional CSS class
+  - width: Optional width
+  - height: Optional height
+  - loading: Optional loading attribute (lazy, eager, auto) - defaults to lazy
+  
+  Example usage:
+  {{< img src="images/my-image.jpg" alt="My Image" caption="This is my image" class="is-rounded" >}}
+*/}}
+
+{{ $src := .Get "src" }}
+{{ $alt := .Get "alt" | default "Image" }}
+{{ $caption := .Get "caption" }}
+{{ $class := .Get "class" | default "" }}
+{{ $width := .Get "width" }}
+{{ $height := .Get "height" }}
+{{ $loading := .Get "loading" | default "lazy" }}
+
+{{ $image := resources.Get $src }}
+{{ if not $image }}
+  {{ errorf "Image %s not found" $src }}
+{{ end }}
+
+{{ $webpImage := $image.Resize "800x webp q80" }}
+{{ $smallImage := $image.Resize "400x q80" }}
+{{ $mediumImage := $image.Resize "800x q80" }}
+{{ $largeImage := $image.Resize "1200x q80" }}
+
+{{ $smallWebp := $image.Resize "400x webp q80" }}
+{{ $mediumWebp := $image.Resize "800x webp q80" }}
+{{ $largeWebp := $image.Resize "1200x webp q80" }}
+
+<figure class="image {{ $class }}">
+  <picture>
+    <source 
+      type="image/webp" 
+      srcset="{{ $smallWebp.RelPermalink }} 400w, {{ $mediumWebp.RelPermalink }} 800w, {{ $largeWebp.RelPermalink }} 1200w"
+      sizes="(max-width: 600px) 400px, (max-width: 1200px) 800px, 1200px">
+    <source 
+      srcset="{{ $smallImage.RelPermalink }} 400w, {{ $mediumImage.RelPermalink }} 800w, {{ $largeImage.RelPermalink }} 1200w"
+      sizes="(max-width: 600px) 400px, (max-width: 1200px) 800px, 1200px">
+    <img 
+      src="{{ $mediumImage.RelPermalink }}" 
+      alt="{{ $alt }}"
+      {{ with $width }}width="{{ . }}"{{ end }}
+      {{ with $height }}height="{{ . }}"{{ end }}
+      loading="{{ $loading }}"
+      decoding="async">
+  </picture>
+  {{ with $caption }}
+  <figcaption>{{ . | markdownify }}</figcaption>
+  {{ end }}
+</figure>

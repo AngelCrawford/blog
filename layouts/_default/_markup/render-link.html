@@ -1,0 +1,22 @@
+{{/* 
+  Render Hook for Markdown Links
+  Automatically adds security attributes to external links
+*/}}
+
+{{ $link := .Destination }}
+{{ $text := .Text }}
+{{ $title := .Title }}
+{{ $isExternal := or (strings.HasPrefix $link "http") (strings.HasPrefix $link "//") }}
+
+<a href="{{ $link }}"
+  {{ with $title }}title="{{ . }}"{{ end }}
+  {{ if $isExternal }}
+    target="_blank" 
+    rel="noopener noreferrer"
+    class="external-link"
+  {{ end }}>
+  {{ $text }}
+  {{ if $isExternal }}
+    <span class="sr-only">(opens in a new tab)</span>
+  {{ end }}
+</a>

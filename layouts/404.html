@@ -1,0 +1,25 @@
+{{ define "main" }}
+    <div class="columns is-multiline">
+        <div class="column is-12">
+            <article class="box">
+                <div class="box-content has-text-centered">
+                    <h1 class="title is-1" data-heading="404">404</h1>
+                    <p class="subtitle">Seite nicht gefunden</p>
+                    <p class="is-size-5 mb-5">
+                        Die gesuchte Seite existiert leider nicht oder wurde verschoben.
+                    </p>
+                </div>
+            </article>
+        </div>
+
+        <div class="column is-12">
+            <div class="fixed-grid has-1-cols-mobile has-2-cols-tablet has-3-cols-desktop has-4-cols-widescreen has-4-cols-fullhd">
+                <div class="grid is-column-gap-4 is-row-gap-4 is-medium">
+                    {{ range first 4 (where .Site.RegularPages.ByDate.Reverse "Section" "articles") }}
+                        {{ partial "card" . }}
+                    {{ end }}
+                </div>
+            </div>
+        </div>
+    </div>
+{{ end }}
