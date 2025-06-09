@@ -1,10 +1,12 @@
 @use "vars/helpers";
 @use "sass:color";
+@use "mixins/effects";
+@use "mixins/responsive";
 
 main.content.section {
     .box {
         background: color.adjust(helpers.$dark, $lightness: -2%);
-        @include helpers.box-shadow(false, 5px, 5px, 5px, rgba(#000, .5), rgba(helpers.$light, .05));
+        @include effects.box-shadow(false, 5px, 5px, 5px, rgba(#000, .5), rgba(helpers.$light, .05));
         border: 1px solid rgba(helpers.$gold, .2);
         margin-bottom: 2rem;
 
@@ -13,7 +15,7 @@ main.content.section {
             width: calc(100% - 1.5em);
             display: flow-root; // clear the float from the child
 
-            @media screen and (max-width: 640px) {
+            @include responsive.mobile {
                 margin-left: 0;
                 width: 100%;
             }
@@ -24,7 +26,7 @@ main.content.section {
                 width: calc(100% + 2.6em);
                 margin-top: -1.5em;
 
-                @media screen and (min-width: 640px) {
+                @include responsive.breakpoint(640px) {
                     float: left;
                     margin-left: -3em;
                     margin-right: 1.5em;
@@ -55,10 +57,10 @@ main.content.section {
                         @include helpers.translate(0, 3px);
                     }
                     a {
-                        color: helpers.$gold;
+                color: helpers.$gold;
                         &:hover {
                             color: helpers.$gold-light;
-                        }
+            }
                     }
                 }
                 img {
@@ -72,14 +74,14 @@ main.content.section {
         .box-content {
             a {
                 color: helpers.$gold;
+                
                 &:hover {
                     color: helpers.$gold-light;
                 }
             }
             p:last-child {
                 margin-bottom: 0;
+                }
             }
         }
     }
-}
-

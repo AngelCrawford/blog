@@ -1,5 +1,7 @@
 @use "vars/helpers";
 @use "sass:color";
+@use "mixins/effects";
+@use "mixins/animations";
 
 // THANKS: https://codepen.io/wikiki/pen/XagrqJ
 .has-ribbon {
@@ -9,26 +11,26 @@
 .ribbon {
     max-width: 13.5em;
     position: absolute;
-    z-index: 2;
+    z-index: 5;
     transition: color .3s ease-out;
     @include helpers.font-header;
     text-shadow: 3px 3px 4px rgba(#000, .5);
     background-color: helpers.$gold-dark;
     
     &:hover {
-      @include helpers.translate(0, -2px);
+      @include animations.translate(0, -2px);
     }
     a:hover {
       color: color.adjust(helpers.$light, $lightness: 5%);
       background-color: helpers.$gold !important;
-      @include helpers.box-shadow(false, 3px, 3px, 5px, rgba(#000, .3), rgba(helpers.$light, .15));
+      @include effects.box-shadow(false, 3px, 3px, 5px, rgba(#000, .3), rgba(helpers.$light, .15));
     }
 
     a {
       display: block;
       padding: .4em 1.1em .4em 1em;
       color: helpers.$light;
-      @include helpers.box-shadow(true, 3px, 3px, 5px, rgba(#000, .3), rgba(helpers.$light, .3));      
+      @include effects.box-shadow(true, 3px, 3px, 5px, rgba(#000, .3), rgba(helpers.$light, .3));      
     }
 }
 
@@ -49,11 +51,9 @@
 //       height: 0px;
 //       position: absolute;
 //       margin-left: 9px;
-//       margin-top: -4px;
-//       -webkit-transform: rotate(360deg);
-//       transform: rotate(360deg);
+//       margin-top: -1.5em;
 //       border-style: solid;
-//       border-width: 16px 0 16px 16px;
-//       border-color: transparent transparent transparent helpers.$gold;
+//       border-width: 0 0 1.5em 1.5em;
+//       border-color: transparent transparent helpers.$gold-dark transparent;
 //     }
 //   }

@@ -2,7 +2,10 @@
 @use "sass:math";
 @use "sass:color";
 @use "vars/helpers";
-@use "src/bulma/utilities/mixins" as mixins;
+@use "src/bulma/utilities/mixins" as bulma-mixins;
+@use "mixins/responsive";
+@use "mixins/animations";
+@use "mixins/effects";
 
 header.hero {
     position: relative;
@@ -317,8 +320,7 @@ header.hero {
     }
 }
 
-
-@include mixins.tablet-only {
+@include responsive.breakpoint(641px, 840px) {
     // Between 769px and 1023px
     header.hero.is-medium .hero-body {
         padding: 3rem 1.5rem;
@@ -338,34 +340,8 @@ header.hero {
     header.hero #hero-animations .bird-wrapper .bird {
         transform: scale(.7);
     }
-}
 
-@include mixins.mobile {
-    // Mobile Up to 768px
-    header.hero.is-medium .hero-body {
-        padding: 3rem .5rem;
-    }
-
-    header.hero #hero-animations #hotairballoon {
-        top: 150px;
-        left: calc(50% + 240px);
-        height: 30px;
-        width: 30px;
-    }
-
-    header.hero #hero-animations .wave-wrapper {
-        bottom: -45px;
-    }
-
-    header.hero #hero-animations .bird-wrapper .bird {
-        transform: scale(.7);
-    }
-}
-
-    
-@media (max-width: 730px) {
     header.hero {
-
         #city {
             background-size: auto 80%;
         }
@@ -391,14 +367,10 @@ header.hero {
         top: calc(50% - 20px);
         left: calc(50% - 170px);
     }
-
-    header.hero #hero-animations .bird-wrapper .bird {
-        transform: scale(.5);
-    }
 }
 
 
-@media (max-width: 505px) {
+@include responsive.mobile {
     header.hero {
         height: 200px;
 
@@ -408,6 +380,7 @@ header.hero {
 
         .hero-body {
             height: 200px;
+            padding: 3rem .5rem;
 
             .clock-logo {
                 height: 200px
@@ -441,5 +414,13 @@ header.hero {
         left: calc(50% + 140px);
         height: 20px;
         width: 20px;
+    }
+
+    header.hero #hero-animations .wave-wrapper {
+        bottom: -45px;
+    }
+
+    header.hero #hero-animations .bird-wrapper .bird {
+        transform: scale(.7);
     }
 }

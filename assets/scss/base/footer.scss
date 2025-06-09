@@ -1,11 +1,13 @@
 @use "vars/helpers";
 @use "sass:color";
+@use "mixins/effects";
+@use "mixins/responsive";
 
 footer.footer {
   margin: 0;
   padding: 0 0 2em 0;
   background-color: color.adjust(helpers.$dark, $lightness: -5%);
-  @include helpers.box-shadow(true, 10px, 10px, 15px, rgba(#000, .3), rgba(helpers.$light, .1));
+  @include effects.box-shadow(true, 10px, 10px, 15px, rgba(#000, .3), rgba(helpers.$light, .1));
   position: fixed;
   bottom: 0;
   left: 0;
@@ -58,7 +60,7 @@ footer.footer {
       filter: sepia(.7) blur(.1em) url("#turbulence");
     }
   }
-  
+
   .columns {
     padding: 3em;
     position: relative;
@@ -90,7 +92,7 @@ footer.footer {
         content: "\ec52";
       }
     }
-  
+    
   
     .title.is-5 {
       text-align: center;
@@ -119,7 +121,7 @@ footer.footer {
         margin-right: -50%;
       }
     }
-
+    
     .widget.box {
         background-color: transparent !important;
         border: none;
@@ -166,7 +168,7 @@ footer.footer {
       }
     }
   }
-
+  
   .social {
     .logo {
       opacity: .4;

@@ -1,0 +1,28 @@
+// Animation mixins
+@use "sass:color";
+@use "../vars/colors" as c;
+
+// Animation mixin for consistent cross-browser animations
+@mixin animation($animation, $time, $style: both) {
+  animation: $animation alternate $time $style;
+  -webkit-animation: $animation alternate $time $style;
+  -moz-animation-name: $animation alternate $time $style;
+}
+
+// Keyframes mixin for consistent cross-browser keyframes
+@mixin keyframes($name) {
+  @-webkit-keyframes #{$name} { @content; }
+  @-moz-keyframes #{$name} { @content; }
+  @-ms-keyframes #{$name} { @content; }
+  @-o-keyframes #{$name} { @content; }
+  @keyframes #{$name} { @content; }
+}
+
+// Transform mixin for consistent cross-browser transforms
+@mixin translate($horiz, $vert) {
+  -webkit-transform: translate($horiz, $vert); /* Safari and Chrome */
+  -moz-transform: translate($horiz, $vert); /* Firefox */
+  -ms-transform: translate($horiz, $vert); /* IE 9 */
+  -o-transform: translate($horiz, $vert); /* Opera */
+  transform: translate($horiz, $vert);
+}

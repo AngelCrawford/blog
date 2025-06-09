@@ -1,5 +1,7 @@
 @use "vars/helpers";
 @use "sass:color";
+@use "mixins/effects";
+@use "mixins/animations";
 
 // Burger Menu design
 input#menu-switch {
@@ -23,7 +25,7 @@ input#menu-switch:checked ~ .navbar-menu {
 
 nav.navbar {
     background-color: color.adjust(helpers.$dark, $lightness: -5%);
-    // @include helpers.box-shadow(true, 1px, 1px, 2px, rgba(color.adjust(helpers.$dark, $lightness: -20%), 1), rgba(helpers.$light, .1));
+    // @include effects.box-shadow(true, 1px, 1px, 2px, rgba(color.adjust(helpers.$dark, $lightness: -20%), 1), rgba(helpers.$light, .1));
 
     a.navbar-item {
         color: helpers.$gold;
@@ -34,7 +36,7 @@ nav.navbar {
         &:hover {
             color: helpers.$gold-light;
             background-color: color.adjust(helpers.$dark, $lightness: -5%);
-            @include helpers.box-shadow(true, 1px, 1px, 4px, rgba(color.adjust(helpers.$dark, $lightness: -20%), .8), rgba(helpers.$light, 0.14));
+            @include effects.box-shadow(true, 1px, 1px, 4px, rgba(color.adjust(helpers.$dark, $lightness: -20%), .8), rgba(helpers.$light, 0.14));
         }
 
         &.is-active {
@@ -52,7 +54,7 @@ nav.navbar {
     .navbar-item.has-dropdown {
         // This is the key - when the entire dropdown container is hovered
         &:hover {
-            background-color: color.adjust(helpers.$dark, $lightness: -5%);
+        background-color: color.adjust(helpers.$dark, $lightness: -5%);
             
             // Style the navbar-link when the dropdown container is hovered
             > .navbar-link, > .navbar-link.is-active {
@@ -112,7 +114,7 @@ nav.navbar {
 
             &::after {
                 border-color: helpers.$gold;
-            }
+        }
         }
 
         &.is-active {
@@ -126,7 +128,7 @@ nav.navbar {
             &:hover {
                 color: helpers.$gold-light;
                 background-color: color.adjust(helpers.$dark, $lightness: -5%);
-            }
+        }
         }
     }
     
@@ -142,13 +144,12 @@ nav.navbar {
             font-weight: 400;
 
             &.is-active, &:hover {
-                color: helpers.$gold-light;
+            color: helpers.$gold-light;
             }
         }
 
         // This ensures the dropdown remains visible when moving from link to dropdown
         &:hover {
             display: block;
-        }
-    }
+        }    }
 }

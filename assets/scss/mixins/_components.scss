@@ -1,0 +1,52 @@
+// UI Component mixins
+@use "sass:color";
+@use "../vars/colors" as c;
+@use "effects";
+@use "animations";
+
+// Round button mixin for consistent circular buttons
+@mixin round-button($inset: true, $size: 48px, $color: c.$gold, $border: c.$gold-dark) {
+  border-radius: 50%;
+  width: $size;
+  height: $size;
+  color: $color;
+  border: 1px solid rgba($border, .5);
+
+  display: inline-flex;
+  align-content: center;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
+  background: color.adjust(c.$dark, $lightness: -4%);
+  transition: color .3s ease-out, transform .2s ease-out, border .2s ease-out;
+  cursor: pointer;
+
+  @if $inset == true {
+    @include effects.box-shadow(true, 3px, 3px, 5px, rgba(#000, .3), rgba(c.$light, .05));
+  } @else {
+    @include effects.box-shadow(false, 3px, 3px, 5px, rgba(#000, .3), rgba(c.$light, .05));
+  }
+
+  svg {
+    fill: c.$gold;
+    width: calc($size - 13px);
+    height: calc($size - 13px);
+    transition: fill .3s ease-out;
+  }
+
+  &:hover, &:focus {
+    border: 1px solid $border;
+    color: c.$gold-light;
+
+    @if $inset == true {
+      @include effects.box-shadow(false, 3px, 3px, 5px, rgba(#000, .3), rgba(c.$light, .05));
+      @include animations.translate(0, -2px);
+    } @else {
+      @include effects.box-shadow(true, 3px, 3px, 5px, rgba(#000, .3), rgba(c.$light, .05));
+      @include animations.translate(0, 2px);
+    }
+    svg {
+      fill: c.$gold-light;
+    }
+  }
+}

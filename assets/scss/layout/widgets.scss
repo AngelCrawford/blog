@@ -1,5 +1,7 @@
 @use "vars/helpers";
 @use "sass:color";
+@use "mixins/effects";
+@use "mixins/responsive";
 
 .widget.box {
     padding-bottom: 0;
@@ -49,7 +51,7 @@
 
                 a {
                     color: helpers.$gold-light;
-
+                    
                     &:hover {
                         color: helpers.$gold;
                     }
@@ -60,7 +62,7 @@
                 padding-left: 0.3em;
                 color: color.scale(helpers.$dark, $lightness: 40%);
             }
-        
+            
             &::after {
                 content: "";
                 flex-grow: 1;

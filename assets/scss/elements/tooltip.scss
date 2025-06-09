@@ -1,5 +1,7 @@
 @use "vars/helpers";
 @use "sass:color";
+@use "mixins/effects";
+@use "mixins/animations";
 
 // Variables
 $tooltip-bg: color.adjust(helpers.$dark, $lightness: -5%) !default;
@@ -37,7 +39,7 @@ $tooltip-z-index: 9999 !default;
     font-size: $tooltip-font-size;
     text-align: center;
     white-space: nowrap;
-    box-shadow: 2px 2px 5px rgba(helpers.$gold-light, 0.2), -2px -2px 5px rgba(helpers.$light, 0.2);
+    @include effects.simple-shadow(2px, 2px, 5px, rgba(helpers.$gold-light, 0.2));
   }
   
   // Tooltip arrow
@@ -89,7 +91,7 @@ $tooltip-z-index: 9999 !default;
       left: auto;
       right: 100%;
       top: 50%;
-      transform: translateY(-50%) translateX(-6px);
+      transform: translateY(-50%) translateX(-10px);
     }
     
     &::after {
@@ -97,9 +99,9 @@ $tooltip-z-index: 9999 !default;
       left: auto;
       right: 100%;
       top: 50%;
-      transform: translateY(-50%);
+      transform: translateY(-50%) translateX(-10px);
       border-top-color: transparent;
-      border-left-color: rgba($tooltip-bg, 0.9);
+      border-left-color: $tooltip-bg;
       margin-bottom: 0;
       margin-right: -$tooltip-arrow-size * 2;
     }
@@ -110,7 +112,7 @@ $tooltip-z-index: 9999 !default;
       bottom: auto;
       left: 100%;
       top: 50%;
-      transform: translateY(-50%) translateX(6px);
+      transform: translateY(-50%) translateX(10px);
     }
     
     &::after {
