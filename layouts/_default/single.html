@@ -1,5 +1,124 @@
 {{ define "main" }}
-<h1 class="title is-1" data-heading="{{ .Title }}">{{ .Title }}</h1>
+    {{ if eq .Page.Type "page" }}
+        <div class="columns is-multiline">
+            <div class="column is-12">
+                <article class="box {{ if .Resources -}} has-image{{- end }} is-single-page">
+                    {{- if .Resources -}}
+                        <figure class="image is-4by3">
+                            {{- $img := (.Resources.ByType "image").GetMatch "cover*" -}}
+                            {{- with $img -}}
 
-{{ .Content }}
+                                {{ $image := $img.Process "fill 480x320 webp" }}
+                                <img src="{{ $image.RelPermalink }}" alt="{{ $.Title }}" width="480" height="320" loading="lazy">
+
+                                {{ with .Exif }}{{ with .Tags.ImageDescription  }}
+                                    <figcaption>
+                                        <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ $.Site.Params.remixicon_version}}#information-line"></use></svg>
+                                        {{ . | safeHTML }}
+                                    </figcaption>
+                                {{ end }}{{ end }}
+                            {{- end -}}
+                        </figure>
+                    {{- end -}}
+        
+                    <div class="box-content">
+                        <h1 class="title is-1" data-heading="{{ .Title }}">{{ .Title }}</h1>
+                        {{ with .Params.subtitle }}<p class="subtitle">{{ . }}</p>{{ end }}
+                        {{ .Content }}
+                    </div>
+                </article>
+            </div>
+        </div>
+    {{ else if eq .Page.Type "articles" }}
+        <div class="columns is-multiline">
+            <div class="column is-9">
+                <article class="box {{ if .Resources }}has-image{{ end }}">
+            
+                    {{- if .Resources -}}
+                        <figure class="image is-2by3">
+                            {{- $img := (.Resources.ByType "image").GetMatch "cover*" -}}
+                            {{- with $img -}}
+                                {{ $portraitImage := $img.Process "fill 320x480 webp" }}
+                                {{ $landscapeImage := $img.Process "fill 480x320 webp" }}
+                                <picture>
+                                    <source media="(max-width: 640px)" srcset="{{ $landscapeImage.RelPermalink }}">
+                                    <source media="(min-width: 641px)" srcset="{{ $portraitImage.RelPermalink }}">
+                                    <img src="{{ $portraitImage.RelPermalink }}" alt="{{ $.Title }}" loading="lazy">
+                                </picture>
+                                {{ with .Exif }}{{ with .Tags.ImageDescription  }}
+                                    <figcaption>
+                                        <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ $.Site.Params.remixicon_version}}#information-line"></use></svg>
+                                        {{ . | safeHTML }}
+                                    </figcaption>
+                                {{ end }}{{ end }}
+                            {{- end -}}
+                        </figure>
+                    {{- end -}}
+            
+                    <div class="box-content">
+                        <h1 class="title is-1" data-heading="{{ .Title }}">{{ .Title }}</h1>
+                        {{ with .Params.subtitle }}<p class="subtitle is-4">{{ . }}</p>{{ end }}
+                        {{ .Content }}
+                    </div>
+
+                </article>
+            </div>
+            <div class="column is-3">
+
+                <div class="info widget box">
+                    <p class="title is-5">Information</p>
+
+                    {{- if .GetTerms "categories" -}}
+                      {{- range first 1 (.GetTerms "categories") -}}
+                          <div class="ribbon">
+                              <a href="{{ .RelPermalink }}" style="{{if .Params.categoryColor }}background-color:{{.Params.categoryColor }}{{end}}">{{- .LinkTitle -}}</a>
+                          </div>
+                      {{- end -}}
+                    {{- end -}}
+                        
+ 
+                    <time datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}" data-tooltip="Veröffentlichungsdatum" title="Veröffentlichungsdatum">
+                        <svg class='remix-small'>
+                            <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ .Site.Params.remixicon_version}}#calendar-line"></use>
+                        </svg> {{ .Date.Format "02.01.06" }}
+                    </time>
+                    {{ if not ( eq (.Date.Format "02.01.06") (.Lastmod.Format "02.01.06") ) }}
+                        <time class="updated" datetime="{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}" data-tooltip="Letztes Bearbeitungsdatum" title="Letztes Bearbeitungsdatum">
+                            <svg class='remix-small'>
+                                <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ .Site.Params.remixicon_version}}#pencil-line"></use>
+                            </svg> {{ .Lastmod.Format "02.01.06" }}
+                        </time>
+                    {{ end }}
+          
+                    {{- if .Params.tags -}}
+                      <div class="tags-line">
+                        <svg class='remix-small'>
+                          <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#price-tag-3-line"></use>
+                        </svg>
+                        {{- range (.GetTerms "tags") -}}
+                          <a href="{{ .RelPermalink }}" class="hashtags">#{{ .LinkTitle }} </a> 
+                        {{- end -}}
+                      </div>
+                    {{- end -}}
+
+                    {{ $readingTime := div (float .WordCount) .Site.Params.reading_speed }}
+                    {{ $readingTime = math.Ceil $readingTime }}
+                    <span data-tooltip="{{ $readingTime }} Minuten Lesezeit">
+                        <svg class='remix-small'>
+                            <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ .Site.Params.remixicon_version}}#timer-line"></use>
+                        </svg> {{ $readingTime }} Min.
+                    </span>
+                    
+                  </div>
+          
+                  {{- if ge (len .TableOfContents) 100 -}}
+                    <div class="toc widget box">
+                      <p class="title is-5">Übersicht</p>
+                      {{ .TableOfContents }}
+                    </div>
+                  {{- end -}}
+                
+            </div>
+        </div>
+    {{ end }}
 {{ end }}

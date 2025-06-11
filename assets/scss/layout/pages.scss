@@ -1,5 +1,13 @@
 @use "vars/helpers";
 @use "sass:color";
+@use "mixins/effects";
+@use "mixins/animations";
+@use "mixins/components";
+@use "mixins/responsive";
+
+body.kind-is-page .box.is-single-page {
+    background: color.adjust(helpers.$dark, $lightness: 5%);
+}
 
 body.layout-is-archive {
     .column > h2 {    
@@ -32,6 +40,83 @@ body.layout-is-archive {
         &:after {
             left: .5em;
             margin-right: -50%;
+        }
+    }
+}
+
+body.type-is-articles main.content {
+    article.box {
+        background: color.adjust(helpers.$dark, $lightness: 5%);
+        position: relative;
+    
+        .subtitle {
+          color: helpers.$gold;
+        }
+            
+        .box-content {
+        }
+    }
+
+    article.box.has-image {
+        figure.image {
+            height: calc(100% - 1.5em);
+            margin-left: -2.75em;
+            margin-top: .25em;
+            margin-right: 1.5em;
+            margin-bottom: 1.5em;
+            width: 274px;
+            float: left;
+
+            figcaption {
+                position: absolute;
+                font-size: 80%;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                display: inline-block;
+                padding: .5em;
+                bottom: 0;
+                color: helpers.$light;
+                width: 100%;
+                border-top: 1px solid rgba(color.adjust(helpers.$dark, $lightness: -10%), .5);
+                background-color: rgba(color.adjust(helpers.$dark, $lightness: -7%), .7);
+                a {
+                    color: helpers.$gold;
+                    &:hover {
+                        color: helpers.$gold-light;
+                    }
+                }
+                svg {
+                    width: 16px;
+                    height: 16px;
+                    fill: helpers.$gold;
+                    margin-right: 3px;
+                    @include animations.translate(0, 3px);
+                }
+            }
+            img {
+                @include effects.box-shadow(false, 5px, 5px, 3px, rgba(#000, .5), rgba(helpers.$light, .05));
+                border-radius: .75rem;
+                transition: 0.3s;
+                object-fit: cover;
+            }
+        }
+    }
+
+    .widget.box {
+        .ribbon {
+            position: relative;
+            width: fit-content;
+        }
+        time {
+            display: flex;
+            align-items: center;
+        }
+        svg {
+            width: 20px;
+            height: 20px;
+            fill: color.scale(helpers.$dark, $lightness: 40%);
+            margin-right: 2px;
         }
     }
 }

@@ -3,7 +3,6 @@
 @use "mixins/effects";
 @use "mixins/animations";
 
-// THANKS: https://codepen.io/wikiki/pen/XagrqJ
 .has-ribbon {
     position: relative;
 }
@@ -23,37 +22,13 @@
     a:hover {
       color: color.adjust(helpers.$light, $lightness: 5%);
       background-color: helpers.$gold !important;
-      @include effects.box-shadow(false, 3px, 3px, 5px, rgba(#000, .3), rgba(helpers.$light, .15));
+      @include effects.box-shadow(true, 3px, 3px, 5px, rgba(#000, .3), rgba(helpers.$light, .3));   
     }
 
     a {
       display: block;
       padding: .4em 1.1em .4em 1em;
-      color: helpers.$light;
-      @include effects.box-shadow(true, 3px, 3px, 5px, rgba(#000, .3), rgba(helpers.$light, .3));      
+      color: helpers.$light;   
+      @include effects.box-shadow(false, 3px, 3px, 5px, rgba(#000, .3), rgba(helpers.$light, .15));
     }
 }
-
-  
-//   .is-single-page {
-//     color: helpers.$gold;
-//     border: none;
-//     text-transform: uppercase;
-//     font-weight: 600;
-//     top: .3em;
-//     left: -1.5em;
-//     @include helpers.font-bold;
-//     font-size: .8em;
-//     z-index: unset;
-//     &:after {
-//       content: "";
-//       width: 0px;
-//       height: 0px;
-//       position: absolute;
-//       margin-left: 9px;
-//       margin-top: -1.5em;
-//       border-style: solid;
-//       border-width: 0 0 1.5em 1.5em;
-//       border-color: transparent transparent helpers.$gold-dark transparent;
-//     }
-//   }

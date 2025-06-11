@@ -1,6 +1,7 @@
 ---
 title: "RSS Test"
 description: "SEO Description and Subheader for single posts" # Not more than 160 characters!
+subtitle: "Subheader for single posts"
 summary: "" # if content has shortcodes, than the excerpt will render it. USE <!--start-summary--> comment in content or summary here instead
 date: 2020-12-31T19:58:30+01:00
 draft: false
@@ -46,18 +47,23 @@ stickers:
 
 ---
 
-
-
-
-![](20210109_215313.png)
-
 <!--start-summary-->
 ## Eine Überschrift
 Dies ist ein Typoblindtext. An ihm kann man sehen,
 ob alle Buchstaben da sind und wie sie aussehen.
 Manchmal benutzt man Worte wie Hamburgefonts, Rafgenduks oder Handgloves, um Schriften zu testen. Manchmal Sätze, die alle Buchstaben des Alphabets enthalten – man nennt diese Sätze »Pangrams«. Sehr bekannt ist dieser: The quick brown fox jumps over the lazy old dog. Oft werden in Typoblindtexte auch fremdsprachige Satzteile eingebaut (AVAIL® and Wefox™ are testing aussi la Kerning), um die Wirkung in anderen Sprachen zu testen. In Lateinisch sieht zum Beispiel fast jede Schrift gut aus.
 
-![Alt Attribute Description for Screen Readers](cover.jpg "Title and Image Descirption, shown on the frontpage <a href='#'>Testlink</a>")
+
+Dies ist ein Typoblindtext. An ihm kann man sehen,
+ob alle Buchstaben da sind und wie sie aussehen.
+Manchmal benutzt man Worte wie Hamburgefonts, Rafgenduks oder Handgloves, um Schriften zu testen. Manchmal Sätze, die alle Buchstaben des Alphabets enthalten – man nennt diese Sätze »Pangrams«. Sehr bekannt ist dieser: The quick brown fox jumps over the lazy old dog. Oft werden in Typoblindtexte auch fremdsprachige Satzteile eingebaut (AVAIL® and Wefox™ are testing aussi la Kerning), um die Wirkung in anderen Sprachen zu testen. In Lateinisch sieht zum Beispiel fast jede Schrift gut aus.
+
+
+Dies ist ein Typoblindtext. An ihm kann man sehen,
+ob alle Buchstaben da sind und wie sie aussehen.
+Manchmal benutzt man Worte wie Hamburgefonts, Rafgenduks oder Handgloves, um Schriften zu testen. Manchmal Sätze, die alle Buchstaben des Alphabets enthalten – man nennt diese Sätze »Pangrams«. Sehr bekannt ist dieser: The quick brown fox jumps over the lazy old dog. Oft werden in Typoblindtexte auch fremdsprachige Satzteile eingebaut (AVAIL® and Wefox™ are testing aussi la Kerning), um die Wirkung in anderen Sprachen zu testen. In Lateinisch sieht zum Beispiel fast jede Schrift gut aus.
+
+![Alt Attribute Description for Screen Readers](20210109_215313.png "Title and Image Descirption, shown on the frontpage <a href='#'>Testlink</a>")
 
 ## Zweite Überschrift
 Dies ist ein Typoblindtext. An ihm kann man sehen, ob alle Buchstaben da sind und wie sie aussehen. Manchmal benutzt man Worte wie Hamburgefonts, Rafgenduks oder Handgloves, um Schriften zu testen. Manchmal Sätze, die alle Buchstaben des Alphabets enthalten – man nennt diese Sätze »Pangrams«. Sehr bekannt ist dieser: The quick brown fox jumps over the lazy old dog. Oft werden in Typoblindtexte auch fremdsprachige Satzteile eingebaut (AVAIL® and Wefox™ are testing aussi la Kerning), um die Wirkung in anderen Sprachen zu testen. In Lateinisch sieht zum Beispiel fast jede Schrift gut aus.
