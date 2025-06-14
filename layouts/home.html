@@ -6,25 +6,26 @@
     <div class="fixed-grid has-1-cols-mobile has-1-cols-tablet has-2-cols-desktop has-2-cols-widescreen has-3-cols-fullhd">
         <div class="grid is-column-gap-7 is-row-gap-4">
 
-            {{/* Get all articles */}}
-            {{ $articlePages := where .Site.RegularPages "Section" "articles" }}
+            {{/* Get paginated articles */}}
+            {{ $paginator := .Paginate (where .Site.RegularPages "Section" "articles") }}
             
             {{/* First show articles with weight parameter, sorted by weight */}}
-            {{ range (where $articlePages "Params.weight" "gt" 0).ByWeight }}
+            {{ range (where $paginator.Pages "Params.weight" "gt" 0).ByWeight }}
                 {{ partial "card" . }}
             {{ end }}
             
             {{/* Then show the rest of the articles sorted by publish date */}}
-            {{ range (where $articlePages "Params.weight" "le" 0).ByPublishDate.Reverse }}
+            {{ range (where $paginator.Pages "Params.weight" "le" 0).ByPublishDate.Reverse }}
                 {{ partial "card" . }}
             {{ end }}
             
             {{/* Finally show articles without weight parameter */}}
-            {{ range (where $articlePages "Params.weight" "eq" nil).ByPublishDate.Reverse }}
+            {{ range (where $paginator.Pages "Params.weight" "eq" nil).ByPublishDate.Reverse }}
                 {{ partial "card" . }}
             {{ end }}
 
         </div>
     </div>
 
+    {{ partial "pagination" . }}
 {{ end }}

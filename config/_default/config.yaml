@@ -35,6 +35,11 @@ markup:
         superscript:
           enable: true
 
+pagination:
+  disableAliases: true
+  pagerSize: 6
+  path: page
+
 permalinks:
   articles: "/:section/:year/:month/:slug/"
   year: "/articles/:slug/"
