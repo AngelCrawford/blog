@@ -210,3 +210,14 @@ footer.footer {
     opacity: .7;
   }
 }
+
+
+
+@include responsive.tablet {
+  footer.footer .title.slogan {
+    font-size: 1.5rem;
+    &::before, &::after {
+      font-size: 1rem;
+    }
+  }
+}

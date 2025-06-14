@@ -154,3 +154,32 @@ body.type-is-articles main.content {
         }
     }
 }
+
+@include responsive.mobile {
+    body.type-is-articles main.content article.box {
+      min-width: unset;
+      width: unset;
+      max-width: 100%;
+      display: block;
+  
+      &.has-image {
+        display: block;
+
+        figure.image {
+            max-height: 250px;
+            min-height: 150px;
+            margin-left: -1.25rem;
+            margin-top: -1.25rem;
+            width: calc(100% + 2.5rem);
+            float: unset;
+        }
+      }
+  
+      &:not(.has-image) {
+        margin-left: unset;
+        width: 100%;
+        min-width: 100%;
+      }
+    }
+    
+  }

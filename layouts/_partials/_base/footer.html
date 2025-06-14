@@ -13,7 +13,6 @@
 
 <div class="columns is-multiline">
     <div class="column is-12">
-
         <div class="has-text-centered">
             <div class="title is-3 slogan">
                 Du willst schreiben - ohne einen eignen Blog zu veröffentlichen?<br />
@@ -22,17 +21,17 @@
         </div>
     </div>
 
-    <div class="column is-3 social">
+    <div class="column is-12-mobile is-6-tablet is-6-desktop is-3-widescreen is-3-fullhd social">
         <p class="title is-5">Article Time</p>
         <div class="has-text-centered logo"><img src="/images/header/clock_small.webp" width="150" height="150" alt="Logo" title="Logo" /></div>
         <div class="icons has-text-centered">Social Follow</div>
     </div>
 
-    <div class="column is-3">
+    <div class="column is-12-mobile is-6-tablet is-6-desktop is-3-widescreen is-3-fullhd ">
         <p class="title is-5">Most Loved Widgets</p>
     </div>
 
-    <div class="column is-3 stats">
+    <div class="column is-hidden-touch is-hidden-desktop-only is-12-mobile is-6-tablet is-6-desktop is-3-widescreen is-3-fullhd  stats">
         <p class="title is-5">Statistik</p>
         <p>Momentan befinden sich {{ len (where .Site.RegularPages "Section" "articles") }} <a href="/" title="Artikel">Artikel</a> auf dieser Seite.</p>
         <ul>             
@@ -51,7 +50,7 @@
         </ul>
     </div>
 
-    <div class="column is-3">
+    <div class="column is-hidden-touch is-hidden-desktop-only is-12-mobile is-6-tablet is-6-desktop is-3-widescreen is-3-fullhd ">
         {{ partial "widgets/archive" (dict "context" . "archiveTitle" "Archiv") }}
     </div>
 </div>

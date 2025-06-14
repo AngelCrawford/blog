@@ -1,130 +1,119 @@
-<div class="cell {{ if .Resources }} {{ if eq .Kind "term" }} is-row-span-2 {{ end }} {{ end }}">
-    {{ $cssClasses := "card is-horizontal" }}
-    {{ if .Resources }}{{ $cssClasses = add $cssClasses " has-image" }}{{ end }}
-    {{ if .GetTerms "categories" }}{{ $cssClasses = add $cssClasses " has-ribbon" }}{{ end }}
-    {{ if eq .Params.weight 1 }}{{ $cssClasses = add $cssClasses " is-fixed" }}{{ end }}
-    {{ if eq .Params.format "log" }}{{ $cssClasses = add $cssClasses " is-log" }}{{ end }}
-    <article class="{{ $cssClasses }}">
-        <!-- TODO: Footer generell weiter machen, Quote erhält ebenfalls ein Icon -->
+{{ if eq .Type "articles" }}
 
-        {{- if .GetTerms "categories" -}}
-            {{- range first 1 (.GetTerms "categories") -}}
-                <div class="ribbon">
-                    <a href="{{ .RelPermalink }}" style="{{if .Params.categoryColor }}background-color:{{.Params.categoryColor }}{{end}}">{{- .LinkTitle -}}</a>
+    <div class='cell {{ if .Resources }} {{ if eq .Kind "term" }} is-row-span-2 {{ end }} {{ end }}'>
+        {{ $cssClasses := "card is-horizontal" }}
+        {{ if .Resources }}{{ $cssClasses = add $cssClasses " has-image" }}{{ end }}
+        {{ if .GetTerms "categories" }}{{ $cssClasses = add $cssClasses " has-ribbon" }}{{ end }}
+        {{ if eq .Params.weight 1 }}{{ $cssClasses = add $cssClasses " is-fixed" }}{{ end }}
+        {{ if eq .Params.format "log" }}{{ $cssClasses = add $cssClasses " is-log" }}{{ end }}
+        <article class="{{ $cssClasses }}">
+            <!-- TODO: Footer generell weiter machen, Quote erhält ebenfalls ein Icon -->
+
+            {{- if .GetTerms "categories" -}}
+                {{- range first 1 (.GetTerms "categories") -}}
+                    <div class="ribbon">
+                        <a href="{{ .RelPermalink }}" style="{{if .Params.categoryColor }}background-color:{{.Params.categoryColor }}{{end}}">{{- .LinkTitle -}}</a>
+                    </div>
+                {{- end -}}
+            {{- end -}}
+
+            {{- if .Resources -}}
+                <div class="card-image">
+                    <figure class="image is-2by3">
+                        {{- $img := (.Resources.ByType "image").GetMatch "cover*" -}}
+                        {{- with $img -}}
+                            {{- if not (eq $.Params.format "log") }}<a href="{{ $.Permalink }}">{{- end -}}
+                                {{ if eq $.Params.format "log" }}
+                                    <!-- Resize to a width of 600px and a height of 480px -->
+                                    {{ $image := $img.Process "fill 600x480 webp" }}
+                                    <picture>
+                                        <img src="{{ $image.RelPermalink }}" alt="{{ $.Title }}" width="600" height="480" loading="lazy">
+                                    </picture>
+                                {{ else }}
+                                    {{ $portraitImage := $img.Process "fill 320x480 webp" }}
+                                    {{ $landscapeImage := $img.Process "fill 480x320 webp" }}
+                                    <picture>
+                                        <source media="(max-width: 640px)" srcset="{{ $landscapeImage.RelPermalink }}">
+                                        <source media="(min-width: 641px)" srcset="{{ $portraitImage.RelPermalink }}">
+                                        <img src="{{ $portraitImage.RelPermalink }}" alt="{{ $.Title }}" loading="lazy">
+                                    </picture>
+                                {{ end }}
+                            {{- if not (eq $.Params.format "log") }}</a>{{- end -}}
+
+                            {{ with .Exif }}{{ with .Tags.ImageDescription  }}
+                                <figcaption>
+                                    <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ $.Site.Params.remixicon_version}}#information-line"></use></svg>
+                                    {{ . | safeHTML }}
+                                </figcaption>
+                            {{ end }}{{ end }}
+                        {{- end -}}
+                    </figure>
                 </div>
             {{- end -}}
-        {{- end -}}
 
-        {{- if .Resources -}}
-            <div class="card-image">
-                <figure class="image is-2by3">
-                    {{- $img := (.Resources.ByType "image").GetMatch "cover*" -}}
-                    {{- with $img -}}
-                        {{- if not (eq $.Params.format "log") }}<a href="{{ $.Permalink }}">{{- end -}}
-                            {{ if eq $.Params.format "log" }}
-                                <!-- Resize to a width of 600px and a height of 480px -->
-                                {{ $image := $img.Process "fill 600x480 webp" }}
-                                <picture>
-                                    <img src="{{ $image.RelPermalink }}" alt="{{ $.Title }}" width="600" height="480" loading="lazy">
-                                </picture>
-                            {{ else if eq $.Kind "term" }}
-                                {{ $image := $img.Process "fill 480x320 webp" }}
-                                <picture>
-                                    <img src="{{ $image.RelPermalink }}" alt="{{ $.Title }}" width="480" height="320" loading="lazy">
-                                </picture>
-                            {{ else }}
-                                {{ $portraitImage := $img.Process "fill 320x480 webp" }}
-                                {{ $landscapeImage := $img.Process "fill 480x320 webp" }}
-                                <picture>
-                                    <source media="(max-width: 640px)" srcset="{{ $landscapeImage.RelPermalink }}">
-                                    <source media="(min-width: 641px)" srcset="{{ $portraitImage.RelPermalink }}">
-                                    <img src="{{ $portraitImage.RelPermalink }}" alt="{{ $.Title }}" loading="lazy">
-                                </picture>
-                            {{ end }}
-                        {{- if not (eq $.Params.format "log") }}</a>{{- end -}}
-
-                        {{ with .Exif }}{{ with .Tags.ImageDescription  }}
-                            <figcaption>
-                                <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ $.Site.Params.remixicon_version}}#information-line"></use></svg>
-                                {{ . | safeHTML }}
-                            </figcaption>
-                        {{ end }}{{ end }}
-                    {{- end -}}
-                </figure>
-            </div>
-        {{- end -}}
-
-        <div class="card-content">
-            <h2 class="title is-5"><a href="{{ .RelPermalink }}" style="{{if .Params.categoryColor }}color:{{.Params.categoryColor }};{{end}}">{{ .Title }}</a></h2>
-            
-            <p class="subtitle">
-                {{ if eq .Type "authors" }}
-                    {{ if .Params.birthdate }}
-                        <svg class="remix-small">
-                            <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#cake-line"></use>
-                        </svg>
-                        {{ .Params.birthdate }}
-                    {{ end }}
-                {{ else }}
-                    <time datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}" title="Veröffentlichungsdatum">
-                        <svg class='remix-small'>
-                            <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ .Site.Params.remixicon_version}}#calendar-line"></use>
-                        </svg> {{ .Date.Format "02.01.06" }}
-                    </time>
-                    {{ if not ( eq (.Date.Format "02.01.06") (.Lastmod.Format "02.01.06") ) }}
-                        <time class="updated" datetime="{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}" title="Letztes Bearbeitungsdatum">
-                            <svg class='remix-small'>
-                                <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ .Site.Params.remixicon_version}}#pencil-line"></use>
-                            </svg> {{ .Lastmod.Format "02.01.06" }}
-                        </time>
-                    {{ end }}
-                {{ end }}
-            </p>
+            <div class="card-content">
+                {{ if ne .Params.format "log" }}
+                    <h2 class="title is-5"><a href="{{ .RelPermalink }}" style="{{if .Params.categoryColor }}color:{{.Params.categoryColor }};{{end}}">{{ .Title }}</a></h2>
                 
-            <div class="content">
-                {{ if ne .Kind "term" }}
+                    <p class="subtitle">
+                        <time datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}" title="Veröffentlichungsdatum">
+                            <svg class='remix-small'>
+                                <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ .Site.Params.remixicon_version}}#calendar-line"></use>
+                            </svg> {{ .Date.Format "02.01.06" }}
+                        </time>
+                        {{ if not ( eq (.Date.Format "02.01.06") (.Lastmod.Format "02.01.06") ) }}
+                            <time class="updated" datetime="{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}" title="Letztes Bearbeitungsdatum">
+                                <svg class='remix-small'>
+                                    <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ .Site.Params.remixicon_version}}#pencil-line"></use>
+                                </svg> {{ .Lastmod.Format "02.01.06" }}
+                            </time>
+                        {{ end }}
+                    </p>
+                {{- end -}}
+                    
+                <div class="content">
                     <!-- If article has no image, show more content instead -->
                     {{- if not .Resources -}}
                         {{ .Summary | plainify | truncate 1000 }}
                     {{ else }}
                         {{ .Summary | plainify | truncate 500 }}
                     {{- end -}}
-                {{ else if eq .Type "authors" }}
-
-                    {{ .Kind }}
-                    {{ .Type }}
-                    {{ if eq $.Parent.Kind "taxonomy" }}
-                        {{ len .Pages }} Artikel
-                    {{ else }}
-                        {{ .Summary | plainify | truncate 100 }}
-                    {{ end }}
-                {{ else }}
-                    {{ len .Pages }} Artikel
-                {{ end }}
-            </div>
-            
-            {{ if ne .Params.format "log" }}
-                {{- if (.GetTerms "tags") -}}
-                    <div class="tags-wrapper">
-                        <svg class='remix-small'>
-                            <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ .Site.Params.remixicon_version}}#price-tag-3-line"></use>
-                        </svg>
-                        {{- range (.GetTerms "tags") -}}
-                            <a href="{{ .RelPermalink }}">#{{ .LinkTitle }} </a> 
-                        {{- end -}}
-                    </div>
+                </div>
+                
+                {{ if ne .Params.format "log" }}
+                    {{- if (.GetTerms "tags") -}}
+                        <div class="tags-wrapper">
+                            <svg class='remix-small'>
+                                <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ .Site.Params.remixicon_version}}#price-tag-3-line"></use>
+                            </svg>
+                            {{- range (.GetTerms "tags") -}}
+                                <a href="{{ .RelPermalink }}">#{{ .LinkTitle }} </a> 
+                            {{- end -}}
+                        </div>
+                    {{- end -}}
                 {{- end -}}
-            {{- end -}}
-        </div>
+            </div>
 
-        <footer class="card-footer">
-            {{ $list := .GetTerms "authors" }}
-            {{ $len := len $list }}
-            <div class="author-img {{- if gt $len 1 }} more-authors{{ end -}}">
-                {{- if gt $len 1 -}}
-                    <div class="author-opener">{{ $len }}</div>
-                    <div class="more-authors-img">
-                        {{- range first 3 (.GetTerms "authors") -}}
+            <footer class="card-footer">
+                {{ $list := .GetTerms "authors" }}
+                {{ $len := len $list }}
+                <div class="author-img {{- if gt $len 1 }} more-authors{{ end -}}">
+                    {{- if gt $len 1 -}}
+                        <div class="author-opener">{{ $len }}</div>
+                        <div class="more-authors-img">
+                            {{- range first 3 (.GetTerms "authors") -}}
+                                <figure class="image is-48x48">
+                                    <a href="{{ .Permalink }}">
+                                        {{- range first 1 (.Resources.ByType "image") -}}
+                                            {{- $img := .Fill "48x48" -}}
+                                            <img class="is-rounded" src="{{ $img.RelPermalink }}" alt="{{ $.Title }}" width="48" height="48" loading="lazy">
+                                        {{- end -}}
+                                    </a>
+                                </figure>
+                            {{- end -}}
+                        </div>
+                    {{- else -}}
+                        {{- range first 1 (.GetTerms "authors") -}}
                             <figure class="image is-48x48">
                                 <a href="{{ .Permalink }}">
                                     {{- range first 1 (.Resources.ByType "image") -}}
@@ -134,88 +123,172 @@
                                 </a>
                             </figure>
                         {{- end -}}
-                    </div>
-                {{- else -}}
-                    {{- range first 1 (.GetTerms "authors") -}}
-                        <figure class="image is-48x48">
-                            <a href="{{ .Permalink }}">
-                                {{- range first 1 (.Resources.ByType "image") -}}
-                                    {{- $img := .Fill "48x48" -}}
-                                    <img class="is-rounded" src="{{ $img.RelPermalink }}" alt="{{ $.Title }}" width="48" height="48" loading="lazy">
-                                {{- end -}}
-                            </a>
-                        </figure>
                     {{- end -}}
-                {{- end -}}
-            </div>
+                </div>
 
-            {{- if not (eq .Params.format "log") }}
-                <a class="button round-button inset" title="Weiterlesen" href="{{ .RelPermalink }}">
-                    <svg class='remix-small'>
-                        <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ .Site.Params.remixicon_version}}#arrow-right-s-line"></use>
-                    </svg>
-                </a>
+                {{- if not (eq .Params.format "log") }}
+                    <a class="button round-button inset" title="Weiterlesen" href="{{ .RelPermalink }}">
+                        <svg class='remix-small'>
+                            <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ .Site.Params.remixicon_version}}#arrow-right-s-line"></use>
+                        </svg>
+                    </a>
+                {{- end -}}
+
+                <div class="card-footer-item log-date">
+                    {{- if eq .Params.format "log" -}}
+                        <time datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}" data-tooltip="Veröffentlichungsdatum" title="Veröffentlichungsdatum">
+                            <svg class='remix-small'>
+                                <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ .Site.Params.remixicon_version}}#calendar-line"></use>
+                            </svg> {{ .Date.Format "02.01.06" }}
+                        </time>
+                        {{ if not ( eq (.Date.Format "02.01.06") (.Lastmod.Format "02.01.06") ) }}
+                            <time class="updated" datetime="{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}" data-tooltip="Letztes Bearbeitungsdatum" title="Letztes Bearbeitungsdatum">
+                                <svg class='remix-small'>
+                                    <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ .Site.Params.remixicon_version}}#pencil-line"></use>
+                                </svg> {{ .Lastmod.Format "02.01.06" }}
+                            </time>
+                        {{ end }}
+                    {{- else -}}
+                        {{ $readingTime := div (float .WordCount) .Site.Params.reading_speed }}
+                        {{ $readingTime = math.Ceil $readingTime }}
+                        <span data-tooltip="{{ $readingTime }} Minuten Lesezeit">
+                            <svg class='remix-small'>
+                                <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ .Site.Params.remixicon_version}}#timer-line"></use>
+                            </svg> {{ $readingTime }} Min.
+                        </span>
+                    {{- end -}}
+                </div>
+
+                <div class="card-footer-item formats">
+                    {{- if .Params.weight -}}
+                        <!-- TODO: Add tooltip -->
+                        <span data-tooltip="Angepinnter Artikel">
+                            <svg class='remix-small'>
+                                <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ .Site.Params.remixicon_version}}#pushpin-line"></use>
+                            </svg>
+                        </span>
+                    {{- else if eq .Params.format "log" -}}
+                        <span data-tooltip="Log">
+                            <svg class='remix-small'>
+                                <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ .Site.Params.remixicon_version}}#lightbulb-flash-line"></use>
+                            </svg>
+                        </span>
+                    {{ else }}
+                        <span data-tooltip="Normaler Artikel">
+                            <svg class='remix-small'>
+                                <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ .Site.Params.remixicon_version}}#article-line"></use>
+                            </svg>
+                        </span>
+                    {{- end -}}
+                </div>
+            </footer>
+        </article>
+    </div>
+    
+{{ else if or (eq .Type "tags") (eq .Type "categories") }}
+
+    <div class='cell {{ if .Resources }} {{ if eq .Kind "term" }} is-row-span-2 {{ end }} {{ end }}'>
+        <article class="card is-horizontal {{ if .Resources }}has-image{{ end }}">
+            {{- if .Resources -}}
+                <div class="card-image">
+                    <figure class="image is-2by3">
+                        {{- $img := (.Resources.ByType "image").GetMatch "cover*" -}}
+                        {{- with $img -}}
+                            <a href="{{ $.Permalink }}">
+                                {{ $portraitImage := $img.Process "fill 320x480 webp" }}
+                                {{ $landscapeImage := $img.Process "fill 480x320 webp" }}
+                                <picture>
+                                    <source media="(max-width: 640px)" srcset="{{ $landscapeImage.RelPermalink }}">
+                                    <source media="(min-width: 641px)" srcset="{{ $portraitImage.RelPermalink }}">
+                                    <img src="{{ $portraitImage.RelPermalink }}" alt="{{ $.Title }}" loading="lazy">
+                                </picture>
+                            </a>
+                            {{ with .Exif }}{{ with .Tags.ImageDescription  }}
+                                <figcaption>
+                                    <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ $.Site.Params.remixicon_version}}#information-line"></use></svg>
+                                    {{ . | safeHTML }}
+                                </figcaption>
+                            {{ end }}{{ end }}
+                        {{- end -}}
+                    </figure>
+                </div>
+            {{- end -}}
+            <div class="card-content">
+                <h2 class="title is-5"><a href="{{ .RelPermalink }}" style="{{if .Params.categoryColor }}color:{{.Params.categoryColor }};{{end}}">{{ .Title }}</a></h2>
+                
+                <div class="content">
+                    {{ len .Pages }} Artikel
+                </div>
+            </div>
+        </article>
+    </div>
+
+{{ else if eq .Type "authors" }}
+
+    <div class='cell'>
+        <article class="card is-horizontal {{ if .Resources }} has-image{{ end }} is-author">
+            {{- if .Resources -}}
+                <div class="card-image">
+                    <figure class="image is-2by3">
+                        {{- $img := (.Resources.ByType "image").GetMatch "cover*" -}}
+                        {{- with $img -}}
+                            <a href="{{ $.Permalink }}">
+                                {{ $image := $img.Process "fill 480x320 webp" }}
+                                <picture>
+                                    <img src="{{ $image.RelPermalink }}" alt="{{ $.Title }}" width="480" height="320" loading="lazy">
+                                </picture>
+                            </a>
+                            {{ with .Exif }}{{ with .Tags.ImageDescription  }}
+                                <figcaption>
+                                    <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ $.Site.Params.remixicon_version}}#information-line"></use></svg>
+                                    {{ . | safeHTML }}
+                                </figcaption>
+                            {{ end }}{{ end }}
+                        {{- end -}}
+                    </figure>
+                </div>
             {{- end -}}
 
-            <div class="card-footer-item log-date">
-                {{- if eq .Params.format "log" -}}
-                    <time datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}" data-tooltip="Veröffentlichungsdatum" title="Veröffentlichungsdatum">
-                        <svg class='remix-small'>
-                            <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ .Site.Params.remixicon_version}}#calendar-line"></use>
-                        </svg> {{ .Date.Format "02.01.06" }}
-                    </time>
-                    {{ if not ( eq (.Date.Format "02.01.06") (.Lastmod.Format "02.01.06") ) }}
-                        <time class="updated" datetime="{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}" data-tooltip="Letztes Bearbeitungsdatum" title="Letztes Bearbeitungsdatum">
-                            <svg class='remix-small'>
-                                <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ .Site.Params.remixicon_version}}#pencil-line"></use>
-                            </svg> {{ .Lastmod.Format "02.01.06" }}
-                        </time>
+            <div class="card-content">
+                <h2 class="title is-5"><a href="{{ .RelPermalink }}">{{ .Title }}</a></h2>
+                
+                <p class="subtitle">
+                    {{ if .Params.birthdate }}
+                        <svg class="remix-small">
+                            <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#cake-line"></use>
+                        </svg>
+                        {{ .Params.birthdate }}
                     {{ end }}
-                {{- else -}}
-                    {{ $readingTime := div (float .WordCount) .Site.Params.reading_speed }}
-                    {{ $readingTime = math.Ceil $readingTime }}
-                    <span data-tooltip="{{ $readingTime }} Minuten Lesezeit">
-                        <svg class='remix-small'>
-                            <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ .Site.Params.remixicon_version}}#timer-line"></use>
-                        </svg> {{ $readingTime }} Min.
-                    </span>
-                {{- end -}}
+                </p>
+                    
+                <div class="content">
+                    <div class="author-summary">{{ .Summary | plainify | truncate 200 }}</div>
+                    <div class="author-articles">{{ len .Pages }} Artikel</div>
+                </div>
             </div>
 
-            <div class="card-footer-item formats">
-                {{- if .Params.weight -}}
-                    <!-- TODO: Add tooltip -->
-                    <span data-tooltip="Angepinnter Artikel">
+            <footer class="card-footer">
+                {{- if not (eq .Params.format "log") }}
+                    <a class="button round-button inset" title="Weiterlesen" href="{{ .RelPermalink }}">
                         <svg class='remix-small'>
-                            <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ .Site.Params.remixicon_version}}#pushpin-line"></use>
+                            <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ .Site.Params.remixicon_version}}#arrow-right-s-line"></use>
                         </svg>
-                    </span>
-                {{- else if eq .Params.format "log" -}}
-                    <span data-tooltip="Log">
-                        <svg class='remix-small'>
-                            <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ .Site.Params.remixicon_version}}#lightbulb-flash-line"></use>
-                        </svg>
-                    </span>
-                {{ else }}
-                    <span data-tooltip="Normaler Artikel">
-                        <svg class='remix-small'>
-                            <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ .Site.Params.remixicon_version}}#article-line"></use>
-                        </svg>
-                    </span>
+                    </a>
                 {{- end -}}
-            </div>
 
-            {{ with .Params.socials }}
-                {{ range . }}
-                    <div class="card-footer-item author">
-                        <a data-tooltip="{{ .name }}" href="{{ .src }}" target="_blank" rel="noreferrer">
-                            <svg class='remix-small'>
-                                <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ $.Site.Params.remixicon_version}}#{{ .icon }}-line"></use>
-                            </svg>
-                        </a>
-                    </div>
+                {{ with .Params.socials }}
+                    {{ range . }}
+                        <div class="card-footer-item author">
+                            <a data-tooltip="{{ .name }}" href="{{ .src }}" target="_blank" rel="noreferrer">
+                                <svg class='remix-small'>
+                                    <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ $.Site.Params.remixicon_version}}#{{ .icon }}-line"></use>
+                                </svg>
+                            </a>
+                        </div>
+                    {{ end }}
                 {{ end }}
-            {{ end }}
-        </footer>
-    </article>
-</div>
+            </footer>
+        </article>
+    </div>
+
+{{ end }}

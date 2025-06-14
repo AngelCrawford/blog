@@ -81,7 +81,26 @@ main.content.section {
             }
             p:last-child {
                 margin-bottom: 0;
-                }
             }
         }
     }
+}
+
+body.type-is-authors {
+    .single-author-socials {
+        display: flex;
+        gap: 1em;
+        margin-bottom: 1em;
+
+        svg {
+            width: 40px;
+            height: 40px;
+            fill: helpers.$gold;
+            transition: fill .3s ease-out;
+
+            &:hover {
+                fill: helpers.$gold-light;
+            }
+        }
+    }
+}

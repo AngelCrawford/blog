@@ -31,7 +31,7 @@
         </div>
     {{ else if eq .Page.Type "articles" }}
         <div class="columns is-multiline">
-            <div class="column is-9">
+            <div class="column is-12-mobile is-12-tablet is-12-desktop is-9-widescreen is-9-fullhd">
                 <article class="box {{ if .Resources }}has-image{{ end }}">
             
                     {{- if .Resources -}}
@@ -63,7 +63,7 @@
 
                 </article>
             </div>
-            <div class="column is-3">
+            <div class="column is-12-mobile is-12-tablet is-12-desktop is-3-widescreen is-3-fullhd">
 
                 <div class="info widget box">
                     <p class="title is-5">Artikel</p>
@@ -127,7 +127,7 @@
                     {{ $list := .GetTerms "authors" }}
                     {{ $len := len $list }}
                     {{ range (.GetTerms "authors") }}
-                        <aside class="is-small author {{ if .Resources }}has-image{{else}}no-image{{ end }} mt-5">
+                        <aside class="is-small author-single-page {{ if .Resources }}has-image{{else}}no-image{{ end }} mt-5">
                             {{ partial "card" . }}
                         </aside>
                     {{ end }}

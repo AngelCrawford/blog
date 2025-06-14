@@ -5,12 +5,16 @@
 @use "mixins/animations";
 
 button, a.button {
-    // transition: background, border .3s ease-out;
     font-weight: 600;
-    // @include effects.box-shadow(false, 5px, 5px, 5px, rgba(#000, .3), rgba($text, .07));
+    @include effects.box-shadow(false, 5px, 5px, 5px, rgba(#000, .3), rgba(helpers.$gold, .07));
+    transition: color .3s ease-out, background .2s ease-out;
 
-    svg {
-        fill: hsl(var(--bulma-button-h),var(--bulma-button-s),var(--bulma-button-l));
+    &:not(.round-button):not(.is-round) svg {
+        fill: helpers.$gold-dark;
+        width: 25px;
+        height: 25px;
+        @include animations.translate(-5px, 0);
+        transition: fill .3s ease-out;
     }
     
     // &:hover, &:focus {
@@ -18,7 +22,15 @@ button, a.button {
     // }
 
     &.is-primary {
-        svg {fill: hsl(var(--bulma-button-h),var(--bulma-button-s),var(--bulma-button-l));}
+
+        &.is-outlined {
+            border-color: helpers.$gold;
+            background-color: color.adjust(helpers.$dark, $lightness: -2%);
+        }
+        
+        svg {
+            fill: helpers.$gold-dark;
+        }
     }
 
     &.round-button {

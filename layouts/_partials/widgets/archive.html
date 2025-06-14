@@ -16,4 +16,16 @@
         {{ $.context.Scratch.Delete "yearIndexArchive" }}
       {{ end }}
     </ul>
+
+    <!-- Show Button only in the footer, not on the archive page -->
+    <div class="is-pulled-right">
+      {{ if not (eq .context.RelPermalink "/pages/archive/") }}
+          <a href="/pages/archive/" class="button is-primary is-outlined">
+              <svg class='remix-small'>
+                  <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#bookmark-line"></use>
+              </svg>
+              Archiv
+          </a>
+      {{ end }}
+    </div>
 </div>
