@@ -15,7 +15,7 @@ $('#back-to-top').click(function () { // Klick auf den Button
   return false;
 });
 
-// Handle visited articles
+// ***************** Handle visited articles
 // Store current page as visited (only if it's an article)
 const currentPath = window.location.pathname;
 
@@ -50,6 +50,37 @@ for (let i = 0; i < links.length; i++) {
   }
 }
 
+// ***************** Handle new articles
+// Function to mark articles as new if they are not older than X days
+function markNewArticles(daysThreshold) {
+  // Get all article cards
+  const articleCards = document.querySelectorAll('article.card.is-horizontal');
+  
+  // Current date
+  const currentDate = new Date();
+  
+  // Process each article
+  articleCards.forEach(article => {
+    // Find the time element inside the article
+    const timeElement = article.querySelector('time[datetime]');
+    
+    if (timeElement) {
+      // Get the article date from the datetime attribute
+      const articleDateStr = timeElement.getAttribute('datetime');
+      const articleDate = new Date(articleDateStr);
+      
+      // Calculate the difference in days
+      const diffTime = currentDate - articleDate;
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      
+      // If the article is not older than the threshold, mark it as new
+      if (diffDays <= daysThreshold) {
+        article.classList.add('is-new');
+      }
+    }
+  });
+}
+markNewArticles(7);
 
 // ***************** Footer Reveal Effect
 // Function to adjust body padding based on footer height

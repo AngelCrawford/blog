@@ -3,7 +3,7 @@ title: "RSS Test"
 description: "SEO Description and Subheader for single posts" # Not more than 160 characters!
 subtitle: "Subheader for single posts"
 summary: "" # if content has shortcodes, than the excerpt will render it. USE <!--start-summary--> comment in content or summary here instead
-date: 2020-12-31T19:58:30+01:00
+date: 2025-06-12T19:58:30+01:00
 # lastmod: 2025-12-31T19:58:30+01:00
 draft: false
 tags:
