@@ -120,11 +120,12 @@ article.card.is-horizontal {
     //   }
     // }
 
-    button.round-button {
+    .button.round-button {
       position: absolute;
       bottom: 1.5em;
       right: 1.5em;
       z-index: 3;
+      display: inline-grid;
     }
      
     .tags-wrapper {
@@ -574,6 +575,38 @@ article.card.is-horizontal.is-log {
     width: 100%;
     min-width: 100%;
     min-height: unset;
+  }
+}
+
+// Author Single Page
+.is-small.author article.card.is-horizontal {
+  background: color.adjust(helpers.$dark, $lightness: -2%);
+  // box-shadow: none;
+
+  .card-content {
+    .title {
+      text-align: left;
+    }
+    .subtitle {
+      display: block;
+    }
+    .content {
+      text-align: left;
+    }
+    .content::after {
+      display: none;
+    }
+  }
+
+  .card-footer {
+    display: flex;
+
+    .card-footer-item {
+      &.log-date, &.formats {
+        display: none;
+      }
+      
+    }
   }
 }
 

@@ -58,17 +58,26 @@
             <h2 class="title is-5"><a href="{{ .RelPermalink }}" style="{{if .Params.categoryColor }}color:{{.Params.categoryColor }};{{end}}">{{ .Title }}</a></h2>
             
             <p class="subtitle">
-                <time datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}" title="Veröffentlichungsdatum">
-                    <svg class='remix-small'>
-                        <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ .Site.Params.remixicon_version}}#calendar-line"></use>
-                    </svg> {{ .Date.Format "02.01.06" }}
-                </time>
-                {{ if not ( eq (.Date.Format "02.01.06") (.Lastmod.Format "02.01.06") ) }}
-                    <time class="updated" datetime="{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}" title="Letztes Bearbeitungsdatum">
+                {{ if eq .Type "authors" }}
+                    {{ if .Params.birthdate }}
+                        <svg class="remix-small">
+                            <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#cake-line"></use>
+                        </svg>
+                        {{ .Params.birthdate }}
+                    {{ end }}
+                {{ else }}
+                    <time datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}" title="Veröffentlichungsdatum">
                         <svg class='remix-small'>
-                            <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ .Site.Params.remixicon_version}}#pencil-line"></use>
-                        </svg> {{ .Lastmod.Format "02.01.06" }}
+                            <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ .Site.Params.remixicon_version}}#calendar-line"></use>
+                        </svg> {{ .Date.Format "02.01.06" }}
                     </time>
+                    {{ if not ( eq (.Date.Format "02.01.06") (.Lastmod.Format "02.01.06") ) }}
+                        <time class="updated" datetime="{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}" title="Letztes Bearbeitungsdatum">
+                            <svg class='remix-small'>
+                                <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ .Site.Params.remixicon_version}}#pencil-line"></use>
+                            </svg> {{ .Lastmod.Format "02.01.06" }}
+                        </time>
+                    {{ end }}
                 {{ end }}
             </p>
                 
@@ -80,6 +89,15 @@
                     {{ else }}
                         {{ .Summary | plainify | truncate 500 }}
                     {{- end -}}
+                {{ else if eq .Type "authors" }}
+
+                    {{ .Kind }}
+                    {{ .Type }}
+                    {{ if eq $.Parent.Kind "taxonomy" }}
+                        {{ len .Pages }} Artikel
+                    {{ else }}
+                        {{ .Summary | plainify | truncate 100 }}
+                    {{ end }}
                 {{ else }}
                     {{ len .Pages }} Artikel
                 {{ end }}
@@ -132,11 +150,11 @@
             </div>
 
             {{- if not (eq .Params.format "log") }}
-                <button class="round-button inset" title="Weiterlesen" href="{{ .RelPermalink }}">
+                <a class="button round-button inset" title="Weiterlesen" href="{{ .RelPermalink }}">
                     <svg class='remix-small'>
                         <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ .Site.Params.remixicon_version}}#arrow-right-s-line"></use>
                     </svg>
-                </button>
+                </a>
             {{- end -}}
 
             <div class="card-footer-item log-date">
@@ -164,7 +182,7 @@
                 {{- end -}}
             </div>
 
-            <div class="card-footer-item">
+            <div class="card-footer-item formats">
                 {{- if .Params.weight -}}
                     <!-- TODO: Add tooltip -->
                     <span data-tooltip="Angepinnter Artikel">
@@ -186,6 +204,18 @@
                     </span>
                 {{- end -}}
             </div>
+
+            {{ with .Params.socials }}
+                {{ range . }}
+                    <div class="card-footer-item author">
+                        <a data-tooltip="{{ .name }}" href="{{ .src }}" target="_blank" rel="noreferrer">
+                            <svg class='remix-small'>
+                                <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ $.Site.Params.remixicon_version}}#{{ .icon }}-line"></use>
+                            </svg>
+                        </a>
+                    </div>
+                {{ end }}
+            {{ end }}
         </footer>
     </article>
 </div>

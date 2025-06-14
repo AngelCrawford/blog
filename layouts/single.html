@@ -71,11 +71,11 @@
                     <div class="widget-content">
 
                         {{- if .GetTerms "categories" -}}
-                        {{- range first 1 (.GetTerms "categories") -}}
-                            <div class="ribbon">
-                                <a href="{{ .RelPermalink }}" style="{{if .Params.categoryColor }}background-color:{{.Params.categoryColor }}{{end}}">{{- .LinkTitle -}}</a>
-                            </div>
-                        {{- end -}}
+                            {{- range first 1 (.GetTerms "categories") -}}
+                                <div class="ribbon">
+                                    <a href="{{ .RelPermalink }}" style="{{if .Params.categoryColor }}background-color:{{.Params.categoryColor }}{{end}}">{{- .LinkTitle -}}</a>
+                                </div>
+                            {{- end -}}
                         {{- end -}}
     
                         <time datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}" data-tooltip="Veröffentlichungsdatum" title="Veröffentlichungsdatum">
@@ -122,7 +122,17 @@
                       </div>
                     </div>
                   {{- end -}}
-                
+
+                {{- if .Params.authors -}}
+                    {{ $list := .GetTerms "authors" }}
+                    {{ $len := len $list }}
+                    {{ range (.GetTerms "authors") }}
+                        <aside class="is-small author {{ if .Resources }}has-image{{else}}no-image{{ end }} mt-5">
+                            {{ partial "card" . }}
+                        </aside>
+                    {{ end }}
+                {{- end -}}
+      
             </div>
         </div>
     {{ end }}

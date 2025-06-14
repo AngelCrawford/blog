@@ -2,8 +2,6 @@
 title: "Angel Crawford"
 slug: "angel"
 birthdate: "05.02.1987"
-wikipedia: "https://en.wikipedia.org/wiki/Bruce_Willis"
-description: "The last theme you'll ever need. Maybe."
 socials:
 - icon: facebook-circle
   name: Facebook
