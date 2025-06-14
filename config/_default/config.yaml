@@ -8,7 +8,8 @@ languages:
     weight: 1
 
 enableGitInfo: true
-lastmod: ["lastmod", ":git", "date"] 
+frontmatter:
+  lastmod: ["lastmod", ":git", "date"] 
 
 taxonomies:
   category: categories

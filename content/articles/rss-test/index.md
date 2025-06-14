@@ -4,6 +4,7 @@ description: "SEO Description and Subheader for single posts" # Not more than 16
 subtitle: "Subheader for single posts"
 summary: "" # if content has shortcodes, than the excerpt will render it. USE <!--start-summary--> comment in content or summary here instead
 date: 2020-12-31T19:58:30+01:00
+# lastmod: 2025-12-31T19:58:30+01:00
 draft: false
 tags:
 - eins
