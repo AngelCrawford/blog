@@ -131,6 +131,12 @@
                             {{ partial "card" . }}
                         </aside>
                     {{ end }}
+                {{ else }}
+                    {{ with $.Site.GetPage (printf "/authors/%s" $.Site.Params.default_author) }}
+                        <aside class="is-small author-single-page {{ if .Resources }}has-image{{else}}no-image{{ end }} mt-5">
+                            {{ partial "card" . }}
+                        </aside>
+                    {{ end }}
                 {{- end -}}
       
             </div>
