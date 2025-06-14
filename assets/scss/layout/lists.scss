@@ -8,7 +8,7 @@ main.content.section {
         background: color.adjust(helpers.$dark, $lightness: -2%);
         @include effects.box-shadow(false, 5px, 5px, 5px, rgba(#000, .5), rgba(helpers.$light, .05));
         border: 1px solid rgba(helpers.$gold, .2);
-        margin-bottom: 2rem;
+        // margin-bottom: 2rem;
 
         &.has-image {
             margin-left: 1.5em;
@@ -101,6 +101,39 @@ body.type-is-authors {
             &:hover {
                 fill: helpers.$gold-light;
             }
+        }
+    }
+
+    .github-contributions {
+        height: max-content;
+        padding-bottom: 1.25em;
+        overflow-x: auto;
+
+        .github-calendar { 
+            width: fit-content;
+            height: 180px;
+            min-height: 180px !important;
+            padding: 1em;
+            margin: 0 auto;
+            // background: helpers.$dark;
+            border-radius: 0.75rem;
+
+            &.is-skeleton {
+                width: 100%;
+            }
+
+            table td {
+                border: 3px solid color.adjust(helpers.$dark, $lightness: -2%);
+            }
+        }
+
+        .Link--muted { display: none; }
+        caption.sr-only { display: none; }
+        .ContributionCalendar-day[data-level='0'] {background-color: color.adjust(helpers.$dark, $lightness: -5%)}
+        td.ContributionCalendar-label span[aria-hidden='true'] {color: color.adjust(helpers.$dark, $lightness: 40%)}
+
+        p {
+            height: 100%;
         }
     }
 }

@@ -4,16 +4,16 @@
       {{ range where .context.Site.Pages "Section" "articles" }}
           {{ range (.Pages.GroupByDate "2006") }}
     
-            {{ $.context.Scratch.Set "yearIndexArchive" .Key }}
+            {{ $.context.Store.Set "yearIndexArchive" .Key }}
                 {{ $list := .Pages }}
                 {{ $len := (len $list) }}
                 <li>
-                  <span class="name"><a href='{{ $.Site.Params.baseurl }}/pages/archive/#{{ $.context.Scratch.Get "yearIndexArchive" }}'>{{ .Key }}</a></span>
+                  <span class="name"><a href='{{ $.Site.Params.baseurl }}/pages/archive/#{{ $.context.Store.Get "yearIndexArchive" }}'>{{ .Key }}</a></span>
                   <span class="number">{{ $len }} Artikel</span>
                 </li>
           
           {{ end }}
-        {{ $.context.Scratch.Delete "yearIndexArchive" }}
+        {{ $.context.Store.Delete "yearIndexArchive" }}
       {{ end }}
     </ul>
 

@@ -14,6 +14,10 @@ socials:
   name: Instagram
   src: https://www.instagram.com/angel_crawford_ftw/
   username: crawford_ftw
+- icon: github
+  name: GitHub
+  src: https://github.com/AngelCrawford
+github_username: AngelCrawford
 menu: 
   main:
     name: 'Angel Crawford'

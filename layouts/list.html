@@ -1,68 +1,145 @@
 {{ define "main" }}
+    <div class="columns is-multiline">
+        <div class="column {{ if .Params.github_username }}{{ if eq .Kind "term" }}is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-6-fullhd{{ else }}is-12{{ end }}{{ end }}">
+            <article class="box {{ if .Resources -}} has-image{{- end -}}">
+                {{- if .Resources -}}
+                    <figure class="image is-4by3">
+                        {{- $img := (.Resources.ByType "image").GetMatch "cover*" -}}
+                        {{- with $img -}}
 
-    <article class="box {{ if .Resources -}} has-image{{- end -}}">
-        {{- if .Resources -}}
-            <figure class="image is-4by3">
-                {{- $img := (.Resources.ByType "image").GetMatch "cover*" -}}
-                {{- with $img -}}
+                            {{ $image := $img.Process "fill 480x320 webp" }}
+                            <img src="{{ $image.RelPermalink }}" alt="{{ $.Title }}" width="480" height="320" loading="lazy">
 
-                    {{ $image := $img.Process "fill 480x320 webp" }}
-                    <img src="{{ $image.RelPermalink }}" alt="{{ $.Title }}" width="480" height="320" loading="lazy">
-
-                    {{ with .Exif }}{{ with .Tags.ImageDescription  }}
-                        <figcaption>
-                            <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ $.Site.Params.remixicon_version}}#information-line"></use></svg>
-                            {{ . | safeHTML }}
-                        </figcaption>
-                    {{ end }}{{ end }}
+                            {{ with .Exif }}{{ with .Tags.ImageDescription  }}
+                                <figcaption>
+                                    <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ $.Site.Params.remixicon_version}}#information-line"></use></svg>
+                                    {{ . | safeHTML }}
+                                </figcaption>
+                            {{ end }}{{ end }}
+                        {{- end -}}
+                    </figure>
                 {{- end -}}
-            </figure>
-        {{- end -}}
-        <div class="box-content">
-            {{ $pagename := .Title }}
-    
-            {{ if eq .Kind "term" }}
-                {{ if .Parent.Params.translation.singular }}
-                    {{ $pagename = printf "%s%s %s" .Parent.Params.translation.singular ": " .Title }}
-                {{ else }}
-                    {{ $pagename = .Title }}
-                {{ end }}
-            {{ else if eq .Kind "taxonomy" }}
-                {{ if .Params.translation.plural }}
-                    {{ $pagename = .Params.translation.plural }}
-                {{ else }}
-                    {{ $pagename = .Title }}
-                {{ end }}
-            {{ else }}
-                {{ $pagename = .Title }}
-            {{ end }}
-    
-            <h1 class="title is-1" data-heading="{{ $pagename }}">{{ $pagename }}</h1>
-            {{ with .Params.subtitle }}<p class="subtitle">{{ . }}</p>{{ end }}
-
-            {{ if eq .Section "authors" }}
-                <div class="single-author-socials">
-                    {{ range .Params.socials }}
-                        <a data-tooltip="{{ .name }}" href="{{ .src }}" target="_blank" rel="noreferrer">
-                            <svg class='remix-small'>
-                                <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#{{ .icon }}-line"></use>
-                            </svg>
-                        </a>
-                    {{ end }}
-                </div>
-            {{ end }}
-
-            {{ if .Summary }}{{ .Summary }}{{ end }}
+                <div class="box-content">
+                    {{ $pagename := .Title }}
             
+                    {{ if eq .Kind "term" }}
+                        {{ if .Parent.Params.translation.singular }}
+                            {{ $pagename = printf "%s%s %s" .Parent.Params.translation.singular ": " .Title }}
+                        {{ else }}
+                            {{ $pagename = .Title }}
+                        {{ end }}
+                    {{ else if eq .Kind "taxonomy" }}
+                        {{ if .Params.translation.plural }}
+                            {{ $pagename = .Params.translation.plural }}
+                        {{ else }}
+                            {{ $pagename = .Title }}
+                        {{ end }}
+                    {{ else }}
+                        {{ $pagename = .Title }}
+                    {{ end }}
+            
+                    <h1 class="title is-1" data-heading="{{ $pagename }}">{{ $pagename }}</h1>
+                    {{ with .Params.subtitle }}<p class="subtitle">{{ . }}</p>{{ end }}
+
+                    {{ if eq .Section "authors" }}
+                        <div class="single-author-socials">
+                            {{ range .Params.socials }}
+                                <a data-tooltip="{{ .name }}" href="{{ .src }}" target="_blank" rel="noreferrer">
+                                    <svg class='remix-small'>
+                                        <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#{{ .icon }}-line"></use>
+                                    </svg>
+                                </a>
+                            {{ end }}
+                        </div>
+                    {{ end }}
+
+                    {{ if .Summary }}{{ .Summary }}{{ end }}
+                    
+                </div>
+            </article>
         </div>
-    </article>
+
+        {{ if eq .Section "authors" }}
+            {{ if eq .Kind "term" }}
+                {{ if .Params.github_username }}
+                    <div class="column {{ if eq .Kind "term" }}is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-6-fullhd {{ else }}is-12{{ end }}">
+                        <div class="box widget">
+                            <!-- GitHub Contributions Calendar -->
+                            <div class="github-contributions">
+                                <p class="title is-5">GitHub Contributions</p>
+                                <div class="github-calendar is-skeleton">
+                                    <!-- Loading placeholder -->
+                                    <p>Loading ...</p>
+                                </div>
+                            </div>
+
+                            <!-- GitHub Calendar CSS -->
+                            <link rel="stylesheet" href="https://unpkg.com/github-calendar@latest/dist/github-calendar-responsive.css" />
+
+                            <!-- GitHub Calendar JS and Initialization -->
+                            <script>
+                            // Function to check if calendar is loaded
+                            function checkCalendarLoaded() {
+                                var calendarElement = document.querySelector(".github-calendar");
+                                if (calendarElement && calendarElement.querySelector('.js-calendar-graph')) {
+                                    // Calendar is loaded, remove skeleton class
+                                    calendarElement.classList.remove("is-skeleton");
+                                } else {
+                                    // Check again in 100ms
+                                    setTimeout(checkCalendarLoaded, 100);
+                                }
+                            }
+                            
+                            // Create script element
+                            var script = document.createElement('script');
+                            script.src = "https://unpkg.com/github-calendar@latest/dist/github-calendar.min.js";
+                            script.onload = function() {
+                                // Initialize GitHub Calendar
+                                GitHubCalendar(".github-calendar", "{{ .Params.github_username }}", { 
+                                    responsive: false,
+                                    tooltips: false,
+                                    global_stats: false
+                                });
+                                
+                                // Start checking if calendar is loaded
+                                setTimeout(checkCalendarLoaded, 100);
+                            };
+                            script.onerror = function() {
+                                // Handle error if script fails to load
+                                var calendarElement = document.querySelector(".github-calendar");
+                                calendarElement.classList.remove("is-skeleton");
+                                calendarElement.innerHTML = "<p>Failed to load GitHub contributions. Please try again later.</p>";
+                            };
+                            
+                            // Append script to document
+                            document.head.appendChild(script);
+                            </script>
+                        </div>
+                    </div>
+                {{ end }}
+            {{ end }}
+        {{ end }}
+    </div>
 
     <div class="grid is-row-gap-4 is-multiline {{if eq .Kind "taxonomy"}} is-column-gap-4 is-col-min-13 is-small {{else}} is-column-gap-7 is-col-min-19 {{end}}">
         {{ $pageCount := len .Pages }}
-        {{ range .Pages.ByPublishDate.Reverse }}
-            {{ partial "card" . }}
+        {{ if eq .Kind "taxonomy" }}
+            {{ $terms := slice }}
+            {{ range $term, $pages := .Data.Terms }}
+                {{ $terms = $terms | append (dict "Term" $term "Count" (len $pages)) }}
+            {{ end }}
+            
+            {{ range sort $terms "Count" "desc" }}
+                {{ with $.GetPage (printf "/%s/%s" $.Data.Plural .Term) }}
+                    {{ partial "card" . }}
+                {{ end }}
+            {{ end }}
+        {{ else }}
+            {{ range .Pages.ByPublishDate.Reverse }}
+                {{ partial "card" . }}
+            {{ end }}
         {{ end }}
-        
+
         {{ if eq $pageCount 1 }}
             <div class="cell empty-cell"></div>
             <div class="cell empty-cell"></div>
