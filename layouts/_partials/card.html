@@ -53,7 +53,10 @@
 
             <div class="card-content">
                 {{ if ne .Params.format "log" }}
-                    <h2 class="title is-5"><a href="{{ .RelPermalink }}" style="{{if .Params.categoryColor }}color:{{.Params.categoryColor }};{{end}}">{{ .Title }}</a></h2>
+                    <h2 class="title is-5" aria-label="{{ .Title }}">
+                        <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+                        <span aria-hidden="true"></span>
+                    </h2>
                 
                     <p class="subtitle">
                         <time datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}" title="Veröffentlichungsdatum">
@@ -214,7 +217,10 @@
                 </div>
             {{- end -}}
             <div class="card-content">
-                <h2 class="title is-5"><a href="{{ .RelPermalink }}" style="{{if .Params.categoryColor }}color:{{.Params.categoryColor }};{{end}}">{{ .Title }}</a></h2>
+                <h2 class="title is-5" aria-label="{{ .Title }}">
+                    <a href="{{ .RelPermalink }}" style="{{if .Params.categoryColor }}color:{{.Params.categoryColor }};{{end}}">{{ .Title }}</a>
+                    <span aria-hidden="true"></span>
+                </h2>
                 
                 <div class="content">
                     {{ len .Pages }} Artikel

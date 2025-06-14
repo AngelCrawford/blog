@@ -15,6 +15,41 @@ $('#back-to-top').click(function () { // Klick auf den Button
   return false;
 });
 
+// Handle visited articles
+// Store current page as visited (only if it's an article)
+const currentPath = window.location.pathname;
+
+// Only mark as visited if it's an article page
+if (currentPath.includes('/articles/')) {
+  localStorage.setItem('visited-' + currentPath, 'true');
+}
+
+// Check all links on the page
+const links = document.getElementsByTagName('a');
+for (let i = 0; i < links.length; i++) {
+  const link = links[i];
+  
+  // Only check links to articles on the same site
+  if (link.host === window.location.host) {
+    const linkPath = link.pathname;
+    
+    // Only process article links
+    if (linkPath.includes('/articles/')) {
+      // Check if this article has been visited
+      if (localStorage.getItem('visited-' + linkPath) === 'true') {
+        // Mark as visited
+        link.setAttribute('data-visited', 'true');
+        
+        // Also mark the parent article if it exists
+        const parentArticle = link.closest('article.card.is-horizontal');
+        if (parentArticle) {
+          parentArticle.classList.add('visited');
+        }
+      }
+    }
+  }
+}
+
 
 // ***************** Footer Reveal Effect
 // Function to adjust body padding based on footer height
@@ -32,7 +67,6 @@ $(document).ready(function() {
     adjustBodyPadding();
   });
 });
-
 
 // // ***************** Spoiler
 // $('.spoiler').click(function () {
