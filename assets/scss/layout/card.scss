@@ -221,6 +221,7 @@ article.card.is-horizontal {
       .card-footer-item {
         color: color.scale(helpers.$dark, $lightness: 40%);
         padding: .75em 1.5em;
+        border-color: rgba(helpers.$gold-dark, .5);
         span svg {
           @include animations.translate(0, 5px);
         }

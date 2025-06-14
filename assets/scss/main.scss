@@ -83,7 +83,11 @@ main {
   background-color: color.adjust(helpers.$dark, $lightness: -2%);
   max-width: 2560px;
   margin: 0 auto;
-  min-height: calc(100vh - 300px);
+  min-height: calc(100dvh - 300px);
+  /* Controls size of dot */
+  background-image: radial-gradient(color.adjust(helpers.$dark, $lightness: -3%) .05vw, transparent .2vw);
+  /* Controls Spacing, First value will scale width, second, height between dots */
+  background-size: 1vw 1vw;
 
   &.content h1.title {
     font-size: 40px;

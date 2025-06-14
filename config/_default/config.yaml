@@ -1,6 +1,11 @@
 title: Article Time
-languageCode: de-DE
-languageName: Deutsch
+defaultContentLanguage: de
+languages:
+  de:
+    languageCode: de-DE
+    languageName: Deutsch
+    timeZone: Europe/Berlin
+    weight: 1
 
 enableGitInfo: true
 lastmod: ["lastmod", ":git", "date"] 
