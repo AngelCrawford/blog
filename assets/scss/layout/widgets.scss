@@ -3,7 +3,7 @@
 @use "mixins/effects";
 @use "mixins/responsive";
 
-.widget.box {
+.widget {
     padding-bottom: 0;
     background: color.adjust(helpers.$dark, $lightness: -2%);
 
@@ -11,8 +11,8 @@
       text-align: center;
       overflow: hidden;
       text-align: center;
-      margin-bottom: 0;
       color: color.scale(helpers.$dark, $lightness: 50%);
+      margin-bottom: .5em;
       
       &:before,
       &:after {
@@ -40,7 +40,7 @@
 .widget.archive.box {
     ul {
         margin: 0;
-        padding: 1em 0 1.5em 0em;
+        padding: 0 0 1.5em 0em;
         margin-inline-start: 0;
 
         li {

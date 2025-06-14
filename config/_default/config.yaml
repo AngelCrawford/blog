@@ -83,3 +83,14 @@ outputs:
     - JSON
   page:
     - HTML
+
+related:
+  threshold: 20
+  includeNewer: true
+  indices:
+  - name: series
+    weight: 3
+  - name: categories
+    weight: 2
+  - name: authors
+    weight: 1

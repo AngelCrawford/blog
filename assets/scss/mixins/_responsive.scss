@@ -42,7 +42,7 @@ $breakpoints: (
 }
 
 @mixin widescreen {
-  @media screen and (min-width: map-get($breakpoints, "desktop") + 1) {
+  @media screen and (min-width: map-get($breakpoints, "widescreen") + 1) {
     @content;
   }
 }
