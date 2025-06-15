@@ -7,7 +7,7 @@
     padding-bottom: 0;
     background: color.adjust(helpers.$dark, $lightness: -2%);
 
-    .title {
+    .title:not(.is-6) {
       text-align: center;
       overflow: hidden;
       text-align: center;

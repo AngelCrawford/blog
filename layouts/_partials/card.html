@@ -183,6 +183,13 @@
                             </svg>
                         </span>
                     {{- end -}}
+                    {{- if .Params.series -}}
+                        <span data-tooltip="Teil einer Serie">
+                            <svg class='remix-small'>
+                                <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#stack-line"></use>
+                            </svg>
+                        </span>
+                    {{- end -}}
                 </div>
             </footer>
         </article>

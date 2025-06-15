@@ -17,7 +17,7 @@
     <!-- TODO: EINBLENDEN BEI PRODUCTION! Muss unter umständen immer mal wieder angepasst werden -->
     <!-- THANKS: Content Security Policy (CSP) in Hugo - https://blog.jeremylikness.com/blog/create-content-security-policy-csp-in-hugo/ -->
     <meta name="referrer" content="always" />
-    {{ printf `<meta http-equiv="Content-Security-Policy" content="default-src %s; form-action %s; frame-src %s; img-src %s; object-src %s; style-src %s; script-src %s; script-src-elem %s;">` (delimit .Site.Params.csp.default " ") (delimit .Site.Params.csp.formaction " ") (delimit .Site.Params.csp.framesrc " ") (delimit .Site.Params.csp.imgsrc " ") (delimit .Site.Params.csp.objectsrc " ") (delimit .Site.Params.csp.stylesrc " ") (delimit .Site.Params.csp.scriptsrc " ") (delimit .Site.Params.csp.scriptsrcelem " ") | safeHTML }}
+    {{ printf `<meta http-equiv="Content-Security-Policy" content="default-src %s; form-action %s; frame-src %s; img-src %s; object-src %s; style-src %s; script-src %s; script-src-elem %s; connect-src %s;">` (delimit .Site.Params.csp.default " ") (delimit .Site.Params.csp.formaction " ") (delimit .Site.Params.csp.framesrc " ") (delimit .Site.Params.csp.imgsrc " ") (delimit .Site.Params.csp.objectsrc " ") (delimit .Site.Params.csp.stylesrc " ") (delimit .Site.Params.csp.scriptsrc " ") (delimit .Site.Params.csp.scriptsrcelem " ") (delimit .Site.Params.csp.connectsrc " ") | safeHTML }}
 
     <!-- Styles -->
     {{- $opts := (dict "targetPath" "style.css" "transpiler" "dartsass" "enableSourceMap" true ) -}}

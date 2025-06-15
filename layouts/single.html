@@ -60,6 +60,12 @@
                         {{ with .Params.subtitle }}<p class="subtitle is-4">{{ . }}</p>{{ end }}
                         {{ .Content }}
                     </div>
+
+                    <div class="box-footer">
+                        {{ if .Params.series }}
+                            {{ partial "articles/series" . }}
+                        {{ end }}
+                    </div>
                 </article>
                 
                 <aside class="widget">
@@ -76,58 +82,67 @@
             <div class="column is-12-mobile is-12-tablet is-12-desktop is-3-widescreen is-3-fullhd">
 
                 <div class="columns is-multiline">
-                    <div class="column is-12-mobile is-6-tablet is-6-desktop is-12-widescreen is-12-fullhd">
+                    <div class="column is-12-mobile is-6-tablet is-4-desktop is-12-widescreen is-12-fullhd">
                         <div class="info widget">
                             <p class="title is-5">Artikel</p>
 
                             <div class="widget-content">
 
-                            {{- if .GetTerms "categories" -}}
-                                {{- range first 1 (.GetTerms "categories") -}}
-                                    <div class="ribbon">
-                                        <a href="{{ .RelPermalink }}" style="{{if .Params.categoryColor }}background-color:{{.Params.categoryColor }}{{end}}">{{- .LinkTitle -}}</a>
+                                {{- if .GetTerms "categories" -}}
+                                    {{- range first 1 (.GetTerms "categories") -}}
+                                        <div class="ribbon">
+                                            <a href="{{ .RelPermalink }}" style="{{if .Params.categoryColor }}background-color:{{.Params.categoryColor }}{{end}}">{{- .LinkTitle -}}</a>
+                                        </div>
+                                    {{- end -}}
+                                {{- end -}}
+            
+                                <time datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}" data-tooltip="Veröffentlichungsdatum" title="Veröffentlichungsdatum">
+                                    <svg class='remix-small'>
+                                        <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ .Site.Params.remixicon_version}}#calendar-line"></use>
+                                    </svg> {{ .Date | time.Format ":date_long" }}
+                                </time>
+                                {{ if not ( eq (.Date.Format "02.01.06") (.Lastmod.Format "02.01.06") ) }}
+                                    <time class="updated" datetime="{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}" data-tooltip="Letztes Bearbeitungsdatum" title="Letztes Bearbeitungsdatum">
+                                        <svg class='remix-small'>
+                                            <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ .Site.Params.remixicon_version}}#pencil-line"></use>
+                                        </svg> {{ .Lastmod | time.Format ":date_long" }}
+                                    </time>
+                                {{ end }}
+                    
+                                {{- if .Params.tags -}}
+                                    <div class="tags-line">
+                                        <svg class='remix-small'>
+                                        <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#price-tag-3-line"></use>
+                                        </svg>
+                                        {{- range (.GetTerms "tags") -}}
+                                        <a href="{{ .RelPermalink }}" class="hashtags">#{{ .LinkTitle }} </a> 
+                                        {{- end -}}
                                     </div>
                                 {{- end -}}
-                            {{- end -}}
-        
-                            <time datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}" data-tooltip="Veröffentlichungsdatum" title="Veröffentlichungsdatum">
-                                <svg class='remix-small'>
-                                    <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ .Site.Params.remixicon_version}}#calendar-line"></use>
-                                </svg> {{ .Date | time.Format ":date_long" }}
-                            </time>
-                            {{ if not ( eq (.Date.Format "02.01.06") (.Lastmod.Format "02.01.06") ) }}
-                                <time class="updated" datetime="{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}" data-tooltip="Letztes Bearbeitungsdatum" title="Letztes Bearbeitungsdatum">
+
+                                {{ $readingTime := div (float .WordCount) .Site.Params.reading_speed }}
+                                {{ $readingTime = math.Ceil $readingTime }}
+                                <span data-tooltip="{{ $readingTime }} Minuten Lesezeit">
                                     <svg class='remix-small'>
-                                        <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ .Site.Params.remixicon_version}}#pencil-line"></use>
-                                    </svg> {{ .Lastmod | time.Format ":date_long" }}
-                                </time>
-                            {{ end }}
-                
-                            {{- if .Params.tags -}}
-                            <div class="tags-line">
-                                <svg class='remix-small'>
-                                <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#price-tag-3-line"></use>
-                                </svg>
-                                {{- range (.GetTerms "tags") -}}
-                                <a href="{{ .RelPermalink }}" class="hashtags">#{{ .LinkTitle }} </a> 
+                                        <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ .Site.Params.remixicon_version}}#timer-line"></use>
+                                    </svg>{{ $readingTime }} Min.
+                                </span>
+                                
+
+                                {{- if .Params.series -}}
+                                    <span data-tooltip="Teil einer Serie">
+                                        {{ $name := index .Params.series 0 }}
+                                        <svg class='remix-small'>
+                                            <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#stack-line"></use>
+                                        </svg><a href="{{.Site.BaseURL}}/series/{{$name | urlize}}">{{ $name }}</a>
+                                    </span>
                                 {{- end -}}
                             </div>
-                            {{- end -}}
-
-                            {{ $readingTime := div (float .WordCount) .Site.Params.reading_speed }}
-                            {{ $readingTime = math.Ceil $readingTime }}
-                            <span data-tooltip="{{ $readingTime }} Minuten Lesezeit">
-                                <svg class='remix-small'>
-                                    <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ .Site.Params.remixicon_version}}#timer-line"></use>
-                                </svg> {{ $readingTime }} Min.
-                            </span>
-                        </div>
-                        
                         </div>
                     </div>
                 
                     {{- if ge (len .TableOfContents) 100 -}}
-                        <div class="column is-12-mobile is-6-tablet is-6-desktop is-12-widescreen is-12-fullhd">
+                        <div class="column is-12-mobile is-6-tablet is-4-desktop is-12-widescreen is-12-fullhd">
                             <div class="toc widget">
                                 <p class="title is-5">Übersicht</p>
 
@@ -137,6 +152,37 @@
                             </div>
                         </div>
                     {{- end -}}
+                    
+                    {{- if .Params.series -}}
+                        <div class="column is-12-mobile is-6-tablet is-4-desktop is-12-widescreen is-12-fullhd">
+                            <div class="serie widget">
+                                <p class="title is-5">Serie</p>
+                                {{- $currentPage := . -}}
+                                {{- $series_name := index .Params.series 0 -}}
+
+                                {{- $.Store.Set "series_count" 0 -}}
+                                {{- range .Site.RegularPages.ByDate -}}
+                                    {{- if in .Params.series $series_name -}}
+                                        {{- $.Store.Add "series_count" 1 -}}
+                                    {{- end -}}
+                                {{- end -}}
+
+                                <p class="title is-6"><a href="{{.Site.BaseURL}}/series/{{$series_name | urlize}}">{{ $series_name }} ({{ $.Store.Get "series_count" }})</a></p>
+                                <ol class="series-list">
+                                    {{- range .Site.RegularPages.ByDate -}}
+                                        {{- if in .Params.series $series_name -}}
+                                            {{- if not (eq $currentPage.RelPermalink .RelPermalink) -}}
+                                                <li><a href="{{ .RelPermalink }}" title="{{ .Name }} page">{{ .Title }}</a></li>
+                                            {{- else -}}
+                                                <li class="is-active">{{ .Title }} </li>
+                                            {{- end -}}
+                                        {{- end -}}
+                                    {{- end -}}
+                                </ol>
+                            </div>
+                        </div>
+                        {{ $.Store.Delete "series_count" }}
+                {{- end -}}
                 </div>
 
                 {{- if .Params.authors -}}

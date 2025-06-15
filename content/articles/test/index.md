@@ -4,7 +4,6 @@ date: 2025-02-10T10:58:08-04:00
 format: article
 tags: ["scene"]
 categories: "Eine Sehr Lange Kategorie zum testen"
-series: ["Seriennummer"]
 contains:
 - code
 - gallery
