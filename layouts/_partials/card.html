@@ -161,22 +161,22 @@
                 </div>
 
                 <div class="card-footer-item formats">
-                    {{- if .Params.weight -}}
-                        <span data-tooltip="Angepinnt">
-                            <svg class='ri-1x'>
-                                <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ .Site.Params.remixicon_version}}#pushpin-line"></use>
+                    {{- if eq .Params.weight 1 -}}
+                        <span data-tooltip="Evergreen">
+                            <svg class='ri-1x' style="fill: rgb(78, 151, 78);">
+                                <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ .Site.Params.remixicon_version}}#tree-line"></use>
                             </svg>
                         </span>
                     {{- else if eq .Params.format "log" -}}
                         <span data-tooltip="Log">
-                            <svg class='ri-1x'>
+                            <svg class='ri-1x' style="fill: rgb(201, 172, 92)">
                                 <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ .Site.Params.remixicon_version}}#lightbulb-flash-line"></use>
                             </svg>
                         </span>
                     {{ else }}
                         <span data-tooltip="Artikel">
-                            <svg class='ri-1x'>
-                                <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ .Site.Params.remixicon_version}}#article-line"></use>
+                            <svg class='ri-1x' style="fill: rgb(88, 179, 189)">
+                                <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ .Site.Params.remixicon_version}}#flower-line"></use>
                             </svg>
                         </span>
                     {{- end -}}

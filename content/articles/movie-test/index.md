@@ -1,7 +1,8 @@
 ---
-title:  "Movie Rating"
+title:  "Movie Rating - Sort by weight"
 date: 2020-03-16T20:35:48+01:00
 publishdate: 2020-03-16 # Only usefull, if running Hugo in server
+weight: 5
 
 tags: ["eins", "zwei", "quote"]
 categories: "Movie"

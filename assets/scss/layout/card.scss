@@ -207,6 +207,12 @@ article.card.is-horizontal {
           fill: color.scale(helpers.$dark, $lightness: 40%);
           margin-right: 2px;
         }
+
+        &.formats {
+          span:not(:last-child) {
+            margin-right: 10px;
+          }
+        }
       }
     }
 }
