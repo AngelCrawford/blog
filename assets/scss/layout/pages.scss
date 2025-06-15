@@ -57,6 +57,10 @@ body.type-is-articles main.content {
            overflow-x: auto;   
         }
 
+        .box-content {
+            @include components.readable-content;
+        }
+
         .box-footer {
             border-top: 1px solid rgba(helpers.$gold-dark, .5);
             background: helpers.$dark;
@@ -189,7 +193,7 @@ body.type-is-articles main.content {
             padding-top: .75em;
 
             > * {
-                width: max-content
+                width: fit-content;
             }
         }
 

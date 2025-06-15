@@ -50,3 +50,71 @@
     }
   }
 }
+
+@mixin readable-content($width: 70ch) {
+
+    h1, h2, h3, h4, h5, h6 {
+      color: c.$gold-light;
+    }
+
+    figure {
+      position: relative;
+      picture {
+        img {
+          @include effects.box-shadow(false, 5px, 5px, 3px, rgba(#000, .5), rgba(c.$light, .05));
+          border-radius: .75rem;
+        }
+      }
+    }
+    figcaption {
+        position: absolute;
+        font-size: 80%;
+        padding: .5em;
+        bottom: 7px;
+        left: 0;
+        color: c.$light;
+        width: 100%;
+        border-top: 1px solid rgba(color.adjust(c.$dark, $lightness: -10%), .5);
+        background-color: rgba(color.adjust(c.$dark, $lightness: -7%), .7);
+        border-bottom-left-radius: .75rem;
+        border-bottom-right-radius: .75rem;
+        a {
+            color: c.$gold;
+            &:hover {
+                color: c.$gold-light;
+            }
+        }
+        svg {
+            width: 16px;
+            height: 16px;
+            fill: c.$gold;
+            margin-right: 3px;
+            @include animations.translate(0, 3px);
+        }
+    }
+
+    sup a {
+      color: c.$gold-light;
+      padding: 0 .4em 0 .2em;
+      &:hover {
+        color: c.$gold;
+      }
+    }
+
+    .footnotes {
+      hr {
+        background-color: color.adjust(c.$gold-dark, $lightness: -3%);
+        height: 1px;
+      }
+      ol li::marker {
+        color: c.$gold;
+      }
+      a {
+        color: c.$gold-light;
+        &:hover {
+          color: c.$gold;
+        }
+      }
+    }
+
+}
