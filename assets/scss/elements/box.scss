@@ -12,7 +12,6 @@
 
     &.has-image {
         margin-left: 1.5em;
-        display: flow-root; // clear the float from the child
 
         figure.image {
             @include components.figure;
@@ -36,8 +35,10 @@
             }
         }
 
-        .box-content {
-            display: flow-root; // clear the float from the child
+        &::after {
+            content: "";
+            display: block;
+            clear: both;
         }
     }
 }
