@@ -10,11 +10,12 @@
 @forward "src/bulma" with (
   $text: helpers.$light,
   $link: helpers.$gold-dark,
-  $primary: helpers.$gold-light,
-  // $info: hsl(271, 41%, 60%),
-  // $success: hsl(271, 41%, 60%),
-  // $warning: hsl(271, 41%, 60%),
-  // $danger: hsl(271, 41%, 60%),
+  $primary: hsl(214, 76%, 34%),
+  $dark: helpers.$dark,
+  $info: hsl(189, 90%, 33%),
+  $warning: hsl(41, 77%, 37%),
+  $success: hsl(152, 76%, 33%),
+  $danger: hsl(0, 79%, 32%),
 
   $family-primary: helpers.$family-sans-serif,
   $family-secondary: helpers.$family-secondary,
@@ -56,8 +57,6 @@ body {
 }
 
 body.kind-is-home,
-// /categories or /tags
-// body.kind-is-taxonomy,
 // /categories/some-category or /tags/some-tag
 body.kind-is-term {
 

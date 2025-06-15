@@ -49,6 +49,7 @@ Wrap up your article here.
 
 <!--
 Shortcodes you can use:
+colors to use: dark, link, info, primary, success, warning, danger
 {{< tags tags="tag: Action Crime name: Genre color: primary tag: Adventure name: Genre color: info tag: Sci-Fi name: Genre color: danger" >}}
 {{< youtube id="VIDEO_ID" >}}
 {{< rating value="4.5" showValue="true" >}}

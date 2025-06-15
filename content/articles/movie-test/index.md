@@ -21,11 +21,16 @@ params:
 {{< rating value="4.5" showValue="true" >}}
 
 Weit hinten, hinter den Wortbergen, fern der Länder Vokalien und Konsonantien leben die Blindtexte. 
-<!-- is-black, is-dark, is-light, is-white, is-primary, is-link, is-info, is-success, is-warning, is-danger -->
-{{< tags tags="tag: Action Crime name: Genre color: primary tag: Adventure name: Genre color: info tag: Sci-Fi name: Genre color: danger" >}}
 
-Abgeschieden wohnen sie in Buchstabhausen an der Küste des Semantik, eines großen Sprachozeans. Ein kleines Bächlein namens Duden fließt durch ihren Ort und versorgt sie mit den nötigen Regelialien. Es ist ein paradiesmatisches Land, in dem einem gebratene [Random external Link](https://angel-crawford.de) Satzteile in den Mund fliegen. Nicht einmal von der allmächtigen Interpunktion werden die Blindtexte beherrscht – ein geradezu unorthographisches Leben. Eines Tages aber beschloß eine kleine Zeile Blindtext, ihr Name war Lorem Ipsum, hinaus zu gehen in die weite Grammatik. Der große Oxmox riet ihr davon ab, da es dort wimmele von bösen Kommata, wilden Fragezeichen und hinterhaltigen Semikoli, doch das Blindtextchen ließ sich nicht beirren. 
+{{< tags tags="tag: Action Crime name: Dark color: dark tag: Adventure name: Info color: info tag: Sci-Fi name: Danger color: danger tag: Action Crime name: Warning color: warning tag: Adventure name: Primary color: primary tag: Sci-Fi name: Link color: link tag: Sci-Fi name: Success color: success" >}}
 
+Abgeschieden wohnen sie in Buchstabhausen an der Küste des Semantik, eines großen Sprachozeans. Ein kleines Bächlein namens Duden fließt durch ihren Ort und versorgt sie mit den nötigen Regelialien. Es ist ein paradiesmatisches Land, in dem einem gebratene [Random external Link](https://angel-crawford.de) 
+
+{{< message color="dark" header="Editierungen" >}}
+Edits:
+{{< /message >}}
+
+Satzteile in den Mund fliegen. Nicht einmal von der allmächtigen Interpunktion werden die Blindtexte beherrscht – ein geradezu unorthographisches Leben. Eines Tages aber beschloß eine kleine Zeile Blindtext, ihr Name war Lorem Ipsum, hinaus zu gehen in die weite Grammatik. Der große Oxmox riet ihr davon ab, da es dort wimmele von bösen Kommata, wilden Fragezeichen und hinterhaltigen Semikoli, doch das Blindtextchen ließ sich nicht beirren. 
 
 Es packte seine sieben Versalien, schob sich sein Initial in den Gürtel und machte sich auf den Weg. Als es die ersten Hügel des Kursivgebirges erklommen hatte, warf es einen letzten Blick zurück auf die Skyline seiner Heimatstadt Buchstabhausen, die Headline von Alphabetdorf und die Subline seiner eigenen Straße, der Zeilengasse. Wehmütig lief ihm eine rhetorische Frage über die Wange, dann setzte es seinen Weg fort. Unterwegs traf es eine Copy. Die Copy warnte das Blindtextchen, da, wo sie herkäme wäre sie 
 
@@ -39,3 +44,7 @@ Es packte seine sieben Versalien, schob sich sein Initial in den Gürtel und mac
     Nicht einmal von der allmächtigen Interpunktion werden die Blindtexte beherrscht<br />
   </p>
 ```
+
+{{< message color="info" header="Editierungen" >}}
+Edits:
+{{< /message >}}
