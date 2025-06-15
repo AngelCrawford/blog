@@ -2,21 +2,7 @@
 title: "Angel Crawford"
 slug: "angel"
 birthdate: "05.02.1987"
-socials:
-- icon: facebook-circle
-  name: Facebook
-  src: https://www.facebook.com/angel.crawford.ftw
-- icon: twitter
-  name: Twitter
-  src: https://twitter.com/crawford_ftw
-  username: crawford_ftw
-- icon: instagram
-  name: Instagram
-  src: https://www.instagram.com/angel_crawford_ftw/
-  username: crawford_ftw
-- icon: github
-  name: GitHub
-  src: https://github.com/AngelCrawford
+website: "https://angel-crawford.de"
 github_username: AngelCrawford
 menu: 
   main:

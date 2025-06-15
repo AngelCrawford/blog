@@ -55,10 +55,25 @@
 
     h1, h2, h3, h4, h5, h6 {
       color: c.$gold-light;
+      position: relative;
+      
+      .anchor-link {
+        svg {
+          width: 20px;
+          height: 20px;
+          fill: c.$gold;
+          transition: fill 0.2s ease-in-out;
+      
+          &:hover {
+            fill: c.$gold-light;
+          }
+        }
+      }
     }
 
     figure {
       position: relative;
+      width: fit-content;
       picture {
         img {
           @include effects.box-shadow(false, 5px, 5px, 3px, rgba(#000, .5), rgba(c.$light, .05));
@@ -91,6 +106,33 @@
             margin-right: 3px;
             @include animations.translate(0, 3px);
         }
+    }
+
+    .rating-container {
+      display: flex;
+      align-items: center;
+      margin: 0.5rem 0;
+
+      .stars {
+        display: flex;
+        
+        svg {
+          fill: c.$gold;
+        }
+      }
+    }
+
+    .tags-container {
+      margin: 1rem 0;
+
+      .tags.has-addons {
+        margin-bottom: 0;
+      }
+      span.tag {
+        border-left: 1px solid rgba(color.adjust(c.$gold, $lightness: -10%), .5);
+        border-bottom: 1px solid rgba(color.adjust(c.$gold, $lightness: -10%), .5);
+        border-top: 1px solid rgba(color.adjust(c.$gold, $lightness: -10%), .5);
+      }
     }
 
     sup a {

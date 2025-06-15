@@ -1,5 +1,6 @@
 {{ define "main" }}
     {{ if eq .Page.Type "page" }}
+
         <div class="columns is-multiline">
             <div class="column is-12">
                 <article class="box {{ if .Resources -}} has-image{{- end }} is-single-page">
@@ -29,6 +30,7 @@
                 </article>
             </div>
         </div>
+
     {{ else if eq .Page.Type "articles" }}
         <div class="columns is-multiline">
             <div class="column is-12-mobile is-12-tablet is-12-desktop is-9-widescreen is-9-fullhd">
@@ -112,7 +114,7 @@
                                 {{- if .Params.tags -}}
                                     <div class="tags-line">
                                         <svg class='remix-small'>
-                                        <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#price-tag-3-line"></use>
+                                        <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ .Site.Params.remixicon_version}}#price-tag-3-line"></use>
                                         </svg>
                                         {{- range (.GetTerms "tags") -}}
                                         <a href="{{ .RelPermalink }}" class="hashtags">#{{ .LinkTitle }} </a> 
@@ -133,8 +135,8 @@
                                     <span data-tooltip="Teil einer Serie">
                                         {{ $name := index .Params.series 0 }}
                                         <svg class='remix-small'>
-                                            <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#stack-line"></use>
-                                        </svg><a href="{{.Site.BaseURL}}/series/{{$name | urlize}}">{{ $name }}</a>
+                                            <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ .Site.Params.remixicon_version}}#stack-line"></use>
+                                        </svg><a href="/series/{{$name | urlize}}">{{ $name }}</a>
                                     </span>
                                 {{- end -}}
                             </div>
@@ -167,7 +169,7 @@
                                     {{- end -}}
                                 {{- end -}}
 
-                                <p class="title is-6"><a href="{{.Site.BaseURL}}/series/{{$series_name | urlize}}">{{ $series_name }} ({{ $.Store.Get "series_count" }})</a></p>
+                                <p class="title is-6"><a href="/series/{{$series_name | urlize}}">{{ $series_name }} ({{ $.Store.Get "series_count" }})</a></p>
                                 <ol class="series-list">
                                     {{- range .Site.RegularPages.ByDate -}}
                                         {{- if in .Params.series $series_name -}}

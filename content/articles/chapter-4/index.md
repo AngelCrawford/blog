@@ -1,13 +1,9 @@
 ---
 date: 2017-04-12T11:14:48-04:00
-tags: 
-- scene
-- quote
+tags: ["scene", "quote"]
 series: ["Serienname"]
 title: "Chapter IV: Master Jacques Coppenole"
 categories: ["quote"]
-contains:
-- image
 year: "2017"
 month: "2017/04"
 # weight: 1

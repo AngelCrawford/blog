@@ -1,0 +1,68 @@
+{{/* 
+  Tags Shortcode
+  
+  Parameters:
+  - heading: The heading text for the tags (optional)
+  - tags: Space-separated list of tags in format "tag: [value] name: [name] color: [color]" (optional)
+  
+  Example usage:
+  {{< tags heading="Genre" tags="tag: Action name: Genre color: primary tag: Adventure name: Genre color: info tag: Sci-Fi name: Genre color: danger" >}}
+*/}}
+
+{{- $heading := .Get "heading" -}}
+{{- $tagsParam := .Get "tags" | default "" -}}
+
+<div class="tags-container">
+  {{- if $tagsParam -}}
+    {{- $tagsList := split $tagsParam "tag:" -}}
+    <div class="field is-grouped is-grouped-multiline">
+    {{- range $index, $element := $tagsList -}}
+      {{- if ne $index 0 -}}
+        {{- $tagInfo := $element | strings.TrimSpace -}}
+        {{- if $tagInfo -}}
+          {{- $tagParts := split $tagInfo " " -}}
+          
+          {{- $tagValue := "" -}}
+          {{- $tagName := "" -}}
+          {{- $tagColor := "primary" -}} <!-- Default color -->
+          
+          {{- $currentKey := "tag" -}}
+          {{- range $partIndex, $part := $tagParts -}}
+            {{- if eq $part "name:" -}}
+              {{- $currentKey = "name" -}}
+            {{- else if eq $part "color:" -}}
+              {{- $currentKey = "color" -}}
+            {{- else -}}
+              {{- if eq $currentKey "tag" -}}
+                {{- if eq $tagValue "" -}}
+                  {{- $tagValue = $part -}}
+                {{- else -}}
+                  {{- $tagValue = printf "%s %s" $tagValue $part -}}
+                {{- end -}}
+              {{- else if eq $currentKey "name" -}}
+                {{- if eq $tagName "" -}}
+                  {{- $tagName = $part -}}
+                {{- else -}}
+                  {{- $tagName = printf "%s %s" $tagName $part -}}
+                {{- end -}}
+              {{- else if eq $currentKey "color" -}}
+                {{- $tagColor = $part -}}
+                {{- $currentKey = "done" -}} <!-- After color, reset to avoid adding more words -->
+              {{- end -}}
+            {{- end -}}
+          {{- end -}}
+          
+          {{- if $tagValue -}}
+            <div class="tags has-addons">
+              {{- if $tagName -}}
+                <span class="tag is-medium">{{ $tagName }}</span>
+              {{- end -}}
+              <span class="tag is-medium is-{{ $tagColor }}">{{ $tagValue }}</span>
+            </div>
+          {{- end -}}
+        {{- end -}}
+      {{- end -}}
+    {{- end -}}
+    </div>
+  {{- end -}}
+</div>

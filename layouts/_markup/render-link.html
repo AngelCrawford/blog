@@ -7,6 +7,11 @@
 {{ $text := .Text }}
 {{ $title := .Title }}
 {{ $isExternal := or (strings.HasPrefix $link "http") (strings.HasPrefix $link "//") }}
+{{ $hostname := "" }}
+{{ if $isExternal }}
+  {{ $url := urls.Parse $link }}
+  {{ $hostname = $url.Host }}
+{{ end }}
 
 <a href="{{ $link }}"
   {{ with $title }}title="{{ . }}"{{ end }}
@@ -14,6 +19,7 @@
     target="_blank" 
     rel="noopener noreferrer"
     class="external-link"
+    style='background: url("https://icons.duckduckgo.com/ip2/{{ $hostname }}.ico") left center / 16px 16px no-repeat; padding-left: 21px;'
   {{ end }}>
   {{ $text }}
   {{ if $isExternal }}

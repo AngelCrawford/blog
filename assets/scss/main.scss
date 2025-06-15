@@ -148,6 +148,24 @@ main {
   }
 }
 
+
+// External Links
+.external-link span.sr-only {
+  visibility: hidden;
+  display: none;
+}
+
+.external-link::after {
+  content: "\ecaf";
+  font-family: 'remixicon' !important;
+  font-size: 80%;
+  color: rgba(helpers.$gold, .5);
+}
+.external-link::before {
+  content: "";
+  background: url("");
+}
+
 html body button#back-to-top {
   position: fixed;
   z-index: 999999;

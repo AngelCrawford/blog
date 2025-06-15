@@ -1,31 +1,12 @@
 ---
 date: 2017-04-14T11:25:05-04:00
-tags: 
-- CSS
-- HTML
-- JS
-- Flex
-- Position
-- Tree
+tags: ["CSS", "HTML", "JS", "Flex", "Position", "Tree"]
 summary: "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr"
 series: ["Serienname"]
-description: "The last theme you'll ever need. Maybe."
 categories: "Allgemein"
 title: "Chapter VI: Esmeralda"
 year: "2017"
 month: "2017/04"
-contains:
-- code
-icons:
-- src: "windows-line"
-  color: "#456987"
-  tooltip: "Some Tooltip info"
-stickers:
-- heading: "Genre"
-  tags:
-  - tag: "Some"
-  - tag: "Tag"
-  - tag: "I Want"
 ---
 
 ## Headline

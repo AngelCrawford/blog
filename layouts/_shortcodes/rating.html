@@ -1,0 +1,29 @@
+{{ $rating := .Get "value" | default "0" }}
+{{ $max := .Get "max" | default "5" }}
+{{ $showValue := .Get "showValue" | default "true" }}
+
+{{ $ratingNum := float $rating }}
+{{ $maxNum := float $max }}
+
+<div class="rating-container">
+  <div class="stars">
+    {{ range $i := seq 1 $maxNum }}
+      {{ $icon := "star-line" }}
+      {{ if le $i $ratingNum }}
+        {{ $icon = "star-fill" }}
+      {{ else if and (lt (sub $i 1) $ratingNum) (lt $ratingNum $i) }}
+        {{ $icon = "star-half-fill" }}
+      {{ end }}
+      <span class="icon">
+        <svg class='remix-small'>
+          <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ $.Site.Params.remixicon_version}}#{{ $icon }}"></use>
+        </svg>
+      </span>
+    {{ end }}
+  </div>
+  {{ if eq $showValue "true" }}
+  <div class="rating-value ml-2">
+    {{ $rating }} / {{ $max }}
+  </div>
+  {{ end }}
+</div>

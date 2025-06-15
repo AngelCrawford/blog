@@ -96,30 +96,6 @@ article.card.is-horizontal {
       }
     }
 
-    // &:not(.is-log) .rating {
-    //   ul {
-    //     list-style: none;
-    //     margin: 0 0 .7em 0;
-    //     width: auto;
-    //     display: inline-block;
-    //     li {
-    //       display: inline-block;
-    //       .remix {
-    //         fill: helpers.$gold;
-    //         width: 18px;
-    //         height: 18px;
-    //         @include helpers.translate(0, 4px);
-    //       }
-    //     }
-    //     li.star-count {
-    //       color: helpers.$gold;
-    //       font-size: 13px;
-    //       padding-left: .5em;
-    //       padding-top: 0;
-    //     }
-    //   }
-    // }
-
     .button.round-button {
       position: absolute;
       bottom: 1.5em;
@@ -635,8 +611,7 @@ article.card.is-horizontal.is-log {
       text-align: left;
     }
     .subtitle {
-      text-align: left;
-      display: block;
+      display: none;
     }
     .content {
       text-align: left;
@@ -646,6 +621,11 @@ article.card.is-horizontal.is-log {
     }
     .author-articles {
       display: none;
+    }
+  }
+  .card-footer-item {
+    svg.remix-small {
+      margin-right: 5px;
     }
   }
 }

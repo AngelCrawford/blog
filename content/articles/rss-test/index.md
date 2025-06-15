@@ -1,54 +1,19 @@
 ---
 title: "RSS Test"
-description: "SEO Description and Subheader for single posts" # Not more than 160 characters!
 subtitle: "Subheader for single posts"
-summary: "" # if content has shortcodes, than the excerpt will render it. USE <!--start-summary--> comment in content or summary here instead
 date: 2025-06-12T19:58:30+01:00
-# lastmod: 2025-12-31T19:58:30+01:00
 draft: false
-tags:
-- eins
-- zwei
+tags: ["eins", "zwei"]
 categories: "Allgemein"
-contains:
-- image
-- gallery
 authors: ["angel"]
-# series: [""]
-# weight: 0 # 1 = makes the post sticky
-# format: rating # rating design on the home page
-# rating: "0.5" # 0-5 with .5 possible, will show a rating on the home page
-icons:
-- src: "windows-line"
-  color: "#456987"
-  tooltip: "Some Tooltip info"
-- src: "ubuntu-line"
-  color: "tomato"
-  tooltip: "Some Tooltip info"
-- src: "android-line"
-  color: "green"
-  tooltip: "Some Tooltip info"
 year: "2020"
 month: "2020/12"
 comments:
   enabled: false
   deactivatedOn: "22.12.2020"
   message: "Reaktionen wurden entfernt weil...."
-stickers:
-- heading: "Genre"
-  tags:
-  - tag: "Some"
-  - tag: "Tag"
-  - tag: "I Want"
-- heading: "Info"
-  tags:
-  - tag: "Some Tag"
-  - tag: "Long Tag I want for testing purpose"
-  - tag: "Anything"
-
 ---
 
-<!--start-summary-->
 ## Eine Überschrift
 Dies ist ein Typoblindtext. An ihm kann man sehen,
 ob alle Buchstaben da sind und wie sie aussehen.

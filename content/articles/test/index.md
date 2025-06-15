@@ -4,39 +4,12 @@ date: 2025-02-10T10:58:08-04:00
 format: article
 tags: ["scene"]
 categories: "Eine Sehr Lange Kategorie zum testen"
-contains:
-- code
-- gallery
 weight: 1
 # slug: ""
 # year: "2020"
 # month: "2020/02"
 summary: "SUMMARY: One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin. One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin. One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin. One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin."
-params:
-  SEOdesc: "One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin. One morning, when Gregor Samsa woke"
 authors: ["jdksaj", "angel"]
-icons:
-- src: "windows-line"
-  color: "#456987"
-  tooltip: "Some Tooltip info"
-- src: "ubuntu-line"
-  color: "tomato"
-- src: "android-line"
-  color: "green"
-- src: "apple-line"
-  color: "white"
-stickers:
-- heading: "Genre"
-  tags:
-  - tag: "Some"
-  - tag: "Tag"
-  - tag: "I Want"
-- heading: "Info"
-  tags:
-  - tag: "Some Tag"
-  - tag: "Long Tag I want for testing purpose"
-  - tag: "Anything"
-
 ---
 
 ## Introduction

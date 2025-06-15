@@ -164,8 +164,7 @@
 
                 <div class="card-footer-item formats">
                     {{- if .Params.weight -}}
-                        <!-- TODO: Add tooltip -->
-                        <span data-tooltip="Angepinnter Artikel">
+                        <span data-tooltip="Angepinnt">
                             <svg class='remix-small'>
                                 <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ .Site.Params.remixicon_version}}#pushpin-line"></use>
                             </svg>
@@ -177,7 +176,7 @@
                             </svg>
                         </span>
                     {{ else }}
-                        <span data-tooltip="Normaler Artikel">
+                        <span data-tooltip="Artikel">
                             <svg class='remix-small'>
                                 <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ .Site.Params.remixicon_version}}#article-line"></use>
                             </svg>
@@ -186,7 +185,7 @@
                     {{- if .Params.series -}}
                         <span data-tooltip="Teil einer Serie">
                             <svg class='remix-small'>
-                                <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#stack-line"></use>
+                                <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ .Site.Params.remixicon_version}}#stack-line"></use>
                             </svg>
                         </span>
                     {{- end -}}
@@ -264,15 +263,6 @@
 
             <div class="card-content">
                 <h2 class="title is-5"><a href="{{ .RelPermalink }}">{{ .Title }}</a></h2>
-                
-                <p class="subtitle">
-                    {{ if .Params.birthdate }}
-                        <svg class="remix-small">
-                            <use xlink:href="/fonts/remixicon/remixicon.symbol.svg#cake-line"></use>
-                        </svg>
-                        {{ .Params.birthdate }}
-                    {{ end }}
-                </p>
                     
                 <div class="content">
                     <div class="author-summary">{{ .Summary | plainify | truncate 200 }}</div>
@@ -289,16 +279,23 @@
                     </a>
                 {{- end -}}
 
-                {{ with .Params.socials }}
-                    {{ range . }}
-                        <div class="card-footer-item author">
-                            <a data-tooltip="{{ .name }}" href="{{ .src }}" target="_blank" rel="noreferrer">
-                                <svg class='remix-small'>
-                                    <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ $.Site.Params.remixicon_version}}#{{ .icon }}-line"></use>
-                                </svg>
-                            </a>
-                        </div>
-                    {{ end }}
+                {{ with .Params.website }}
+                    <div class="card-footer-item">
+                        <a data-tooltip="Webseite" href="{{ . }}" target="_blank" rel="noreferrer">
+                            <svg class='remix-small'>
+                                <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ $.Site.Params.remixicon_version}}#external-link-line"></use>
+                            </svg>
+                        </a>
+                    </div>
+                {{ end }}
+                
+                {{ if .Params.birthdate }}
+                    <div class="card-footer-item">
+                        <svg class="remix-small">
+                            <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ .Site.Params.remixicon_version}}#cake-line"></use>
+                        </svg>
+                        {{ .Params.birthdate }}
+                    </div>
                 {{ end }}
             </footer>
         </article>
