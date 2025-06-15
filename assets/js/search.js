@@ -1,7 +1,12 @@
 "use strict";
 // THANKS: Dynamic Search in a Static Hugo Website - https://blog.jeremylikness.com/blog/dynamic-search-in-a-static-hugo-website/
+function searchFn() {
+  // Make sure jQuery is loaded before executing search functionality
+  if (typeof jQuery === 'undefined') {
+    console.error("jQuery is not loaded - search functionality cannot initialize");
+    return;
+  }
 
-var searchFn = function () {
   var lastTerm = "You are likely to be eaten by a grue.";
   var stopwords = ["aber", "als", "am", "an", "auch", "auf", "aus", "bei", "bin", "bis", "bist", "da", "dadurch", "daher", "darum", "das", "daß", "dass", 
     "dein", "deine", "dem", "den", "der", "des", "dessen", "deshalb", "die", "dies", "dieser", "dieses", "doch", "dort", "du", 
@@ -221,4 +226,11 @@ var searchFn = function () {
     initSearch();
   });
 };
-window.addEventListener("DOMContentLoaded", searchFn);
+
+// Make sure the function is available in the global scope
+window.searchFn = searchFn;
+
+// Call the search function when the DOM is fully loaded
+$(document).ready(function() {
+  searchFn();
+});
