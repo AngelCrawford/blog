@@ -12,7 +12,7 @@
 
                             {{ with .Exif }}{{ with .Tags.ImageDescription  }}
                                 <figcaption>
-                                    <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ $.Site.Params.remixicon_version}}#information-line"></use></svg>
+                                    <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ $.Site.Params.remixicon_version}}#pencil-line"></use></svg>
                                     {{ . | safeHTML }}
                                 </figcaption>
                             {{ end }}{{ end }}
@@ -45,7 +45,7 @@
                         <div class="single-author-socials">
                             {{ range .Params.socials }}
                                 <a data-tooltip="{{ .name }}" href="{{ .src }}" target="_blank" rel="noreferrer">
-                                    <svg class='remix-small'>
+                                    <svg class='ri-1x'>
                                         <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ .Site.Params.remixicon_version}}#{{ .icon }}-line"></use>
                                     </svg>
                                 </a>

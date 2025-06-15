@@ -10,7 +10,6 @@ article.card.is-horizontal {
     @include effects.box-shadow(false, 5px, 5px, 5px, rgba(#000, .5), rgba(helpers.$light, .05));
     border: 1px solid rgba(helpers.$gold, .2);
     height: 100%;
-    // transition: transform border .2s ease-out;
     color: color.adjust(helpers.$light, $lightness: 0.5%);
     max-width: 733.5px;
     margin-left: auto;
@@ -115,7 +114,7 @@ article.card.is-horizontal {
           color: helpers.$gold;
         }
       }
-      .remix-small {
+      svg {
         height: 15px;
         width: 15px;
         margin-right: 2px;
@@ -202,7 +201,7 @@ article.card.is-horizontal {
         span svg {
           @include animations.translate(0, 5px);
         }
-        svg.remix-small {
+        svg.ri-1x {
           width: 20px;
           height: 20px;
           fill: color.scale(helpers.$dark, $lightness: 40%);
@@ -249,44 +248,8 @@ article.card.is-horizontal.has-image {
       left: -1.66em;
     }
     .card-image {
-      figure.image {
-        height: calc(100% - 1.5em);
-        margin-left: -1.5em;
-        margin-top: 1.5em;
-        figcaption {
-          position: absolute;
-          font-size: 80%;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          display: inline-block;
-          padding: .5em;
-          bottom: 0;
-          color: helpers.$light;
-          width: 100%;
-          border-top: 1px solid rgba(color.adjust(helpers.$dark, $lightness: -10%), .5);
-          background-color: rgba(color.adjust(helpers.$dark, $lightness: -7%), .7);
-          border-radius: 0 0 var(--bulma-card-radius) var(--bulma-card-radius);
-          a {
-            color: helpers.$gold;
-            &:hover {
-              color: helpers.$gold-light;
-            }
-          }
-          svg {
-            width: 16px;
-            height: 16px;
-            fill: helpers.$gold;
-            margin-right: 3px;
-            @include animations.translate(0, 3px);
-          }
-        }
-        img {
-          @include effects.box-shadow(false, 5px, 5px, 3px, rgba(#000, .5), rgba(helpers.$light, .05));
-          border-radius: var(--bulma-card-radius);
-          transition: 0.3s;
-          object-fit: cover;
-        }
+      figure {
+        @include components.figure;
       }
     }
 }
@@ -314,8 +277,10 @@ article.card.is-horizontal.is-log {
         z-index: 1;
         figure.image {
           width: calc(100% + 1.5em);
+          height: calc(100% - 1.5em);
           background-color: helpers.$dark;
-          border-radius: var(--bulma-card-radius);
+          border-radius: .75rem;
+          position: relative;
           img {
             opacity: .5;
             // overflow: visible;
@@ -374,7 +339,7 @@ article.card.is-horizontal.is-log {
 
     &:not(.has-image) .ribbon {
       top: 3em;
-      left: -1.66em;
+      right: calc(1.25rem - 3px);
     }
 
     &:not(.has-image) .card-content {
@@ -418,26 +383,26 @@ article.card.is-horizontal.is-log {
   display: inline-flex;
   flex-direction: column;
   width: 100%;
-
-  &.has-image .ribbon {
+    
+  .ribbon {
     margin-left: 1.5em;
     margin-top: -1.5em;
-    z-index: 10;
   }
-  &:not(.has-image).is-log .ribbon {
-    margin-left: 1.5em;
-    margin-top: -1.5em;
-    z-index: 10;
-  }
+  
 
   &.is-log {
     display: grid;
     min-height: 350px;
+    
+    .ribbon.is-left {
+      margin-right: -1.25em;
+      margin-top: -1.5em;
+    }
 
     figure.image {
-        margin-left: 0em;
-        margin-top: unset;
-        height: 100%;
+        margin-left: 0;
+        margin-top: 0;
+        height: 100% !important;
     }
 
     .card-content {
@@ -462,7 +427,6 @@ article.card.is-horizontal.is-log {
   }
 
   &:not(.is-log) {
-
     .card-content {
       height: fit-content;
       flex: 1;
@@ -487,8 +451,8 @@ article.card.is-horizontal.is-log {
       .card-image {
         figure.image {
           height: 230px;
-          margin-left: unset;
-          margin-top: unset;
+          margin-left: 0;
+          margin-top: 0;
           width: 100%;
         }
       }
@@ -499,6 +463,10 @@ article.card.is-horizontal.is-log {
       width: 100%;
       min-width: 100%;
       min-height: unset;
+    
+      .ribbon.is-left {
+        margin-top: 0;
+      }
     }
   }
 
@@ -556,8 +524,8 @@ article.card.is-horizontal.is-log {
     .card-image {
       figure.image {
         height: 230px;
-        margin-left: unset;
-        margin-top: unset;
+        margin-left: 0;
+        margin-top: 0;
         width: 100%;
       }
     }
@@ -624,7 +592,7 @@ article.card.is-horizontal.is-log {
     }
   }
   .card-footer-item {
-    svg.remix-small {
+    svg.ri-1x {
       margin-right: 5px;
     }
   }

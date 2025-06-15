@@ -16,31 +16,20 @@ nav.pagination {
         @include components.round-button(false, 48px, helpers.$gold, color.adjust(helpers.$dark, $lightness: 5%));
 
         &.is-current {
-            @include components.round-button(true, 48px, helpers.$gold-light, helpers.$gold-dark);
+            // @include components.round-button(true, 48px, helpers.$gold-light, helpers.$gold-dark);
+            border: 1px solid rgba(helpers.$gold-dark, .5);
+            color: helpers.$gold-light;
+            @include effects.box-shadow(true, 3px, 3px, 5px, rgba(#000, .3), rgba(helpers.$light, .05));
             svg {
                 fill: helpers.$gold-light;
             }
             &:hover {
-                // @include components.round-button(false, 48px, helpers.$gold-light, helpers.$gold-dark);
                 border: 1px solid rgba(helpers.$gold-dark, .5);
                 @include effects.box-shadow(true, 3px, 3px, 5px, rgba(#000, .3), rgba(helpers.$light, .05));
                 @include animations.translate(0, 0);
                 cursor: not-allowed;
                 svg {
                     fill: helpers.$gold-light;
-                }
-            }
-        }
-
-        &:disabled, &[disabled] {
-            cursor: not-allowed;
-            box-shadow: none;
-            &:hover {
-                @include animations.translate(0, 0);
-                box-shadow: none;
-                border: 1px solid rgba(helpers.$dark, 1);
-                svg {
-                    fill: helpers.$gold;
                 }
             }
         }

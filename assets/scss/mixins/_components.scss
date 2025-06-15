@@ -1,6 +1,7 @@
 // UI Component mixins
 @use "sass:color";
 @use "../vars/colors" as c;
+@use "../vars/fonts" as f;
 @use "effects";
 @use "animations";
 
@@ -19,7 +20,7 @@
   box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
   background: color.adjust(c.$dark, $lightness: -4%);
   transition: color .3s ease-out, transform .2s ease-out, border .2s ease-out;
-  cursor: pointer;
+  // cursor: pointer;
 
   @if $inset == true {
     @include effects.box-shadow(true, 3px, 3px, 5px, rgba(#000, .3), rgba(c.$light, .05));
@@ -51,112 +52,73 @@
   }
 }
 
-@mixin readable-content($width: 70ch) {
+@mixin figure {
+  height: calc(100% - 1.5em);
+  margin-left: -1.5em;
+  margin-top: 1.5em;
 
-    h1, h2, h3, h4, h5, h6 {
-      color: c.$gold-light;
-      position: relative;
-      
-      .anchor-link {
-        svg {
-          width: 20px;
-          height: 20px;
-          fill: c.$gold;
-          transition: fill 0.2s ease-in-out;
-      
-          &:hover {
-            fill: c.$gold-light;
-          }
-        }
-      }
-    }
+  img {
+    @include effects.box-shadow(false, 5px, 5px, 3px, rgba(#000, .5), rgba(c.$light, .05));
+    border-radius: .75rem;
+    transition: 0.3s;
+    object-fit: cover;
+  }
 
-    figure {
-      position: relative;
-      width: fit-content;
-      picture {
-        img {
-          @include effects.box-shadow(false, 5px, 5px, 3px, rgba(#000, .5), rgba(c.$light, .05));
-          border-radius: .75rem;
-        }
-      }
-    }
-    figcaption {
-        position: absolute;
-        font-size: 80%;
-        padding: .5em;
-        bottom: 7px;
-        left: 0;
-        color: c.$light;
-        width: 100%;
-        border-top: 1px solid rgba(color.adjust(c.$dark, $lightness: -10%), .5);
-        background-color: rgba(color.adjust(c.$dark, $lightness: -7%), .7);
-        border-bottom-left-radius: .75rem;
-        border-bottom-right-radius: .75rem;
-        a {
-            color: c.$gold;
-            &:hover {
-                color: c.$gold-light;
-            }
-        }
-        svg {
-            width: 16px;
-            height: 16px;
-            fill: c.$gold;
-            margin-right: 3px;
-            @include animations.translate(0, 3px);
-        }
-    }
-
-    .rating-container {
-      display: flex;
-      align-items: center;
-      margin: 0.5rem 0;
-
-      .stars {
-        display: flex;
-        
-        svg {
-          fill: c.$gold;
-        }
-      }
-    }
-
-    .tags-container {
-      margin: 1rem 0;
-
-      .tags.has-addons {
-        margin-bottom: 0;
-      }
-      span.tag:first-of-type {
-        border-left: 1px solid rgba(color.adjust(c.$gold, $lightness: -10%), .5);
-        border-bottom: 1px solid rgba(color.adjust(c.$gold, $lightness: -10%), .5);
-        border-top: 1px solid rgba(color.adjust(c.$gold, $lightness: -10%), .5);
-      }
-    }
-
-    sup a {
-      color: c.$gold-light;
-      padding: 0 .4em 0 .2em;
+  figcaption {
+    position: absolute;
+    font-size: 80%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    display: inline-block;
+    padding: .5em;
+    bottom: 0;
+    color: c.$light;
+    width: 100%;
+    border-top: 1px solid rgba(color.adjust(c.$dark, $lightness: -10%), .5);
+    background-color: rgba(color.adjust(c.$dark, $lightness: -7%), .7);
+    border-radius: 0 0 .75rem .75rem;
+    a {
+      color: c.$gold;
       &:hover {
-        color: c.$gold;
-      }
-    }
-
-    .footnotes {
-      hr {
-        background-color: color.adjust(c.$gold-dark, $lightness: -3%);
-        height: 1px;
-      }
-      ol li::marker {
-        color: c.$gold;
-      }
-      a {
         color: c.$gold-light;
-        &:hover {
-          color: c.$gold;
-        }
       }
     }
+    svg {
+      width: 16px;
+      height: 16px;
+      fill: c.$gold;
+      margin-right: 3px;
+      @include animations.translate(0, 3px);
+    }
+  }
+}
 
+@mixin lined-title {
+  text-align: center;
+  overflow: hidden;
+  text-align: center;
+  color: color.scale(c.$dark, $lightness: 50%);
+  @include f.font-header;
+  
+  &:before,
+  &:after {
+    background: rgba(c.$gold, .5);
+    content: "";
+    display: inline-block;
+    height: 1px;
+    position: relative;
+    vertical-align: middle;
+    width: 50%;
+  }
+  
+  &:before {
+    right: 0.5em;
+    margin-left: -50%;
+  }
+  
+  &:after {
+    left: 0.5em;
+    margin-right: -50%;
+  }
 }

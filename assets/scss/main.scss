@@ -7,11 +7,12 @@
 @use "vars/helpers";
 @use "sass:color";
 
+// Bulma customization
 @forward "src/bulma" with (
-  $text: helpers.$light,
-  $link: helpers.$gold-dark,
+  $text: hsl(190, 20%, 90%),
+  $link: hsl(35, 45%, 26%),
   $primary: hsl(214, 76%, 34%),
-  $dark: helpers.$dark,
+  $dark: hsl(190, 11%, 11%),
   $info: hsl(189, 90%, 33%),
   $warning: hsl(41, 77%, 37%),
   $success: hsl(152, 76%, 33%),
@@ -19,33 +20,36 @@
 
   $family-primary: helpers.$family-sans-serif,
   $family-secondary: helpers.$family-secondary,
-  $title-weight: 600,
+  // $title-weight: 600,
 
   // NAVBAR
   $navbar-burger-color: helpers.$gold-light,
   $navbar-dropdown-border-color: helpers.$gold-light,
-  $navbar-dropdown-arrow: helpers.$gold,
-  
-  // $navbar-dropdown-background-color: helpers.$light
+  $navbar-dropdown-arrow: helpers.$gold
 );
 
-// ***************************** OWN STUFF *****************************
+// ============================= IMPORTS =============================
+// Base components
 @use "base/hero";
 @use "base/navigation";
 @use "base/footer";
 
-// // Elements
+// Elements
+@use "elements/badge";
+@use "elements/box";
 @use "elements/button";
 @use "elements/pagination";
 @use "elements/ribbon";
 @use "elements/tooltip";
-@use "elements/badge";
 
-// Layout
-@use "layout/lists";
+// // Layout
+// @use "layout/pages";
 @use "layout/card";
-@use "layout/pages";
+@use "layout/lists";
+@use "layout/single";
 @use "layout/widgets";
+
+// ============================= GLOBAL STYLES =============================
 
 *, html {
   scroll-behavior: smooth !important;
@@ -56,10 +60,9 @@ body {
   background-color: color.adjust(helpers.$dark, $lightness: -2%);
 }
 
+// ============================= HOME & TERM PAGES =============================
 body.kind-is-home,
-// /categories/some-category or /tags/some-tag
 body.kind-is-term {
-
   @media (min-width: 641px) {
     .section {
       .grid {
@@ -80,16 +83,18 @@ body.kind-is-term {
   }
 }
 
+// ============================= MAIN CONTENT AREA =============================
 main {
   background-color: color.adjust(helpers.$dark, $lightness: -2%);
   max-width: 2560px;
   margin: 0 auto;
   min-height: calc(100dvh - 300px);
-  /* Controls size of dot */
+  
+  // Dotted background pattern
   background-image: radial-gradient(color.adjust(helpers.$dark, $lightness: -3%) .05vw, transparent .2vw);
-  /* Controls Spacing, First value will scale width, second, height between dots */
   background-size: 1vw 1vw;
 
+  // Title styling with 3D effect
   &.content h1.title {
     font-size: 40px;
     @include helpers.font-header;
@@ -102,25 +107,33 @@ main {
       margin-bottom: 0;
     }
 
+    // Shadow layer
     &::before {
       content: attr(data-heading);
       position: absolute;
       top: 0;
       left: 0;
-      text-shadow: -1px 0 1px rgba(color.scale(helpers.$gold-light, $lightness: 20%), .7),
-                  0 1px 1px rgba(color.scale(helpers.$gold-light, $lightness: 20%), .7),
-                  5px 5px 10px rgba(0, 0, 0, .5),
-                  -2px -2px 5px rgba(255, 255, 255, 0.3);
+      text-shadow: 
+        -1px 0 1px rgba(color.scale(helpers.$gold-light, $lightness: 20%), .7),
+        0 1px 1px rgba(color.scale(helpers.$gold-light, $lightness: 20%), .7),
+        5px 5px 10px rgba(0, 0, 0, .5),
+        -2px -2px 5px rgba(255, 255, 255, 0.3);
       color: helpers.$dark;
       z-index: 1;
     }
 
+    // Gradient text layer
     &::after {
       content: attr(data-heading);
       position: absolute;
       top: 0;
       left: 0;
-      background: linear-gradient(to bottom, helpers.$gold 32%, helpers.$gold-light 50%, helpers.$gold-dark 80%);
+      background: linear-gradient(
+        to bottom, 
+        helpers.$gold 32%, 
+        helpers.$gold-light 50%, 
+        helpers.$gold-dark 80%
+      );
       background-clip: text;
       -webkit-background-clip: text;
       -moz-background-clip: text;
@@ -137,7 +150,7 @@ main {
 
   .subtitle {
     @include helpers.font-header;
-    margin-top:.3em;
+    margin-top: .3em;
   }
 
   &.section {
@@ -147,24 +160,23 @@ main {
   }
 }
 
-
+// ============================= UTILITY CLASSES =============================
 // External Links
-.external-link span.sr-only {
-  visibility: hidden;
-  display: none;
+.external-link {
+  span.sr-only {
+    visibility: hidden;
+    display: none;
+  }
+
+  &::after {
+    content: "\ecaf";
+    font-family: 'remixicon' !important;
+    font-size: 80%;
+    color: rgba(helpers.$gold, .5);
+  }
 }
 
-.external-link::after {
-  content: "\ecaf";
-  font-family: 'remixicon' !important;
-  font-size: 80%;
-  color: rgba(helpers.$gold, .5);
-}
-.external-link::before {
-  content: "";
-  background: url("");
-}
-
+// Back to top button
 html body button#back-to-top {
   position: fixed;
   z-index: 999999;

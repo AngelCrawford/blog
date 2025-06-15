@@ -16,13 +16,8 @@ button, a.button {
         @include animations.translate(-5px, 0);
         transition: fill .3s ease-out;
     }
-    
-    // &:hover, &:focus {
-    //     @include effects.box-shadow(true, 5px, 5px, 5px, rgba(#000, .3), rgba($text, .07));
-    // }
 
     &.is-primary {
-
         &.is-outlined {
             border-color: helpers.$gold;
             background-color: color.adjust(helpers.$dark, $lightness: -2%);
@@ -37,7 +32,8 @@ button, a.button {
       @include components.round-button(false, 48px, helpers.$gold, color.adjust(helpers.$dark, $lightness: 5%));
     }
 
-    &[disabled], &.is-disabled {
+    &[disabled], &.is-disabled, &:disabled,
+    &.is-round[disabled], &.is-round.is-disabled, &.is-round:disabled {
         cursor: not-allowed;
         box-shadow: none;
         &:hover {

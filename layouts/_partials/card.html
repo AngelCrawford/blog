@@ -11,9 +11,7 @@
 
             {{- if .GetTerms "categories" -}}
                 {{- range first 1 (.GetTerms "categories") -}}
-                    <div class="ribbon">
-                        <a href="{{ .RelPermalink }}" style="{{if .Params.categoryColor }}background-color:{{.Params.categoryColor }}{{end}}">{{- .LinkTitle -}}</a>
-                    </div>
+                    <a href="{{ .RelPermalink }}" title="{{- .LinkTitle -}}" class="ribbon {{if not $.Resources }}is-left{{end}}" style="{{if .Params.categoryColor }}background-color:{{.Params.categoryColor }}{{end}}">{{- .LinkTitle -}}</a>
                 {{- end -}}
             {{- end -}}
 
@@ -42,7 +40,7 @@
 
                             {{ with .Exif }}{{ with .Tags.ImageDescription  }}
                                 <figcaption>
-                                    <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ $.Site.Params.remixicon_version}}#information-line"></use></svg>
+                                    <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ $.Site.Params.remixicon_version}}#pencil-line"></use></svg>
                                     {{ . | safeHTML }}
                                 </figcaption>
                             {{ end }}{{ end }}
@@ -60,13 +58,13 @@
                 
                     <p class="subtitle">
                         <time datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}" title="Veröffentlichungsdatum">
-                            <svg class='remix-small'>
+                            <svg class='ri-1x'>
                                 <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ .Site.Params.remixicon_version}}#calendar-line"></use>
                             </svg> {{ .Date.Format "02.01.06" }}
                         </time>
                         {{ if not ( eq (.Date.Format "02.01.06") (.Lastmod.Format "02.01.06") ) }}
                             <time class="updated" datetime="{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}" title="Letztes Bearbeitungsdatum">
-                                <svg class='remix-small'>
+                                <svg class='ri-1x'>
                                     <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ .Site.Params.remixicon_version}}#pencil-line"></use>
                                 </svg> {{ .Lastmod.Format "02.01.06" }}
                             </time>
@@ -86,7 +84,7 @@
                 {{ if ne .Params.format "log" }}
                     {{- if (.GetTerms "tags") -}}
                         <div class="tags-wrapper">
-                            <svg class='remix-small'>
+                            <svg class='ri-1x'>
                                 <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ .Site.Params.remixicon_version}}#price-tag-3-line"></use>
                             </svg>
                             {{- range (.GetTerms "tags") -}}
@@ -131,7 +129,7 @@
 
                 {{- if not (eq .Params.format "log") }}
                     <a class="button round-button inset" title="Weiterlesen" href="{{ .RelPermalink }}">
-                        <svg class='remix-small'>
+                        <svg class='ri-1x'>
                             <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ .Site.Params.remixicon_version}}#arrow-right-s-line"></use>
                         </svg>
                     </a>
@@ -140,13 +138,13 @@
                 <div class="card-footer-item log-date">
                     {{- if eq .Params.format "log" -}}
                         <time datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}" data-tooltip="Veröffentlichungsdatum" title="Veröffentlichungsdatum">
-                            <svg class='remix-small'>
+                            <svg class='ri-1x'>
                                 <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ .Site.Params.remixicon_version}}#calendar-line"></use>
                             </svg> {{ .Date.Format "02.01.06" }}
                         </time>
                         {{ if not ( eq (.Date.Format "02.01.06") (.Lastmod.Format "02.01.06") ) }}
                             <time class="updated" datetime="{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}" data-tooltip="Letztes Bearbeitungsdatum" title="Letztes Bearbeitungsdatum">
-                                <svg class='remix-small'>
+                                <svg class='ri-1x'>
                                     <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ .Site.Params.remixicon_version}}#pencil-line"></use>
                                 </svg> {{ .Lastmod.Format "02.01.06" }}
                             </time>
@@ -155,7 +153,7 @@
                         {{ $readingTime := div (float .WordCount) .Site.Params.reading_speed }}
                         {{ $readingTime = math.Ceil $readingTime }}
                         <span data-tooltip="{{ $readingTime }} Minuten Lesezeit">
-                            <svg class='remix-small'>
+                            <svg class='ri-1x'>
                                 <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ .Site.Params.remixicon_version}}#timer-line"></use>
                             </svg> {{ $readingTime }} Min.
                         </span>
@@ -165,26 +163,26 @@
                 <div class="card-footer-item formats">
                     {{- if .Params.weight -}}
                         <span data-tooltip="Angepinnt">
-                            <svg class='remix-small'>
+                            <svg class='ri-1x'>
                                 <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ .Site.Params.remixicon_version}}#pushpin-line"></use>
                             </svg>
                         </span>
                     {{- else if eq .Params.format "log" -}}
                         <span data-tooltip="Log">
-                            <svg class='remix-small'>
+                            <svg class='ri-1x'>
                                 <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ .Site.Params.remixicon_version}}#lightbulb-flash-line"></use>
                             </svg>
                         </span>
                     {{ else }}
                         <span data-tooltip="Artikel">
-                            <svg class='remix-small'>
+                            <svg class='ri-1x'>
                                 <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ .Site.Params.remixicon_version}}#article-line"></use>
                             </svg>
                         </span>
                     {{- end -}}
                     {{- if .Params.series -}}
                         <span data-tooltip="Teil einer Serie">
-                            <svg class='remix-small'>
+                            <svg class='ri-1x'>
                                 <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ .Site.Params.remixicon_version}}#stack-line"></use>
                             </svg>
                         </span>
@@ -214,7 +212,7 @@
                             </a>
                             {{ with .Exif }}{{ with .Tags.ImageDescription  }}
                                 <figcaption>
-                                    <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ $.Site.Params.remixicon_version}}#information-line"></use></svg>
+                                    <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ $.Site.Params.remixicon_version}}#pencil-line"></use></svg>
                                     {{ . | safeHTML }}
                                 </figcaption>
                             {{ end }}{{ end }}
@@ -252,7 +250,7 @@
                             </a>
                             {{ with .Exif }}{{ with .Tags.ImageDescription  }}
                                 <figcaption>
-                                    <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ $.Site.Params.remixicon_version}}#information-line"></use></svg>
+                                    <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ $.Site.Params.remixicon_version}}#pencil-line"></use></svg>
                                     {{ . | safeHTML }}
                                 </figcaption>
                             {{ end }}{{ end }}
@@ -273,7 +271,7 @@
             <footer class="card-footer">
                 {{- if not (eq .Params.format "log") }}
                     <a class="button round-button inset" title="Weiterlesen" href="{{ .RelPermalink }}">
-                        <svg class='remix-small'>
+                        <svg class='ri-1x'>
                             <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ .Site.Params.remixicon_version}}#arrow-right-s-line"></use>
                         </svg>
                     </a>
@@ -282,7 +280,7 @@
                 {{ with .Params.website }}
                     <div class="card-footer-item">
                         <a data-tooltip="Webseite" href="{{ . }}" target="_blank" rel="noreferrer">
-                            <svg class='remix-small'>
+                            <svg class='ri-1x'>
                                 <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ $.Site.Params.remixicon_version}}#external-link-line"></use>
                             </svg>
                         </a>
@@ -291,7 +289,7 @@
                 
                 {{ if .Params.birthdate }}
                     <div class="card-footer-item">
-                        <svg class="remix-small">
+                        <svg class="ri-1x">
                             <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ .Site.Params.remixicon_version}}#cake-line"></use>
                         </svg>
                         {{ .Params.birthdate }}

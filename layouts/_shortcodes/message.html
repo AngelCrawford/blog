@@ -18,7 +18,7 @@
 {{ $color := .Get "color" | default "dark" }}
 {{ $header := .Get "header" }}
 
-<article class="message is-{{ $color }}">
+<div class="message is-{{ $color }}">
   {{ if $header }}
   <div class="message-header">
     <p>{{ $header }}</p>
@@ -27,4 +27,4 @@
   <div class="message-body">
     {{ .Inner | markdownify }}
   </div>
-</article>
+</div>

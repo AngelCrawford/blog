@@ -1,43 +1,21 @@
 @use "vars/helpers";
 @use "sass:color";
 @use "mixins/effects";
+@use "mixins/animations";
+@use "mixins/components";
 @use "mixins/responsive";
 
 .widget {
-    padding-bottom: 0;
-    background: color.adjust(helpers.$dark, $lightness: -2%);
+    > .title:not(.is-6) {
+      @include components.lined-title;
+    }
 
-    .title:not(.is-6) {
-      text-align: center;
-      overflow: hidden;
-      text-align: center;
-      color: color.scale(helpers.$dark, $lightness: 50%);
-      margin-bottom: .5em;
-      
-      &:before,
-      &:after {
-        background: rgba(helpers.$gold, .5);
-        content: "";
-        display: inline-block;
-        height: 1px;
-        position: relative;
-        vertical-align: middle;
-        width: 50%;
-      }
-      
-      &:before {
-        right: 0.5em;
-        margin-left: -50%;
-      }
-      
-      &:after {
-        left: 0.5em;
-        margin-right: -50%;
-      }
-    } 
+    a:hover {
+        color: helpers.$gold-light;
+    }
 }
 
-.widget.archive.box {
+.widget.archive {
     ul {
         margin: 0;
         padding: 0 0 1.5em 0em;
@@ -74,5 +52,32 @@
                 height: auto;
             }
         }
+    }
+}
+
+.widget.info {
+    .widget-content {
+        display: flex;
+        flex-direction: column;
+        gap: .4em;
+        margin-left: .4em;
+
+        > * {
+            width: fit-content;
+        }
+    }
+
+    .ribbon {
+        position: relative;
+        max-width: fit-content;
+        margin: 0 0 .75em -.4em;
+    }
+
+    svg {
+        width: 20px;
+        height: 20px;
+        fill: color.scale(helpers.$dark, $lightness: 40%);
+        margin-right: 10px;
+        @include animations.translate(0, 4px);
     }
 }

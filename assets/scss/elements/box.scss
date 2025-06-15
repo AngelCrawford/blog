@@ -1,0 +1,47 @@
+@use "vars/helpers";
+@use "sass:color";
+@use "mixins/effects";
+@use "mixins/animations";
+@use "mixins/components";
+@use "mixins/responsive";
+
+.box {
+    background: color.adjust(helpers.$dark, $lightness: -2%);
+    @include effects.box-shadow(false, 5px, 5px, 5px, rgba(#000, .5), rgba(helpers.$light, .05));
+    border: 1px solid rgba(helpers.$gold, .2);
+
+    &.has-image {
+        margin-left: 1.5em;
+        display: flow-root; // clear the float from the child
+
+        figure.image {
+            @include components.figure;
+            margin: .25rem 1em 1em -2.75em;
+            width: 250px;
+            float: left;
+        }
+
+        @include responsive.mobile {
+            margin-left: 0;
+
+            figure.image {
+                margin: -1.25rem;
+                width: calc(100% + 2.5rem);
+                float: unset;
+                height: 250px;
+            }
+
+            .box-content {
+                padding-top: 2.5em;
+            }
+        }
+
+        .box-content {
+            display: flow-root; // clear the float from the child
+        }
+    }
+}
+
+article.box {
+    background: color.adjust(helpers.$dark, $lightness: 5%);
+}

@@ -1,4 +1,4 @@
-<div class="widget archive box">
+<div class="widget archive">
     <p class="title is-5">{{ .archiveTitle }}</p>
     <ul>
       {{ range where .context.Site.Pages "Section" "articles" }}
@@ -21,7 +21,7 @@
     <div class="is-pulled-right">
       {{ if not (eq .context.RelPermalink "/pages/archive/") }}
           <a href="/pages/archive/" class="button is-primary is-outlined">
-              <svg class='remix-small'>
+              <svg class='ri-1x'>
                   <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ .Site.Params.remixicon_version}}#bookmark-line"></use>
               </svg>
               Archiv

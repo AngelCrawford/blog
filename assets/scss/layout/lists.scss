@@ -2,108 +2,17 @@
 @use "sass:color";
 @use "mixins/effects";
 @use "mixins/responsive";
+@use "mixins/components";
 
-main.content.section {
-    .box {
-        background: color.adjust(helpers.$dark, $lightness: -2%);
-        @include effects.box-shadow(false, 5px, 5px, 5px, rgba(#000, .5), rgba(helpers.$light, .05));
-        border: 1px solid rgba(helpers.$gold, .2);
-        // margin-bottom: 2rem;
 
-        &.has-image {
-            margin-left: 1.5em;
-            width: calc(100% - 1.5em);
-            display: flow-root; // clear the float from the child
-
-            @include responsive.mobile {
-                margin-left: 0;
-                width: 100%;
-            }
-
-            figure.image {
-                margin-left: -1.3em;
-                margin-bottom: 2em;
-                width: calc(100% + 2.6em);
-                margin-top: -1.5em;
-
-                @include responsive.breakpoint(640px) {
-                    float: left;
-                    margin-left: -3em;
-                    margin-right: 1.5em;
-                    margin-bottom: 1em;
-                    margin-top: 0;
-                    width: 250px;
-                }
-                
-                figcaption {
-                    position: absolute;
-                    font-size: 80%;
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                    display: inline-block;
-                    padding: .5em;
-                    bottom: 0;
-                    color: helpers.$light;
-                    width: 100%;
-                    border-top: 1px solid rgba(color.adjust(helpers.$dark, $lightness: -10%), .5);
-                    background-color: rgba(color.adjust(helpers.$dark, $lightness: -7%), .7);
-                    border-radius: 0 0 0.75rem 0.75rem;
-                    svg {
-                        width: 16px;
-                        height: 16px;
-                        fill: helpers.$gold;
-                        margin-right: 3px;
-                        @include helpers.translate(0, 3px);
-                    }
-                    a {
-                color: helpers.$gold;
-                        &:hover {
-                            color: helpers.$gold-light;
-            }
-                    }
-                }
-                img {
-                    @include helpers.box-shadow(false, 5px, 5px, 3px, rgba(#000, .5), rgba(helpers.$light, .05));
-                    border-radius: 0.75rem;
-                    object-fit: cover;
-                }
-            }
-        }
-
-        .box-content {
-            a {
-                color: helpers.$gold;
-                
-                &:hover {
-                    color: helpers.$gold-light;
-                }
-            }
-            p:last-child {
-                margin-bottom: 0;
-            }
-        }
+body.layout-is-archive {
+    main.content .column > h2.title {
+        @include components.lined-title;
+        margin-top: 1em;
     }
 }
 
 body.type-is-authors {
-    .single-author-socials {
-        display: flex;
-        gap: 1em;
-        margin-bottom: 1em;
-
-        svg {
-            width: 40px;
-            height: 40px;
-            fill: helpers.$gold;
-            transition: fill .3s ease-out;
-
-            &:hover {
-                fill: helpers.$gold-light;
-            }
-        }
-    }
-
     .github-contributions {
         height: max-content;
         padding-bottom: 1.25em;

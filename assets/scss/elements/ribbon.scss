@@ -7,28 +7,90 @@
     position: relative;
 }
 
-.ribbon {
+a.ribbon {
     max-width: 13.5em;
     position: absolute;
-    z-index: 5;
-    transition: color .3s ease-out;
     @include helpers.font-header;
     text-shadow: 3px 3px 4px rgba(#000, .5);
     background-color: helpers.$gold-dark;
+    padding: .4em .5em .4em 1em;
+    color: helpers.$light;
+    z-index: 5;
+    border: none;
+    transition: color, background-color .3s ease-out;
+
+    &:before,
+    &:after {
+      content: "";
+      position: absolute;
+      right: -15px;
+      top: 0;
+      width: 40px;
+      background: inherit;
+      z-index: -1;
+    }
+    &:before {
+      transform: skewX(45deg);
+      height: 51%;
+    }
+    &:after {
+      transform: skewX(-45deg);
+      height: 50%;
+      top: 51%;
+    }
     
     &:hover {
-      @include animations.translate(0, -2px);
-    }
-    a:hover {
       color: color.adjust(helpers.$light, $lightness: 5%);
-      background-color: helpers.$gold !important;
-      @include effects.box-shadow(true, 3px, 3px, 5px, rgba(#000, .3), rgba(helpers.$light, .3));   
-    }
+      background-color: helpers.$dark !important;
+      // @include effects.box-shadow(true, 3px, 3px, 5px, rgba(#000, .3), rgba(helpers.$light, .3));
 
-    a {
-      display: block;
-      padding: .4em 1.1em .4em 1em;
-      color: helpers.$light;   
-      @include effects.box-shadow(false, 3px, 3px, 5px, rgba(#000, .3), rgba(helpers.$light, .15));
+      &:before,
+      &:after {
+        // @include effects.box-shadow(true, 3px, 3px, 5px, rgba(#000, .3), rgba(helpers.$light, .3));
+      }
     }
+}
+
+a.ribbon.is-left {
+  max-width: 13.5em;
+  position: absolute;
+  @include helpers.font-header;
+  text-shadow: 3px 3px 4px rgba(#000, .5);
+  background-color: helpers.$gold-dark;
+  padding: .4em 1em .4em .5em;
+  color: helpers.$light;
+  z-index: 5;
+  border: none;
+  transition: color .3s ease-out;
+
+  &:before,
+  &:after {
+    content: "";
+    position: absolute;
+    left: -15px;
+    top: 0;
+    width: 40px;
+    background: inherit;
+    z-index: -1;
+  }
+  &:before {
+    transform: skewX(-45deg);
+    height: 51%;
+  }
+  &:after {
+    transform: skewX(45deg);
+    height: 50%;
+    top: 51%;
+  }
+  
+  &:hover {
+    color: color.adjust(helpers.$light, $lightness: 5%);
+    background-color: helpers.$gold-dark !important;
+    // @include effects.box-shadow(true, 3px, 3px, 5px, rgba(#000, .3), rgba(helpers.$light, .3));
+
+    &:before,
+    &:after {
+      // @include effects.box-shadow(true, 3px, 3px, 5px, rgba(#000, .3), rgba(helpers.$light, .3));
+    }
+  }
 }
