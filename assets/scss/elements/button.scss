@@ -1,19 +1,16 @@
 @use "vars/helpers";
 @use "sass:color";
-@use "mixins/components";
-@use "mixins/effects";
-@use "mixins/animations";
 
 button, a.button {
     font-weight: 600;
-    @include effects.box-shadow(false, 5px, 5px, 5px, rgba(#000, .3), rgba(helpers.$gold, .07));
+    @include helpers.box-shadow(false, 5px, 5px, 5px, rgba(#000, .3), rgba(helpers.$gold, .07));
     transition: color .3s ease-out, background .2s ease-out;
 
     &:not(.round-button):not(.is-round) svg {
         fill: helpers.$gold-dark;
         width: 25px;
         height: 25px;
-        @include animations.translate(-5px, 0);
+        @include helpers.translate(-5px, 0);
         transition: fill .3s ease-out;
     }
 
@@ -29,7 +26,7 @@ button, a.button {
     }
 
     &.round-button {
-      @include components.round-button(false, 48px, helpers.$gold, color.adjust(helpers.$dark, $lightness: 5%));
+      @include helpers.round-button(false, 48px, helpers.$gold, color.adjust(helpers.$dark, $lightness: 5%));
     }
 
     &[disabled], &.is-disabled, &:disabled,
@@ -37,7 +34,7 @@ button, a.button {
         cursor: not-allowed;
         box-shadow: none;
         &:hover {
-            @include animations.translate(0, 0);
+            @include helpers.translate(0, 0);
             box-shadow: none;
             border: 1px solid rgba(helpers.$dark, 1);
             svg {

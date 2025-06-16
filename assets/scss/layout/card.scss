@@ -1,13 +1,9 @@
 @use "vars/helpers";
 @use "sass:color";
-@use "mixins/effects";
-@use "mixins/animations";
-@use "mixins/components";
-@use "mixins/responsive";
 
 article.card.is-horizontal {
     background: color.adjust(helpers.$dark, $lightness: 5%);
-    @include effects.box-shadow(false, 5px, 5px, 5px, rgba(#000, .5), rgba(helpers.$light, .05));
+    @include helpers.box-shadow(false, 5px, 5px, 5px, rgba(#000, .5), rgba(helpers.$light, .05));
     border: 1px solid rgba(helpers.$gold, .2);
     height: 100%;
     color: color.adjust(helpers.$light, $lightness: 0.5%);
@@ -16,7 +12,7 @@ article.card.is-horizontal {
     margin-right: auto;
 
     &.is-fixed {
-      @include effects.box-shadow(false, 5px, 5px, 5px, rgba(#000, .55), rgba(helpers.$light, .1));
+      @include helpers.box-shadow(false, 5px, 5px, 5px, rgba(#000, .55), rgba(helpers.$light, .1));
       border: 1px solid rgba(helpers.$gold, .5);
     }
 
@@ -33,7 +29,7 @@ article.card.is-horizontal {
     }
 
     &:not(.is-log):hover {
-      @include effects.box-shadow(false, 5px, 5px, 5px, rgba(#000, .55), rgba(helpers.$light, .1));
+      @include helpers.box-shadow(false, 5px, 5px, 5px, rgba(#000, .55), rgba(helpers.$light, .1));
       // transform: scale(1.01);
 
       &::after {
@@ -70,7 +66,7 @@ article.card.is-horizontal {
         fill: color.scale(helpers.$dark, $lightness: 40%);
         width: 15px;
         height: 15px;
-        @include animations.translate(0, 3px);
+        @include helpers.translate(0, 3px);
         margin-right: 2px;
       }
     }
@@ -119,7 +115,7 @@ article.card.is-horizontal {
         width: 15px;
         margin-right: 2px;
         fill: color.scale(helpers.$dark, $lightness: 40%);
-        @include animations.translate(0, 3px);
+        @include helpers.translate(0, 3px);
       }
     }
   
@@ -136,7 +132,7 @@ article.card.is-horizontal {
         z-index: 2;
         img {
           filter: grayscale(1);
-          @include effects.box-shadow(false, 3px, 3px, 5px, rgba(#000, .3), rgba(helpers.$light, .05));
+          @include helpers.box-shadow(false, 3px, 3px, 5px, rgba(#000, .3), rgba(helpers.$light, .05));
           border: 1px solid helpers.$dark;
           
           &:hover {
@@ -148,7 +144,7 @@ article.card.is-horizontal {
           display: inline-block;
   
           .author-opener {
-            @include components.round-button(true, 48px, helpers.$gold, color.adjust(helpers.$dark, $lightness: 5%));
+            @include helpers.round-button(true, 48px, helpers.$gold, color.adjust(helpers.$dark, $lightness: 5%));
             background: color.adjust(helpers.$dark, $lightness: -4%);
             font-size: 1.3em;
             @include helpers.font-header;            
@@ -163,7 +159,7 @@ article.card.is-horizontal {
             height: 62px;
             bottom: -18px;
             padding: 7px;
-            @include effects.box-shadow(false, 5px, 5px, 5px, rgba(#000, .3), rgba(helpers.$light, .07));
+            @include helpers.box-shadow(false, 5px, 5px, 5px, rgba(#000, .3), rgba(helpers.$light, .07));
             display: none;
   
             &:before {
@@ -199,7 +195,7 @@ article.card.is-horizontal {
         padding: .75em 1.5em;
         border-color: rgba(helpers.$gold-dark, .5);
         span svg {
-          @include animations.translate(0, 5px);
+          @include helpers.translate(0, 5px);
         }
         svg.ri-1x {
           width: 20px;
@@ -255,7 +251,7 @@ article.card.is-horizontal.has-image {
     }
     .card-image {
       figure {
-        @include components.figure;
+        @include helpers.figure;
       }
     }
 }
@@ -334,11 +330,11 @@ article.card.is-horizontal.is-log {
         }
         &::before {
           content: "\ec51";
-          @include animations.translate(0, -8px);
+          @include helpers.translate(0, -8px);
         }
         &::after {
           content: "\ec52";
-          @include animations.translate(-2px, -8px);
+          @include helpers.translate(-2px, -8px);
         }
       }
     }
@@ -359,7 +355,7 @@ article.card.is-horizontal.is-log {
         background-color: color.adjust(helpers.$dark, $lightness: -2%);
         border-radius: var(--bulma-card-radius);
         z-index: 1;
-        @include effects.box-shadow(false, 5px, 5px, 3px, rgba(#000, .5), rgba(helpers.$light, .05));
+        @include helpers.box-shadow(false, 5px, 5px, 3px, rgba(#000, .5), rgba(helpers.$light, .05));
       }
 
       .content {
@@ -378,7 +374,7 @@ article.card.is-horizontal.is-log {
         fill: color.scale(helpers.$dark, $lightness: 40%);
         width: 15px;
         height: 15px;
-        @include animations.translate(0, 3px);
+        @include helpers.translate(0, 3px);
         margin-right: 2px;
       }
     }
@@ -604,7 +600,7 @@ article.card.is-horizontal.is-log {
   }
 }
 
-@include responsive.mobile {
+@include helpers.mobile {
 
   .grid.is-col-min-19,
   .grid.is-col-min-13.is-small {

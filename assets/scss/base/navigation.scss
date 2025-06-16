@@ -1,7 +1,5 @@
 @use "vars/helpers";
 @use "sass:color";
-@use "mixins/effects";
-@use "mixins/animations";
 
 // Burger Menu design
 input#menu-switch {
@@ -25,7 +23,7 @@ input#menu-switch:checked ~ .navbar-menu {
 
 nav.navbar {
     background-color: color.adjust(helpers.$dark, $lightness: -5%);
-    // @include effects.box-shadow(true, 1px, 1px, 2px, rgba(color.adjust(helpers.$dark, $lightness: -20%), 1), rgba(helpers.$light, .1));
+    // @include helpers.box-shadow(true, 1px, 1px, 2px, rgba(color.adjust(helpers.$dark, $lightness: -20%), 1), rgba(helpers.$light, .1));
 
     a.navbar-item {
         color: helpers.$gold;
@@ -36,7 +34,7 @@ nav.navbar {
         &:hover {
             color: helpers.$gold-light;
             background-color: color.adjust(helpers.$dark, $lightness: -5%);
-            @include effects.box-shadow(true, 1px, 1px, 4px, rgba(color.adjust(helpers.$dark, $lightness: -20%), .8), rgba(helpers.$light, 0.14));
+            @include helpers.box-shadow(true, 1px, 1px, 4px, rgba(color.adjust(helpers.$dark, $lightness: -20%), .8), rgba(helpers.$light, 0.14));
         }
 
         &.is-active {

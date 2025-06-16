@@ -1,7 +1,5 @@
 @use "vars/helpers";
 @use "sass:color";
-@use "mixins/effects";
-@use "mixins/animations";
 
 .has-ribbon {
     position: relative;
@@ -42,11 +40,11 @@ a.ribbon {
     &:hover {
       color: color.adjust(helpers.$light, $lightness: 5%);
       background-color: helpers.$dark !important;
-      // @include effects.box-shadow(true, 3px, 3px, 5px, rgba(#000, .3), rgba(helpers.$light, .3));
+      // @include helpers.box-shadow(true, 3px, 3px, 5px, rgba(#000, .3), rgba(helpers.$light, .3));
 
       &:before,
       &:after {
-        // @include effects.box-shadow(true, 3px, 3px, 5px, rgba(#000, .3), rgba(helpers.$light, .3));
+        // @include helpers.box-shadow(true, 3px, 3px, 5px, rgba(#000, .3), rgba(helpers.$light, .3));
       }
     }
 }
@@ -86,11 +84,11 @@ a.ribbon.is-left {
   &:hover {
     color: color.adjust(helpers.$light, $lightness: 5%);
     background-color: helpers.$gold-dark !important;
-    // @include effects.box-shadow(true, 3px, 3px, 5px, rgba(#000, .3), rgba(helpers.$light, .3));
+    // @include helpers.box-shadow(true, 3px, 3px, 5px, rgba(#000, .3), rgba(helpers.$light, .3));
 
     &:before,
     &:after {
-      // @include effects.box-shadow(true, 3px, 3px, 5px, rgba(#000, .3), rgba(helpers.$light, .3));
+      // @include helpers.box-shadow(true, 3px, 3px, 5px, rgba(#000, .3), rgba(helpers.$light, .3));
     }
   }
 }

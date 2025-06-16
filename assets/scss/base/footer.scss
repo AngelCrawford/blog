@@ -1,14 +1,11 @@
 @use "vars/helpers";
 @use "sass:color";
-@use "mixins/effects";
-@use "mixins/responsive";
-@use "mixins/components";
 
 footer.footer {
   margin: 0;
   padding: 0 0 2em 0;
   background-color: color.adjust(helpers.$dark, $lightness: -5%);
-  @include effects.box-shadow(true, 10px, 10px, 15px, rgba(#000, .3), rgba(helpers.$light, .1));
+  @include helpers.box-shadow(true, 10px, 10px, 15px, rgba(#000, .3), rgba(helpers.$light, .1));
   position: fixed;
   bottom: 0;
   left: 0;
@@ -95,7 +92,7 @@ footer.footer {
     }
     
     .title.is-5 {
-      @include components.lined-title;
+      @include helpers.lined-title;
     }
     
     .stats {
@@ -107,12 +104,16 @@ footer.footer {
           display: flex;
           width: 100%;
           padding: .1em 0;
+
+          svg {
+            @include helpers.translate(-5px, 2px);
+          }
           
           .variable-number {
-            order: 1;
+            order: 3;
           }
           .variable {
-            order: 3;
+            order: 1;
             padding-left: 0.3em;
             color: color.scale(helpers.$dark, $lightness: 40%);
           }
@@ -127,11 +128,6 @@ footer.footer {
             background-repeat: repeat-x;
             height: auto;
           }
-        }
-  
-        ul {
-          padding-left: 2em;
-          margin: 0;
         }
       }
     }
@@ -179,7 +175,7 @@ footer.footer {
   }
 }
 
-@include responsive.tablet {
+@include helpers.tablet {
   footer.footer .title.slogan {
     font-size: 1.5rem;
     &::before, &::after {

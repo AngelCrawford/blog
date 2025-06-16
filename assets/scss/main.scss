@@ -103,6 +103,10 @@ main {
     letter-spacing: .03em;
     display: inline-block;
 
+    @include helpers.mobile {
+      font-size: 28px;
+    }
+
     &:first-child:last-child {
       padding-bottom: 0;
       margin-bottom: 0;

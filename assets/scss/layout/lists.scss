@@ -1,13 +1,9 @@
 @use "vars/helpers";
 @use "sass:color";
-@use "mixins/effects";
-@use "mixins/responsive";
-@use "mixins/components";
-
 
 body.layout-is-archive {
     main.content .column > h2.title {
-        @include components.lined-title;
+        @include helpers.lined-title;
         margin-top: 1em;
     }
 }

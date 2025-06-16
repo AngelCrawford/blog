@@ -1,100 +1,258 @@
 @forward 'fonts';
 @forward 'colors';
 @forward 'icons';
-@forward '../mixins';
 @use 'colors' as c;
+@use 'fonts' as f;
 @use "sass:color";
+@use "sass:map";
 
-// This file now forwards all mixins from the new mixins directory
-// The implementations below are kept for backward compatibility
-// For new code, please use the mixins from the mixins directory directly
-
-// // @include box-shadow(false, 5px, 5px, 5px, rgba(#000, .3), rgba($text, .05))
-// @mixin animation($animation, $time, $style: both) {
-//     animation: $animation alternate $time $style;
-//     -webkit-animation: $animation alternate $time $style;
-//     -moz-animation-name: $animation alternate $time $style;
-// }
-
-// @mixin box-shadow($inset: false, $horizOffset: 5px, $vertOffset: 5px, $blur: 5px, $color: rgba(#000, .3), $color2: rgba(c.$light, .05)) {
-//   // Calculate negative offsets
-//   $negHorizOffset: $horizOffset * -1;
-//   $negVertOffset: $vertOffset * -1;
+// Animation mixin for consistent cross-browser animations
+@mixin animation($animation, $time, $style: both) {
+  animation: $animation alternate $time $style;
+  -webkit-animation: $animation alternate $time $style;
+  -moz-animation-name: $animation alternate $time $style;
+}
   
-//   @if $inset == true {
-//     -webkit-box-shadow: inset $horizOffset $vertOffset $blur $color, inset $negHorizOffset $negVertOffset $blur $color2;
-//     -moz-box-shadow: inset $horizOffset $vertOffset $blur $color, inset $negHorizOffset $negVertOffset $blur $color2;
-//     -ms-box-shadow: inset $horizOffset $vertOffset $blur $color, inset $negHorizOffset $negVertOffset $blur $color2;
-//     -o-box-shadow: inset $horizOffset $vertOffset $blur $color, inset $negHorizOffset $negVertOffset $blur $color2;
-//     box-shadow: inset $horizOffset $vertOffset $blur $color, inset $negHorizOffset $negVertOffset $blur $color2;
-//   } @else {
-//     -webkit-box-shadow: $horizOffset $vertOffset $blur $color, $negHorizOffset $negVertOffset $blur $color2;
-//     -moz-box-shadow: $horizOffset $vertOffset $blur $color, $negHorizOffset $negVertOffset $blur $color2;
-//     -ms-box-shadow: $horizOffset $vertOffset $blur $color, $negHorizOffset $negVertOffset $blur $color2;
-//     -o-box-shadow: $horizOffset $vertOffset $blur $color, $negHorizOffset $negVertOffset $blur $color2;
-//     box-shadow: $horizOffset $vertOffset $blur $color, $negHorizOffset $negVertOffset $blur $color2;
-//   }
-// }
+// Keyframes mixin for consistent cross-browser keyframes
+@mixin keyframes($name) {
+    @-webkit-keyframes #{$name} { @content; }
+    @-moz-keyframes #{$name} { @content; }
+    @-ms-keyframes #{$name} { @content; }
+    @-o-keyframes #{$name} { @content; }
+    @keyframes #{$name} { @content; }
+}
   
-// @mixin translate($horiz, $vert) {
-//   -webkit-transform: translate($horiz, $vert); /* Safari and Chrome */
-//   -moz-transform: translate($horiz, $vert); /* Firefox */
-//   -ms-transform: translate($horiz, $vert); /* IE 9 */
-//   -o-transform: translate($horiz, $vert); /* Opera */
-//   transform: translate($horiz, $vert);
-// }
+// Transform mixin for consistent cross-browser transforms
+@mixin translate($horiz, $vert) {
+    -webkit-transform: translate($horiz, $vert); /* Safari and Chrome */
+    -moz-transform: translate($horiz, $vert); /* Firefox */
+    -ms-transform: translate($horiz, $vert); /* IE 9 */
+    -o-transform: translate($horiz, $vert); /* Opera */
+    transform: translate($horiz, $vert);
+}
 
-// @mixin keyframes($name) {
-//   @-webkit-keyframes #{$name} { @content; }
-//   @-moz-keyframes #{$name} { @content; }
-//   @-ms-keyframes #{$name} { @content; }
-//   @-o-keyframes #{$name} { @content; }
-//   @keyframes #{$name} { @content; }
-// }
+// Box shadow mixin with support for inset and dual shadows
+@mixin box-shadow($inset: false, $horizOffset: 5px, $vertOffset: 5px, $blur: 5px, $color: rgba(#000, .3), $color2: rgba(c.$light, .05)) {
+    // Calculate negative offsets
+    $negHorizOffset: $horizOffset * -1;
+    $negVertOffset: $vertOffset * -1;
+    
+    @if $inset == true {
+      -webkit-box-shadow: inset $horizOffset $vertOffset $blur $color, inset $negHorizOffset $negVertOffset $blur $color2;
+      -moz-box-shadow: inset $horizOffset $vertOffset $blur $color, inset $negHorizOffset $negVertOffset $blur $color2;
+      -ms-box-shadow: inset $horizOffset $vertOffset $blur $color, inset $negHorizOffset $negVertOffset $blur $color2;
+      -o-box-shadow: inset $horizOffset $vertOffset $blur $color, inset $negHorizOffset $negVertOffset $blur $color2;
+      box-shadow: inset $horizOffset $vertOffset $blur $color, inset $negHorizOffset $negVertOffset $blur $color2;
+    } @else {
+      -webkit-box-shadow: $horizOffset $vertOffset $blur $color, $negHorizOffset $negVertOffset $blur $color2;
+      -moz-box-shadow: $horizOffset $vertOffset $blur $color, $negHorizOffset $negVertOffset $blur $color2;
+      -ms-box-shadow: $horizOffset $vertOffset $blur $color, $negHorizOffset $negVertOffset $blur $color2;
+      -o-box-shadow: $horizOffset $vertOffset $blur $color, $negHorizOffset $negVertOffset $blur $color2;
+      box-shadow: $horizOffset $vertOffset $blur $color, $negHorizOffset $negVertOffset $blur $color2;
+    }
+}
+  
+// Simple box shadow mixin for single shadows
+@mixin simple-shadow($x: 0, $y: 1px, $blur: 3px, $color: rgba(0,0,0,.3)) {
+    box-shadow: $x $y $blur $color;
+}
+  
+// Text shadow mixin
+@mixin text-shadow($x: 1px, $y: 1px, $blur: 2px, $color: rgba(0,0,0,.5)) {
+    text-shadow: $x $y $blur $color;
+}
 
-// @mixin round-button($inset: true, $size: 48px, $color: $gold, $border: $gold-dark) {
-//   border-radius: 50%;
-//   width: $size;
-//   height: $size;
-//   color: $color;
-//   border: 1px solid rgba($border, .5);
 
-//   display: inline-flex;
-//   align-content: center;
-//   align-items: center;
-//   justify-content: center;
-//   justify-content: center;
-//   box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
-//   background: color.adjust(c.$dark, $lightness: -4%);
-//   transition: color .3s ease-out;
-//   cursor: pointer;
+// Round button mixin for consistent circular buttons
+@mixin round-button($inset: true, $size: 48px, $color: c.$gold, $border: c.$gold-dark) {
+    border-radius: 50%;
+    width: $size;
+    height: $size;
+    color: $color;
+    border: 1px solid rgba($border, .5);
+  
+    display: inline-flex;
+    align-content: center;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
+    background: color.adjust(c.$dark, $lightness: -4%);
+    transition: color .3s ease-out, transform .2s ease-out, border .2s ease-out;
+    // cursor: pointer;
+  
+    @if $inset == true {
+      @include box-shadow(true, 3px, 3px, 5px, rgba(#000, .3), rgba(c.$light, .05));
+    } @else {
+      @include box-shadow(false, 3px, 3px, 5px, rgba(#000, .3), rgba(c.$light, .05));
+    }
+  
+    svg {
+      fill: c.$gold;
+      width: calc($size - 13px);
+      height: calc($size - 13px);
+      transition: fill .3s ease-out;
+    }
+  
+    &:hover, &:focus {
+      border: 1px solid $border;
+      color: c.$gold-light;
+  
+      @if $inset == true {
+        @include box-shadow(false, 3px, 3px, 5px, rgba(#000, .3), rgba(c.$light, .05));
+        @include translate(0, -2px);
+      } @else {
+        @include box-shadow(true, 3px, 3px, 5px, rgba(#000, .3), rgba(c.$light, .05));
+        @include translate(0, 2px);
+      }
+      svg {
+        fill: c.$gold-light;
+      }
+    }
+}
+  
+@mixin figure {
+    height: calc(100% - 1.5em);
+    margin-left: -1.5em;
+    margin-top: 1.5em;
+  
+    img {
+      @include box-shadow(false, 5px, 5px, 3px, rgba(#000, .5), rgba(c.$light, .05));
+      border-radius: .75rem;
+      transition: 0.3s;
+      object-fit: cover;
+    }
+  
+    figcaption {
+      position: absolute;
+      font-size: 80%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      display: inline-block;
+      padding: .5em;
+      bottom: 0;
+      color: c.$light;
+      width: 100%;
+      border-top: 1px solid rgba(color.adjust(c.$dark, $lightness: -10%), .5);
+      background-color: rgba(color.adjust(c.$dark, $lightness: -7%), .7);
+      border-radius: 0 0 .75rem .75rem;
+      a {
+        color: c.$gold;
+        &:hover {
+          color: c.$gold-light;
+        }
+      }
+      svg {
+        width: 16px;
+        height: 16px;
+        fill: c.$gold;
+        margin-right: 3px;
+        @include translate(0, 3px);
+      }
+    }
+}
+  
+@mixin lined-title {
+    text-align: center;
+    overflow: hidden;
+    text-align: center;
+    color: color.scale(c.$dark, $lightness: 50%);
+    @include f.font-header;
+    
+    &:before,
+    &:after {
+      background: rgba(c.$gold, .5);
+      content: "";
+      display: inline-block;
+      height: 1px;
+      position: relative;
+      vertical-align: middle;
+      width: 50%;
+    }
+    
+    &:before {
+      right: 0.5em;
+      margin-left: -50%;
+    }
+    
+    &:after {
+      left: 0.5em;
+      margin-right: -50%;
+    }
+}
 
-//   @if $inset == true {
-//     @include box-shadow(true, 3px, 3px, 5px, rgba(#000, .3), rgba(c.$light, .05));
-//   } @else {
-//     @include box-shadow(false, 3px, 3px, 5px, rgba(#000, .3), rgba(c.$light, .05));
-//   }
 
-//   svg {
-//     fill: c.$gold;
-//     width: calc($size - 13px);
-//     height: calc($size - 13px);
-//     transition: fill .3s ease-out;
-//   }
-
-//   &:hover, &:focus {
-//     border: 1px solid $border;
-//     color: c.$gold-light;
-
-//     @if $inset == true {
-//       @include box-shadow(false, 3px, 3px, 5px, rgba(#000, .3), rgba(c.$light, .05));
-//       @include translate(0, -2px);
-//     } @else {
-//       @include box-shadow(true, 3px, 3px, 5px, rgba(#000, .3), rgba(c.$light, .05));
-//       @include translate(0, 2px);
-//     }
-//     svg {
-//       fill: c.$gold-light;
-//     }
-//   }
-// }
+// Breakpoint variables
+$breakpoints: (
+    "mobile": 640px,
+    "tablet": 768px,
+    "desktop": 1024px,
+    "widescreen": 1216px,
+    "fullhd": 1408px
+);
+  
+// Media query mixins
+@mixin mobile {
+    @media screen and (max-width: map.get($breakpoints, "mobile")) {
+      @content;
+    }
+}
+  
+@mixin tablet {
+    @media screen and (min-width: map.get($breakpoints, "mobile") + 1) and (max-width: map.get($breakpoints, "tablet")) {
+      @content;
+    }
+}
+  
+@mixin tablet-only {
+    @media screen and (max-width: map.get($breakpoints, "tablet")) {
+      @content;
+    }
+}
+  
+@mixin desktop {
+    @media screen and (min-width: map.get($breakpoints, "tablet") + 1) {
+      @content;
+    }
+}
+  
+@mixin desktop-only {
+    @media screen and (min-width: map.get($breakpoints, "tablet") + 1) and (max-width: map.get($breakpoints, "desktop")) {
+      @content;
+    }
+}
+  
+@mixin widescreen {
+    @media screen and (min-width: map.get($breakpoints, "widescreen") + 1) {
+      @content;
+    }
+}
+  
+@mixin widescreen-only {
+    @media screen and (min-width: map.get($breakpoints, "desktop") + 1) and (max-width: map.get($breakpoints, "widescreen")) {
+      @content;
+    }
+}
+  
+@mixin fullhd {
+    @media screen and (min-width: map.get($breakpoints, "widescreen") + 1) {
+      @content;
+    }
+}
+ 
+// Custom breakpoint mixin
+@mixin breakpoint($min: 0, $max: 0) {
+    @if $max == 0 {
+      @media screen and (min-width: $min) {
+        @content;
+      }
+    } @else if $min == 0 {
+      @media screen and (max-width: $max) {
+        @content;
+      }
+    } @else {
+      @media screen and (min-width: $min) and (max-width: $max) {
+        @content;
+      }
+    }
+}

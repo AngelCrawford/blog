@@ -10,8 +10,7 @@ Now I want to stick on to one project - a custom theme for my private blog.
 
 # To-Do
 - [ ] Add clouds to day sky
-- [ ] Mega Menu, yes or no? Can't devide if needed.
-  - [ ] Do I even need the dropdowns? Because I want the user to open the site!
+- [ ] Do I even need the dropdowns? Because I want the user to open the site!
 
 
 # Includes

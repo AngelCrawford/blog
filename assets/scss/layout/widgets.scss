@@ -1,13 +1,9 @@
 @use "vars/helpers";
 @use "sass:color";
-@use "mixins/effects";
-@use "mixins/animations";
-@use "mixins/components";
-@use "mixins/responsive";
 
 .widget {
     > .title:not(.is-6) {
-      @include components.lined-title;
+      @include helpers.lined-title;
     }
 
     a:hover {
@@ -78,6 +74,6 @@
         height: 20px;
         fill: color.scale(helpers.$dark, $lightness: 40%);
         margin-right: 10px;
-        @include animations.translate(0, 4px);
+        @include helpers.translate(0, 4px);
     }
 }

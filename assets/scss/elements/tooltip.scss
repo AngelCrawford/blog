@@ -1,7 +1,5 @@
 @use "vars/helpers";
 @use "sass:color";
-@use "mixins/effects";
-@use "mixins/animations";
 
 // Variables
 $tooltip-bg: color.adjust(helpers.$dark, $lightness: -5%) !default;
@@ -39,7 +37,7 @@ $tooltip-z-index: 9999 !default;
     font-size: $tooltip-font-size;
     text-align: center;
     white-space: nowrap;
-    @include effects.simple-shadow(2px, 2px, 5px, rgba(helpers.$gold-light, 0.2));
+    @include helpers.simple-shadow(2px, 2px, 5px, rgba(helpers.$gold-light, 0.2));
   }
   
   // Tooltip arrow

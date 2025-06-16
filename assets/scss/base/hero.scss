@@ -3,9 +3,6 @@
 @use "sass:color";
 @use "vars/helpers";
 @use "src/bulma/utilities/mixins" as bulma-mixins;
-@use "mixins/responsive";
-@use "mixins/animations";
-@use "mixins/effects";
 
 header.hero {
     position: relative;
@@ -61,11 +58,11 @@ header.hero {
             z-index: 1;
             will-change: background-position;
             
-            @include animations.keyframes(clock) {
+            @include helpers.keyframes(clock) {
                 0% { background-position: 50% 200px; } 
                 100% {background-position: 50% 20px; } 
             }
-            @include animations.animation(clock, 2s);
+            @include helpers.animation(clock, 2s);
         }
 
         // Text Logo
@@ -124,13 +121,13 @@ header.hero {
                 
                     // Wird per JS getriggert
                     &.shimmer-animation {
-                        @include animations.animation(shimmer, .8s);
+                        @include helpers.animation(shimmer, .8s);
                         will-change: background-position;
                     }
     
                 }
     
-                @include animations.keyframes(shimmer) {
+                @include helpers.keyframes(shimmer) {
                     0% { background-position: top left; }
                     100% { background-position: top right; }
                 }
@@ -223,13 +220,13 @@ header.hero {
             }
             .back {
                 transform-origin: 1.5rem 2rem;
-                @include animations.animation(counter-wiggle, 4s, ease-in-out);
+                @include helpers.animation(counter-wiggle, 4s, ease-in-out);
             }
             .santa-hat-piece {
                 fill: firebrick;
             }
             
-            @include animations.keyframes(counter-wiggle) {
+            @include helpers.keyframes(counter-wiggle) {
                 33% { transform: rotate(-20deg); }
                 66% { transform: rotate(10deg); }
             }
@@ -250,10 +247,10 @@ header.hero {
                 animation-iteration-count: 1;
                 animation-delay: 2.5s;
                 opacity: 0;
-                @include animations.animation(ghost, 2.5s, forwards);
+                @include helpers.animation(ghost, 2.5s, forwards);
             }
 
-            @include animations.keyframes(ghost) {
+            @include helpers.keyframes(ghost) {
                 0% { opacity: 0; }
                 50% { opacity: 1; }
                 100% { opacity: 0; }
@@ -302,10 +299,10 @@ header.hero {
                     animation-delay: 4s;
                 }
             }
-            @include animations.keyframes(fly-cycle) {
+            @include helpers.keyframes(fly-cycle) {
                 100% { background-position: -900px 0; }
             }
-            @include animations.keyframes(fly-right-one) {
+            @include helpers.keyframes(fly-right-one) {
                 0% { transform: scale(0.25) translateX(-10vw);}
                 10% { transform: translateY(2vh) translateX(10vw) scale(0.3); }
                 20% { transform: translateY(0vh) translateX(30vw) scale(0.35); }
@@ -320,7 +317,7 @@ header.hero {
     }
 }
 
-@include responsive.breakpoint(641px, 840px) {
+@include helpers.breakpoint(641px, 840px) {
     // Between 769px and 1023px
     header.hero.is-medium .hero-body {
         padding: 3rem 1.5rem;
@@ -370,7 +367,7 @@ header.hero {
 }
 
 
-@include responsive.mobile {
+@include helpers.mobile {
     header.hero {
         height: 200px;
 

@@ -1,8 +1,5 @@
 @use "vars/helpers";
 @use "sass:color";
-@use "mixins/components";
-@use "mixins/effects";
-@use "mixins/animations";
 
 #resultsWrapper {
     position: absolute;
@@ -21,7 +18,7 @@
     border: 1px solid blue;
     @include helpers.font-regular;
     background-color: helpers.$dark;
-    @include effects.box-shadow(false, 5px, 5px, 5px, rgba(#000, .3), rgba(helpers.$light, .05));
+    @include helpers.box-shadow(false, 5px, 5px, 5px, rgba(#000, .3), rgba(helpers.$light, .05));
     border-radius: .75rem;
     border: 1px solid rgba(helpers.$gold, .2);
     overflow: auto;
@@ -59,7 +56,7 @@
             height: 150px;
             max-height: 100%;
             border-radius: .75rem;
-            @include effects.box-shadow(false, 3px, 3px, 3px, rgba(#000, .5), rgba(helpers.$light, .1));
+            @include helpers.box-shadow(false, 3px, 3px, 3px, rgba(#000, .5), rgba(helpers.$light, .1));
             filter: sepia(1);
             object-fit: cover;
             

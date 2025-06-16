@@ -4,7 +4,7 @@ robotsdisallow: true
 type: page
 menu:
   footer:
-    weight: 10
+    weight: 30
 ---
 
 Es handelt sich hier um eine rein private Website.

@@ -6,8 +6,8 @@ featured_image:
 - src: ./featured.jpg
   byline: TEST <a href='#'>test</a>
 menu:
-  main:
-    weight: 30
+  footer:
+    weight: 10
 
 ---
 
