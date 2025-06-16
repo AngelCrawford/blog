@@ -6,8 +6,11 @@ body.type-is-articles {
         // max-width: 70ch;
         // margin: 0 auto;
       
-        p {
+        p, ul, ol, li {
           color: color.adjust(helpers.$light, $lightness: 0.5%);
+        }
+        li::marker, ol::marker {
+          color: helpers.$gold;
         }
       
         h1, h2, h3, h4, h5, h6 {

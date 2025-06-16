@@ -20,11 +20,19 @@
     {{ printf `<meta http-equiv="Content-Security-Policy" content="default-src %s; form-action %s; frame-src %s; img-src %s; object-src %s; style-src %s; script-src %s; script-src-elem %s; connect-src %s;">` (delimit .Site.Params.csp.default " ") (delimit .Site.Params.csp.formaction " ") (delimit .Site.Params.csp.framesrc " ") (delimit .Site.Params.csp.imgsrc " ") (delimit .Site.Params.csp.objectsrc " ") (delimit .Site.Params.csp.stylesrc " ") (delimit .Site.Params.csp.scriptsrc " ") (delimit .Site.Params.csp.scriptsrcelem " ") (delimit .Site.Params.csp.connectsrc " ") | safeHTML }}
 
     <!-- Styles -->
-    {{- $opts := (dict "targetPath" "style.css" "transpiler" "dartsass" "enableSourceMap" true ) -}}
-    {{- with resources.Get "scss/main.scss" | toCSS $opts | minify | fingerprint -}}
-        <link rel="stylesheet" href="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}" media="all">
-    {{- end -}}
-
+    {{ with resources.Get "scss/main.scss" }}
+        {{- $opts := (dict "targetPath" "style.css" "transpiler" "dartsass" "enableSourceMap" true ) -}}
+        {{ with . | toCSS $opts }}
+            {{ if hugo.IsDevelopment }}
+                <link rel="stylesheet" href="{{ .RelPermalink }}">
+            {{ else }}
+                {{ with . | fingerprint | minify }}
+                    <link rel="stylesheet" href="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}" media="all">
+                {{ end }}
+            {{ end }}
+        {{ end }}
+    {{ end }}
+  
     <!-- Scripts -->
     {{- $jQuery := resources.Get "js/jquery.js" -}}
     {{- $gdpr := resources.Get "js/gdpr.js" -}}
