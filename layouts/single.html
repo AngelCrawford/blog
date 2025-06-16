@@ -118,7 +118,7 @@
                                         <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ .Site.Params.remixicon_version}}#price-tag-3-line"></use>
                                         </svg>
                                         {{- range (.GetTerms "tags") -}}
-                                        <a href="{{ .RelPermalink }}" class="hashtags">#{{ .LinkTitle }} </a> 
+                                        <a href="{{ .RelPermalink }}" title="{{ .LinkTitle }}" class="hashtags">#{{ .LinkTitle }} </a> 
                                         {{- end -}}
                                     </div>
                                 {{- end -}}
@@ -137,7 +137,7 @@
                                         {{ $name := index .Params.series 0 }}
                                         <svg class='ri-1x'>
                                             <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ .Site.Params.remixicon_version}}#stack-line"></use>
-                                        </svg><a href="/series/{{$name | urlize}}">{{ $name }}</a>
+                                        </svg><a href="/series/{{$name | urlize}}" title="{{ $name }}">{{ $name }}</a>
                                     </span>
                                 {{- end -}}
                             </div>
@@ -170,12 +170,12 @@
                                     {{- end -}}
                                 {{- end -}}
 
-                                <p class="title is-6"><a href="/series/{{$series_name | urlize}}">{{ $series_name }} ({{ $.Store.Get "series_count" }})</a></p>
+                                <p class="title is-6"><a href="/series/{{$series_name | urlize}}" title="{{ $series_name }}">{{ $series_name }} ({{ $.Store.Get "series_count" }})</a></p>
                                 <ol class="series-list">
                                     {{- range .Site.RegularPages.ByDate -}}
                                         {{- if in .Params.series $series_name -}}
                                             {{- if not (eq $currentPage.RelPermalink .RelPermalink) -}}
-                                                <li><a href="{{ .RelPermalink }}" title="{{ .Name }} page">{{ .Title }}</a></li>
+                                                <li><a href="{{ .RelPermalink }}" title="{{ .Title }}">{{ .Title }}</a></li>
                                             {{- else -}}
                                                 <li class="is-active">{{ .Title }} </li>
                                             {{- end -}}

@@ -7,7 +7,7 @@
         {{ if eq .Params.weight 1 }}{{ $cssClasses = add $cssClasses " is-fixed" }}{{ end }}
         {{ if eq .Params.format "log" }}{{ $cssClasses = add $cssClasses " is-log" }}{{ end }}
         <article class="{{ $cssClasses }}">
-            <!-- TODO: Footer generell weiter machen, Quote erhält ebenfalls ein Icon -->
+            <!-- TODO: Footer generell weiter machen -->
 
             {{- if .GetTerms "categories" -}}
                 {{- range first 1 (.GetTerms "categories") -}}
@@ -20,7 +20,7 @@
                     <figure class="image is-2by3">
                         {{- $img := (.Resources.ByType "image").GetMatch "cover*" -}}
                         {{- with $img -}}
-                            {{- if not (eq $.Params.format "log") }}<a href="{{ $.Permalink }}">{{- end -}}
+                            {{- if not (eq $.Params.format "log") }}<a href="{{ $.Permalink }}" title="{{ $.Title }}">{{- end -}}
                                 {{ if eq $.Params.format "log" }}
                                     <!-- Resize to a width of 600px and a height of 480px -->
                                     {{ $image := $img.Process "fill 600x480 webp" }}
@@ -52,7 +52,7 @@
             <div class="card-content">
                 {{ if ne .Params.format "log" }}
                     <h2 class="title is-5" aria-label="{{ .Title }}">
-                        <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+                        <a href="{{ .RelPermalink }}" title="{{ .Title }}">{{ .Title }}</a>
                         <span aria-hidden="true"></span>
                     </h2>
                 
@@ -88,7 +88,7 @@
                                 <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ .Site.Params.remixicon_version}}#price-tag-3-line"></use>
                             </svg>
                             {{- range (.GetTerms "tags") -}}
-                                <a href="{{ .RelPermalink }}">#{{ .LinkTitle }} </a> 
+                                <a href="{{ .RelPermalink }}" title="{{ .LinkTitle }}">#{{ .LinkTitle }} </a> 
                             {{- end -}}
                         </div>
                     {{- end -}}
@@ -104,7 +104,7 @@
                         <div class="more-authors-img">
                             {{- range first 3 (.GetTerms "authors") -}}
                                 <figure class="image is-48x48">
-                                    <a href="{{ .Permalink }}">
+                                    <a href="{{ .Permalink }}" title="{{ .LinkTitle }}">
                                         {{- range first 1 (.Resources.ByType "image") -}}
                                             {{- $img := .Fill "48x48" -}}
                                             <img class="is-rounded" src="{{ $img.RelPermalink }}" alt="{{ $.Title }}" width="48" height="48" loading="lazy">
@@ -116,7 +116,7 @@
                     {{- else -}}
                         {{- range first 1 (.GetTerms "authors") -}}
                             <figure class="image is-48x48">
-                                <a href="{{ .Permalink }}">
+                                <a href="{{ .Permalink }}" title="{{ .LinkTitle }}">
                                     {{- range first 1 (.Resources.ByType "image") -}}
                                         {{- $img := .Fill "48x48" -}}
                                         <img class="is-rounded" src="{{ $img.RelPermalink }}" alt="{{ $.Title }}" width="48" height="48" loading="lazy">
@@ -201,7 +201,7 @@
                     <figure class="image is-2by3">
                         {{- $img := (.Resources.ByType "image").GetMatch "cover*" -}}
                         {{- with $img -}}
-                            <a href="{{ $.Permalink }}">
+                            <a href="{{ $.Permalink }}" title="{{ $.Title }}">
                                 {{ $portraitImage := $img.Process "fill 320x480 webp" }}
                                 {{ $landscapeImage := $img.Process "fill 480x320 webp" }}
                                 <picture>
@@ -222,7 +222,7 @@
             {{- end -}}
             <div class="card-content">
                 <h2 class="title is-5" aria-label="{{ .Title }}">
-                    <a href="{{ .RelPermalink }}" style="{{if .Params.categoryColor }}color:{{.Params.categoryColor }};{{end}}">{{ .Title }}</a>
+                    <a href="{{ .RelPermalink }}" title="{{ .Title }}" style="{{if .Params.categoryColor }}color:{{.Params.categoryColor }};{{end}}">{{ .Title }}</a>
                     <span aria-hidden="true"></span>
                 </h2>
                 
@@ -242,7 +242,7 @@
                     <figure class="image is-2by3">
                         {{- $img := (.Resources.ByType "image").GetMatch "cover*" -}}
                         {{- with $img -}}
-                            <a href="{{ $.Permalink }}">
+                            <a href="{{ $.Permalink }}" title="{{ $.Title }}">
                                 {{ $image := $img.Process "fill 480x320 webp" }}
                                 <picture>
                                     <img src="{{ $image.RelPermalink }}" alt="{{ $.Title }}" width="480" height="320" loading="lazy">
@@ -260,7 +260,7 @@
             {{- end -}}
 
             <div class="card-content">
-                <h2 class="title is-5"><a href="{{ .RelPermalink }}">{{ .Title }}</a></h2>
+                <h2 class="title is-5"><a href="{{ .RelPermalink }}" title="{{ .Title }}">{{ .Title }}</a></h2>
                     
                 <div class="content">
                     <div class="author-summary">{{ .Summary | plainify | truncate 200 }}</div>
@@ -279,7 +279,7 @@
 
                 {{ with .Params.website }}
                     <div class="card-footer-item">
-                        <a data-tooltip="Webseite" href="{{ . }}" target="_blank" rel="noreferrer">
+                        <a data-tooltip="Webseite" href="{{ . }}" title="Webseite" target="_blank" rel="noreferrer">
                             <svg class='ri-1x'>
                                 <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ $.Site.Params.remixicon_version}}#external-link-line"></use>
                             </svg>

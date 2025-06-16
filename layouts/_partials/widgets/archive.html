@@ -8,7 +8,7 @@
                 {{ $list := .Pages }}
                 {{ $len := (len $list) }}
                 <li>
-                  <span class="name"><a href='{{ $.Site.Params.baseurl }}/pages/archive/#{{ $.context.Store.Get "yearIndexArchive" }}'>{{ .Key }}</a></span>
+                  <span class="name"><a href='{{ $.Site.Params.baseurl }}/pages/archive/#{{ $.context.Store.Get "yearIndexArchive" }}' title="{{ .Key }}">{{ .Key }}</a></span>
                   <span class="number">{{ $len }} Artikel</span>
                 </li>
           
@@ -20,7 +20,7 @@
     <!-- Show Button only in the footer, not on the archive page -->
     <div class="is-pulled-right">
       {{ if not (eq .context.RelPermalink "/pages/archive/") }}
-          <a href="/pages/archive/" class="button is-primary is-outlined">
+          <a href="/pages/archive/" class="button is-primary is-outlined" title="Archiv">
               <svg class='ri-1x'>
                   <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ .Site.Params.remixicon_version}}#bookmark-line"></use>
               </svg>

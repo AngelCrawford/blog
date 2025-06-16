@@ -2,7 +2,7 @@
 {{ $level := .Level }}
 <h{{ $level }} id="{{ $id }}">
   {{ .Text | safeHTML }}
-  <a class="anchor-link" href="#{{ $id }}" aria-hidden="true">
+  <a class="anchor-link" href="#{{ $id }}" title="anker" aria-hidden="true">
     <svg class="remix">
       <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ $.Page.Site.Params.remixicon_version}}#links-fill"></use>
     </svg>

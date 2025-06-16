@@ -31,18 +31,18 @@ function searchFn() {
     results.sort(function (a, b) { return b.weight - a.weight; });
       for (var i = 0; i < results.length && i < limit; i += 1) {
         var result = results[i].item;
-        var openAnchor = "<a href=\"" + result.permalink + "\" " + "alt=\"" + result.showTitle + "\" class=\"title is-5\">";
+        var openAnchor = "<a href=\"" + result.permalink + "\" " + "alt=\"" + result.showTitle + "\" title=\"" + result.showTitle + "\" class=\"title is-5\">";
         var resultPane = "<div class=\"columns\">" +
           "<div class=\"column is-full\"><figure class=\"image\">" + openAnchor + 
           "<img src=\"" + result.image + "\" width=\"200\" height=\"150\" loading=\"lazy\" alt=\"" + result.title + "\" title=\"" + result.title + "\">" +
           "</a></figure>" + openAnchor + result.showTitle + "</a>" + 
           "<span class=\"heading\">" + 
-          "<span></span><svg class=\"ri-1x\"><use xlink:href=\"/fonts/remixicon/remixicon.symbol.svg?t={{ .Site.Params.remixicon_version}}#price-tag-3-line\"></use></svg>" + result.tags + 
-          "<span></span><svg class=\"ri-1x\"><use xlink:href=\"/fonts/remixicon/remixicon.symbol.svg?t={{ .Site.Params.remixicon_version}}#calendar-line\"></use></svg>" + result.publishedOn + 
-          "<span></span><svg class=\"ri-1x\"><use xlink:href=\"/fonts/remixicon/remixicon.symbol.svg?t={{ .Site.Params.remixicon_version}}#pencil-line\"></use></svg>" + result.updatedOn + 
+          "<span></span><svg class=\"ri-1x\"><use xlink:href=\"/fonts/remixicon/remixicon.symbol.svg#price-tag-3-line\"></use></svg>" + result.tags + 
+          "<span></span><svg class=\"ri-1x\"><use xlink:href=\"/fonts/remixicon/remixicon.symbol.svg#calendar-line\"></use></svg>" + result.publishedOn + 
+          "<span></span><svg class=\"ri-1x\"><use xlink:href=\"/fonts/remixicon/remixicon.symbol.svg#pencil-line\"></use></svg>" + result.updatedOn + 
           "</span>" + 
           "<div class=\"content\">" + result.showContent.substr(0, 250) + " [...]" + 
-          "<a href=\"" + result.permalink + "\" " + "alt=\"" + result.showTitle + "\" class=\"read-more\"> weiterlesen</a>" +
+          "<a href=\"" + result.permalink + "\" " + "alt=\"" + result.showTitle + "\" title=\"" + result.showTitle + "\" class=\"read-more\"> weiterlesen</a>" +
           "</div></div>";
         $("#results").append(resultPane);
       }

@@ -6,25 +6,25 @@
   {{- if gt $paginator.TotalPages 1 -}}
     <nav class="pagination is-centered" aria-label="pagination">
       {{- with $paginator.First -}}
-          <a {{ if $paginator.HasPrev }}href="{{ .URL }}"{{ else }}href="#"{{ end }} class="pagination-previous button is-round" aria-label="First" {{ if not $paginator.HasPrev }}disabled{{ end }}>
+          <a {{ if $paginator.HasPrev }}href="{{ .URL }}"{{ else }}href="#"{{ end }} class="pagination-previous button is-round" aria-label="First" {{ if not $paginator.HasPrev }}disabled{{ end }} title="First">
             <svg class='remix'>
               <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ $.Site.Params.remixicon_version}}#skip-back-line"></use>
             </svg>
           </a>
       {{- end -}}
-      <a {{ if $paginator.HasPrev }}href="{{ $paginator.Prev.URL }}"{{ else }}href="#"{{ end }} class="pagination-previous button is-round" aria-label="Previous" {{ if not $paginator.HasPrev }}disabled{{ end }}>
+      <a {{ if $paginator.HasPrev }}href="{{ $paginator.Prev.URL }}"{{ else }}href="#"{{ end }} class="pagination-previous button is-round" aria-label="Previous" {{ if not $paginator.HasPrev }}disabled{{ end }} title="Previous">
         <svg class='remix'>
           <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ $.Site.Params.remixicon_version}}#arrow-left-s-line"></use>
         </svg>
       </a>
 
-      <a {{ if $paginator.HasNext }}href="{{ $paginator.Next.URL }}"{{ else }}href="#"{{ end }} class="pagination-next button is-round" aria-label="Next" {{ if not $paginator.HasNext }}disabled{{ end }}>
+      <a {{ if $paginator.HasNext }}href="{{ $paginator.Next.URL }}"{{ else }}href="#"{{ end }} class="pagination-next button is-round" aria-label="Next" {{ if not $paginator.HasNext }}disabled{{ end }} title="Next">
         <svg class='remix'>
           <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ $.Site.Params.remixicon_version}}#arrow-right-s-line"></use>
         </svg>
       </a>
       {{- with $paginator.Last -}}
-        <a {{ if $paginator.HasNext }}href="{{ .URL }}"{{ else }}href="#"{{ end }} class="pagination-next button is-round" aria-label="Last" {{ if not $paginator.HasNext }}disabled{{ end }}>
+        <a {{ if $paginator.HasNext }}href="{{ .URL }}"{{ else }}href="#"{{ end }} class="pagination-next button is-round" aria-label="Last" {{ if not $paginator.HasNext }}disabled{{ end }} title="Last">
           <svg class='remix'>
             <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ $.Site.Params.remixicon_version}}#skip-forward-line"></use>
           </svg>
@@ -46,7 +46,7 @@
                 {{- $ellipsed = true -}}
             {{- end -}}
             {{- if $showNumber -}}
-                <li><a class="pagination-link{{ if eq . $paginator }} is-current{{ end }} button is-round" href="{{ .URL }}" aria-label="Goto page">{{ .PageNumber }}</a></li>
+                <li><a class="pagination-link{{ if eq . $paginator }} is-current{{ end }} button is-round" href="{{ .URL }}" aria-label="Goto page" title="Goto page {{ .PageNumber }}">{{ .PageNumber }}</a></li>
             {{- else if $shouldEllipse -}}
                 <li><span class="pagination-ellipsis">&hellip;</span></li>
             {{- end -}}

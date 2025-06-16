@@ -31,7 +31,7 @@
   {{- if $.Store.Get "prev_link" -}}
     {{- if ne ($.Store.Get "prev_link") ($.Store.Get "first_link") -}}
       <div class="box-footer-item">
-        <a href="{{- $.Store.Get "first_link" -}}">
+        <a href="{{- $.Store.Get "first_link" -}}" title="Serien Anfang">
           <svg class='ri-1x'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ .Site.Params.remixicon_version}}#skip-back-line"></use></svg>
           Serien Anfang
         </a>
@@ -40,7 +40,7 @@
 
     {{- if $.Store.Get "prev_link" -}}
       <div class="box-footer-item">
-        <a href="{{- $.Store.Get "prev_link" -}}">
+        <a href="{{- $.Store.Get "prev_link" -}}" title="{{ $.Store.Get "prev_title" }}">
           <svg class='ri-1x'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ .Site.Params.remixicon_version}}#arrow-left-s-line"></use></svg>
           {{- $.Store.Get "prev_title" -}}
         </a>
@@ -50,7 +50,7 @@
 
   {{- if $.Store.Get "next_link" -}}
     <div class="box-footer-item">
-      <a href="{{- $.Store.Get "next_link" -}}">
+      <a href="{{- $.Store.Get "next_link" -}}" title="{{ $.Store.Get "next_title" }}">
         {{- $.Store.Get "next_title" -}}
         <svg class='ri-1x'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ .Site.Params.remixicon_version}}#arrow-right-s-line"></use></svg>
       </a>

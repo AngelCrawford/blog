@@ -5,7 +5,7 @@
     <input id="menu-switch" name="menu-switch" type="checkbox" />
 
     <div class="navbar-brand">
-        <a class="navbar-item {{ if .IsHome }}is-active{{ end }}" href="/"><img src="/images/favicon/favicon.ico" width="28" height="28" alt="Logo">{{ .Site.Title }}</a>
+        <a class="navbar-item {{ if .IsHome }}is-active{{ end }}" href="/" title="{{ .Site.Title }}"><img src="/images/favicon/favicon.ico" width="28" height="28" alt="Logo">{{ .Site.Title }}</a>
         <label for="menu-switch" class="navbar-burger" role="button" aria-expanded="false">
             <span aria-hidden="true"></span>
             <span aria-hidden="true"></span>
@@ -23,7 +23,7 @@
                 {{- if .HasChildren -}}
 
                     <div class="navbar-item has-dropdown is-hoverable">
-                        <a class="navbar-link {{ if or ($currentPage.IsMenuCurrent "main" .) ($currentPage.HasMenuCurrent "main" .) }}is-active{{ end }}" href="{{ .Page.Permalink }}">
+                        <a class="navbar-link {{ if or ($currentPage.IsMenuCurrent "main" .) ($currentPage.HasMenuCurrent "main" .) }}is-active{{ end }}" href="{{ .Page.Permalink }}" title="{{ .Page.Title }}">
                           <!-- Get the translation name, if there is one -->
                           {{ if .Page }}
                             {{ if .Page.Params.translation }}
@@ -41,7 +41,7 @@
                         </a>
                         <div class="navbar-dropdown">
                             {{- range .Children -}}
-                                <a class="navbar-item {{ if or ($currentPage.IsMenuCurrent "main" .) ($currentPage.HasMenuCurrent "main" .) }} is-active{{ end }}" href="{{ .Page.Permalink }}">{{ .Name }}</a>
+                                <a class="navbar-item {{ if or ($currentPage.IsMenuCurrent "main" .) ($currentPage.HasMenuCurrent "main" .) }} is-active{{ end }}" href="{{ .Page.Permalink }}" title="{{ .Page.Title }}">{{ .Name }}</a>
                             {{- end -}}
                         </div>
                     </div>
@@ -59,8 +59,9 @@
           
           <div class="navbar-item field searchWithButton">
             <p class="control has-icons-right">
-              <input class="input" type="search" name="searchBox" id="searchBox" placeholder="Search...">
-              <span id="searchIcons" class="icon is-small is-right" aria-label="Search Icon">
+              <label for="searchBox" class="sr-only">Search</label>
+              <input class="input" type="search" name="searchBox" id="searchBox" aria-placeholder="Search...">
+              <span id="searchIcons" class="icon is-small is-right">
                 <svg class='remix lens'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#search-2-line"></use></svg>
                 <svg class='remix close'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#close-fill"></use></svg>
                 <div id="spinnerLoading" class="control spinner is-loading"></div>
