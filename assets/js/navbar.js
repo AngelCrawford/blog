@@ -1,18 +1,18 @@
 // ***************** Navigation Scroll
-function navScroll() {
-    var theNavigation = $(".navbar");
-    stuck = "is-fixed-top";
-    theHeader = 300;
+// function navScroll() {
+//     var theNavigation = $(".navbar");
+//     stuck = "is-fixed-top";
+//     theHeader = 300;
   
-    if ($(window).scrollTop() > theHeader) {
-      theNavigation.addClass(stuck);
-    } else {
-      theNavigation.removeClass(stuck);
-    }
-}
-$(window).on('scroll',function() { 
-    navScroll();
-});
+//     if ($(window).scrollTop() > theHeader) {
+//       theNavigation.addClass(stuck);
+//     } else {
+//       theNavigation.removeClass(stuck);
+//     }
+// }
+// $(window).on('scroll',function() { 
+//     navScroll();
+// });
 
 
 // ***************** Navigation

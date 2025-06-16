@@ -32,18 +32,14 @@ function searchFn() {
       for (var i = 0; i < results.length && i < limit; i += 1) {
         var result = results[i].item;
         var openAnchor = "<a href=\"" + result.permalink + "\" " + "alt=\"" + result.showTitle + "\" title=\"" + result.showTitle + "\" class=\"title is-5\">";
-        var resultPane = "<div class=\"columns\">" +
-          "<div class=\"column is-full\"><figure class=\"image\">" + openAnchor + 
-          "<img src=\"" + result.image + "\" width=\"200\" height=\"150\" loading=\"lazy\" alt=\"" + result.title + "\" title=\"" + result.title + "\">" +
-          "</a></figure>" + openAnchor + result.showTitle + "</a>" + 
-          "<span class=\"heading\">" + 
-          "<span></span><svg class=\"ri-1x\"><use xlink:href=\"/fonts/remixicon/remixicon.symbol.svg#price-tag-3-line\"></use></svg>" + result.tags + 
-          "<span></span><svg class=\"ri-1x\"><use xlink:href=\"/fonts/remixicon/remixicon.symbol.svg#calendar-line\"></use></svg>" + result.publishedOn + 
-          "<span></span><svg class=\"ri-1x\"><use xlink:href=\"/fonts/remixicon/remixicon.symbol.svg#pencil-line\"></use></svg>" + result.updatedOn + 
-          "</span>" + 
-          "<div class=\"content\">" + result.showContent.substr(0, 250) + " [...]" + 
+        var resultPane = "<div class=\"column\">" + openAnchor + result.showTitle + "</a>" + "<p class=\"subtitle\">" + 
+          "<span><svg class=\"ri-1x\"><use xlink:href=\"/fonts/remixicon/remixicon.symbol.svg#price-tag-3-line\"></use></svg>" + result.tags + "</span>" +
+          "<span><svg class=\"ri-1x\"><use xlink:href=\"/fonts/remixicon/remixicon.symbol.svg#calendar-line\"></use></svg>" + result.publishedOn + "</span>" +
+          "<span><svg class=\"ri-1x\"><use xlink:href=\"/fonts/remixicon/remixicon.symbol.svg#pencil-line\"></use></svg>" + result.updatedOn + "</span>" +
+          "</p>" + 
+          "<p>" + result.showContent.substr(0, 250) + " [...]" + 
           "<a href=\"" + result.permalink + "\" " + "alt=\"" + result.showTitle + "\" title=\"" + result.showTitle + "\" class=\"read-more\"> weiterlesen</a>" +
-          "</div></div>";
+          "</p></div>";
         $("#results").append(resultPane);
       }
   };
@@ -92,7 +88,7 @@ function searchFn() {
       if (results.length > limit) {
         resultsMessage += " Showing first " + limit + " results.";
       }
-      $("#results").html("<p>" + resultsMessage + "</p>");
+      $("#results").html(resultsMessage);
         render(results);
       }
     else {
@@ -215,7 +211,6 @@ function searchFn() {
         });
         res.tags = newTags_1;
         res.permalink = result.permalink;
-        res.image = result.image;
         res.publishedOn = result.publishedOn;
         res.updatedOn = result.updatedOn;
         searchHost.index.push(res);

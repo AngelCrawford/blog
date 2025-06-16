@@ -11,7 +11,7 @@ $(window).scroll(function () {
 $('#back-to-top').click(function () { // Klick auf den Button
   $('html').animate({
     scrollTop: 0
-  }, 800);
+  }, 50);
   return false;
 });
 
