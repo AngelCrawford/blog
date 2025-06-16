@@ -6,7 +6,10 @@ image: "https://i.picsum.photos/id/369/700/200.jpg"
 description: We'd love to hear from you
 type: page
 layout: archive
-menu: "main"
+menu:
+  main:
+    params:
+      icon: "bookmark-line"
 
 ---
 

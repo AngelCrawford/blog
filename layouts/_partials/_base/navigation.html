@@ -5,7 +5,7 @@
     <input id="menu-switch" name="menu-switch" type="checkbox" />
 
     <div class="navbar-brand">
-        <a class="navbar-item {{ if .IsHome }}is-active{{ end }}" href="/" title="{{ .Site.Title }}"><img src="/images/favicon/favicon.ico" width="28" height="28" alt="Logo">{{ .Site.Title }}</a>
+        <a class="navbar-item {{ if .IsHome }}is-active{{ end }}" href="/" title="{{ .Site.Title }}"><img src="/images/favicon/favicon.ico" width="28" height="28" alt="Logo">Artikel</a>
         <label for="menu-switch" class="navbar-burger" role="button" aria-expanded="false">
             <span aria-hidden="true"></span>
             <span aria-hidden="true"></span>
@@ -19,39 +19,10 @@
 
             {{- $currentPage := . -}}
             {{- range .Site.Menus.main -}}
-
-                {{- if .HasChildren -}}
-
-                    <div class="navbar-item has-dropdown is-hoverable">
-                        <a class="navbar-link {{ if or ($currentPage.IsMenuCurrent "main" .) ($currentPage.HasMenuCurrent "main" .) }}is-active{{ end }}" href="{{ .Page.Permalink }}" title="{{ .Page.Title }}">
-                          <!-- Get the translation name, if there is one -->
-                          {{ if .Page }}
-                            {{ if .Page.Params.translation }}
-                                {{ if .Page.Params.translation.plural }}
-                                    {{ .Page.Params.translation.plural }}
-                                {{ else }}
-                                    {{ .Name }}
-                                {{ end }}
-                            {{ else }}
-                                {{ .Name }}
-                            {{ end }}
-                          {{ else }}
-                              {{ .Name }}
-                          {{ end }}
-                        </a>
-                        <div class="navbar-dropdown">
-                            {{- range .Children -}}
-                                <a class="navbar-item {{ if or ($currentPage.IsMenuCurrent "main" .) ($currentPage.HasMenuCurrent "main" .) }} is-active{{ end }}" href="{{ .Page.Permalink }}" title="{{ .Page.Title }}">{{ .Name }}</a>
-                            {{- end -}}
-                        </div>
-                    </div>
-
-                {{- else -}}
-                    <a class="navbar-item {{ if or ($currentPage.IsMenuCurrent "main" .) ($currentPage.HasMenuCurrent "main" .) }} is-active{{ end }}" href="{{ .URL }}" title="{{ .Name }} page">
-                      {{ .Name }}
-                    </a>
-                {{- end -}}
-                        
+              <a class="navbar-item {{ if or ($currentPage.IsMenuCurrent "main" .) ($currentPage.HasMenuCurrent "main" .) }} is-active{{ end }}" href="{{ .URL }}" title="{{- if .Page.Params.translation.plural -}}{{ .Page.Params.translation.plural}}{{- else -}}{{ .Name }}{{- end -}}">
+                <svg class="ri-1x" style="fill:red;"><use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ $.Site.Params.remixicon_version}}#{{ .Params.icon }}"></use></svg>
+                {{- if .Page.Params.translation.plural -}}{{ .Page.Params.translation.plural}}{{- else -}}{{ .Name }}{{- end -}}
+              </a>
             {{- end -}}
         </div>
 

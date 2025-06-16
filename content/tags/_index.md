@@ -6,7 +6,7 @@ translation:
 menu: 
   main:
     params:
-      isMegaMenu: false
+      icon: "price-tag-3-line"
 description: "The last theme you'll ever need. Maybe."
 ---
 
