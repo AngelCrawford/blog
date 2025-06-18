@@ -1,27 +1,32 @@
-![](https://img.shields.io/badge/Hugo-0.6.7.0-darkgreen) ![](https://img.shields.io/badge/Platform-Windows-blue) ![](https://img.shields.io/badge/Editor-Visual_Studio_Code-green) ![](https://img.shields.io/badge/Image_Edit-Gimp-purple) ![](https://img.shields.io/badge/SVG_Edit-Inkscape-darkorchid)
+![](https://img.shields.io/badge/Hugo-0.147-darkgreen) ![](https://img.shields.io/badge/Platform-Windows-blue) ![](https://img.shields.io/badge/Editor-Windsurf-green) ![](https://img.shields.io/badge/Image_Edit-Gimp-purple) ![](https://img.shields.io/badge/SVG_Edit-Inkscape-darkorchid)
 
-# Information
-Web development is my full time job. But after work isn't much space for private projects. Thus, I almost everytime discarded my projects.
-Now I want to stick on to one project - a custom theme for my private blog.
+# Uses
+- [Bulma v1.0.4](https://bulma.io) with [PurgeCSS](https://purgecss.com) `hugo server --environment production`
 
-* [**LOG File**](LOG.md)
-* [#100DaysOfCode Rules](https://www.100daysofcode.com/rules/)
-* [My Twitter Profile](https://twitter.com/crawford_ftw)
 
 # To-Do
 - [ ] Add clouds to day sky
-- [ ] Do I even need the dropdowns? Because I want the user to open the site!
 
 
 # Includes
-* [Hugo](https://gohugo.io) => Extented Version
-* Deploy file => [View Tutorial here](https://gist.github.com/AngelCrawford/06dbd50beee9f96064b8dc1d71dfa120)
-* [FontAwesome](https://fontawesome.com) => Will be replaced in the future
-* [Bulma](https://bulma.io) => CSS Framework
-* [Ananke](https://github.com/budparr/gohugo-theme-ananke) => Helper Theme
-* [Lorem Picsum](https://picsum.photos/) => Placeholder Images
+* [Hugo Extented Version](https://gohugo.io)
+* [Deploy file](https://gist.github.com/AngelCrawford/06dbd50beee9f96064b8dc1d71dfa120)
+* [Remix Icon](https://remixicon.com)
+* [Lorem Picsum for Placeholder Images](https://picsum.photos/)
+* [Google Fonts Montserrat und Montserrat Alternates](https://fonts.google.com/specimen/Montserrat)
 
 
 # Thanks to
+## Hugo
 * [Related Pages](https://www.pakstech.com/blog/hugo-related-pages/)
 * [Series Links](http://www.joesacher.com/blog/2017/08/27/converting-series-to-taxonomy/)
+* [Dynamic Search in a Static Hugo Website](https://blog.jeremylikness.com/blog/dynamic-search-in-a-static-hugo-website/)
+
+## JS/CSS/SVG
+* [Firework.js](https://codepen.io/zystvan/details/LEbNRp)
+* [Sky Background](https://codepen.io/ellimccale/pen/wxzJMx)
+* [Hot Air Balloon](https://codepen.io/nicooprat/pen/ALANqj)
+* [Santa Hat](https://codepen.io/bennettfeely/pen/mEjio)
+* [Ghosty](https://codepen.io/uchardon/pen/eGjJap?editors=0100)
+* [Bird](https://codepen.io/matchboxhero/pen/RLebOY)
+* [SunriseSunsetJS](https://github.com/mourner/suncalc)

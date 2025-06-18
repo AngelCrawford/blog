@@ -19,18 +19,13 @@
     {{ printf `<meta http-equiv="Content-Security-Policy" content="default-src %s; form-action %s; frame-src %s; img-src %s; object-src %s; style-src %s; script-src %s; script-src-elem %s; connect-src %s;">` (delimit .Site.Params.csp.default " ") (delimit .Site.Params.csp.formaction " ") (delimit .Site.Params.csp.framesrc " ") (delimit .Site.Params.csp.imgsrc " ") (delimit .Site.Params.csp.objectsrc " ") (delimit .Site.Params.csp.stylesrc " ") (delimit .Site.Params.csp.scriptsrc " ") (delimit .Site.Params.csp.scriptsrcelem " ") (delimit .Site.Params.csp.connectsrc " ") | safeHTML }}
 
     <!-- Styles -->
-    {{ with resources.Get "scss/main.scss" }}
-        {{- $opts := (dict "targetPath" "style.css" "transpiler" "dartsass" "enableSourceMap" true ) -}}
-        {{ with . | toCSS $opts }}
-            {{ if hugo.IsDevelopment }}
-                <link rel="stylesheet" href="{{ .RelPermalink }}">
-            {{ else }}
-                {{ with . | fingerprint | minify }}
-                    <link rel="stylesheet" href="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}" media="all">
-                {{ end }}
-            {{ end }}
-        {{ end }}
+    {{ $sass := resources.Get "scss/main.scss" }}
+    {{ $toCssOpt := (dict "targetPath" "style.css" "transpiler" "dartsass" "enableSourceMap" true) }}
+    {{ $style := $sass | toCSS $toCssOpt | postCSS }}
+    {{ if hugo.IsProduction }}
+        {{ $style = $style | minify | fingerprint | resources.PostProcess }}
     {{ end }}
+    <link href="{{ $style.RelPermalink }}" rel="stylesheet">
   
     <!-- Scripts -->
     {{- $jQuery := resources.Get "js/jquery.js" -}}

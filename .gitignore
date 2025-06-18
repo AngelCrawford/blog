@@ -4,6 +4,10 @@
 /themes
 .vscode/
 
+# node
+node_modules
+package-lock.json
+
 ## OS Files
 # Windows
 Thumbs.db

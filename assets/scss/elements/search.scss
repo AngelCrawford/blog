@@ -105,7 +105,9 @@ label[for="searchBox"] {
     margin-top: 1em;
   }
 }
-
+#searchIcons svg {
+  fill: helpers.$gold;
+}
 #searchIcons svg.remix.close, #spinnerLoading {
     display: none;
 }

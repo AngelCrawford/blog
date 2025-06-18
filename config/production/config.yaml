@@ -1,1 +1,14 @@
 baseURL: https://article-time.de/
+
+build:
+  buildStats:
+    enable: true
+module:
+  hugoVersion:
+    extended: true
+    min: "0.115.0"
+  mounts:
+    - source: "assets"
+      target: "assets"
+    - source: "hugo_stats.json"
+      target: "assets/watching/hugo_stats.json"

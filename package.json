@@ -1,0 +1,24 @@
+{
+  "name": "blog",
+  "version": "1.0.0",
+  "description": "![](https://img.shields.io/badge/Hugo-0.6.7.0-darkgreen) ![](https://img.shields.io/badge/Platform-Windows-blue) ![](https://img.shields.io/badge/Editor-Visual_Studio_Code-green) ![](https://img.shields.io/badge/Image_Edit-Gimp-purple) ![](https://img.shields.io/badge/SVG_Edit-Inkscape-darkorchid)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AngelCrawford/blog.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AngelCrawford/blog/issues"
+  },
+  "homepage": "https://github.com/AngelCrawford/blog#readme",
+  "dependencies": {
+    "@fullhuman/postcss-purgecss": "^7.0.2",
+    "postcss": "^8.5.6",
+    "postcss-cli": "^11.0.1"
+  }
+}
