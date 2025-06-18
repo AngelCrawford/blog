@@ -71,7 +71,7 @@ header.hero {
             z-index: 9999;
             top: calc(50% - 20px);
 
-            h1.textlogo {
+            .textlogo {
                 background: linear-gradient(to bottom, helpers.$gold 32%, helpers.$gold-light 50%, helpers.$gold-dark 80%);
                 -webkit-background-clip: text;
                 background-clip: text;
@@ -343,7 +343,7 @@ header.hero {
             background-size: auto 80%;
         }
     
-        .hero-body .title h1.textlogo {
+        .hero-body .title .textlogo {
             font-size: 50px;
             
             &::after {
@@ -383,7 +383,7 @@ header.hero {
                 height: 200px
             }
 
-            .title h1.textlogo {
+            .title .textlogo {
                 font-size: 37px;
                 
                 &::after {

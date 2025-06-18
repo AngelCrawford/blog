@@ -81,6 +81,12 @@ outputs:
     - HTML
     - RSS
     - JSON
+  section:
+    - HTML
+  taxonomy:
+    - HTML
+  term:
+    - HTML
   page:
     - HTML
 
