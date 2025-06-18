@@ -20,7 +20,7 @@
             {{- $currentPage := . -}}
             {{- range .Site.Menus.main -}}
               <a class="navbar-item {{ if or ($currentPage.IsMenuCurrent "main" .) ($currentPage.HasMenuCurrent "main" .) }} is-active{{ end }}" href="{{ .URL }}" title="{{- if .Page.Params.translation.plural -}}{{ .Page.Params.translation.plural}}{{- else -}}{{ .Name }}{{- end -}}">
-                <svg class="ri-1x" style="fill:red;"><use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ $.Site.Params.remixicon_version}}#{{ .Params.icon }}"></use></svg>
+                {{ if .Params.icon }}<svg class="ri-1x"><use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ $.Site.Params.remixicon_version}}#{{ .Params.icon }}"></use></svg>{{ end }}
                 {{- if .Page.Params.translation.plural -}}{{ .Page.Params.translation.plural}}{{- else -}}{{ .Name }}{{- end -}}
               </a>
             {{- end -}}

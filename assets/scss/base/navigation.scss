@@ -33,9 +33,21 @@ nav.navbar {
         color: helpers.$gold;
         @include helpers.font-regular;
         padding: 0 2em;
+        gap: .4rem;
 
-        @include helpers.breakpoint(0, 1046px) {
+        @include helpers.breakpoint(0, 1135px) {
             padding: .5rem .75rem;
+        }
+
+        svg {
+            fill: helpers.$gold-dark;
+        }
+
+        @include helpers.breakpoint(0, 1023px) {
+            svg {
+                margin-right: 10px;
+                @include helpers.translate(0, 3px);
+            }
         }
 
         &:hover,
@@ -48,11 +60,13 @@ nav.navbar {
 
         &.is-active {
             color: color.adjust(helpers.$light, $lightness: -25%);
-            background-color: color.adjust(helpers.$dark, $lightness: -2%);
+            background-color: color.adjust(helpers.$dark, $lightness: -5%);
+            // @include helpers.box-shadow(true, 1px, 1px, 4px, rgba(color.adjust(helpers.$dark, $lightness: -20%), .8), rgba(helpers.$light, 0.14));
 
             &:hover {
-                color: color.adjust(helpers.$light, $lightness: 0.5%);
+                color: color.adjust(helpers.$light, $lightness: -25%);
                 background-color: color.adjust(helpers.$dark, $lightness: -5%);
+                box-shadow: none;
             }
         }
     } 
