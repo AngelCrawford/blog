@@ -134,16 +134,44 @@ footer.footer {
   }
   
   .social {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+
     .logo {
       opacity: .4;
+      position: absolute;
+      top: 2.8rem;
+      width: calc(100% - 1.5rem);
+      z-index: -1;
+      transform: scale(.9);
     }
-    .icons {
-      margin-top: -50px;
-      font-size: 2em;
 
-      .icon, .remix {
-        height: 2rem;
-        width: 2rem;
+    .follow-icons {
+      display: flex;
+      justify-content: center;
+      margin-top: auto;
+      gap: 1.5em;
+      a {
+        font-size: 1.4em;
+        width: 1.4em;
+        height: 1.4em;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        svg {
+          fill: helpers.$gold-light;
+          width: 1.4em;
+          height: 1.4em;
+          transition: fill .4s;
+        }
+
+        &:hover {
+          svg {
+            fill: helpers.$gold;
+          }
+        }
       }
     }
   }

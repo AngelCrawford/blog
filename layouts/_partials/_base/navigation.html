@@ -27,14 +27,21 @@
         </div>
 
         <div class="navbar-end">
+          {{ range .Site.Params.follow.header }}
+            <a href="{{ .src }}" title="{{ .name }}" class="navbar-item follow-icons" alt="{{ .name }}" target="_blank" rel="noreferrer">
+              <span class="icon">
+                <svg><use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ $.Site.Params.remixicon_version}}#{{ .icon }}"></use></svg>
+              </span>
+            </a>
+          {{ end }}
           
           <div class="navbar-item field searchWithButton">
             <p class="control has-icons-right">
               <label for="searchBox" class="sr-only">Search</label>
               <input class="input" type="search" name="searchBox" id="searchBox" aria-placeholder="Search...">
               <span id="searchIcons" class="icon is-small is-right">
-                <svg class='remix lens'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#search-2-line"></use></svg>
-                <svg class='remix close'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg#close-fill"></use></svg>
+                <svg class='remix lens'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ $.Site.Params.remixicon_version}}#search-2-line"></use></svg>
+                <svg class='remix close'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ $.Site.Params.remixicon_version}}#close-fill"></use></svg>
                 <div id="spinnerLoading" class="control spinner is-loading"></div>
               </span>
             </p>
@@ -42,32 +49,6 @@
           </div>
     
         </div>
-  
-      {{/*  <div class="navbar-end">
-        <div class="navbar-item">
-          <div class="field is-grouped">
-            <p class="control">
-              <a
-                class="bd-tw-button button"
-                data-social-network="Twitter"
-                data-social-action="tweet"
-                data-social-target="https://bulma.io"
-                target="_blank"
-                href="https://twitter.com/intent/tweet?text=Bulma: a modern CSS framework based on Flexbox&amp;hashtags=bulmaio&amp;url=https://bulma.io&amp;via=jgthms"
-              >
-                <span class="icon">
-                  <i class="fab fa-twitter"></i>
-                </span>
-                <span> Tweet </span>
-              </a>
-            </p>
-          </div>
-        </div>
-      </div>  */}}
-
-
-
-
     </div>
 </nav>
 {{ end }}

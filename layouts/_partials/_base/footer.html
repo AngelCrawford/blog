@@ -24,7 +24,13 @@
     <div class="column is-12-mobile is-6-tablet is-6-desktop is-3-widescreen is-3-fullhd social">
         <p class="title is-5">Article Time</p>
         <div class="has-text-centered logo"><img src="/images/header/clock_small.webp" width="150" height="150" alt="Logo" title="Logo" /></div>
-        <div class="icons has-text-centered">Social Follow</div>
+        <div class="follow-icons">
+            {{ range .Site.Params.follow.footer }}
+            <a href="{{ .src }}" title="{{ .name }}" alt="{{ .name }}" target="_blank" rel="noreferrer">
+                <svg><use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ $.Site.Params.remixicon_version}}#{{ .icon }}"></use></svg>
+            </a>
+            {{ end }}
+        </div>
     </div>
 
     <div class="column is-12-mobile is-6-tablet is-6-desktop is-3-widescreen is-3-fullhd ">

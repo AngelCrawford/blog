@@ -70,6 +70,22 @@ nav.navbar {
             }
         }
     } 
+
+    .navbar-end {
+        a.navbar-item.follow-icons {
+            padding: 0 1rem;
+            svg {
+                fill: helpers.$gold;
+            }
+            &:hover,
+            &:focus,
+            &:active {
+                svg {
+                    fill: color.adjust(helpers.$light, $lightness: 0.5%);
+                }
+            }
+        }
+    }
 }
 
 
