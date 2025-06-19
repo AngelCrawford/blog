@@ -1,11 +1,11 @@
 ---
 title: "Datenschutz"
-tagline: "Datenschutzerklärung"
-robotsdisallow: true
 type: page
 menu:
   footer:
     weight: 20
+params:
+  robotsdisallow: true
 ---
 
 ## Datenschutz auf einen Blick

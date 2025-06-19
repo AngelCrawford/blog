@@ -1,16 +1,11 @@
 ---
-title: Archive
-translation: 
-  singular: "Archiv"
-image: "https://i.picsum.photos/id/369/700/200.jpg"
-description: We'd love to hear from you
+title: Über mich
 type: page
-layout: archive
 menu:
-  main:
-    params:
-      icon: "bookmark-line"
-
+  footer:
+    weight: 10
+params:
+  robotsdisallow: false
 ---
 
 This is an example of a custom shortcode that you can put right into your content. You will need to add a form action to the the shortcode to make it work. Check out [Formspree](https://formspree.io/) for a simple, free form service. 
