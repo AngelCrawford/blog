@@ -6,7 +6,6 @@ languages:
     languageName: Deutsch
     timeZone: Europe/Berlin
     weight: 1
-
 enableGitInfo: true
 frontmatter:
   lastmod: ["lastmod", ":git", "date"] 
