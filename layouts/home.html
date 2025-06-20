@@ -6,8 +6,10 @@
     <div class="fixed-grid has-1-cols-mobile has-1-cols-tablet has-2-cols-desktop has-2-cols-widescreen has-3-cols-fullhd">
         <div class="grid is-column-gap-7 is-row-gap-4">
 
-            {{/* Get paginated articles */}}
-            {{ $paginator := .Paginate (where .Site.RegularPages "Section" "articles") }}
+            {{/* Get paginated articles and logs */}}
+            {{ $paginator := .Paginate (where .Site.RegularPages "Type" "in" (slice "articles" "logs")) }}
+
+            {{/*  {{ $paginator.Pages}}  */}}
             
             {{/* First show articles with weight parameter, sorted by weight */}}
             {{ range (where $paginator.Pages "Params.weight" "gt" 0).ByWeight }}
