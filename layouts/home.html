@@ -8,8 +8,6 @@
 
             {{/* Get paginated articles and logs */}}
             {{ $paginator := .Paginate (where .Site.RegularPages "Type" "in" (slice "articles" "logs")) }}
-
-            {{/*  {{ $paginator.Pages}}  */}}
             
             {{/* First show articles with weight parameter, sorted by weight */}}
             {{ range (where $paginator.Pages "Params.weight" "gt" 0).ByWeight }}

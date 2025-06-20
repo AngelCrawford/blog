@@ -1,5 +1,5 @@
 [
-  {{ range $index, $element := (where (where .Site.RegularPages "Section" "=" "articles") "Params.format" "ne" "log") -}}
+  {{ range $index, $element := where .Site.RegularPages "Type" "in" "articles" -}}
     {{- if and $index (gt $index 0) -}},{{- end }}
     {
       "index" : {{ add 1 $index }},

@@ -39,10 +39,10 @@
 
     <div class="column is-hidden-touch is-hidden-desktop-only is-12-mobile is-6-tablet is-6-desktop is-3-widescreen is-3-fullhd stats">
         <p class="title is-5">Statistik</p>
-        <p>Momentan befinden sich {{ len (where .Site.RegularPages "Section" "articles") }} <a href="/" title="Artikel">Einträge</a> auf dieser Seite.</p>
+        <p>Momentan befinden sich {{ len (where .Site.RegularPages "Type" "in" (slice "articles" "logs")) }} <a href="/" title="Artikel">Einträge</a> auf dieser Seite.</p>
         <ul>             
             <li>
-                {{ $countA := len (where .Site.RegularPages "Section" "articles") }}
+                {{ $countA := len (where .Site.RegularPages "Type" "articles") }}
                 <span class="variable-number">
                     <svg class='ri-1x' style="fill: rgb(88, 179, 189)">
                         <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ .Site.Params.remixicon_version}}#flower-line"></use>
@@ -52,7 +52,7 @@
                 <span class="variable">{{ $countA }}</span>
             </li>
             <li>
-                {{ $countM := len (where (where .Site.RegularPages "Section" "articles") ".Params.format" "==" "log") }}
+                {{ $countM := len (where .Site.RegularPages "Type" "logs") }}
                 <span class="variable-number">
                     <svg class='ri-1x' style="fill: rgb(201, 172, 92)">
                         <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ .Site.Params.remixicon_version}}#lightbulb-flash-line"></use>

@@ -1,4 +1,4 @@
-{{ if eq .Type "articles" }}
+{{ if or (eq .Type "articles") (eq .Type "logs") }}
 
     <div class='cell {{ if .Resources }} {{ if eq .Kind "term" }} is-row-span-2 {{ end }} {{ end }}'>
         {{ $cssClasses := "card is-horizontal" }}
