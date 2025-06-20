@@ -76,18 +76,11 @@ imaging:
 
 # Output configuration
 outputs:
-  home:
-    - HTML
-    - RSS
-    - JSON
-  section:
-    - HTML
-  taxonomy:
-    - HTML
-  term:
-    - HTML
-  page:
-    - HTML
+  home: ["HTML", "RSS", "JSON"]
+  section: ["HTML"]
+  taxonomy: ["HTML"]
+  term: ["HTML"]
+  page: ["HTML"]
 
 related:
   threshold: 20
@@ -99,3 +92,7 @@ related:
     weight: 2
   - name: authors
     weight: 1
+
+sitemap:
+  changefreq: weekly
+  filename: sitemap.xml
