@@ -1,6 +1,6 @@
 ---
 title: "Eine Geschichte"
-date: 2025-06-06T22:23:46+01:00
+date: 2025-06-21T22:23:46+01:00
 categories: ["Allgemein"]
 year: "2025"
 month: "2025/06"

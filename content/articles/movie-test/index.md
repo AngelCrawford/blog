@@ -7,10 +7,6 @@ weight: 5
 tags: ["eins", "zwei", "quote"]
 categories: "Movie"
 
-# Use for archive sorting
-year: "2020"
-month: "2020/03"
-
 # summary: ""
 # series: [""]
 # weight: 0 # 1 = makes the post sticky

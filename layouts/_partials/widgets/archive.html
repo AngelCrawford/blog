@@ -1,19 +1,22 @@
 <div class="widget archive">
     <p class="title is-5">Übersicht</p>
     <ul>
-      {{ range where .context.Site.Pages "Section" "articles" }}
-          {{ range (.Pages.GroupByDate "2006") }}
-    
-            {{ $.context.Store.Set "yearIndexArchive" .Key }}
-                {{ $list := .Pages }}
-                {{ $len := (len $list) }}
-                <li>
-                  <span class="name"><a href='{{ $.Site.Params.baseurl }}/pages/archive/#{{ $.context.Store.Get "yearIndexArchive" }}' title="{{ .Key }}">{{ .Key }}</a></span>
-                  <span class="number">{{ $len }} Artikel</span>
-                </li>
-          
-          {{ end }}
-        {{ $.context.Store.Delete "yearIndexArchive" }}
+			{{ $combinedPages := slice }}
+			{{ range (where .context.Site.Pages "Type" "articles") }}
+				{{ $combinedPages = $combinedPages | append .Pages }}
+			{{ end }}
+			{{ range (where .context.Site.Pages "Type" "logs") }}
+				{{ $combinedPages = $combinedPages | append .Pages }}
+			{{ end }}
+			
+			{{ range ($combinedPages.GroupByDate "2006") }}
+
+        {{ $list := .Pages }}
+        {{ $len := (len $list) }}
+        <li>
+          <span class="name"><a href='{{ $.Site.Params.baseurl }}/pages/archiv/#{{ .Key }}' title="{{ .Key }}">{{ .Key }}</a></span>
+          <span class="number">{{ $len }} {{ if eq $len 1 }}Eintrag{{ else }}Einträge{{ end }}</span>
+        </li>
       {{ end }}
     </ul>
 

@@ -4,8 +4,6 @@ tags: ["scene", "quote"]
 series: ["Serienname"]
 title: "Chapter IV: Master Jacques Coppenole"
 categories: ["quote"]
-year: "2017"
-month: "2017/04"
 # weight: 1
 ---
 

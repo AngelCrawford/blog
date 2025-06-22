@@ -6,12 +6,6 @@ draft: false
 tags: ["eins", "zwei"]
 categories: "Allgemein"
 authors: ["angel"]
-year: "2020"
-month: "2020/12"
-comments:
-  enabled: false
-  deactivatedOn: "22.12.2020"
-  message: "Reaktionen wurden entfernt weil...."
 ---
 
 ## Eine Überschrift

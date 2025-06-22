@@ -32,20 +32,24 @@
 		</div>
 
 		<div class="column is-9">
-			{{ range where .Site.Pages "Section" "articles" }}
-				{{ range (.Pages.GroupByDate "2006") }}
-		
-					{{ $.Store.Set "yearIndexArchive" .Key }}
-					<h2 class="title is-2" data-heading="{{ .Key }}" id='{{ $.Store.Get "yearIndexArchive" }}'>{{ .Key }}</h2>
-					
-					<div class="fixed-grid has-1-cols-mobile has-2-cols-tablet has-3-cols-desktop has-4-cols-widescreen has-4-cols-fullhd">
-						<div class="grid is-column-gap-4 is-row-gap-4 is-medium">
-							{{ range .Pages.ByPublishDate.Reverse }}
-								{{ partial "card" . }}
-							{{ end }}
-						</div>
+			{{ $combinedPages := slice }}
+			{{ range (where .Site.Pages "Type" "articles") }}
+				{{ $combinedPages = $combinedPages | append .Pages }}
+			{{ end }}
+			{{ range (where .Site.Pages "Type" "logs") }}
+				{{ $combinedPages = $combinedPages | append .Pages }}
+			{{ end }}
+			
+			{{ range ($combinedPages.GroupByDate "2006") }}
+				<h2 class="title is-2" data-heading="{{ .Key }}" id='{{ .Key }}'>{{ .Key }}</h2>
+				
+				<div class="fixed-grid has-1-cols-mobile has-2-cols-tablet has-3-cols-desktop has-4-cols-widescreen has-4-cols-fullhd">
+					<div class="grid is-column-gap-4 is-row-gap-4 is-medium">
+						{{ range .Pages.ByPublishDate.Reverse }}
+							{{ partial "card" . }}
+						{{ end }}
 					</div>
-				{{ end }}
+				</div>
 			{{ end }}
 		</div>
 	</div>

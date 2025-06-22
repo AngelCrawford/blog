@@ -5,8 +5,6 @@ summary: "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonu
 series: ["Serienname"]
 categories: "Allgemein"
 title: "Chapter VI: Esmeralda"
-year: "2017"
-month: "2017/04"
 ---
 
 ## Headline

@@ -5,12 +5,6 @@ publishdate: 2020-12-31
 draft: true # true/false, auf false setzen wenn publiziert werden soll
 tags: ["eins", "zwei"]
 categories: "Allgemein"
-year: "2020"
-month: "2020/12"
-comments:
-  enabled: true
-  deactivatedOn: YYYY-MM-DD
-  message: "Reaktionen wurden entfernt weil...."
 ---
 
 

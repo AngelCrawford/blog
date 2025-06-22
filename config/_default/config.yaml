@@ -41,8 +41,8 @@ pagination:
 
 permalinks:
   # articles: "/:section/:year/:month/:slug/"
-  year: "/articles/:slug/"
-  month: "/articles/:slug/"
+  # year: "/articles/:slug/"
+  # month: "/articles/:slug/"
 
 # Server configuration with caching headers
 server:
