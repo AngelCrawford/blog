@@ -13,7 +13,7 @@ tags: [""] # Array of tags, ["tag1", "tag2"]
 series: [""] # Needs to be the same name, if you want to group posts
 authors: ["angel"] # Default is angel, can be removed
 
-summary: "" # Summary for the list view, will replace the content truncation if set
+summary: "" # REQUIRED: Summary for the list view
 
 params:
   SEOdesc: "" # SEO Description for single posts, 160 characters max
@@ -23,7 +23,7 @@ params:
 <!--
 - Place your main image as "cover.[format]" in the same folder
 - All images will be automatically converted to WebP format
-- Figcaption 
+- Use the image Properties as figcaption. Windows: Properties -> Details -> Description -> Title -> Add here for figcaption
 -->
 
 ## Introduction
@@ -33,14 +33,15 @@ Write your introduction here.
 ## Main Content
 
 Your main content goes here.
+![Alt for Screen Readers](20210109_215313.png "Title and Image Description, shown on the frontpage <a href='#'>Testlink</a>")
 
 ## Conclusion
 
 Wrap up your article here.
 
 <!--
-Shortcodes you can use:
-colors to use: dark, link, info, primary, success, warning, danger
+Shortcodes
+Colors to use: dark, link, info, primary, success, warning, danger
 {{< tags tags="tag: Action Crime name: Genre color: primary tag: Adventure name: Genre color: info tag: Sci-Fi name: Genre color: danger" >}}
 {{< youtube id="VIDEO_ID" >}}
 {{< rating value="4.5" showValue="true" >}}

@@ -6,6 +6,7 @@ draft: false
 tags: ["eins", "zwei"]
 categories: "Allgemein"
 authors: ["angel"]
+summary: "Dies ist ein Typoblindtext. An ihm kann man sehen, ob alle Buchstaben da sind und wie sie aussehen."
 ---
 
 ## Eine Überschrift

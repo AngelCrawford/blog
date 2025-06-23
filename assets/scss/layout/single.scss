@@ -47,6 +47,13 @@ body.type-is-articles {
                 position: absolute;
                 bottom: 7px;
                 left: 0;
+
+                &:before {
+                    content: "\efe0";
+                    font-family: "remixicon";
+                    color: helpers.$gold;
+                    padding-right: .5em;
+                }
             }
         }
       

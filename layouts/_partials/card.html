@@ -74,10 +74,20 @@
                     
                 <div class="content">
                     <!-- If article has no image, show more content instead -->
-                    {{- if not .Resources -}}
-                        {{ .Summary | plainify | truncate 1000 }}
+                    {{ if eq .Params.format "log" }}
+                        {{ .Summary | markdownify }}
                     {{ else }}
-                        {{ .Summary | plainify | truncate 500 }}
+                        {{ if .Params.summary }}
+                            {{ $content := .Summary | markdownify }}
+
+                            {{- if not .Resources -}}
+                                {{ $content | truncate 1000 }}
+                            {{ else }}
+                                {{ $content | truncate 500 }}
+                            {{- end -}}
+                        {{ else }}
+                            {{ errorf "Missing summary in front matter for page: %s" .File.Path }}
+                        {{- end -}}
                     {{- end -}}
                 </div>
                 

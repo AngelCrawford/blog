@@ -7,7 +7,7 @@ weight: 5
 tags: ["eins", "zwei", "quote"]
 categories: "Movie"
 
-# summary: ""
+summary: "One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin. One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin."
 # series: [""]
 # weight: 0 # 1 = makes the post sticky
 
