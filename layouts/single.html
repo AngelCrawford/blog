@@ -69,23 +69,11 @@
                         </div>
                     {{ end }}
                 </article>
-                
-                <aside class="widget mt-6 mb-6">
-                    <h2 class="title is-4">Ähnliche Artikel</h2>
-                    <div class="fixed-grid has-1-cols-mobile has-2-cols-tablet has-3-cols-desktop has-4-cols-widescreen has-4-cols-fullhd">
-                        <div class="grid is-column-gap-4 is-row-gap-4 is-medium">
-                            {{ range .Site.RegularPages.Related . | first 4 }}
-                                {{ partial "card" . }}
-                            {{ end }}
-                        </div>
-                    </div>
-                </aside>
             </div>
-            <div class="column is-12-mobile is-12-tablet is-12-desktop is-3-widescreen is-3-fullhd">
-
+            <div class="column is-12-mobile is-12-tablet is-12-desktop is-3-widescreen is-3-fullhd pt-0">
                 <div class="columns is-multiline">
                     <div class="column is-12-mobile is-6-tablet is-4-desktop is-12-widescreen is-12-fullhd">
-                        <div class="info widget mt-4">
+                        <div class="info widget mt-6">
                             <p class="title is-5">Artikel</p>
 
                             <div class="widget-content">
@@ -146,7 +134,7 @@
                 
                     {{- if ge (len .TableOfContents) 100 -}}
                         <div class="column is-12-mobile is-6-tablet is-4-desktop is-12-widescreen is-12-fullhd">
-                            <div class="toc widget mt-4">
+                            <div class="toc widget mt-6">
                                 <p class="title is-5">Übersicht</p>
 
                                 <div class="widget-content">
@@ -158,7 +146,7 @@
                     
                     {{- if .Params.series -}}
                         <div class="column is-12-mobile is-6-tablet is-4-desktop is-12-widescreen is-12-fullhd">
-                            <div class="serie widget mt-4">
+                            <div class="serie widget mt-6">
                                 <p class="title is-5">Serie</p>
                                 {{- $currentPage := . -}}
                                 {{- $series_name := index .Params.series 0 -}}
@@ -185,24 +173,46 @@
                             </div>
                         </div>
                         {{ $.Store.Delete "series_count" }}
-                {{- end -}}
+                    {{- end -}}
+
+                    
+                    <div class="column is-12-mobile is-6-tablet is-4-desktop is-12-widescreen is-12-fullhd">
+                        <div class="related widget mt-6">
+                            <p class="title is-5">Ähnliche Artikel</p>
+                            <div class="widget-content">
+                                <ul>
+                                    {{ $related := .Site.RegularPages.Related . }}
+                                    {{ range first 5 (where $related "Type" "articles") }}
+                                        <li>
+                                            <span class="name"><a href="{{ .RelPermalink }}" title="{{ .Title }}">{{ .Title }}</a></span>
+                                            <span class="number">{{ .Date | time.Format ":date_short" }}</span>
+                                        </li>
+                                    {{ end }}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                {{- if .Params.authors -}}
-                    {{ $list := .GetTerms "authors" }}
-                    {{ $len := len $list }}
-                    {{ range (.GetTerms "authors") }}
-                        <aside class="is-small author-single-page {{ if .Resources }}has-image{{else}}no-image{{ end }} mt-5">
-                            {{ partial "card" . }}
-                        </aside>
-                    {{ end }}
-                {{ else }}
-                    {{ with $.Site.GetPage (printf "/authors/%s" $.Site.Params.default_author) }}
-                        <aside class="is-small author-single-page {{ if .Resources }}has-image{{else}}no-image{{ end }} mt-5">
-                            {{ partial "card" . }}
-                        </aside>
-                    {{ end }}
-                {{- end -}}
+                <aside class="widget mt-6 mb-6">
+                    {{- if .Params.authors -}}
+                        {{ $list := .GetTerms "authors" }}
+                        {{ $len := len $list }}
+                        <p class="title is-5">{{ if eq $len 1 }}Autor{{ else }}Autoren{{ end }}</p>
+                        {{ range (.GetTerms "authors") }}
+                            <aside class="is-small author-single-page {{ if .Resources }}has-image{{else}}no-image{{ end }} mt-5">
+                                {{ partial "card" . }}
+                            </aside>
+                        {{ end }}
+                    {{ else }}
+                        {{ with $.Site.GetPage (printf "/authors/%s" $.Site.Params.default_author) }}
+                            <p class="title is-5">Autor</p>
+                            <aside class="is-small author-single-page {{ if .Resources }}has-image{{else}}no-image{{ end }} mt-5">
+                                {{ partial "card" . }}
+                            </aside>
+                        {{ end }}
+                    {{- end -}}
+                </aside>
             </div>
         </div>
     {{ end }}

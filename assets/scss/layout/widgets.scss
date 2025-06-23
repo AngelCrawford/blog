@@ -1,13 +1,67 @@
 @use "vars/helpers";
 @use "sass:color";
 
-.widget {
+.content .widget {
     > .title:not(.is-6) {
       @include helpers.lined-title;
     }
 
     a:hover {
         color: helpers.$gold-light;
+    }
+
+    ul li > ul {
+      margin-top: .25em;
+    }
+}
+
+.widget.related {
+    ul {
+        // margin: 0;
+        // padding: 0 0 1.5em 0em;
+        margin-inline-start: 0;
+
+        li {
+            display: flex;
+
+            &::before {
+                content: "";
+                background-color: hsl(190deg, 20%, 71%);
+                margin: .6em 1em .5em 1em;
+                height: 5px;
+                width: 5px;
+                border-radius: 2.5px;
+            }
+        
+            .name {
+                order: 1;
+
+                a {
+                    color: helpers.$gold;
+                    
+                    &:hover {
+                        color: helpers.$gold-light;
+                    }
+                }
+            }
+            .number {
+                order: 3;
+                padding-left: 0.3em;
+                color: color.scale(helpers.$dark, $lightness: 40%);
+                flex-shrink: 0;
+            }
+            
+            &::after {
+                content: "";
+                flex-grow: 1;
+                order: 2;
+                background-image: radial-gradient(circle, rgba(helpers.$gold-dark, .5) 1px, transparent 1px);
+                background-position-y: calc(100% - 6px);
+                background-size: 1ex 3px;
+                background-repeat: repeat-x;
+                height: auto;
+            }
+        }
     }
 }
 
