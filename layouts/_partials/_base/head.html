@@ -42,12 +42,9 @@
     <meta name="apple-mobile-web-app-title" content="Article Time" />
 
     {{- /* Schema */}}
-    {{ partial "seo/schema.html" . }}
+    {{ partial "_base/schema.html" . }}
 
-    <!-- SEO TODO: Author filling
-    {{- with .Params.author }}<meta name="author" content="{{ . }}" />{{ end -}}
-    {{ with .Params.description }}<meta name="description" content="{{ . }}" />{{ end }}
-    {{ with .Params.keywords }}<meta name="keywords" content="{{ . }}" />{{ end }} -->
+
 
     <!-- Open Graph
     <meta property="og:title" content="{{ .Title }}" />

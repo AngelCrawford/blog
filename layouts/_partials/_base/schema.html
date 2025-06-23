@@ -72,3 +72,10 @@ Keywords precedence:
     }
     {{- end }}
 </script>
+
+{{- /* SEO TODO: Author filling */}}
+{{- if eq .Section "articles" }}
+    <meta name="author" content="{{ .Site.Params.author.name }}" />
+    <meta name="description" content="{{ with or .Params.Seo.desc .Summary | plainify | htmlUnescape }}{{ trim . "\n\r\t " }}{{ end }}" />
+    <meta name="keywords" content="{{ range $i, $e := $keywords }}{{ if $i }}, {{ end }}{{ $e }}{{ end }}" /> 
+{{- end }}

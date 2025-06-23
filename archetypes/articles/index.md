@@ -1,5 +1,5 @@
 ---
-title: '{{ replace .File.ContentBaseName `-` ` ` | title }}'
+title: '{{ replace .File.ContentBaseName `-` ` ` | title }}' # Is the SEO meta title, too -> Only 60 - 70 characters
 # slug: "" -> Use if title has Ä, Ö, Ü, ß and other special characters
 subtitle: "" # Optional
 date: {{ .Date }}
@@ -16,8 +16,9 @@ authors: ["angel"] # Default is angel, can be removed
 summary: "" # REQUIRED: Summary for the list view
 
 params:
-  SEOdesc: "" # SEO Description for single posts, 160 characters max
-
+  SEO:
+    desc: "Seo Desc" # SEO Description for single posts, 120 - 158 characters max -> If not set, Summary will be used
+    keywords: [""] # Use 1 max 3, if not set, will get generated from tags
 ---
 
 <!-- USE WITH: hugo147.exe new content articles/my-title-name (NO .md at the end, generates folder) -->
@@ -48,4 +49,13 @@ Colors to use: dark, link, info, primary, success, warning, danger
 {{< youtube id="VIDEO_ID" >}}
 {{< rating value="4.5" showValue="true" >}}
 {{< message color="info" header="Info" >}}This is an info message content{{< /message >}}
+-->
+
+<!--
+Use 1 SEO Keyword, or as max 3 words.
+Optimize Posts around A Single Keyword
+No Keyword stuffing!
+Use Keyword in the title of HTML and in the actual H1 title (in the URL, too)
+Mention keyword in the conclusion, too
+Mention keyword one time in the start of the post, too
 -->
