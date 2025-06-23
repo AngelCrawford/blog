@@ -27,9 +27,34 @@ Abgeschieden wohnen sie in Buchstabhausen an der Küste des Semantik, eines gro�
 Dieser Artikel ist noch nicht fertig.
 {{< /message >}}
 
+```html
+<div class="column is-12-mobile is-12-tablet is-12-desktop is-3-widescreen is-3-fullhd pt-0">
+    <div class="columns is-multiline">
+        <div class="column is-12-mobile is-6-tablet is-4-desktop is-12-widescreen is-12-fullhd">
+            <div class="info widget mt-6">
+            </div>
+        </div>
+    </div>
+</div>
+```
+
 Satzteile in den Mund fliegen. Nicht einmal von der allmächtigen Interpunktion werden die Blindtexte beherrscht – ein geradezu unorthographisches Leben. Eines Tages aber beschloß eine kleine Zeile Blindtext, ihr Name war Lorem Ipsum, hinaus zu gehen in die weite Grammatik. Der große Oxmox riet ihr davon ab, da es dort wimmele von bösen Kommata, wilden Fragezeichen und hinterhaltigen Semikoli, doch das Blindtextchen ließ sich nicht beirren. 
 
-Es packte seine sieben Versalien, schob sich sein Initial in den Gürtel und machte sich auf den Weg. Als es die ersten Hügel des Kursivgebirges erklommen hatte, warf es einen letzten Blick zurück auf die Skyline seiner Heimatstadt Buchstabhausen, die Headline von Alphabetdorf und die Subline seiner eigenen Straße, der Zeilengasse. Wehmütig lief ihm eine rhetorische Frage über die Wange, dann setzte es seinen Weg fort. Unterwegs traf es eine Copy. Die Copy warnte das Blindtextchen, da, wo sie herkäme wäre sie 
+* Some test
+  * A subtest
+* More test
+
+Satzteile in den Mund fliegen. Nicht einmal von der allmächtigen Interpunktion werden die Blindtexte beherrscht – ein geradezu unorthographisches Leben. Eines Tages aber beschloß eine kleine Zeile Blindtext, ihr Name war Lorem Ipsum, hinaus zu gehen in die weite Grammatik. Der große Oxmox riet ihr davon ab, da es dort wimmele von bösen Kommata, wilden Fragezeichen und hinterhaltigen Semikoli, doch das Blindtextchen ließ sich nicht beirren. 
+
+1. Some test
+  1. A Subtest
+2. More test
+
+Es packte seine sieben Versalien, schob sich sein Initial in den Gürtel und machte sich auf den Weg. Als es die ersten Hügel des Kursivgebirges erklommen hatte, warf es einen letzten Blick zurück auf die Skyline seiner Heimatstadt Buchstabhausen, die Headline von Alphabetdorf und die Subline seiner eigenen Straße, der Zeilengasse. 
+
+> Wehmütig lief ihm eine rhetorische Frage über die Wange, dann setzte es seinen Weg fort. Unterwegs traf es eine Copy. Die Copy warnte das Blindtextchen, da, wo sie herkäme wäre sie <cite>Some Name</cite>
+
+Wehmütig lief ihm eine rhetorische Frage über die Wange, dann setzte es seinen Weg fort. Unterwegs traf es eine Copy. Die Copy warnte das Blindtextchen, da, wo sie herkäme wäre sie 
 
 ```html {linenos=table,hl_lines=[1,"3-5", 8],linenostart=3}
   <meta name="author" content="Angel Crawford" />

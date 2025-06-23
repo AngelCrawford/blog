@@ -123,6 +123,11 @@
         margin: 0 0 .75em -.4em;
     }
 
+    .time {
+        display: flex;
+        gap: 2em;
+    }
+
     svg {
         width: 20px;
         height: 20px;
