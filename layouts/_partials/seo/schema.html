@@ -1,0 +1,74 @@
+{{- with or .Title site.Title | plainify }}
+    <meta itemprop="name" content="{{ . }}">
+{{- end }}
+
+{{- with or .Params.Seo.desc .Summary | plainify | htmlUnescape }}
+    <meta itemprop="description" content="{{ trim . "\n\r\t " }}">
+{{- end }}
+
+{{- $ISO8601 := "2006-01-02T15:04:05-07:00" }}
+{{- with .PublishDate }}
+    <meta itemprop="datePublished" {{ .Format $ISO8601 | printf "content=%q" | safeHTMLAttr }}>
+{{- end }}
+
+{{- with .Lastmod }}
+    <meta itemprop="dateModified" {{ .Format $ISO8601 | printf "content=%q" | safeHTMLAttr }}>
+{{- end }}
+
+{{- with .WordCount }}
+    <meta itemprop="wordCount" content="{{ . }}">
+{{- end }}
+
+{{- $images := .Resources.ByType "image" }}
+{{- $featured := $images.GetMatch "*cover*" }}
+{{- with $featured }}
+    <meta itemprop="image" content="{{ $featured.Permalink }}">
+{{- end }}
+
+{{- /*
+Keywords precedence:
+
+1. Use "keywords" from the SEO Frontmatter.
+2. Use "tags" term page titles.
+3. Use term page titles from all taxonomies.
+
+*/}}
+{{- $keywords := slice }}
+
+{{- with .Params.Seo.keywords }}
+    {{- $keywords = . }}
+{{- else }}
+    {{- range .GetTerms "tags" }}
+    {{- $keywords = $keywords | append .Title }}
+    {{- else }}
+    {{- range $taxonomy, $_ := site.Taxonomies }}
+        {{- range $.GetTerms $taxonomy }}
+        {{- $keywords = $keywords | append .Title }}
+        {{- end }}
+    {{- end }}
+    {{- end }}
+{{- end }}
+
+{{- with $keywords }}
+    <meta itemprop="keywords" content="{{ delimit . `,` }}">
+{{- end }}
+
+<script type="application/ld+json">
+    {{- if eq .Section "articles" }}
+    {
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      "headline": {{ .Title }},
+      "image": {{- $images := .Resources.ByType "image" }}{{- $featured := $images.GetMatch "*cover*" }}{{- with $featured }}{{ $featured.Permalink }}{{- end }},
+      "datePublished": {{ .PublishDate }},
+      "dateModified": {{ .Lastmod }},
+      "author": {
+        "@type": "Person",
+        "name": {{ .Site.Params.author.name }}
+      },
+      "mainEntityOfPage": { "@type": "WebPage" },
+      "description": {{ with or .Params.Seo.desc .Summary | plainify | htmlUnescape }}{{ trim . "\n\r\t " }}{{ end }},
+      "keywords": [{{ range $i, $e := $keywords }}{{ if $i }}, {{ end }}{{ $e }}{{ end }}]
+    }
+    {{- end }}
+</script>

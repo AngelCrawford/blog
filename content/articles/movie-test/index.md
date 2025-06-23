@@ -12,7 +12,9 @@ summary: "One morning, when Gregor Samsa woke from troubled dreams, he found him
 # weight: 0 # 1 = makes the post sticky
 
 params:
-  SEOdesc: "One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin. One morning, when Gregor Samsa woke"
+  SEO:
+    desc: "Seo Desc"
+    keywords: ["Movie Rating", "Movie Test"]
 
 ---
 {{< rating value="4.5" showValue="true" >}}
