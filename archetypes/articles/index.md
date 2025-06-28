@@ -19,6 +19,7 @@ params:
   SEO:
     desc: "Seo Desc" # SEO Description for single posts, 120 - 158 characters max -> If not set, Summary will be used
     keywords: [""] # Use 1 max 3, if not set, will get generated from tags
+    canonicalURL: "" # Use if post on other Platform, else leave empty. Or use if homage to another post
 ---
 
 <!-- USE WITH: hugo147.exe new content articles/my-title-name (NO .md at the end, generates folder) -->

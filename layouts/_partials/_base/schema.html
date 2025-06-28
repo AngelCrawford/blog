@@ -53,29 +53,34 @@ Keywords precedence:
     <meta itemprop="keywords" content="{{ delimit . `,` }}">
 {{- end }}
 
-<script type="application/ld+json">
-    {{- if eq .Section "articles" }}
-    {
-      "@context": "https://schema.org",
-      "@type": "BlogPosting",
-      "headline": {{ .Title }},
-      "image": {{- $images := .Resources.ByType "image" }}{{- $featured := $images.GetMatch "*cover*" }}{{- with $featured }}{{ $featured.Permalink }}{{- end }},
-      "datePublished": {{ .PublishDate }},
-      "dateModified": {{ .Lastmod }},
-      "author": {
-        "@type": "Person",
-        "name": {{ .Site.Params.author.name }}
-      },
-      "mainEntityOfPage": { "@type": "WebPage" },
-      "description": {{ with or .Params.Seo.desc .Summary | plainify | htmlUnescape }}{{ trim . "\n\r\t " }}{{ end }},
-      "keywords": [{{ range $i, $e := $keywords }}{{ if $i }}, {{ end }}{{ $e }}{{ end }}]
-    }
-    {{- end }}
-</script>
+    <script type="application/ld+json">
+        {{- if eq .Section "articles" }}
+        {
+            "@context": "https://schema.org",
+            "@type": "BlogPosting",
+            "headline": {{ .Title }},
+            "image": {{- $images := .Resources.ByType "image" }}{{- $featured := $images.GetMatch "*cover*" }}{{- with $featured }}{{ $featured.Permalink }}{{- end }},
+            "datePublished": {{ .PublishDate }},
+            "dateModified": {{ .Lastmod }},
+            "author": {
+                "@type": "Person",
+                "name": {{ .Site.Params.author.name }}
+            },
+            "mainEntityOfPage": { "@type": "WebPage" },
+            "description": {{ with or .Params.Seo.desc .Summary | plainify | htmlUnescape }}{{ trim . "\n\r\t " }}{{ end }},
+            "keywords": [{{ range $i, $e := $keywords }}{{ if $i }}, {{ end }}{{ $e }}{{ end }}]
+        }
+        {{- end }}
+    </script>
 
 {{- /* SEO TODO: Author filling */}}
-{{- if eq .Section "articles" }}
+{{ if eq .Section "articles" }}
     <meta name="author" content="{{ .Site.Params.author.name }}" />
     <meta name="description" content="{{ with or .Params.Seo.desc .Summary | plainify | htmlUnescape }}{{ trim . "\n\r\t " }}{{ end }}" />
-    <meta name="keywords" content="{{ range $i, $e := $keywords }}{{ if $i }}, {{ end }}{{ $e }}{{ end }}" /> 
+    <meta name="keywords" content="{{ range $i, $e := $keywords }}{{ if $i }}, {{ end }}{{ $e }}{{ end }}" />
+{{- if .Params.Seo.canonicalURL }}
+    <link rel="canonical" href="{{ .Params.Seo.canonicalURL }}">
+{{- else }}
+    <link rel="canonical" href="{{ .Permalink }}">
+{{- end }}
 {{- end }}

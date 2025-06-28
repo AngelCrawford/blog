@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="de" data-theme="dark">
-    {{- partial "_base/head" . -}}
-
+    {{ partial "_base/head" . }}
     <body class="type-is-{{ .Type }} {{if .Layout}}layout-is-{{ .Layout }}{{end}} kind-is-{{ .Kind }}">
         <header class="hero is-medium has-sky">
             {{- partial "_base/hero" . -}}
