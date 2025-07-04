@@ -31,6 +31,8 @@ Now I want to stick on to one project - a custom theme for my private blog. And 
 * [SunriseSunsetJS](https://github.com/mourner/suncalc)
 
 ### Images
+* [Hamburg skyline](https://www.shutterstock.com/image-vector/hamburg-skyline-471775031) | by [pixelliebe](https://www.shutterstock.com/g/pixelliebe) | Gekauft auf [shutterstock.com](https://shutterstock.com)
+* [Kiel skyline](https://www.shutterstock.com/image-vector/kiel-skyline-german-city-581455954) | by [pixelliebe](https://www.shutterstock.com/g/pixelliebe) | Gekauft auf [shutterstock.com](https://shutterstock.com)
 * [Favicon Generator](https://realfavicongenerator.net)
 * [~~Lorem Picsum for Placeholder Images~~](https://picsum.photos/)
 * [Unsplash](https://unsplash.com)
