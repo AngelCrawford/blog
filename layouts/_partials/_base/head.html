@@ -41,67 +41,12 @@
     <link rel="manifest" href="/images/favicon/site.webmanifest" />
     <meta name="apple-mobile-web-app-title" content="Article Time" />
 
-    {{- /* Schema */}}
-    {{ partial "_base/schema.html" . }}
+    {{- /* SEO PARTS */}}
+    {{ partial "_base/seo.html" . }}
 
-
-
-    <!-- Open Graph
-    <meta property="og:title" content="{{ .Title }}" />
-    <meta property="og:description" content="{{ with .Description }}{{ . }}{{ else }}{{ .Summary }}{{ end }}" />
-    <meta property="og:type" content="{{ if .IsPage }}article{{ else }}website{{ end }}" />
-    <meta property="og:url" content="{{ .Permalink }}" />
-    <meta property="og:site_name" content="{{ with .Params.title }}{{ . }}{{ end }}" />
-    
-    {{- $iso8601 := "2006-01-02T15:04:05-07:00" }}
-    {{ if not .Lastmod.IsZero }}<meta property="og:updated_time" {{ .Lastmod.Format $iso8601 | printf "content=%q" | safeHTMLAttr }} />{{ end -}}-->
-
-    <!-- If it is part of a series, link to related articles -->
-    <!-- TODO: Series Twitter
-    {{- if .Params.series -}}
-        {{- $currentPage := . -}}
-        {{- $series_name := index .Params.series 0 -}}
-        {{- range .Site.RegularPages.ByDate -}}
-    {{- if in .Params.series $series_name -}}<meta property="og:see_also" content="{{ .Permalink }}" />{{- end -}}
-        {{- end -}}
-    {{- end }} -->
-
-    <!-- TODO: Twitter
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta property="twitter:description" content="{{ with .Description }}{{ . }}{{ else }}{{ .Summary }}{{ end }}" />
-    {{- with .Site.Params.seo.twitterHandle }}<meta name="twitter:site" content="@{{ . }}" />{{ end -}} -->
-
-    <!-- Social Images TODO: Social Media Images and Grayscale
-    {{- range first 1 (.Resources.ByType "image") }}
-        {{- $img := .Fill "400x300" | images.Filter images.Grayscale -}}
-    <meta property="og:image" content="{{ $img.RelPermalink | absURL }}" />
-    <meta name="twitter:image" content="{{ $img.RelPermalink | absURL }}" />
-    {{ end -}} -->
-
-    <!-- Article Info
-    {{ if not .PublishDate }}<meta property="article:published_time" {{ .PublishDate.Format $iso8601 | printf "content=%q" | safeHTMLAttr }} />
-    {{- else if not .Date.IsZero -}}<meta property="article:published_time" {{ .Date.Format $iso8601 | printf "content=%q" | safeHTMLAttr }} />
-    {{ end }}
-    {{- if not .Lastmod.IsZero }}<meta property="article:modified_time" {{ .Lastmod.Format $iso8601 | printf "content=%q" | safeHTMLAttr }} />{{ end }} -->
-
-    <!-- {{- with .Params.tags -}}
-        {{- range first 6 . }}
-    <meta property="article:tag" content="{{ . }}" />
-        {{- end -}}
-    {{- end -}} -->
-
-    <!-- TODO: Autoren richtig anzeigen und Namen füllen
-    {{- range (.Page.GetTerms "authors") -}}
-        {{- range .Params.socials }}
-            {{ if eq .name "facebook"}}<meta property="article:author" content="{{ .src }}" />{{ end }}
-            {{- if eq .name "twitter"}}<meta property="twitter:creator" content="@{{ .username }}" />{{ end }}
-        {{ end -}}
-        <meta property="article:section" content="{{ $.Section }}" />
-    {{- end -}} -->
-
-{{- with .Site.Home.OutputFormats.Get "rss" }}<!-- RSS -->
+{{ with .Site.Home.OutputFormats.Get "rss" }}<!-- RSS -->
     {{ printf `<link rel="%s" type="%s" href="%s" title="%s" />` .Rel .MediaType.Type .Permalink $.Site.Title | safeHTML }}
-{{- end }}
+{{- end -}}
 
     <!-- TODO: Humans.txt 
     <link type="text/plain" rel="author" href="humans.txt" />-->
