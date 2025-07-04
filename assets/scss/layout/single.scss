@@ -58,17 +58,17 @@ body.type-is-articles {
         }
       
         .rating-container {
-        display: flex;
-        align-items: center;
-        margin: 0.5rem 0;
-    
-        .stars {
             display: flex;
-            
-            svg {
-            fill: helpers.$gold;
+            align-items: center;
+            margin: 0.5rem 0;
+        
+            .stars {
+                display: flex;
+                
+                svg {
+                fill: helpers.$gold;
+                }
             }
-        }
         }
       
         .tags-container {

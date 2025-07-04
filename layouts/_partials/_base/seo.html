@@ -62,10 +62,17 @@ Keywords precedence:
             "image": {{- $images := .Resources.ByType "image" }}{{- $featured := $images.GetMatch "*cover*" }}{{- with $featured }}{{ $featured.Permalink }}{{- end }},
             "datePublished": {{ .PublishDate }},
             "dateModified": {{ .Lastmod }},
+        {{- range .GetTerms "authors" }}
             "author": {
                 "@type": "Person",
-                "name": {{ .Site.Params.author.name }}
+                "name": "{{ .Title }}"
             },
+        {{- else }}
+            "author": {
+                "@type": "Person",
+                "name": "{{ .Site.Params.default_author_name }}"
+            },
+        {{- end }}
             "mainEntityOfPage": { "@type": "WebPage" },
             "description": {{ with or .Params.Seo.desc .Summary | plainify | htmlUnescape }}{{ trim . "\n\r\t " }}{{ end }},
             "keywords": [{{ range $i, $e := $keywords }}{{ if $i }}, {{ end }}{{ $e }}{{ end }}]
@@ -73,9 +80,10 @@ Keywords precedence:
         {{- end }}
     </script>
 
-{{- /* TODO: Author filling */}}
 {{ if eq .Section "articles" }}
-    <meta name="author" content="{{ .Site.Params.author.name }}" />
+    {{- range .GetTerms "authors" }}
+    <meta name="author" content="{{ .Title }}" />
+    {{- end }}
     <meta name="description" content="{{ with or .Params.Seo.desc .Summary | plainify | htmlUnescape }}{{ trim . "\n\r\t " }}{{ end }}" />
     <meta name="keywords" content="{{ range $i, $e := $keywords }}{{ if $i }}, {{ end }}{{ $e }}{{ end }}" />
 {{- if .Params.Seo.canonicalURL }}
@@ -108,6 +116,9 @@ Keywords precedence:
 {{- end }}
 {{- range .GetTerms "tags" | first 6 }}
     <meta property="article:tag" content="{{ .Page.Title | plainify }}">
+{{- end }}
+{{- range .GetTerms "authors" }}
+    <meta property="article:author" content="{{ .Title }}" />
 {{- end }}
 {{- else }}
     <meta property="og:type" content="website">
@@ -150,10 +161,3 @@ Keywords precedence:
     {{- end }}
   {{- end }}
 {{- end }}
-
-<!-- TODO: Autoren richtig anzeigen und Namen füllen
-{{- range (.Page.GetTerms "authors") -}}
-    {{- range .Params.socials }}
-        {{ if eq .name "facebook"}}<meta property="article:author" content="{{ .src }}" />{{ end }}
-    {{ end -}}
-{{- end -}} -->

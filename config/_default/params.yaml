@@ -1,9 +1,7 @@
 remixicon_version: 1750019714996
 reading_speed: 179
 default_author: "angel"
-author:
-  name: "Angel"
-  # email: "mail@article-time.de"
+default_author_name: "Angel Crawford"
 follow:
   header:
     - name: "RSS Feed"
@@ -13,4 +11,3 @@ follow:
     - name: "RSS Feed"
       src: "/index.xml"
       icon: "rss-line"
-    

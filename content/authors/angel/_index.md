@@ -4,6 +4,14 @@ slug: "angel"
 birthdate: "05.02.1987"
 website: "https://angel-crawford.de"
 github_username: AngelCrawford
+params:
+  socials:
+    - name: "Website"
+      src: "https://angel-crawford.de"
+      icon: "link"
+    - name: "Instagram"
+      src: "https://instagram.com/AngelCrawford"
+      icon: "instagram"
 menu: 
   main:
     name: 'Angel Crawford'

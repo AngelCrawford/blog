@@ -247,28 +247,6 @@
 
     <div class='cell'>
         <article class="card is-horizontal {{ if .Resources }} has-image{{ end }} is-author">
-            {{- if .Resources -}}
-                <div class="card-image">
-                    <figure class="image is-2by3">
-                        {{- $img := (.Resources.ByType "image").GetMatch "cover*" -}}
-                        {{- with $img -}}
-                            <a href="{{ $.Permalink }}" title="{{ $.Title }}">
-                                {{ $image := $img.Process "fill 480x320 webp" }}
-                                <picture>
-                                    <img src="{{ $image.RelPermalink }}" alt="{{ $.Title }}" width="480" height="320" loading="lazy">
-                                </picture>
-                            </a>
-                            {{ with .Exif }}{{ with .Tags.ImageDescription  }}
-                                <figcaption>
-                                    <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ $.Site.Params.remixicon_version}}#pencil-line"></use></svg>
-                                    {{ . | safeHTML }}
-                                </figcaption>
-                            {{ end }}{{ end }}
-                        {{- end -}}
-                    </figure>
-                </div>
-            {{- end -}}
-
             <div class="card-content">
                 <h2 class="title is-5"><a href="{{ .RelPermalink }}" title="{{ .Title }}">{{ .Title }}</a></h2>
                     
@@ -279,6 +257,19 @@
             </div>
 
             <footer class="card-footer">
+                {{- if .Resources -}}
+                    <div class="author-img">
+                        <figure class="image is-48x48">
+                            <a href="{{ .Permalink }}" title="{{ .LinkTitle }}">
+                                {{- range first 1 (.Resources.ByType "image") -}}
+                                    {{- $img := .Fill "48x48" -}}
+                                    <img class="is-rounded" src="{{ $img.RelPermalink }}" alt="{{ $.Title }}" width="48" height="48" loading="lazy">
+                                {{- end -}}
+                            </a>
+                        </figure>
+                    </div>
+                {{- end -}}
+
                 {{- if not (eq .Params.format "log") }}
                     <a class="button round-button inset" title="Weiterlesen" href="{{ .RelPermalink }}">
                         <svg class='ri-1x'>

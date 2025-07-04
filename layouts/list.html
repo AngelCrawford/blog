@@ -42,15 +42,13 @@
                     {{ with .Params.subtitle }}<p class="subtitle">{{ . }}</p>{{ end }}
 
                     {{ if eq .Section "authors" }}
-                        <div class="single-author-socials">
-                            {{ range .Params.socials }}
-                                <a data-tooltip="{{ .name }}" href="{{ .src }}" title="{{ .name }}" target="_blank" rel="noreferrer">
-                                    <svg class='ri-1x'>
-                                        <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ .Site.Params.remixicon_version}}#{{ .icon }}-line"></use>
-                                    </svg>
-                                </a>
-                            {{ end }}
-                        </div>
+                        {{ with .Params.website }}
+                            <a data-tooltip="Webseite" href="{{ . }}" title="Webseite" target="_blank" rel="noreferrer">
+                                <svg class='ri-1x'>
+                                    <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ $.Site.Params.remixicon_version}}#external-link-line"></use>
+                                </svg>
+                            </a>
+                        {{ end }}
                     {{ end }}
 
                     {{ if .Summary }}{{ .Summary }}{{ end }}
@@ -66,7 +64,7 @@
                         <div class="box widget">
                             <!-- GitHub Contributions Calendar -->
                             <div class="github-contributions">
-                                <p class="title is-5">GitHub Contributions</p>
+                                <p class="title is-4">GitHub Contributions</p>
                                 <div class="github-calendar is-skeleton">
                                     <!-- Loading placeholder -->
                                     <p>Loading ...</p>
