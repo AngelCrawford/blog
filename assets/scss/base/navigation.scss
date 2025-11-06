@@ -32,8 +32,10 @@ nav.navbar {
     a.navbar-item {
         color: helpers.$gold;
         @include helpers.font-regular;
-        padding: 0 2em;
-        gap: .4rem;
+        & {
+          padding: 0 2em;
+          gap: .4rem;
+        }
 
         @include helpers.breakpoint(0, 1135px) {
             padding: .5rem .75rem;

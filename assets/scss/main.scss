@@ -99,9 +99,11 @@ main {
   &.content h1.title {
     font-size: 40px;
     @include helpers.font-header;
-    position: relative;
-    letter-spacing: .03em;
-    display: inline-block;
+    & {
+      position: relative;
+      letter-spacing: .03em;
+      display: inline-block;
+    }
 
     @include helpers.mobile {
       font-size: 28px;
@@ -155,7 +157,9 @@ main {
 
   .subtitle {
     @include helpers.font-header;
-    margin-top: .3em;
+    & {
+      margin-top: .3em;
+    }
   }
 
   &.section {

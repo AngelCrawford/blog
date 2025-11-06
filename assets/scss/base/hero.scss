@@ -57,12 +57,14 @@ header.hero {
 
             z-index: 1;
             will-change: background-position;
-            
+
             @include helpers.keyframes(clock) {
-                0% { background-position: 50% 200px; } 
-                100% {background-position: 50% 20px; } 
+                0% { background-position: 50% 200px; }
+                100% {background-position: 50% 20px; }
             }
-            @include helpers.animation(clock, 2s);
+            & {
+              @include helpers.animation(clock, 2s);
+            }
         }
 
         // Text Logo

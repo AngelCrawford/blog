@@ -1,12 +1,13 @@
-# Hugo default output directory
+# Hugo
 /resources
 /public
 /themes
 .vscode/
+hugo_stats.json
 
 # node
 node_modules
-package-lock.json
+# package-lock.json
 
 ## OS Files
 # Windows

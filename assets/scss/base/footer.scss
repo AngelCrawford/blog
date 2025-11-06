@@ -70,10 +70,12 @@ footer.footer {
       text-shadow: 3px 3px 4px rgba(#000, .5);
       background: linear-gradient(270deg, transparent 0%, rgba(0,0,0,.3) 50%, transparent 100%);
       @include helpers.font-header;
-      line-height: 1.5;
-      width: fit-content;
-      margin: 0 auto;
-      padding: .3em;
+      & {
+        line-height: 1.5;
+        width: fit-content;
+        margin: 0 auto;
+        padding: .3em;
+      }
   
       &::before, &::after {
         font-family: "remixicon" !important;

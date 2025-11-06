@@ -9,13 +9,15 @@ a.ribbon {
     max-width: 13.5em;
     position: absolute;
     @include helpers.font-header;
-    text-shadow: 3px 3px 4px rgba(#000, .5);
-    background-color: helpers.$gold-dark;
-    padding: .4em .5em .4em 1em;
-    color: helpers.$light;
-    z-index: 5;
-    border: none;
-    transition: color, background-color .3s ease-out;
+    & {
+      text-shadow: 3px 3px 4px rgba(#000, .5);
+      background-color: helpers.$gold-dark;
+      padding: .4em .5em .4em 1em;
+      color: helpers.$light;
+      z-index: 5;
+      border: none;
+      transition: color, background-color .3s ease-out;
+    }
 
     &:before,
     &:after {
@@ -53,13 +55,15 @@ a.ribbon.is-left {
   max-width: 13.5em;
   position: absolute;
   @include helpers.font-header;
-  text-shadow: 3px 3px 4px rgba(#000, .5);
-  background-color: helpers.$gold-dark;
-  padding: .4em 1em .4em .5em;
-  color: helpers.$light;
-  z-index: 5;
-  border: none;
-  transition: color .3s ease-out;
+  & {
+    text-shadow: 3px 3px 4px rgba(#000, .5);
+    background-color: helpers.$gold-dark;
+    padding: .4em 1em .4em .5em;
+    color: helpers.$light;
+    z-index: 5;
+    border: none;
+    transition: color .3s ease-out;
+  }
 
   &:before,
   &:after {

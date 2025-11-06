@@ -63,10 +63,12 @@ label[for="searchBox"] {
 
     a.title.is-5 {
       @include helpers.font-header;
-      margin-bottom: .25em;
-      font-size: 1.25rem;
-      color: helpers.$gold-light;
-      display: block;
+      & {
+        margin-bottom: .25em;
+        font-size: 1.25rem;
+        color: helpers.$gold-light;
+        display: block;
+      }
       &:hover {
         color: helpers.$gold;
       }

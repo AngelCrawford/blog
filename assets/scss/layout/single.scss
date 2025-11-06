@@ -120,9 +120,11 @@ body.type-is-articles {
             p {
                 color: color.scale(helpers.$dark, $lightness: 60%);
                 @include helpers.font-header;
-                line-height: 1.5;
-                position: relative;
-                font-size: 1.3rem;
+                & {
+                  line-height: 1.5;
+                  position: relative;
+                  font-size: 1.3rem;
+                }
 
                 @include helpers.mobile {
                     font-size: 1em;
