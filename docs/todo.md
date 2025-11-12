@@ -1,3 +1,10 @@
+# Next Steps
+- [ ] CIS Brainstorming
+- [ ] Agent `Analyst`: Brainstorming with PRD in mind
+- [ ] Agent `Anylist`: PRD workflow with reference to: `docs/bmm-index.md`
+
+
+# Open Items (Make Github issues?)
 ## 1. Modern browsers don't need jQuery for basic DOM manipulation 
 **Recommendation:** Consider migrating to vanilla JavaScript to reduce bundle size by ~30KB (minified).
 
@@ -53,3 +60,14 @@ The head.html references .Site.Params.csp.* but the params file wasn't fully rev
 
 ## Other
 - A token-based design system
+
+
+# BMAD Method
+## When Creating a Brownfield PRD
+- Point the PRD workflow to: `docs/bmm-index.md`
+
+## For Any Development Work
+- **UI features**: Reference `docs/component-inventory.md`
+- **Content changes**: Reference `docs/data-models.md`
+- **Architecture questions**: Reference `docs/architecture.md`
+- **Setup/workflow**: Reference `docs/development-guide.md`
