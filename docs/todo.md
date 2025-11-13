@@ -1,7 +1,12 @@
 # Next Steps
-- [ ] CIS Brainstorming
-- [ ] Agent `Analyst`: Brainstorming with PRD in mind
+- [ ] Agent `Analyst`: Brainstorming with PRD and Github Issues in mind
 - [ ] Agent `Anylist`: PRD workflow with reference to: `docs/bmm-index.md`
+
+# Ideas
+- Mit AI auf EN übersetzen?
+- Datum eines Artikels in URL anpassen, sobald er neu editiert wird. Mit canonical URL dann aber arbeiten für die alte URL?
+- neobrutalism web design
+- Backlinks hinzufügen? Würde die "Related" Box auf der Single Seite ersetzen?
 
 
 # Open Items (Make Github issues?)
