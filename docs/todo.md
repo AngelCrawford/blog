@@ -7,6 +7,7 @@
 - Datum eines Artikels in URL anpassen, sobald er neu editiert wird. Mit canonical URL dann aber arbeiten für die alte URL?
 - neobrutalism web design
 - Backlinks hinzufügen? Würde die "Related" Box auf der Single Seite ersetzen?
+- Instagram format = Log, selbes Design
 
 
 # Open Items (Make Github issues?)
