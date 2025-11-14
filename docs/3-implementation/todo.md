@@ -1,5 +1,4 @@
 # Next Steps
-- [ ] Agent `Analyst`: Brainstorming with PRD and Github Issues in mind
 - [ ] Agent `Anylist`: PRD workflow with reference to: `docs/bmm-index.md`
 
 # Ideas
