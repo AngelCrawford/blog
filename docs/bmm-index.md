@@ -35,10 +35,10 @@
 
 ### Core Documentation
 
-- **[Project Overview](./project-overview.md)** - Executive summary, tech stack, quick start
-- **[Architecture](./architecture.md)** - Complete system architecture, design decisions, JAMstack implementation
-- **[Development Guide](./development-guide.md)** - Setup, workflow, commands, troubleshooting
-- **[Source Tree Analysis](./source-tree-analysis.md)** - Annotated directory structure, file organization
+- **[Project Overview](./0-discovery/project-overview.md)** - Executive summary, tech stack, quick start
+- **[Architecture](./2-planning/architecture.md)** - Complete system architecture, design decisions, JAMstack implementation
+- **[Development Guide](./2-planning/development-guide.md)** - Setup, workflow, commands, troubleshooting
+- **[Source Tree Analysis](./0-discovery/source-tree-analysis.md)** - Annotated directory structure, file organization
 
 ### Component Documentation
 

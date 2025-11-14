@@ -23,14 +23,14 @@ workflow_path: "method-brownfield.yaml"
 
 workflow_status:
   # Prerequisite: Documentation (brownfield projects)
-  document-project: required  # agent: analyst
+  document-project: docs/0-discovery/project-overview.md  # agent: analyst
 
   # Phase 0: Discovery (Optional)
   brainstorm-project: optional  # agent: analyst
   research: optional  # agent: analyst
 
   # Phase 1: Planning
-  prd: required  # agent: pm
+  prd: docs/1-planning/prd/  # agent: pm
   validate-prd: optional  # agent: pm
   create-design: conditional  # agent: ux-designer
 
