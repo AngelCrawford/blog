@@ -15,16 +15,25 @@ This PRD has been split into focused, manageable sections for easier navigation 
 
 ### Quick Links
 
+**Core PRD Documents:**
 1. **[Executive Summary](./01-executive-summary.md)** - What we're building and why
 2. **[Vision & Goals](./02-vision-and-goals.md)** - Product vision, philosophy, success metrics
 3. **[Core Features](./03-core-features.md)** - Growth stages, sorting, popularity, engagement
+3A. **[Functional Requirements](./03a-functional-requirements.md)** - 52 numbered FRs with traceability
 4. **[Content Formats](./04-content-formats.md)** - All 6 formats (Article, Log, Link, Video, Gallery, Portfolio)
 5. **[Technical Architecture](./05-technical-architecture.md)** - System design, tech stack, data flow
-6. **[Epic Breakdown](./06-epic-breakdown.md)** - 9 epics with user stories and acceptance criteria
+6. **[Epic Breakdown (DEPRECATED)](./06-epic-breakdown.md)** - ⚠️ See standalone epics.md instead
 7. **[Implementation Phases](./07-implementation-phases.md)** - Phase 0-4 detailed roadmap (14 weeks)
-8. **[Final Decisions](./08-final-decisions.md)** - All 10 decisions with implementation details
+8. **[Final Decisions](./08-final-decisions.md)** - All 10 decisions
 9. **[Risks & Dependencies](./09-risks-and-dependencies.md)** - Critical path, technical risks, mitigations
-10. **[Appendices](./10-appendices.md)** - Frontmatter schema, glossary, metrics dashboard
+10. **[Appendices](./10-appendices.md)** - FR traceability matrix, frontmatter schema, glossary
+
+**Standalone Implementation Documents:**
+- **[Epics & User Stories](../epics.md)** - 9 epics, 48 detailed user stories with acceptance criteria
+- **[Architecture Notes](./architecture-notes.md)** - Technical implementation details for architecture phase
+
+**Validation:**
+- **[Validation Report (2025-11-14)](./validation-report-2025-11-14.md)** - Initial validation findings (before fixes)
 
 ---
 

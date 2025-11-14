@@ -91,3 +91,5 @@ The head.html references .Site.Params.csp.* but the params file wasn't fully rev
 - Use Keyword in the title of HTML and in the actual H1 title (in the URL, too)
 - Mention keyword in the conclusion, too 
 - Mention keyword one time in the start of the post, too
+
+https://discourse.gohugo.io/t/title-of-categories-page-is-not-translated/55359/2

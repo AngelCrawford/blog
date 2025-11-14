@@ -26,12 +26,12 @@ workflow_status:
   document-project: docs/0-discovery/project-overview.md  # agent: analyst
 
   # Phase 0: Discovery (Optional)
-  brainstorm-project: optional  # agent: analyst
-  research: optional  # agent: analyst
+  brainstorm-project: docs/0-discovery/brainstorming-session-results-2025-11-13.md  # agent: analyst
+  research: docs/0-discovery/research-domain-2025-11-14.md  # agent: analyst
 
   # Phase 1: Planning
   prd: docs/1-planning/prd/  # agent: pm
-  validate-prd: optional  # agent: pm
+  validate-prd: docs/1-planning/prd/validation-report-2025-11-14-FINAL.md  # agent: pm
   create-design: conditional  # agent: ux-designer
 
   # Phase 2: Solutioning
