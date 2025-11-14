@@ -32,10 +32,11 @@ workflow_status:
   # Phase 1: Planning
   prd: docs/1-planning/prd/  # agent: pm
   validate-prd: docs/1-planning/prd/validation-report-2025-11-14-FINAL.md  # agent: pm
-  create-design: conditional  # agent: ux-designer
+  create-design: docs/1-planning/ux-design-specification.md  # agent: ux-designer
 
   # Phase 2: Solutioning
   create-architecture: recommended  # agent: architect
+  test-design: Recommended # agent: tea
   validate-architecture: optional  # agent: architect
   solutioning-gate-check: required  # agent: architect
 

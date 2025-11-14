@@ -1,14 +1,3 @@
-# Next Steps
-- [ ] Agent `Anylist`: PRD workflow with reference to: `docs/bmm-index.md`
-
-# Ideas
-- Mit AI auf EN übersetzen?
-- Datum eines Artikels in URL anpassen, sobald er neu editiert wird. Mit canonical URL dann aber arbeiten für die alte URL?
-- neobrutalism web design
-- Backlinks hinzufügen? Würde die "Related" Box auf der Single Seite ersetzen?
-- Instagram format = Log, selbes Design
-
-
 # Open Items (Make Github issues?)
 ## 1. Modern browsers don't need jQuery for basic DOM manipulation 
 **Recommendation:** Consider migrating to vanilla JavaScript to reduce bundle size by ~30KB (minified).
@@ -63,25 +52,34 @@ The head.html references .Site.Params.csp.* but the params file wasn't fully rev
 - Missing 500.html, 403.html, etc.
 - Could improve user experience during errors
 
+---
+
 ## Other
 - A token-based design system
 
+---
 
-# BMAD Method
-## When Creating a Brownfield PRD
-- Point the PRD workflow to: `docs/bmm-index.md`
+## BMAD Method Quick Reference
 
-## For Any Development Work
-- **UI features**: Reference `docs/component-inventory.md`
-- **Content changes**: Reference `docs/data-models.md`
-- **Architecture questions**: Reference `docs/architecture.md`
-- **Setup/workflow**: Reference `docs/development-guide.md`
+### Planning Phase Documents
+- **PRD**: `docs/1-planning/prd/README.md`
+- **UX Design**: `docs/1-planning/ux-design-specification.md`
+- **Epics & Stories**: `docs/1-planning/epics.md`
+
+### Existing Codebase Documentation
+- **Architecture**: `docs/2-solutioning/architecture.md`
+- **Components**: `docs/2-solutioning/component-inventory.md`
+- **Data Models**: `docs/2-solutioning/data-models.md`
+- **Dev Guide**: `docs/2-solutioning/development-guide.md`
+
+### Discovery Documents (Historical)
+- **Project Overview**: `docs/0-discovery/project-overview.md`
+- **Source Tree**: `docs/0-discovery/source-tree-analysis.md`
 
 
 
 
 - Search Console Google verwenden, DSGVO?
-- https://umami.is/docs/track-outbound-links 
 
 ------------------
 
@@ -93,3 +91,9 @@ The head.html references .Site.Params.csp.* but the params file wasn't fully rev
 - Mention keyword one time in the start of the post, too
 
 https://discourse.gohugo.io/t/title-of-categories-page-is-not-translated/55359/2
+
+---
+
+[docs\0-discovery\Digital-garden.md](docs\0-discovery\Digital-garden.md)
+
+Content that grows and evolves over time, where quality naturally rises through community engagement, and updates are rewarded with visibility.
