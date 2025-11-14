@@ -76,3 +76,18 @@ The head.html references .Site.Params.csp.* but the params file wasn't fully rev
 - **Content changes**: Reference `docs/data-models.md`
 - **Architecture questions**: Reference `docs/architecture.md`
 - **Setup/workflow**: Reference `docs/development-guide.md`
+
+
+
+
+- Search Console Google verwenden, DSGVO?
+- https://umami.is/docs/track-outbound-links 
+
+------------------
+
+- Use 1 SEO Keyword, or as max 3 words
+- Optimize Posts around A Single Keyword
+- No Keyword stuffing!
+- Use Keyword in the title of HTML and in the actual H1 title (in the URL, too)
+- Mention keyword in the conclusion, too 
+- Mention keyword one time in the start of the post, too

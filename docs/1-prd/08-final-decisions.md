@@ -1,9 +1,13 @@
-# Final Decisions Summary
+# 8. Final Decisions
+
+[← Back to Index](./README.md) | [Previous: Implementation Phases](./07-implementation-phases.md) | [Next: Risks & Dependencies →](./09-risks-and-dependencies.md)
+
+---
 
 **Date:** 2025-11-13
 **Analyst:** Mary (Business Analyst)
 **Participant:** Angel Crawford
-**Status:** LOCKED - Ready for PRD Update
+**Status:** LOCKED - Ready for Implementation
 
 ---
 
@@ -452,147 +456,6 @@ git show <commit-hash>:data/popularity_scores.json
 
 ---
 
-## Revised Implementation Timeline
-
-### Phase 0: Foundation Cleanup
-**Duration:** 1 week
-**Goal:** Prepare infrastructure
-
-- [ ] Set up Umami Cloud account (already done! ✅)
-- [ ] Generate Umami API key
-- [ ] Validate security headers (#38)
-- [ ] Validate RSS feed (#31)
-- [ ] Add privacy policy (#49)
-- [ ] Add contact page (#41)
-- [ ] Set up GitHub Actions infrastructure
-- [ ] Create `data-updates` branch
-
----
-
-### Phase 1A: Core Garden (MVP)
-**Duration:** 6 weeks
-**Goal:** Build digital garden sorting + engagement
-
-**Week 1-2: Engagement Infrastructure**
-- [ ] Umami analytics integration
-- [ ] Heart button component
-- [ ] Webmention.io setup
-- [ ] GitHub Actions daily rebuild workflow
-
-**Week 3: Growth Stage System**
-- [ ] Add growth_stage frontmatter field
-- [ ] Design 4 growth stage badges (🌱 🌿 🌳 💀)
-- [ ] Implement badge display on cards
-- [ ] Update archetypes with growth_stage
-
-**Week 4-5: Popularity Scoring & Three-Tier Sorting**
-- [ ] Umami fetch script
-- [ ] Webmention processing script
-- [ ] Popularity formula implementation
-- [ ] last_significant_update field
-- [ ] Grace period logic (28 days)
-- [ ] Refactor home.html for three tiers
-- [ ] Early promotion (≥20 points)
-
-**Week 6: Badges & Filters**
-- [ ] New/Updated badge logic
-- [ ] Dual filter UI (format + growth stage)
-- [ ] Client-side filtering JavaScript
-- [ ] Withered handling (hide by default)
-
----
-
-### Phase 1B: Format Expansion
-**Duration:** 3 weeks
-**Goal:** Implement 4 new content formats
-
-**Week 7-8: Link & Video Formats**
-- [ ] Link format archetype
-- [ ] Link card design (external icon, domain display)
-- [ ] Link single page template
-- [ ] Video format archetype
-- [ ] Video card design (thumbnail, duration)
-- [ ] Video single page template (YouTube embed)
-- [ ] Test both formats with sample content
-
-**Week 9: Gallery & Portfolio Formats**
-- [ ] Gallery format archetype
-- [ ] Gallery card design (image grid)
-- [ ] Gallery single page template (lightbox?)
-- [ ] Portfolio format archetype
-- [ ] Portfolio card design (tech stack, links)
-- [ ] Portfolio single page template
-- [ ] Test both formats with sample content
-
----
-
-### Phase 2: Polish & History
-**Duration:** 2 weeks
-**Goal:** Add transparency and visual polish
-
-**Week 10:**
-- [ ] History field implementation
-- [ ] History sidebar widget (3 recent entries)
-- [ ] Full history section (article footer)
-- [ ] Withered article warnings
-- [ ] Withered in RSS/sitemap (with date suffix)
-
-**Week 11:**
-- [ ] OG image generation (Hugo image processing)
-- [ ] OG images with growth stage badges
-- [ ] Schema.org markup updates
-- [ ] No-JS banner
-- [ ] Performance optimization
-- [ ] Accessibility audit
-
----
-
-### Phase 3: Federated Community
-**Duration:** 2 weeks
-**Goal:** POSSE automation + advanced webmentions
-
-**Week 12:**
-- [ ] Mastodon account setup
-- [ ] Mastodon POSSE automation
-- [ ] Threads POSSE (attempt automation)
-- [ ] Test automated posting
-
-**Week 13:**
-- [ ] Advanced webmention display
-- [ ] Reply context/threading
-- [ ] Conversation display
-- [ ] Syndication links in footer
-- [ ] Manual posting guide (Facebook, Reddit)
-
----
-
-### Phase 4: Future Enhancements
-**Duration:** Ongoing
-**Goal:** Nice-to-have features
-
-- [ ] Webring integration (#146)
-- [ ] Sidenotes (#157)
-- [ ] Error/info notifications (#46)
-- [ ] Concept-based related articles (TF-IDF)
-- [ ] Visual garden map (force-directed graph)
-
----
-
-## Total Timeline Summary
-
-| Phase | Duration | Cumulative |
-|-------|----------|------------|
-| Phase 0 | 1 week | 1 week |
-| Phase 1A (Core Garden) | 6 weeks | 7 weeks |
-| Phase 1B (Formats) | 3 weeks | 10 weeks |
-| Phase 2 (Polish) | 2 weeks | 12 weeks |
-| Phase 3 (POSSE) | 2 weeks | **14 weeks** |
-| **Total to Launch** | | **~3.5 months** |
-
-**No rush = Quality over speed ✅**
-
----
-
 ## GitHub Secrets Required
 
 Add these to GitHub Repository Settings → Secrets:
@@ -637,18 +500,17 @@ posse:
 ## Next Steps
 
 1. ✅ **Decisions locked** - All 10 questions answered
-2. ⏭️ **Update PRD** - Incorporate final decisions
-3. ⏭️ **Create Phase 0 task list** - Detailed breakdown
+2. ✅ **PRD updated** - Incorporated into sharded PRD
+3. ⏭️ **Begin Phase 0** - Foundation cleanup tasks
 4. ⏭️ **Set up Umami API key** - Generate and test
-5. ⏭️ **Begin implementation** - Start Phase 0
-
-**Ready to:**
-- Update the PRD with these decisions?
-- Create detailed Phase 0 task breakdown?
-- Start implementation immediately?
+5. ⏭️ **Architecture workflow** - Use PRD as input for technical design
 
 ---
 
 *Decisions finalized by Angel Crawford & Mary (Business Analyst)*
 *Date: 2025-11-13*
 *Status: LOCKED - Ready for implementation*
+
+---
+
+[← Back to Index](./README.md) | [Previous: Implementation Phases](./07-implementation-phases.md) | [Next: Risks & Dependencies →](./09-risks-and-dependencies.md)
