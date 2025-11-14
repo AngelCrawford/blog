@@ -1,10 +1,10 @@
 ---
-description: task-adv-elicit
+description: task-advanced-elicitation
 auto_execution_mode: 2
 ---
 
-<task id=".bmad/core/tasks/adv-elicit.xml" name="Advanced Elicitation" standalone="true"
-  methods="{project-root}/.bmad/core/tasks/adv-elicit-methods.csv"
+<task id=".bmad/core/tasks/advanced-elicitation.xml" name="Advanced Elicitation" standalone="true"
+  methods="{project-root}/.bmad/core/tasks/advanced-elicitation-methods.csv"
   agent-party="{project-root}/.bmad/_cfg/agent-manifest.csv">
   <llm critical="true">
     <i>MANDATORY: Execute ALL steps in the flow section IN EXACT ORDER</i>
@@ -73,7 +73,7 @@ auto_execution_mode: 2
           <i>CRITICAL: Re-present the same 1-5,r,x prompt to allow additional elicitations</i>
         </case>
         <case n="r">
-          <i>Select 5 different methods from adv-elicit-methods.csv, present new list with same prompt format</i>
+          <i>Select 5 different methods from advanced-elicitation-methods.csv, present new list with same prompt format</i>
         </case>
         <case n="x">
           <i>Complete elicitation and proceed</i>
