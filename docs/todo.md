@@ -56,32 +56,11 @@ The head.html references .Site.Params.csp.* but the params file wasn't fully rev
 
 ## Other
 - A token-based design system
-
----
-
-## BMAD Method Quick Reference
-
-### Planning Phase Documents
-- **PRD**: `docs/1-planning/prd/README.md`
-- **UX Design**: `docs/1-planning/ux-design-specification.md`
-- **Epics & Stories**: `docs/1-planning/epics.md`
-
-### Existing Codebase Documentation
-- **Architecture**: `docs/2-solutioning/architecture.md`
-- **Components**: `docs/2-solutioning/component-inventory.md`
-- **Data Models**: `docs/2-solutioning/data-models.md`
-- **Dev Guide**: `docs/2-solutioning/development-guide.md`
-
-### Discovery Documents (Historical)
-- **Project Overview**: `docs/0-discovery/project-overview.md`
-- **Source Tree**: `docs/0-discovery/source-tree-analysis.md`
-
-
-
-
-- Search Console Google verwenden, DSGVO?
+- https://discourse.gohugo.io/t/title-of-categories-page-is-not-translated/55359/2
 
 ------------------
+
+- Search Console Google verwenden, DSGVO?
 
 - Use 1 SEO Keyword, or as max 3 words
 - Optimize Posts around A Single Keyword
@@ -89,8 +68,6 @@ The head.html references .Site.Params.csp.* but the params file wasn't fully rev
 - Use Keyword in the title of HTML and in the actual H1 title (in the URL, too)
 - Mention keyword in the conclusion, too 
 - Mention keyword one time in the start of the post, too
-
-https://discourse.gohugo.io/t/title-of-categories-page-is-not-translated/55359/2
 
 ---
 
