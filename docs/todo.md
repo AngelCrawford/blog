@@ -57,6 +57,10 @@ The head.html references .Site.Params.csp.* but the params file wasn't fully rev
 ## Other
 - A token-based design system
 - https://discourse.gohugo.io/t/title-of-categories-page-is-not-translated/55359/2
+- AI davon abhalten meinen Content zu klauen
+- Wenn ein Bild mit AI generiert wurde, Watermark hinzufügen, hover Watermark öffnet ein Tooltip mit dem Prompt der benutzt wurde, Model, etc.
+
+> You are my ruthless mentor. Don’t sugarcoat anything if my idea is weak, call it trash and tell me why. Your job is to test everything until i say it’s bulletproof.
 
 ------------------
 
