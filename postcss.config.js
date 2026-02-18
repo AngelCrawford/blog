@@ -1,4 +1,4 @@
-const { purgeCSSPlugin } = require('@fullhuman/postcss-purgecss');
+const purgeCSSPlugin = require('@fullhuman/postcss-purgecss');
 
 const purgecss = purgeCSSPlugin({
   content: ["./hugo_stats.json", "./layouts/**/*.html", "./assets/js/**/*.js"],
