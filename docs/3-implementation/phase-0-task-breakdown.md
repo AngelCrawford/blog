@@ -368,6 +368,44 @@ Value: angelcrawford.github.io
 
 ### Day 4: Validation Issues
 
+#### Task 4.0: Fix CSP Configuration in `params.yaml` ⚠️ **Live Bug** ⭐ **DO FIRST**
+**Time:** 15 minutes
+**Difficulty:** Easy
+
+**Background:**
+`layouts/_partials/_base/head.html` references nine `.Site.Params.csp.*` keys (`default`, `formaction`, `framesrc`, `imgsrc`, `objectsrc`, `stylesrc`, `scriptsrc`, `scriptsrcelem`, `connectsrc`) but `config/_default/params.yaml` defines only `imgsrc`. The other CSP directives currently render with empty values, silently weakening the site's Content-Security-Policy header.
+
+**Reference:** `docs/0-discovery/feature-gap-blog-old.md` → "Privacy / DSGVO → CSP-Konfiguration kaputt". The legacy `[params.csp]` block in `blog-old/config.toml` had a complete set — port the same values and update for new external services (Umami Cloud, webmention.io).
+
+**Steps:**
+1. Open `config/_default/params.yaml` (and any `production`/`development` overlay)
+2. Add the missing CSP keys under `params.csp.*` (example values — adjust per actual external services in use):
+
+```yaml
+csp:
+  default: ["'self'"]
+  formaction: ["'self'"]
+  framesrc: ["'self'", "https://www.youtube-nocookie.com"]
+  imgsrc: ["'self'", "data:", "https:"]
+  objectsrc: ["'none'"]
+  stylesrc: ["'self'", "'unsafe-inline'"]
+  scriptsrc: ["'self'", "https://cloud.umami.is"]
+  scriptsrcelem: ["'self'", "https://cloud.umami.is"]
+  connectsrc: ["'self'", "https://cloud.umami.is", "https://webmention.io"]
+```
+
+3. Build site locally: `hugo --environment production`
+4. Inspect the generated `<meta http-equiv="Content-Security-Policy">` tag in any built HTML page — confirm all nine directives have non-empty values
+5. (Optional) Validate via https://csp-evaluator.withgoogle.com/ on a published article URL
+
+**Acceptance Criteria:**
+- [ ] All 9 CSP directives have non-empty values in built HTML
+- [ ] No browser console CSP-violation errors on the live site
+- [ ] CSP evaluator reports no critical findings
+- [ ] `docs/0-discovery/feature-gap-blog-old.md` "CSP-Konfiguration kaputt" item ticked off
+
+---
+
 #### Task 4.1: Validate Security Headers (#38)
 **Time:** 10 minutes
 **Difficulty:** Easy
@@ -468,6 +506,74 @@ Permissions-Policy: camera=(), microphone=(), geolocation=()
 - [ ] Rich Results Test passes (or shows warnings, not errors)
 - [ ] Article schema recognized
 - [ ] Issue #173 updated with findings
+
+---
+
+#### Task 4.4: Restore `[Author]`-Block in Site Config
+**Time:** 5 minutes
+**Difficulty:** Easy
+
+**Background:**
+The legacy `blog-old/config.toml` exposed a top-level `[Author]` block with `name` and `email`. This was consumed by the OpenGraph `article:author` meta tag, the Schema.org `Person` markup, and the footer copyright credit. The new repo dropped the block — affected templates either fall back to defaults or render with empty author metadata.
+
+**Reference:** `docs/0-discovery/feature-gap-blog-old.md` → "Config / Taxonomies → `[Author]`-Block".
+
+**Steps:**
+1. Open `config/_default/params.yaml`
+2. Add a top-level `author` block (snake_case keys, per project convention):
+
+```yaml
+author:
+  name: "Angel Crawford"
+  email: "..."           # optional — only if you want it exposed in metadata
+  url: "https://article-time.de"
+```
+
+3. Search the codebase for `.Site.Params.author` references — verify SEO partial (`layouts/_partials/_base/seo.html`) and any Schema.org partial pick up the new keys. Add fallbacks if missing.
+4. Build site locally: `hugo --environment production`
+5. Inspect a built article HTML: `<meta property="article:author">` and JSON-LD `author` should both be populated.
+
+**Acceptance Criteria:**
+- [ ] `params.author` block present with at least `name` and `url`
+- [ ] OpenGraph `article:author` meta tag populated on article pages
+- [ ] Schema.org `Person` `name` populated on article pages
+- [ ] No empty `author=""` artifacts in built HTML
+
+---
+
+#### Task 4.5: Restore Copyright Footer Credit
+**Time:** 5 minutes
+**Difficulty:** Easy
+
+**Background:**
+The legacy site rendered a copyright line in the footer (e.g. `© 2025 Angel Crawford`). The new footer is missing this. Quick win, depends on Task 4.4 (uses `params.author.name`).
+
+**Reference:** `docs/0-discovery/feature-gap-blog-old.md` → "Config / Taxonomies → `copyright`-String".
+
+**Steps:**
+1. Open `layouts/_partials/_base/footer.html`
+2. Add a copyright line (year auto-rolls via `now.Format`):
+
+```go-html-template
+<p class="copyright">
+  © {{ now.Format "2006" }} {{ .Site.Params.author.name | default .Site.Title }}
+</p>
+```
+
+3. (Optional) Add a `params.copyright_suffix` key in `params.yaml` if you want a custom suffix like "All rights reserved." appended:
+```yaml
+copyright_suffix: "All rights reserved."
+```
+And reference it in the template with `| default ""` for graceful absence.
+4. Build and visually verify on a few pages (home, single article, log).
+
+**Acceptance Criteria:**
+- [ ] Copyright line visible in footer on every page
+- [ ] Year auto-updates (uses Hugo `now.Format` — no hardcoded year)
+- [ ] Author name comes from `params.author.name` (depends on Task 4.4)
+- [ ] Styling matches surrounding footer text (no visual regression)
+
+**Prerequisites:** Task 4.4
 
 ---
 
@@ -897,9 +1003,12 @@ Closes #49
 - [ ] Task 3.2: Configure custom domain
 
 **Day 4: Validation Issues**
+- [ ] Task 4.0: Fix CSP configuration in params.yaml ⚠️ Live Bug
 - [ ] Task 4.1: Validate security headers (#38)
 - [ ] Task 4.2: Validate RSS feed (#31)
 - [ ] Task 4.3: Validate schema markup (#173)
+- [ ] Task 4.4: Restore [Author]-Block in site config
+- [ ] Task 4.5: Restore Copyright Footer Credit
 
 **Day 5: Legal Pages**
 - [ ] Task 5.1: Create privacy policy (#49)

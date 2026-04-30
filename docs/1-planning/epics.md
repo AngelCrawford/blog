@@ -19,21 +19,65 @@ This document breaks down the Digital Garden transformation into **9 epics** and
 
 ---
 
+## GitHub Issues Mapping
+
+Stories mit einem `**GitHub Issue:**`-Eintrag schließen das verlinkte Issue, sobald die Story den Status `done` erreicht. Bei mehreren Stories pro Issue (z. B. #145 deckt 2.3 + 2.4) Issue erst nach der **letzten** zugehörigen Story schließen. Epic-Umbrella-Issues (z. B. #59, #147) werden nach Abschluss aller Stories im Epic geschlossen.
+
+**Vollständige Mapping-Übersicht:**
+
+| Issue | State | Story / Epic | Hinweis |
+|---|---|---|---|
+| [#49](https://github.com/AngelCrawford/blog/issues/49) Needed Sites (Privacy Policy) | OPEN | Story 2.5 | direkt |
+| [#59](https://github.com/AngelCrawford/blog/issues/59) Possible Formats | OPEN | Epic 8 (umbrella) | nach allen 8.x |
+| [#67](https://github.com/AngelCrawford/blog/issues/67) Merge and Deploy | OPEN | Story 2.6 | teilweise (GH Actions Setup) |
+| [#70](https://github.com/AngelCrawford/blog/issues/70) Analytics | OPEN | Story 2.1 | direkt |
+| [#78](https://github.com/AngelCrawford/blog/issues/78) Like Button | OPEN | Story 2.2 | direkt |
+| [#95](https://github.com/AngelCrawford/blog/issues/95) If no JavaScript | OPEN | Story 9.3 | direkt |
+| [#116](https://github.com/AngelCrawford/blog/issues/116) Open Graph (Share Images) | OPEN | Story 9.1 | direkt |
+| [#124](https://github.com/AngelCrawford/blog/issues/124) IndieWeb (umbrella) | OPEN | Epic 2 + Epic 7 | nach #145 + #147 |
+| [#145](https://github.com/AngelCrawford/blog/issues/145) Webmentions & Pingbacks | OPEN | Stories 2.3 + 2.4 | erst nach beiden |
+| [#147](https://github.com/AngelCrawford/blog/issues/147) IndieWeb - POSSE | OPEN | Epic 7 (umbrella) | nach allen 7.x |
+| [#158](https://github.com/AngelCrawford/blog/issues/158) Format Filter | OPEN | Story 5.5 | direkt |
+| [#173](https://github.com/AngelCrawford/blog/issues/173) Schema | OPEN | Story 9.2 | direkt |
+| [#32](https://github.com/AngelCrawford/blog/issues/32) Link Preview for Posts | OPEN | Story 8.2 | direkt |
+| [#60](https://github.com/AngelCrawford/blog/issues/60) Headline Anchors | OPEN | Story 9.9 | direkt |
+| [#94](https://github.com/AngelCrawford/blog/issues/94) Cookie-Banner UI | OPEN | Story 2.7 | direkt |
+| [#115](https://github.com/AngelCrawford/blog/issues/115) Most-Loved Widget | OPEN | Story 3.6 | direkt |
+| [#170](https://github.com/AngelCrawford/blog/issues/170) robots.txt Layout | OPEN | Story 9.8 | gemeinsam mit #171, #172 |
+| [#171](https://github.com/AngelCrawford/blog/issues/171) sitemap.xml Layout | OPEN | Story 9.8 | gemeinsam mit #170, #172 |
+| [#172](https://github.com/AngelCrawford/blog/issues/172) sitemap priorities | OPEN | Story 9.8 | gemeinsam mit #170, #171 |
+
+**Offene Issues, die NICHT von Stories abgedeckt werden** (separat zu entscheiden — eigenes Backlog oder Epic-Erweiterung):
+
+| Issue | Thema | Empfehlung |
+|---|---|---|
+| [#185](https://github.com/AngelCrawford/blog/issues/185) Add Claude Code Skills | Meta-Tooling | außerhalb Digital Garden Scope |
+| [#183](https://github.com/AngelCrawford/blog/issues/183) Adjust article date in URL | URL-Verhalten beim Edit | evtl. Erweiterung Epic 6 |
+| [#182](https://github.com/AngelCrawford/blog/issues/182) AI translation to EN | i18n | eigenes zukünftiges Epic |
+| [#176](https://github.com/AngelCrawford/blog/issues/176) Tests after deploy | CI/Smoke-Tests | evtl. zu Epic 9 ergänzen |
+| [#146](https://github.com/AngelCrawford/blog/issues/146) IndieWeb - Webring | Webring | evtl. zu Epic 7 ergänzen |
+| [#46](https://github.com/AngelCrawford/blog/issues/46) Error/Info Notifications | neues Format auf Homepage | überschneidet sich nicht direkt mit Stories |
+| [#41](https://github.com/AngelCrawford/blog/issues/41) Contact | Kontaktseite | wie #49 — separate Page-Story möglich |
+| [#38](https://github.com/AngelCrawford/blog/issues/38) Security Headers | CSP, HSTS etc. | evtl. zu Epic 9 ergänzen |
+| [#31](https://github.com/AngelCrawford/blog/issues/31) Add RSS Feed | RSS-Validierung | überschneidet sich teilweise mit 1.5/9.6 |
+
+---
+
 ## Epic Overview
 
 | Epic | Focus | Stories | Phase | Weeks | FR Coverage |
 |------|-------|---------|-------|-------|-------------|
 | Epic 1 | Growth Stage System | 5 | 1A | Week 3 | FR-001 to FR-007 |
-| Epic 2 | Engagement Infrastructure | 6 | 1A | Week 1-2 | FR-008 to FR-013, FR-047, FR-049 |
-| Epic 3 | Popularity Scoring Engine | 5 | 1A | Week 4-5 | FR-010, FR-013, FR-018, FR-019, FR-035 to FR-037 |
+| Epic 2 | Engagement Infrastructure | 7 | 1A | Week 1-2 | FR-008 to FR-013, FR-047, FR-048, FR-049 |
+| Epic 3 | Popularity Scoring Engine | 6 | 1A | Week 4-5 | FR-010, FR-013, FR-018, FR-019, FR-035 to FR-037 |
 | Epic 4 | Three-Tier Sorting | 4 | 1A | Week 4-5 | FR-014 to FR-017, FR-020, FR-050, FR-051 |
-| Epic 5 | Badge & Filter System | 6 | 1A | Week 6 | FR-003, FR-005, FR-024, FR-025, FR-032, FR-033 |
+| Epic 5 | Badge & Filter System | 7 | 1A | Week 6 | FR-003, FR-005, FR-024, FR-025, FR-032, FR-033 |
 | Epic 6 | History Timeline | 3 | 2 | Week 10 | FR-021 to FR-023 |
 | Epic 7 | POSSE & Advanced Webmentions | 5 | 3 | Week 12-13 | FR-038 to FR-041 |
 | Epic 8 | Format Expansion | 8 | 1B | Week 7-9 | FR-028 to FR-033 |
-| Epic 9 | Polish & Optimization | 6 | 2 | Week 10-11 | FR-006, FR-007, FR-042 to FR-046, FR-048 |
+| Epic 9 | Polish & Optimization | 12 | 2 | Week 10-11 | FR-006, FR-007, FR-013, FR-042 to FR-046, FR-048 |
 
-**Total:** 48 stories across 9 epics
+**Total:** 57 stories across 9 epics
 
 ---
 
@@ -174,6 +218,8 @@ This document breaks down the Digital Garden transformation into **9 epics** and
 
 **FR Coverage:** FR-008, FR-009, FR-010, FR-011, FR-012, FR-013, FR-047, FR-048, FR-049
 
+**Umbrella GitHub Issues** (close after ALL related stories done): [#124 IndieWeb](https://github.com/AngelCrawford/blog/issues/124), [#145 Webmentions & Pingbacks](https://github.com/AngelCrawford/blog/issues/145) (after Stories 2.3 + 2.4)
+
 ---
 
 ## Story 2.1: Umami Analytics Integration
@@ -183,6 +229,8 @@ This document breaks down the Digital Garden transformation into **9 epics** and
 **So that** I can understand content performance without violating privacy
 
 **FR Coverage:** FR-047, FR-049
+
+**GitHub Issue:** [#70 Analytics](https://github.com/AngelCrawford/blog/issues/70)
 
 **Acceptance Criteria:**
 1. Umami script tag added to `<head>` in `baseof.html`
@@ -207,6 +255,8 @@ This document breaks down the Digital Garden transformation into **9 epics** and
 **So that** I can show appreciation without creating an account
 
 **FR Coverage:** FR-008, FR-009
+
+**GitHub Issue:** [#78 Like Button for the articles?](https://github.com/AngelCrawford/blog/issues/78)
 
 **Acceptance Criteria:**
 1. Heart button visible on all article and log pages (below title or in sidebar)
@@ -233,6 +283,8 @@ This document breaks down the Digital Garden transformation into **9 epics** and
 
 **FR Coverage:** FR-011
 
+**GitHub Issue:** [#145 IndieWeb - Webmentions & Pingbacks](https://github.com/AngelCrawford/blog/issues/145) (gemeinsam mit Story 2.4)
+
 **Acceptance Criteria:**
 1. Webmention endpoint link added to `<head>`: `<link rel="webmention" href="https://webmention.io/article-time.de/webmention" />`
 2. Webmention.io account created and verified for article-time.de domain
@@ -255,6 +307,8 @@ This document breaks down the Digital Garden transformation into **9 epics** and
 **So that** I can follow federated conversations
 
 **FR Coverage:** FR-012
+
+**GitHub Issue:** [#145 IndieWeb - Webmentions & Pingbacks](https://github.com/AngelCrawford/blog/issues/145) (gemeinsam mit Story 2.3 — Issue erst schließen wenn beide done)
 
 **Acceptance Criteria:**
 1. "Replies & Mentions" section added to article footer
@@ -281,6 +335,8 @@ This document breaks down the Digital Garden transformation into **9 epics** and
 
 **FR Coverage:** FR-048
 
+**GitHub Issue:** [#49 Needed Sites (Legal Notice, Privacy Policy)](https://github.com/AngelCrawford/blog/issues/49)
+
 **Acceptance Criteria:**
 1. Privacy policy page created at `/pages/privacy/`
 2. Policy explains: Umami (anonymous analytics), hearts (event tracking), webmentions (public data)
@@ -305,6 +361,8 @@ This document breaks down the Digital Garden transformation into **9 epics** and
 
 **FR Coverage:** FR-034
 
+**GitHub Issue:** [#67 Merge and Deploy](https://github.com/AngelCrawford/blog/issues/67) (teilweise — GitHub Actions Setup; ältere Punkte des Issues evtl. schon erledigt)
+
 **Acceptance Criteria:**
 1. GitHub Actions workflow file created: `.github/workflows/daily-rebuild.yml`
 2. Workflow triggers daily at 2 AM UTC via cron schedule
@@ -319,6 +377,35 @@ This document breaks down the Digital Garden transformation into **9 epics** and
 **Dependencies:** Epic 3 (engagement fetch scripts added later)
 
 **Effort:** 1 day
+
+---
+
+## Story 2.7: Cookie-Banner UI
+
+**As a** reader concerned about privacy
+**I want** a clear notice about minimal data collection on first visit
+**So that** I understand the site's privacy posture and can dismiss the notice
+
+**FR Coverage:** FR-048 (extends Privacy Policy 2.5)
+
+**GitHub Issue:** [#94 Cookie-Banner UI](https://github.com/AngelCrawford/blog/issues/94)
+
+**Source:** Restoration of `blog-old/themes/article/layouts/partials/cookie-banner.html` (see `docs/0-discovery/feature-gap-blog-old.md` → Privacy / DSGVO).
+
+**Acceptance Criteria:**
+1. Banner partial created at `layouts/_partials/_base/cookie-banner.html` (matches existing `_base/` partials convention)
+2. Banner appears once per session on first visit and is dismissible via close button (sessionStorage flag, NO cookies)
+3. Banner text explains: cookieless analytics (Umami), no tracking cookies, link to Privacy Policy (Story 2.5)
+4. Banner integrates with existing `assets/js/gdpr.js` (already imported in head bundle)
+5. Banner styled non-intrusive (bottom-fixed, semi-transparent, matches site theme)
+6. Banner accessible (keyboard-dismissible, ARIA `role="dialog"`, screen-reader friendly)
+7. Banner suppressed in noindex contexts and via `@media print`
+
+**Prerequisites:** Story 2.5 (Privacy Policy must exist for link target)
+
+**Dependencies:** None (uses existing `gdpr.js`)
+
+**Effort:** 0.5 days
 
 ---
 
@@ -453,6 +540,36 @@ This document breaks down the Digital Garden transformation into **9 epics** and
 **Dependencies:** Epic 4, Story 4.3
 
 **Effort:** 0.5 days
+
+---
+
+## Story 3.6: Most-Loved Widget
+
+**As a** reader
+**I want** a sidebar widget showing the most-loved articles
+**So that** I can quickly discover the community's favorites
+
+**FR Coverage:** FR-019 (extends Early Promotion logic 3.5)
+
+**GitHub Issue:** [#115 Most-Loved Widget](https://github.com/AngelCrawford/blog/issues/115)
+
+**Source:** Restoration of `blog-old/themes/article/layouts/partials/widget-mostloved.html` (see `docs/0-discovery/feature-gap-blog-old.md` → Page-Level Features).
+
+**Acceptance Criteria:**
+1. Widget partial created at `layouts/_partials/widgets/most-loved.html`
+2. Widget reads `data/popularity_scores.json` (output of Story 3.3)
+3. Widget displays top 5 articles by popularity score (descending), excluding withered content
+4. Each entry shows: title (linked), engagement count (hearts + webmentions), permalink
+5. Empty-state: widget hides itself if fewer than 3 articles have a non-zero popularity score
+6. Widget styled to match existing sidebar widgets (archive, series, related)
+7. Widget includable on any page via `{{ partial "widgets/most-loved.html" . }}`
+8. Widget renders without JavaScript (server-side data lookup at build time)
+
+**Prerequisites:** Story 3.3 (popularity scores)
+
+**Dependencies:** None
+
+**Effort:** 1 day
 
 ---
 
@@ -679,6 +796,8 @@ This document breaks down the Digital Garden transformation into **9 epics** and
 
 **FR Coverage:** FR-032
 
+**GitHub Issue:** [#158 Format Filter](https://github.com/AngelCrawford/blog/issues/158)
+
 **Acceptance Criteria:**
 1. Format filter UI added to homepage (next to growth stage filter)
 2. Filter buttons for: All (default), Article, Log, Link (Phase 1B), Video (Phase 1B), Gallery (Phase 1B), Portfolio (Phase 1B)
@@ -712,6 +831,35 @@ This document breaks down the Digital Garden transformation into **9 epics** and
 6. Filter state persists across page navigations (sessionStorage)
 
 **Prerequisites:** Story 5.4, Story 5.5
+
+**Dependencies:** None
+
+**Effort:** 1 day
+
+---
+
+## Story 5.7: Format-Icons via `contains`-Taxonomy
+
+**As a** reader
+**I want** small format icons (Instagram, Twitter, YouTube, image, gallery, code) on cards
+**So that** I can recognize the type of embedded content at a glance
+
+**FR Coverage:** FR-024 (badge system extension; complements FR-032 Format Filter)
+
+**GitHub Issue:** [#158 Format Filter](https://github.com/AngelCrawford/blog/issues/158) (visual layer to the filter)
+
+**Source:** Restoration of the legacy `contains`-Taxonomie from `blog-old` (see `docs/0-discovery/feature-gap-blog-old.md` → Content-Formate / `contains`-Taxonomie). Old taxonomy reactivated solely to drive icon mapping on cards.
+
+**Acceptance Criteria:**
+1. `contains` taxonomy reactivated in `config/_default/config.yaml`
+2. Frontmatter `contains: ["youtube", "image", ...]` accepts predefined values: `instagram`, `twitter`, `youtube`, `image`, `gallery`, `code`
+3. `layouts/_partials/card.html` renders matching Remix Icon glyph(s) per `contains` entry
+4. Icons positioned in card footer (consistent with growth-badge ADR-005 — no top-corner placement)
+5. Icons accessible (ARIA labels: "Contains YouTube video", "Contains image", etc.)
+6. Multiple icons supported (e.g., article with `["image", "youtube"]` shows both)
+7. No icons rendered when `contains` field is absent (no clutter for plain text articles)
+
+**Prerequisites:** None
 
 **Dependencies:** None
 
@@ -807,6 +955,8 @@ This document breaks down the Digital Garden transformation into **9 epics** and
 **Value:** Reach federated audience, drive traffic, federated conversations
 
 **FR Coverage:** FR-038, FR-039, FR-040, FR-041
+
+**Umbrella GitHub Issue** (close after ALL stories in epic done): [#147 IndieWeb - Posse](https://github.com/AngelCrawford/blog/issues/147)
 
 ---
 
@@ -941,6 +1091,8 @@ This document breaks down the Digital Garden transformation into **9 epics** and
 
 **FR Coverage:** FR-028, FR-029, FR-030, FR-031, FR-032, FR-033
 
+**Umbrella GitHub Issue** (close after ALL stories in epic done): [#59 Possible Formats](https://github.com/AngelCrawford/blog/issues/59)
+
 ---
 
 ## Story 8.1: Link Format - Archetype & Frontmatter
@@ -973,6 +1125,8 @@ This document breaks down the Digital Garden transformation into **9 epics** and
 **So that** I know it's curated content
 
 **FR Coverage:** FR-028
+
+**GitHub Issue:** [#32 Link Preview for Posts](https://github.com/AngelCrawford/blog/issues/32) (Rich-Snippet-Vorschau für Links)
 
 **Acceptance Criteria:**
 1. Link card partial created: `layouts/_partials/cards/link.html`
@@ -1151,6 +1305,8 @@ This document breaks down the Digital Garden transformation into **9 epics** and
 
 **FR Coverage:** FR-042
 
+**GitHub Issue:** [#116 Open Graph (Share Images)](https://github.com/AngelCrawford/blog/issues/116)
+
 **Acceptance Criteria:**
 1. OG image template created: `assets/images/og-template.png` (1200×630)
 2. Growth stage badge overlays added: `assets/images/badges/*.png`
@@ -1176,6 +1332,8 @@ This document breaks down the Digital Garden transformation into **9 epics** and
 
 **FR Coverage:** FR-043
 
+**GitHub Issue:** [#173 Schema](https://github.com/AngelCrawford/blog/issues/173)
+
 **Acceptance Criteria:**
 1. JSON-LD structured data added to article pages
 2. Schema includes: Article type, headline, author, datePublished, dateModified, description, image
@@ -1199,6 +1357,8 @@ This document breaks down the Digital Garden transformation into **9 epics** and
 **So that** I understand why filters don't work
 
 **FR Coverage:** FR-044
+
+**GitHub Issue:** [#95 If no JavaScript](https://github.com/AngelCrawford/blog/issues/95)
 
 **Acceptance Criteria:**
 1. `<noscript>` banner added to header/top of page
@@ -1290,20 +1450,187 @@ This document breaks down the Digital Garden transformation into **9 epics** and
 
 ---
 
+## Story 9.7: Twitter-Cards Meta-Tags
+
+**As a** content creator
+**I want** Twitter Card meta-tags on every article
+**So that** links shared on Twitter/X render with rich previews
+
+**FR Coverage:** FR-042 (extends OG image work in Story 9.1)
+
+**Source:** Restoration of legacy `[params.seo].twitterHandle` + `twitter:*` meta tags from `blog-old` (see `docs/0-discovery/feature-gap-blog-old.md` → Social).
+
+**Acceptance Criteria:**
+1. `<meta name="twitter:card" content="summary_large_image">` added to `layouts/_partials/_base/seo.html`
+2. `twitter:title`, `twitter:description`, `twitter:image` populated from page params with sensible fallbacks
+3. `twitter:site` and `twitter:creator` configurable in `config/_default/params.yaml` via a new `twitterHandle` key (under `params.seo`)
+4. Pages without OG image still produce a valid `summary` Twitter card (not `summary_large_image`)
+5. Validation: pasting a published article URL into Twitter's Card Validator renders correctly with title, description, image
+6. Backwards compatible: existing OpenGraph tags remain unchanged
+7. CSP allowlist updated if needed (no new external script — meta tags only)
+
+**Prerequisites:** None (Story 9.1 OG images preferred but not blocking — graceful fallback)
+
+**Dependencies:** None
+
+**Effort:** 0.5 days
+
+---
+
+## Story 9.8: Custom robots.txt and sitemap.xml Templates
+
+**As a** content creator
+**I want** custom `robots.txt` and `sitemap.xml` templates
+**So that** I can control crawler directives and sitemap content (especially for withered/deprecated pages)
+
+**FR Coverage:** FR-006 (extends Story 9.6 Withered SEO Integration)
+
+**GitHub Issue:** [#170](https://github.com/AngelCrawford/blog/issues/170), [#171](https://github.com/AngelCrawford/blog/issues/171), [#172](https://github.com/AngelCrawford/blog/issues/172) (covered together)
+
+**Source:** Restoration of `blog-old/themes/article/layouts/robots.txt` and `sitemap.xml` (see `docs/0-discovery/feature-gap-blog-old.md` → SEO / Output-Formate).
+
+**Acceptance Criteria:**
+1. `layouts/robots.txt` created with: User-agent rules, Sitemap directive (absolute URL), optional Crawl-delay
+2. `layouts/sitemap.xml` created with: full URL set, `<lastmod>`, `<changefreq>`, `<priority>` per page type
+3. Withered content `<priority>` set to 0.3 (per Story 9.6); evergreen 0.8; default 0.5
+4. `robots.txt` excludes draft preview paths and asset internals (`/resources/_gen/`)
+5. Sitemap validates against the sitemaps.org schema (XML well-formed, all URLs absolute)
+6. `outputs.home`/`outputs.section` config retains XML sitemap output
+7. Generated `robots.txt` accessible at `https://article-time.de/robots.txt`
+
+**Prerequisites:** None
+
+**Dependencies:** Story 9.6 (Withered SEO Integration) — completes the SEO trio
+
+**Effort:** 1 day
+
+---
+
+## Story 9.9: Headline-Hash Auto-Anchor
+
+**As a** reader
+**I want** clickable anchor links next to article headings
+**So that** I can copy a direct link to a specific section
+
+**FR Coverage:** FR-045 (accessibility / usability polish)
+
+**GitHub Issue:** [#60 Headline Anchors](https://github.com/AngelCrawford/blog/issues/60)
+
+**Source:** Restoration of `blog-old/themes/article/layouts/partials/single-pages/headline-hash.html` (see `docs/0-discovery/feature-gap-blog-old.md` → Page-Level Features).
+
+**Acceptance Criteria:**
+1. Heading render-hook updated at `layouts/_markup/render-heading.html` to inject anchor `<a>` after `<h2>`/`<h3>`/`<h4>`
+2. Anchor uses heading slug as `id` and `href="#slug"`
+3. Anchor displays a Remix Icon link/anchor glyph
+4. Anchor visually subtle (low opacity), revealed on heading hover via CSS only
+5. Anchor accessible (keyboard-focusable, ARIA label "Permalink to section: [heading text]")
+6. Optional polish: click-to-copy URL behavior in vanilla JS (no framework dependency)
+7. Anchors NOT rendered on `<h1>` (page title) — only `<h2>` through `<h4>`
+
+**Prerequisites:** None
+
+**Dependencies:** None
+
+**Effort:** 0.5 days
+
+---
+
+## Story 9.10: Author-Box with Socials on Single-Page
+
+**As a** reader
+**I want** a rich author-box at the end of articles showing the author's bio, avatar, and social links
+**So that** I can learn more about the writer and follow them elsewhere
+
+**FR Coverage:** FR-045 (UX polish)
+
+**Source:** Restoration of `blog-old/themes/article/layouts/partials/single-pages/author-box.html` (see `docs/0-discovery/feature-gap-blog-old.md` → Page-Level Features → Author-Box).
+
+**Acceptance Criteria:**
+1. Partial created at `layouts/_partials/widgets/author-box.html`
+2. Box displays: avatar, name, bio (from author taxonomy term content), social links from term frontmatter (website, mastodon, github, etc.)
+3. Box rendered at end of `layouts/single.html` for articles + logs (after webmentions, before related-articles)
+4. Multiple authors: all displayed; if more than 3, collapse with "+N more" toggle
+5. Social-icons use Remix Icon glyphs (matching existing icon system)
+6. Box hidden if author has no bio AND no socials
+7. Box responsive (stacks on mobile)
+8. Box accessible (ARIA landmark `<aside>` with label, descriptive link text)
+
+**Prerequisites:** None (uses existing author taxonomy)
+
+**Dependencies:** None
+
+**Effort:** 1 day
+
+---
+
+## Story 9.11: Rich `index.json` — Webmentions Count Field
+
+**As a** search-feature consumer
+**I want** each article in `index.json` to include a `webmentionsCount` field
+**So that** search results can surface engagement signals alongside textual matches
+
+**FR Coverage:** FR-013 (webmention integration with search index)
+
+**Source:** Partial restoration of legacy rich `index.json` from `blog-old/themes/article/layouts/_default/index.json` (see `docs/0-discovery/feature-gap-blog-old.md` → Such-Index). Legacy `image` and `commentsCount` fields explicitly OUT of scope; `commentsCount` is replaced by `webmentionsCount` because Staticman comments are dropped in favor of webmentions.
+
+**Acceptance Criteria:**
+1. `layouts/index.json` (existing search-index template) extended to include `webmentionsCount` per page entry
+2. Count derived from `data/webmentions_by_article.json` via permalink lookup; default 0 when no match
+3. `webmentionsCount` is an integer summing all webmention types (replies + reposts + mentions + likes)
+4. Field present for all article-like content types (articles, logs, links, videos, galleries, portfolio)
+5. Build still succeeds when `data/webmentions_by_article.json` is missing (graceful fallback to 0)
+6. Existing search-index fields (title, summary, tags, permalink, date) remain untouched
+
+**Prerequisites:** Story 3.2 (Webmention Processing Script) — provides the data source
+
+**Dependencies:** None
+
+**Effort:** 0.5 days
+
+---
+
+## Story 9.12: Social-Follow Icon Row (Header & Footer)
+
+**As a** reader
+**I want** small icons in the header and footer linking to the author's social profiles (Mastodon, GitHub, RSS, etc.)
+**So that** I can follow the author's content beyond this site
+
+**FR Coverage:** FR-045 (UX polish, navigation)
+
+**Source:** Restoration of `blog-old/themes/article/layouts/partials/social-follow.html` plus the legacy `[[params.social]]`-Array (see `docs/0-discovery/feature-gap-blog-old.md` → Social). New repo currently has only an RSS entry in a `follow`-Block.
+
+**Acceptance Criteria:**
+1. `params.social` array (re)structured in `config/_default/params.yaml` with entries per network: `name`, `url`, `icon`, `inHeader: true|false`, `inFooter: true|false`
+2. Partial created at `layouts/_partials/social-follow.html` rendering an icon row, filtering entries by a `location` argument (`"header"` or `"footer"`)
+3. Header invocation wired: `{{ partial "social-follow.html" (dict "ctx" . "location" "header") }}` in `layouts/_partials/_base/navigation.html` (or hero/header partial)
+4. Footer invocation wired: `{{ partial "social-follow.html" (dict "ctx" . "location" "footer") }}` in `layouts/_partials/_base/footer.html`
+5. Icons use Remix Icon glyphs (matching existing icon system); fallback to a generic icon if the named glyph is missing
+6. External links open in new tab with `rel="noopener noreferrer"` and a descriptive `aria-label` (e.g., "Follow on Mastodon")
+7. Existing RSS-only `follow`-Block in footer migrated into the new `params.social` array (no duplicate RSS link)
+8. Empty array (or zero entries with the matching location flag) gracefully renders nothing — no empty container
+
+**Prerequisites:** None
+
+**Dependencies:** None
+
+**Effort:** 0.5 days
+
+---
+
 # Epic Summary Table
 
 | Epic | Stories | Phase | Duration | FR Count | Effort (Days) |
 |------|---------|-------|----------|----------|---------------|
 | Epic 1: Growth Stage System | 5 | 1A | Week 3 | 7 | 7 |
-| Epic 2: Engagement Infrastructure | 6 | 1A | Week 1-2 | 9 | 7.5 |
-| Epic 3: Popularity Scoring Engine | 5 | 1A | Week 4-5 | 7 | 6 |
+| Epic 2: Engagement Infrastructure | 7 | 1A | Week 1-2 | 9 | 8 |
+| Epic 3: Popularity Scoring Engine | 6 | 1A | Week 4-5 | 7 | 7 |
 | Epic 4: Three-Tier Sorting | 4 | 1A | Week 4-5 | 7 | 6.5 |
-| Epic 5: Badge & Filter System | 6 | 1A | Week 6 | 6 | 5.5 |
+| Epic 5: Badge & Filter System | 7 | 1A | Week 6 | 6 | 6.5 |
 | Epic 6: History Timeline | 3 | 2 | Week 10 | 3 | 3 |
 | Epic 7: POSSE & Advanced Webmentions | 5 | 3 | Week 12-13 | 4 | 8 |
 | Epic 8: Format Expansion | 8 | 1B | Week 7-9 | 6 | 11.5 |
-| Epic 9: Polish & Optimization | 6 | 2 | Week 10-11 | 9 | 8.5 |
-| **TOTAL** | **48** | **All** | **14 weeks** | **52** | **63.5 days** |
+| Epic 9: Polish & Optimization | 12 | 2 | Week 10-11 | 10 | 12.5 |
+| **TOTAL** | **57** | **All** | **14 weeks** | **52** | **70 days** |
 
 ---
 
@@ -1314,6 +1641,11 @@ This document breaks down the Digital Garden transformation into **9 epics** and
 - Story 2.1 (Umami Integration)
 - Story 2.3 (Webmention Setup)
 - Story 4.1 (Pinned Content)
+- Story 5.7 (Format-Icons via `contains`-Taxonomy)
+- Story 9.7 (Twitter-Cards Meta-Tags)
+- Story 9.9 (Headline-Hash Auto-Anchor)
+- Story 9.10 (Author-Box with Socials)
+- Story 9.12 (Social-Follow Icon Row)
 - All archetype stories (8.1, 8.3, 8.5, 8.7)
 
 **Critical Path:**
