@@ -38,7 +38,7 @@
                                 {{ end }}
                             {{- if not (eq $.Params.format "log") }}</a>{{- end -}}
 
-                            {{ with .Exif }}{{ with .Tags.ImageDescription  }}
+                            {{ with .Meta.Exif }}{{ with .Tags.ImageDescription  }}
                                 <figcaption>
                                     <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ $.Site.Params.remixicon_version}}#pencil-line"></use></svg>
                                     {{ . | safeHTML }}
@@ -220,7 +220,7 @@
                                     <img src="{{ $portraitImage.RelPermalink }}" alt="{{ $.Title }}" loading="lazy">
                                 </picture>
                             </a>
-                            {{ with .Exif }}{{ with .Tags.ImageDescription  }}
+                            {{ with .Meta.Exif }}{{ with .Tags.ImageDescription  }}
                                 <figcaption>
                                     <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ $.Site.Params.remixicon_version}}#pencil-line"></use></svg>
                                     {{ . | safeHTML }}

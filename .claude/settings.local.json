@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(gh issue *)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "WebFetch(domain:gohugo.io)",
+      "mcp__mcp-server-github__search_code",
+      "mcp__mcp-server-github__get_file_contents"
+    ]
+  }
+}

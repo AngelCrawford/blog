@@ -10,7 +10,7 @@
 							{{ $image := $img.Process "fill 480x320 webp" }}
 							<img src="{{ $image.RelPermalink }}" alt="{{ $.Title }}" width="480" height="320" loading="lazy">
 
-							{{ with .Exif }}{{ with .Tags.ImageDescription  }}
+							{{ with .Meta.Exif }}{{ with .Tags.ImageDescription  }}
 								<figcaption>
 									<svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ $.Site.Params.remixicon_version}}#pencil-line"></use></svg>
 									{{ . | safeHTML }}

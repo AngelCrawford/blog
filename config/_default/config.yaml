@@ -2,8 +2,8 @@ title: Article Time
 defaultContentLanguage: de
 languages:
   de:
-    languageCode: de-DE
-    languageName: Deutsch
+    locale: de-DE
+    label: Deutsch
     timeZone: Europe/Berlin
     weight: 1
 enableGitInfo: true

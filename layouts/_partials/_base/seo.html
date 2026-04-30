@@ -98,7 +98,7 @@ Keywords precedence:
     <meta property="og:site_name" content="{{ with .Site.Title }}{{ . | plainify }}{{ end }}">
     <meta property="og:title" content="{{ with or .Title .Site.Title .Site.Params.title | plainify }}{{ . }}{{ end }}">
     <meta property="og:description" content="{{ with or .Params.Seo.desc .Summary | plainify | htmlUnescape }}{{ trim . "\n\r\t " }}{{ end }}">
-{{- with or .Params.locale site.Language.LanguageCode }}
+{{- with or .Params.locale site.Language.Locale }}
     <meta property="og:locale" content="{{ replace . `-` `_` }}">
 {{- end }}
 
