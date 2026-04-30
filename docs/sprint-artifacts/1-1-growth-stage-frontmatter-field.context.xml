@@ -1,0 +1,392 @@
+<story-context id=".bmad/bmm/workflows/4-implementation/story-context/template" v="1.0">
+  <metadata>
+    <epicId>1</epicId>
+    <storyId>1</storyId>
+    <title>Growth Stage Frontmatter Field</title>
+    <status>drafted</status>
+    <generatedAt>2026-04-30</generatedAt>
+    <generator>BMAD Story Context Workflow (regeneration after scope expansion)</generator>
+    <sourceStoryPath>docs/sprint-artifacts/1-1-growth-stage-frontmatter-field.md</sourceStoryPath>
+  </metadata>
+
+  <story>
+    <asA>a content creator</asA>
+    <iWant>to assign a growth stage to each article via frontmatter</iWant>
+    <soThat>I can explicitly communicate content maturity</soThat>
+    <tasks>
+      - Update archetypes/articles/index.md (AC: 4, 5)
+        - Add `growth_stage: "seedling"` to YAML frontmatter block
+        - Add explanatory comment listing all four valid values with one-line description each
+        - Verify `hugo new content articles/test-name` produces a file with the new field
+      - Update archetypes/logs/index.md (AC: 4, 5)
+        - Add `growth_stage: "seedling"` to YAML frontmatter block
+        - Add explanatory comment listing all four valid values
+        - Verify `hugo new content logs/test-name` produces a file with the new field
+      - Implement build-time validation partial (AC: 1, 2) — Layer 3
+        - Create layouts/_partials/_base/validate-growth-stage.html
+        - Use Hugo's `errorf` to fail the build when `.Params.growth_stage` is set to a value outside {seedling, budding, evergreen, withered}
+        - Error message must include the page's `.File.Path` and the list of allowed values
+        - Wire the partial into layouts/baseof.html (Hugo v0.146+ flat layout — confirmed: NO `_default/baseof.html` exists, baseof.html is at layouts/ root)
+      - Implement default-value fallback (AC: 3)
+        - Where templates read `growth_stage`, use `default "seedling" .Params.growth_stage`
+        - Document the fallback approach as inline comment for downstream stories (Story 1.2 badge consumer)
+      - NEW — Layer 1 (Editor): JSON Schema + Zed integration (AC: 1, 2)
+        - Create schemas/frontmatter/article.schema.json (JSON Schema draft-07)
+        - Define growth_stage as enum: ["seedling", "budding", "evergreen", "withered"], default "seedling"
+        - Cover full target frontmatter shape (existing fields documented; future-additive fields documented as optional)
+        - Configure .zed/settings.json (workspace) so YAML LSP applies schema to content/articles/**/*.md and content/logs/**/*.md
+        - Add fallback `# yaml-language-server: $schema=...` modeline guidance in archetype comments
+        - Document Zed extension/setup steps in docs/technical/editor-setup.md (~30 lines)
+        - Manually verify in Zed: invalid growth_stage value shows red squiggle before save
+      - NEW — Layer 2 (Pre-commit): Husky + schema validation hook (AC: 1, 2)
+        - Add `husky` and `ajv-cli` (or programmatic ajv) as devDependencies in package.json
+        - Run `npx husky init` to scaffold .husky/ and pre-commit hook
+        - Create scripts/validate-frontmatter.js: read staged .md files via `git diff --cached --name-only --diff-filter=ACM`, extract frontmatter via `gray-matter`, validate against schemas/frontmatter/article.schema.json, exit non-zero with per-file errors
+        - Wire .husky/pre-commit to call `node scripts/validate-frontmatter.js`
+        - Hook MUST be skip-aware: exit 0 silently if no content/.md files staged
+        - Manually verify: stage file with invalid growth_stage → `git commit` blocked
+      - NEW — Build smoke tests (AC: 1-3, regression coverage for Hugo updates)
+        - Create tests/build/fixtures/: valid-evergreen.md, valid-missing-field.md, invalid-stage.md
+        - Create tests/build/build-smoke.test.mjs (`node --test` runner): copy fixtures to temp content/_test/, run `hugo --quiet --environment production`, assert exit codes (0 valid / non-zero invalid), cleanup
+        - Add npm script: "test:build": "node --test tests/build/"
+      - NEW — Playwright bootstrap (foundation for downstream per test-design-system.md)
+        - Add @playwright/test as devDependency
+        - Run `npx playwright install --with-deps chromium` (chromium-only sufficient for smoke; full matrix later)
+        - Create playwright.config.ts with webServer running `hugo server` on port 1313
+        - Create tests/e2e/smoke.spec.ts: ONE test — homepage HTTP 200 + `<meta name="generator" content^="Hugo">` present
+        - Add npm scripts: "test:e2e": "playwright test", "test": "npm run test:build && npm run test:e2e"
+        - Document in docs/technical/testing.md when to add visual regression / journey / a11y tests (Story 1.2 onwards)
+      - NEW — CI integration (AC: 1, 2)
+        - CREATE .github/workflows/test.yml from scratch (NO existing workflow files in repo)
+        - Job 1: `npm ci && npm run test:build` on every push/PR
+        - Job 2 (separate): `npm ci && npx playwright install chromium && npm run test:e2e`
+        - Both jobs required for branch protection (manual config — note in PR)
+      - Manual smoke testing (AC: 1-5, sanity check)
+        - Test article with growth_stage: "evergreen" → build succeeds, editor clean
+        - Test article with growth_stage: "invalid" → editor underlines, pre-commit blocks, build fails
+        - Test article with no growth_stage → build succeeds via fallback
+        - Run `hugo --environment production` to confirm production validation
+        - Delete temp test articles after (do NOT commit them); only tests/build/fixtures/ is committed
+      - Documentation (AC: 5)
+        - Update archetype comments to be self-explanatory
+        - Cross-link docs/technical/editor-setup.md and docs/technical/testing.md from project README
+    </tasks>
+  </story>
+
+  <acceptanceCriteria>
+    1. `growth_stage` field accepts exactly four values: `seedling`, `budding`, `evergreen`, `withered`.
+    2. Invalid `growth_stage` values trigger a Hugo build error with a clear message identifying the offending file and the allowed values. Layers 1 (Zed editor) and 2 (pre-commit hook) provide earlier feedback; Layer 3 (Hugo errorf) is the authoritative gate.
+    3. Default value resolves to `seedling` when the field is omitted from frontmatter (consumed by templates with the fallback `default "seedling" .Params.growth_stage`).
+    4. Archetype templates `archetypes/articles/index.md` and `archetypes/logs/index.md` include `growth_stage: "seedling"` by default.
+    5. Field is documented in archetype comments with all four allowed options explained (seedling = early/draft, budding = developing, evergreen = mature/maintained, withered = deprecated).
+  </acceptanceCriteria>
+
+  <artifacts>
+    <docs>
+      <doc>
+        <path>docs/2-solutioning/digital-garden-integration-architecture.md</path>
+        <title>Digital Garden Integration Architecture</title>
+        <section>Decision Summary / Frontmatter Schema</section>
+        <snippet>"Frontmatter Schema" decision: Add `growth_stage`, `format`, `pinned` fields. Backwards compatible with defaults, simple extensions. Default `growth_stage` is "seedling" if missing. Hugo will fail build if `growth_stage` has invalid value (not one of 4 options).</snippet>
+      </doc>
+      <doc>
+        <path>docs/2-solutioning/digital-garden-integration-architecture.md</path>
+        <title>Digital Garden Integration Architecture</title>
+        <section>Project Structure</section>
+        <snippet>archetypes/articles/index.md and archetypes/logs/index.md are MODIFY targets. Existing rich frontmatter is preserved — change is additive only. layouts/_partials/_base/ is the location for core init partials.</snippet>
+      </doc>
+      <doc>
+        <path>docs/2-solutioning/digital-garden-integration-architecture.md</path>
+        <title>Digital Garden Integration Architecture</title>
+        <section>Naming Conventions (lines ~569-594)</section>
+        <snippet>Frontmatter fields use snake_case (`growth_stage`, `last_significant_update`, `pinned`). Hugo partials use kebab-case file names per repo convention. NOTE: architecture doc text proposes PascalCase for partials in some places — actual codebase reality is kebab-case; follow the codebase.</snippet>
+      </doc>
+      <doc>
+        <path>docs/2-solutioning/digital-garden-integration-architecture.md</path>
+        <title>Digital Garden Integration Architecture</title>
+        <section>Frontmatter Schema (lines ~780-825)</section>
+        <snippet>Target state with growth_stage example. Default values documented: growth_stage = "seedling" if missing, format = "article", pinned = false, weight = 0. Validation: Hugo will fail build if growth_stage has invalid value.</snippet>
+      </doc>
+      <doc>
+        <path>docs/2-solutioning/digital-garden-integration-architecture.md</path>
+        <title>Digital Garden Integration Architecture</title>
+        <section>First Implementation Story (lines 1527-1528)</section>
+        <snippet>"First Implementation Story: Epic 1, Story 1.1: Add growth_stage frontmatter field to archetypes. Update existing articles with growth_stage: 'seedling' (migration task)." Migration of existing content is OUT of scope for Story 1.1 — tracked in docs/todo.md as a manual content task.</snippet>
+      </doc>
+      <doc>
+        <path>docs/1-planning/epics.md</path>
+        <title>Digital Garden Transformation - Epic and Story Breakdown</title>
+        <section>Epic 1: Growth Stage System / Story 1.1</section>
+        <snippet>Acceptance Criteria 1-5 (enum values; build error; default seedling; archetype defaults; comment docs). Foundation story for Epic 1; downstream stories 1.2-1.5 (badge, hiding, banner, RSS), Epic 4 (3-tier sorting), Epic 5 (filters), Epic 9 (withered SEO) all consume the growth_stage field.</snippet>
+      </doc>
+      <doc>
+        <path>docs/1-planning/prd/03a-functional-requirements.md</path>
+        <title>Functional Requirements</title>
+        <section>FR-001 Growth Stage Assignment</section>
+        <snippet>Capability: Content creators can assign one of four growth stages to each piece of content. Validation: Growth stage field accepts valid values (seedling, budding, evergreen, withered) and rejects invalid values.</snippet>
+      </doc>
+      <doc>
+        <path>docs/2-solutioning/test-design-system.md</path>
+        <title>System-Level Test Design (Test Architect Murat, 2025-11-15)</title>
+        <section>Test Stack / Visual Regression / ASR-001..ASR-008</section>
+        <snippet>AUTHORITATIVE test plan for the digital-garden transformation. Stack: Playwright (E2E + visual regression + accessibility via axe-core) + Node test runner for build/script unit tests + `act` for local GitHub Actions testing. SUPERSEDES the brownfield-baseline "No Automated Tests Found" line in architecture.md. Story 1.1 bootstraps the test infrastructure (build smoke + Playwright config + ONE smoke test) so subsequent stories add tests cheaply.</snippet>
+      </doc>
+      <doc>
+        <path>docs/2-solutioning/architecture.md</path>
+        <title>Architecture Documentation - Article Time Blog</title>
+        <section>Testing Strategy (BROWNFIELD BASELINE — superseded by test-design-system.md)</section>
+        <snippet>"No Automated Tests Found." This line describes the project state BEFORE the digital-garden transformation. The transformation introduces Playwright + Node test runner per test-design-system.md.</snippet>
+      </doc>
+      <doc>
+        <path>docs/2-solutioning/architecture.md</path>
+        <title>Architecture Documentation - Article Time Blog</title>
+        <section>Component Architecture / Template Hierarchy</section>
+        <snippet>Existing partial structure. _base/ holds core layout/init partials (head, hero, navigation, footer, seo). widgets/ holds feature widgets. Top-level _partials/ holds component partials like card.html. Validation logic that runs once per page belongs in _base/.</snippet>
+      </doc>
+      <doc>
+        <path>docs/1-planning/ux-design-specification.md</path>
+        <title>Article Time UX Design Specification</title>
+        <section>Executive Summary / Core Philosophy</section>
+        <snippet>Content matures through lifecycle stages: 🌱 Seedling → 🌿 Budding → 🌳 Evergreen → 💀 Withered. Growth stages communicate content maturity honestly (transparency over polish).</snippet>
+      </doc>
+      <doc>
+        <path>docs/todo.md</path>
+        <title>Open Items / Manual Tasks</title>
+        <section>Manuelle Aufgabe: Growth-Stage-Migration bestehender Inhalte</section>
+        <snippet>Manual content task: assign meaningful growth_stage values to existing articles in content/articles/ and content/logs/. OUT of scope for Story 1.1 — fallback (AC #3) keeps existing content building cleanly without this work. Should be done before Epic 4 (Three-Tier Sorting) for sorting to be meaningful.</snippet>
+      </doc>
+    </docs>
+
+    <code>
+      <artifact>
+        <path>archetypes/articles/index.md</path>
+        <kind>archetype</kind>
+        <symbol>frontmatter (rich existing schema)</symbol>
+        <lines>1-23</lines>
+        <reason>MODIFY target. Existing fields: title, date, draft, weight, categories, tags, series, authors, summary, params.SEO.* (desc, keywords, canonicalURL). Add `growth_stage: "seedling"` plus explanatory comment listing four allowed values. Existing fields MUST NOT be modified — additive only.</reason>
+      </artifact>
+      <artifact>
+        <path>archetypes/logs/index.md</path>
+        <kind>archetype</kind>
+        <symbol>frontmatter (minimal existing schema)</symbol>
+        <lines>1-10</lines>
+        <reason>MODIFY target. Existing fields: title, date, draft, categories, tags, authors. Lacks summary and weight (logs are headless). Add `growth_stage: "seedling"` and the same explanatory comment. Keep additive change consistent — no new required fields beyond growth_stage.</reason>
+      </artifact>
+      <artifact>
+        <path>layouts/_partials/_base/</path>
+        <kind>directory</kind>
+        <symbol>_base partials directory (existing: head.html, hero.html, navigation.html, footer.html, seo.html)</symbol>
+        <reason>NEW partial location. Create `validate-growth-stage.html` here — confirmed correct location for core layout/init partials.</reason>
+      </artifact>
+      <artifact>
+        <path>layouts/baseof.html</path>
+        <kind>template</kind>
+        <symbol>baseof base template (Hugo v0.146+ flat layout)</symbol>
+        <reason>MODIFY target. CONFIRMED: file is at `layouts/baseof.html` — there is NO `layouts/_default/baseof.html` (verified by glob). Wire validate-growth-stage partial here so it runs for every page render.</reason>
+      </artifact>
+      <artifact>
+        <path>layouts/_partials/card.html</path>
+        <kind>partial</kind>
+        <symbol>card.html (existing errorf precedent)</symbol>
+        <lines>89</lines>
+        <reason>REFERENCE only. Existing `errorf` usage: `{{ errorf "Missing summary in front matter for page: %s" .File.Path }}`. CONFIRMED via grep — this is the only existing errorf in layouts/. Mirror this style (with .File.Path and a clear human message) in the new validation partial.</reason>
+      </artifact>
+      <artifact>
+        <path>layouts/_partials/_base/head.html</path>
+        <kind>partial</kind>
+        <symbol>head partial (style reference)</symbol>
+        <reason>REFERENCE only. Demonstrates _base partial conventions (resource pipeline, dotted-path partial calls, indentation style). Style template for the new validate-growth-stage partial.</reason>
+      </artifact>
+      <artifact>
+        <path>config/_default/config.yaml</path>
+        <kind>config</kind>
+        <symbol>Hugo site config</symbol>
+        <reason>REFERENCE only. Confirms Hugo configuration location.</reason>
+      </artifact>
+      <artifact>
+        <path>schemas/frontmatter/article.schema.json</path>
+        <kind>json-schema</kind>
+        <symbol>article frontmatter schema (NEW)</symbol>
+        <reason>NEW. JSON Schema draft-07 — single source of truth for Layers 1 (editor) and 2 (pre-commit). Defines `growth_stage` as enum + default "seedling". Document existing fields too (title, date, draft, weight, categories, tags, series, authors, summary, params.SEO.*) so editor autocomplete works for the whole frontmatter. Use `additionalProperties: true` to stay forward-compatible with future-additive fields (format, pinned, last_significant_update, weight, withered_*).</reason>
+      </artifact>
+      <artifact>
+        <path>.zed/settings.json</path>
+        <kind>config</kind>
+        <symbol>Zed workspace settings (NEW)</symbol>
+        <reason>NEW. Wires JSON Schema to .md files in content/articles/ and content/logs/ via the YAML language server. CAVEAT: Zed's frontmatter validation in .md files may be limited (YAML LSPs traditionally validate .yaml/.yml). Fall back to inline `# yaml-language-server: $schema=...` modeline if needed. Document any limitation in editor-setup.md. Pre-commit hook (Layer 2) is the authoritative gate; editor is productivity layer.</reason>
+      </artifact>
+      <artifact>
+        <path>scripts/validate-frontmatter.js</path>
+        <kind>node-script</kind>
+        <symbol>pre-commit frontmatter validator (NEW)</symbol>
+        <reason>NEW. Reads staged .md files via `git diff --cached --name-only --diff-filter=ACM`, extracts YAML frontmatter (gray-matter), validates against schemas/frontmatter/article.schema.json (ajv programmatically OR shell out to ajv-cli). Exits non-zero with per-file error report on failure. SKIP-AWARE: exit 0 silently if no content/.md files staged.</reason>
+      </artifact>
+      <artifact>
+        <path>.husky/pre-commit</path>
+        <kind>git-hook</kind>
+        <symbol>pre-commit hook (NEW)</symbol>
+        <reason>NEW. Calls `node scripts/validate-frontmatter.js`. Created via `npx husky init`. Husky v9+ (no shebang/source needed in newer versions).</reason>
+      </artifact>
+      <artifact>
+        <path>tests/build/fixtures/</path>
+        <kind>directory</kind>
+        <symbol>build test fixtures (NEW)</symbol>
+        <reason>NEW. Committed test fixtures: valid-evergreen.md, valid-missing-field.md, invalid-stage.md. Each is a complete .md file with frontmatter, copied into a temp content/ subdirectory by the smoke test runner.</reason>
+      </artifact>
+      <artifact>
+        <path>tests/build/build-smoke.test.mjs</path>
+        <kind>test</kind>
+        <symbol>build smoke tests (NEW)</symbol>
+        <reason>NEW. Node test runner suite (`node --test`). For each fixture: copy to temp content/_test/ dir, spawn `hugo --quiet --environment production`, assert exit code (0 for valid fixtures, non-zero for invalid-stage), cleanup temp dir. Uses node:test, node:assert, node:fs, node:child_process — no extra runtime deps.</reason>
+      </artifact>
+      <artifact>
+        <path>playwright.config.ts</path>
+        <kind>config</kind>
+        <symbol>Playwright config (NEW)</symbol>
+        <reason>NEW. Minimal: chromium-only project, webServer config running `hugo server --port 1313 --quiet`, baseURL `http://localhost:1313`. Foundation for visual regression / journey tests in Story 1.2 and downstream — KEEP MINIMAL here to avoid scope creep.</reason>
+      </artifact>
+      <artifact>
+        <path>tests/e2e/smoke.spec.ts</path>
+        <kind>test</kind>
+        <symbol>e2e smoke test (NEW)</symbol>
+        <reason>NEW. ONE test only: navigate to baseURL, expect HTTP 200, expect `<meta name="generator">` to include "Hugo". Catches Hugo-version regressions. Don't add visual snapshots, axe-core, or journeys here — those are downstream stories.</reason>
+      </artifact>
+      <artifact>
+        <path>package.json</path>
+        <kind>config</kind>
+        <symbol>npm package manifest</symbol>
+        <reason>MODIFY. CURRENT STATE: only postcss/postcss-cli/postcss-purgecss in dependencies; "test" script just echoes "no test specified"; NO devDependencies block, NO prepare script. ADD: devDependencies (husky, ajv-cli, gray-matter, @playwright/test); npm scripts (prepare: "husky", test:build: "node --test tests/build/", test:e2e: "playwright test", test: "npm run test:build && npm run test:e2e").</reason>
+      </artifact>
+      <artifact>
+        <path>.github/workflows/test.yml</path>
+        <kind>ci-config</kind>
+        <symbol>GitHub Actions test workflow (NEW)</symbol>
+        <reason>CREATE FROM SCRATCH. CONFIRMED: NO existing .github/workflows/*.yml in repo (verified by glob). Two jobs: (1) build smoke — checkout, setup-node, npm ci, install Hugo (peaceiris/setup-hugo or actions/setup-hugo with version 0.152.2), `npm run test:build`. (2) e2e — same setup + `npx playwright install chromium` + `npm run test:e2e`. Trigger: on push and pull_request. Required for branch protection (manual config note in PR description).</reason>
+      </artifact>
+      <artifact>
+        <path>docs/technical/editor-setup.md</path>
+        <kind>doc</kind>
+        <symbol>editor-setup documentation (NEW)</symbol>
+        <reason>NEW one-pager (~30 lines max). Topics: how to enable Zed YAML LSP for .md frontmatter, schema path, fallback modeline approach, known Zed limitations. Cross-linked from project README. KEEP CONCISE — not a Zed manual.</reason>
+      </artifact>
+      <artifact>
+        <path>docs/technical/testing.md</path>
+        <kind>doc</kind>
+        <symbol>test strategy documentation (NEW)</symbol>
+        <reason>NEW. Summarizes test layers (build smoke + Playwright e2e + manual). References docs/2-solutioning/test-design-system.md as the authoritative plan. Tells future story authors: "Story 1.2 → add visual regression for badges; Epic 5 → add filter journey tests; Epic 9 → add axe-core a11y."</reason>
+      </artifact>
+    </code>
+
+    <dependencies>
+      <ecosystem name="hugo">
+        <package name="hugo-extended" version="0.152.2 (pinned per architecture)" note="Uses errorf, .Params, .File.Path, in/slice helpers. Hugo v0.146+ flat layout (baseof.html at layouts/ root, NOT _default/baseof.html — verified by glob)." />
+      </ecosystem>
+      <ecosystem name="node-npm">
+        <package name="@fullhuman/postcss-purgecss" version="^8.0.0" note="EXISTING in package.json dependencies. Production CSS optimization. Not affected by this story." />
+        <package name="postcss" version="^8.5.6" note="EXISTING. CSS processing. Not affected." />
+        <package name="postcss-cli" version="^11.0.1" note="EXISTING. CSS CLI. Not affected." />
+        <package name="husky" version="^9.x" note="NEW devDependency. Git hook manager. Install via `npm install -D husky &amp;&amp; npx husky init` (initializes .husky/ and adds prepare script)." />
+        <package name="ajv-cli" version="^5.x" note="NEW devDependency. JSON Schema validator CLI. ALTERNATIVE: programmatic ajv inside scripts/validate-frontmatter.js (saves a CLI dep)." />
+        <package name="gray-matter" version="^4.x" note="NEW devDependency. Extracts YAML frontmatter from .md files in pre-commit script. Industry standard for Markdown frontmatter parsing in Node." />
+        <package name="@playwright/test" version="^1.x" note="NEW devDependency. E2E + visual regression test runner. Bootstrap chromium-only in this story; full browser matrix and visual snapshots in downstream stories." />
+      </ecosystem>
+      <ecosystem name="content-tooling">
+        <package name="Bulma" version="1.0.4" note="EXISTING CSS framework — no styling work in this story." />
+        <package name="Remix Icon" version="4.x" note="EXISTING icon library — Story 1.2 will use seedling/plant/tree/skull glyphs; not used here." />
+      </ecosystem>
+    </dependencies>
+  </artifacts>
+
+  <constraints>
+    - Additive-only change to archetypes: NEVER modify existing frontmatter fields (title, date, draft, weight, categories, tags, series, authors, summary, params.SEO.*). Only add `growth_stage`.
+    - Frontmatter field naming: snake_case (`growth_stage`). Established convention; downstream stories add `format`, `last_significant_update`, `pinned`, `withered_*` consistently.
+    - Single Source of Truth for the schema: `schemas/frontmatter/article.schema.json`. Layers 1 (Zed) and 2 (pre-commit) read this file. Layer 3 (Hugo errorf) hardcodes the enum independently. When future stories add fields/values, update BOTH the schema AND the Hugo partial(s) — note this in story-1.2 onwards.
+    - Hugo `errorf` pattern: invoke from `layouts/baseof.html` (CONFIRMED location, NOT `layouts/_default/baseof.html`). Mirror style of `layouts/_partials/card.html:89`. Error message MUST include `.File.Path` AND the allowed-values list.
+    - Default-value fallback (AC #3) is a TEMPLATE-CONSUMER concern. Establish convention `default "seedling" .Params.growth_stage` for downstream stories. The build-time validation partial uses an `if $stage` guard so missing/empty values do NOT trigger errorf — they fall through to the consumer fallback.
+    - Partial location: `layouts/_partials/_base/validate-growth-stage.html` — `_base/` is for core layout/init partials. Existing _base/ partials confirmed: head.html, hero.html, navigation.html, footer.html, seo.html.
+    - Filename casing: kebab-case (`validate-growth-stage.html`), matching existing repo convention. Architecture doc occasionally proposes PascalCase for partials — codebase reality is kebab-case; FOLLOW THE CODEBASE.
+    - Pre-commit hook MUST be skip-aware (exit 0 silently if no content/.md files are staged). Bypass via `git commit --no-verify` is acceptable as escape hatch.
+    - Zed YAML LSP frontmatter validation may be limited — if it doesn't work cleanly, document the limitation in editor-setup.md and rely on Layer 2 (pre-commit) as authoritative pre-build gate. DO NOT block Story 1.1 on Zed UX polish.
+    - Playwright bootstrap: chromium-only, ONE smoke test. Visual regression / journey / a11y / multi-browser come in Story 1.2 (badge) and downstream per `docs/2-solutioning/test-design-system.md`. Don't expand scope here.
+    - CI workflow MUST be CREATED FROM SCRATCH at `.github/workflows/test.yml` — repo currently has no `.github/workflows/` directory. Branch protection setup is manual — note the requirement in PR description.
+    - Out of scope: badge rendering (Story 1.2), withered hiding (1.3), warning banner (1.4), RSS/SEO (1.5/9.6), migration of existing articles (tracked in `docs/todo.md` "Manuelle Aufgabe: Growth-Stage-Migration"), full Playwright matrix.
+    - Build must continue to succeed for all existing articles (no `growth_stage` field) via the fallback path (AC #3) — this is the regression guarantee.
+  </constraints>
+
+  <interfaces>
+    <interface>
+      <name>growth_stage frontmatter field</name>
+      <kind>frontmatter contract</kind>
+      <signature>growth_stage: "seedling" | "budding" | "evergreen" | "withered"  (string; optional in existing content; default "seedling" via consumer fallback)</signature>
+      <path>archetypes/articles/index.md, archetypes/logs/index.md (definition); schemas/frontmatter/article.schema.json (formal schema); consumed by templates via `default "seedling" .Params.growth_stage`</path>
+    </interface>
+    <interface>
+      <name>article.schema.json</name>
+      <kind>JSON Schema draft-07</kind>
+      <signature>{"$schema": "http://json-schema.org/draft-07/schema#", "type": "object", "properties": {"growth_stage": {"type": "string", "enum": ["seedling","budding","evergreen","withered"], "default": "seedling"}, ...existing fields}, "additionalProperties": true}</signature>
+      <path>schemas/frontmatter/article.schema.json (NEW). Used by Layer 1 (Zed YAML LSP) and Layer 2 (pre-commit ajv).</path>
+    </interface>
+    <interface>
+      <name>validate-frontmatter.js (pre-commit)</name>
+      <kind>Node CLI script</kind>
+      <signature>Usage: `node scripts/validate-frontmatter.js`. Reads staged .md files from `git diff --cached --name-only --diff-filter=ACM`. Filters to content/articles/**/*.md and content/logs/**/*.md. Returns exit 0 (pass / no-op) or non-zero (fail with per-file error report).</signature>
+      <path>scripts/validate-frontmatter.js (NEW). Wired via .husky/pre-commit.</path>
+    </interface>
+    <interface>
+      <name>validate-growth-stage partial</name>
+      <kind>Hugo partial (no return value, side-effect: errorf on invalid input)</kind>
+      <signature>{{ partial "_base/validate-growth-stage.html" . }}  — receives current page context; halts build via errorf when .Params.growth_stage is set and not in {seedling, budding, evergreen, withered}; no-op when field is missing or empty (consumer fallback handles it)</signature>
+      <path>layouts/_partials/_base/validate-growth-stage.html (NEW); invoked from layouts/baseof.html</path>
+    </interface>
+    <interface>
+      <name>default-value fallback expression</name>
+      <kind>Hugo template idiom (convention)</kind>
+      <signature>{{ default "seedling" .Params.growth_stage }}  — used by every consuming template (Story 1.2 badge and downstream)</signature>
+      <path>convention; documented in archetype comments and docs/technical/editor-setup.md</path>
+    </interface>
+    <interface>
+      <name>npm test scripts</name>
+      <kind>package.json scripts</kind>
+      <signature>"prepare": "husky" | "test:build": "node --test tests/build/" | "test:e2e": "playwright test" | "test": "npm run test:build &amp;&amp; npm run test:e2e"</signature>
+      <path>package.json (MODIFY). Used locally and in CI.</path>
+    </interface>
+  </interfaces>
+
+  <tests>
+    <standards>
+      Authoritative test plan: `docs/2-solutioning/test-design-system.md` (Test Architect Murat, 2025-11-15). Stack: Playwright (E2E + visual regression + axe-core a11y) + Node test runner (`node --test`, built-in since Node 20) for build smoke + script unit tests + `act` (optional) for local GitHub Actions testing. The older `architecture.md` "No Automated Tests Found" line describes the brownfield baseline and is SUPERSEDED.
+
+      Story 1.1 BOOTSTRAPS test infrastructure for downstream: build smoke tests in `tests/build/` (with `tests/build/fixtures/`), minimal Playwright config + ONE smoke test in `tests/e2e/`, CI workflow at `.github/workflows/test.yml` (created from scratch — no existing workflows). Visual regression / journey / a11y tests live in Story 1.2 (badge visual regression) and downstream per the test-design plan — do NOT expand scope here.
+
+      Manual verification still required for end-to-end sanity (editor squiggle behavior, pre-commit hook UX). Hugo build verification: `hugo` (development) and `hugo --environment production` must both succeed/fail correctly per AC #2 — both paths must invoke the validation partial via baseof.html.
+    </standards>
+    <locations>
+      - tests/build/fixtures/      (committed test fixtures: valid-evergreen.md, valid-missing-field.md, invalid-stage.md)
+      - tests/build/               (build-smoke.test.mjs — node --test runner, no extra runtime deps)
+      - tests/e2e/                 (smoke.spec.ts — Playwright; foundation for downstream visual/journey tests)
+      - playwright.config.ts       (root)
+      - schemas/frontmatter/       (article.schema.json — single source of truth)
+      - scripts/                   (validate-frontmatter.js — pre-commit script)
+      - .husky/                    (pre-commit hook)
+      - .zed/                      (settings.json — workspace editor settings)
+      - .github/workflows/         (test.yml — created from scratch)
+      - docs/technical/            (editor-setup.md, testing.md — short docs cross-linked from README)
+      - content/articles/, content/logs/  (DO NOT commit ad-hoc test articles here — use tests/build/fixtures/ instead)
+    </locations>
+    <ideas>
+      - AC #1, #4: `hugo new content articles/test-stage-default` → file contains `growth_stage: "seedling"` and explanatory comment with all four values. Same for logs archetype.
+      - AC #1: build-smoke fixture `valid-evergreen.md` (and one per stage variant) → hugo build exits 0.
+      - AC #2: build-smoke fixture `invalid-stage.md` → hugo build exits non-zero AND error output contains the fixture's .File.Path AND the allowed-values list.
+      - AC #2 (Layer 1): in Zed, opening `invalid-stage.md` shows red squiggle on the growth_stage line BEFORE saving. Manual smoke check.
+      - AC #2 (Layer 2): `git add invalid-stage.md && git commit -m test` is BLOCKED with the validator's per-file error message. Bypass-able only via `--no-verify`.
+      - AC #2 (Layer 3, prod path): Same failure under `hugo --environment production` (validation MUST run in prod, not just dev) — covered by build-smoke test using the production env flag.
+      - AC #3: build-smoke fixture `valid-missing-field.md` (no growth_stage) → hugo build exits 0; in a probe template (or visual confirmation in Story 1.2 once the badge renders), `default "seedling" .Params.growth_stage` resolves to `"seedling"`.
+      - AC #5: open both updated archetypes and confirm inline comment lists all four values with one-line descriptions.
+      - Regression: build the full site with NO changes to existing content; all existing articles continue to build successfully via fallback (this is the most important regression check — DO NOT break the existing site).
+      - Edge case: empty string `growth_stage: ""` — confirm validator treats empty as "missing" (per AC #3 fallback) rather than as an invalid value. The Hugo `if $stage` guard handles this; the schema should also allow missing/empty (use `oneOf` with null-or-enum-or-omitted) OR treat the field as optional with `additionalProperties: true`.
+      - Playwright smoke: `tests/e2e/smoke.spec.ts` — homepage GET 200 AND `<meta name="generator" content^="Hugo">` present. Regression canary for Hugo updates.
+      - CI smoke: PR-triggered run of `npm run test:build && npm run test:e2e` — both must pass before merge. Branch protection setup is manual (out of code scope).
+      - Pre-commit no-op: stage a non-content file (e.g., README.md change) → pre-commit exits 0 silently (skip-aware behavior verified).
+    </ideas>
+  </tests>
+</story-context>
