@@ -26,15 +26,12 @@
     <item>
       <title>{{ .Title }}</title>
       {{- /*
-        Cover image as <enclosure> — only when we have a Hugo Resource (so we know .Size).
-        Skipped for articles without a cover Resource: RSS spec requires `length`,
-        and we can't reliably compute byte size for static-folder fallback paths.
+        <enclosure> dropped entirely — RSS-Spec requires `length` (file size in bytes),
+        but Hugo Resource doesn't expose .Size as a template-accessible field.
+        Modern RSS readers extract cover images from <description> <img> tags anyway.
+        Trade-off: simpler template, validator-clean (no missing-length errors),
+        no cover thumbnail in podcast-style readers (rare for blog feeds).
       */ -}}
-      {{- $images := .Resources.ByType "image" -}}
-      {{- $featured := $images.GetMatch "*cover*" -}}
-      {{- with $featured }}
-      <enclosure url="{{ .Permalink }}" type="{{ .MediaType.Type }}" length="{{ .Size }}" />
-      {{- end }}
       {{ if .GetTerms "categories" -}}
         {{- range first 1 (.GetTerms "categories") -}}
           <category>{{- .LinkTitle -}}</category>
@@ -46,14 +43,16 @@
       {{- /*
         Sanitize content for RSS readers:
         1. Resolve relative anchor hrefs (#section) to absolute via .Permalink
-           — handles both single + double quotes
-        2. Resolve relative img srcs to absolute, but ONLY if not already absolute
-        3. Strip <svg>...</svg> blocks (RSS readers don't render SVG well, validator warns)
-        4. Strip style="..." attributes (validator flags as potentially dangerous)
+        2. Strip <svg>...</svg> blocks (RSS readers don't render SVG well, validator warns)
+        3. Strip style="..." attributes (validator flags as potentially dangerous)
+
+        NOTE: img src rewrite skipped — Hugo's render-image hook produces .RelPermalink
+        which is root-relative (/blog/...). RSS readers resolve those against feed origin
+        correctly. RE2 (Hugo's regex engine) lacks lookaheads, making it hard to match
+        only "truly relative" srcs without breaking absolute URLs.
       */ -}}
       {{- $content := .Content -}}
-      {{- $content = replaceRE `a href=(["'])(#[^"']*)["']` (printf `a href=$1%s$2$1` .Permalink) $content -}}
-      {{- $content = replaceRE `img src=(["'])(?!https?:|//|/)([^"']+)["']` (printf `img src=$1%s$2$1` .Permalink) $content -}}
+      {{- $content = replaceRE `a href="(#[^"]*)"` (printf `a href="%s$1"` .Permalink) $content -}}
       {{- $content = replaceRE `<svg[\s\S]*?</svg>` "" $content -}}
       {{- $content = replaceRE `\s+style="[^"]*"` "" $content -}}
       <description>{{ $content | html }}</description>
