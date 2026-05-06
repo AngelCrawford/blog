@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>Two-Tone Icons — Mini-Demo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet">
+<style>
+  :root {
+    --dark-1: hsl(190, 11%, 9%);
+    --dark-2: hsl(190, 11%, 13%);
+    --dark-3: hsl(190, 11%, 16%);
+    --dark-4: hsl(190, 11%, 20%);
+    --light: hsl(190, 20%, 90%);
+    --light-dim: hsl(190, 14%, 70%);
+    --light-mute: hsl(190, 10%, 55%);
+    --gold-light: hsl(29, 100%, 80%);
+    --gold: hsl(35, 45%, 50%);
+    --gold-dark: hsl(35, 45%, 26%);
+
+    --font-body: "Montserrat", system-ui, sans-serif;
+    --font-head: "Montserrat Alternates", system-ui, sans-serif;
+    --font-mono: "JetBrains Mono", monospace;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--dark-1);
+    font-family: var(--font-body);
+    color: var(--light);
+    -webkit-font-smoothing: antialiased;
+    background-image: radial-gradient(hsl(190, 11%, 8%) .05vw, transparent .2vw);
+    background-size: 14px 14px;
+    min-height: 100vh;
+    padding: 60px 40px;
+  }
+
+  .wrap { max-width: 1200px; margin: 0 auto; }
+
+  h1 {
+    font-family: var(--font-head); font-weight: 600;
+    color: var(--gold-light);
+    font-size: 28px; letter-spacing: .02em;
+    margin: 0 0 6px;
+  }
+  .subtitle {
+    font-family: var(--font-mono);
+    font-size: 11px; letter-spacing: .15em; text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 48px;
+  }
+  h2 {
+    font-family: var(--font-head); font-weight: 500;
+    color: var(--gold-light);
+    font-size: 14px; letter-spacing: .12em; text-transform: uppercase;
+    margin: 0 0 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid hsla(35, 45%, 26%, .35);
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 14px;
+    margin-bottom: 48px;
+  }
+  .icon-card {
+    background: var(--dark-2);
+    border: 1px solid hsla(35, 45%, 26%, .35);
+    border-radius: 10px;
+    padding: 18px 12px 14px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    text-align: center;
+  }
+  .icon-card .label {
+    font-family: var(--font-mono);
+    font-size: 9.5px;
+    color: var(--light-mute);
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+
+  /* ============ TWO-TONE TECHNIQUE ============
+     Stack two Remix icons in the same SVG box:
+     - back layer: filled glyph in --gold-dark (the "shadow"/mass)
+     - front layer: line glyph in --gold-light (the "edge"/light)
+     Slight offset gives depth.
+  ============================================== */
+  .tt {
+    position: relative;
+    display: inline-grid;
+    place-items: center;
+    width: 1em; height: 1em;
+    line-height: 1;
+  }
+  .tt i {
+    position: absolute;
+    inset: 0;
+    display: grid; place-items: center;
+    line-height: 1;
+  }
+  .tt .fill { color: var(--gold-dark); }
+  .tt .line { color: var(--gold-light); }
+
+  /* Variant A: simple stack, no offset, just fill+line same icon */
+  .tt-a .fill, .tt-a .line { transform: none; }
+
+  /* Variant B: slight offset shadow (gives a 3d-ish edge) */
+  .tt-b .fill { transform: translate(.06em, .06em); opacity: .9; }
+  .tt-b .line { transform: none; }
+
+  /* Variant C: tinted background tile + line glyph */
+  .tt-c {
+    width: 1.3em; height: 1.3em;
+    background: hsla(35, 45%, 26%, .35);
+    border: 1px solid hsla(29, 100%, 80%, .25);
+    border-radius: .26em;
+  }
+  .tt-c .line { color: var(--gold-light); transform: scale(.78); }
+  .tt-c .fill { display: none; }
+
+  /* sizes */
+  .s-md { font-size: 28px; }
+  .s-lg { font-size: 40px; }
+  .s-xl { font-size: 56px; }
+
+  /* Comparison row */
+  .compare {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 48px;
+  }
+  .compare-card {
+    background: var(--dark-2);
+    border: 1px solid hsla(35, 45%, 26%, .35);
+    border-radius: 10px;
+    padding: 24px 20px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+  .compare-card .stack {
+    display: flex; flex-direction: column;
+    gap: 2px;
+  }
+  .compare-card .name {
+    font-family: var(--font-head); font-weight: 600;
+    color: var(--light); font-size: 14px;
+  }
+  .compare-card .meta {
+    font-family: var(--font-mono); font-size: 10px;
+    color: var(--light-mute); letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+
+  /* Real-world examples */
+  .examples {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+  }
+  .example-card {
+    background: var(--dark-2);
+    border: 1px solid hsla(35, 45%, 26%, .35);
+    border-radius: 12px;
+    padding: 24px;
+  }
+  .example-card .ex-title {
+    font-family: var(--font-mono);
+    font-size: 10px; letter-spacing: .15em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 16px;
+  }
+
+  /* Format mark example */
+  .format-mark {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: var(--font-mono);
+    font-size: 11px; letter-spacing: .08em;
+    color: var(--light-mute);
+  }
+  .format-mark .tt { font-size: 18px; }
+
+  /* Sidebar stat tile example */
+  .stat-tile {
+    display: flex; align-items: center; gap: 14px;
+    padding: 14px 16px;
+    background: var(--dark-3);
+    border: 1px solid hsla(35, 45%, 26%, .25);
+    border-radius: 8px;
+    margin-bottom: 8px;
+  }
+  .stat-tile .tt { font-size: 22px; flex-shrink: 0; }
+  .stat-tile .stat-body { display: flex; flex-direction: column; gap: 2px; }
+  .stat-tile .stat-label {
+    font-family: var(--font-mono);
+    font-size: 9.5px; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--light-mute);
+  }
+  .stat-tile .stat-val {
+    font-family: var(--font-head); font-weight: 600;
+    color: var(--gold-light); font-size: 14px;
+  }
+
+  /* Nav link example */
+  .navlink {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 10px 16px;
+    background: hsla(35, 45%, 26%, .2);
+    border: 1px solid hsla(35, 45%, 26%, .35);
+    border-radius: 8px;
+    color: var(--gold-light);
+    font-family: var(--font-head); font-weight: 500;
+    font-size: 13px; letter-spacing: .04em; text-transform: uppercase;
+  }
+  .navlink .tt { font-size: 18px; }
+
+  .note {
+    font-size: 12px;
+    color: var(--light-dim);
+    line-height: 1.6;
+    margin: 24px 0 0;
+    padding: 16px 18px;
+    border-left: 2px solid var(--gold-dark);
+    background: hsla(35, 45%, 26%, .1);
+    border-radius: 0 8px 8px 0;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>Two-Tone Icons</h1>
+  <div class="subtitle">Mini-Demo · Remix Icon Fill + Line Overlay · Gold-light / Gold-dark</div>
+
+  <!-- Variant A: pure stack -->
+  <h2>Variante A — Pure Stack (Fill darunter, Line darüber)</h2>
+  <div class="grid">
+    <div class="icon-card"><span class="tt tt-a s-md"><i class="fill ri-flower-fill"></i><i class="line ri-flower-line"></i></span><span class="label">Article</span></div>
+    <div class="icon-card"><span class="tt tt-a s-md"><i class="fill ri-lightbulb-flash-fill"></i><i class="line ri-lightbulb-flash-line"></i></span><span class="label">Log</span></div>
+    <div class="icon-card"><span class="tt tt-a s-md"><i class="fill ri-tree-fill"></i><i class="line ri-tree-line"></i></span><span class="label">Evergreen</span></div>
+    <div class="icon-card"><span class="tt tt-a s-md"><i class="fill ri-price-tag-3-fill"></i><i class="line ri-price-tag-3-line"></i></span><span class="label">Tag</span></div>
+    <div class="icon-card"><span class="tt tt-a s-md"><i class="fill ri-archive-fill"></i><i class="line ri-archive-line"></i></span><span class="label">Archive</span></div>
+    <div class="icon-card"><span class="tt tt-a s-md"><i class="fill ri-time-fill"></i><i class="line ri-time-line"></i></span><span class="label">Reading</span></div>
+    <div class="icon-card"><span class="tt tt-a s-md"><i class="fill ri-user-fill"></i><i class="line ri-user-line"></i></span><span class="label">Author</span></div>
+    <div class="icon-card"><span class="tt tt-a s-md"><i class="fill ri-game-fill"></i><i class="line ri-game-line"></i></span><span class="label">Gaming</span></div>
+  </div>
+
+  <!-- Variant B: offset shadow -->
+  <h2>Variante B — Offset Shadow (Fill leicht versetzt darunter)</h2>
+  <div class="grid">
+    <div class="icon-card"><span class="tt tt-b s-md"><i class="fill ri-flower-fill"></i><i class="line ri-flower-line"></i></span><span class="label">Article</span></div>
+    <div class="icon-card"><span class="tt tt-b s-md"><i class="fill ri-lightbulb-flash-fill"></i><i class="line ri-lightbulb-flash-line"></i></span><span class="label">Log</span></div>
+    <div class="icon-card"><span class="tt tt-b s-md"><i class="fill ri-tree-fill"></i><i class="line ri-tree-line"></i></span><span class="label">Evergreen</span></div>
+    <div class="icon-card"><span class="tt tt-b s-md"><i class="fill ri-price-tag-3-fill"></i><i class="line ri-price-tag-3-line"></i></span><span class="label">Tag</span></div>
+    <div class="icon-card"><span class="tt tt-b s-md"><i class="fill ri-archive-fill"></i><i class="line ri-archive-line"></i></span><span class="label">Archive</span></div>
+    <div class="icon-card"><span class="tt tt-b s-md"><i class="fill ri-time-fill"></i><i class="line ri-time-line"></i></span><span class="label">Reading</span></div>
+    <div class="icon-card"><span class="tt tt-b s-md"><i class="fill ri-user-fill"></i><i class="line ri-user-line"></i></span><span class="label">Author</span></div>
+    <div class="icon-card"><span class="tt tt-b s-md"><i class="fill ri-game-fill"></i><i class="line ri-game-line"></i></span><span class="label">Gaming</span></div>
+  </div>
+
+  <!-- Variant C: badge tile -->
+  <h2>Variante C — Badge Tile (Glyph in goldener Kachel)</h2>
+  <div class="grid">
+    <div class="icon-card"><span class="tt tt-c s-md"><i class="line ri-flower-line"></i></span><span class="label">Article</span></div>
+    <div class="icon-card"><span class="tt tt-c s-md"><i class="line ri-lightbulb-flash-line"></i></span><span class="label">Log</span></div>
+    <div class="icon-card"><span class="tt tt-c s-md"><i class="line ri-tree-line"></i></span><span class="label">Evergreen</span></div>
+    <div class="icon-card"><span class="tt tt-c s-md"><i class="line ri-price-tag-3-line"></i></span><span class="label">Tag</span></div>
+    <div class="icon-card"><span class="tt tt-c s-md"><i class="line ri-archive-line"></i></span><span class="label">Archive</span></div>
+    <div class="icon-card"><span class="tt tt-c s-md"><i class="line ri-time-line"></i></span><span class="label">Reading</span></div>
+    <div class="icon-card"><span class="tt tt-c s-md"><i class="line ri-user-line"></i></span><span class="label">Author</span></div>
+    <div class="icon-card"><span class="tt tt-c s-md"><i class="line ri-game-line"></i></span><span class="label">Gaming</span></div>
+  </div>
+
+  <!-- Direct comparison: line vs A vs B vs C -->
+  <h2>Direkter Vergleich — gleiche Größe, gleiches Icon</h2>
+  <div class="compare">
+    <div class="compare-card">
+      <span class="tt s-lg"><i class="line ri-tree-line"></i></span>
+      <div class="stack"><span class="name">Aktuell</span><span class="meta">Line · 1 Farbe</span></div>
+    </div>
+    <div class="compare-card">
+      <span class="tt tt-a s-lg"><i class="fill ri-tree-fill"></i><i class="line ri-tree-line"></i></span>
+      <div class="stack"><span class="name">Variante A</span><span class="meta">Pure Stack</span></div>
+    </div>
+    <div class="compare-card">
+      <span class="tt tt-b s-lg"><i class="fill ri-tree-fill"></i><i class="line ri-tree-line"></i></span>
+      <div class="stack"><span class="name">Variante B</span><span class="meta">Offset Shadow</span></div>
+    </div>
+    <div class="compare-card">
+      <span class="tt tt-c s-lg"><i class="line ri-tree-line"></i></span>
+      <div class="stack"><span class="name">Variante C</span><span class="meta">Badge Tile</span></div>
+    </div>
+  </div>
+
+  <!-- In-context examples -->
+  <h2>Im Kontext — wie es im Layout aussehen würde</h2>
+  <div class="examples">
+    <div class="example-card">
+      <div class="ex-title">Format-Marker (Card-Footer)</div>
+      <div style="display: flex; flex-direction: column; gap: 14px;">
+        <span class="format-mark"><span class="tt tt-a"><i class="fill ri-flower-fill"></i><i class="line ri-flower-line"></i></span> Artikel</span>
+        <span class="format-mark"><span class="tt tt-a"><i class="fill ri-lightbulb-flash-fill"></i><i class="line ri-lightbulb-flash-line"></i></span> Log</span>
+        <span class="format-mark"><span class="tt tt-a"><i class="fill ri-tree-fill"></i><i class="line ri-tree-line"></i></span> Evergreen</span>
+      </div>
+    </div>
+
+    <div class="example-card">
+      <div class="ex-title">Sidebar Stat-Tiles</div>
+      <div class="stat-tile">
+        <span class="tt tt-a"><i class="fill ri-time-fill"></i><i class="line ri-time-line"></i></span>
+        <div class="stat-body"><span class="stat-label">Lesezeit</span><span class="stat-val">14 Min.</span></div>
+      </div>
+      <div class="stat-tile">
+        <span class="tt tt-a"><i class="fill ri-flower-fill"></i><i class="line ri-flower-line"></i></span>
+        <div class="stat-body"><span class="stat-label">Format</span><span class="stat-val">Evergreen</span></div>
+      </div>
+      <div class="stat-tile">
+        <span class="tt tt-a"><i class="fill ri-price-tag-3-fill"></i><i class="line ri-price-tag-3-line"></i></span>
+        <div class="stat-body"><span class="stat-label">Kategorie</span><span class="stat-val">Gaming</span></div>
+      </div>
+    </div>
+
+    <div class="example-card">
+      <div class="ex-title">Nav Active States</div>
+      <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+        <span class="navlink"><span class="tt tt-a"><i class="fill ri-article-fill"></i><i class="line ri-article-line"></i></span> Artikel</span>
+        <span class="navlink"><span class="tt tt-a"><i class="fill ri-lightbulb-flash-fill"></i><i class="line ri-lightbulb-flash-line"></i></span> Logs</span>
+        <span class="navlink"><span class="tt tt-a"><i class="fill ri-archive-fill"></i><i class="line ri-archive-line"></i></span> Kategorien</span>
+      </div>
+    </div>
+
+    <div class="example-card">
+      <div class="ex-title">Pin-Badge (Evergreen auf Card)</div>
+      <div style="display: flex; align-items: center; gap: 12px; padding: 8px 14px; background: hsl(140, 35%, 25%); border-radius: 6px; width: fit-content;">
+        <span class="tt tt-a" style="font-size: 16px;"><i class="fill ri-tree-fill" style="color: hsl(140, 35%, 15%);"></i><i class="line ri-tree-line" style="color: hsl(140, 35%, 75%);"></i></span>
+        <span style="font-family: var(--font-mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: hsl(140, 35%, 90%); font-weight: 500;">Evergreen</span>
+      </div>
+      <p style="font-size: 11px; color: var(--light-mute); margin: 12px 0 0; line-height: 1.5;">→ Two-Tone funktioniert auch in farbigen Kontexten (Pin-Farben statt Gold)</p>
+    </div>
+  </div>
+
+  <p class="note">
+    <strong style="color: var(--gold-light);">Empfehlung:</strong> Variante A (Pure Stack) ist die sauberste — die Line-Version definiert die Form klar, der Fill darunter gibt Masse und visuellen Halt. Bei kleinen Größen (≤16px) verschmelzen die Varianten B und C; A bleibt überall lesbar. Variante C (Badge Tile) eignet sich nur als Akzent (z.B. Stat-Tiles), nicht für Inline-Icons im Fließtext.
+  </p>
+  <p class="note" style="margin-top: 12px;">
+    <strong style="color: var(--gold-light);">Größen-Bump:</strong> Aktuell sind die Icons 10–14px. Mit Two-Tone empfehle ich global +4–6px (also 16–20px in Cards/Nav, 22–24px in Sidebar-Tiles). Sag mir welche Variante, dann rolle ich es global aus.
+  </p>
+
+</div>
+</body>
+</html>

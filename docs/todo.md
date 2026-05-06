@@ -1,4 +1,10 @@
 # Open Items (Make Github issues?)
+
+- Preflight Datei anlegen mit SEO Stuff für jede Seite - Wenn nicht erfüllt, kein commit möglich?
+- [Icons austauschen](docs/IconDemo.html)
+- [New Home Design, einbauen](docs/Home.html)
+- [New Artikel Design, einbauen]('docs/Artikel.html')
+
 ## 1. Modern browsers don't need jQuery for basic DOM manipulation 
 **Recommendation:** Consider migrating to vanilla JavaScript to reduce bundle size by ~30KB (minified).
 
