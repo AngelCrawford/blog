@@ -10,8 +10,8 @@
     <meta name="robots" content="index, follow, archive">
 {{- end }}
 
-    <meta name="referrer" content="always" /><!-- INFO: Muss unter umständen immer mal wieder angepasst werden -->
-    {{ printf `<meta http-equiv="Content-Security-Policy" content="default-src %s; form-action %s; frame-src %s; img-src %s; object-src %s; style-src %s; script-src %s; connect-src %s;">` (delimit .Site.Params.csp.default " ") (delimit .Site.Params.csp.formaction " ") (delimit .Site.Params.csp.framesrc " ") (delimit .Site.Params.csp.imgsrc " ") (delimit .Site.Params.csp.objectsrc " ") (delimit .Site.Params.csp.stylesrc " ") (delimit .Site.Params.csp.scriptsrc " ") (delimit .Site.Params.csp.connectsrc " ") | safeHTML }}
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    {{ printf `<meta http-equiv="Content-Security-Policy" content="default-src %s; form-action %s; frame-src %s; frame-ancestors %s; img-src %s; object-src %s; style-src %s; script-src %s; connect-src %s;">` (delimit .Site.Params.csp.default " ") (delimit .Site.Params.csp.formaction " ") (delimit .Site.Params.csp.framesrc " ") (delimit .Site.Params.csp.frameancestors " ") (delimit .Site.Params.csp.imgsrc " ") (delimit .Site.Params.csp.objectsrc " ") (delimit .Site.Params.csp.stylesrc " ") (delimit .Site.Params.csp.scriptsrc " ") (delimit .Site.Params.csp.connectsrc " ") | safeHTML }}
 
     <title>{{- if .IsHome }}{{ .Site.Title }}{{ else }}{{ block "title" . }}{{ .Site.Title }}{{ with .Params.Title }} | {{ . }}{{ end }}{{ end }}{{ end -}}</title>
 <!-- Style and Script -->

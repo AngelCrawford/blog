@@ -28,7 +28,7 @@
 
         <div class="navbar-end">
           {{ range .Site.Params.follow.header }}
-            <a href="{{ .src }}" title="{{ .name }}" class="navbar-item follow-icons" alt="{{ .name }}" target="_blank" rel="noreferrer">
+            <a href="{{ .src | relURL }}" title="{{ .name }}" class="navbar-item follow-icons" alt="{{ .name }}" target="_blank" rel="noreferrer">
               <span class="icon">
                 <svg><use xlink:href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ $.Site.Params.remixicon_version}}#{{ .icon }}"></use></svg>
               </span>

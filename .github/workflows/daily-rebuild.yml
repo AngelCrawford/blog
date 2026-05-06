@@ -59,52 +59,43 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      # === Switch to data-updates BEFORE writing data files ===
-      # Reason: data-updates already tracks data/popularity_scores.json (placeholder
-      # from Task 1.3). Writing to main first then `git checkout data-updates` would
-      # fail with "untracked working tree files would be overwritten by checkout".
-      - name: Switch to data-updates branch
-        run: |
-          git config user.name "GitHub Actions Bot"
-          git config user.email "actions@github.com"
-          git checkout data-updates
-
-      # Scripts are Phase-0 placeholders — they write empty {} JSON files so Hugo's
-      # data pipeline has something valid to consume. Phase 1A replaces the bodies
-      # with real Umami/webmention.io fetch logic (Stories 2.1, 2.3, 3.1, 3.2, 3.3).
-      - name: Fetch Umami hearts
+      # === Generate data files via Phase-0-Placeholder-Scripts ===
+      # Scripts run on main (where scripts/ exists) and write to main's data/ as
+      # untracked files. Hugo build (later step) consumes them directly.
+      # Phase 1A replaces the script bodies with real Umami/webmention.io fetch logic
+      # (Stories 2.1, 2.3, 3.1, 3.2, 3.3).
+      - name: Generate data files via scripts
         env:
           UMAMI_API_KEY: ${{ secrets.UMAMI_API_KEY }}
           UMAMI_WEBSITE_ID: ${{ secrets.UMAMI_WEBSITE_ID }}
-        run: node scripts/fetch-umami-hearts.js
-
-      - name: Fetch raw webmentions (Phase 1A — currently no-op)
         run: |
+          mkdir -p data
+          node scripts/fetch-umami-hearts.js
           # Phase 1A will replace this with: curl https://webmention.io/api/mentions.jf2?domain=...
           echo '{"children":[]}' > data/webmentions_raw.json
+          node scripts/process-webmentions.js
+          node scripts/calculate-popularity.js
 
-      - name: Process webmentions
-        run: node scripts/process-webmentions.js
-
-      - name: Calculate popularity scores
-        run: node scripts/calculate-popularity.js
-
-      - name: Commit and push data-updates
+      # === Commit data to data-updates branch via worktree ===
+      # Why worktree instead of `git checkout data-updates`:
+      #   - main checkout has scripts/ (needed to RUN the scripts above)
+      #   - data-updates is an orphan branch with only data/ — no scripts/
+      #   - Switching branches would lose scripts/ access
+      # Worktree gives us a parallel checkout of data-updates without disturbing main.
+      - name: Commit data to data-updates branch
         run: |
+          git config user.name "GitHub Actions Bot"
+          git config user.email "actions@github.com"
+          git worktree add ../data-updates data-updates
+          # Copy the freshly-generated data files into the worktree
+          cp data/*.json ../data-updates/data/
+          cd ../data-updates
           git add data/*.json
           # Commit returns non-zero if no changes — that's fine
           git commit -m "chore: update data $(date +%Y-%m-%d) [skip ci]" || echo "No changes to commit"
           git push origin data-updates
-
-      - name: Switch back to main
-        run: git checkout main
-
-      - name: Copy data from data-updates branch into main workspace
-        run: |
-          git fetch origin data-updates
-          git checkout origin/data-updates -- data/
-          # Main workspace now has latest data files (staged but not committed —
-          # discarded after the build job finishes)
+          cd "$GITHUB_WORKSPACE"
+          git worktree remove ../data-updates
 
       # Setup Pages BEFORE build so we can pass the correct base_url to Hugo.
       # Output `base_url` reflects the active Pages URL:

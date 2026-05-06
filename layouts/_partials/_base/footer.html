@@ -26,7 +26,7 @@
         <div class="has-text-centered logo"><img src="{{ "images/header/clock_small.webp" | relURL }}" width="150" height="150" alt="Logo" title="Logo" /></div>
         <div class="follow-icons">
             {{ range .Site.Params.follow.footer }}
-            <a href="{{ .src }}" title="{{ .name }}" alt="{{ .name }}" target="_blank" rel="noreferrer">
+            <a href="{{ .src | relURL }}" title="{{ .name }}" alt="{{ .name }}" target="_blank" rel="noreferrer">
                 <svg><use xlink:href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ $.Site.Params.remixicon_version}}#{{ .icon }}"></use></svg>
             </a>
             {{ end }}

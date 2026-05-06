@@ -5,6 +5,16 @@
 - [New Home Design, einbauen](docs/Home.html)
 - [New Artikel Design, einbauen]('docs/Artikel.html')
 
+Was kommt nach dem Re-Deploy
+
+1. Workflow läuft grün durch mit den Scripts
+2. Du machst die **3 manuellen Verifikationen** (CSP/RSS/Schema) — sind ja jetzt mehrfach gepusht worden, sollten alle stabil sein
+3. Wenn alles passt: **Day 7.2 README updaten** (mache ich) + **Day 7.1 Final-Cycle-Test** (1× Workflow manuell triggern, alle Steps grün?)
+4. **Issues schließen** (#31, #38, #41, #49, #173)
+5. **Optional:** ersten Release-Tag setzen `git tag -a v0.1.0` → Footer zeigt das ab nächstem Run
+
+Sag Bescheid wenn der Push durch ist und der Workflow grün durchgelaufen ist — dann gehen wir Day 7 an.
+
 ---
 
 ## 🔄 Remixicon Updates: Cache-Bust Workflow

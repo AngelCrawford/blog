@@ -18,6 +18,7 @@ csp:
   default: ["'self'"]
   formaction: ["'self'"]
   framesrc: ["'self'", "https://www.youtube-nocookie.com"]
+  frameancestors: ["'none'"] # Modern X-Frame-Options replacement — Clickjacking-Schutz, niemand darf die Site embedden
   imgsrc: ["'self'", "data:", "https:"]
   objectsrc: ["'none'"]
   stylesrc: ["'self'", "'unsafe-inline'"] # 'unsafe-inline' required for inline SVG style attrs (sea-filter, fill colors)
@@ -30,9 +31,9 @@ csp:
 follow:
   header:
     - name: "RSS Feed"
-      src: "../index.xml"
+      src: "/index.xml"
       icon: "rss-line"
   footer:
     - name: "RSS Feed"
-      src: "../index.xml"
+      src: "/index.xml"
       icon: "rss-line"

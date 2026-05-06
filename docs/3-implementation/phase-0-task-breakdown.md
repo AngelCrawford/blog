@@ -408,8 +408,8 @@ csp:
 
 **Acceptance Criteria:**
 - [x] All 9 CSP directives have non-empty values in built HTML
-- [ ] No browser console CSP-violation errors on the live site (verify after re-deploy)
-- [ ] CSP evaluator reports no critical findings (verify manually)
+- [x] No browser console CSP-violation errors on the live site (verify after re-deploy)
+- [x] CSP evaluator reports no critical findings (verify manually)
 - [x] `docs/0-discovery/feature-gap-blog-old.md` "CSP-Konfiguration kaputt" item ticked off
 
 ---
@@ -441,10 +441,10 @@ Permissions-Policy: camera=(), microphone=(), geolocation=()
 "GitHub Pages doesn't support custom HTTP headers. Site is secure via HTTPS. CSP delivered via meta tag. Accepted limitation."
 
 **Acceptance Criteria:**
-- [ ] Security scan completed (run after re-deploy: https://securityheaders.com/)
+- [x] Security scan completed (run after re-deploy: https://securityheaders.com/)
 - [x] Limitation understood (GitHub Pages doesn't support headers)
 - [x] Decision made: Accept limitation
-- [ ] Issue #38 updated with findings (close with note above)
+- [x] Issue #38 updated with findings (close with note above)
 
 ---
 
