@@ -1031,10 +1031,11 @@ Closes #49
 - [x] Task 5.2: Contact page (covered by Impressum + Über mich, kein separates Page nötig)
 
 **Day 6: Placeholder Scripts**
-- [ ] Task 6.1: Create scripts/ directory
-- [ ] Task 6.2: Create fetch-umami-hearts.js
-- [ ] Task 6.3: Create process-webmentions.js
-- [ ] Task 6.4: Create calculate-popularity.js
+- [x] Task 6.1: Create scripts/ directory
+- [x] Task 6.2: Create fetch-umami-hearts.js (placeholder — `data/umami_hearts.json` mit `{}`)
+- [x] Task 6.3: Create process-webmentions.js (placeholder — `data/webmentions_by_article.json` mit `{}`)
+- [x] Task 6.4: Create calculate-popularity.js (placeholder — `data/popularity_scores.json` mit `{}`)
+- [x] **Bonus:** Workflow aktualisiert — ruft jetzt die echten Scripts statt inline `echo '{}'` auf
 
 **Day 7: Final Testing**
 - [ ] Task 7.1: Test full daily rebuild

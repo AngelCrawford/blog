@@ -69,24 +69,25 @@ jobs:
           git config user.email "actions@github.com"
           git checkout data-updates
 
-      - name: Fetch Umami hearts (placeholder)
+      # Scripts are Phase-0 placeholders — they write empty {} JSON files so Hugo's
+      # data pipeline has something valid to consume. Phase 1A replaces the bodies
+      # with real Umami/webmention.io fetch logic (Stories 2.1, 2.3, 3.1, 3.2, 3.3).
+      - name: Fetch Umami hearts
         env:
           UMAMI_API_KEY: ${{ secrets.UMAMI_API_KEY }}
           UMAMI_WEBSITE_ID: ${{ secrets.UMAMI_WEBSITE_ID }}
-        run: |
-          mkdir -p data
-          echo '{}' > data/umami_hearts.json
-          # TODO: Replace with scripts/fetch-umami-hearts.js in Phase 1A (Story 3.1)
+        run: node scripts/fetch-umami-hearts.js
 
-      - name: Fetch webmentions (placeholder)
+      - name: Fetch raw webmentions (Phase 1A — currently no-op)
         run: |
+          # Phase 1A will replace this with: curl https://webmention.io/api/mentions.jf2?domain=...
           echo '{"children":[]}' > data/webmentions_raw.json
-          # TODO: Replace with webmention.io fetch in Phase 1A (Story 3.2)
 
-      - name: Calculate popularity scores (placeholder)
-        run: |
-          echo '{}' > data/popularity_scores.json
-          # TODO: Replace with scripts/calculate-popularity.js in Phase 1A (Story 3.3)
+      - name: Process webmentions
+        run: node scripts/process-webmentions.js
+
+      - name: Calculate popularity scores
+        run: node scripts/calculate-popularity.js
 
       - name: Commit and push data-updates
         run: |

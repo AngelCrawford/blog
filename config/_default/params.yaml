@@ -30,9 +30,9 @@ csp:
 follow:
   header:
     - name: "RSS Feed"
-      src: "/index.xml"
+      src: "../index.xml"
       icon: "rss-line"
   footer:
     - name: "RSS Feed"
-      src: "/index.xml"
+      src: "../index.xml"
       icon: "rss-line"
