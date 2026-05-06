@@ -88,7 +88,12 @@
 </div>
 
 <div class="copyright has-text-centered">
-    &copy; 2020 - {{ dateFormat "2006" now }} {{ or .Site.Params.author.name .Site.Params.default_author_name .Site.Title }} | <abbr title='Build Date: {{ now.Format "2006-01-02 15:04 UTC" }}'>v{{ if (fileExists "version.txt") }}{{ readFile "version.txt" | strings.TrimSpace }}{{ else }}dev{{ end }}</abbr>
+    {{- $version := "dev" -}}
+    {{- if (fileExists "version.txt") -}}
+        {{- $version = readFile "version.txt" | strings.TrimSpace -}}
+        {{- if not (hasPrefix $version "v") -}}{{- $version = printf "v%s" $version -}}{{- end -}}
+    {{- end -}}
+    &copy; 2020 - {{ dateFormat "2006" now }} {{ or .Site.Params.author.name .Site.Params.default_author_name .Site.Title }} | <abbr title='Build Date: {{ now.Format "2006-01-02 15:04 UTC" }}'>{{ $version }}</abbr>
     | <span>{{ .Site.Copyright | safeHTML }}</span>
 
     <p>
