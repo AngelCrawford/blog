@@ -71,7 +71,6 @@ The head.html references .Site.Params.csp.* but the params file wasn't fully rev
 ------------------
 
 - Search Console Google verwenden, DSGVO?
-
 - Use 1 SEO Keyword, or as max 3 words
 - Optimize Posts around A Single Keyword
 - No Keyword stuffing!

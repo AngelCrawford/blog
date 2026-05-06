@@ -113,6 +113,17 @@ jobs:
         id: pages
         uses: actions/configure-pages@v5
 
+      # Generate version.txt for the footer.
+      # `git describe` returns:
+      # - The latest tag if HEAD is at one (e.g. "v1.2.3")
+      # - "tag-N-gSHA" if HEAD is N commits past the latest tag (e.g. "v1.2.3-5-gabc12345")
+      # - The short SHA if no tags exist yet (e.g. "abc12345")
+      # Read in footer.html via readFile (with fileExists guard for local dev).
+      - name: Generate version.txt
+        run: |
+          git describe --tags --always --abbrev=8 > version.txt
+          echo "Build version: $(cat version.txt)"
+
       - name: Build Hugo site
         run: |
           hugo \
