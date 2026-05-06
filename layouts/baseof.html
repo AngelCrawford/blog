@@ -25,7 +25,8 @@
         <!-- Footer Scripts -->
         {{- $sunCalc := resources.Get "js/suncalc.js" -}}
         {{- $main := resources.Get "js/main.js" -}}
-        {{- $search := resources.Get "js/search.js" -}}
+        {{- /* search.js needs baseURL injection — process as Hugo template */ -}}
+        {{- $search := resources.Get "js/search.js" | resources.ExecuteAsTemplate "js/search.js" . -}}
         {{- $firework := resources.Get "js/firework.js" -}}
         {{- $navbar := resources.Get "js/navbar.js" -}}
         {{- $header := resources.Get "js/header.js" -}}

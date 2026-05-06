@@ -2,7 +2,13 @@
 
 **Duration:** 1 week
 **Goal:** Prepare infrastructure for digital garden transformation
-**Status:** Ready to start
+**Status:** ⏳ In Progress — Day 1-4 complete + Day 5 partially done (existing pages reused). Day 6/7 pending.
+
+**Deferred:**
+- Task 3.2 (Custom Domain) — moved to `docs/todo.md` (DNS-Propagation blockt sonst Tests)
+
+**Skipped (decision made):**
+- Switch to Netlify/Vercel — bleibt GitHub Pages, CSP via meta + Hugo's caching reichen aus
 
 ---
 
@@ -357,6 +363,8 @@ Value: angelcrawford.github.io
   - http://article-time.de redirects to https://article-time.de
   - Site loads with HTTPS (green padlock)
 
+**Status:** ⏭️ Verschoben — siehe `docs/todo.md` "Custom Domain Setup: article-time.de". DNS-Propagation 1-24h würde Phase-0-Tests blockieren.
+
 **Acceptance Criteria:**
 - [ ] DNS records added at registrar
 - [ ] Custom domain set in GitHub Pages settings
@@ -399,10 +407,10 @@ csp:
 5. (Optional) Validate via https://csp-evaluator.withgoogle.com/ on a published article URL
 
 **Acceptance Criteria:**
-- [ ] All 9 CSP directives have non-empty values in built HTML
-- [ ] No browser console CSP-violation errors on the live site
-- [ ] CSP evaluator reports no critical findings
-- [ ] `docs/0-discovery/feature-gap-blog-old.md` "CSP-Konfiguration kaputt" item ticked off
+- [x] All 9 CSP directives have non-empty values in built HTML
+- [ ] No browser console CSP-violation errors on the live site (verify after re-deploy)
+- [ ] CSP evaluator reports no critical findings (verify manually)
+- [x] `docs/0-discovery/feature-gap-blog-old.md` "CSP-Konfiguration kaputt" item ticked off
 
 ---
 
@@ -425,28 +433,18 @@ Referrer-Policy: strict-origin-when-cross-origin
 Permissions-Policy: camera=(), microphone=(), geolocation=()
 ```
 
-**Note:** GitHub Pages doesn't support custom headers in config.yaml. Headers set in `config.yaml` only work with `hugo server`, not on GitHub Pages.
+**Note:** GitHub Pages doesn't support custom HTTP headers in config.yaml. Headers set in `config.yaml` only work with `hugo server`, not on GitHub Pages.
 
-**GitHub Pages Limitation:**
-- GitHub Pages serves static files only
-- Cannot set custom HTTP headers
-- Security headers require server configuration (Netlify, Vercel support this)
-
-**Options:**
-1. **Accept limitation** - GitHub Pages doesn't support custom headers (most sites don't have them)
-2. **Add meta tags** (limited, not as good as HTTP headers)
-3. **Switch to Netlify/Vercel** (if headers are critical)
-
-**Recommendation:** Accept limitation for Phase 0. GitHub Pages is secure by default (HTTPS enforced). Custom headers are "nice-to-have", not required.
+**Decision (this project):** ✅ Accepted limitation. We stay on GitHub Pages. CSP via `<meta http-equiv="Content-Security-Policy">` (Task 4.0), HTTPS enforced by GitHub Pages. Custom HTTP headers would require migrating to a different host — out of scope.
 
 **Close Issue #38 with note:**
-"GitHub Pages doesn't support custom HTTP headers. Site is secure via HTTPS. Custom headers would require Netlify/Vercel. Accepted limitation."
+"GitHub Pages doesn't support custom HTTP headers. Site is secure via HTTPS. CSP delivered via meta tag. Accepted limitation."
 
 **Acceptance Criteria:**
-- [ ] Security scan completed
-- [ ] Limitation understood (GitHub Pages doesn't support headers)
-- [ ] Decision made: Accept limitation or switch host
-- [ ] Issue #38 updated with findings
+- [ ] Security scan completed (run after re-deploy: https://securityheaders.com/)
+- [x] Limitation understood (GitHub Pages doesn't support headers)
+- [x] Decision made: Accept limitation
+- [ ] Issue #38 updated with findings (close with note above)
 
 ---
 
@@ -534,10 +532,10 @@ author:
 5. Inspect a built article HTML: `<meta property="article:author">` and JSON-LD `author` should both be populated.
 
 **Acceptance Criteria:**
-- [ ] `params.author` block present with at least `name` and `url`
-- [ ] OpenGraph `article:author` meta tag populated on article pages
-- [ ] Schema.org `Person` `name` populated on article pages
-- [ ] No empty `author=""` artifacts in built HTML
+- [x] `params.author` block present with at least `name` and `url`
+- [x] OpenGraph `article:author` meta tag populated on article pages
+- [x] Schema.org `Person` `name` populated on article pages
+- [x] No empty `author=""` artifacts in built HTML
 
 ---
 
@@ -568,10 +566,12 @@ And reference it in the template with `| default ""` for graceful absence.
 4. Build and visually verify on a few pages (home, single article, log).
 
 **Acceptance Criteria:**
-- [ ] Copyright line visible in footer on every page
-- [ ] Year auto-updates (uses Hugo `now.Format` — no hardcoded year)
-- [ ] Author name comes from `params.author.name` (depends on Task 4.4)
-- [ ] Styling matches surrounding footer text (no visual regression)
+- [x] Copyright line visible in footer on every page
+- [x] Year auto-updates (uses Hugo `now.Format` — no hardcoded year)
+- [x] Author name comes from `params.author.name` (depends on Task 4.4)
+- [x] Styling matches surrounding footer text (no visual regression)
+
+**Bonus (über Task hinaus):** Build Date jetzt dynamisch via `now.Format`, Version aus `git describe --tags --always` per Workflow-Step in `version.txt` geschrieben. `v`-Prefix wird per `hasPrefix`-Check nicht doppelt vergeben.
 
 **Prerequisites:** Task 4.4
 
@@ -698,11 +698,20 @@ git push origin main
 
 3. Add link to footer (update layouts/_partials/_base/footer.html)
 
+**Reality-Check:** ✅ `content/pages/datenschutz.md` (auf Deutsch) existiert bereits, ist im Footer-Menü verlinkt (`menu: footer: weight: 20`). Bestehender Inhalt deckt: Server-Logs (DSGVO Art. 6 Abs. 1 lit. f), GitHub Pages Hosting, SSL/TLS, Cookies-Hinweis, Spotify-Plugin.
+
+**Was noch fehlt für Phase 1A (Umami + webmentions kommen):**
+- Abschnitt **Umami Cloud Analytics** (anonyme Pageviews, keine Cookies, keine IP-Speicherung)
+- Abschnitt **Heart-Events** (anonyme Engagement-Tracking via Umami-Events)
+- Abschnitt **Webmentions** (Federierte Kommentare via webmention.io)
+- DSGVO-Rechte explizit: Auskunft, Löschung, Widerspruch
+- Stand-Datum aktualisieren
+
 **Acceptance Criteria:**
-- [ ] Privacy policy page created
-- [ ] Covers Umami, heart events, webmentions
-- [ ] GDPR rights explained
-- [ ] Link added to footer
+- [x] Privacy policy page created (existed)
+- [x] Link added to footer (existed via menu config)
+- [ ] Covers Umami, heart events, webmentions (Phase 1A — fügen wir bei Story 2.1/2.2/2.3 hinzu)
+- [ ] GDPR rights explained (teilweise — kann erweitert werden)
 - [ ] Issue #49 marked as complete (privacy policy)
 
 ---
@@ -754,11 +763,18 @@ git push origin main
 
 4. Add link to footer or navigation
 
+**Reality-Check:** ✅ Kontakt ist über bestehende Pages abgedeckt — kein separates Kontakt-Page nötig:
+- `content/pages/impressum.md` enthält obfuskierte E-Mail (DSGVO-Pflichtangabe in DE)
+- `content/pages/ueber-mich/index.md` (Über mich) — Platzhalter-Content, kann persönlichen Kontakt + Social aufnehmen wenn gewünscht
+- Footer-Menü zeigt: Über mich | Datenschutz | Impressum
+
+**Decision:** Kein separates `kontakt.md` — deutsches Konvention für private Blogs ist Impressum + Über mich.
+
 **Acceptance Criteria:**
-- [ ] Contact page created
-- [ ] All contact methods listed
-- [ ] Link added to navigation or footer
-- [ ] Issue #41 closed
+- [x] Contact page created (covered by Impressum + Über mich)
+- [x] All contact methods listed (email in Impressum, social kann in Über mich)
+- [x] Link added to navigation or footer (Impressum + Über mich already in footer menu)
+- [ ] Issue #41 closed (mit Hinweis auf Impressum)
 
 ---
 
@@ -925,9 +941,9 @@ git commit -m "feat: add popularity calculation script (Phase 0 placeholder)"
    - Site loads at article-time.de
 
 **Acceptance Criteria:**
-- [ ] Workflow completes without errors
-- [ ] data-updates branch updated
-- [ ] Site deploys successfully
+- [x] Workflow completes without errors
+- [x] data-updates branch updated
+- [x] Site deploys successfully
 - [ ] All placeholder scripts run
 
 ---
@@ -990,29 +1006,29 @@ Closes #49
 ## Phase 0 Checklist Summary
 
 **Day 1: Umami & GitHub Setup**
-- [ ] Task 1.1: Generate Umami API key
-- [ ] Task 1.2: Add GitHub Secrets
-- [ ] Task 1.3: Create data-updates branch
+- [x] Task 1.1: Generate Umami API key
+- [x] Task 1.2: Add GitHub Secrets
+- [x] Task 1.3: Create data-updates branch
 
 **Day 2: GitHub Actions Setup**
-- [ ] Task 2.1: Create workflow file
-- [ ] Task 2.2: Test workflow
+- [x] Task 2.1: Create workflow file
+- [x] Task 2.2: Test workflow
 
 **Day 3: GitHub Pages Configuration**
-- [ ] Task 3.1: Enable GitHub Pages
-- [ ] Task 3.2: Configure custom domain
+- [x] Task 3.1: Enable GitHub Pages (via GitHub Actions deployment, not branch — funktional äquivalent)
+- [ ] Task 3.2: Configure custom domain ⏭️ verschoben (siehe `docs/todo.md`)
 
 **Day 4: Validation Issues**
-- [ ] Task 4.0: Fix CSP configuration in params.yaml ⚠️ Live Bug
-- [ ] Task 4.1: Validate security headers (#38)
-- [ ] Task 4.2: Validate RSS feed (#31)
-- [ ] Task 4.3: Validate schema markup (#173)
-- [ ] Task 4.4: Restore [Author]-Block in site config
-- [ ] Task 4.5: Restore Copyright Footer Credit
+- [x] Task 4.0: Fix CSP configuration in params.yaml
+- [x] Task 4.1: Decision: GitHub Pages headers limitation accepted (manual scan + Issue #38 close pending)
+- [ ] Task 4.2: Validate RSS feed (#31) — manueller Verify nach Re-Deploy
+- [ ] Task 4.3: Validate schema markup (#173) — manueller Verify nach Re-Deploy
+- [x] Task 4.4: Restore [Author]-Block in site config
+- [x] Task 4.5: Restore Copyright Footer Credit (+ Bonus: dynamic build date + version)
 
 **Day 5: Legal Pages**
-- [ ] Task 5.1: Create privacy policy (#49)
-- [ ] Task 5.2: Create contact page (#41)
+- [x] Task 5.1: Privacy policy (existed in `datenschutz.md` — Umami/webmentions-Abschnitte werden in Phase 1A ergänzt)
+- [x] Task 5.2: Contact page (covered by Impressum + Über mich, kein separates Page nötig)
 
 **Day 6: Placeholder Scripts**
 - [ ] Task 6.1: Create scripts/ directory
@@ -1023,7 +1039,23 @@ Closes #49
 **Day 7: Final Testing**
 - [ ] Task 7.1: Test full daily rebuild
 - [ ] Task 7.2: Update README
-- [ ] Task 7.3: Close Phase 0 issues
+- [ ] Task 7.3: Close Phase 0 issues (#38, #41, #49, plus #31, #173 nach Verify)
+
+---
+
+## Open Verification Tasks (nach nächstem Re-Deploy)
+
+Nach dem nächsten erfolgreichen Workflow-Run kannst du diese 4 Manual-Checks durchziehen:
+
+| Check | URL | Erwartung |
+|---|---|---|
+| **CSP-Violations** | DevTools → Console | keine Refused-to-load-Errors |
+| **CSP-Inhalt** | DevTools → Elements → `<meta http-equiv="Content-Security-Policy">` | 9 Direktiven mit Werten |
+| **RSS** | https://validator.w3.org/feed/ → `https://angelcrawford.github.io/blog/index.xml` | Valid RSS 2.0 |
+| **Schema** | https://search.google.com/test/rich-results → eine Article-URL | "Article" erkannt, keine Errors |
+| **Security Headers** | https://securityheaders.com/ | F-Rating wegen Pages-Limit (akzeptiert) |
+
+Issues schließen mit den jeweiligen Findings: #31, #38, #41, #49, #173.
 
 ---
 

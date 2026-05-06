@@ -22,7 +22,9 @@ csp:
   objectsrc: ["'none'"]
   stylesrc: ["'self'", "'unsafe-inline'"] # 'unsafe-inline' required for inline SVG style attrs (sea-filter, fill colors)
   scriptsrc: ["'self'", "https://cloud.umami.is"] # umami integrated in Phase 1A (Story 2.1)
-  scriptsrcelem: ["'self'", "https://cloud.umami.is"]
+  # script-src-elem dropped — `script-src` is the canonical fallback for both element and attr.
+  # Removing the redundant directive silences Firefox's informational warning about
+  # `'unsafe-eval'`/`'wasm-unsafe-eval'` being ignored in element-context.
   connectsrc: ["'self'", "https://cloud.umami.is", "https://webmention.io"]
 
 follow:

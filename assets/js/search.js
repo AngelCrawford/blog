@@ -193,7 +193,7 @@ function searchFn() {
   $("#resultsWrapper").hide();
   var searchHost = {};
 
-  $.getJSON("/index.json", function (results) {
+  $.getJSON("{{ "/index.json" | relURL }}", function (results) {
     searchHost.index = [];
     var dup = {};
     results.forEach(function (result) {

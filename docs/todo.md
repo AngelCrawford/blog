@@ -29,9 +29,6 @@ scroll-padding-top: 35px;
 - In baseof.html:15
 - Mixing language comments
 
-## 4. CSP Configuration
-The head.html references .Site.Params.csp.* but the params file wasn't fully reviewed. Ensure CSP is properly configured to prevent XSS attacks.
-
 ## 5. Performance Considerations
 
 **Large search index loading**
