@@ -470,10 +470,10 @@ Permissions-Policy: camera=(), microphone=(), geolocation=()
 - Common issues: HTML entities, invalid characters
 
 **Acceptance Criteria:**
-- [ ] RSS feed accessible at /index.xml
-- [ ] Feed validates (W3C Feed Validator)
-- [ ] Feed contains articles
-- [ ] Issue #31 closed (or updated with findings)
+- [x] RSS feed accessible at /index.xml
+- [x] Feed validates (W3C Feed Validator)
+- [x] Feed contains articles
+- [x] Issue #31 closed (or updated with findings)
 
 ---
 
@@ -944,7 +944,7 @@ git commit -m "feat: add popularity calculation script (Phase 0 placeholder)"
 - [x] Workflow completes without errors
 - [x] data-updates branch updated
 - [x] Site deploys successfully
-- [ ] All placeholder scripts run
+- [x] All placeholder scripts run
 
 ---
 
@@ -1021,7 +1021,7 @@ Closes #49
 **Day 4: Validation Issues**
 - [x] Task 4.0: Fix CSP configuration in params.yaml
 - [x] Task 4.1: Decision: GitHub Pages headers limitation accepted (manual scan + Issue #38 close pending)
-- [ ] Task 4.2: Validate RSS feed (#31) — manueller Verify nach Re-Deploy
+- [x] Task 4.2: Validate RSS feed (#31) — manueller Verify nach Re-Deploy
 - [ ] Task 4.3: Validate schema markup (#173) — manueller Verify nach Re-Deploy
 - [x] Task 4.4: Restore [Author]-Block in site config
 - [x] Task 4.5: Restore Copyright Footer Credit (+ Bonus: dynamic build date + version)
@@ -1038,8 +1038,8 @@ Closes #49
 - [x] **Bonus:** Workflow aktualisiert — ruft jetzt die echten Scripts statt inline `echo '{}'` auf
 
 **Day 7: Final Testing**
-- [ ] Task 7.1: Test full daily rebuild
-- [ ] Task 7.2: Update README
+- [x] Task 7.1: Test full daily rebuild (alles grün)
+- [x] Task 7.2: Update README — Phase 0 completion + Stack-Overview + BMM-Workflow-Verweis
 - [ ] Task 7.3: Close Phase 0 issues (#38, #41, #49, plus #31, #173 nach Verify)
 
 ---
