@@ -35,7 +35,7 @@
 - [ ] Check previous story status
 
 **If previous story status is done/review/in-progress:**
-- [ ] Load previous story file: {story_dir}/{{previous_story_key}}.md
+- [ ] Load previous story file: {story_dir}/epic-{{previous_epic_num}}/{{previous_story_key}}.md (fallback: glob {story_dir}/**/{{previous_story_key}}.md)
 - [ ] Extract: Dev Agent Record (Completion Notes, File List with NEW/MODIFIED)
 - [ ] Extract: Senior Developer Review section if present
 - [ ] Count unchecked [ ] items in Review Action Items
@@ -142,7 +142,7 @@
   - Context Reference, Agent Model Used, Debug Log References, Completion Notes List, File List
   - [ ] Missing sections → **MAJOR ISSUE**
 - [ ] Change Log initialized → If missing → **MINOR ISSUE**
-- [ ] File in correct location: {story_dir}/{{story_key}}.md → If not → **MAJOR ISSUE**
+- [ ] File in correct location: {story_dir}/epic-{{epic_num}}/{{story_key}}.md → If not → **MAJOR ISSUE**
 
 ### 8. Unresolved Review Items Alert
 

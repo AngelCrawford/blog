@@ -1,0 +1,325 @@
+<story-context id="bmad/bmm/workflows/4-implementation/story-context/template" v="1.0">
+  <metadata>
+    <epicId>1</epicId>
+    <storyId>4</storyId>
+    <title>Withered Content Warning Banner</title>
+    <status>drafted</status>
+    <generatedAt>2026-05-06</generatedAt>
+    <generator>BMAD Story Context Workflow</generator>
+    <sourceStoryPath>docs/sprint-artifacts/epic-1/1-4-withered-content-warning-banner.md</sourceStoryPath>
+  </metadata>
+
+  <story>
+    <asA>a reader</asA>
+    <iWant>a clear warning when viewing withered content</iWant>
+    <soThat>I know the information may be outdated or deprecated</soThat>
+    <tasks>
+      <task ac="7">Frontmatter schema extension — add withered_date (string/date), withered_reason (string ≤280), replacement_url (uri-reference); JSON Schema draft-07 if/then: when growth_stage=="withered" then required:[withered_date]; verify Husky pre-commit hook (Story 1.1) catches missing withered_date</task>
+      <task ac="8">Archetype updates — append commented-out withered metadata block (withered_date / withered_reason / replacement_url) to archetypes/articles/index.md AND archetypes/logs/index.md after the Story 1.1 growth_stage line</task>
+      <task ac="7">Extend layouts/_partials/_base/validate-growth-stage.html (Story 1.1) — after enum check: if growth_stage=="withered" AND withered_date empty → errorf with .File.Path and field name</task>
+      <task ac="1,2,5,6,9,11">Create layouts/_partials/withered-banner.html — no-op when growth_stage != "withered"; renders aside.withered-banner.notification.is-warning with role=alert, aria-labelledby=withered-banner-title, data-banner-key="withered-banner-dismissed:{{.RelPermalink}}"; close button (.delete.withered-banner-dismiss, aria-label="Hinweis ausblenden"); h2 with ri-skull-line + "Verwelkter Inhalt"; date paragraph using time.Format ":date_long" $.Site.Language; optional reason paragraph; optional replacement link "Aktuelle Version ansehen →" via relURL</task>
+      <task ac="1,11">Wire partial into layouts/single.html — insert {{ partial "withered-banner.html" . }} at the top of BOTH Page.Type branches ("page" and "articles") inside the .column wrapper, before the &lt;article class="box"&gt; opens; verify log pages render via the articles branch (start hugo server and check)</task>
+      <task ac="3,9,10">Create assets/scss/elements/withered-banner.scss — minor layout adjustments over Bulma .notification.is-warning (margin-bottom 1.5rem, padding-right 3rem for dismiss button); .withered-banner-heading icon uses helpers.$growth-withered (TODO inline hsl(0,0%,50%) if Story 1.2 not landed); &amp;[hidden]{display:none}; mobile breakpoint reduces heading size and bumps dismiss tap target ≥1.75rem; @use "elements/withered-banner" in assets/scss/main.scss after elements/badge</task>
+      <task ac="4">Create assets/js/withered-banner.js — vanilla IIFE; query .withered-banner[data-banner-key]; if sessionStorage.getItem(key)==="1" then banner.hidden=true and return; on dismiss click: banner.hidden=true and sessionStorage.setItem(key,"1"); wrap sessionStorage access in try/catch; append to footer bundle slice in layouts/baseof.html (currently line 33: slice $sunCalc $main $search $firework $navbar $header)</task>
+      <task ac="12">Add fixtures — tests/build/fixtures/withered-with-replacement.md (all three withered fields), withered-minimal.md (withered_date only), withered-invalid.md (growth_stage:"withered" without withered_date — expected build FAILS)</task>
+      <task ac="1,2,7,11,12">Extend tests/build/build-smoke.test.mjs (Story 1.1) — assert withered fixture HTML contains class="withered-banner" + formatted date; withered-minimal omits .withered-banner-reason and .withered-banner-replacement; withered-invalid causes hugo --quiet --environment production to exit non-zero with expected error; valid-evergreen does NOT contain class="withered-banner"</task>
+      <task ac="1,4,9,10,11">Add tests/e2e/withered-banner.spec.ts (Playwright) — visit withered fixture: assert [role=alert].withered-banner visible with date+reason; visit withered-minimal: banner visible without reason/replacement; dismiss flow: click .withered-banner-dismiss → hidden; reload (same context) → still hidden; new context → reappears; visit non-withered: no .withered-banner element; replacement link click navigates → 200; axe-core assertion on withered page: zero new violations</task>
+      <task ac="1-12">Manual smoke test — hugo server, visit withered article (banner top, correct date/reason/replacement), dismiss → hide, refresh → hidden, new tab → reappears; visit withered without reason → no empty paragraph; without replacement_url → no link; non-withered → no banner; viewport &lt;600px → readable, dismiss tappable; axe-core no a11y issues</task>
+      <task>Documentation — append "Withered Warning Banner (Story 1.4)" subsection to docs/technical/testing.md describing fixtures and Playwright spec; update docs/technical/editor-setup.md with one-paragraph note about the three optional withered fields and when to fill them</task>
+    </tasks>
+  </story>
+
+  <acceptanceCriteria>
+    <criterion id="1">Warning banner rendered at top of single-page view (layouts/single.html) when growth_stage=="withered". Banner appears ABOVE the article body (above title/hero region of the article box) — first content the reader sees.</criterion>
+    <criterion id="2">Banner includes: deprecation date (from frontmatter withered_date — required when withered), reason (from withered_reason — optional, omitted line if absent — no empty placeholder), replacement link (from replacement_url — optional, labelled link "Aktuelle Version ansehen →" if present).</criterion>
+    <criterion id="3">Styled with existing semantic $warning palette (Bulma is-warning callout), background $warning with WCAG-AA contrast for body and link text, ri-skull-line icon left for visual consistency with the growth-stage badge family.</criterion>
+    <criterion id="4">Dismissible via close button (ri-close-line) that sets sessionStorage key withered-banner-dismissed:{{.RelPermalink}} (no cookies, no localStorage). Per-article, per-session — re-shows on next visit.</criterion>
+    <criterion id="5">withered_date populates banner date, formatted long-form German via time.Format ":date_long" $.Site.Language to match single-page convention (single.html lines 90, 97).</criterion>
+    <criterion id="6">withered_reason populates explanation when present, plain paragraph (no markdown rendering — short prose only).</criterion>
+    <criterion id="7">Frontmatter schema additions in schemas/frontmatter/article.schema.json: withered_date (date, required iff growth_stage=="withered"), withered_reason (string optional), replacement_url (string optional, URL pattern). Build-time validation (Story 1.1's validate-growth-stage.html partial) extended to errorf if withered AND no withered_date.</criterion>
+    <criterion id="8">archetypes/articles/index.md AND archetypes/logs/index.md add commented-out examples of the three withered fields with one-line explanations (uncommented by author when content is marked withered).</criterion>
+    <criterion id="9">Accessibility — container role="alert", aria-labelledby="withered-banner-title"; dismiss aria-label="Hinweis ausblenden", keyboard-focusable; replacement link visible text + sensible title; axe-core zero new violations.</criterion>
+    <criterion id="10">Mobile responsive — at &lt;600px icon, text, dismiss stack/wrap gracefully; replacement link tap target ≥44×44 px.</criterion>
+    <criterion id="11">No regression — non-withered (seedling, budding, evergreen, missing field) renders single.html exactly as before; banner partial returns nothing for those pages.</criterion>
+    <criterion id="12">Build succeeds cleanly with existing Story 1.1 fixtures plus a new withered fixture incl. withered_date and withered_reason; a second fixture without replacement_url confirms the optional-field branch.</criterion>
+  </acceptanceCriteria>
+
+  <artifacts>
+    <docs>
+      <doc>
+        <path>docs/1-planning/epics.md</path>
+        <title>Epics Document</title>
+        <section>Story 1.4: Withered Content Warning Banner (lines 165–186)</title>
+        <snippet>FR Coverage: FR-002, FR-007. AC includes: warning banner at top of withered single pages; deprecation date / reason / replacement link; alert colors (orange/yellow); dismissible via session storage (no cookies); withered_date and withered_reason frontmatter fields. Prerequisites: Story 1.1, Story 1.3. Effort: 1 day.</snippet>
+      </doc>
+      <doc>
+        <path>docs/1-planning/prd/03-core-features.md</path>
+        <title>Core Features — Feature 1: Growth Stage System</title>
+        <section>Withered Handling (lines 56–88)</section>
+        <snippet>Withered: deprecated, outdated, historical content. Hidden by default on homepage; explicit "Show Withered" toggle; included in SEO/RSS with "[Withered DATE]" suffix; warning banner on single pages; link to replacement content (if exists).</snippet>
+      </doc>
+      <doc>
+        <path>docs/1-planning/prd/03a-functional-requirements.md</path>
+        <title>Functional Requirements</title>
+        <section>FR-002 Growth Stage Visibility &amp; FR-007 Withered Reason Documentation</section>
+        <snippet>FR-002: Readers see growth stage at a glance — badge visible on card and single page views. FR-007: Content creators document why content was deprecated — withered reason displays on single page with optional replacement link. Phase 1A Week 3 / Phase 2 Week 10.</snippet>
+      </doc>
+      <doc>
+        <path>docs/2-solutioning/digital-garden-integration-architecture.md</path>
+        <title>Digital Garden Integration Architecture</title>
+        <section>Frontmatter Schema (lines 786–815) — Withered metadata fields</section>
+        <snippet>withered_date (when marked as withered), withered_reason ("Framework deprecated, see new article"), replacement_url ("/articles/new-version/"). Default values: growth_stage seedling, format article, pinned false, weight 0. Hugo fails build if growth_stage has invalid value.</snippet>
+      </doc>
+      <doc>
+        <path>docs/2-solutioning/digital-garden-integration-architecture.md</path>
+        <title>Digital Garden Integration Architecture</title>
+        <section>Critical Agent Rules (lines 762–771)</section>
+        <snippet>Never modify existing card variants. Always add new features to card footer. NEVER use jQuery (vanilla JS for all new features). Always add | default when accessing data files. Pin Hugo version in GitHub Actions (0.152.2).</snippet>
+      </doc>
+      <doc>
+        <path>docs/2-solutioning/digital-garden-integration-architecture.md</path>
+        <title>Digital Garden Integration Architecture</title>
+        <section>Naming Conventions &amp; File Organization (lines 567–605)</section>
+        <snippet>Hugo partials PascalCase per architecture (project actually uses kebab-case file convention — verified against existing _partials). SCSS files kebab-case. Frontmatter snake_case. CSS classes kebab-case. JS variables/functions camelCase. Partials by function flat structure preferred over deep nesting. SCSS by type: elements/ for components.</snippet>
+      </doc>
+      <doc>
+        <path>docs/2-solutioning/test-design-system.md</path>
+        <title>System-Level Test Design</title>
+        <section>Test Levels Strategy (lines 172–384) &amp; NFR Testing Approach</section>
+        <snippet>30% Unit / 40% Integration / 30% E2E for JAMstack. E2E via Playwright (chromium, firefox, webkit) with screenshot/video on failure; axe-core for WCAG; baseURL http://localhost:1313 with hugo server webServer. ASR-001: zero tracking cookies (Playwright cookie audit). Vanilla JavaScript = no framework-specific test setup.</snippet>
+      </doc>
+      <doc>
+        <path>docs/1-planning/ux-design-specification.md</path>
+        <title>UX Design Specification</title>
+        <section>Growth Stage Color Palette + Remix Icon Mapping (lines 280–298)</section>
+        <snippet>$growth-seedling hsl(152,76%,50%); $growth-budding hsl(189,90%,50%); $growth-evergreen hsl(152,76%,33%) [EXISTING $success]; $growth-withered hsl(0,0%,50%) — gray (archived). Icons: ri-seedling-line, ri-plant-line, ri-tree-line, ri-skull-line.</snippet>
+      </doc>
+      <doc>
+        <path>docs/1-planning/ux-design-specification.md</path>
+        <title>UX Design Specification</title>
+        <section>JavaScript Disabled / no-js-banner Pattern (lines 1392–1400)</section>
+        <snippet>&lt;noscript&gt;&lt;div class="no-js-banner"&gt;&lt;i class="ri-alert-line"&gt;&lt;/i&gt;&lt;p&gt;Some features require JavaScript…&lt;/p&gt;&lt;/div&gt;&lt;/noscript&gt; — sibling notification-style pattern; reuse Bulma alert palette.</snippet>
+      </doc>
+      <doc>
+        <path>docs/sprint-artifacts/epic-1/1-1-growth-stage-frontmatter-field.md</path>
+        <title>Story 1.1 — Growth Stage Frontmatter Field (drafted, ready-for-dev)</title>
+        <section>Schema, validation partial, archetype edits, test infra (prerequisite)</section>
+        <snippet>Bootstraps schemas/frontmatter/article.schema.json (JSON Schema draft-07), layouts/_partials/_base/validate-growth-stage.html (build-time enum check via errorf), Playwright + node-test infrastructure, tests/build/fixtures/ and tests/e2e/ directories. Default fallback default "seedling" .Params.growth_stage. This story EXTENDS all three.</snippet>
+      </doc>
+      <doc>
+        <path>docs/sprint-artifacts/epic-1/1-2-growth-stage-badge-component.md</path>
+        <title>Story 1.2 — Growth Stage Badge Component (drafted, ready-for-dev)</title>
+        <section>SCSS variables + Remix icon mapping (prerequisite for color reuse)</section>
+        <snippet>Introduces $growth-seedling/$growth-budding/$growth-evergreen/$growth-withered SCSS variables in assets/scss/vars/_colors.scss and ri-skull-line for withered. If 1.2 has not landed when 1.4 is implemented, inline hsl(0,0%,50%) with TODO(1.2) comment for the banner icon color.</snippet>
+      </doc>
+      <doc>
+        <path>docs/sprint-artifacts/epic-1/1-3-withered-content-default-hiding.md</path>
+        <title>Story 1.3 — Withered Content Default Hiding (drafted, sibling)</title>
+        <section>Out-of-scope handoff: warning banner is owned by 1.4</section>
+        <snippet>1.3 introduces layouts/_partials/withered-filter.html, withered-count.html, withered-hidden-notice.html (kebab-case withered-* family). 1.3's e2e Test 2 explicitly defers banner assertion to 1.4 ("no banner test here — that's Story 1.4"). 1.3 fixture tests/build/fixtures/withered-article.md may exist when 1.4 lands; do not rename. 1.4 adds withered-with-replacement.md, withered-minimal.md, withered-invalid.md.</snippet>
+      </doc>
+    </docs>
+    <code>
+      <artifact>
+        <path>layouts/single.html</path>
+        <kind>template</kind>
+        <symbol>main block (two Page.Type branches: "page" and "articles")</symbol>
+        <lines>1-218</lines>
+        <reason>Modification target — insert {{ partial "withered-banner.html" . }} at top of BOTH branches inside .column wrapper before the &lt;article class="box"&gt; opens. Currently uses .Date | time.Format ":date_long" at lines 90 and 97 — banner uses the same format convention. Two branches confirmed: line 2 page branch, line 34 articles branch. Logs do NOT have a dedicated layout — verify they fall through to the articles branch via hugo server before assuming.</reason>
+      </artifact>
+      <artifact>
+        <path>layouts/baseof.html</path>
+        <kind>template</kind>
+        <symbol>Footer Scripts bundle (slice + resources.Concat)</symbol>
+        <lines>25-34</lines>
+        <reason>Append the new $witheredBanner resource to the slice at line 33: currently slice $sunCalc $main $search $firework $navbar $header → add $witheredBanner. Bundle is loaded async defer, so the IIFE script runs after DOM ready. Do NOT add a separate &lt;script&gt; tag.</reason>
+      </artifact>
+      <artifact>
+        <path>archetypes/articles/index.md</path>
+        <kind>archetype</kind>
+        <symbol>articles archetype frontmatter</symbol>
+        <lines>1-23</lines>
+        <reason>Add commented-out withered fields block AFTER Story 1.1's growth_stage line. Existing frontmatter has weight, categories, tags, series, authors, summary, params.SEO. The withered block is informational — uncommented by author when content is marked withered.</reason>
+      </artifact>
+      <artifact>
+        <path>archetypes/logs/index.md</path>
+        <kind>archetype</kind>
+        <symbol>logs archetype frontmatter</symbol>
+        <lines>1-10</lines>
+        <reason>Same commented-out withered block as articles archetype. Existing fields: title, date, lastmod, draft, categories, tags, authors. Story 1.1 also adds growth_stage here.</reason>
+      </artifact>
+      <artifact>
+        <path>assets/scss/main.scss</path>
+        <kind>stylesheet</kind>
+        <symbol>Bulma customization + element imports</symbol>
+        <lines>10-44</lines>
+        <reason>Bulma $warning is set at line 17: hsl(41, 77%, 37%). Element imports start at line 38 (@use "elements/badge"). Add @use "elements/withered-banner" after elements/badge to keep elements grouped (and after the planned elements/growth-badge from Story 1.2).</reason>
+      </artifact>
+      <artifact>
+        <path>assets/scss/vars/_colors.scss</path>
+        <kind>stylesheet</kind>
+        <symbol>Theme color palette ($dark, $light, $gold-*)</symbol>
+        <lines>1-43</lines>
+        <reason>Current palette is gold/dark only — does NOT yet contain $growth-* variables. Story 1.2 (drafted, not implemented) is responsible for adding $growth-seedling/$growth-budding/$growth-evergreen/$growth-withered. If 1.2 has not landed, inline hsl(0,0%,50%) for the withered icon color in withered-banner.scss with TODO(1.2) comment.</reason>
+      </artifact>
+      <artifact>
+        <path>assets/scss/elements/badge.scss</path>
+        <kind>stylesheet</kind>
+        <symbol>existing element-level component pattern reference</symbol>
+        <lines>1-47</lines>
+        <reason>Reference for element/component SCSS structure: @use "vars/helpers"; @use "sass:color"; absolute-positioned label with rotate transform, helpers.$gold + color.adjust(helpers.$dark, $lightness:1%) backgrounds. Use the same import pattern in withered-banner.scss.</reason>
+      </artifact>
+      <artifact>
+        <path>assets/js/main.js</path>
+        <kind>script</kind>
+        <symbol>existing JS bundle entry (jQuery + plugins)</symbol>
+        <lines>n/a</lines>
+        <reason>Existing main.js / gdpr.js use jQuery patterns ($(document).ready). Per CRITICAL AGENT RULES (architecture lines 762–771) and test-design-system §controllability — vanilla JS only for new features. Do NOT extend jQuery patterns; new withered-banner.js is a vanilla IIFE.</reason>
+      </artifact>
+      <artifact>
+        <path>assets/js/gdpr.js</path>
+        <kind>script</kind>
+        <symbol>existing legacy jQuery script</symbol>
+        <lines>n/a</lines>
+        <reason>Reference only — DO NOT extend this style. Story 1.4 introduces vanilla IIFE pattern for sessionStorage-backed dismiss; legacy jQuery handlers remain isolated.</reason>
+      </artifact>
+      <artifact>
+        <path>layouts/_partials/_base/footer.html</path>
+        <kind>template</kind>
+        <symbol>existing _base layout-init partials</symbol>
+        <lines>n/a</lines>
+        <reason>Reference for _base/ vs top-level _partials/ placement convention. _base/ holds layout-init (head, hero, navigation, footer, seo, validate-growth-stage from Story 1.1). withered-banner.html is a COMPONENT partial → placed at layouts/_partials/withered-banner.html (top level), NOT under _base/.</reason>
+      </artifact>
+      <artifact>
+        <path>schemas/frontmatter/article.schema.json</path>
+        <kind>schema (created by Story 1.1)</kind>
+        <symbol>JSON Schema draft-07 — article frontmatter</symbol>
+        <lines>n/a (file does not yet exist; Story 1.1 ready-for-dev creates it)</lines>
+        <reason>Extension target — add withered_date (string, format date), withered_reason (string maxLength 280), replacement_url (string, format uri-reference), and an if/then block: if growth_stage=="withered" then required:[withered_date]. Coordinate landing order with Story 1.1.</reason>
+      </artifact>
+      <artifact>
+        <path>layouts/_partials/_base/validate-growth-stage.html</path>
+        <kind>template (created by Story 1.1)</kind>
+        <symbol>build-time validation partial</symbol>
+        <lines>n/a (file does not yet exist; Story 1.1 ready-for-dev creates it)</lines>
+        <reason>Extension target — after the existing enum check, add: if .Params.growth_stage=="withered" AND .Params.withered_date is empty → errorf single-line with .File.Path and field name. Match the existing error-message style from Story 1.1.</reason>
+      </artifact>
+      <artifact>
+        <path>tests/build/build-smoke.test.mjs</path>
+        <kind>test (created by Story 1.1)</kind>
+        <symbol>node --test build smoke harness</symbol>
+        <lines>n/a (Story 1.1 bootstraps)</lines>
+        <reason>Extension target — add 4 banner-related assertions: withered fixture HTML contains class="withered-banner" + formatted date; withered-minimal omits .withered-banner-reason / .withered-banner-replacement; withered-invalid causes hugo --quiet to exit non-zero with expected error; valid-evergreen does NOT contain class="withered-banner".</reason>
+      </artifact>
+      <artifact>
+        <path>tests/e2e/withered-banner.spec.ts</path>
+        <kind>test (new)</kind>
+        <symbol>Playwright spec — banner visibility, dismiss flow, sessionStorage persistence, axe-core</symbol>
+        <lines>n/a (new file)</lines>
+        <reason>Test target patterns: visit withered fixture URL (banner visible), withered-minimal (no reason/replacement), dismiss → reload (still hidden in same context) → new context (reappears), non-withered (no banner), replacement link → 200, axe-core zero new violations. Follows the spec pattern of Story 1.2 growth-badge.spec.ts and Story 1.3 withered-hiding.spec.ts.</reason>
+      </artifact>
+    </code>
+    <dependencies>
+      <node>
+        <package name="@fullhuman/postcss-purgecss" version="^8.0.0" />
+        <package name="postcss" version="^8.5.14" />
+        <package name="postcss-cli" version="^11.0.1" />
+        <note>Story 1.1 (drafted, ready-for-dev) introduces @playwright/test, axe-core, and node --test runner. Story 1.4 explicitly adds NO new npm dependencies (per Critical Agent Rule "no new npm deps for the dismiss script").</note>
+      </node>
+      <hugo>
+        <version>0.152.2 (per architecture §10 / GitHub Actions hugo-version pin); story uses Hugo v0.146+ flat layouts (no _default/ subdirectory)</version>
+        <feature>Bulma SCSS framework (forwarded in main.scss with $warning hsl(41,77%,37%)) — banner reuses .notification.is-warning class</feature>
+        <feature>Remix Icon (ri-skull-line for withered, ri-close-line via Bulma's .delete; remixicon.symbol.svg referenced in baseof.html)</feature>
+        <feature>Hugo time.Format ":date_long" $.Site.Language (long-form German date — same as single.html lines 90, 97)</feature>
+      </hugo>
+      <build>
+        <tool>Husky pre-commit hook (Story 1.1) — JSON Schema validation runs locally; Story 1.4 extends conditional-required rule</tool>
+        <tool>Hugo build-time errorf — validate-growth-stage.html (Story 1.1, extended here)</tool>
+      </build>
+    </dependencies>
+  </artifacts>
+
+  <constraints>
+    <constraint level="critical">No jQuery — withered-banner.js is a vanilla IIFE only; do NOT extend the legacy jQuery patterns in assets/js/main.js or gdpr.js. [Source: digital-garden-integration-architecture.md lines 762–771]</constraint>
+    <constraint level="critical">Hugo v0.146+ flat layouts — modify layouts/single.html and layouts/baseof.html directly; no layouts/_default/ subdirectory. [Source: layouts/single.html, layouts/baseof.html]</constraint>
+    <constraint level="critical">No new npm dependencies — dismiss script is ~15 lines vanilla JS; do not pull in a banner/notification library. [Source: Story 1.4 Critical Agent Rules]</constraint>
+    <constraint level="critical">Use Bulma .notification.is-warning rather than re-implementing alert backgrounds; layer .withered-banner-* classes for layout adjustments only. [Source: Story 1.4 Tasks; assets/scss/main.scss line 17 ($warning)]</constraint>
+    <constraint level="high">sessionStorage only — no cookies, no localStorage. Per-article keying via withered-banner-dismissed:{{.RelPermalink}}. Wrap sessionStorage access in try/catch (some browser privacy modes throw). Banner re-shows on next visit by design. [Source: AC #4]</constraint>
+    <constraint level="high">Banner partial is no-op for non-withered (seedling/budding/evergreen/missing) — single.html unchanged for those pages. [Source: AC #11]</constraint>
+    <constraint level="high">Frontmatter field name is replacement_url (snake_case) per architecture line 813 — overrides epics.md AC #2 phrasing "link to replacement"; backport recommended for epics.md as housekeeping. [Source: Story 1.4 ⚠️ AC Discrepancy Resolution]</constraint>
+    <constraint level="high">single.html has TWO Page.Type branches (page, articles). Logs do NOT have a dedicated layout — VERIFY which branch they hit via hugo server before assuming articles. If a logs/single.html exists at implementation time, wire the partial there too. [Source: Story 1.4 ⚠️ Single-Layout Coverage; layouts/single.html lines 2, 34]</constraint>
+    <constraint level="high">Validation: Hugo build MUST fail (errorf) when growth_stage=="withered" AND withered_date is empty. Extend Story 1.1's validate-growth-stage.html, do not duplicate. [Source: AC #7]</constraint>
+    <constraint level="medium">Naming — frontmatter snake_case (withered_date, withered_reason, replacement_url); HTML class kebab-case (withered-banner, withered-banner-dismiss, withered-banner-heading); JS camelCase. [Source: digital-garden-integration-architecture.md lines 567–605]</constraint>
+    <constraint level="medium">Reuse $growth-withered SCSS variable from Story 1.2's vars/_colors.scss for the icon color. Inline hsl(0,0%,50%) with TODO(1.2) comment if 1.2 has not landed. [Source: ux-design-specification.md line 290; Story 1.2 prerequisite]</constraint>
+    <constraint level="medium">Partial placement — layouts/_partials/withered-banner.html (top-level component partial). NOT under _partials/_base/ (that directory is for layout-init: head, hero, navigation, footer, seo, validate-growth-stage). [Source: digital-garden-integration-architecture.md File Organization §587–605; layouts/_partials/_base/* listing]</constraint>
+    <constraint level="medium">SCSS placement — assets/scss/elements/withered-banner.scss (alongside badge.scss, box.scss). One component per file. Imported in main.scss after elements/badge. [Source: Story 1.4 Project Structure Notes; assets/scss/main.scss line 38]</constraint>
+    <constraint level="medium">JS placement — assets/js/withered-banner.js (flat under assets/js/, alongside main.js, header.js, navbar.js). Append to footer bundle slice in baseof.html line 33. [Source: layouts/baseof.html lines 26–34]</constraint>
+    <constraint level="medium">Accessibility — role="alert", aria-labelledby="withered-banner-title", aria-label="Hinweis ausblenden" on dismiss, replacement link visible text + sensible title, axe-core zero new violations. WCAG-AA contrast verified for body text and link text on $warning background. [Source: AC #9]</constraint>
+    <constraint level="medium">Mobile — at &lt;600px icon/text/dismiss stack/wrap gracefully; replacement link tap target ≥44×44 px; Bulma .delete bumped to ≥1.75rem in mobile media query. [Source: AC #10]</constraint>
+    <constraint level="medium">RSS, sitemap, schema.org and listing-page filtering are EXPLICITLY OUT OF SCOPE — Story 1.5 (RSS), Story 9.6 (sitemap/SEO), Story 1.3 (listing filter). Banner is single-page-only. [Source: Story 1.4 Out of Scope]</constraint>
+    <constraint level="low">German-only banner copy (matches existing site language). i18n is a future concern (open issue #182, out of scope per project's offline issue triage). [Source: Story 1.4 Out of Scope]</constraint>
+  </constraints>
+
+  <interfaces>
+    <interface>
+      <name>withered-banner.html partial</name>
+      <kind>Hugo partial</kind>
+      <signature>{{ partial "withered-banner.html" . }} — input: page context (.). Reads: .Params.growth_stage, .Params.withered_date, .Params.withered_reason, .Params.replacement_url, .RelPermalink. Output: aside.withered-banner.notification.is-warning element OR nothing (when growth_stage != "withered").</signature>
+      <path>layouts/_partials/withered-banner.html</path>
+      <notes>Uses standard partial pattern (not return) — emits HTML directly into the calling template's flow. Caller passes the page (.) so partial can read frontmatter and resolve RelPermalink for the dismiss key.</notes>
+    </interface>
+    <interface>
+      <name>withered-banner.js dismiss handler</name>
+      <kind>vanilla JS IIFE</kind>
+      <signature>(function() { /* DOM-ready via defer-loaded bundle. Selects .withered-banner[data-banner-key]; reads sessionStorage[key]; on dismiss click sets key=1 and hides banner via banner.hidden=true. try/catch around sessionStorage access. */ })()</signature>
+      <path>assets/js/withered-banner.js</path>
+      <notes>Storage key contract: withered-banner-dismissed:{{ .RelPermalink }} — written by the partial as data-banner-key attribute, read+written by the script. Single banner per page (querySelector, not querySelectorAll).</notes>
+    </interface>
+    <interface>
+      <name>frontmatter schema fields</name>
+      <kind>JSON Schema draft-07 properties</kind>
+      <signature>withered_date: { type: "string", format: "date" } — required when growth_stage=="withered" (via if/then). withered_reason: { type: "string", maxLength: 280 } — optional. replacement_url: { type: "string", format: "uri-reference" } — optional. if: properties.growth_stage.const=="withered" then required:[withered_date].</signature>
+      <path>schemas/frontmatter/article.schema.json (created by Story 1.1, extended here)</path>
+      <notes>JSON Schema draft-07 supports if/then conditional-required (Story 1.1 chose draft-07 for this reason). Validation runs in Husky pre-commit hook AND Hugo build-time partial.</notes>
+    </interface>
+    <interface>
+      <name>build-time validation contract</name>
+      <kind>Hugo errorf invocation</kind>
+      <signature>{{ if and (eq .Params.growth_stage "withered") (not .Params.withered_date) }}{{ errorf "%s: growth_stage=\"withered\" requires withered_date" .File.Path }}{{ end }}</signature>
+      <path>layouts/_partials/_base/validate-growth-stage.html (created by Story 1.1, extended here)</path>
+      <notes>Match existing error-message style from Story 1.1 (single line, includes .File.Path, names the missing field). Extends — does not replace — the enum check from 1.1.</notes>
+    </interface>
+    <interface>
+      <name>footer JS bundle composition</name>
+      <kind>Hugo resources.Concat slice</kind>
+      <signature>slice $sunCalc $main $search $firework $navbar $header $witheredBanner | resources.Concat "js/footerBundle.js" | resources.Minify | resources.Fingerprint</signature>
+      <path>layouts/baseof.html (lines 26–34)</path>
+      <notes>Append $witheredBanner := resources.Get "js/withered-banner.js" to the slice. Bundle is loaded async defer — DOM-ready timing implicit; no $(document).ready or DOMContentLoaded listener needed.</notes>
+    </interface>
+  </interfaces>
+
+  <tests>
+    <standards>The project's authoritative test plan is docs/2-solutioning/test-design-system.md (Playwright + node --test runner + axe-core). Story 1.1 (drafted, ready-for-dev) bootstraps both. This story uses them: build smoke tests (tests/build/) for build-output assertions including a NEGATIVE case (invalid fixture must fail the build); Playwright e2e (tests/e2e/) for visible behavior including cross-context sessionStorage check; axe-core for a11y (role="alert", labelled heading, dismiss accessible label, AA contrast). Test infrastructure: Playwright @playwright/test, baseURL http://localhost:1313 with hugo server webServer config, projects chromium/firefox/webkit, screenshot only-on-failure, video retain-on-failure. Test distribution per architecture: 30% unit / 40% integration / 30% E2E.</standards>
+    <locations>
+      <location>tests/build/ — build smoke tests (node --test, .test.mjs)</location>
+      <location>tests/build/fixtures/ — markdown content fixtures (Story 1.1 bootstraps)</location>
+      <location>tests/e2e/ — Playwright spec files (.spec.ts)</location>
+    </locations>
+    <ideas>
+      <idea ac="1">Build smoke: assert public/&lt;withered-fixture-path&gt;/index.html contains class="withered-banner" + the formatted German long-form date string corresponding to withered_date.</idea>
+      <idea ac="2">Build smoke: assert withered-with-replacement.md output contains .withered-banner-reason paragraph AND .withered-banner-replacement link; withered-minimal.md output contains NEITHER (optional-field branch).</idea>
+      <idea ac="2">Playwright: visit withered-with-replacement permalink → click .withered-banner-replacement a → assert navigation succeeds (200 + target URL).</idea>
+      <idea ac="3,9">Axe-core via Playwright on the withered fixture page → zero new a11y violations (covers role=alert, aria-labelledby, dismiss aria-label, AA contrast on $warning background).</idea>
+      <idea ac="4">Playwright dismiss flow: click .withered-banner-dismiss → assert banner has [hidden]; reload page (same browser context preserves sessionStorage) → still hidden; open NEW context (clean session) → banner reappears.</idea>
+      <idea ac="4">Playwright per-article isolation: dismiss banner on /articles/withered-A/ → navigate to /articles/withered-B/ → banner on B still visible (different sessionStorage key).</idea>
+      <idea ac="5">Build smoke: verify HTML &lt;time datetime="..."&gt; matches withered_date (ISO YYYY-MM-DD) and the rendered text matches the long-form German format.</idea>
+      <idea ac="6">Build smoke: assert withered-minimal output omits the .withered-banner-reason paragraph (no empty &lt;p&gt;).</idea>
+      <idea ac="7">Build smoke (NEGATIVE): assert withered-invalid.md (growth_stage:"withered" without withered_date) causes hugo --quiet --environment production to exit non-zero with the expected errorf message including the file path.</idea>
+      <idea ac="7">Husky pre-commit (manual or CI): stage withered-invalid.md → commit attempt → assert blocked by JSON Schema validation; correct file → assert allowed.</idea>
+      <idea ac="9">Playwright keyboard-navigation: Tab to .withered-banner-dismiss → assert focus indicator visible → Enter → assert dismiss fires.</idea>
+      <idea ac="10">Playwright at viewport &lt;600px: visit withered fixture → assert banner remains readable, assert dismiss button bounding box ≥44×44 px (or ≥1.75rem given Bulma .delete + mobile breakpoint).</idea>
+      <idea ac="11">Build smoke: assert valid-evergreen.md output does NOT contain class="withered-banner". Playwright: visit a non-withered article → assert no .withered-banner element exists.</idea>
+      <idea ac="12">Build smoke: full hugo --environment production build with the existing fixture set (Story 1.1) plus the three new withered fixtures → assert exit 0 (excluding withered-invalid which is run separately in the negative test).</idea>
+    </ideas>
+  </tests>
+</story-context>

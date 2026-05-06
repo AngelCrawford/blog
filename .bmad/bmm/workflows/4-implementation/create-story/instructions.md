@@ -32,7 +32,9 @@
          - Extract {{previous_story_key}}
          - Check previous story status (done, in-progress, review, etc.)
          - If status is "done", "review", or "in-progress" (has some completion):
-           * Construct path: {{story_dir}}/{{previous_story_key}}.md
+           * Derive {{previous_epic_num}} from {{previous_story_key}} (first segment before first dash, e.g. "1" from "1-2-user-auth")
+           * Construct path: {{story_dir}}/epic-{{previous_epic_num}}/{{previous_story_key}}.md
+           * If file not found at that path (legacy flat layout), recursively glob {{story_dir}}/**/{{previous_story_key}}.md as fallback
            * Load the COMPLETE previous story file
            * Parse ALL sections comprehensively:
 

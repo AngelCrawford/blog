@@ -33,7 +33,7 @@ variables:
     - *architecture*.md
   story_title: "" # Will be elicited if not derivable
 
-default_output_file: "{story_dir}/{{story_key}}.md"
+default_output_file: "{story_dir}/epic-{{epic_num}}/{{story_key}}.md"
 
 # Smart input file references - handles both whole docs and sharded docs
 # Priority: Whole document first, then sharded version

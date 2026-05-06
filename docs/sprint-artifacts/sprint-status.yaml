@@ -38,21 +38,21 @@ development_status:
   # Epic 1: Growth Stage System [Phase 1A, Week 3]
   epic-1: backlog
   1-1-growth-stage-frontmatter-field: ready-for-dev
-  1-2-growth-stage-badge-component: backlog
-  1-3-withered-content-default-hiding: backlog
-  1-4-withered-content-warning-banner: backlog
-  1-5-withered-seo-rss-inclusion: backlog
+  1-2-growth-stage-badge-component: ready-for-dev
+  1-3-withered-content-default-hiding: ready-for-dev
+  1-4-withered-content-warning-banner: ready-for-dev
+  1-5-withered-seo-rss-inclusion: ready-for-dev
   epic-1-retrospective: optional
 
   # Epic 2: Engagement Infrastructure [Phase 1A, Week 1-2]
   epic-2: backlog
-  2-1-umami-analytics-integration: backlog
-  2-2-heart-button-component: backlog
-  2-3-webmention-endpoint-setup: backlog
-  2-4-webmention-display-component: backlog
-  2-5-privacy-policy-page: backlog
-  2-6-daily-rebuild-github-actions-workflow: backlog
-  2-7-cookie-banner-ui: backlog
+  2-1-umami-analytics-integration: ready-for-dev
+  2-2-heart-button-component: ready-for-dev
+  2-3-webmention-endpoint-setup: ready-for-dev
+  2-4-webmention-display-component: ready-for-dev
+  2-5-privacy-policy-page: ready-for-dev
+  2-6-daily-rebuild-github-actions-workflow: ready-for-dev
+  2-7-cookie-banner-ui: ready-for-dev
   epic-2-retrospective: optional
 
   # Epic 3: Popularity Scoring Engine [Phase 1A, Week 4-5]

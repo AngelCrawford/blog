@@ -1,0 +1,325 @@
+<story-context id="bmad/bmm/workflows/4-implementation/story-context/template" v="1.0">
+  <metadata>
+    <epicId>1</epicId>
+    <storyId>5</storyId>
+    <title>Withered SEO &amp; RSS Inclusion</title>
+    <status>drafted</status>
+    <generatedAt>2026-05-06</generatedAt>
+    <generator>BMAD Story Context Workflow</generator>
+    <sourceStoryPath>docs/sprint-artifacts/epic-1/1-5-withered-seo-rss-inclusion.md</sourceStoryPath>
+  </metadata>
+
+  <story>
+    <asA>a content creator</asA>
+    <iWant>withered content indexed by search engines and RSS readers with deprecation context</iWant>
+    <soThat>historical content remains discoverable but is clearly marked as outdated</soThat>
+    <tasks>
+      <task ac="1,2,7">RSS template — withered title suffix and description prepend in layouts/rss.xml inside the range where .Site.RegularPages "Type" "in" "articles" block (line 25). Compute $isWithered := eq .Params.growth_stage "withered" and $witheredDate := .Params.withered_date once per item. Emit conditional German short-month suffix in &lt;title&gt;: printf " [Verwelkt %s]" ((time $witheredDate).Format "Jan. 2006"). Inside &lt;description&gt; AFTER existing sanitization regexes (anchor rewrite line 58, &lt;svg&gt; strip line 59, style="…" strip lines 61–62) and BEFORE | html, prepend ⚠️ Dieser Inhalt ist als veraltet markiert seit {{ long-form date }}. + optional Grund: {{ withered_reason }} as a &lt;p&gt;&lt;strong&gt;…&lt;/strong&gt;&lt;/p&gt;. Verify Hugo time.Format with site locale de-DE yields German short-month names; if not, fall back to time.Format ":date_short" $.Site.Language and post-process. Order matters: sanitize → prepend warning → emit.</task>
+      <task ac="3,4,5,7">Sitemap template — withered lastmod + priority in layouts/sitemap.xml inside the range .Pages loop. After {{- if not .Params.robotsdisallow -}} guard, compute $isWithered. Replace unconditional &lt;lastmod&gt; with: if $isWithered AND .Params.withered_date → use (time .Params.withered_date).Format "2006-01-02T15:04:05-07:00"; else if not .Lastmod.IsZero → fall through to existing .Lastmod path. Replace &lt;priority&gt; block with: if $isWithered → 0.3; else with .Sitemap.Priority → existing emission. Leave &lt;changefreq&gt; untouched. Defensive .Lastmod fallback if withered_date somehow missing (Story 1.4 validation should already prevent this).</task>
+      <task ac="5">Sitemap config baseline priority — add priority: 0.8 to the sitemap: block in config/_default/config.yaml (lines 96–98) so non-withered pages get an explicit &lt;priority&gt;0.8&lt;/priority&gt; baseline, satisfying the contrast called out in epics AC #5 ("0.3 for withered vs 0.8 for evergreen"). Hugo's .Sitemap.Priority resolves from page frontmatter → site config → 0; the with .Sitemap.Priority gate continues to handle emission.</task>
+      <task ac="6,7">Schema.org JSON-LD deprecation metadata in layouts/_partials/_base/seo.html inside the {{- if eq .Section "articles" }} JSON-LD BlogPosting block (lines 56–85). Compute $isWithered. Override "dateModified" to (time .Params.withered_date).Format "2006-01-02T15:04:05Z07:00" | jsonify when withered, else preserve existing .Lastmod-driven value. Inject "creativeWorkStatus": "Obsolete" sibling field, conditional on withered, placed above "mainEntityOfPage" for readability. Modify "description" field: when withered, prepend "Veraltet seit {{ DATE }}" + optional ": {{ REASON }}" + " — " before the existing summary; the no-reason branch must NOT produce orphaned colon (format Veraltet seit DATE — original-summary). Refactor with-block scoping to flat if/else if mutation proves brittle. Do NOT modify OG / Twitter / Open Graph blocks (owned by 9.6 / 9.7).</task>
+      <task ac="8">Test fixtures — REUSE Story 1.4's tests/build/fixtures/withered-with-replacement.md (with growth_stage, withered_date, withered_reason, replacement_url) and withered-minimal.md (growth_stage:"withered" + withered_date only — no withered_reason). REUSE Story 1.1's valid-evergreen.md and valid-missing-field.md for non-withered regression. NO new fixtures required. If Story 1.4 hasn't landed when 1.5 is implemented, copy Story 1.4's two fixtures into this story's PR with a clear note.</task>
+      <task ac="1,2,7,9">Build smoke tests — RSS — extend tests/build/build-smoke.test.mjs (Story 1.1) with assertions on public/index.xml: withered article appears with [Verwelkt …] title suffix; description starts with ⚠️ Dieser Inhalt ist als veraltet; with-reason fixture includes Grund: in prepended warning; minimal fixture does NOT include Grund: (no empty label); non-withered article RSS title unchanged AND description does NOT start with ⚠️; RSS file is well-formed XML via xmllint --noout (child_process.spawnSync, exit code 0).</task>
+      <task ac="3,4,5,7,10">Build smoke tests — sitemap — assertions on public/sitemap.xml: withered URL is present; withered entry has &lt;priority&gt;0.3&lt;/priority&gt;; withered &lt;lastmod&gt; matches withered_date prefix YYYY-MM-DD; non-withered entry has &lt;priority&gt;0.8&lt;/priority&gt; (baseline); non-withered &lt;lastmod&gt; matches Hugo's computed lastmod (NOT withered_date); sitemap is well-formed XML via xmllint --noout. Optional: xmllint --schema sitemap-0.9.xsd if vendored.</task>
+      <task ac="6,7">Build smoke tests — Schema.org JSON-LD — extract &lt;script type="application/ld+json"&gt; block from public/&lt;withered-fixture-path&gt;/index.html with regex anchored on the script tag. JSON.parse and assert: creativeWorkStatus === "Obsolete"; dateModified starts with the withered_date ISO date prefix; description starts with "Veraltet seit "; for the withered-minimal fixture (no withered_reason), description does NOT contain ": " between date and "—" (format Veraltet seit DATE — summary, not Veraltet seit DATE: — …). For non-withered fixture: JSON-LD does NOT include creativeWorkStatus and dateModified does NOT match a withered_date.</task>
+      <task ac="1,2,6">Playwright e2e — extend tests/e2e/withered-banner.spec.ts (Story 1.4) with one additional test that fetches /index.xml via page.request.get() and asserts the response body contains the withered fixture's [Verwelkt title marker. NO new spec file. NO Playwright sitemap test (build-time concern, fully covered by smoke tests).</task>
+      <task ac="1-7">Manual smoke test — hugo server → /index.xml: withered fixture &lt;title&gt; ends with [Verwelkt MMM. YYYY], non-withered unchanged; withered &lt;description&gt; starts with the warning paragraph, non-withered unchanged. /sitemap.xml: withered has &lt;priority&gt;0.3&lt;/priority&gt; and &lt;lastmod&gt;=withered_date; non-withered has &lt;priority&gt;0.8&lt;/priority&gt;. View source on withered article single page → JSON-LD includes "creativeWorkStatus": "Obsolete" and "dateModified" matches withered_date; description starts with Veraltet seit. View source on non-withered → JSON-LD has no creativeWorkStatus and dateModified matches git/lastmod. Verify in a real RSS reader. Validate public/index.xml at validator.w3.org/feed/ (no new errors); validate public/sitemap.xml in Search Console "Test sitemap" or xml-sitemaps.com.</task>
+      <task>Documentation — append "Withered SEO &amp; RSS (Story 1.5)" subsection to docs/technical/testing.md (Story 1.1) describing new smoke-test assertions and where to find them. Update docs/technical/editor-setup.md (Story 1.1) with a one-line note that withered_date and (optional) withered_reason from Story 1.4 also drive RSS/sitemap/JSON-LD — no additional metadata required. Add a one-line code comment in layouts/rss.xml AND layouts/sitemap.xml referencing this story's intent so a future maintainer understands the conditional blocks.</task>
+    </tasks>
+  </story>
+
+  <acceptanceCriteria>
+    <criterion id="1">RSS feed (layouts/rss.xml) includes withered articles; each withered item's &lt;title&gt; is suffixed with [Verwelkt {{ MMM. YYYY }}] (e.g., [Verwelkt Nov. 2025]) where the date is derived from withered_date (Story 1.4 schema). Non-withered items render their title unchanged.</criterion>
+    <criterion id="2">RSS &lt;description&gt; for withered items is prepended with a deprecation warning (one line + blank line + existing content): ⚠️ Dieser Inhalt ist als veraltet markiert seit {{ withered_date long-form }}. Grund: {{ withered_reason }}. The Grund: clause is omitted entirely when withered_reason is absent (no empty Grund: label). Existing content sanitization (anchor rewrite, &lt;svg&gt; strip, style="…" strip — layouts/rss.xml lines 56–63) is preserved.</criterion>
+    <criterion id="3">Sitemap (layouts/sitemap.xml) continues to include withered pages — no filter is added. Withered pages must remain discoverable by search engines per FR-006.</criterion>
+    <criterion id="4">Sitemap &lt;lastmod&gt; for withered pages is withered_date (formatted as ISO-8601, identical to the existing .Lastmod.Format "2006-01-02T15:04:05-07:00" pattern). For non-withered pages, &lt;lastmod&gt; continues to use Hugo's computed .Lastmod (driven by enableGitInfo: true and the frontmatter.lastmod precedence list in config/_default/config.yaml lines 9–11). If withered_date is missing on a withered page, the template falls back to .Lastmod rather than emitting an empty &lt;lastmod&gt;.</criterion>
+    <criterion id="5">Sitemap &lt;priority&gt; is set to 0.3 for withered pages. For non-withered pages, the existing behaviour is retained: priority is emitted only when defined via .Sitemap.Priority. Project decision: also add a site-default sitemap.priority: 0.8 to config/_default/config.yaml so non-withered pages get the implicit 0.8 baseline called out in epics AC #5.</criterion>
+    <criterion id="6">Schema.org JSON-LD for withered articles (layouts/_partials/_base/seo.html, the BlogPosting block) includes deprecation metadata: "creativeWorkStatus": "Obsolete" (Schema.org-compliant string for deprecated/no-longer-current creative works); "dateModified" set to withered_date (overriding the .Lastmod-driven value for withered articles only); when withered_reason is present, append a single-sentence prefix Veraltet seit {{ DATE }}: {{ REASON }} —  to the description field of the JSON-LD output (the human-readable description preserved after the prefix).</criterion>
+    <criterion id="7">No regression for non-withered pages: identical RSS title/description/pubDate; identical sitemap &lt;lastmod&gt;, no &lt;priority&gt; (or the configured baseline 0.8 once the config change in AC #5 lands), no other changes; no creativeWorkStatus field in JSON-LD, no description prefix, dateModified continues to come from .Lastmod.</criterion>
+    <criterion id="8">Build succeeds cleanly with at least one withered fixture (tests/build/fixtures/withered-with-replacement.md from Story 1.4) and at least one non-withered fixture (Story 1.1's valid-evergreen.md / valid-missing-field.md). Build smoke tests (extending Story 1.1's tests/build/build-smoke.test.mjs) assert the rendered RSS/sitemap/article HTML contain the expected withered markers and that non-withered output is untouched.</criterion>
+    <criterion id="9">RSS validator pass: rendered public/index.xml validates as RSS 2.0 + Media RSS via the existing W3C-feed-style assertion pattern (no new validator infra — reuse smoke-test approach: xmllint --noout plus existing project pattern of asserting absence of validator-flagged constructs from b870bfa feat(rss): add Media RSS namespace + media:thumbnail for cover images).</criterion>
+    <criterion id="10">Sitemap validator pass: rendered public/sitemap.xml is valid XML and conforms to https://www.sitemaps.org/schemas/sitemap/0.9 (xmllint --schema against the shipped XSD or a well-formedness check + presence of expected &lt;url&gt;&lt;loc&gt;…&lt;lastmod&gt;…&lt;priority&gt;0.3&lt;/priority&gt;&lt;/url&gt; for the withered fixture).</criterion>
+  </acceptanceCriteria>
+
+  <artifacts>
+    <docs>
+      <doc>
+        <path>docs/1-planning/epics.md</path>
+        <title>Epics Document</title>
+        <section>Story 1.5: Withered SEO &amp; RSS Inclusion (lines 189–209)</section>
+        <snippet>FR Coverage: FR-006. Six ACs: RSS title suffix [Withered Nov 2025]; RSS description prepend deprecation warning + reason; sitemap includes withered; sitemap lastmod=withered_date; sitemap priority=0.3 (vs 0.8 evergreen); Schema.org includes deprecation metadata. Prerequisites: Story 1.1, Story 1.4. Effort: 2 days.</snippet>
+      </doc>
+      <doc>
+        <path>docs/1-planning/epics.md</path>
+        <title>Epics Document</title>
+        <section>Story 9.6: Withered Content SEO Integration (lines 1438–1458) — overlapping ACs flagged for reconciliation</section>
+        <snippet>9.6 lists the same RSS title/description and sitemap lastmod/priority ACs as 1.5. Stories 1.3 and 1.4 deferred RSS to 1.5 and sitemap/Schema.org to 9.6, but epics.md never reflected that split. Resolution applied in 1.5: implement all six 1.5 ACs in Phase 1A; rescope 9.6 to "Re-validate Story 1.5 SEO/RSS implementation; add custom robots/sitemap directives via Story 9.8".</snippet>
+      </doc>
+      <doc>
+        <path>docs/1-planning/prd/03-core-features.md</path>
+        <title>Core Features — Feature 1: Growth Stage System</title>
+        <section>Withered Handling (lines 83–88)</section>
+        <snippet>Hidden by default on homepage; explicit "Show Withered" toggle; included in SEO/RSS with "[Withered DATE]" suffix; warning banner on single pages; link to replacement content (if exists).</snippet>
+      </doc>
+      <doc>
+        <path>docs/1-planning/prd/03a-functional-requirements.md</path>
+        <title>Functional Requirements</title>
+        <section>FR-006 Withered Content SEO Inclusion (lines 52–56)</section>
+        <snippet>Capability: Withered content included in RSS feed and sitemap with deprecation metadata. Rationale: Search engines and subscribers know content is deprecated but still accessible. Validation: RSS includes withered with "[Withered DATE]" suffix, sitemap includes with low priority. Priority: Growth (Phase 2 - Week 10) — pulled forward to Phase 1A Week 3 by this story (see scope-overlap reconciliation).</snippet>
+      </doc>
+      <doc>
+        <path>docs/1-planning/prd/08-final-decisions.md</path>
+        <title>Final Decisions — Question 1: Withered Content Handling</title>
+        <section>Implementation Details (lines 14–24)</section>
+        <snippet>RSS Feed: include withered with title suffix "Article Title [Withered Nov 2025]". RSS description: prepend warning ⚠️ This content is deprecated as of [DATE]. Reason: [REASON]. Sitemap: include withered, use withered_date for &lt;lastmod&gt;, set &lt;priority&gt; to 0.3. SEO: timeline-based signals (lastmod = when deprecated). Frontmatter: withered_date + optional withered_reason + replacement_url.</snippet>
+      </doc>
+      <doc>
+        <path>docs/2-solutioning/digital-garden-integration-architecture.md</path>
+        <title>Digital Garden Integration Architecture</title>
+        <section>Frontmatter Schema (lines 786–815) — Withered metadata fields</section>
+        <snippet>withered_date (when marked as withered, e.g., 2026-01-15), withered_reason (optional, e.g., "Framework deprecated, see new article"), replacement_url (optional, e.g., "/articles/new-version/"). Defaults: growth_stage seedling, format article. Hugo fails build if growth_stage has invalid value.</snippet>
+      </doc>
+      <doc>
+        <path>docs/2-solutioning/digital-garden-integration-architecture.md</path>
+        <title>Digital Garden Integration Architecture</title>
+        <section>Critical Agent Rules (lines 762–771)</section>
+        <snippet>Never modify existing card variants. NEVER use jQuery (vanilla JS for new features). Always add | default when accessing data files. Always pin Hugo version in GitHub Actions (0.152.2). NEVER commit data/*.json files to main branch (only data-updates branch). ALWAYS use the popularity-score.html partial.</snippet>
+      </doc>
+      <doc>
+        <path>docs/2-solutioning/test-design-system.md</path>
+        <title>System-Level Test Design</title>
+        <section>Test Levels Strategy &amp; NFR Testing Approach</section>
+        <snippet>30% Unit / 40% Integration / 30% E2E for JAMstack. E2E via Playwright with screenshot/video on failure; axe-core for WCAG. baseURL http://localhost:1313 with hugo server webServer. Build smoke tests for build-output assertions; Playwright for visible browser behaviour; axe-core for a11y. Vanilla JavaScript = no framework-specific test setup.</snippet>
+      </doc>
+      <doc>
+        <path>docs/sprint-artifacts/epic-1/1-1-growth-stage-frontmatter-field.md</path>
+        <title>Story 1.1 — Growth Stage Frontmatter Field (ready-for-dev, prerequisite)</title>
+        <section>Test infra bootstrap, validation partial, archetype edits</section>
+        <snippet>Bootstraps schemas/frontmatter/article.schema.json, layouts/_partials/_base/validate-growth-stage.html (build-time enum check via errorf), tests/build/build-smoke.test.mjs (node --test runner), tests/build/fixtures/ (valid-evergreen.md, valid-missing-field.md, invalid-stage.md), tests/e2e/ (Playwright + axe-core), playwright.config.ts. This story extends the build smoke harness with RSS/sitemap/JSON-LD assertions.</snippet>
+      </doc>
+      <doc>
+        <path>docs/sprint-artifacts/epic-1/1-3-withered-content-default-hiding.md</path>
+        <title>Story 1.3 — Withered Content Default Hiding (ready-for-dev, sibling)</title>
+        <section>Out-of-Scope handoff to 1.5</section>
+        <snippet>1.3 explicitly defers RSS feed handling for withered to Story 1.5. 1.3 leaves layouts/index.json (search index) unchanged because withered must remain searchable — same product principle that governs this story's RSS/sitemap inclusion. 1.3 introduces withered-filter.html / withered-count.html partials (NOT consumed by 1.5).</snippet>
+      </doc>
+      <doc>
+        <path>docs/sprint-artifacts/epic-1/1-4-withered-content-warning-banner.md</path>
+        <title>Story 1.4 — Withered Content Warning Banner (ready-for-dev, prerequisite)</title>
+        <section>Frontmatter fields, fixtures, date format conventions</section>
+        <snippet>Establishes withered_date (required when withered), withered_reason (optional ≤280 chars), replacement_url (optional URI) — consumed read-only by 1.5. Banner uses (time $date).Format ":date_long" $.Site.Language; 1.5 matches that long-form format for RSS description prepend and Schema.org description prefix. Adds fixtures withered-with-replacement.md, withered-minimal.md, withered-invalid.md — 1.5 reuses the first two.</snippet>
+      </doc>
+      <doc>
+        <path>docs/1-planning/prd/07-implementation-phases.md</path>
+        <title>Implementation Phases</title>
+        <section>Phase 1A Week 3 deliverable</section>
+        <snippet>Story 1.5 lands withered RSS/sitemap/Schema.org signals in Phase 1A Week 3 — readers landing on withered pages directly via search/feed need the deprecation signals from day one. Story 9.6 (Phase 2 Week 10–11) becomes a verification + refinement slot.</snippet>
+      </doc>
+      <doc>
+        <path>docs/1-planning/prd/10-appendices.md</path>
+        <title>PRD Appendices — FR Traceability Matrix</title>
+        <section>FR-006 mapping</section>
+        <snippet>FR-006 (Withered Content SEO Inclusion) → Story 1.5 (this story) + Story 9.6 (refinement). Validation criteria: RSS includes withered with "[Withered DATE]" suffix; sitemap includes with low priority.</snippet>
+      </doc>
+    </docs>
+    <code>
+      <artifact>
+        <path>layouts/rss.xml</path>
+        <kind>template</kind>
+        <symbol>RSS feed item rendering — channel + item range</symbol>
+        <lines>14-67</lines>
+        <reason>Primary modification target. Item rendering inside range where .Site.RegularPages "Type" "in" "articles" (line 25). Recently hardened by commits b870bfa (Media RSS namespace + media:thumbnail) and 9643f68 (single-quoted style attr strip). Existing sanitization at lines 57–62: anchor rewrite, &lt;svg&gt; strip, double + single quoted style="..." strip. Title at line 27, description at line 63 wrapped by | html. INSERT $isWithered + $witheredDate near top of item; suffix &lt;title&gt; conditionally; prepend warning HTML to $content AFTER all sanitization regexes and BEFORE | html. Order matters: sanitize → prepend warning → emit.</reason>
+      </artifact>
+      <artifact>
+        <path>layouts/sitemap.xml</path>
+        <kind>template</kind>
+        <symbol>sitemap urlset / range .Pages loop</symbol>
+        <lines>1-19</lines>
+        <reason>Primary modification target. Inside the range .Pages loop, after the {{- if not .Params.robotsdisallow -}} guard (line 4), introduce $isWithered. Replace the unconditional &lt;lastmod&gt; (lines 7–9) with conditional: time .Params.withered_date when withered, else fall through to .Lastmod. Replace &lt;priority&gt; with conditional (lines 13–15): 0.3 when withered, else with .Sitemap.Priority emit existing. Leave &lt;changefreq&gt; (lines 10–12) unchanged.</reason>
+      </artifact>
+      <artifact>
+        <path>layouts/_partials/_base/seo.html</path>
+        <kind>template</kind>
+        <symbol>Schema.org JSON-LD BlogPosting block (within {{- if eq .Section "articles" }})</symbol>
+        <lines>56-85</lines>
+        <reason>Primary modification target. JSON-LD object generation (lines 58–83) currently emits @context, @type, headline, image, datePublished, dateModified (line 68 from .Lastmod), author, mainEntityOfPage (line 80), description (line 81 from .Params.Seo.desc or .Summary), keywords. INSERT $isWithered near top of object. OVERRIDE dateModified to (time .Params.withered_date).Format "2006-01-02T15:04:05Z07:00" | jsonify when withered. INSERT "creativeWorkStatus": "Obsolete" sibling above mainEntityOfPage when withered. MODIFY description to prepend "Veraltet seit {{ DATE }}: {{ REASON }} — " (Grund clause omitted when no withered_reason — no orphaned colon). DO NOT modify OG / Twitter / Open Graph blocks at lines 100–167 (owned by 9.6 / 9.7).</reason>
+      </artifact>
+      <artifact>
+        <path>config/_default/config.yaml</path>
+        <kind>config</kind>
+        <symbol>sitemap config block</symbol>
+        <lines>96-98</lines>
+        <reason>One-line addition target. Current sitemap block has changefreq: weekly and filename: sitemap.xml. ADD priority: 0.8 so non-withered pages get an explicit baseline emission. Hugo populates .Sitemap.Priority from frontmatter → site config → 0; the with .Sitemap.Priority gate continues to handle emission, so the explicit 0.8 baseline ensures emission. Site is German (defaultContentLanguage: de, locale: de-DE — line 5) which affects time.Format month-name localization for the RSS suffix.</reason>
+      </artifact>
+      <artifact>
+        <path>tests/build/build-smoke.test.mjs</path>
+        <kind>test (created by Story 1.1, extended by 1.4 — extension target here)</kind>
+        <symbol>node --test build smoke harness</symbol>
+        <lines>n/a</lines>
+        <reason>Extension target. Add ~12 assertions under describe "Story 1.5: Withered SEO &amp; RSS": RSS title [Verwelkt …] suffix; RSS description prepend ⚠️ Dieser Inhalt …; with-reason includes Grund:; minimal omits Grund: (no empty label); non-withered RSS title unchanged + description not starting with ⚠️; xmllint --noout public/index.xml exit 0; sitemap withered URL present; withered &lt;priority&gt;0.3&lt;/priority&gt;; withered &lt;lastmod&gt; matches withered_date prefix; non-withered &lt;priority&gt;0.8&lt;/priority&gt;; non-withered &lt;lastmod&gt; matches Hugo lastmod; xmllint --noout public/sitemap.xml exit 0; JSON-LD creativeWorkStatus === "Obsolete"; JSON-LD dateModified prefix === withered_date; JSON-LD description starts with Veraltet seit; minimal fixture description has no orphaned colon between date and —; non-withered JSON-LD has no creativeWorkStatus.</reason>
+      </artifact>
+      <artifact>
+        <path>tests/e2e/withered-banner.spec.ts</path>
+        <kind>test (created by Story 1.4 — extension target here)</kind>
+        <symbol>Playwright spec — append RSS marker assertion</symbol>
+        <lines>n/a</lines>
+        <reason>Extension target. Append ONE additional test that uses page.request.get('/index.xml') and asserts the response body contains the withered fixture's [Verwelkt title marker. NO new spec file. NO Playwright sitemap test (build-time concern, fully covered by smoke tests). NO new axe-core checks (RSS/sitemap/JSON-LD have no a11y surface).</reason>
+      </artifact>
+      <artifact>
+        <path>tests/build/fixtures/withered-with-replacement.md</path>
+        <kind>fixture (created by Story 1.4 — reused here)</kind>
+        <symbol>withered fixture with all three withered fields</symbol>
+        <lines>n/a</lines>
+        <reason>Reused fixture — exercises the full withered path: growth_stage:"withered" + withered_date + withered_reason + replacement_url. Drives the with-reason RSS Grund: branch and the Schema.org description with-reason prefix.</reason>
+      </artifact>
+      <artifact>
+        <path>tests/build/fixtures/withered-minimal.md</path>
+        <kind>fixture (created by Story 1.4 — reused here)</kind>
+        <symbol>withered fixture without withered_reason</symbol>
+        <lines>n/a</lines>
+        <reason>Reused fixture — exercises the no-withered_reason branch. Critical for asserting RSS description omits Grund: (no empty label) and Schema.org description omits the orphaned colon (Veraltet seit DATE — summary, not Veraltet seit DATE: — …).</reason>
+      </artifact>
+      <artifact>
+        <path>tests/build/fixtures/valid-evergreen.md</path>
+        <kind>fixture (created by Story 1.1 — reused here)</kind>
+        <symbol>non-withered regression fixture</symbol>
+        <lines>n/a</lines>
+        <reason>Reused fixture — drives the no-regression assertions for AC #7: identical RSS title/description/pubDate; sitemap &lt;priority&gt;0.8&lt;/priority&gt; (post-config-change baseline); Schema.org without creativeWorkStatus.</reason>
+      </artifact>
+      <artifact>
+        <path>docs/technical/testing.md</path>
+        <kind>documentation (created by Story 1.1)</kind>
+        <symbol>testing strategy documentation</symbol>
+        <lines>n/a</lines>
+        <reason>Append "Withered SEO &amp; RSS (Story 1.5)" subsection describing new smoke-test assertions and where to find them in build-smoke.test.mjs.</reason>
+      </artifact>
+      <artifact>
+        <path>docs/technical/editor-setup.md</path>
+        <kind>documentation (created by Story 1.1)</kind>
+        <symbol>editor / authoring documentation</symbol>
+        <lines>n/a</lines>
+        <reason>Append a one-line note: "When marking content withered, the withered_date and (optional) withered_reason fields you add for the in-page banner (Story 1.4) also drive the RSS suffix, sitemap priority, and Schema.org deprecation status — no additional metadata required."</reason>
+      </artifact>
+      <artifact>
+        <path>layouts/baseof.html</path>
+        <kind>template (reference only)</kind>
+        <symbol>page template wiring (NOT modified)</symbol>
+        <lines>n/a</lines>
+        <reason>Reference only — confirms Hugo v0.146+ flat-layout convention used across the project. This story's RSS/sitemap/seo edits are flat-layout direct edits; no _default/ subdirectory.</reason>
+      </artifact>
+    </code>
+    <dependencies>
+      <node>
+        <package name="@fullhuman/postcss-purgecss" version="^8.0.0" />
+        <package name="postcss" version="^8.5.14" />
+        <package name="postcss-cli" version="^11.0.1" />
+        <note>Story 1.1 (ready-for-dev) introduces @playwright/test, axe-core, husky, ajv-cli, gray-matter, and the node --test runner. Story 1.5 explicitly adds NO new npm dependencies (per Critical Agent Rule 3 — XML/JSON validation uses xmllint already present in CI per recent RSS hardening commits, and built-in JSON.parse).</note>
+      </node>
+      <hugo>
+        <version>0.152.2 (per architecture §10 / GitHub Actions hugo-version pin); story uses Hugo v0.146+ flat layouts (no _default/ subdirectory)</version>
+        <feature>enableGitInfo: true and frontmatter.lastmod: ["lastmod", ":git", "date"] (config/_default/config.yaml lines 9–11) — drives non-withered .Lastmod fallback path</feature>
+        <feature>Site language de-DE (config/_default/config.yaml lines 2–7) — affects time.Format month-name localization for the RSS suffix; locale-aware format strings (:date_long, :date_short) with $.Site.Language</feature>
+        <feature>Hugo time.Format "2006-01-02T15:04:05-07:00" / "2006-01-02T15:04:05Z07:00" (existing pattern in sitemap.xml line 8 and seo.html lines 11, 67–68) — match this format for the withered overrides</feature>
+        <feature>Hugo's .Sitemap.Priority resolution chain (page frontmatter → site sitemap config → 0); the with .Sitemap.Priority gate emits when truthy</feature>
+        <feature>RSS namespaces from recent hardening: xmlns:atom + xmlns:media (Media RSS); existing media:thumbnail for cover images (commit b870bfa). Validator-clean state preserved by 1.5.</feature>
+      </hugo>
+      <build>
+        <tool>xmllint (already present in CI per recent RSS hardening commits) — used for --noout well-formedness checks on public/index.xml and public/sitemap.xml. No new infra.</tool>
+        <tool>Hugo build-time errorf — Story 1.4's extension to validate-growth-stage.html (errorf when growth_stage:"withered" AND withered_date empty) is the upstream guarantee that 1.5 relies on; the AC #4 .Lastmod fallback is defensive belt-and-braces.</tool>
+        <tool>node --test (Story 1.1 bootstrap) — runs tests/build/*.test.mjs; child_process.spawnSync for xmllint invocation; built-in JSON.parse for JSON-LD extraction.</tool>
+      </build>
+    </dependencies>
+  </artifacts>
+
+  <constraints>
+    <constraint level="critical">Hugo v0.146+ flat layouts — modify layouts/rss.xml, layouts/sitemap.xml, layouts/_partials/_base/seo.html directly; no layouts/_default/ subdirectory. [Source: digital-garden-integration-architecture.md lines 762–771; existing layouts/ structure]</constraint>
+    <constraint level="critical">No new npm dependencies — XML/JSON validation in smoke tests uses xmllint (already in CI per recent RSS hardening) and built-in JSON.parse. No xml2js, no jsdom, no cheerio. [Source: Story 1.5 Critical Agent Rules; package.json]</constraint>
+    <constraint level="critical">Sanitization order in RSS — withered description prepend MUST run AFTER existing sanitization regexes (anchor rewrite line 58, &lt;svg&gt; strip line 59, style="…" double-quote strip line 61, single-quote strip line 62) and BEFORE | html (line 63). Inserting before sanitization risks the warning's own attributes being affected. [Source: Story 1.5 Tasks; layouts/rss.xml lines 56–63]</constraint>
+    <constraint level="critical">Frontmatter snake_case — withered_date, withered_reason, replacement_url, growth_stage; no kebab-case or camelCase frontmatter additions. [Source: digital-garden-integration-architecture.md lines 567–605, 786–815]</constraint>
+    <constraint level="high">Reuse Story 1.4's fixtures (withered-with-replacement.md, withered-minimal.md) — do not invent new fixture variants. If 1.4 hasn't landed at implementation time, copy 1.4's two fixtures into this story's PR with a clear note (analogous to Story 1.4's "if 1.1 hasn't landed" pattern). [Source: Story 1.5 Tasks; Story 1.4 fixtures matrix]</constraint>
+    <constraint level="high">Test layered — build smoke tests handle correctness (RSS / sitemap / JSON-LD); Playwright handles only the cross-cutting RSS-fetch sanity check. Do NOT over-build Playwright tests for build-output assertions. Sitemap correctness is build-time-only — no Playwright sitemap test. [Source: Story 1.5 Critical Agent Rules; test-design-system.md]</constraint>
+    <constraint level="high">No regression on non-withered pages — identical RSS title/description/pubDate; sitemap &lt;lastmod&gt; from .Lastmod; no creativeWorkStatus in JSON-LD; description without prefix; dateModified from .Lastmod. The only intentional change for non-withered is &lt;priority&gt;0.8&lt;/priority&gt; baseline emission once the config change in AC #5 lands. [Source: AC #7]</constraint>
+    <constraint level="high">German short-month suffix in RSS title — [Verwelkt MMM. YYYY] (e.g., [Verwelkt Nov. 2025]). Hugo's time.Format "Jan. 2006" returns English by default; site is de-DE. Try time.Format ":date_short" $.Site.Language first; if format does not yield "Mon. YYYY" cleanly, build the string from time.Format "January 2006" | i18n or manually map month number → German abbreviation. Decide at implementation time after live-checking hugo server output. [Source: Story 1.5 Dev Notes — Hugo time.Format Localization]</constraint>
+    <constraint level="high">Long-form German date in RSS description prepend AND Schema.org description prefix — match Story 1.4's banner format (time $date).Format "2. January 2006" via $.Site.Language for cross-surface consistency. [Source: Story 1.5 Tasks; 1.4 banner partial]</constraint>
+    <constraint level="high">Sitemap baseline priority — add priority: 0.8 to config/_default/config.yaml sitemap: block to satisfy epics AC #5's 0.3-vs-0.8 contrast. One-line config change, NOT a per-page edit. [Source: AC #5; config/_default/config.yaml lines 96–98]</constraint>
+    <constraint level="high">Defensive .Lastmod fallback in sitemap — if withered_date is somehow missing on a withered page (Story 1.4 build-time validation should prevent this), fall through to .Lastmod rather than emitting an empty &lt;lastmod&gt;. Belt-and-braces, not a workaround. [Source: AC #4]</constraint>
+    <constraint level="high">Schema.org creativeWorkStatus value — use "Obsolete" (most widely-recognized deprecation marker, used by GitHub/MDN/many CMSs; aligns with German "Verwelkt/Veraltet" wording). Not "Deprecated" (more API-doc-flavored), not "Withdrawn"/"Archived" (too strong, implies removal). If Google's Rich Results validator flags "Obsolete" during manual smoke, drop creativeWorkStatus and rely on dateModified=withered_date alone — note in completion notes. [Source: Story 1.5 Dev Notes — Schema.org creativeWorkStatus]</constraint>
+    <constraint level="medium">Schema.org no orphaned colon — when withered_reason is absent, the description prefix format is "Veraltet seit DATE — original-summary", NOT "Veraltet seit DATE: — original-summary". Asserted by smoke test against the withered-minimal fixture. [Source: AC #6; Story 1.5 Tasks; smoke test ideas]</constraint>
+    <constraint level="medium">RSS Grund: omission — when withered_reason is absent, the warning is "⚠️ Dieser Inhalt ist als veraltet markiert seit DATE." (no empty Grund: label). Asserted by smoke test against the withered-minimal fixture. [Source: AC #2]</constraint>
+    <constraint level="medium">RSS scope is articles only — current layouts/rss.xml filters by Type "in" "articles" (line 25); withered logs do not appear in RSS. This story does NOT change that scope. Logs in RSS is a separate concern (out of scope). [Source: Story 1.5 Architectural Context]</constraint>
+    <constraint level="medium">Out of scope here, owned elsewhere: OG (og:updated_time) and Twitter-Card deprecation hints → Story 9.6 / 9.7. Custom robots.txt directives for withered (e.g., noarchive) → Story 9.8. Sitemap &lt;changefreq&gt; overrides for withered → 9.6 / 9.8 (PRD does not call for changefreq override). Multi-language RSS (English + German) → out of project scope (German-only Phase 1A/1B per 08-final-decisions.md). replacement_url propagation to RSS / Schema.org → not in epics ACs (1.4 banner concern). [Source: Story 1.5 Out of Scope]</constraint>
+    <constraint level="medium">Validator integration — xmllint --noout in smoke tests is automated; W3C feed validator + Google Search Console / xml-sitemaps.com are MANUAL gates performed during manual smoke before marking the story done. Document validator URLs visited in completion notes. Adding W3C validator to CI is a future infra concern. [Source: Story 1.5 Test Strategy]</constraint>
+    <constraint level="low">German-only banner / RSS / Schema.org copy — matches existing site language. i18n is a future concern (out of scope per project's offline issue triage; same posture as Story 1.4). [Source: Story 1.4 Out of Scope; 08-final-decisions.md German-only Phase 1A/1B]</constraint>
+  </constraints>
+
+  <interfaces>
+    <interface>
+      <name>RSS template item rendering (withered branch)</name>
+      <kind>Hugo template inline conditional</kind>
+      <signature>Inside range where .Site.RegularPages "Type" "in" "articles" — compute $isWithered := eq .Params.growth_stage "withered" and $witheredDate := .Params.withered_date once. Title: &lt;title&gt;{{ .Title }}{{ if $isWithered }}{{ printf " [Verwelkt %s]" ((time $witheredDate).Format "Jan. 2006") }}{{ end }}&lt;/title&gt;. Description: after sanitization, before | html, conditionally prepend &lt;p&gt;&lt;strong&gt;⚠️ Dieser Inhalt ist als veraltet markiert seit LONG_DATE.[ Grund: REASON]&lt;/strong&gt;&lt;/p&gt;\n\n + $content.</signature>
+      <path>layouts/rss.xml</path>
+      <notes>Reads .Params.growth_stage, .Params.withered_date, .Params.withered_reason, .Title, .Content. No new partials introduced — inline edits inside the existing range loop.</notes>
+    </interface>
+    <interface>
+      <name>Sitemap template withered branch</name>
+      <kind>Hugo template inline conditional</kind>
+      <signature>Inside range .Pages, after {{- if not .Params.robotsdisallow -}}: $isWithered := eq .Params.growth_stage "withered". &lt;lastmod&gt;: {{ if and $isWithered .Params.withered_date }}{{ (time .Params.withered_date).Format "2006-01-02T15:04:05-07:00" | safeHTML }}{{ else if not .Lastmod.IsZero }}{{ .Lastmod.Format "2006-01-02T15:04:05-07:00" | safeHTML }}{{ end }}. &lt;priority&gt;: {{ if $isWithered }}0.3{{ else with .Sitemap.Priority }}{{ . }}{{ end }}.</signature>
+      <path>layouts/sitemap.xml</path>
+      <notes>Reads .Params.growth_stage, .Params.withered_date, .Lastmod, .Sitemap.Priority. Leaves &lt;changefreq&gt; (with .Sitemap.ChangeFreq) untouched.</notes>
+    </interface>
+    <interface>
+      <name>Sitemap baseline priority (config-level)</name>
+      <kind>Hugo site config</kind>
+      <signature>sitemap: { changefreq: weekly, filename: sitemap.xml, priority: 0.8 }</signature>
+      <path>config/_default/config.yaml lines 96–98</path>
+      <notes>Adds the priority key to the existing sitemap: block. Hugo populates .Sitemap.Priority from page frontmatter → site config → 0; the with .Sitemap.Priority gate continues to handle emission. Explicit 0.8 baseline ensures non-withered emission to satisfy AC #5 contrast.</notes>
+    </interface>
+    <interface>
+      <name>Schema.org JSON-LD withered metadata</name>
+      <kind>Hugo template inline conditional inside JSON-LD generation</kind>
+      <signature>Inside {{- if eq .Section "articles" }} JSON-LD block: $isWithered := eq .Params.growth_stage "withered". "dateModified": {{ if $isWithered }}{{ (time .Params.withered_date).Format "2006-01-02T15:04:05Z07:00" | jsonify }}{{ else }}{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" | jsonify }}{{ end }},. {{ if $isWithered }}"creativeWorkStatus": "Obsolete",{{ end }} (placed above mainEntityOfPage). "description": prepend "Veraltet seit DATE[: REASON] — " when withered, else original. Result: "Veraltet seit DATE — summary" with no orphaned colon when reason absent.</signature>
+      <path>layouts/_partials/_base/seo.html lines 56–85</path>
+      <notes>Reads .Params.growth_stage, .Params.withered_date, .Params.withered_reason, .Params.Seo.desc, .Summary, .Lastmod. Field order in JSON-LD is irrelevant to Schema.org parsers but consistent placement helps human review. with-block scoping interacts awkwardly with the prefix mutation — refactor to flat if/else if it proves brittle.</notes>
+    </interface>
+    <interface>
+      <name>Frontmatter contract (read-only consumption)</name>
+      <kind>YAML frontmatter fields established by Story 1.4</kind>
+      <signature>growth_stage: "withered" (string enum); withered_date: YYYY-MM-DD (date string, required when growth_stage=="withered" — enforced by validate-growth-stage.html); withered_reason: string ≤280 chars (optional); replacement_url: URI-reference (optional, NOT consumed by 1.5).</signature>
+      <path>schemas/frontmatter/article.schema.json (created by Story 1.1, extended by Story 1.4)</path>
+      <notes>1.5 consumes these fields read-only. No schema changes here. The .Lastmod fallback in sitemap AC #4 is defensive — relies on Story 1.4's build-time validation to guarantee withered_date presence on withered pages.</notes>
+    </interface>
+    <interface>
+      <name>Build smoke harness extension</name>
+      <kind>node --test assertions in tests/build/build-smoke.test.mjs</kind>
+      <signature>describe("Story 1.5: Withered SEO &amp; RSS", () =&gt; { /* ~12 assertions: RSS title suffix, RSS warning prepend, Grund: presence/omission, non-regression, xmllint --noout via spawnSync exit 0; sitemap priority 0.3 / 0.8, lastmod prefix matching withered_date / Hugo lastmod, xmllint --noout exit 0; JSON-LD creativeWorkStatus, dateModified prefix, description Veraltet seit prefix, no orphaned colon, non-withered absence */ });</signature>
+      <path>tests/build/build-smoke.test.mjs</path>
+      <notes>Reads rendered public/index.xml, public/sitemap.xml, public/&lt;withered-fixture-path&gt;/index.html. JSON-LD extraction via regex anchored on &lt;script type="application/ld+json"&gt; tag, then JSON.parse. xmllint via child_process.spawnSync (assert exit code 0).</notes>
+    </interface>
+  </interfaces>
+
+  <tests>
+    <standards>The project's authoritative test plan is docs/2-solutioning/test-design-system.md (Playwright + node --test runner + axe-core). Story 1.1 (ready-for-dev) bootstraps both. This story uses them: build smoke tests (tests/build/) for build-output assertions on RSS, sitemap, and JSON-LD — primary coverage; cheap, deterministic, run in CI on every PR. Playwright e2e (tests/e2e/) — single RSS-fetch assertion APPENDED to the existing 1.4 withered-banner spec; confirms RSS endpoint reachability and that the marker survives the live-server pipeline. NO new axe-core checks (RSS / sitemap / JSON-LD have no a11y surface). Manual validator passes — W3C feed validator and a sitemap validator (Google Search Console preferred, fallback xml-sitemaps.com) — performed during manual smoke as a final gate before marking the story done. Test infrastructure: Playwright @playwright/test, baseURL http://localhost:1313 with hugo server webServer config, projects chromium/firefox/webkit, screenshot only-on-failure, video retain-on-failure. Test distribution per architecture: 30% unit / 40% integration / 30% E2E (this story is build-output integration heavy, no unit-testable surface).</standards>
+    <locations>
+      <location>tests/build/ — build smoke tests (node --test, .test.mjs); EXTEND build-smoke.test.mjs (Story 1.1)</location>
+      <location>tests/build/fixtures/ — markdown content fixtures; REUSE withered-with-replacement.md and withered-minimal.md (Story 1.4) plus valid-evergreen.md / valid-missing-field.md (Story 1.1); NO new fixtures</location>
+      <location>tests/e2e/ — Playwright spec files (.spec.ts); EXTEND withered-banner.spec.ts (Story 1.4) with one RSS-fetch test; NO new spec file</location>
+      <location>Manual validators — https://validator.w3.org/feed/ and Google Search Console "Test sitemap" or https://www.xml-sitemaps.com/validate-xml-sitemap.html (gates before marking done)</location>
+    </locations>
+    <ideas>
+      <idea ac="1">Build smoke (RSS): assert public/index.xml contains the withered fixture's &lt;title&gt; suffixed with [Verwelkt MMM. YYYY] (e.g., [Verwelkt Jan. 2026]); assert non-withered fixture title in the same feed is unchanged (no [Verwelkt).</idea>
+      <idea ac="2">Build smoke (RSS): assert withered-with-replacement description starts with ⚠️ Dieser Inhalt ist als veraltet markiert seit and contains Grund: with the fixture's withered_reason; assert withered-minimal description starts with the warning AND does NOT contain Grund: (no empty label); assert non-withered description does NOT start with ⚠️.</idea>
+      <idea ac="2,7">Build smoke (RSS sanitization preservation): assert that the existing single-quote and double-quote style="..." strips and the &lt;svg&gt; strip still run on withered content (no &lt;svg&gt; or style="..." tokens leak through).</idea>
+      <idea ac="3">Build smoke (sitemap): assert public/sitemap.xml contains the withered fixture's permalink &lt;loc&gt; (withered pages remain discoverable per FR-006).</idea>
+      <idea ac="4">Build smoke (sitemap): assert withered fixture's &lt;lastmod&gt; starts with the withered_date prefix YYYY-MM-DD; assert non-withered &lt;lastmod&gt; does NOT match the withered_date prefix (matches Hugo's git/lastmod-driven value instead).</idea>
+      <idea ac="5">Build smoke (sitemap): assert withered fixture entry has &lt;priority&gt;0.3&lt;/priority&gt;; assert non-withered fixture entry has &lt;priority&gt;0.8&lt;/priority&gt; (post-config-change baseline).</idea>
+      <idea ac="6">Build smoke (JSON-LD): regex-extract &lt;script type="application/ld+json"&gt; from public/&lt;withered-fixture-path&gt;/index.html, JSON.parse, assert creativeWorkStatus === "Obsolete", dateModified.startsWith(withered_date_iso_prefix), description.startsWith("Veraltet seit ").</idea>
+      <idea ac="6">Build smoke (JSON-LD no-orphaned-colon): for withered-minimal (no withered_reason), assert JSON-LD description matches /^Veraltet seit [^:]+ — / (date NOT followed by ": —"); for withered-with-replacement, assert description matches /^Veraltet seit [^:]+: [^—]+ — / (date, colon, reason, em-dash).</idea>
+      <idea ac="7">Build smoke (non-regression JSON-LD): for non-withered fixture, parse JSON-LD and assert creativeWorkStatus is undefined; assert dateModified does NOT start with the withered_date ISO prefix (matches .Lastmod-driven value).</idea>
+      <idea ac="8">Build smoke (build success): full hugo --environment production build with the existing fixture set (Story 1.1 + 1.4 fixtures, excluding withered-invalid which is the negative test owned by 1.4) → assert exit 0.</idea>
+      <idea ac="9">Build smoke (RSS validator): xmllint --noout public/index.xml via child_process.spawnSync → assert exit code 0 (well-formed XML). Optional: assert no validator-flagged constructs from the recent RSS hardening commits leak back in.</idea>
+      <idea ac="10">Build smoke (sitemap validator): xmllint --noout public/sitemap.xml → exit 0. Optional, if sitemap-0.9.xsd is vendored: xmllint --schema sitemap-0.9.xsd public/sitemap.xml → exit 0. Otherwise assert presence of the expected &lt;url&gt;&lt;loc&gt;…&lt;lastmod&gt;…&lt;priority&gt;0.3&lt;/priority&gt;&lt;/url&gt; structure for the withered fixture.</idea>
+      <idea ac="1,2,6">Playwright (RSS reachability): in tests/e2e/withered-banner.spec.ts, append test('RSS feed includes withered marker'): const res = await page.request.get('/index.xml'); expect(await res.text()).toContain('[Verwelkt'). Single assertion — covers RSS endpoint reachability and survival of the marker through the live-server pipeline.</idea>
+      <idea ac="1-7">Manual smoke (final gate): hugo server → fetch /index.xml (withered title suffix + warning paragraph; non-withered unchanged); fetch /sitemap.xml (withered priority 0.3 + lastmod=withered_date; non-withered priority 0.8); view source on withered article single page (JSON-LD creativeWorkStatus + dateModified=withered_date + description Veraltet seit); view source on non-withered (no creativeWorkStatus, dateModified=lastmod). Open RSS in real reader (Feedbin / NetNewsWire / feedreader.com web preview). Drop public/index.xml into validator.w3.org/feed/ (no new errors vs. baseline). Drop public/sitemap.xml into Google Search Console "Test sitemap" or xml-sitemaps.com (no new errors).</idea>
+    </ideas>
+  </tests>
+</story-context>

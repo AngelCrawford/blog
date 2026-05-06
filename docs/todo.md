@@ -73,6 +73,26 @@ Quelle: [docs/1-planning/epics.md](1-planning/epics.md) — Tabelle "Epic Overvi
 - Bei Epics mit Inter-Story-Abhängigkeiten (Epic 2, Epic 5): 1-2 Stories voraus draften, dann implementieren.
 - BMM-Default "eine Story nach der anderen" zielt auf Teams ab; Solo darf gebatcht werden.
 
+**🔗 Cross-Epic Dependencies in Epic 2 (Klarstellung):**
+
+Zwei Stories in Epic 2 referenzieren Epic 3 — **kein Strukturfehler**, sondern *soft dependency* (Daten/Runtime, kein Build-Blocker):
+
+| Story | Hintergrund |
+|---|---|
+| **2.4 — Webmention Display** | UI ist mit leerem/Mock-JSON baubar + testbar. Echte Daten-Datei `data/webmentions_by_article.json` wird von Story 3.2 erzeugt; bis dahin greift der „No replies yet"-Fallback (AC5 explizit Teil der Story). |
+| **2.6 — Daily Rebuild Workflow** | Workflow-Scaffolding (Cron + Hugo Build + Deploy) ist eigenständig. „Fetch engagement data" ist in AC4 explizit als **Placeholder-Step** spezifiziert, der erst in Epic 3 mit echten Scripts befüllt wird. |
+
+**Warum die Trennung sinnvoll bleibt:**
+
+- Epic 2 = *Surface Layer* (Endpoints, UI, Scaffolding — was Reader & externe Sites sehen)
+- Epic 3 = *Data Layer* (Fetch-Scripts, Score-Berechnung — was die Daten produziert)
+
+Würde man 2.4 + 2.6 nach Epic 3 verschieben, zerriss es die thematische Klammer „Engagement Infrastructure". Status quo bleibt, Soft-Dep ist hiermit dokumentiert.
+
+**Konsequenz fürs Drafting:**
+
+Epic 2 komplett draftbar (alle 7 Stories), inkl. 2.4 + 2.6 — beim Implementieren von 2.4/2.6 Mocks bzw. Placeholder verwenden, bis Epic 3 echte Daten liefert. Reihenfolge im Critical Path bleibt: Epic 2 → Epic 3 → echte Datenflüsse.
+
 ---
 
 ## 📝 Manuelle Aufgabe: Growth-Stage-Migration bestehender Inhalte

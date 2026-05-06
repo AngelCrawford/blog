@@ -1,0 +1,433 @@
+<story-context id=".bmad/bmm/workflows/4-implementation/story-context/template" v="1.0">
+  <metadata>
+    <epicId>1</epicId>
+    <storyId>2</storyId>
+    <title>Growth Stage Badge Component</title>
+    <status>drafted</status>
+    <generatedAt>2026-05-06</generatedAt>
+    <generator>BMAD Story Context Workflow</generator>
+    <sourceStoryPath>docs/sprint-artifacts/1-2-growth-stage-badge-component.md</sourceStoryPath>
+  </metadata>
+
+  <story>
+    <asA>a reader</asA>
+    <iWant>to see a visual growth stage indicator on content cards</iWant>
+    <soThat>I can assess content maturity at a glance</soThat>
+    <tasks>
+      - Add growth stage color variables (AC: 3)
+        - Edit `assets/scss/vars/_colors.scss` — add `$growth-seedling`, `$growth-budding`, `$growth-evergreen`, `$growth-withered` with HSL values from UX spec
+        - Add a comment block above the new vars: WCAG-AA rationale, source reference to UX spec
+        - Consider aliasing `$growth-evergreen: $success` instead of duplicating the value (decide based on `$success` definition — note: `$success` is forwarded into Bulma in main.scss but is not currently a standalone var in `_colors.scss`)
+      - Create growth badge SCSS component (AC: 1, 3, 6, 7)
+        - Create `assets/scss/elements/growth-badge.scss` following the pattern in `digital-garden-integration-architecture.md` lines 619–648
+        - Base selector: `.card-footer-item.growth-stage` — color, font-size 80%, gap, vertical alignment
+        - Per-stage selectors: `&[data-stage="seedling"] i { color: $growth-seedling; }` (and 3 others)
+        - Mobile breakpoint: `@include helpers.mobile { span { display: none; } }` (icon-only, tooltip preserves label)
+        - Import the new file in `assets/scss/main.scss` via `@use "elements/growth-badge"` (existing pattern uses `@use`, not `@import`) — place after `@use "elements/badge";` (line 38 of main.scss)
+      - Create growth badge partial (AC: 1, 2, 6, 8)
+        - Create `layouts/_partials/growth-badge.html` (kebab-case, top-level `_partials/` per repo convention — NOT `_base/`)
+        - Resolve stage with default: `{{ $stage := default "seedling" .Params.growth_stage }}`
+        - Define stage→icon and stage→label dicts:
+          - icons: `seedling: ri-seedling-line`, `budding: ri-plant-line`, `evergreen: ri-tree-line`, `withered: ri-skull-line`
+          - labels: `Seedling`, `Budding`, `Evergreen`, `Withered`
+          - tooltips: `Seedling — early/draft content`, `Budding — developing`, `Evergreen — mature &amp; maintained`, `Withered — deprecated`
+        - Render markup (NOTE: existing card uses `&lt;svg&gt;&lt;use xlink:href="…remixicon.symbol.svg#…"&gt;` SVG-sprite pattern, not `&lt;i class="ri-…"&gt;` icon-font classes — confirm which pattern Remix Icon delivers for this site before final markup; story spec uses `&lt;i&gt;`, but card.html uses SVG sprites):
+          ```html
+          &lt;div class="card-footer-item growth-stage" data-stage="{{ $stage }}" title="{{ $tooltip }}"&gt;
+            &lt;i class="{{ $icon }}" aria-hidden="true"&gt;&lt;/i&gt;
+            &lt;span&gt;{{ $label }}&lt;/span&gt;
+          &lt;/div&gt;
+          ```
+        - Pass page context with `.` so the partial works from card and single contexts: `{{ partial "growth-badge.html" . }}`
+      - Wire growth badge into card footer (AC: 1, 5, 9)
+        - Edit `layouts/_partials/card.html` — locate the existing `&lt;footer class="card-footer"&gt;` block (line 108)
+        - Insert `{{ partial "growth-badge.html" . }}` as the **first** `.card-footer-item` (UX spec line 313 ordering: growth-stage → log-date/formats → author). Concretely: insert before `.card-footer-item.log-date` (line 148) and before `.card-footer-item.formats` (line 173). The `.author-img` (line 111) and `.button.round-button` (line 141) come earlier in source but are absolute-positioned/styled, not flex footer items — verify visually.
+        - Do NOT modify `.is-horizontal`, `.is-log`, `.has-image` variants or the top-right badge / ribbon markup (architecture critical rule line 764)
+        - Verify Bulma's `.card-footer-item` flex behavior accommodates the new item (likely no SCSS change needed)
+      - Wire growth badge into single page view (AC: 5)
+        - Read `layouts/single.html` first to confirm article header structure (Hugo v0.146+ flat layout — NO `_default/single.html` confirmed)
+        - The article-header metadata is in the right-column `.info.widget` (single.html lines 76–131): ribbon → time block → tags-line → reading time → series. Insert `{{ partial "growth-badge.html" . }}` here near the time/tags row (typical placement: right after the `.time` div block, before tags-line) — keeps badge in the metadata cluster a reader scans alongside categories/date/tags.
+        - This story is articles-only: single.html branches on `.Page.Type` — only the `eq .Page.Type "articles"` branch (line 34) needs the badge. The `page` branch (line 2) is for static pages without growth_stage.
+        - There is NO dedicated article-header partial in `_partials/_base/` — confirmed: `_base/` contains head, hero, navigation, footer, seo only. Place the badge inline in `single.html`.
+      - Confirm card layout SCSS spacing (AC: 1, 9)
+        - Edit `assets/scss/layout/card.scss` only if the new footer item visibly disrupts spacing in any variant
+        - Manual visual check of `.is-horizontal`, `.is-log`, `.has-image` cards with the badge active
+      - Tooltip enrichment (AC: 4)
+        - Use `title` attribute on the wrapper `div` for the long description (native browser tooltip, no JS)
+        - Note: existing card footer items use `data-tooltip="…"` (Bulma-style custom tooltip from `assets/scss/elements/tooltip.scss`); the story spec uses `title=`. If the design intent is "tooltip styled consistently with rest of footer," consider `data-tooltip` instead — confirm with UX spec author. Story explicitly says `title` attribute (AC #6), so default to `title` unless told otherwise.
+      - Visual regression tests (AC: 1, 2, 3, 5, 7) [Source: test-design-system.md]
+        - PRECONDITION: Story 1.1's Playwright bootstrap must already be done. Story 1.1 is currently `ready-for-dev` (not `done`) — verify `playwright.config.ts`, `tests/e2e/smoke.spec.ts`, and `npm run test:e2e` script exist before adding visual tests. If 1.1 has not landed, do NOT bootstrap Playwright in 1.2 — coordinate with team to land 1.1 first.
+        - Create `tests/e2e/growth-badge.spec.ts`
+        - Test cases: 4 stages × {desktop @1280×800, mobile @375×667} = 8 baseline screenshots
+        - Add a card-list assertion (homepage) and a single-page assertion (one article per stage)
+        - Add an assertion for missing-field article → renders Seedling badge (default fallback path)
+        - Commit baseline screenshots under `tests/e2e/growth-badge.spec.ts-snapshots/`
+        - Verify the test runs locally via `npm run test:e2e` (Playwright config from Story 1.1)
+      - Manual smoke test (AC: 1–9)
+        - `hugo server` → spot-check homepage cards: every card has a badge, correct icon and color
+        - Toggle a test article through all 4 stages → badge updates correctly
+        - Inspect a card without `growth_stage` → renders Seedling
+        - Resize viewport `&lt; 600px` → icon-only layout, tooltip still surfaces label
+        - Single-page view for each stage → badge appears in header
+        - Run `axe-core` (Playwright) on a representative page → no new a11y issues
+        - Verify `.is-new` / `.visited` top-right badges and category ribbons still render correctly (regression)
+      - Documentation
+        - Append a short "Growth Badge" section to `docs/technical/testing.md` (created in Story 1.1) describing the visual-regression test
+        - Optional: add a small ASCII or screenshot reference in the story Completion Notes
+    </tasks>
+  </story>
+
+  <acceptanceCriteria>
+    1. Badge displays on each card in the **card footer** (first/left position). NOTE: This overrides the Epic 1 AC #1 wording ("top-right corner") — see Dev Notes → "AC Discrepancy Resolution". Architecture ADR-005 + UX Spec mandate footer placement.
+    2. Four badge variants are implemented with Remix Icon `-line` glyphs and a text label:
+       - 🌱 Seedling → `ri-seedling-line`
+       - 🌿 Budding → `ri-plant-line`
+       - 🌳 Evergreen → `ri-tree-line`
+       - 💀 Withered → `ri-skull-line`
+    3. Stage-specific color is applied to the **icon** (not the background) per UX spec:
+       - Seedling `$growth-seedling: hsl(152, 76%, 50%)`
+       - Budding `$growth-budding: hsl(189, 90%, 50%)`
+       - Evergreen `$growth-evergreen: hsl(152, 76%, 33%)` (matches existing `$success`)
+       - Withered `$growth-withered: hsl(0, 0%, 50%)`
+    4. Tooltip shows full stage name + brief description on hover and keyboard focus (e.g., `title="Seedling — early/draft content"`).
+    5. Badge renders in **list view** (every card via `_partials/card.html` footer) and in **single page view** (article header metadata row, near date/categories).
+    6. Badge is accessible:
+       - Icon marked decorative (`aria-hidden="true"`), text label provides semantics for screen readers.
+       - Tooltip exposed via the `title` attribute on the wrapper element (keyboard-focusable not required because badge is non-interactive).
+       - WCAG-AA contrast verified against card background.
+    7. Mobile responsive: text label hidden on `&lt; 600px` (`@include helpers.mobile { span { display: none; } }`); icon-only with `title` tooltip preserves a11y.
+    8. Default fallback: badge consumes `default "seedling" .Params.growth_stage` (pattern established by Story 1.1) — articles missing the field render as Seedling without error.
+    9. No regressions to existing card variants: `.is-horizontal`, `.is-log`, `.has-image`, top-right `.is-new` / `.visited` badges, and category ribbons all render unchanged.
+  </acceptanceCriteria>
+
+  <artifacts>
+    <docs>
+      <doc>
+        <path>docs/2-solutioning/digital-garden-integration-architecture.md</path>
+        <title>Digital Garden Integration Architecture</title>
+        <section>ADR-005: Growth Badge Placement (Card Footer) — lines 1400–1428</section>
+        <snippet>"Place growth stage badge in card footer (first position, left side), not top corner." Rationale: avoids conflicts with existing top badges (New, Visited) and category ribbons; semantic location alongside format/author metadata; accessible (icon + text); responsive. Top-right and top-left explicitly REJECTED. Authoritative override of Epic 1 AC #1.</snippet>
+      </doc>
+      <doc>
+        <path>docs/2-solutioning/digital-garden-integration-architecture.md</path>
+        <title>Digital Garden Integration Architecture</title>
+        <section>SCSS Component Structure — lines 619–648</section>
+        <snippet>Authoritative SCSS pattern for `.card-footer-item.growth-stage`: base color/font-size, child `i` icon styling, per-stage `&amp;[data-stage="…"] i { color: $growth-…; }` selectors, and `@include helpers.mobile { span { display: none; } }` for icon-only mobile.</snippet>
+      </doc>
+      <doc>
+        <path>docs/2-solutioning/digital-garden-integration-architecture.md</path>
+        <title>Digital Garden Integration Architecture</title>
+        <section>Critical Agent Rules — lines 762–771</section>
+        <snippet>1. NEVER modify existing card variants (`.is-horizontal`, `.is-log`, `.has-image`). 2. ALWAYS add new features to card footer (this story complies). 5. NEVER use jQuery — vanilla CSS-only badge in this story. Plus icon convention: ALWAYS use Remix Icon `-line` style for consistency.</snippet>
+      </doc>
+      <doc>
+        <path>docs/2-solutioning/digital-garden-integration-architecture.md</path>
+        <title>Digital Garden Integration Architecture</title>
+        <section>Project Structure / Component File Map — lines 75–94, 131–137</section>
+        <snippet>NEW files for Epic 1: `assets/scss/elements/growth-badge.scss`, `layouts/_partials/growth-badge.html`. MODIFY: `assets/scss/vars/_colors.scss` (add growth stage color vars), `assets/scss/main.scss` (import new component), `layouts/_partials/card.html` (insert partial), `assets/scss/layout/card.scss` (only if footer spacing needs adjustment).</snippet>
+      </doc>
+      <doc>
+        <path>docs/2-solutioning/digital-garden-integration-architecture.md</path>
+        <title>Digital Garden Integration Architecture</title>
+        <section>Naming Conventions — lines 565–586</section>
+        <snippet>Architecture text proposes Hugo partials in PascalCase (e.g., `GrowthBadge.html`) — INCONSISTENT with codebase reality. Actual repo convention is kebab-case (`card.html`, `growth-badge.html`). FOLLOW THE CODEBASE: `growth-badge.html`. SCSS files kebab-case: `growth-badge.scss`. CSS classes kebab-case: `.growth-stage`. Data attributes: `data-stage` (kebab-case). Frontmatter snake_case: `growth_stage`.</snippet>
+      </doc>
+      <doc>
+        <path>docs/1-planning/ux-design-specification.md</path>
+        <title>Article Time UX Design Specification</title>
+        <section>§1.4 Growth Stage Integration Strategy — lines 193–345</section>
+        <snippet>Authoritative design spec. Dual badge system separates semantic growth stages (footer) from temporal badges (top-right New/Visited, unchanged). Markup template (lines 229–241), SCSS pattern (lines 244–280), color palette (lines 283–292), Remix Icon mapping (lines 294–297), card-layout ASCII positioning diagram (lines 305–318), responsive behavior (lines 351+).</snippet>
+      </doc>
+      <doc>
+        <path>docs/1-planning/ux-design-specification.md</path>
+        <title>Article Time UX Design Specification</title>
+        <section>Color Palette — lines 283–292</section>
+        <snippet>$growth-seedling: hsl(152, 76%, 50%) — #4ade80 light green. $growth-budding: hsl(189, 90%, 50%) — #16d4f0 cyan. $growth-evergreen: hsl(152, 76%, 33%) — #118855 deep green (matches existing `$success` defined in main.scss `@forward "src/bulma" with` block). $growth-withered: hsl(0, 0%, 50%) — #808080 gray.</snippet>
+      </doc>
+      <doc>
+        <path>docs/1-planning/ux-design-specification.md</path>
+        <title>Article Time UX Design Specification</title>
+        <section>Footer Item Order — lines 305–318</section>
+        <snippet>Card footer item order (left to right): 1. Growth Stage (NEW, prominent), 2. Format(s) (article/log/link/video/etc.), 3. Metadata (author, date). Positions growth badge as the FIRST `.card-footer-item` in the flex layout.</snippet>
+      </doc>
+      <doc>
+        <path>docs/1-planning/epics.md</path>
+        <title>Digital Garden Transformation - Epic and Story Breakdown</title>
+        <section>Story 1.2: Growth Stage Badge Component — lines 117–137</section>
+        <snippet>FR-002 coverage. Original AC #1 says "top-right corner" — superseded by ADR-005 + UX spec. Original AC #3 says "color-coded background" — superseded by UX spec which color-codes the icon, not the background. Prerequisite: Story 1.1 (frontmatter field). Effort: 2 days. PM/SM should backport corrected ACs to epics.md in housekeeping commit.</snippet>
+      </doc>
+      <doc>
+        <path>docs/sprint-artifacts/1-1-growth-stage-frontmatter-field.md</path>
+        <title>Story 1.1: Growth Stage Frontmatter Field</title>
+        <section>Default-Value Fallback (AC #3)</section>
+        <snippet>Story 1.1 establishes `default "seedling" .Params.growth_stage` as the consumer convention. Story 1.2 is the FIRST consumer — the badge partial MUST use this exact idiom so missing-field articles render Seedling without error. Build-time validation (1.1) guarantees only valid enum values reach the template.</snippet>
+      </doc>
+      <doc>
+        <path>docs/sprint-artifacts/1-1-growth-stage-frontmatter-field.md</path>
+        <title>Story 1.1: Growth Stage Frontmatter Field</title>
+        <section>Test Infrastructure Bootstrap</section>
+        <snippet>Story 1.1 bootstraps Playwright + node test runner: `playwright.config.ts`, `tests/e2e/smoke.spec.ts`, npm scripts `test:build`/`test:e2e`/`test`, CI workflow at `.github/workflows/test.yml`. Story 1.2 adds visual-regression tests to `tests/e2e/growth-badge.spec.ts`. NOTE: Story 1.1 is currently `ready-for-dev`, NOT `done` — Story 1.2 visual-regression tests are blocked until 1.1 lands.</snippet>
+      </doc>
+      <doc>
+        <path>docs/2-solutioning/test-design-system.md</path>
+        <title>System-Level Test Design (Test Architect Murat, 2025-11-15)</title>
+        <section>Test Stack / Visual Regression / ASR-001..ASR-008</section>
+        <snippet>Authoritative test plan. Stack: Playwright (E2E + visual regression + axe-core a11y) + Node test runner for build/script unit tests. Visual regression via Playwright `toHaveScreenshot()`. SUPERSEDES the brownfield-baseline "No Automated Tests Found" line in architecture.md. Story 1.2 introduces the first visual-regression suite (4 stages × 2 viewports = 8 baselines).</snippet>
+      </doc>
+      <doc>
+        <path>docs/1-planning/prd/03a-functional-requirements.md</path>
+        <title>Functional Requirements</title>
+        <section>FR-002 Growth Stage Visual Indicator</section>
+        <snippet>FR coverage for this story. Capability: Visual badge on cards and single pages communicates growth stage at a glance. Supported by FR-001 (frontmatter field, Story 1.1).</snippet>
+      </doc>
+      <doc>
+        <path>docs/2-solutioning/architecture.md</path>
+        <title>Architecture Documentation - Article Time Blog</title>
+        <section>Component Architecture / Template Hierarchy</section>
+        <snippet>Existing partial structure. `_partials/_base/` holds core layout/init partials (head, hero, navigation, footer, seo). `_partials/widgets/` holds feature widgets (pagination, series, archive). Top-level `_partials/` holds component partials like `card.html`. The growth-badge partial belongs at the top level alongside `card.html` (component, not init/widget).</snippet>
+      </doc>
+    </docs>
+
+    <code>
+      <artifact>
+        <path>layouts/_partials/card.html</path>
+        <kind>partial</kind>
+        <symbol>card.html — `&lt;footer class="card-footer"&gt;` block</symbol>
+        <lines>108-201</lines>
+        <reason>PRIMARY MODIFY target. Existing footer flex children (in source order): `.author-img` (111), `.button.round-button` (141, absolute-positioned), `.card-footer-item.log-date` (148), `.card-footer-item.formats` (173). Insert `{{ partial "growth-badge.html" . }}` as a NEW `.card-footer-item.growth-stage` BEFORE `.card-footer-item.log-date` so it renders first per UX spec. Card has three rendered branches at top level: articles/logs (1), tags/categories (205), authors (246) — only the first branch (articles/logs) needs the badge.</reason>
+      </artifact>
+      <artifact>
+        <path>layouts/single.html</path>
+        <kind>template</kind>
+        <symbol>single.html — articles branch `.info.widget` block</symbol>
+        <lines>34-131</lines>
+        <reason>SECONDARY MODIFY target. Article header metadata lives in the right sidebar `.info.widget` (lines 76–131): ribbon (82), `.time` block (86–100), tags-line (102–110), reading time (113–119), series (122–129). Place growth badge near `.time`/tags-line to sit alongside other meta. The `eq .Page.Type "page"` branch (line 2) does NOT need the badge — pages don't carry growth_stage. There is NO `_default/single.html`; this is the only single template (Hugo v0.146+ flat layout confirmed).</reason>
+      </artifact>
+      <artifact>
+        <path>layouts/_partials/growth-badge.html</path>
+        <kind>partial</kind>
+        <symbol>growth-badge partial (NEW)</symbol>
+        <reason>NEW. Top-level `_partials/` per repo convention (kebab-case, alongside `card.html`). Resolves stage with `default "seedling" .Params.growth_stage`, uses dicts for icon/label/tooltip lookup, renders the `&lt;div class="card-footer-item growth-stage" data-stage="…" title="…"&gt;` markup from UX spec. Receives page context (`.`) so it works from card.html (page) and single.html (article context).</reason>
+      </artifact>
+      <artifact>
+        <path>assets/scss/elements/growth-badge.scss</path>
+        <kind>scss-component</kind>
+        <symbol>growth-badge SCSS (NEW)</symbol>
+        <reason>NEW. One component per file per repo convention. Mirrors existing element files (`badge.scss`, `ribbon.scss`, `box.scss`, etc.) — opens with `@use "vars/helpers";` (and `@use "sass:color";` if needed). Implements the architecture pattern (lines 619–648): base `.card-footer-item.growth-stage`, per-stage `&amp;[data-stage="…"] i { color: …; }`, mobile breakpoint via `@include helpers.mobile`.</reason>
+      </artifact>
+      <artifact>
+        <path>assets/scss/vars/_colors.scss</path>
+        <kind>scss-vars</kind>
+        <symbol>color palette (MODIFY)</symbol>
+        <lines>1-40</lines>
+        <reason>MODIFY. Currently defines `$dark`, `$light`, `$gold`, `$gold-light`, `$gold-dark` and a `$color-map`. NOTE: there is no `$success` variable here — `$success: hsl(152, 76%, 33%)` is defined inside `main.scss`'s `@forward "src/bulma" with (...)` block (line 18). To keep `$growth-evergreen` consistent, EITHER (a) duplicate `hsl(152, 76%, 33%)` in `_colors.scss`, OR (b) add `$success` to `_colors.scss` and reference both from main.scss. Recommendation: add the four growth vars directly with literal HSL — simpler, matches UX spec verbatim. Add explanatory comment block citing UX spec.</reason>
+      </artifact>
+      <artifact>
+        <path>assets/scss/main.scss</path>
+        <kind>scss-entry</kind>
+        <symbol>main.scss element imports</symbol>
+        <lines>37-44</lines>
+        <reason>MODIFY. Existing pattern uses `@use "elements/badge";` (line 38), `@use "elements/box";`, etc. Add `@use "elements/growth-badge";` immediately after `@use "elements/badge";` to keep the elements grouping. The architecture's "@import" mention is loose phrasing — repo uses `@use`.</reason>
+      </artifact>
+      <artifact>
+        <path>assets/scss/layout/card.scss</path>
+        <kind>scss-layout</kind>
+        <symbol>card layout styles</symbol>
+        <reason>CONDITIONAL MODIFY. Only edit if the new `.card-footer-item.growth-stage` visibly disrupts spacing/flex behavior in `.is-horizontal`, `.is-log`, or `.has-image` variants. Default expectation: Bulma's `.card-footer` flex distribution accommodates the new item without changes. Do NOT preemptively add rules.</reason>
+      </artifact>
+      <artifact>
+        <path>assets/scss/elements/badge.scss</path>
+        <kind>reference</kind>
+        <symbol>existing top-right badges (.visited, .is-new)</symbol>
+        <lines>1-47</lines>
+        <reason>REFERENCE only — DO NOT MODIFY. Existing badges live in `article.card.is-horizontal.visited .title a::after` and `article.card.is-horizontal.is-new …::after/::before`. They are pseudo-elements at top-right with 45° rotation. Growth badge is an INDEPENDENT component (separate file, real DOM element in card footer). AC #9 and architecture line 764 require these stay untouched.</reason>
+      </artifact>
+      <artifact>
+        <path>assets/scss/elements/ribbon.scss</path>
+        <kind>reference</kind>
+        <symbol>category ribbons</symbol>
+        <reason>REFERENCE only — DO NOT MODIFY. Top-left/right ribbons for categories. Growth badge does not interact with these. AC #9 regression coverage.</reason>
+      </artifact>
+      <artifact>
+        <path>assets/scss/elements/tooltip.scss</path>
+        <kind>reference</kind>
+        <symbol>data-tooltip styling</symbol>
+        <reason>REFERENCE. Existing footer items use `data-tooltip="…"` attribute (e.g., card.html lines 150, 165, 175). Story 1.2 spec uses native `title` attribute (AC #4, #6) — different mechanism. If the team later wants visual consistency, swapping to `data-tooltip` is a one-line change in the partial. Out of scope for the Tooltip Enrichment task here.</reason>
+      </artifact>
+      <artifact>
+        <path>assets/scss/vars/_helpers.scss</path>
+        <kind>scss-mixins</kind>
+        <symbol>helpers.mobile mixin</symbol>
+        <lines>195-199</lines>
+        <reason>REFERENCE. `@mixin mobile { @media screen and (max-width: 640px) { @content; } }` — used as `@include helpers.mobile { ... }`. Story spec mentions `&lt; 600px` (AC #7) but the codebase mobile breakpoint is 640px. Use `helpers.mobile` to stay consistent with the rest of the SCSS — this slightly widens the icon-only zone vs. the spec's 600px, which is acceptable (and architecturally correct).</reason>
+      </artifact>
+      <artifact>
+        <path>archetypes/articles/index.md</path>
+        <kind>archetype</kind>
+        <symbol>article frontmatter (MODIFIED by Story 1.1)</symbol>
+        <lines>1-23</lines>
+        <reason>REFERENCE only. Story 1.1 adds `growth_stage: "seedling"` to this archetype. Story 1.2 consumes the field but does NOT modify this file. CURRENT STATE (read 2026-05-06): the file does NOT yet have `growth_stage` — Story 1.1 is `ready-for-dev` not `done`. Confirm 1.1 is merged before relying on archetype output.</reason>
+      </artifact>
+      <artifact>
+        <path>archetypes/logs/index.md</path>
+        <kind>archetype</kind>
+        <symbol>log frontmatter (MODIFIED by Story 1.1)</symbol>
+        <reason>REFERENCE only. Same as articles archetype. Logs render via `card.html` `is-log` variant — the badge appears in their footer too (AC #5, AC #9 ensures `.is-log` is unchanged otherwise).</reason>
+      </artifact>
+      <artifact>
+        <path>layouts/_partials/_base/validate-growth-stage.html</path>
+        <kind>partial</kind>
+        <symbol>build-time validation (created by Story 1.1)</symbol>
+        <reason>REFERENCE only — created by Story 1.1, NOT this story. Halts build on invalid `growth_stage`. The badge partial does NOT need to re-validate; build-time validation guarantees only valid enum values reach this template. CURRENT STATE: file does not yet exist (1.1 not merged).</reason>
+      </artifact>
+      <artifact>
+        <path>schemas/frontmatter/article.schema.json</path>
+        <kind>json-schema</kind>
+        <symbol>frontmatter schema (created by Story 1.1)</symbol>
+        <reason>REFERENCE only. Single source of truth for the growth_stage enum. Story 1.2 does NOT modify the schema. If a future filter UI needs the enum in JS, import from this schema rather than duplicating.</reason>
+      </artifact>
+      <artifact>
+        <path>layouts/baseof.html</path>
+        <kind>template</kind>
+        <symbol>base template</symbol>
+        <reason>REFERENCE only — DO NOT MODIFY. Hugo v0.146+ flat layout (no `_default/baseof.html` confirmed). Story 1.1 wires `validate-growth-stage` here. Story 1.2 has no reason to touch baseof.html.</reason>
+      </artifact>
+      <artifact>
+        <path>tests/e2e/growth-badge.spec.ts</path>
+        <kind>test</kind>
+        <symbol>visual regression suite (NEW)</symbol>
+        <reason>NEW. Playwright `toHaveScreenshot()` test covering 4 stages × 2 viewports (1280×800 desktop, 375×667 mobile) = 8 baseline screenshots. Plus card-list assertion (homepage), single-page assertion per stage, and missing-field default-fallback assertion. Commit baselines under `tests/e2e/growth-badge.spec.ts-snapshots/`. Depends on Story 1.1's `playwright.config.ts` and `npm run test:e2e` script.</reason>
+      </artifact>
+      <artifact>
+        <path>tests/e2e/smoke.spec.ts</path>
+        <kind>reference</kind>
+        <symbol>existing smoke test (created by Story 1.1)</symbol>
+        <reason>REFERENCE pattern. Use as Playwright file structure template. Story 1.2 ADDS a new spec file alongside, does NOT modify smoke.spec.ts.</reason>
+      </artifact>
+      <artifact>
+        <path>playwright.config.ts</path>
+        <kind>config</kind>
+        <symbol>Playwright config (created by Story 1.1)</symbol>
+        <reason>REFERENCE only. webServer runs `hugo server`, baseURL `http://localhost:1313`, chromium-only. Story 1.2 does NOT modify config — uses existing project. If visual regression needs separate viewport projects, prefer per-test `page.setViewportSize(...)` over config changes to keep 1.1's bootstrap untouched.</reason>
+      </artifact>
+      <artifact>
+        <path>docs/technical/testing.md</path>
+        <kind>doc</kind>
+        <symbol>test strategy doc (created by Story 1.1)</symbol>
+        <reason>MODIFY. Append a "Growth Badge" section describing the visual-regression test, baseline-screenshot strategy, and how to update baselines (`npx playwright test --update-snapshots`). Cross-link to `docs/2-solutioning/test-design-system.md`.</reason>
+      </artifact>
+      <artifact>
+        <path>static/fonts/remixicon/</path>
+        <kind>assets</kind>
+        <symbol>Remix Icon font/sprite assets</symbol>
+        <reason>REFERENCE. Site uses Remix Icon via SVG sprite (`fonts/remixicon/remixicon.symbol.svg` referenced from card.html line 43, head.html, etc.). The story spec uses `&lt;i class="ri-…"&gt;` icon-font classes (UX spec line 231). VERIFY: the bundled Remix Icon assets here include both the SVG sprite AND the icon-font CSS classes. If only the sprite is loaded, the partial must render `&lt;svg&gt;&lt;use xlink:href="…#seedling-line"&gt;&lt;/svg&gt;` instead of `&lt;i class="ri-seedling-line"&gt;`. Glyphs needed: seedling-line, plant-line, tree-line, skull-line. Check `static/fonts/remixicon/` and the bundled CSS before finalizing the partial markup.</reason>
+      </artifact>
+      <artifact>
+        <path>package.json</path>
+        <kind>config</kind>
+        <symbol>npm package manifest</symbol>
+        <reason>REFERENCE only — Story 1.2 does NOT add new dependencies. Story 1.1 adds `@playwright/test`, `husky`, `ajv-cli`, `gray-matter` and the `test`/`test:build`/`test:e2e` scripts. Story 1.2 reuses them. CURRENT STATE: package.json still has only postcss + postcss-cli + postcss-purgecss; no devDependencies; no test scripts. Story 1.1 must land first.</reason>
+      </artifact>
+    </code>
+
+    <dependencies>
+      <ecosystem name="hugo">
+        <package name="hugo-extended" version="0.152.2 (pinned per architecture)" note="Templating uses `default`, `dict`, `index`, `partial`, `.Params.*`. Hugo v0.146+ flat layout (single.html and baseof.html at layouts/ root) — confirmed by glob: NO `layouts/_default/single.html`." />
+      </ecosystem>
+      <ecosystem name="content-tooling">
+        <package name="Bulma" version="1.0.4" note="EXISTING CSS framework. Provides `.card-footer` flex layout and `.card-footer-item` flex children — the growth badge slot relies on Bulma's default flex distribution." />
+        <package name="Remix Icon" version="4.x" note="EXISTING icon library. Glyphs used: `ri-seedling-line`, `ri-plant-line`, `ri-tree-line`, `ri-skull-line`. ⚠️ The repo currently uses Remix Icon via SVG sprite (`static/fonts/remixicon/remixicon.symbol.svg`) — confirm the icon-font CSS class form (`&lt;i class='ri-…'&gt;`) is also loaded before committing the partial markup; otherwise switch to the existing `&lt;svg&gt;&lt;use xlink:href='…#seedling-line'&gt;` pattern from `card.html`." />
+      </ecosystem>
+      <ecosystem name="node-npm">
+        <package name="@fullhuman/postcss-purgecss" version="^8.0.0" note="EXISTING. PurgeCSS strips unused selectors in production. The new `.card-footer-item.growth-stage` and `&amp;[data-stage='…']` selectors must survive PurgeCSS — confirm safelist or that selectors are reachable from rendered HTML (they should be, via the partial). Add to safelist if any false positives." />
+        <package name="postcss" version="^8.5.14" note="EXISTING. CSS processing." />
+        <package name="postcss-cli" version="^11.0.1" note="EXISTING. CSS CLI." />
+        <package name="@playwright/test" version="^1.x (added by Story 1.1)" note="DEPENDENCY ON STORY 1.1. Visual regression tests use `toHaveScreenshot()`. Story 1.2 does NOT install Playwright itself." />
+      </ecosystem>
+    </dependencies>
+  </artifacts>
+
+  <constraints>
+    - Card-footer placement is mandatory (ADR-005, UX spec §1.4). Top-right and top-left placements are explicitly REJECTED — those slots belong to existing `.is-new` / `.visited` badges and category ribbons.
+    - NEVER modify existing card variants (`.is-horizontal`, `.is-log`, `.has-image`) or the top-right badge / ribbon markup. AC #9 + architecture rule #1 (line 764).
+    - NEVER use jQuery or any new JavaScript. Badge is vanilla CSS + Hugo template only. (Architecture rule #5, line 768.)
+    - Use Remix Icon `-line` glyphs (not `-fill`) for consistency. Architecture line 759.
+    - Default-value consumption: badge MUST use `default "seedling" .Params.growth_stage` (idiom established by Story 1.1). Missing-field articles render Seedling without error; build-time validation (Story 1.1) catches invalid values before the partial runs.
+    - Partial naming: kebab-case `growth-badge.html` at top-level `_partials/` (alongside `card.html`). Architecture line 568 mentions PascalCase — that line is INCONSISTENT with the codebase; follow the codebase. `_base/` is reserved for layout/init partials only.
+    - SCSS file: `assets/scss/elements/growth-badge.scss`, imported via `@use "elements/growth-badge";` in `main.scss` (NOT `@import` — codebase uses `@use`).
+    - Color application: per-stage color goes on the **icon** (`i`), not the badge background. UX spec authoritative (lines 244–280).
+    - Icon decorative, label semantic: `aria-hidden="true"` on the `&lt;i&gt;`; the `&lt;span&gt;` label provides screen-reader text. Tooltip via `title` on the wrapper element (AC #4, #6). Badge is non-interactive; keyboard focus not required.
+    - Mobile breakpoint: hide the `&lt;span&gt;` via `@include helpers.mobile { span { display: none; } }`. Note: codebase mobile breakpoint is 640px in `_helpers.scss`; story spec says `&lt; 600px`. Use the codebase mixin (640px) — staying consistent matters more than a 40px discrepancy.
+    - WCAG-AA contrast must hold against the card background (`color.adjust($dark, $lightness: 5%)`, per `card.scss` line 5). Verify each stage color in the manual smoke test.
+    - Story 1.1 prerequisite: frontmatter field, build validation, archetype updates, AND test infrastructure (Playwright config + smoke spec + npm scripts) must be in place. As of 2026-05-06, Story 1.1 is `ready-for-dev` not `done` — confirm it has shipped before starting visual-regression tasks.
+    - Out of scope: filter UI (Epic 5 / Story 5.3), withered warning banner (Story 1.4), three-tier sorting (Epic 4), withered SEO/RSS (Story 1.5 / 9.6), migration of existing articles' `growth_stage` values (manual content task in `docs/todo.md`), keyboard-focus styled tooltip (use native `title` only).
+    - PurgeCSS regression risk: `.card-footer-item.growth-stage` and `[data-stage="…"]` selectors must survive production CSS purge. Manually verify a production build (`hugo --environment production`) renders the badge styles correctly; safelist if needed.
+    - AC backport recommendation: Epic 1 Story 1.2 in `docs/1-planning/epics.md` still has the obsolete "top-right corner" / "color-coded background" wording (lines 126, 128). PM/SM should update those lines in a follow-up housekeeping commit so Epic and implementation stay aligned. NOT part of this story's scope.
+  </constraints>
+
+  <interfaces>
+    <interface>
+      <name>growth-badge partial</name>
+      <kind>Hugo partial</kind>
+      <signature>{{ partial "growth-badge.html" . }}  — receives current page context (.); reads .Params.growth_stage with `default "seedling"` fallback; renders `&lt;div class="card-footer-item growth-stage" data-stage="{stage}" title="{tooltip}"&gt;&lt;i class="ri-{icon}-line" aria-hidden="true"&gt;&lt;/i&gt;&lt;span&gt;{label}&lt;/span&gt;&lt;/div&gt;`. No return value.</signature>
+      <path>layouts/_partials/growth-badge.html (NEW); invoked from layouts/_partials/card.html (footer) and layouts/single.html (article header metadata)</path>
+    </interface>
+    <interface>
+      <name>growth_stage frontmatter field (consumer view)</name>
+      <kind>frontmatter contract</kind>
+      <signature>growth_stage: "seedling" | "budding" | "evergreen" | "withered"  (string; optional in existing content; default "seedling" via `default "seedling" .Params.growth_stage`)</signature>
+      <path>archetypes/articles/index.md, archetypes/logs/index.md (definition by Story 1.1); schemas/frontmatter/article.schema.json (formal schema by Story 1.1); consumed here in growth-badge partial</path>
+    </interface>
+    <interface>
+      <name>.card-footer-item.growth-stage CSS contract</name>
+      <kind>SCSS component selector</kind>
+      <signature>.card-footer-item.growth-stage[data-stage="seedling"|"budding"|"evergreen"|"withered"]  with child `i` colored per stage; `span` hidden under `helpers.mobile` (max-width: 640px)</signature>
+      <path>assets/scss/elements/growth-badge.scss (NEW); base color/font-size, per-stage `&amp;[data-stage="…"] i { color: $growth-…; }` rules, mobile-icon-only via `@include helpers.mobile`.</path>
+    </interface>
+    <interface>
+      <name>Growth stage SCSS color variables</name>
+      <kind>SCSS vars (Sass module exports)</kind>
+      <signature>$growth-seedling: hsl(152, 76%, 50%); $growth-budding: hsl(189, 90%, 50%); $growth-evergreen: hsl(152, 76%, 33%); $growth-withered: hsl(0, 0%, 50%);</signature>
+      <path>assets/scss/vars/_colors.scss (NEW vars added; existing `$dark`, `$light`, `$gold*` preserved). Consumed by `growth-badge.scss` via `@use "vars/colors"` or `@use "vars/helpers"` (helpers.scss `@forward "colors"` already exposes color vars under `helpers.$…`).</path>
+    </interface>
+    <interface>
+      <name>data-stage attribute</name>
+      <kind>HTML data attribute (CSS hook)</kind>
+      <signature>data-stage="seedling" | "budding" | "evergreen" | "withered"  (kebab-case attribute, lowercase enum value matching frontmatter)</signature>
+      <path>Set by growth-badge.html partial; read by `assets/scss/elements/growth-badge.scss` via `[data-stage="…"]` attribute selectors. Used downstream by Epic 5 filter UI (Story 5.3) for client-side filtering — keep attribute name stable.</path>
+    </interface>
+  </interfaces>
+
+  <tests>
+    <standards>
+      Authoritative test plan: `docs/2-solutioning/test-design-system.md` (Test Architect Murat, 2025-11-15). Stack: Playwright (E2E + visual regression via `toHaveScreenshot()` + axe-core a11y) + Node test runner (`node --test`) for build/script unit tests. Story 1.1 bootstrapped this infrastructure (Playwright config, smoke spec, npm scripts, CI workflow); Story 1.2 ADDS the first real visual-regression suite.
+
+      Visual-regression strategy: 4 growth stages × 2 viewports (desktop 1280×800, mobile 375×667) = 8 baseline screenshots covering both card-list (homepage) and single-page contexts. Plus a missing-field assertion that the default fallback path renders Seedling. Baselines committed under `tests/e2e/growth-badge.spec.ts-snapshots/`.
+
+      Manual verification required for visual fidelity (color saturation, icon weight, mobile icon-only behavior) and a11y (WCAG-AA contrast against dark card background, screen-reader pronunciation of stage labels). Run `axe-core` via Playwright on a representative page with the new badge — expect zero new violations.
+
+      Production build smoke: `hugo --environment production` must render the badge correctly after PurgeCSS (verify the `[data-stage="…"]` selectors survive purge). Add to safelist only if a regression appears.
+    </standards>
+    <locations>
+      - tests/e2e/growth-badge.spec.ts            (NEW — visual regression spec)
+      - tests/e2e/growth-badge.spec.ts-snapshots/ (NEW — committed baseline screenshots)
+      - tests/e2e/smoke.spec.ts                   (existing — created by Story 1.1; reference pattern only, not modified)
+      - playwright.config.ts                      (existing — created by Story 1.1; not modified)
+      - docs/technical/testing.md                 (MODIFY — append "Growth Badge" section)
+    </locations>
+    <ideas>
+      - AC #1, #5 (card list): Homepage screenshot → assert `.card-footer-item.growth-stage` is the FIRST `.card-footer-item` child of every `.card-footer`. Snapshot to baseline.
+      - AC #1, #5 (single page): Visit `/articles/{slug}/` for one article per stage → assert badge renders in the article header metadata cluster (right sidebar `.info.widget`). Snapshot.
+      - AC #2 (icon mapping): For each stage, assert the rendered DOM contains the correct `ri-…-line` icon class AND the matching label text ("Seedling"/"Budding"/"Evergreen"/"Withered").
+      - AC #3 (icon color): Computed-style assertion or visual diff — `getComputedStyle(badge.querySelector('i')).color` matches the expected stage color (or rely on visual snapshot).
+      - AC #4 (tooltip): Assert `title` attribute on `.growth-stage` wrapper contains the long description ("Seedling — early/draft content", etc.).
+      - AC #6 (a11y): `axe-core` Playwright integration on a card-list page AND a single-page; expect zero new violations. Assert `i.aria-hidden === "true"`.
+      - AC #7 (mobile): At viewport 375×667, assert `span` is `display: none` (computed style) AND the `title` tooltip is still present (preserves accessible label). Snapshot.
+      - AC #8 (default fallback): Use a fixture article with NO `growth_stage` field (or remove the field temporarily). Assert badge renders with `data-stage="seedling"` and "Seedling" label. This is the regression guarantee for existing pre-1.1 content.
+      - AC #9 (regression — top-right badges): For an article that's both `is-new` and has a category ribbon, snapshot the card and assert (visual diff) that `.is-new` and ribbon both still render at top corners — growth badge does NOT obscure or shift them.
+      - AC #9 (regression — variants): Snapshot one card per variant: `.is-horizontal` (default), `.is-log`, `.has-image`, `.is-fixed`. Confirm growth badge renders in the footer of each without disrupting layout.
+      - PurgeCSS regression: Run `hugo --environment production` then load the built `index.html` in a Playwright test — assert `.growth-stage` styles are applied (icon has expected color). Catches PurgeCSS over-stripping.
+      - Build smoke: A test article with a valid `growth_stage` builds with `hugo --environment production` exit 0. Already covered by Story 1.1's build-smoke fixtures — no new build test needed for Story 1.2.
+    </ideas>
+  </tests>
+</story-context>

@@ -321,7 +321,9 @@ Stories mit einem `**GitHub Issue:**`-Eintrag schließen das verlinkte Issue, so
 
 **Prerequisites:** Story 2.3
 
-**Dependencies:** Epic 3, Story 3.2 (webmention processing script)
+**Dependencies:** Epic 3, Story 3.2 (webmention processing script) — **soft dependency** (siehe `docs/todo.md` → Cross-Epic Dependencies)
+
+**Implementation Note (Mock Data):** Datei `data/webmentions_by_article.json` existiert noch nicht — wird erst von Story 3.2 erzeugt. Während der Implementierung **Fixture-Datei mit Sample-Webmentions** anlegen (1–2 Replies, 1 Like, 1 Mention, 1 Repost — alle Typ-Gruppierungen aus AC2 abdecken). AC5 („No replies yet")-Pfad mit leerem `{}` testen. Echte Daten fließen automatisch ein, sobald 3.2 läuft. Fixture-Datei vor Merge entweder löschen oder als `.example` umbenennen.
 
 **Effort:** 2 days
 
@@ -374,7 +376,14 @@ Stories mit einem `**GitHub Issue:**`-Eintrag schließen das verlinkte Issue, so
 
 **Prerequisites:** Phase 0 (GitHub Pages configured, secrets added)
 
-**Dependencies:** Epic 3 (engagement fetch scripts added later)
+**Dependencies:** Epic 3 (engagement fetch scripts added later) — **soft dependency** (siehe `docs/todo.md` → Cross-Epic Dependencies)
+
+**Implementation Note (Placeholder Step):** AC4 „Fetch engagement data" wird in dieser Story als **No-Op-Placeholder** implementiert, z.B.:
+```yaml
+- name: Fetch engagement data (placeholder)
+  run: echo "Engagement fetch placeholder — wird von Epic 3 (Stories 3.1, 3.2) befüllt"
+```
+Damit der Workflow bereits jetzt grün durchläuft (AC5: „runs successfully on schedule"). Echte `node scripts/fetch-umami-hearts.js` und `node scripts/fetch-webmentions.js` Aufrufe ersetzen den Placeholder in Stories 3.1 / 3.2 (oder per separatem PR im Rahmen von Epic 3).
 
 **Effort:** 1 day
 

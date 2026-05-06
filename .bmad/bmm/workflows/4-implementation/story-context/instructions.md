@@ -49,6 +49,7 @@
     </check>
 
     <action>Extract {{epic_id}}, {{story_id}}, {{story_title}}, {{story_status}} from filename/content</action>
+    <action>Set {{epic_num}} = {{epic_id}} (same value, alias used by output path resolution and discover_inputs protocol)</action>
     <action>Parse sections: Story, Acceptance Criteria, Tasks/Subtasks, Dev Notes</action>
     <action>Extract user story fields (asA, iWant, soThat)</action>
     <template-output file="{default_output_file}">story_tasks</template-output>

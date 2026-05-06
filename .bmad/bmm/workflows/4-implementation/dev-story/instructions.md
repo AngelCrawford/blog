@@ -45,14 +45,15 @@
     </check>
 
     <action>Store the found story_key (e.g., "1-2-user-authentication") for later status updates</action>
-    <action>Find matching story file in {{story_dir}} using story_key pattern: {{story_key}}.md</action>
+    <action>Derive {{epic_num}} from story_key (first segment before first dash, e.g. "1" from "1-2-user-auth")</action>
+    <action>Find matching story file at {{story_dir}}/epic-{{epic_num}}/{{story_key}}.md; if not found, recursively glob {{story_dir}}/**/{{story_key}}.md as fallback (legacy flat layout)</action>
     <action>Read COMPLETE story file from discovered path</action>
 
     <anchor id="task_check" />
 
     <action>Parse sections: Story, Acceptance Criteria, Tasks/Subtasks, Dev Notes, Dev Agent Record, File List, Change Log, Status</action>
 
-    <action>Check if context file exists at: {{story_dir}}/{{story_key}}.context.xml</action>
+    <action>Check if context file exists at: {{context_file}} (resolves to {{story_dir}}/epic-{{epic_num}}/{{story_key}}.context.xml)</action>
     <check if="context file exists">
       <action>Read COMPLETE context file</action>
       <action>Parse all sections: story details, artifacts (docs, code, dependencies), interfaces, constraints, tests</action>
