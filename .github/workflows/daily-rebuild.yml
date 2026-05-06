@@ -105,12 +105,20 @@ jobs:
           # Main workspace now has latest data files (staged but not committed —
           # discarded after the build job finishes)
 
-      - name: Build Hugo site
-        run: hugo --environment production --minify
-
-      # === Deploy to GitHub Pages via official Pages actions ===
+      # Setup Pages BEFORE build so we can pass the correct base_url to Hugo.
+      # Output `base_url` reflects the active Pages URL:
+      # - With custom domain configured: https://article-time.de/
+      # - Without: https://angelcrawford.github.io/blog/
       - name: Setup Pages
+        id: pages
         uses: actions/configure-pages@v5
+
+      - name: Build Hugo site
+        run: |
+          hugo \
+            --environment production \
+            --minify \
+            --baseURL "${{ steps.pages.outputs.base_url }}"
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3

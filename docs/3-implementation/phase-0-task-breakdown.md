@@ -279,9 +279,9 @@ git push origin main
 
 **Acceptance Criteria:**
 - [x] Workflow triggered manually
-- [ ] Workflow completes successfully
-- [ ] gh-pages branch created (or updated)
-- [ ] data-updates branch has new commit
+- [x] Workflow completes successfully
+- [x] gh-pages branch created (or updated)
+- [x] data-updates branch has new commit
 
 ---
 
@@ -303,9 +303,9 @@ git push origin main
 - Settings → Pages shows: "Your site is published at https://angelcrawford.github.io/blog/"
 
 **Acceptance Criteria:**
-- [ ] GitHub Pages enabled
-- [ ] Deployment successful
-- [ ] Site accessible at https://angelcrawford.github.io/blog/
+- [x] GitHub Pages enabled
+- [x] Deployment successful
+- [x] Site accessible at https://angelcrawford.github.io/blog/
 
 ---
 
