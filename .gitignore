@@ -2,21 +2,7 @@
 /resources
 /public
 /themes
-.vscode/
 hugo_stats.json
 
 # node
 node_modules
-# package-lock.json
-
-## OS Files
-# Windows
-Thumbs.db
-ehthumbs.db
-Desktop.ini
-$RECYCLE.BIN/
-frontmatter.json
-.frontmatter/
-
-# windsurf rules
-.windsurfrules
