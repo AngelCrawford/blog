@@ -10,9 +10,27 @@ on:
     - cron: "0 2 * * *" # 2 AM UTC daily
   workflow_dispatch: # Manual trigger button
 
+# Permissions for the workflow
+# - contents: write   → push to data-updates branch
+# - pages: write      → deploy to GitHub Pages
+# - id-token: write   → OIDC token used by actions/deploy-pages
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+# Allow only one concurrent Pages deployment.
+# Queued runs after the one in progress will not be cancelled.
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
 jobs:
   fetch-and-rebuild:
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
       - name: Checkout main branch
@@ -84,10 +102,15 @@ jobs:
       - name: Build Hugo site
         run: hugo --environment production --minify
 
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
+      # === Deploy to GitHub Pages via official Pages actions ===
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./public
-          cname: article-time.de # Custom domain (Task 3.2)
-          force_orphan: true # Each deploy = single orphan commit (no history bloat)
+          path: ./public
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
