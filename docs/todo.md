@@ -4,10 +4,7 @@
 - [Icons austauschen](docs/IconDemo.html)
 - [New Home Design, einbauen](docs/Home.html)
 - [New Artikel Design, einbauen]('docs/Artikel.html')
-- [Noch kleine Sachen offen](docs\3-implementation\phase-0-task-breakdown.md)
-
-4. **Issues schließen** (#31, #38, #41, #49, #173)
-5. **Optional:** ersten Release-Tag setzen `git tag -a v0.1.0` → Footer zeigt das ab nächstem Run
+- [Noch mini Sachen offen](docs\3-implementation\phase-0-task-breakdown.md)
 
 ---
 
@@ -117,10 +114,6 @@ scroll-padding-top: 35px;
 - Lazy load search functionality (only when search box is focused)
 - Consider Algolia, Lunr.js, or Pagefind for better search performance
 - Implement search result pagination
-
-**Font loading**
-- You're using preload for fonts (good!)
-- But missing font-display: swap in CSS to prevent FOIT (Flash of Invisible Text)
 
 **JavaScript bundle size**
 - jQuery: ~30KB minified + gzipped
