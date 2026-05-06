@@ -146,3 +146,63 @@ Alle bestehenden Artikel in `content/articles/` und `content/logs/` durchgehen u
 **Tipp:** Einen kleinen Helper-Script schreiben falls > 50 Artikel: liest alle .md-Files, listet sie mit Datum + Titel auf, fragt im Terminal nach Stage. Aber für ~31 Artikel (laut `architecture.md`) lohnt sich das nicht — manuell durchklicken ist schneller.
 
 **Quelle:** Architektur-Dokument `docs/2-solutioning/digital-garden-integration-architecture.md` (lines 1527-1528, "Update existing articles with `growth_stage: \"seedling\"` (migration task)") — als Migration explizit out-of-scope von Story 1.1.
+
+---
+
+## 🌐 Custom Domain Setup: article-time.de (verschoben aus Phase-0 Task 3.2)
+
+**Wann:** Wenn du bereit bist, die Site unter `article-time.de` statt `angelcrawford.github.io/blog/` zu betreiben.
+
+**Warum verschoben:** DNS-Propagation dauert 1-24h und blockiert dich bei Phase-0-Tests. Der Workflow funktioniert auch ohne — `actions/configure-pages` liefert automatisch die richtige `base_url`, sobald Custom Domain in den Pages-Settings gesetzt ist.
+
+### Voraussetzungen
+
+- Zugriff auf den Domain-Registrar (wo `article-time.de` gekauft wurde)
+- Repository ist public (✅ erledigt)
+- GitHub Pages ist aktiv via GitHub Actions (✅ erledigt)
+
+### Schritte
+
+**Teil A: DNS-Records beim Registrar setzen**
+
+Vier A-Records auf GitHub Pages IPs + ein CNAME für `www`:
+
+| Type | Name | Value |
+|---|---|---|
+| A | @ (oder `article-time.de`) | `185.199.108.153` |
+| A | @ | `185.199.109.153` |
+| A | @ | `185.199.110.153` |
+| A | @ | `185.199.111.153` |
+| CNAME | www | `angelcrawford.github.io` |
+
+DNS-Änderungen brauchen 1-24h zur Propagation.
+
+**Teil B: GitHub-Settings**
+
+1. Repository → Settings → Pages
+2. **Custom domain** Feld → `article-time.de` eintragen → Save
+3. Warten auf "DNS check successful" (kann ein paar Minuten dauern)
+4. Sobald grün: **Enforce HTTPS** anhaken
+
+**Teil C: Verifikation**
+
+- `http://article-time.de` → leitet auf `https://article-time.de` um
+- Browser zeigt grünes HTTPS-Schloss
+- DevTools → Network: `style.xxx.css` lädt mit Status 200 von `article-time.de`
+
+### Was im Workflow automatisch passiert
+
+Der `daily-rebuild.yml`-Workflow nutzt `actions/configure-pages@v5` mit Output `base_url`. Sobald Custom Domain gesetzt ist:
+- `base_url` → `https://article-time.de/` (war: `https://angelcrawford.github.io/blog/`)
+- Hugo wird mit `--baseURL` gegen den neuen Wert gebaut
+- **Keine Workflow-Änderung nötig** — beim nächsten Run sind alle Asset-URLs korrekt
+
+### Akzeptanzkriterien
+
+- [ ] DNS-Records beim Registrar eingetragen
+- [ ] Custom Domain in GitHub Pages Settings gesetzt
+- [ ] DNS-Check passt (nach Propagation)
+- [ ] Enforce HTTPS aktiv
+- [ ] Site erreichbar unter `https://article-time.de` mit funktionierendem Design
+
+**Quelle:** `docs/3-implementation/phase-0-task-breakdown.md` Task 3.2 — verschoben für späteren Termin.

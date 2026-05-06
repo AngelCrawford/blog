@@ -88,7 +88,7 @@
 </div>
 
 <div class="copyright has-text-centered">
-    &copy; 2020 - {{ dateFormat "2006" now }} | <abbr title='Build Date: {{ readFile "buildDate.txt" }}'>v{{ readFile "version.txt" }}</abbr>
+    &copy; 2020 - {{ dateFormat "2006" now }} {{ or .Site.Params.author.name .Site.Params.default_author_name .Site.Title }} | <abbr title='Build Date: {{ readFile "buildDate.txt" }}'>v{{ readFile "version.txt" }}</abbr>
     | <span>{{ .Site.Copyright | safeHTML }}</span>
 
     <p>

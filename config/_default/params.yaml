@@ -1,7 +1,30 @@
 remixicon_version: 1750019714996
 reading_speed: 179
-default_author: "angel"
-default_author_name: "Angel Crawford"
+
+# Author identity — consumed by SEO (Schema.org Person, OG article:author),
+# footer copyright, and any partial that needs author metadata.
+default_author: "angel" # taxonomy slug (legacy, used by .GetTerms "authors")
+default_author_name: "Angel Crawford" # legacy alias — kept for backward compatibility
+author:
+  name: "Angel Crawford"
+  url: "https://article-time.de"
+  # email: ""  # uncomment + fill if you want it exposed in metadata
+
+# Content Security Policy — consumed by layouts/_partials/_base/head.html:14
+# Each list is space-delimited into a CSP directive value.
+# WARNING: only loosen these (add hosts) when you actually integrate that service.
+# Stricter is better — every entry is a hole in the policy.
+csp:
+  default: ["'self'"]
+  formaction: ["'self'"]
+  framesrc: ["'self'", "https://www.youtube-nocookie.com"]
+  imgsrc: ["'self'", "data:", "https:"]
+  objectsrc: ["'none'"]
+  stylesrc: ["'self'", "'unsafe-inline'"] # 'unsafe-inline' required for inline SVG style attrs (sea-filter, fill colors)
+  scriptsrc: ["'self'", "https://cloud.umami.is"] # umami integrated in Phase 1A (Story 2.1)
+  scriptsrcelem: ["'self'", "https://cloud.umami.is"]
+  connectsrc: ["'self'", "https://cloud.umami.is", "https://webmention.io"]
+
 follow:
   header:
     - name: "RSS Feed"

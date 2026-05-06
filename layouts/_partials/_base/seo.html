@@ -74,7 +74,7 @@ Keywords precedence:
         {{- else }}
             "author": {
                 "@type": "Person",
-                "name": "{{ .Site.Params.default_author_name }}"
+                "name": {{ (or .Site.Params.author.name .Site.Params.default_author_name .Site.Title) | jsonify }}
             },
         {{- end }}
             "mainEntityOfPage": { "@type": "WebPage" },
