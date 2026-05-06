@@ -90,3 +90,4 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./public
           cname: article-time.de # Custom domain (Task 3.2)
+          force_orphan: true # Each deploy = single orphan commit (no history bloat)
