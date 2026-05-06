@@ -11,7 +11,7 @@
 {{- if ge $limit 1 -}}
 {{- $pages = $pages | first $limit -}}
 {{- end -}}
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/">
   <channel>
     <title>{{ .Site.Title }}</title>
     <link>{{ .Permalink }}</link>
@@ -26,12 +26,15 @@
     <item>
       <title>{{ .Title }}</title>
       {{- /*
-        <enclosure> dropped entirely — RSS-Spec requires `length` (file size in bytes),
-        but Hugo Resource doesn't expose .Size as a template-accessible field.
-        Modern RSS readers extract cover images from <description> <img> tags anyway.
-        Trade-off: simpler template, validator-clean (no missing-length errors),
-        no cover thumbnail in podcast-style readers (rare for blog feeds).
+        Cover image as Media RSS thumbnail — semantic, validator-clean, no `length` required.
+        Falls back gracefully when no cover Resource exists.
+        Spec: https://www.rssboard.org/media-rss
       */ -}}
+      {{- $images := .Resources.ByType "image" -}}
+      {{- $featured := $images.GetMatch "*cover*" -}}
+      {{- with $featured }}
+      <media:thumbnail url="{{ .Permalink }}" width="{{ .Width }}" height="{{ .Height }}" />
+      {{- end }}
       {{ if .GetTerms "categories" -}}
         {{- range first 1 (.GetTerms "categories") -}}
           <category>{{- .LinkTitle -}}</category>
