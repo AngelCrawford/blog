@@ -19,7 +19,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: main
-          fetch-depth: 0 # Full history
+          fetch-depth: 0 # Full history (needed for branch switching)
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -35,52 +35,51 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Create data directory
-        run: mkdir -p data
+      # === Switch to data-updates BEFORE writing data files ===
+      # Reason: data-updates already tracks data/popularity_scores.json (placeholder
+      # from Task 1.3). Writing to main first then `git checkout data-updates` would
+      # fail with "untracked working tree files would be overwritten by checkout".
+      - name: Switch to data-updates branch
+        run: |
+          git config user.name "GitHub Actions Bot"
+          git config user.email "actions@github.com"
+          git checkout data-updates
 
       - name: Fetch Umami hearts (placeholder)
         env:
           UMAMI_API_KEY: ${{ secrets.UMAMI_API_KEY }}
           UMAMI_WEBSITE_ID: ${{ secrets.UMAMI_WEBSITE_ID }}
         run: |
+          mkdir -p data
           echo '{}' > data/umami_hearts.json
-          # TODO: Add scripts/fetch-umami-hearts.js in Phase 1A (Story 3.1)
+          # TODO: Replace with scripts/fetch-umami-hearts.js in Phase 1A (Story 3.1)
 
       - name: Fetch webmentions (placeholder)
         run: |
           echo '{"children":[]}' > data/webmentions_raw.json
-          # TODO: Add webmention.io fetch in Phase 1A (Story 3.2)
+          # TODO: Replace with webmention.io fetch in Phase 1A (Story 3.2)
 
       - name: Calculate popularity scores (placeholder)
         run: |
           echo '{}' > data/popularity_scores.json
-          # TODO: Add scripts/calculate-popularity.js in Phase 1A (Story 3.3)
+          # TODO: Replace with scripts/calculate-popularity.js in Phase 1A (Story 3.3)
 
-      - name: Commit to data-updates branch
+      - name: Commit and push data-updates
         run: |
-          git config user.name "GitHub Actions Bot"
-          git config user.email "actions@github.com"
-
-          # Switch to data-updates branch
-          git checkout data-updates
-
-          # Add data files
           git add data/*.json
-
-          # Commit (skip if no changes)
+          # Commit returns non-zero if no changes — that's fine
           git commit -m "chore: update data $(date +%Y-%m-%d) [skip ci]" || echo "No changes to commit"
-
-          # Push to data-updates
           git push origin data-updates
 
-          # Switch back to main
-          git checkout main
+      - name: Switch back to main
+        run: git checkout main
 
-      - name: Copy data from data-updates branch
+      - name: Copy data from data-updates branch into main workspace
         run: |
           git fetch origin data-updates
           git checkout origin/data-updates -- data/
-          # Now main workspace has latest data (not committed)
+          # Main workspace now has latest data files (staged but not committed —
+          # discarded after the build job finishes)
 
       - name: Build Hugo site
         run: hugo --environment production --minify
