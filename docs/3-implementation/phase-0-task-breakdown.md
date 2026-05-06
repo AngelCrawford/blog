@@ -49,10 +49,10 @@ curl -X GET "https://cloud.umami.is/api/websites/<YOUR_WEBSITE_ID>/stats" \
 ```
 
 **Acceptance Criteria:**
-- [ ] API key generated
-- [ ] API key saved securely (password manager)
-- [ ] Website ID noted
-- [ ] Test API call succeeds
+- [x] API key generated
+- [x] API key saved securely (password manager)
+- [x] Website ID noted
+- [x] Test API call succeeds
 
 ---
 
@@ -77,9 +77,9 @@ curl -X GET "https://cloud.umami.is/api/websites/<YOUR_WEBSITE_ID>/stats" \
 - Secrets page shows: UMAMI_API_KEY, UMAMI_WEBSITE_ID (values hidden)
 
 **Acceptance Criteria:**
-- [ ] UMAMI_API_KEY secret created
-- [ ] UMAMI_WEBSITE_ID secret created
-- [ ] Secrets visible in repository settings
+- [x] UMAMI_API_KEY secret created
+- [x] UMAMI_WEBSITE_ID secret created
+- [x] Secrets visible in repository settings
 
 ---
 
