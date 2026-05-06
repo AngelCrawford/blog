@@ -5,6 +5,79 @@
 - [New Home Design, einbauen](docs/Home.html)
 - [New Artikel Design, einbauen]('docs/Artikel.html')
 
+---
+
+## 🔄 Remixicon Updates: Cache-Bust Workflow
+
+**Kontext:** Phase-0-Cleanup hat das `?t={{ .Site.Params.remixicon_version }}` aus den `@font-face`-URLs in `assets/scss/vars/_icons.scss` entfernt — Hugo prozessiert SCSS-Imports nicht als Template, daher rendert die Variable dort nicht. Der `?t=`-Query blieb literal in der URL stehen.
+
+### Wo der Cache-Bust noch funktioniert (HTML-Templates)
+
+Diese Dateien werden von Hugo **als Template gerendert**, hier funktioniert `{{ .Site.Params.remixicon_version }}` einwandfrei:
+
+- `layouts/baseof.html`, `layouts/single.html`, `layouts/list.html`, `layouts/page/archive.html`
+- `layouts/_partials/card.html`, `layouts/_partials/_base/{footer,navigation}.html`
+- `layouts/_partials/widgets/{archive,pagination,series}.html`
+- `layouts/_markup/render-heading.html`, `layouts/_shortcodes/rating.html`
+- `assets/js/search.js` (wird via `resources.ExecuteAsTemplate` prozessiert)
+
+→ Diese laden alle `remixicon.symbol.svg?t=<version>#<icon-name>`. **Bump von `remixicon_version` in `params.yaml` invalidiert den Browser-Cache der SVG-Sprite-Datei korrekt.**
+
+### Wo der Cache-Bust NICHT mehr funktioniert (CSS @font-face)
+
+`assets/scss/vars/_icons.scss` lädt die Remixicon-Font-Files (`.eot`, `.woff2`, `.woff`, `.ttf`, `.svg`) ohne Query-Parameter:
+
+```scss
+src: url("fonts/remixicon/remixicon.woff2") format("woff2"),
+     ...
+```
+
+→ Browser cached diese Dateien per ETag/Last-Modified von GitHub Pages.
+
+### Workflow beim Update der Remixicon-Files
+
+**Wenn du nur die Icon-Liste in der SVG-Sprite (`remixicon.symbol.svg`) änderst:**
+
+1. Sprite-Datei in `static/fonts/remixicon/remixicon.symbol.svg` ersetzen
+2. `config/_default/params.yaml`: `remixicon_version` bumpen (Unix-Timestamp in ms, z. B. `1750019714996`)
+3. Commit + push → Workflow deployed → Browser invalidiert SVG-Sprite-Cache automatisch
+
+**Wenn du die Font-Files (`remixicon.woff2` etc.) änderst** (passiert bei größeren Remixicon-Updates):
+
+1. Font-Dateien in `static/fonts/remixicon/` ersetzen
+2. `_icons.scss` bumpen — z. B. einen Whitespace/Kommentar-Change einfügen
+   - Damit ändert sich der CSS-Fingerprint-Hash (`style.min.<NEUER-HASH>.css`)
+   - Browser lädt die neue CSS-Datei und bei If-Modified-Since fragt es die Font-Files neu an
+   - GitHub Pages liefert die geänderten Files zurück
+3. Optional: zusätzlich `remixicon_version` in `params.yaml` bumpen (für die Sprite)
+4. Commit + push
+
+### Bessere Lösung (wenn du oft updatest)
+
+Falls dir das nervt, gibt's einen sauberen Hugo-Weg ohne CSS-Editing-Ritual:
+
+**Option: SCSS partial rausziehen → als Template-Partial einbinden**
+
+`_icons.scss` wird zu einem Hugo-Template (z. B. `layouts/_partials/icons-css.html`), das einen `<style>`-Block mit den `@font-face`-Definitionen rendert. Dort funktioniert `{{ .Site.Params.remixicon_version }}` direkt. Wird in `head.html` per `{{ partial "icons-css" . }}` eingebunden.
+
+Vorteile:
+- `params.yaml: remixicon_version` bumpen reicht für Komplett-Cache-Bust (Sprite + Fonts)
+- Kein Whitespace-Trick mehr in SCSS nötig
+
+Nachteile:
+- Zusätzlicher Inline-`<style>`-Block in `<head>` (~1 KB unminified)
+- Würde `'unsafe-inline'` in CSP `style-src` voraussetzen — haben wir bereits
+- Etwas mehr Setup-Komplexität
+
+→ Lohnt sich wenn du Remixicon **mehrmals pro Woche** updatest. Für gelegentliche Updates reicht das aktuelle Schema mit `_icons.scss` Whitespace-Bump.
+
+### Schnelltest: ist der Cache wirklich invalidiert?
+
+Nach Re-Deploy in DevTools → Network → Hard-Refresh (Ctrl+F5):
+- `style.min.<hash>.css` sollte **neuen Hash** haben (Beweis: SCSS wurde neu kompiliert)
+- `remixicon.woff2` sollte mit Status **200** (nicht "200 (from disk cache)") laden
+- `remixicon.symbol.svg?t=<neue-version>` mit dem aktuellen `remixicon_version`-Wert
+
 ## 1. Modern browsers don't need jQuery for basic DOM manipulation 
 **Recommendation:** Consider migrating to vanilla JavaScript to reduce bundle size by ~30KB (minified).
 

@@ -28,7 +28,7 @@ header.hero {
     }
 
     #city {
-        background-image: url("../images/header/city.svg");
+        background-image: url("images/header/city.svg");
         background-repeat: repeat-x;
         background-position: center bottom;
         background-size: auto 100%;
@@ -45,7 +45,7 @@ header.hero {
         height: 300px;
 
         .clock-logo {
-            background: url("../images/header/clock.webp") no-repeat top center;
+            background: url("images/header/clock.webp") no-repeat top center;
             background-size: contain;
             position: absolute;
             opacity: .8;
@@ -151,7 +151,7 @@ header.hero {
             position: absolute;
             top: 130px;
             left: calc(50% + 360px);
-            background: url("../images/header/hotairballoon.svg") no-repeat;
+            background: url("images/header/hotairballoon.svg") no-repeat;
             width: 40px;
             height: 40px;
             transform: rotate(10deg)
@@ -262,7 +262,7 @@ header.hero {
         // THANKS: Bird - https://codepen.io/matchboxhero/pen/RLebOY
         .bird-wrapper {
             .bird {
-                background-image: url("../images/header/birds.svg");
+                background-image: url("images/header/birds.svg");
                 background-size: auto 100%;
                 width: 88px;
                 height: 125px;

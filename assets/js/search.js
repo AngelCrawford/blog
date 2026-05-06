@@ -33,9 +33,9 @@ function searchFn() {
         var result = results[i].item;
         var openAnchor = "<a href=\"" + result.permalink + "\" " + "alt=\"" + result.showTitle + "\" title=\"" + result.showTitle + "\" class=\"title is-5\">";
         var resultPane = "<div class=\"column\">" + openAnchor + result.showTitle + "</a>" + "<p class=\"subtitle\">" + 
-          "<span><svg class=\"ri-1x\"><use xlink:href=\"/fonts/remixicon/remixicon.symbol.svg#price-tag-3-line\"></use></svg>" + result.tags + "</span>" +
-          "<span><svg class=\"ri-1x\"><use xlink:href=\"/fonts/remixicon/remixicon.symbol.svg#calendar-line\"></use></svg>" + result.publishedOn + "</span>" +
-          "<span><svg class=\"ri-1x\"><use xlink:href=\"/fonts/remixicon/remixicon.symbol.svg#pencil-line\"></use></svg>" + result.updatedOn + "</span>" +
+          "<span><svg class=\"ri-1x\"><use xlink:href=\"{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}#price-tag-3-line\"></use></svg>" + result.tags + "</span>" +
+          "<span><svg class=\"ri-1x\"><use xlink:href=\"{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}#calendar-line\"></use></svg>" + result.publishedOn + "</span>" +
+          "<span><svg class=\"ri-1x\"><use xlink:href=\"{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}#pencil-line\"></use></svg>" + result.updatedOn + "</span>" +
           "</p>" + 
           "<p>" + result.showContent.substr(0, 250) + " [...]" + 
           "<a href=\"" + result.permalink + "\" " + "alt=\"" + result.showTitle + "\" title=\"" + result.showTitle + "\" class=\"read-more\"> weiterlesen</a>" +
