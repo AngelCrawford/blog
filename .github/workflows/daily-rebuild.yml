@@ -1,0 +1,93 @@
+name: Daily Rebuild with Engagement Data
+
+# REVIEW BEFORE Story 3.4 (data-updates branch automation):
+# - Phase 0: schedule active, deploys with placeholder data (echo '{}')
+# - Phase 1A: real fetch scripts arrive in Story 3.1, 3.2, 3.3
+# - Verify schedule + data flow before relying on it in production
+
+on:
+  schedule:
+    - cron: '0 2 * * *'  # 2 AM UTC daily
+  workflow_dispatch:      # Manual trigger button
+
+jobs:
+  fetch-and-rebuild:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout main branch
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0  # Full history
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Setup Hugo
+        uses: peaceiris/actions-hugo@v2
+        with:
+          hugo-version: '0.161.1'
+          extended: true
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Create data directory
+        run: mkdir -p data
+
+      - name: Fetch Umami hearts (placeholder)
+        env:
+          UMAMI_API_KEY: ${{ secrets.UMAMI_API_KEY }}
+          UMAMI_WEBSITE_ID: ${{ secrets.UMAMI_WEBSITE_ID }}
+        run: |
+          echo '{}' > data/umami_hearts.json
+          # TODO: Add scripts/fetch-umami-hearts.js in Phase 1A (Story 3.1)
+
+      - name: Fetch webmentions (placeholder)
+        run: |
+          echo '{"children":[]}' > data/webmentions_raw.json
+          # TODO: Add webmention.io fetch in Phase 1A (Story 3.2)
+
+      - name: Calculate popularity scores (placeholder)
+        run: |
+          echo '{}' > data/popularity_scores.json
+          # TODO: Add scripts/calculate-popularity.js in Phase 1A (Story 3.3)
+
+      - name: Commit to data-updates branch
+        run: |
+          git config user.name "GitHub Actions Bot"
+          git config user.email "actions@github.com"
+
+          # Switch to data-updates branch
+          git checkout data-updates
+
+          # Add data files
+          git add data/*.json
+
+          # Commit (skip if no changes)
+          git commit -m "chore: update data $(date +%Y-%m-%d) [skip ci]" || echo "No changes to commit"
+
+          # Push to data-updates
+          git push origin data-updates
+
+          # Switch back to main
+          git checkout main
+
+      - name: Copy data from data-updates branch
+        run: |
+          git fetch origin data-updates
+          git checkout origin/data-updates -- data/
+          # Now main workspace has latest data (not committed)
+
+      - name: Build Hugo site
+        run: hugo --environment production --minify
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public
+          cname: article-time.de  # Custom domain (Task 3.2)

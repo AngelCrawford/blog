@@ -120,9 +120,9 @@ git checkout main
 - data-updates branch has only data/ folder
 
 **Acceptance Criteria:**
-- [ ] data-updates branch exists on GitHub
-- [ ] Branch contains data/popularity_scores.json
-- [ ] Switched back to main branch
+- [x] data-updates branch exists on GitHub
+- [x] Branch contains data/popularity_scores.json
+- [x] Switched back to main branch
 
 ---
 

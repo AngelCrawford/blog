@@ -475,7 +475,7 @@ git add .
 git commit -m "Add new article about Hugo"
 
 # Push to remote
-git push origin master
+git push origin main
 ```
 
 ### Git Features Used
