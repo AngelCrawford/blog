@@ -57,7 +57,9 @@
       {{- $content := .Content -}}
       {{- $content = replaceRE `a href="(#[^"]*)"` (printf `a href="%s$1"` .Permalink) $content -}}
       {{- $content = replaceRE `<svg[\s\S]*?</svg>` "" $content -}}
+      {{- /* Strip BOTH double- and single-quoted style attributes (render-link.html uses single) */ -}}
       {{- $content = replaceRE `\s+style="[^"]*"` "" $content -}}
+      {{- $content = replaceRE `\s+style='[^']*'` "" $content -}}
       <description>{{ $content | html }}</description>
     </item>
     {{- end }}
