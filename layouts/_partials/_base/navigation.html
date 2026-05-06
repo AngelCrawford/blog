@@ -5,7 +5,7 @@
     <input id="menu-switch" name="menu-switch" type="checkbox" />
 
     <div class="navbar-brand">
-        <a class="navbar-item {{ if .IsHome }}is-active{{ end }}" href="{{ "/" | relURL }}" title="{{ .Site.Title }}"><img src="{{ "images/favicon/favicon.ico" | relURL }}" width="28" height="28" alt="Logo">Artikel</a>
+        <a class="navbar-item {{ if .IsHome }}is-active{{ end }}" href="{{ .Site.Home.RelPermalink }}" title="{{ .Site.Title }}"><img src="{{ "images/favicon/favicon.ico" | relURL }}" width="28" height="28" alt="Logo">Artikel</a>
         <label for="menu-switch" class="navbar-burger" role="button" aria-expanded="false">
             <span aria-hidden="true"></span>
             <span aria-hidden="true"></span>

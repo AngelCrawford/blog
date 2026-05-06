@@ -39,7 +39,7 @@
 
     <div class="column is-hidden-touch is-hidden-desktop-only is-12-mobile is-6-tablet is-6-desktop is-3-widescreen is-3-fullhd stats">
         <p class="title is-5">Statistik</p>
-        <p>Momentan befinden sich {{ len (where .Site.RegularPages "Type" "in" (slice "articles" "logs")) }} <a href="{{ "/" | relURL }}" title="Artikel">Einträge</a> auf dieser Seite.</p>
+        <p>Momentan befinden sich {{ len (where .Site.RegularPages "Type" "in" (slice "articles" "logs")) }} <a href="{{ .Site.Home.RelPermalink }}" title="Artikel">Einträge</a> auf dieser Seite.</p>
         <ul>             
             <li>
                 {{ $countA := len (where .Site.RegularPages "Type" "articles") }}
