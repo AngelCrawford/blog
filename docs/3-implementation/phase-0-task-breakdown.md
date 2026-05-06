@@ -247,9 +247,9 @@ git push origin main
 - GitHub Actions tab shows "Daily Rebuild with Engagement Data" workflow
 
 **Acceptance Criteria:**
-- [ ] Workflow file created
-- [ ] File committed and pushed
-- [ ] Workflow appears in GitHub Actions tab
+- [x] Workflow file created
+- [x] File committed and pushed
+- [x] Workflow appears in GitHub Actions tab
 
 ---
 
@@ -278,7 +278,7 @@ git push origin main
   - GitHub Pages not enabled
 
 **Acceptance Criteria:**
-- [ ] Workflow triggered manually
+- [x] Workflow triggered manually
 - [ ] Workflow completes successfully
 - [ ] gh-pages branch created (or updated)
 - [ ] data-updates branch has new commit
