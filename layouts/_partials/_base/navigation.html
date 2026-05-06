@@ -5,7 +5,7 @@
     <input id="menu-switch" name="menu-switch" type="checkbox" />
 
     <div class="navbar-brand">
-        <a class="navbar-item {{ if .IsHome }}is-active{{ end }}" href="/" title="{{ .Site.Title }}"><img src="/images/favicon/favicon.ico" width="28" height="28" alt="Logo">Artikel</a>
+        <a class="navbar-item {{ if .IsHome }}is-active{{ end }}" href="{{ "/" | relURL }}" title="{{ .Site.Title }}"><img src="{{ "images/favicon/favicon.ico" | relURL }}" width="28" height="28" alt="Logo">Artikel</a>
         <label for="menu-switch" class="navbar-burger" role="button" aria-expanded="false">
             <span aria-hidden="true"></span>
             <span aria-hidden="true"></span>
@@ -20,7 +20,7 @@
             {{- $currentPage := . -}}
             {{- range .Site.Menus.main -}}
               <a class="navbar-item {{ if or ($currentPage.IsMenuCurrent "main" .) ($currentPage.HasMenuCurrent "main" .) }} is-active{{ end }}" {{ if or ($currentPage.IsMenuCurrent "main" .) ($currentPage.HasMenuCurrent "main" .) }} aria-current="page"{{ end }} href="{{ .URL }}" title="{{- if .Page.Params.translation.plural -}}{{ .Page.Params.translation.plural}}{{- else -}}{{ .Name }}{{- end -}}">
-                {{ if .Params.icon }}<svg class="ri-1x"><use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ $.Site.Params.remixicon_version}}#{{ .Params.icon }}"></use></svg>{{ end }}
+                {{ if .Params.icon }}<svg class="ri-1x"><use xlink:href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ $.Site.Params.remixicon_version}}#{{ .Params.icon }}"></use></svg>{{ end }}
                 {{- if .Page.Params.translation.plural -}}{{ .Page.Params.translation.plural}}{{- else -}}{{ .Name }}{{- end -}}
               </a>
             {{- end -}}
@@ -30,7 +30,7 @@
           {{ range .Site.Params.follow.header }}
             <a href="{{ .src }}" title="{{ .name }}" class="navbar-item follow-icons" alt="{{ .name }}" target="_blank" rel="noreferrer">
               <span class="icon">
-                <svg><use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ $.Site.Params.remixicon_version}}#{{ .icon }}"></use></svg>
+                <svg><use xlink:href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ $.Site.Params.remixicon_version}}#{{ .icon }}"></use></svg>
               </span>
             </a>
           {{ end }}
@@ -40,8 +40,8 @@
               <label for="searchBox" class="sr-only">Search</label>
               <input class="input" type="search" name="searchBox" id="searchBox" aria-label="Search" aria-placeholder="Search...">
               <span id="searchIcons" class="icon is-small is-right">
-                <svg class='remix lens'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ $.Site.Params.remixicon_version}}#search-2-line"></use></svg>
-                <svg class='remix close'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ $.Site.Params.remixicon_version}}#close-fill"></use></svg>
+                <svg class='remix lens'><use xlink:href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ $.Site.Params.remixicon_version}}#search-2-line"></use></svg>
+                <svg class='remix close'><use xlink:href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ $.Site.Params.remixicon_version}}#close-fill"></use></svg>
                 <div id="spinnerLoading" class="control spinner is-loading"></div>
               </span>
             </p>

@@ -29,16 +29,16 @@
     {{- $script := slice $jQuery $gdpr | resources.Concat "js/bundle.js" | resources.Minify | resources.Fingerprint -}}    
     <script src="{{ $script.Permalink }}"></script>
    
-    <link rel="preload" as="font" href="/fonts/Montserrat/MontserratAlternates-Regular.ttf" crossorigin="anonymous">
-    <link rel="preload" as="font" href="/fonts/Montserrat/Montserrat-VariableFont_wght.ttf" crossorigin="anonymous">
-    <link rel="preload" href="/images/header/city.svg" as="image" type="image/svg+xml">
-    <link rel="preload" href="/images/header/clock.webp" as="image" type="image/png">
+    <link rel="preload" as="font" href="{{ "fonts/Montserrat/MontserratAlternates-Regular.ttf" | relURL }}" crossorigin="anonymous">
+    <link rel="preload" as="font" href="{{ "fonts/Montserrat/Montserrat-VariableFont_wght.ttf" | relURL }}" crossorigin="anonymous">
+    <link rel="preload" href="{{ "images/header/city.svg" | relURL }}" as="image" type="image/svg+xml">
+    <link rel="preload" href="{{ "images/header/clock.webp" | relURL }}" as="image" type="image/png">
 
-    <link rel="icon" type="image/png" href="/images/favicon/favicon-96x96.png" sizes="96x96" /> <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" href="/images/favicon/favicon.svg" />
-    <link rel="shortcut icon" href="/images/favicon/favicon.ico" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon/apple-touch-icon.png" />
-    <link rel="manifest" href="/images/favicon/site.webmanifest" />
+    <link rel="icon" type="image/png" href="{{ "images/favicon/favicon-96x96.png" | relURL }}" sizes="96x96" /> <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="{{ "images/favicon/favicon.svg" | relURL }}" />
+    <link rel="shortcut icon" href="{{ "images/favicon/favicon.ico" | relURL }}" />
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ "images/favicon/apple-touch-icon.png" | relURL }}" />
+    <link rel="manifest" href="{{ "images/favicon/site.webmanifest" | relURL }}" />
     <meta name="apple-mobile-web-app-title" content="Article Time" />
 
     {{- /* SEO PARTS */}}

@@ -23,11 +23,11 @@
 
     <div class="column is-12-mobile is-6-tablet is-6-desktop is-3-widescreen is-3-fullhd social">
         <p class="title is-5">Article Time</p>
-        <div class="has-text-centered logo"><img src="/images/header/clock_small.webp" width="150" height="150" alt="Logo" title="Logo" /></div>
+        <div class="has-text-centered logo"><img src="{{ "images/header/clock_small.webp" | relURL }}" width="150" height="150" alt="Logo" title="Logo" /></div>
         <div class="follow-icons">
             {{ range .Site.Params.follow.footer }}
             <a href="{{ .src }}" title="{{ .name }}" alt="{{ .name }}" target="_blank" rel="noreferrer">
-                <svg><use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ $.Site.Params.remixicon_version}}#{{ .icon }}"></use></svg>
+                <svg><use xlink:href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ $.Site.Params.remixicon_version}}#{{ .icon }}"></use></svg>
             </a>
             {{ end }}
         </div>
@@ -39,13 +39,13 @@
 
     <div class="column is-hidden-touch is-hidden-desktop-only is-12-mobile is-6-tablet is-6-desktop is-3-widescreen is-3-fullhd stats">
         <p class="title is-5">Statistik</p>
-        <p>Momentan befinden sich {{ len (where .Site.RegularPages "Type" "in" (slice "articles" "logs")) }} <a href="/" title="Artikel">Einträge</a> auf dieser Seite.</p>
+        <p>Momentan befinden sich {{ len (where .Site.RegularPages "Type" "in" (slice "articles" "logs")) }} <a href="{{ "/" | relURL }}" title="Artikel">Einträge</a> auf dieser Seite.</p>
         <ul>             
             <li>
                 {{ $countA := len (where .Site.RegularPages "Type" "articles") }}
                 <span class="variable-number">
                     <svg class='ri-1x' style="fill: rgb(88, 179, 189)">
-                        <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ .Site.Params.remixicon_version}}#flower-line"></use>
+                        <use xlink:href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ .Site.Params.remixicon_version}}#flower-line"></use>
                     </svg>
                     Artikel
                 </span>
@@ -55,7 +55,7 @@
                 {{ $countM := len (where .Site.RegularPages "Type" "logs") }}
                 <span class="variable-number">
                     <svg class='ri-1x' style="fill: rgb(201, 172, 92)">
-                        <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ .Site.Params.remixicon_version}}#lightbulb-flash-line"></use>
+                        <use xlink:href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ .Site.Params.remixicon_version}}#lightbulb-flash-line"></use>
                     </svg>
                     Logs
                 </span>

@@ -12,7 +12,7 @@
 
 							{{ with .Meta.Exif }}{{ with .Tags.ImageDescription  }}
 								<figcaption>
-									<svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ $.Site.Params.remixicon_version}}#pencil-line"></use></svg>
+									<svg class='remix'><use xlink:href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ $.Site.Params.remixicon_version}}#pencil-line"></use></svg>
 									{{ . | safeHTML }}
 								</figcaption>
 							{{ end }}{{ end }}

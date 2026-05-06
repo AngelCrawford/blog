@@ -14,7 +14,7 @@
 
                                 {{ with .Meta.Exif }}{{ with .Tags.ImageDescription  }}
                                     <figcaption>
-                                        <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ $.Site.Params.remixicon_version}}#pencil-line"></use></svg>
+                                        <svg class='remix'><use xlink:href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ $.Site.Params.remixicon_version}}#pencil-line"></use></svg>
                                         {{ . | safeHTML }}
                                     </figcaption>
                                 {{ end }}{{ end }}
@@ -49,7 +49,7 @@
                                 </picture>
                                 {{ with .Meta.Exif }}{{ with .Tags.ImageDescription  }}
                                     <figcaption>
-                                        <svg class='remix'><use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ $.Site.Params.remixicon_version}}#pencil-line"></use></svg>
+                                        <svg class='remix'><use xlink:href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ $.Site.Params.remixicon_version}}#pencil-line"></use></svg>
                                         {{ . | safeHTML }}
                                     </figcaption>
                                 {{ end }}{{ end }}
@@ -86,14 +86,14 @@
                                 <div class="time">
                                     <time class="publish" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}" data-tooltip="Veröffentlichungsdatum" title="Veröffentlichungsdatum">
                                         <svg class='ri-1x'>
-                                            <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ .Site.Params.remixicon_version}}#calendar-line"></use>
+                                            <use xlink:href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ .Site.Params.remixicon_version}}#calendar-line"></use>
                                         </svg> {{ .Date | time.Format ":date_long" }}
                                     </time>
 
                                     {{ if not ( eq (.Date.Format "02.01.06") (.Lastmod.Format "02.01.06") ) }}
                                         <time class="updated" datetime="{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}" data-tooltip="Letztes Bearbeitungsdatum" title="Letztes Bearbeitungsdatum">
                                             <svg class='ri-1x'>
-                                                <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ .Site.Params.remixicon_version}}#pencil-line"></use>
+                                                <use xlink:href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ .Site.Params.remixicon_version}}#pencil-line"></use>
                                             </svg> {{ .Lastmod | time.Format ":date_long" }}
                                         </time>
                                     {{ end }}
@@ -102,7 +102,7 @@
                                 {{- if .Params.tags -}}
                                     <div class="tags-line">
                                         <svg class='ri-1x'>
-                                            <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ .Site.Params.remixicon_version}}#price-tag-3-line"></use>
+                                            <use xlink:href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ .Site.Params.remixicon_version}}#price-tag-3-line"></use>
                                         </svg>
                                         {{- range (.GetTerms "tags") -}}
                                             <a href="{{ .RelPermalink }}" title="{{ .LinkTitle }}" class="hashtags">#{{ .LinkTitle }} </a> 
@@ -114,7 +114,7 @@
                                 {{ $readingTime = math.Ceil $readingTime }}
                                 <span data-tooltip="{{ $readingTime }} Minuten Lesezeit">
                                     <svg class='ri-1x'>
-                                        <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ .Site.Params.remixicon_version}}#timer-line"></use>
+                                        <use xlink:href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ .Site.Params.remixicon_version}}#timer-line"></use>
                                     </svg>{{ $readingTime }} Min.
                                 </span>
                                 
@@ -123,8 +123,8 @@
                                     <span data-tooltip="Teil einer Serie">
                                         {{ $name := index .Params.series 0 }}
                                         <svg class='ri-1x'>
-                                            <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ .Site.Params.remixicon_version}}#stack-line"></use>
-                                        </svg><a href="/series/{{$name | urlize}}" title="{{ $name }}">{{ $name }}</a>
+                                            <use xlink:href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ .Site.Params.remixicon_version}}#stack-line"></use>
+                                        </svg><a href="{{ printf "series/%s" ($name | urlize) | relURL }}" title="{{ $name }}">{{ $name }}</a>
                                     </span>
                                 {{- end -}}
                             </div>
@@ -157,7 +157,7 @@
                                     {{- end -}}
                                 {{- end -}}
 
-                                <p class="title is-6"><a href="/series/{{$series_name | urlize}}" title="{{ $series_name }}">{{ $series_name }} ({{ $.Store.Get "series_count" }})</a></p>
+                                <p class="title is-6"><a href="{{ printf "series/%s" ($series_name | urlize) | relURL }}" title="{{ $series_name }}">{{ $series_name }} ({{ $.Store.Get "series_count" }})</a></p>
                                 <ol class="series-list">
                                     {{- range .Site.RegularPages.ByDate -}}
                                         {{- if in .Params.series $series_name -}}

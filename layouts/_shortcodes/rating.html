@@ -16,7 +16,7 @@
       {{ end }}
       <span class="icon">
         <svg class='ri-1x'>
-          <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ $.Site.Params.remixicon_version}}#{{ $icon }}"></use>
+          <use xlink:href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ $.Site.Params.remixicon_version}}#{{ $icon }}"></use>
         </svg>
       </span>
     {{ end }}

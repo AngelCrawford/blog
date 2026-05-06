@@ -23,9 +23,9 @@
     <!-- Show Button only in the footer, not on the archive page -->
     <div class="is-pulled-right">
       {{ if not (eq .context.RelPermalink "/pages/archiv/") }}
-          <a href="/pages/archiv/" class="button is-primary is-outlined" title="Archiv">
+          <a href="{{ "pages/archiv/" | relURL }}" class="button is-primary is-outlined" title="Archiv">
               <svg class='ri-1x'>
-                  <use xlink:href="/fonts/remixicon/remixicon.symbol.svg?t={{ .Site.Params.remixicon_version}}#bookmark-line"></use>
+                  <use xlink:href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ .Site.Params.remixicon_version}}#bookmark-line"></use>
               </svg>
               Archiv
           </a>
