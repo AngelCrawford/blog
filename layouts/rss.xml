@@ -25,22 +25,16 @@
     {{- range where .Site.RegularPages "Type" "in" "articles" }}
     <item>
       <title>{{ .Title }}</title>
-
-    {{- $pagePermalink := .Permalink -}}
-    {{- with .Params.images -}}
-        {{- $img := index . 0 -}}
-        <enclosure url="{{ printf "%s%s" $pagePermalink $img }}" type="image/jpg"></enclosure>
-    {{- else -}}
-        {{- $images := .Resources.ByType "image" -}}
-        {{- $featured := $images.GetMatch "*cover*" -}}
-        {{- with $featured }}
-            <enclosure url="{{ $featured.Permalink }}" type="image/jpg"></enclosure>
-        {{- else -}}
-            {{- with .Site.Params.images }}
-            <enclosure url="{{ index . 0 | absURL }}" type="image/jpg"></enclosure>
-            {{- end -}}
-        {{- end -}}
-    {{- end }}    
+      {{- /*
+        Cover image as <enclosure> — only when we have a Hugo Resource (so we know .Size).
+        Skipped for articles without a cover Resource: RSS spec requires `length`,
+        and we can't reliably compute byte size for static-folder fallback paths.
+      */ -}}
+      {{- $images := .Resources.ByType "image" -}}
+      {{- $featured := $images.GetMatch "*cover*" -}}
+      {{- with $featured }}
+      <enclosure url="{{ .Permalink }}" type="{{ .MediaType.Type }}" length="{{ .Size }}" />
+      {{- end }}
       {{ if .GetTerms "categories" -}}
         {{- range first 1 (.GetTerms "categories") -}}
           <category>{{- .LinkTitle -}}</category>
@@ -49,8 +43,19 @@
       <link>{{ .Permalink }}</link>
       <pubDate>{{ .Date.Format "Mon, 02 Jan 2006 15:04:05 -0700" | safeHTML }}</pubDate>
       <guid>{{ .Permalink }}</guid>
-      {{- $content := replaceRE "a href=\"(#.*?)\"" (printf "%s%s%s" "a href=\"" .Permalink "$1\"") .Content -}}
-      {{- $content = replaceRE "img src=\"(.*?)\"" (printf "%s%s%s" "img src=\"" .Permalink "$1\"") $content }}
+      {{- /*
+        Sanitize content for RSS readers:
+        1. Resolve relative anchor hrefs (#section) to absolute via .Permalink
+           — handles both single + double quotes
+        2. Resolve relative img srcs to absolute, but ONLY if not already absolute
+        3. Strip <svg>...</svg> blocks (RSS readers don't render SVG well, validator warns)
+        4. Strip style="..." attributes (validator flags as potentially dangerous)
+      */ -}}
+      {{- $content := .Content -}}
+      {{- $content = replaceRE `a href=(["'])(#[^"']*)["']` (printf `a href=$1%s$2$1` .Permalink) $content -}}
+      {{- $content = replaceRE `img src=(["'])(?!https?:|//|/)([^"']+)["']` (printf `img src=$1%s$2$1` .Permalink) $content -}}
+      {{- $content = replaceRE `<svg[\s\S]*?</svg>` "" $content -}}
+      {{- $content = replaceRE `\s+style="[^"]*"` "" $content -}}
       <description>{{ $content | html }}</description>
     </item>
     {{- end }}
