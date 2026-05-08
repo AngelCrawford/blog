@@ -10,7 +10,7 @@
 {{- if gt $n 0 -}}
 <p class="withered-hidden-notice" role="status" aria-live="polite">
     <svg class="ri-1x" aria-hidden="true">
-        <use xlink:href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ site.Params.remixicon_version }}#skull-2-line"></use>
+        <use href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ site.Params.remixicon_version }}#skull-2-line"></use>
     </svg>
     <span>{{ if eq $n 1 }}1 verwelkter Eintrag ist{{ else }}{{ $n }} verwelkte Einträge sind{{ end }} ausgeblendet</span>
 </p>

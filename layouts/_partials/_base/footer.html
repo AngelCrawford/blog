@@ -7,7 +7,7 @@
     <filter id="turbulence" x="0" y="0" width="100%" height="100%">
     <feTurbulence id="sea-filter" numOctaves="2" seed="2" baseFrequency="0.02 0.05"></feTurbulence>
     <feDisplacementMap in2="" scale="20" in="SourceGraphic"></feDisplacementMap>
-    <animate xlink:href="#sea-filter" attributeName="baseFrequency" dur="200s" keyTimes="0;0.8;1" values="0.02 0.06;0.04 0.08;0.02 0.06" repeatCount="indefinite"/>
+    <animate href="#sea-filter" attributeName="baseFrequency" dur="200s" keyTimes="0;0.8;1" values="0.02 0.06;0.04 0.08;0.02 0.06" repeatCount="indefinite"/>
     </filter>
 </svg>
 
@@ -27,7 +27,7 @@
         <div class="follow-icons">
             {{ range .Site.Params.follow.footer }}
             <a href="{{ .src | relURL }}" title="{{ .name }}" alt="{{ .name }}" target="_blank" rel="noreferrer">
-                <svg><use xlink:href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ $.Site.Params.remixicon_version}}#{{ .icon }}"></use></svg>
+                <svg><use href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ $.Site.Params.remixicon_version}}#{{ .icon }}"></use></svg>
             </a>
             {{ end }}
         </div>
@@ -50,7 +50,7 @@
                 {{ $countA := len (where .Site.RegularPages "Type" "articles") }}
                 <span class="variable-number">
                     <svg class='ri-1x' style="fill: rgb(88, 179, 189)">
-                        <use xlink:href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ .Site.Params.remixicon_version}}#article-line"></use>
+                        <use href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ .Site.Params.remixicon_version}}#article-line"></use>
                     </svg>
                     Artikel
                 </span>
@@ -60,7 +60,7 @@
                 {{ $countM := len (where .Site.RegularPages "Type" "logs") }}
                 <span class="variable-number">
                     <svg class='ri-1x' style="fill: hsl(29, 100%, 80%)">
-                        <use xlink:href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ .Site.Params.remixicon_version}}#lightbulb-flash-line"></use>
+                        <use href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ .Site.Params.remixicon_version}}#lightbulb-flash-line"></use>
                     </svg>
                     Logs
                 </span>

@@ -4,7 +4,7 @@
   {{ .Text | safeHTML }}
   <a class="anchor-link" href="#{{ $id }}" title="anker" aria-hidden="true">
     <svg class="remix">
-      <use xlink:href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ $.Page.Site.Params.remixicon_version}}#links-fill"></use>
+      <use href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ $.Page.Site.Params.remixicon_version}}#links-fill"></use>
     </svg>
   </a>
 </h{{ $level }}>
