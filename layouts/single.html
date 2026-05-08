@@ -98,7 +98,9 @@
                                         </time>
                                     {{ end }}
                                 </div>
-                    
+
+                                {{ partial "growth-badge.html" . }}
+
                                 {{- if .Params.tags -}}
                                     <div class="tags-line">
                                         <svg class='ri-1x'>

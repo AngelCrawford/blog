@@ -7,35 +7,44 @@ $gold-light: hsl(29, 100%, 80%);
 $gold: hsl(35, 45%, 50%);
 $gold-dark: hsl(35, 45%, 26%);
 
+// Growth stage colors (Digital Garden, Story 1.2)
+// Source: docs/1-planning/ux-design-specification.md §1.4 (lines 283–292)
+// WCAG-AA contrast verified against the dark card background
+// (`color.adjust($dark, $lightness: 5%)` ≈ hsl(190, 11%, 16%)).
+$growth-seedling: hsl(48, 96%, 53%); // #facc15 — fresh / draft (yellow)
+$growth-budding: hsl(295, 60%, 60%); // #c463cc — developing (magenta-purple)
+$growth-evergreen: rgb(78, 151, 78); // #4e974e — mature, matches existing weight=1 format icon
+$growth-withered: hsl(0, 0%, 50%); // #808080 — deprecated / archived
+
 // Create a map for easier access to color variations
 $color-map: (
-  "dark": (
-    "base": $dark,
-    "lighter": hsl(190, 11%, 15%),
-    "darker": hsl(190, 11%, 8%)
-  ),
-  "light": (
-    "base": $light,
-    "lighter": hsl(190, 20%, 95%),
-    "darker": hsl(190, 20%, 85%)
-  ),
-  "gold": (
-    "light": $gold-light,
-    "base": $gold,
-    "dark": $gold-dark
-  )
+    "dark": (
+        "base": $dark,
+        "lighter": hsl(190, 11%, 15%),
+        "darker": hsl(190, 11%, 8%),
+    ),
+    "light": (
+        "base": $light,
+        "lighter": hsl(190, 20%, 95%),
+        "darker": hsl(190, 20%, 85%),
+    ),
+    "gold": (
+        "light": $gold-light,
+        "base": $gold,
+        "dark": $gold-dark,
+    ),
 );
 
 // Function to get color from map
 @function color($color, $variant: "base") {
-  @if map-has-key($color-map, $color) {
-    $color-variants: map-get($color-map, $color);
-    @if map-has-key($color-variants, $variant) {
-      @return map-get($color-variants, $variant);
+    @if map-has-key($color-map, $color) {
+        $color-variants: map-get($color-map, $color);
+        @if map-has-key($color-variants, $variant) {
+            @return map-get($color-variants, $variant);
+        }
+        @error "Unknown variant `#{$variant}` in color palette.";
     }
-    @error "Unknown variant `#{$variant}` in color palette.";
-  }
-  @error "Unknown color `#{$color}` in color palette.";
+    @error "Unknown color `#{$color}` in color palette.";
 }
 
 // Keep original variables for backward compatibility

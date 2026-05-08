@@ -1,0 +1,36 @@
+{{- /*
+  Growth-stage badge (Story 1.2)
+  Receives the page context (`.`) and reads .Params.growth_stage.
+  Falls back to "seedling" when the field is missing — matches the
+  consumer convention established by Story 1.1.
+  Build-time validation in `_base/validate-growth-stage.html` guarantees
+  only valid enum values reach this partial.
+*/ -}}
+{{- $stage := default "seedling" .Params.growth_stage -}}
+{{- $icons := dict
+  "seedling" "seedling-line"
+  "budding"  "flower-line"
+  "evergreen" "tree-line"
+  "withered"  "skull-2-line"
+-}}
+{{- $labels := dict
+  "seedling" "Seedling"
+  "budding"  "Budding"
+  "evergreen" "Evergreen"
+  "withered"  "Withered"
+-}}
+{{- $tooltips := dict
+  "seedling" "Seedling; früher Entwurf"
+  "budding"  "Budding; in Entwicklung"
+  "evergreen" "Evergreen; gepflegt & aktuell"
+  "withered"  "Withered; veraltet"
+-}}
+{{- $icon := index $icons $stage -}}
+{{- $label := index $labels $stage -}}
+{{- $tooltip := index $tooltips $stage -}}
+<span class="growth-stage" data-stage="{{ $stage }}" data-tooltip="{{ $tooltip }}" title="{{ $tooltip }}">
+    <svg class="ri-1x" aria-hidden="true">
+        <use xlink:href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ .Site.Params.remixicon_version }}#{{ $icon }}"></use>
+    </svg>
+    <span>{{ $label }}</span>
+</span>

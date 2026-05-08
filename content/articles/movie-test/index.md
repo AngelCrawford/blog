@@ -5,7 +5,7 @@ publishdate: 2020-03-16 # Only usefull, if running Hugo in server
 weight: 5
 
 tags: ["eins", "zwei", "quote"]
-categories: "Movie"
+categories: ["Movie"]
 
 summary: "One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin. One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin."
 # series: [""]
@@ -15,6 +15,7 @@ params:
   SEO:
     desc: "Seo Desc"
     keywords: ["Movie Rating", "Movie Test"]
+growth_stage: "withered"
 
 ---
 {{< rating value="4.5" showValue="true" >}}

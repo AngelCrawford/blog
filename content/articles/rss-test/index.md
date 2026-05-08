@@ -4,9 +4,10 @@ subtitle: "Subheader for single posts"
 date: 2025-06-12T19:58:30+01:00
 draft: false
 tags: ["eins", "zwei"]
-categories: "Allgemein"
+categories: ["Allgemein"]
 authors: ["angel"]
 summary: "Dies ist ein Typoblindtext. An ihm kann man sehen, ob alle Buchstaben da sind und wie sie aussehen."
+growth_stage: "evergreen"
 ---
 
 ## Eine Überschrift

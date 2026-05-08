@@ -55,7 +55,7 @@
                         <a href="{{ .RelPermalink }}" title="{{ .Title }}">{{ .Title }}</a>
                         <span aria-hidden="true"></span>
                     </h2>
-                
+
                     <p class="subtitle">
                         <time datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}" title="Veröffentlichungsdatum">
                             <svg class='ri-1x'>
@@ -71,7 +71,7 @@
                         {{ end }}
                     </p>
                 {{- end -}}
-                    
+
                 <div class="content">
                     <!-- If article has no image, show more content instead -->
                     {{ if eq .Params.format "log" }}
@@ -90,7 +90,7 @@
                         {{- end -}}
                     {{- end -}}
                 </div>
-                
+
                 {{ if ne .Params.format "log" }}
                     {{- if (.GetTerms "tags") -}}
                         <div class="tags-wrapper">
@@ -98,7 +98,7 @@
                                 <use xlink:href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ .Site.Params.remixicon_version}}#price-tag-3-line"></use>
                             </svg>
                             {{- range (.GetTerms "tags") -}}
-                                <a href="{{ .RelPermalink }}" title="{{ .LinkTitle }}">#{{ .LinkTitle }} </a> 
+                                <a href="{{ .RelPermalink }}" title="{{ .LinkTitle }}">#{{ .LinkTitle }} </a>
                             {{- end -}}
                         </div>
                     {{- end -}}
@@ -171,24 +171,15 @@
                 </div>
 
                 <div class="card-footer-item formats">
-                    {{- if eq .Params.weight 1 -}}
-                        <span data-tooltip="Evergreen">
-                            <svg class='ri-1x' style="fill: rgb(78, 151, 78);">
-                                <use xlink:href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ .Site.Params.remixicon_version}}#tree-line"></use>
-                            </svg>
-                        </span>
-                    {{- else if eq .Params.format "log" -}}
+
+                    {{- if eq .Params.format "log" -}}
                         <span data-tooltip="Log">
-                            <svg class='ri-1x' style="fill: rgb(201, 172, 92)">
+                            <svg class='ri-1x' style="fill: hsl(35, 45%, 50%)">
                                 <use xlink:href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ .Site.Params.remixicon_version}}#lightbulb-flash-line"></use>
                             </svg>
                         </span>
                     {{ else }}
-                        <span data-tooltip="Artikel">
-                            <svg class='ri-1x' style="fill: rgb(88, 179, 189)">
-                                <use xlink:href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ .Site.Params.remixicon_version}}#flower-line"></use>
-                            </svg>
-                        </span>
+                        {{ partial "growth-badge.html" . }}
                     {{- end -}}
                     {{- if .Params.series -}}
                         <span data-tooltip="Teil einer Serie">
@@ -201,7 +192,7 @@
             </footer>
         </article>
     </div>
-    
+
 {{ else if or (eq .Type "tags") (eq .Type "categories") }}
 
     <div class='cell {{ if .Resources }} {{ if eq .Kind "term" }} is-row-span-2 {{ end }} {{ end }}'>
@@ -235,7 +226,7 @@
                     <a href="{{ .RelPermalink }}" title="{{ .Title }}" style="{{if .Params.categoryColor }}color:{{.Params.categoryColor }};{{end}}">{{ .Title }}</a>
                     <span aria-hidden="true"></span>
                 </h2>
-                
+
                 <div class="content">
                     {{ len .Pages }} Artikel
                 </div>
@@ -249,7 +240,7 @@
         <article class="card is-horizontal {{ if .Resources }} has-image{{ end }} is-author">
             <div class="card-content">
                 <h2 class="title is-5"><a href="{{ .RelPermalink }}" title="{{ .Title }}">{{ .Title }}</a></h2>
-                    
+
                 <div class="content">
                     <div class="author-summary">{{ .Summary | plainify | truncate 200 }}</div>
                     <div class="author-articles">{{ len .Pages }} Artikel</div>
@@ -287,7 +278,7 @@
                         </a>
                     </div>
                 {{ end }}
-                
+
                 {{ if .Params.birthdate }}
                     <div class="card-footer-item">
                         <svg class="ri-1x">

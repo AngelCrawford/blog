@@ -1,0 +1,50 @@
+@use "vars/helpers";
+@use "sass:color";
+
+// Growth-stage badge — Story 1.2.
+// Color is applied to the SVG glyph (not the wrapper background) for a tone-on-tone aesthetic.
+// Inside the card list the badge nests in `.card-footer-item.formats` alongside format icons.
+// On single pages it sits in `.info.widget > .widget-content`.
+span.growth-stage {
+    display: inline;
+
+    svg {
+        width: 1.2em;
+        height: 1.2em;
+        fill: currentColor;
+    }
+
+    // Per-stage SVG fill colors. `!important` is intentional: these are design-token
+    // overrides that must beat the generic `.card-footer-item svg.ri-1x { fill: gray }`
+    // rule in `layout/card.scss` (higher specificity by ancestor chain inside the
+    // card list). One-property override, deliberately scoped — not an escalation.
+    &[data-stage="seedling"] svg {
+        fill: helpers.$growth-seedling !important;
+    }
+    &[data-stage="budding"] svg {
+        fill: helpers.$growth-budding !important;
+    }
+    &[data-stage="evergreen"] svg {
+        fill: helpers.$growth-evergreen !important;
+    }
+    &[data-stage="withered"] svg {
+        fill: helpers.$growth-withered !important;
+    }
+
+    // Label visibility:
+    // - Card list (.card-footer): icon-only — text label hidden.
+    // - Single-page article header (.info.widget): label visible (overridden below).
+    // - Mobile (≤640px): label always hidden — `title` tooltip preserves a11y.
+    span {
+        display: none;
+    }
+}
+
+// Show the text label when the badge sits in the single-page article header widget.
+.info.widget .growth-stage span {
+    display: inline;
+
+    @include helpers.mobile {
+        display: none;
+    }
+}

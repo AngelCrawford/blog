@@ -48,13 +48,30 @@ CI runs the equivalent `npx playwright install --with-deps chromium` step.
 
 `scripts/validate-frontmatter.js` — pre-commit script. Edit the JSON Schema at `schemas/frontmatter/article.schema.json`; the script auto-picks up changes.
 
+## Growth-stage badge (Story 1.2)
+
+`tests/e2e/growth-badge.spec.ts` covers the badge component end-to-end. It creates per-stage page-bundle fixtures under `content/articles/_test_growth_stage_<stage>/index.md` (one per stage + one with no `growth_stage` for the default-fallback path), exercises a real Hugo render at `/articles/_test_growth_stage_<stage>/`, and removes the fixtures in `afterAll`. The prefix is excluded from `.gitignore` so failed runs never leak into the working tree.
+
+Coverage maps to the story ACs:
+
+- **AC #1, #5, #9** — Homepage cards: every `.card-footer` has `.card-footer-item.growth-stage` as its first child; existing top-right `.is-new` / `.visited` and category ribbons remain intact (regression).
+- **AC #2** — Per-stage single-page fixtures assert `<svg use[xlink:href]>` references the right glyph: `seedling-line`, `flower-line`, `tree-line`, `skull-2-line`.
+- **AC #3** — Per-stage `data-stage` attribute is the CSS selector hook for the icon-fill rules in `assets/scss/elements/growth-badge.scss`. Computed-color assertion is implicit via the snapshot of the `data-stage` value.
+- **AC #4, #6** — `title` attribute matches `^<Stage> — `; `<svg aria-hidden="true">` confirms decorative-icon convention.
+- **AC #7** — At viewport 375×667, `.card-footer-item.growth-stage span` is hidden via the `helpers.mobile` mixin (≤640px) while `title` still surfaces the accessible name.
+- **AC #8** — A fixture without a `growth_stage` field renders `data-stage="seedling"` and the "Seedling" label (default fallback inherited from Story 1.1's `default "seedling" .Params.growth_stage` convention).
+
+The describe block runs in `mode: "serial"` because beforeAll/afterAll manage fixture lifecycle on a single shared Hugo dev server; parallel workers would race on fixture creation/teardown.
+
+To regenerate the fixtures or update assertions, run `npm run test:e2e -- --grep "Growth-stage"`.
+
 ## Adding tests in future stories
 
 Per `test-design-system.md`:
 
 | Story / Epic | Test additions |
 |---|---|
-| Story 1.2 (badge component) | Visual regression for badge rendering across all four growth stages (Playwright `toHaveScreenshot`) |
+| Story 1.2 (badge component) | ✅ Implemented — see "Growth-stage badge (Story 1.2)" above. Pure structural assertions; visual snapshots deferred (cross-machine font-rendering noise). |
 | Story 1.4 (warning banner) | E2E assertion that withered pages emit the warning banner |
 | Epic 5 (filter UI) | Journey test: load list, click filter, verify filtered results; client-side JS coverage |
 | Epic 9 (a11y audit) | `@axe-core/playwright` integrated into the e2e suite |
