@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { test, expect, request } from "@playwright/test";
 import * as fs from "node:fs";
 import * as path from "node:path";
 
@@ -69,8 +69,17 @@ test.describe("Growth-stage badge (Story 1.2)", () => {
         fs.mkdirSync(defaultDir, { recursive: true });
         fs.writeFileSync(path.join(defaultDir, "index.md"), fixtureMarkdown(null));
 
-        // hugo server watches the content folder; give it a moment to rebuild before tests.
-        await new Promise((r) => setTimeout(r, 1500));
+        // Poll until Hugo has rebuilt and the first fixture page responds.
+        // `page` is not available in beforeAll — use a standalone request
+        // context against the configured baseURL instead.
+        const pollUrl = fixtureUrl(FIXTURES.seedling.dir);
+        const ctx = await request.newContext({ baseURL: "http://localhost:1313" });
+        for (let attempt = 0; attempt < 20; attempt++) {
+            const response = await ctx.get(pollUrl).catch(() => null);
+            if (response?.ok()) break;
+            await new Promise((r) => setTimeout(r, 250));
+        }
+        await ctx.dispose();
     });
 
     test.afterAll(async () => {
@@ -82,37 +91,43 @@ test.describe("Growth-stage badge (Story 1.2)", () => {
         fs.rmSync(defaultDir, { recursive: true, force: true });
     });
 
-    test("AC #1, #5, #9: every homepage card carries a growth-stage badge in the footer; existing badges/ribbons unchanged", async ({
+    test("AC #1, #5, #9: every non-log homepage card carries a growth-stage badge in the footer; existing badges/ribbons unchanged", async ({
         page,
     }) => {
         await page.goto("/");
 
-        // Growth badge is a `<span class="growth-stage">` nested inside
-        // `.card-footer-item.formats` alongside the format icons — see Story 1.2 Dev Notes.
-        const cards = page.locator("article.card.is-horizontal").filter({
-            has: page.locator(".card-footer span.growth-stage"),
+        // All horizontal article cards that have a card-footer.
+        const allCards = page.locator("article.card.is-horizontal").filter({
+            has: page.locator(".card-footer"),
         });
-        const count = await cards.count();
-        expect(count, "homepage should render at least one card with growth badge").toBeGreaterThan(
-            0
-        );
+        const count = await allCards.count();
+        expect(count, "homepage should render at least one article card").toBeGreaterThan(0);
 
         for (let i = 0; i < count; i++) {
-            const card = cards.nth(i);
+            const card = allCards.nth(i);
+            // Log-format cards show the lightbulb icon instead of a growth badge — skip them.
+            const isLog = (await card.locator(".card-footer span[data-tooltip='Log']").count()) > 0;
+            if (isLog) continue;
+
             const badge = card.locator(".card-footer span.growth-stage").first();
-            await expect(badge).toBeVisible();
+            await expect(badge, `card ${i} should have a growth-stage badge`).toBeVisible();
             const dataStage = await badge.getAttribute("data-stage");
             expect(STAGES).toContain(dataStage as Stage);
         }
     });
 
+    // The single-page header carries ONE growth-badge per page in `.info.widget`.
+    // Any related-articles card on the same page renders its own growth-badge in
+    // `.card-footer-item.formats`, so a bare `span.growth-stage[data-stage=...]`
+    // selector matches multiple elements and breaks `.toBeVisible()`.
+    // Scope to `.info.widget` so we always assert against the article's own badge.
     for (const stage of STAGES) {
         test(`AC #2, #3, #5: single page renders ${stage} badge with correct icon, label and color hook`, async ({
             page,
         }) => {
             await page.goto(fixtureUrl(FIXTURES[stage].dir));
 
-            const badge = page.locator(`span.growth-stage[data-stage="${stage}"]`);
+            const badge = page.locator(`.info.widget span.growth-stage[data-stage="${stage}"]`);
             await expect(badge).toBeVisible();
             await expect(badge.locator("span")).toHaveText(capitalize(stage));
 
@@ -126,7 +141,7 @@ test.describe("Growth-stage badge (Story 1.2)", () => {
 
     test("AC #8: missing growth_stage frontmatter falls back to seedling", async ({ page }) => {
         await page.goto(fixtureUrl(FIXTURES.default.dir));
-        const badge = page.locator(`span.growth-stage[data-stage="seedling"]`);
+        const badge = page.locator(`.info.widget span.growth-stage[data-stage="seedling"]`);
         await expect(badge).toBeVisible();
         await expect(badge.locator("span")).toHaveText("Seedling");
     });
@@ -135,7 +150,7 @@ test.describe("Growth-stage badge (Story 1.2)", () => {
         page,
     }) => {
         await page.goto(fixtureUrl(FIXTURES.evergreen.dir));
-        const badge = page.locator(`span.growth-stage[data-stage="evergreen"]`);
+        const badge = page.locator(`.info.widget span.growth-stage[data-stage="evergreen"]`);
 
         await expect(badge).toHaveAttribute("title", /^Evergreen[;—] /);
         await expect(badge.locator("svg")).toHaveAttribute("aria-hidden", "true");
@@ -147,7 +162,7 @@ test.describe("Growth-stage badge (Story 1.2)", () => {
         await page.setViewportSize({ width: 375, height: 667 });
         await page.goto(fixtureUrl(FIXTURES.budding.dir));
 
-        const badge = page.locator(`span.growth-stage[data-stage="budding"]`);
+        const badge = page.locator(`.info.widget span.growth-stage[data-stage="budding"]`);
         await expect(badge).toBeVisible();
         await expect(badge.locator("span")).toBeHidden();
         await expect(badge).toHaveAttribute("title", /^Budding[;—] /);

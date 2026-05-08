@@ -1,6 +1,6 @@
 # Story 1.2: Growth Stage Badge Component
 
-Status: review
+Status: done
 
 ## Story
 
@@ -313,6 +313,7 @@ claude-opus-4-7[1m]
 
 **Epic backport recommendation (carried over from story draft, still applies):**
 - `docs/1-planning/epics.md` Story 1.2 still has the obsolete "top-right corner" / "color-coded background" wording. PM/SM to update in a housekeeping commit.
+- **AC #5 wording**: says "every card via `_partials/card.html` footer". Final implementation excludes `format=log` cards from badge display per user UX decision ("Logs sollen das nur intern haben, nicht sichtbar" — log articles still carry the `growth_stage` frontmatter field, but the visual badge is suppressed in favor of the existing Log-bulb format icon). `weight=1` (pinned/sticky) cards DO render the badge correctly and show the actual stage. AC #5 should read: "Badge renders in list view on every card except `format=log` (which keeps its dedicated Log icon), and in single page view".
 
 **User verification still required:**
 1. **Visual fidelity** — `hugo server` spot-check: badge color saturation, mobile icon-only behavior, regression to `.is-new`/`.visited`/category ribbons. Structural correctness is automated.
@@ -337,6 +338,20 @@ claude-opus-4-7[1m]
 - `assets/scss/elements/growth-badge.scss` — component file per repo convention (one element per file)
 - `layouts/_partials/growth-badge.html` — Hugo partial (kebab-case, top-level `_partials/`); SVG-sprite-based markup; `default "seedling"` fallback
 - `tests/e2e/growth-badge.spec.ts` — 8 tests covering all 9 ACs; describe-block runs in serial mode
+
+### Review Findings
+
+- [x] [Review][Decision] **Seedling/Budding colors differ from UX spec and are unconfirmed** — ✅ Resolved: new colors (Seedling `hsl(75,60%,60%)`, Budding `hsl(295,60%,60%)`) confirmed by user; UX spec values superseded. — `_colors.scss` has `$growth-seedling: hsl(75, 60%, 60%)` (lime-yellow) and `$growth-budding: hsl(295, 60%, 60%)` (purple); UX spec §1.4 mandates `hsl(152, 76%, 50%)` (green) and `hsl(189, 90%, 50%)` (cyan). Change log entry 2026-05-08 explicitly marks these as "pending user pick". Confirm or reject the new values. [AC: 3]
+- [x] [Review][Decision] **`weight=1` Evergreen format icon removed without documented intent** — ✅ Resolved: removal intentional; `weight=1` articles show the growth badge, no separate sticky icon. — Old `card.html` showed a dedicated Evergreen tree icon for `weight=1` articles. New code removes the `if eq .Params.weight 1` branch entirely; `weight=1` articles now show the growth badge. This is undocumented as an intentional regression. Confirm whether the weight=1 icon should be removed or restored. [AC: 9]
+- [x] [Review][Decision] **Log icon color changed without confirmed approval** — ✅ Resolved: new color `hsl(35, 45%, 50%)` confirmed. — Old: `rgb(201, 172, 92)`, new: `hsl(35, 45%, 50%)`. Change log marks this as "pending user pick". Confirm or revert. [`layouts/_partials/card.html`]
+- [x] [Review][Decision] **Tooltip text format: semicolon separator and mixed DE/EN** — ✅ Resolved: current format (semicolon, mixed DE/EN) confirmed. — Tooltips use `"Seedling; früher Entwurf"` (semicolon, mixed language); the spec example uses `"Seedling — early/draft content"` (em-dash, English). Decide on separator and language. [`layouts/_partials/growth-badge.html`]
+- [x] [Review][Decision] **Stage labels English-only while translations remain pending** — ✅ Resolved: English labels confirmed (Seedling, Budding, Evergreen, Withered). — Labels (`Seedling`, `Budding`, `Evergreen`, `Withered`) are English. Change log notes "Setzling/Knospe/Immergrün/Verwelkt — pending user pick." Decide whether to use English labels or switch to German before marking done. [`layouts/_partials/growth-badge.html`]
+- [x] [Review][Patch] **Dead `@use "sass:color"` import** — removed. [`assets/scss/elements/growth-badge.scss:2`]
+- [x] [Review][Patch] **E2E AC#1 test only checked cards that already render a badge** — fixed: now iterates ALL cards with `.card-footer`, skips log-format cards explicitly, asserts the badge on every remaining card. [`tests/e2e/growth-badge.spec.ts`]
+- [x] [Review][Patch] **Hardcoded 1500ms server rebuild wait** — replaced with poll loop (20 × 250 ms) that breaks as soon as Hugo responds with 200. [`tests/e2e/growth-badge.spec.ts`]
+- [x] [Review][Defer] **`validate-frontmatter.js` reads working tree instead of staged blob** — pre-existing bug, already logged in `docs/backlog.md`
+- [x] [Review][Defer] **Visual regression snapshots not captured** — deferred by design, documented in `docs/technical/testing.md`
+- [x] [Review][Defer] **WCAG-AA contrast not automatically verified** — deferred to Epic 9 a11y audit per `test-design-system.md`
 
 ## Change Log
 

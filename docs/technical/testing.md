@@ -65,6 +65,24 @@ The describe block runs in `mode: "serial"` because beforeAll/afterAll manage fi
 
 To regenerate the fixtures or update assertions, run `npm run test:e2e -- --grep "Growth-stage"`.
 
+## Withered Content Default Hiding (Story 1.3)
+
+Story 1.3 introduces the first behavioural consumer of `growth_stage` — listings filter out withered pages by default while direct URLs keep working. Coverage lives entirely in `tests/build/build-smoke.test.mjs`: each assertion copies `tests/build/fixtures/withered-article.md` into a unique `content/articles/_test_withered_<slug>/` bundle, runs `hugo --logLevel error --environment production`, and asserts against the rendered `public/`:
+
+- **AC #1** — `public/index.html` does NOT reference the withered fixture's permalink.
+- **AC #4** — `public/articles/_test_withered_ac4/index.html` exists and contains the fixture title (direct URL still renders).
+- **AC #5** — `public/index.json` still references the withered fixture (search index is intentionally unfiltered per the search-discoverability AC).
+- **AC #6** — `public/index.html` contains a `.withered-hidden-notice` element with text matching `\d+ verwelkte`.
+- **AC #6 a11y** — the notice declares `role="status"` and `aria-live="polite"`, and the decorative `<svg>` carries `aria-hidden="true"` so the count is announced politely without leaking icon noise to assistive tech.
+- **AC #8** — `public/404.html` does NOT link to the withered fixture (the recent-articles widget filters it out).
+- **AC #11** — homepage still emits the `article.card.is-horizontal` markup; the withered filter excludes cards, it doesn't replace them.
+
+A Playwright spec was prototyped but **dropped intentionally**: Hugo's fsnotify watcher on Windows does not reliably pick up newly-created article subdirectories without a server restart. Build smoke uses a clean production build (no watcher) and is fully deterministic across platforms. If we ever migrate to a fixture-in-repo or a globalSetup-based bootstrap, the browser-level confirmation of AC #6 (rendered notice visibility, screen-reader semantics) and AC #8 (404 widget) can be added back — for now the rendered-HTML assertions cover the same ground without the flake surface.
+
+`@axe-core/playwright` was not introduced — the role/aria-live/aria-hidden assertions are a single-pattern HTML check, not worth a new devDependency. Revisit during the Epic 9 a11y pass when broader axe coverage is on the table.
+
+Pure-function partials `withered-filter.html` (filter) and `withered-count.html` (count) are consumed by `home.html`, `list.html`, `page/archive.html`, `_partials/widgets/archive.html`, `_partials/_base/footer.html`, `404.html`, `single.html` (series + related), and `_partials/card.html` (taxonomy term count). Future stories that list pages and need to hide withered MUST go through these partials rather than re-inlining the predicate.
+
 ## Adding tests in future stories
 
 Per `test-design-system.md`:

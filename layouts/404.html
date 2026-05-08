@@ -15,7 +15,10 @@
         <div class="column is-12">
             <div class="fixed-grid has-1-cols-mobile has-2-cols-tablet has-3-cols-desktop has-4-cols-widescreen has-4-cols-fullhd">
                 <div class="grid is-column-gap-4 is-row-gap-4 is-medium">
-                    {{ range first 4 (where .Site.RegularPages.ByDate.Reverse "Section" "articles") }}
+                    {{/* Story 1.3: exclude withered from the 404 recent-articles widget. */}}
+                    {{ $recent := where .Site.RegularPages "Section" "articles" }}
+                    {{ $recent = partial "withered-filter.html" $recent }}
+                    {{ range first 4 $recent.ByDate.Reverse }}
                         {{ partial "card" . }}
                     {{ end }}
                 </div>

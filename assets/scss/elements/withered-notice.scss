@@ -1,0 +1,21 @@
+@use "../vars/helpers";
+
+// Withered hidden-count notice (Story 1.3).
+// Sits below paginated lists / archive year groups; small, gray, italic.
+// Uses $growth-withered (defined in vars/_colors.scss by Story 1.2) so the
+// withered family stays color-consistent across badge and notice.
+.withered-hidden-notice {
+    color: helpers.$growth-withered;
+    font-size: 0.875em;
+    font-style: italic;
+    margin: 1em 0;
+    display: flex;
+    align-items: center;
+    gap: 0.4em;
+
+    svg {
+        fill: helpers.$growth-withered;
+        width: 1em;
+        height: 1em;
+    }
+}

@@ -10,7 +10,11 @@
       "mcp__mcp-server-github__search_code",
       "mcp__mcp-server-github__get_file_contents",
       "mcp__mcp-server-github__list_issues",
-      "mcp__mcp-server-github__list_pull_requests"
+      "mcp__mcp-server-github__list_pull_requests",
+      "Bash(python3 D:/Projects/Hugo/Sites/blog/_bmad/scripts/resolve_customization.py --skill D:/Projects/Hugo/Sites/blog/.claude/skills/bmad-dev-story --key workflow)",
+      "Bash(hugo --logLevel error --environment production)",
+      "Bash(npm run *)",
+      "Bash(npx playwright *)"
     ]
   }
 }

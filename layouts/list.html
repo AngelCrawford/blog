@@ -119,21 +119,30 @@
         {{ end }}
     </div>
 
+    {{/* Story 1.3: section/term branch filters withered content; taxonomy
+         index branch keeps unchanged (it lists term cards, not regular pages). */}}
+    {{ $visible := .Pages }}
+    {{ $hiddenCount := 0 }}
+    {{ if ne .Kind "taxonomy" }}
+        {{ $visible = partial "withered-filter.html" .Pages }}
+        {{ $hiddenCount = partial "withered-count.html" .Pages }}
+    {{ end }}
+
     <div class="grid is-row-gap-4 is-multiline {{if eq .Kind "taxonomy"}} is-column-gap-4 is-col-min-13 is-small {{else}} is-column-gap-7 is-col-min-19 {{end}}">
-        {{ $pageCount := len .Pages }}
+        {{ $pageCount := len $visible }}
         {{ if eq .Kind "taxonomy" }}
             {{ $terms := slice }}
             {{ range $term, $pages := .Data.Terms }}
                 {{ $terms = $terms | append (dict "Term" $term "Count" (len $pages)) }}
             {{ end }}
-            
+
             {{ range sort $terms "Count" "desc" }}
                 {{ with $.GetPage (printf "/%s/%s" $.Data.Plural .Term) }}
                     {{ partial "card" . }}
                 {{ end }}
             {{ end }}
         {{ else }}
-            {{ range .Pages.ByPublishDate.Reverse }}
+            {{ range $visible.ByPublishDate.Reverse }}
                 {{ partial "card" . }}
             {{ end }}
         {{ end }}
@@ -167,5 +176,7 @@
             {{ end }}
         {{ end }}
     </div>
+
+    {{ partial "withered-hidden-notice.html" $hiddenCount }}
 
 {{ end }}

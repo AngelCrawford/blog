@@ -1,0 +1,9 @@
+{{- /*
+  Withered filter (Story 1.3) — pure-function partial.
+  Returns the input page collection minus pages with growth_stage="withered".
+  Hugo's `ne` keeps pages where the field is absent/nil — this aligns with
+  the Story 1.1 default-fallback convention (`default "seedling"` consumer-side).
+  MUST NOT emit HTML.
+  Usage: {{ $visible := partial "withered-filter.html" .Site.RegularPages }}
+*/ -}}
+{{- return (where . "Params.growth_stage" "ne" "withered") -}}

@@ -1,3 +1,4 @@
+{{/* NOTE: Search index intentionally includes withered content per Story 1.3 AC #5. Do not filter here. */}}
 [
   {{ range $index, $element := where .Site.RegularPages "Type" "in" "articles" -}}
     {{- if and $index (gt $index 0) -}},{{- end }}

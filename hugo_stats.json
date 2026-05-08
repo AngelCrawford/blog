@@ -11,7 +11,6 @@
       "br",
       "button",
       "canvas",
-      "code",
       "defs",
       "div",
       "ellipse",
@@ -277,11 +276,11 @@
       "variable",
       "variable-number",
       "widget",
-      "widget-content"
+      "widget-content",
+      "withered-hidden-notice"
     ],
     "ids": [
       "2017",
-      "2020",
       "2025",
       "TableOfContents",
       "allgemein",

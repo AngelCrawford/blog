@@ -1,12 +1,13 @@
 <div class="widget archive">
     <p class="title is-5">Übersicht</p>
     <ul>
+			{{/* Story 1.3: filter withered so per-year counts reflect non-withered totals. */}}
 			{{ $combinedPages := slice }}
 			{{ range (where .context.Site.Pages "Type" "articles") }}
-				{{ $combinedPages = $combinedPages | append .Pages }}
+				{{ $combinedPages = $combinedPages | append (partial "withered-filter.html" .Pages) }}
 			{{ end }}
 			{{ range (where .context.Site.Pages "Type" "logs") }}
-				{{ $combinedPages = $combinedPages | append .Pages }}
+				{{ $combinedPages = $combinedPages | append (partial "withered-filter.html" .Pages) }}
 			{{ end }}
 			
 			{{ range ($combinedPages.GroupByDate "2006") }}

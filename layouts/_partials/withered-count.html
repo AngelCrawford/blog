@@ -1,0 +1,7 @@
+{{- /*
+  Withered count (Story 1.3) — pure-function partial.
+  Returns the integer count of pages where growth_stage == "withered".
+  MUST NOT emit HTML.
+  Usage: {{ $hidden := partial "withered-count.html" .Site.RegularPages }}
+*/ -}}
+{{- return (len (where . "Params.growth_stage" "eq" "withered")) -}}
