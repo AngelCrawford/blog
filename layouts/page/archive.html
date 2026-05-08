@@ -31,22 +31,18 @@
 			{{ partial "widgets/archive" (dict "context" . "archiveTitle" "Übersicht") }}
 		</div>
 
+		{{/* Story 1.3 (revised): the archive intentionally INCLUDES withered
+		     entries — the archive's whole purpose is historic discoverability.
+		     Homepage and category/tag listings still hide withered via
+		     `withered-filter.html`; archive does not. */}}
 		<div class="column is-9">
-			{{/* Story 1.3: filter withered out of every section's pages
-			     before they reach the year-grouping accumulator. */}}
 			{{ $combinedPages := slice }}
-			{{ $allPages := slice }}
 			{{ range (where .Site.Pages "Type" "articles") }}
-				{{ $allPages = $allPages | append .Pages }}
-				{{ $combinedPages = $combinedPages | append (partial "withered-filter.html" .Pages) }}
+				{{ $combinedPages = $combinedPages | append .Pages }}
 			{{ end }}
 			{{ range (where .Site.Pages "Type" "logs") }}
-				{{ $allPages = $allPages | append .Pages }}
-				{{ $combinedPages = $combinedPages | append (partial "withered-filter.html" .Pages) }}
+				{{ $combinedPages = $combinedPages | append .Pages }}
 			{{ end }}
-			{{ $hiddenCount := partial "withered-count.html" $allPages }}
-
-			{{ partial "withered-hidden-notice.html" $hiddenCount }}
 
 			{{ range ($combinedPages.GroupByDate "2006") }}
 				<h2 class="title is-2" data-heading="{{ .Key }}" id='{{ .Key }}'>{{ .Key }}</h2>

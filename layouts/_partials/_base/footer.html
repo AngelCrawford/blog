@@ -39,27 +39,27 @@
 
     <div class="column is-hidden-touch is-hidden-desktop-only is-12-mobile is-6-tablet is-6-desktop is-3-widescreen is-3-fullhd stats">
         <p class="title is-5">Statistik</p>
-        {{/* Story 1.3: footer counters split between published (non-withered) and withered;
-             total entry line keeps the grand total accurate. */}}
+        {{/* Story 1.3 (revised): show the grand total of entries with the withered
+             count called out separately. Per-format counts (Artikel, Logs) include
+             withered too so the per-format sum equals the grand total. */}}
         {{ $allEntries := where .Site.RegularPages "Type" "in" (slice "articles" "logs") }}
-        {{ $visibleEntries := partial "withered-filter.html" $allEntries }}
         {{ $witheredCount := partial "withered-count.html" $allEntries }}
-        <p>Momentan befinden sich {{ len $visibleEntries }} <a href="{{ .Site.Home.RelPermalink }}" title="Artikel">Einträge</a> auf dieser Seite{{ if gt $witheredCount 0 }} — davon {{ $witheredCount }} verwelkt{{ end }}.</p>
+        <p>Momentan befinden sich {{ len $allEntries }} <a href="{{ .Site.Home.RelPermalink }}" title="Artikel">Einträge</a> auf dieser Seite{{ if gt $witheredCount 0 }} — davon {{ $witheredCount }} verwelkt{{ end }}.</p>
         <ul>
             <li>
-                {{ $countA := len (partial "withered-filter.html" (where .Site.RegularPages "Type" "articles")) }}
+                {{ $countA := len (where .Site.RegularPages "Type" "articles") }}
                 <span class="variable-number">
                     <svg class='ri-1x' style="fill: rgb(88, 179, 189)">
-                        <use xlink:href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ .Site.Params.remixicon_version}}#flower-line"></use>
+                        <use xlink:href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ .Site.Params.remixicon_version}}#article-line"></use>
                     </svg>
                     Artikel
                 </span>
                 <span class="variable">{{ $countA }}</span>
             </li>
             <li>
-                {{ $countM := len (partial "withered-filter.html" (where .Site.RegularPages "Type" "logs")) }}
+                {{ $countM := len (where .Site.RegularPages "Type" "logs") }}
                 <span class="variable-number">
-                    <svg class='ri-1x' style="fill: rgb(201, 172, 92)">
+                    <svg class='ri-1x' style="fill: hsl(29, 100%, 80%)">
                         <use xlink:href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ .Site.Params.remixicon_version}}#lightbulb-flash-line"></use>
                     </svg>
                     Logs
