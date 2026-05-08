@@ -48,9 +48,23 @@ CI runs the equivalent `npx playwright install --with-deps chromium` step.
 
 `scripts/validate-frontmatter.js` — pre-commit script. Edit the JSON Schema at `schemas/frontmatter/article.schema.json`; the script auto-picks up changes.
 
+## E2E architecture: static export, not hugo server
+
+The Playwright e2e suite serves the production-built `public/` folder via a tiny Node static server (`tests/e2e/build-and-serve.mjs`) instead of running `hugo server`. The lifecycle:
+
+1. **`webServer.command`** runs `build-and-serve.mjs`, which: writes per-stage fixture page bundles into `content/articles/_test_growth_stage_*`, runs `hugo --environment production`, then serves `public/` on port 1314.
+2. **Tests run** against the static server — eight parallel workers, no race on shared state.
+3. **`globalTeardown`** (`tests/e2e/global-teardown.ts`) removes the fixture page bundles. `.gitignore` excludes the `_test_growth_stage_` prefix as a backstop in case teardown is skipped.
+
+Why this is better than `hugo server` for tests:
+
+- **Deterministic on Windows** — Hugo's fsnotify watcher unreliably detects newly-created article subdirs, which made fixtures sporadically invisible in CI.
+- **PurgeCSS is exercised** — `hugo server` runs in dev mode and skips PurgeCSS; the static-export build runs with `--environment production`, catching over-purge regressions before deploy.
+- **Faster** — one build, then tests share a static server (no re-rendering per test).
+
 ## Growth-stage badge (Story 1.2)
 
-`tests/e2e/growth-badge.spec.ts` covers the badge component end-to-end. It creates per-stage page-bundle fixtures under `content/articles/_test_growth_stage_<stage>/index.md` (one per stage + one with no `growth_stage` for the default-fallback path), exercises a real Hugo render at `/articles/_test_growth_stage_<stage>/`, and removes the fixtures in `afterAll`. The prefix is excluded from `.gitignore` so failed runs never leak into the working tree.
+`tests/e2e/growth-badge.spec.ts` covers the badge component end-to-end. Fixtures (one per stage + one with no `growth_stage` for the default-fallback path) are created by `build-and-serve.mjs` and exercised at `/articles/_test_growth_stage_<stage>/` URLs.
 
 Coverage maps to the story ACs:
 
@@ -61,7 +75,7 @@ Coverage maps to the story ACs:
 - **AC #7** — At viewport 375×667, `.card-footer-item.growth-stage span` is hidden via the `helpers.mobile` mixin (≤640px) while `title` still surfaces the accessible name.
 - **AC #8** — A fixture without a `growth_stage` field renders `data-stage="seedling"` and the "Seedling" label (default fallback inherited from Story 1.1's `default "seedling" .Params.growth_stage` convention).
 
-The describe block runs in `mode: "serial"` because beforeAll/afterAll manage fixture lifecycle on a single shared Hugo dev server; parallel workers would race on fixture creation/teardown.
+Parallel workers are safe because fixtures are created **once** by `build-and-serve.mjs` before any worker starts — no per-worker race.
 
 To regenerate the fixtures or update assertions, run `npm run test:e2e -- --grep "Growth-stage"`.
 

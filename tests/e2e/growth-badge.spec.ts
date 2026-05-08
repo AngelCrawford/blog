@@ -1,15 +1,13 @@
-import { test, expect, request } from "@playwright/test";
-import * as fs from "node:fs";
-import * as path from "node:path";
+import { test, expect } from "@playwright/test";
+import { FIXTURE_DIRS } from "./fixtures";
 
 // Visual + structural tests for the growth-stage badge (Story 1.2).
-// Strategy: create per-stage page-bundle fixtures under
-// `content/articles/_test_growth_stage_<stage>/index.md` so Hugo serves a real
-// `articles`-typed page (single.html branches on `.Page.Type "articles"`).
-// Fixtures are wiped in afterAll; `.gitignore` excludes the prefix.
+// Per-stage page-bundle fixtures at `content/articles/_test_growth_stage_<stage>/`
+// are created by `tests/e2e/global-setup.ts` BEFORE Playwright spawns hugo
+// server, so hugo's initial content scan picks them up — no Windows fsnotify
+// watcher race. Cleanup happens in `tests/e2e/global-teardown.ts`.
+// `.gitignore` excludes the `_test_growth_stage_` prefix as a backstop.
 
-const REPO_ROOT = process.cwd();
-const ARTICLES_DIR = path.join(REPO_ROOT, "content", "articles");
 const STAGES = ["seedling", "budding", "evergreen", "withered"] as const;
 type Stage = (typeof STAGES)[number];
 
@@ -20,34 +18,8 @@ const ICONS: Record<Stage, string> = {
     withered: "skull-2-line",
 };
 
-const FIXTURES = {
-    seedling: { dir: "_test_growth_stage_seedling" },
-    budding: { dir: "_test_growth_stage_budding" },
-    evergreen: { dir: "_test_growth_stage_evergreen" },
-    withered: { dir: "_test_growth_stage_withered" },
-    default: { dir: "_test_growth_stage_default" },
-} as const;
-
-function fixtureUrl(dir: string): string {
-    return `/articles/${dir}/`;
-}
-
-function fixtureMarkdown(stage: Stage | null): string {
-    const stageLine = stage
-        ? `growth_stage: "${stage}"`
-        : "# growth_stage intentionally omitted (default fallback)";
-    return `---
-title: "Growth Stage Test ${stage ?? "Default Fallback"}"
-date: 2026-05-08
-draft: false
-summary: "E2E fixture for growth-stage badge — ${stage ?? "no field (default fallback)"}."
-categories: ["Test"]
-authors: ["angel"]
-${stageLine}
----
-
-Body for the ${stage ?? "default"} fixture.
-`;
+function fixtureUrl(stage: Stage | "default"): string {
+    return `/articles/${FIXTURE_DIRS[stage]}/`;
 }
 
 function capitalize(s: string): string {
@@ -55,41 +27,6 @@ function capitalize(s: string): string {
 }
 
 test.describe("Growth-stage badge (Story 1.2)", () => {
-    // Serial mode: fixtures live for the whole describe block via beforeAll/afterAll.
-    // Parallel workers would race on fixture create/delete (Hugo server is shared).
-    test.describe.configure({ mode: "serial" });
-
-    test.beforeAll(async () => {
-        for (const stage of STAGES) {
-            const dir = path.join(ARTICLES_DIR, FIXTURES[stage].dir);
-            fs.mkdirSync(dir, { recursive: true });
-            fs.writeFileSync(path.join(dir, "index.md"), fixtureMarkdown(stage));
-        }
-        const defaultDir = path.join(ARTICLES_DIR, FIXTURES.default.dir);
-        fs.mkdirSync(defaultDir, { recursive: true });
-        fs.writeFileSync(path.join(defaultDir, "index.md"), fixtureMarkdown(null));
-
-        // Poll until Hugo has rebuilt and the first fixture page responds.
-        // `page` is not available in beforeAll — use a standalone request
-        // context against the configured baseURL instead.
-        const pollUrl = fixtureUrl(FIXTURES.seedling.dir);
-        const ctx = await request.newContext({ baseURL: "http://localhost:1313" });
-        for (let attempt = 0; attempt < 20; attempt++) {
-            const response = await ctx.get(pollUrl).catch(() => null);
-            if (response?.ok()) break;
-            await new Promise((r) => setTimeout(r, 250));
-        }
-        await ctx.dispose();
-    });
-
-    test.afterAll(async () => {
-        for (const stage of STAGES) {
-            const dir = path.join(ARTICLES_DIR, FIXTURES[stage].dir);
-            fs.rmSync(dir, { recursive: true, force: true });
-        }
-        const defaultDir = path.join(ARTICLES_DIR, FIXTURES.default.dir);
-        fs.rmSync(defaultDir, { recursive: true, force: true });
-    });
 
     test("AC #1, #5, #9: every non-log homepage card carries a growth-stage badge in the footer; existing badges/ribbons unchanged", async ({
         page,
@@ -125,7 +62,7 @@ test.describe("Growth-stage badge (Story 1.2)", () => {
         test(`AC #2, #3, #5: single page renders ${stage} badge with correct icon, label and color hook`, async ({
             page,
         }) => {
-            await page.goto(fixtureUrl(FIXTURES[stage].dir));
+            await page.goto(fixtureUrl(stage));
 
             const badge = page.locator(`.info.widget span.growth-stage[data-stage="${stage}"]`);
             await expect(badge).toBeVisible();
@@ -140,7 +77,7 @@ test.describe("Growth-stage badge (Story 1.2)", () => {
     }
 
     test("AC #8: missing growth_stage frontmatter falls back to seedling", async ({ page }) => {
-        await page.goto(fixtureUrl(FIXTURES.default.dir));
+        await page.goto(fixtureUrl("default"));
         const badge = page.locator(`.info.widget span.growth-stage[data-stage="seedling"]`);
         await expect(badge).toBeVisible();
         await expect(badge.locator("span")).toHaveText("Seedling");
@@ -149,7 +86,7 @@ test.describe("Growth-stage badge (Story 1.2)", () => {
     test("AC #4, #6: tooltip via title attribute, icon decorative (aria-hidden)", async ({
         page,
     }) => {
-        await page.goto(fixtureUrl(FIXTURES.evergreen.dir));
+        await page.goto(fixtureUrl("evergreen"));
         const badge = page.locator(`.info.widget span.growth-stage[data-stage="evergreen"]`);
 
         await expect(badge).toHaveAttribute("title", /^Evergreen[;—] /);
@@ -160,7 +97,7 @@ test.describe("Growth-stage badge (Story 1.2)", () => {
         page,
     }) => {
         await page.setViewportSize({ width: 375, height: 667 });
-        await page.goto(fixtureUrl(FIXTURES.budding.dir));
+        await page.goto(fixtureUrl("budding"));
 
         const badge = page.locator(`.info.widget span.growth-stage[data-stage="budding"]`);
         await expect(badge).toBeVisible();
