@@ -12,3 +12,4 @@ Routing guidance:
 | Date | Story | Epic | Type | Severity | Owner | Status | Notes |
 | ---- | ----- | ---- | ---- | -------- | ----- | ------ | ----- |
 | 2026-05-08 | 1.4 | 1 | Test | Med | TBD | Open | Add unit test for `scripts/validate-frontmatter.js` itself when introducing `withered_*` conditional-required rules |
+| 2026-05-08 | 1.1 | 1 | Bug | Med | TBD | Open | `scripts/validate-frontmatter.js` reads the **working tree** (`readFileSync(absPath)`) instead of the **staged blob** (`git show :path`). A commit can pass validation while the index still contains broken content (or vice-versa) if working-tree and index drift. Fix: read each target via `git show :"$file"` so validation matches what will actually be committed. |

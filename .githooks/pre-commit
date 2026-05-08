@@ -1,2 +1,18 @@
 #!/usr/bin/env sh
-node scripts/validate-frontmatter.js
+# Validate staged frontmatter, then surface any failure to the editor.
+# Zed (and most editors) only show a generic "commit failed" notice for hook errors;
+# on failure we also dump the validator output to .git/PRECOMMIT_FAILED.txt and try to
+# open it with the `zed` CLI so the actual error is visible without digging into a terminal.
+
+output=$(node scripts/validate-frontmatter.js 2>&1)
+exit_code=$?
+printf '%s\n' "$output"
+
+if [ "$exit_code" -ne 0 ]; then
+  err_file=".git/PRECOMMIT_FAILED.txt"
+  printf '%s\n' "$output" > "$err_file"
+  # Open in Zed if available; fail silently if `zed` isn't on PATH (file still exists).
+  command -v zed >/dev/null 2>&1 && zed "$err_file" >/dev/null 2>&1 &
+fi
+
+exit "$exit_code"

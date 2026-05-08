@@ -11,7 +11,7 @@ $gold-dark: hsl(35, 45%, 26%);
 // Source: docs/1-planning/ux-design-specification.md §1.4 (lines 283–292)
 // WCAG-AA contrast verified against the dark card background
 // (`color.adjust($dark, $lightness: 5%)` ≈ hsl(190, 11%, 16%)).
-$growth-seedling: hsl(48, 96%, 53%); // #facc15 — fresh / draft (yellow)
+$growth-seedling: hsl(75, 60%, 60%); // #c2d452 — fresh / draft (soft lime, distinct from log gold)
 $growth-budding: hsl(295, 60%, 60%); // #c463cc — developing (magenta-purple)
 $growth-evergreen: rgb(78, 151, 78); // #4e974e — mature, matches existing weight=1 format icon
 $growth-withered: hsl(0, 0%, 50%); // #808080 — deprecated / archived
