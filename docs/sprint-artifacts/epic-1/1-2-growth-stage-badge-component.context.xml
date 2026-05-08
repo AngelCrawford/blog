@@ -326,7 +326,7 @@
         <path>package.json</path>
         <kind>config</kind>
         <symbol>npm package manifest</symbol>
-        <reason>REFERENCE only — Story 1.2 does NOT add new dependencies. Story 1.1 adds `@playwright/test`, `husky`, `ajv-cli`, `gray-matter` and the `test`/`test:build`/`test:e2e` scripts. Story 1.2 reuses them. CURRENT STATE: package.json still has only postcss + postcss-cli + postcss-purgecss; no devDependencies; no test scripts. Story 1.1 must land first.</reason>
+        <reason>REFERENCE only — Story 1.2 does NOT add new dependencies. Story 1.1 adds `@playwright/test`, `ajv`, `ajv-formats`, `gray-matter` (Husky was prescribed but replaced mid-review with plain git hooks via `core.hooksPath`) and the `test`/`test:build`/`test:e2e` scripts. Story 1.2 reuses them. As of Story 1.1 landing, package.json contains those devDependencies; the `prepare` script wires `core.hooksPath` to `.githooks/`.</reason>
       </artifact>
     </code>
 

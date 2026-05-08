@@ -212,7 +212,7 @@ From `digital-garden-integration-architecture.md` lines 762–771:
 - **Frontmatter field is in place:** `growth_stage` enum {seedling, budding, evergreen, withered}, default `"seedling"` via `default "seedling" .Params.growth_stage`. **First consumer of this pattern is this story — use it everywhere the badge reads the field.**
 - **Build-time validation is in place:** `layouts/_partials/_base/validate-growth-stage.html` halts builds on invalid values. The badge does not need to re-validate.
 - **JSON Schema as single source of truth:** `schemas/frontmatter/article.schema.json`. If future stories need the enum in JS (e.g., filter UI), they should import from the schema, not duplicate.
-- **Editor (Zed) and pre-commit (Husky) layers exist** — do not bypass.
+- **Editor (Zed) and pre-commit (git hook + ajv) layers exist** — do not bypass.
 - **Test infrastructure is bootstrapped:** Playwright + node test runner from Story 1.1. Add visual-regression tests under `tests/e2e/` directly; no infra setup needed.
 - **Partial convention:**
   - `_partials/_base/` — layout-init partials (head, nav, footer, seo, hero, validate-growth-stage)

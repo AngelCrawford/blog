@@ -2,8 +2,9 @@
 //
 // For each fixture in tests/build/fixtures/, copy it into a unique
 // content/_test_growth_stage_<id>/index.md page bundle, run
-// `hugo --quiet --environment production`, and assert the expected exit code
-// and (for invalid fixtures) error message content.
+// `hugo --logLevel error --environment production`, and assert the expected
+// exit code and (for invalid fixtures) error message content. (`--quiet` would
+// suppress errorf output; see rationale comment in `runHugoWithFixture`.)
 //
 // Each test cleans up its own temp content directory in a finally block so
 // failures never leave the working tree dirty.

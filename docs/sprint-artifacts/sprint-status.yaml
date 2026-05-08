@@ -37,7 +37,7 @@ story_location: docs/sprint-artifacts
 development_status:
   # Epic 1: Growth Stage System [Phase 1A, Week 3]
   epic-1: backlog
-  1-1-growth-stage-frontmatter-field: review
+  1-1-growth-stage-frontmatter-field: done
   1-2-growth-stage-badge-component: ready-for-dev
   1-3-withered-content-default-hiding: ready-for-dev
   1-4-withered-content-warning-banner: ready-for-dev

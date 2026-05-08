@@ -38,7 +38,7 @@ so that I know the information may be outdated or deprecated.
     - `withered_reason`: `{"type": "string", "maxLength": 280}`
     - `replacement_url`: `{"type": "string", "format": "uri-reference"}`
   - [ ] Add a `if/then` block: `if growth_stage == "withered" then required: ["withered_date"]`
-  - [ ] Verify the Husky pre-commit hook (Story 1.1) catches a withered article missing `withered_date`
+  - [ ] Verify the git pre-commit hook (Story 1.1, `.githooks/pre-commit` → `scripts/validate-frontmatter.js`) catches a withered article missing `withered_date`
   - [ ] **If Story 1.1 has not yet landed** when this story is picked up: defer the schema task until 1.1 lands, OR coordinate by adding the schema in this story's PR — note the dependency clearly in the PR description
 - [ ] **Archetype updates** (AC: 8)
   - [ ] Edit `archetypes/articles/index.md` — add a commented-out block (after the existing growth_stage line from Story 1.1):
@@ -241,7 +241,7 @@ replacement_url: "/articles/new-version/"  # Link to replacement content
 | `withered_reason` | string (≤280 chars) | Optional | One-paragraph explanation; no markdown |
 | `replacement_url` | URL or rel-path | Optional | Resolved via `relURL` to allow internal/external links |
 
-**Schema integration:** The conditional-required pattern (`if growth_stage == "withered" then required: [withered_date]`) is JSON Schema draft-07 compatible (Story 1.1's chosen schema version) and runs in both Husky pre-commit and Hugo build-time layers.
+**Schema integration:** The conditional-required pattern (`if growth_stage == "withered" then required: [withered_date]`) is JSON Schema draft-07 compatible (Story 1.1's chosen schema version) and runs in both the git pre-commit hook (Layer 2) and the Hugo build-time partial (Layer 3).
 
 ### ⚠️ AC Discrepancy Resolution
 

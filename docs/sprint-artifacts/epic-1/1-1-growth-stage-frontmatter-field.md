@@ -1,6 +1,6 @@
 # Story 1.1: Growth Stage Frontmatter Field
 
-Status: review
+Status: done
 
 ## Story
 
@@ -78,6 +78,12 @@ so that I can explicitly communicate content maturity.
 - [x] Documentation (AC: 5)
   - [x] Archetype comments self-explanatory: list all four values with one-line descriptions and document the consumer fallback convention
   - [x] Cross-linked `docs/technical/editor-setup.md` and `docs/technical/testing.md` from `README.md` (added "Tests" + "Frontmatter validation" sections under Local Development)
+
+### Review Follow-ups (AI)
+
+- [x] [AI-Review][Low] Replace stale "Husky" wording in `schemas/frontmatter/article.schema.json:5` description with "git pre-commit hook validator" (AC #1, #2 — documentation only, no functional impact). **Resolved 2026-05-08** in backlog sweep — schema description now reads "git pre-commit hook validator at scripts/validate-frontmatter.js".
+- [x] [AI-Review][Low] Update header comment in `tests/build/build-smoke.test.mjs:5-6` to say `--logLevel error` (matches actual invocation on line 36). **Resolved 2026-05-08** in backlog sweep.
+- [x] [AI-Review][Low] Harden `package.json:7` `prepare` script for non-git environments — append `|| exit 0` so `npm install` doesn't fail in Docker layers / `npm pack` flows that lack a git checkout. **Resolved 2026-05-08** in backlog sweep.
 
 ## Dev Notes
 
@@ -249,6 +255,10 @@ The project's authoritative test plan is `docs/2-solutioning/test-design-system.
 
 ## Dev Agent Record
 
+### Completion Notes
+**Completed:** 2026-05-08
+**Definition of Done:** All acceptance criteria met, code reviewed, tests passing
+
 ### Context Reference
 
 - docs/sprint-artifacts/1-1-growth-stage-frontmatter-field.context.xml
@@ -354,3 +364,135 @@ claude-opus-4-7[1m]
 | 2026-04-30 | Story-Context regenerated with verified codebase state (NO `_default/baseof.html`, NO existing `.github/workflows/`, package.json minimal). Status → ready-for-dev. | story-context workflow |
 | 2026-05-08 | Implementation complete: archetypes updated, 3 validation layers wired (Hugo errorf + ajv pre-commit + Zed YAML LSP), JSON Schema as single source of truth, test infra bootstrapped (4 build smoke + 1 e2e — all passing), CI workflow added. Status → review. Two user-only follow-ups: Zed squiggle verification (productivity, not a gate) and branch-protection config (GitHub UI). | Dev (Amelia) |
 | 2026-05-08 | **Refactor in review:** replaced Husky with plain git hooks via `core.hooksPath` per user request. `husky` devDep removed; `.husky/` deleted; `.githooks/pre-commit` introduced; `prepare` script changed from `husky` to `git config core.hooksPath .githooks`; README + editor-setup.md + testing.md updated; `.gitattributes` pin retargeted. Functionally equivalent — all tests still green; `git commit` with invalid stage still blocked. NOTE: downstream story drafts `1-2-...` and `1-4-...` still reference "Husky pre-commit hook (Story 1.1)" in their context.xml; cosmetic cleanup left for those stories' own dev passes. | Dev (Amelia) |
+| 2026-05-08 | Senior Developer Review notes appended — outcome: **Approve** with three LOW advisory items. | Reviewer (AI) |
+| 2026-05-08 | Status → done via `*story-done`. Sprint-status was already `done` (set by `*code-review` Approve). | Dev (Amelia) |
+| 2026-05-08 | Backlog sweep: addressed all 3 LOW review action items (schema description, test header comment, `prepare` script hardening), SHA-pinned `peaceiris/actions-hugo` in both workflows (`@v3` → `@75d2e84…` v3.0.0 in test.yml; `@v2` → `@16361eb4…` v2.6.0 in daily-rebuild.yml), and cleaned up stale "Husky pre-commit hook" wording in downstream stories 1.2/1.3/1.4/1.5 (md + context.xml). All tests still green (4/4 build + 1/1 e2e). | Dev (Amelia) |
+
+## Senior Developer Review (AI)
+
+**Reviewer:** Angel
+**Date:** 2026-05-08
+**Outcome:** **Approve** ✅
+
+### Summary
+
+Story 1.1 lands a clean, well-tested foundation for the Digital Garden growth-stage system. All 5 acceptance criteria are fully implemented with file:line evidence and automated test coverage; every task marked complete has been verified end-to-end. The mid-review Husky → plain git hooks refactor is clean (one fewer dependency, no functional change). Three LOW-severity findings are documentation/cosmetic and do not block merge.
+
+The implementation is also notable for what it _doesn't_ do: it deliberately stops short of consumer-side rendering (Story 1.2's job), correctly establishes the `default "seedling" .Params.growth_stage` convention without prematurely scattering it across templates, and bootstraps test infra at the minimum-viable level so 1.2 can layer on without rebuilding scaffolding.
+
+### Key Findings
+
+**HIGH severity:** none.
+
+**MEDIUM severity:** none.
+
+**LOW severity (advisory):**
+
+1. **Stale "Husky" wording in schema description** (`schemas/frontmatter/article.schema.json:5`). The `description` field still reads "Consumed by the Zed YAML LSP (Layer 1) and the Husky pre-commit validator (Layer 2)." Should be updated to reflect the plain git-hook implementation. Documentation drift only — no functional impact.
+2. **Stale `--quiet` reference in test comment** (`tests/build/build-smoke.test.mjs:5`). Header comment says "run `hugo --quiet --environment production`" but the actual `spawnSync` call uses `--logLevel error` (line 36). Two lines below (line 32) the rationale comment correctly explains the deviation, so the inconsistency is purely between the file-header summary and the implementation.
+3. **`prepare` script will fail in non-git environments** (`package.json:7`). `git config core.hooksPath .githooks` errors with exit code 128 if `npm install` runs outside a git checkout (e.g., a Docker layer that copies `package.json` only, or `npm pack`-style flows). Not a current problem — the daily-rebuild and test workflows both checkout before installing — but a future-proofing concern. Adding `|| exit 0` would silence the failure for non-git runs without affecting the happy path.
+
+### Acceptance Criteria Coverage
+
+| AC# | Description | Status | Evidence |
+|---|---|---|---|
+| 1 | `growth_stage` accepts exactly four values (`seedling`, `budding`, `evergreen`, `withered`) | **IMPLEMENTED** | Enum enforced in three independent places: `schemas/frontmatter/article.schema.json:64` (`"enum": [...]`), `scripts/validate-frontmatter.js:81` (ajv compile + validate), `layouts/_partials/_base/validate-growth-stage.html:7` (`slice "seedling" "budding" "evergreen" "withered"`). Test: `tests/build/build-smoke.test.mjs:73-80` (valid evergreen) + `:91-114` (invalid stage). |
+| 2 | Invalid value → Hugo build error with file path + allowed values | **IMPLEMENTED** | `validate-growth-stage.html:11` errorf string includes `%s` for `.File.Path` and the literal allowed-values list. Test: `build-smoke.test.mjs:99-113` asserts non-zero exit, regex match for "Invalid growth_stage", regex `seedling.*budding.*evergreen.*withered`, and the offending file path. Layer 2 (pre-commit) verified by direct probe during dev session — invalid stage → exit 1 with allowed values, real `git commit` blocked (HEAD unchanged at b9b76e2). |
+| 3 | Default value resolves to `seedling` when field omitted | **IMPLEMENTED** | `validate-growth-stage.html:9` (`if $stage` guard) ensures missing/empty values pass through to consumer fallback. Convention `default "seedling" .Params.growth_stage` documented in `archetypes/articles/index.md:23`, `archetypes/logs/index.md:16`, `schemas/frontmatter/article.schema.json:66`, and `docs/technical/editor-setup.md`. Test: `build-smoke.test.mjs:82-89` (build succeeds with no field). First template consumer is Story 1.2 — correctly out of scope. |
+| 4 | Both archetypes include `growth_stage: "seedling"` by default | **IMPLEMENTED** | `archetypes/articles/index.md:24`, `archetypes/logs/index.md:17`. Manual `hugo new content articles/...` and `hugo new content logs/...` probes during dev session confirmed the field appears in generated files. |
+| 5 | Field documented in archetype comments with all four options | **IMPLEMENTED** | 6-line comment block in both archetypes (`articles:18-23`, `logs:11-16`) — each value paired with a one-line description: seedling=early/draft, budding=developing, evergreen=mature/maintained, withered=deprecated. Cross-linked from `docs/technical/editor-setup.md`. |
+
+**AC Coverage: 5 of 5 fully implemented.**
+
+### Task Completion Validation
+
+| Task | Marked As | Verified As | Evidence |
+|---|---|---|---|
+| Update `archetypes/articles/index.md` (+ subtasks) | [x] | **VERIFIED** | `archetypes/articles/index.md:18-24` — comment block + `growth_stage: "seedling"`. `hugo new` probe ran during dev. |
+| Update `archetypes/logs/index.md` (+ subtasks) | [x] | **VERIFIED** | `archetypes/logs/index.md:11-17` — comment block + `growth_stage: "seedling"`. `hugo new` probe ran during dev. |
+| Build-time validation partial | [x] | **VERIFIED** | `layouts/_partials/_base/validate-growth-stage.html` (14 lines) — errorf with `.File.Path` (line 11), wired into `layouts/baseof.html:5`. Mirrors `card.html:89` errorf style. |
+| Default-value fallback (AC: 3) | [x] | **VERIFIED** | Convention documented in archetypes + schema + editor-setup.md. `if $stage` guard in partial line 9 ensures empty values pass through. First consumer is Story 1.2 (correctly deferred). |
+| Layer 1 — JSON Schema + Zed | [x] (one user-only subtask correctly left [ ]) | **VERIFIED** | `schemas/frontmatter/article.schema.json` (95 lines, draft-07, comprehensive), `.zed/settings.json:16-31` (YAML LSP schema mapping for `content/articles/**/*.md` + `content/logs/**/*.md`), `docs/technical/editor-setup.md` (modeline fallback documented). The unchecked Zed-squiggle verification subtask is correctly flagged user-only — automation cannot drive Zed. |
+| Layer 2 — Pre-commit (post-refactor: plain git hook + ajv) | [x] | **VERIFIED** | `scripts/validate-frontmatter.js` (103 lines: ajv programmatic, gray-matter, skip-aware filter to `content/articles/**` + `content/logs/**`, exit 0/1/2 contract). `.githooks/pre-commit` (executable, LF-pinned via `.gitattributes`). `package.json:7` `prepare` script wires `core.hooksPath`. End-to-end probe during dev: invalid stage → blocked, valid → passes, no .md → silent pass. Real `git commit` test blocked HEAD-advance. |
+| Layer 3 — Hugo `errorf` | [x] | **VERIFIED** | Same partial as build-time validation task (above). |
+| Build smoke tests | [x] | **VERIFIED** | `tests/build/fixtures/{valid-evergreen,valid-missing-field,invalid-stage}.md` (all 3 present), `tests/build/build-smoke.test.mjs` (4 tests including baseline regression guard). `npm run test:build`: 4/4 passed in ~9s at review time. |
+| Playwright bootstrap | [x] | **VERIFIED** | `playwright.config.ts` (chromium-only project, webServer = `hugo server --port 1313`), `tests/e2e/smoke.spec.ts` (homepage 200 + `<meta name="generator">/Hugo/i`), npm scripts `test:e2e` + `test`. `docs/technical/testing.md` documents future-story expansion. |
+| CI integration (one user-only subtask correctly left [ ]) | [x] | **VERIFIED** | `.github/workflows/test.yml` — two jobs (build-smoke + e2e), both triggered on push + PR to `main`, concurrency cancellation, Hugo 0.161.1 extended + Dart Sass + Playwright `--with-deps chromium`, Playwright report artifact upload on failure. The unchecked branch-protection subtask is correctly flagged user-only — GitHub UI/API config, not code. |
+| Manual smoke testing (AC 1–5, with one user-only subtask left [ ]) | [x] | **VERIFIED** | All build/pre-commit/production-env scenarios are covered by automated tests; the only [ ] item is Zed-squiggle (user-only). |
+| Documentation (AC: 5) | [x] | **VERIFIED** | Archetype comments self-explanatory (verified above). `README.md:53-71` cross-links both new technical docs. |
+
+**Task summary: All [x] tasks verified complete. 0 falsely marked complete. 0 questionable. The 3 unchecked [ ] subtasks (Zed verification, branch protection, no-1.4-stale-context cleanup) are correctly identified as user-action-only or out-of-scope.**
+
+### Test Coverage and Gaps
+
+**Coverage:**
+- AC1 + AC4: covered by `build-smoke.test.mjs` "AC1+AC4: build succeeds with valid growth_stage (evergreen)"
+- AC2: covered by "AC2: build fails on invalid growth_stage with helpful error" (asserts exit code, error string, allowed values, file path) + Layer 2 pre-commit probe during dev session
+- AC3: covered by "AC3: build succeeds when growth_stage is missing (default fallback)"
+- AC5: documentation-only, verified by direct file read
+- Regression: covered by "baseline: hugo build succeeds with no test fixtures"
+- Hugo-update canary: covered by `tests/e2e/smoke.spec.ts`
+
+**Gaps (deliberate, deferred to future stories):**
+- No visual-regression tests — Story 1.2 will add `toHaveScreenshot()` for the badge
+- No accessibility testing (axe-core) — Epic 9 per `test-design-system.md`
+- No multi-browser matrix — chromium-only is sufficient for smoke; Story 1.2+ may expand
+- No test for the validator script itself (unit test of `validate-frontmatter.js`) — covered indirectly by integration probes; consider adding in Story 1.4 when `withered_*` conditional-required rules are added
+
+**Test quality:**
+- All build-smoke tests use `try/finally` for fixture cleanup — deterministic
+- Assertions are specific (regex matches for error content, not just exit code)
+- Baseline regression test guards against unrelated build breakage masking AC failures
+- Fixture-per-AC structure is extensible for Story 1.4
+
+### Architectural Alignment
+
+**Compliant with `digital-garden-integration-architecture.md`:**
+- Frontmatter Schema (snake_case `growth_stage`, default `"seedling"`) — `archetypes/articles/index.md:24`
+- Single source of truth (JSON Schema) feeding all three layers — `schemas/frontmatter/article.schema.json` consumed by ajv (Layer 2) and Zed YAML LSP (Layer 1); Layer 3 hardcodes the enum independently as documented
+- Partial location `_base/` for core init partials — `layouts/_partials/_base/validate-growth-stage.html` correctly placed alongside head/hero/navigation/footer/seo
+- Hugo v0.146+ flat layout — partial wired into `layouts/baseof.html` (root, NOT `_default/baseof.html`)
+- errorf style mirrors existing `card.html:89` precedent — message includes `.File.Path` and human-readable allowed-values list
+
+**Compliant with `test-design-system.md`:**
+- Stack: Playwright + `node --test` + (CI-only) `act` — matches authoritative plan
+- Story 1.1 bootstraps minimum-viable test infra; Story 1.2+ expands per the plan
+- File locations (`tests/build/`, `tests/build/fixtures/`, `tests/e2e/`) match the plan
+
+**Compliant with `architecture.md` Component Architecture / Template Hierarchy:** validation logic that runs once per page lives in `_base/` (correct).
+
+**No architecture violations.**
+
+### Security Notes
+
+- `scripts/validate-frontmatter.js`: uses `execFileSync("git", [...])` with a fixed argument array — no shell interpolation, no command-injection vector (line 29-33).
+- `gray-matter` parses untrusted YAML; gray-matter wraps `js-yaml` with `safeLoad` semantics by default (no code execution risk from `!!js/function`-style payloads).
+- `ajv`: `strict: false` is intentional (we want forward-compatibility via `additionalProperties: true`); no risk surface.
+- `.husky/_/` (the auto-generated husky scaffolding directory) is fully removed — no leftover scripts that could be invoked accidentally.
+- `.githooks/pre-commit` is bypass-able via `git commit --no-verify` — documented and intentional. Layer 3 (Hugo build) is the un-bypass-able gate.
+- CI workflow uses pinned major versions of actions (`actions/checkout@v4`, `actions/setup-node@v4`, `peaceiris/actions-hugo@v3`, `actions/upload-artifact@v4`); `peaceiris/actions-hugo` is pinned at `@v3` (mutable) — could be tightened to a SHA, but matches the existing `daily-rebuild.yml` pattern (`@v2` there). Not a finding for this story; project-wide consideration.
+
+**No security concerns identified.**
+
+### Best-Practices and References
+
+- **JSON Schema draft-07** (chosen over draft 2020-12 for ajv compatibility and broader editor support) — reasonable choice. Docs: <https://json-schema.org/specification.html>
+- **Hugo `errorf`** for build-time validation — standard pattern, mirrors `layouts/_partials/card.html:89`. Docs: <https://gohugo.io/functions/fmt/errorf/>
+- **`core.hooksPath`** for tracked git hooks (vs. Husky) — standard since git 2.9 (May 2016). Docs: <https://git-scm.com/docs/githooks#_description>
+- **gray-matter** for frontmatter extraction — industry standard for Markdown+YAML in Node. <https://github.com/jonschlinkert/gray-matter>
+- **ajv** programmatic validation with `addFormats` — recommended over `ajv-cli` when error formatting matters. <https://ajv.js.org/api.html>
+- **Playwright `webServer` config** auto-spinning Hugo — official pattern: <https://playwright.dev/docs/test-webserver>
+
+### Action Items
+
+**Code Changes (Low priority — all advisory):**
+- [x] [Low] Update stale "Husky" wording in schema description [file: `schemas/frontmatter/article.schema.json:5`] — Replace "Consumed by the Zed YAML LSP (Layer 1) and the Husky pre-commit validator (Layer 2)" with "Consumed by the Zed YAML LSP (Layer 1) and the git pre-commit hook validator (Layer 2)". **Resolved 2026-05-08.**
+- [x] [Low] Update stale `--quiet` reference in test header comment [file: `tests/build/build-smoke.test.mjs:5-6`] — Header summary should say `--logLevel error` to match the actual `spawnSync` invocation on line 36; the inline rationale comment on line 32-33 is correct. **Resolved 2026-05-08.**
+- [x] [Low] Harden `prepare` script for non-git environments [file: `package.json:7`] — Change `"git config core.hooksPath .githooks"` to `"git config core.hooksPath .githooks || exit 0"` so `npm install` doesn't fail in Docker layers / `npm pack` flows that lack a git checkout. **Resolved 2026-05-08.**
+
+**Advisory Notes (no action required):**
+- Note: Stories 1.2 and 1.4 context.xml files still reference "Husky pre-commit hook (Story 1.1)" — already documented in this story's Change Log; cleanup left to those stories' own dev passes
+- Note: Two user-only follow-ups remain documented in Completion Notes — Zed editor squiggle verification (productivity check, not a gate; Layers 2+3 are authoritative) and branch-protection config (GitHub UI for the two new CI jobs)
+- Note: Consider pinning `peaceiris/actions-hugo` to a SHA across both workflow files (`test.yml` + `daily-rebuild.yml`) in a future security-hardening pass — out of scope for Story 1.1
+- Note: Adding a unit test for `scripts/validate-frontmatter.js` itself would be valuable when Story 1.4 introduces the `withered_*` conditional-required rules — recommend including with that story
+

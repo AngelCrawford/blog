@@ -14,7 +14,7 @@
     <iWant>a clear warning when viewing withered content</iWant>
     <soThat>I know the information may be outdated or deprecated</soThat>
     <tasks>
-      <task ac="7">Frontmatter schema extension — add withered_date (string/date), withered_reason (string ≤280), replacement_url (uri-reference); JSON Schema draft-07 if/then: when growth_stage=="withered" then required:[withered_date]; verify Husky pre-commit hook (Story 1.1) catches missing withered_date</task>
+      <task ac="7">Frontmatter schema extension — add withered_date (string/date), withered_reason (string ≤280), replacement_url (uri-reference); JSON Schema draft-07 if/then: when growth_stage=="withered" then required:[withered_date]; verify the git pre-commit hook (Story 1.1, `.githooks/pre-commit` → `scripts/validate-frontmatter.js`) catches missing withered_date</task>
       <task ac="8">Archetype updates — append commented-out withered metadata block (withered_date / withered_reason / replacement_url) to archetypes/articles/index.md AND archetypes/logs/index.md after the Story 1.1 growth_stage line</task>
       <task ac="7">Extend layouts/_partials/_base/validate-growth-stage.html (Story 1.1) — after enum check: if growth_stage=="withered" AND withered_date empty → errorf with .File.Path and field name</task>
       <task ac="1,2,5,6,9,11">Create layouts/_partials/withered-banner.html — no-op when growth_stage != "withered"; renders aside.withered-banner.notification.is-warning with role=alert, aria-labelledby=withered-banner-title, data-banner-key="withered-banner-dismissed:{{.RelPermalink}}"; close button (.delete.withered-banner-dismiss, aria-label="Hinweis ausblenden"); h2 with ri-skull-line + "Verwelkter Inhalt"; date paragraph using time.Format ":date_long" $.Site.Language; optional reason paragraph; optional replacement link "Aktuelle Version ansehen →" via relURL</task>
@@ -233,7 +233,7 @@
         <feature>Hugo time.Format ":date_long" $.Site.Language (long-form German date — same as single.html lines 90, 97)</feature>
       </hugo>
       <build>
-        <tool>Husky pre-commit hook (Story 1.1) — JSON Schema validation runs locally; Story 1.4 extends conditional-required rule</tool>
+        <tool>git pre-commit hook (Story 1.1, `.githooks/pre-commit` → `scripts/validate-frontmatter.js`) — JSON Schema validation runs locally; Story 1.4 extends conditional-required rule</tool>
         <tool>Hugo build-time errorf — validate-growth-stage.html (Story 1.1, extended here)</tool>
       </build>
     </dependencies>
@@ -280,7 +280,7 @@
       <kind>JSON Schema draft-07 properties</kind>
       <signature>withered_date: { type: "string", format: "date" } — required when growth_stage=="withered" (via if/then). withered_reason: { type: "string", maxLength: 280 } — optional. replacement_url: { type: "string", format: "uri-reference" } — optional. if: properties.growth_stage.const=="withered" then required:[withered_date].</signature>
       <path>schemas/frontmatter/article.schema.json (created by Story 1.1, extended here)</path>
-      <notes>JSON Schema draft-07 supports if/then conditional-required (Story 1.1 chose draft-07 for this reason). Validation runs in Husky pre-commit hook AND Hugo build-time partial.</notes>
+      <notes>JSON Schema draft-07 supports if/then conditional-required (Story 1.1 chose draft-07 for this reason). Validation runs in the git pre-commit hook AND the Hugo build-time partial.</notes>
     </interface>
     <interface>
       <name>build-time validation contract</name>
@@ -315,7 +315,7 @@
       <idea ac="5">Build smoke: verify HTML &lt;time datetime="..."&gt; matches withered_date (ISO YYYY-MM-DD) and the rendered text matches the long-form German format.</idea>
       <idea ac="6">Build smoke: assert withered-minimal output omits the .withered-banner-reason paragraph (no empty &lt;p&gt;).</idea>
       <idea ac="7">Build smoke (NEGATIVE): assert withered-invalid.md (growth_stage:"withered" without withered_date) causes hugo --quiet --environment production to exit non-zero with the expected errorf message including the file path.</idea>
-      <idea ac="7">Husky pre-commit (manual or CI): stage withered-invalid.md → commit attempt → assert blocked by JSON Schema validation; correct file → assert allowed.</idea>
+      <idea ac="7">git pre-commit hook (manual or CI): stage withered-invalid.md → commit attempt → assert blocked by JSON Schema validation; correct file → assert allowed.</idea>
       <idea ac="9">Playwright keyboard-navigation: Tab to .withered-banner-dismiss → assert focus indicator visible → Enter → assert dismiss fires.</idea>
       <idea ac="10">Playwright at viewport &lt;600px: visit withered fixture → assert banner remains readable, assert dismiss button bounding box ≥44×44 px (or ≥1.75rem given Bulma .delete + mobile breakpoint).</idea>
       <idea ac="11">Build smoke: assert valid-evergreen.md output does NOT contain class="withered-banner". Playwright: visit a non-withered article → assert no .withered-banner element exists.</idea>

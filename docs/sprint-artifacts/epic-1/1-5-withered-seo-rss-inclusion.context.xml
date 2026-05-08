@@ -213,7 +213,7 @@
         <package name="@fullhuman/postcss-purgecss" version="^8.0.0" />
         <package name="postcss" version="^8.5.14" />
         <package name="postcss-cli" version="^11.0.1" />
-        <note>Story 1.1 (ready-for-dev) introduces @playwright/test, axe-core, husky, ajv-cli, gray-matter, and the node --test runner. Story 1.5 explicitly adds NO new npm dependencies (per Critical Agent Rule 3 — XML/JSON validation uses xmllint already present in CI per recent RSS hardening commits, and built-in JSON.parse).</note>
+        <note>Story 1.1 (now `done`) introduced @playwright/test, ajv, ajv-formats, gray-matter, and the node --test runner. (Husky was prescribed but replaced mid-review with plain git hooks via `core.hooksPath`; axe-core was deferred to Epic 9 per `test-design-system.md`.) Story 1.5 explicitly adds NO new npm dependencies (per Critical Agent Rule 3 — XML/JSON validation uses xmllint already present in CI per recent RSS hardening commits, and built-in JSON.parse).</note>
       </node>
       <hugo>
         <version>0.152.2 (per architecture §10 / GitHub Actions hugo-version pin); story uses Hugo v0.146+ flat layouts (no _default/ subdirectory)</version>

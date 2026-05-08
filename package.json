@@ -4,7 +4,7 @@
   "description": "![](https://img.shields.io/badge/Hugo-0.6.7.0-darkgreen) ![](https://img.shields.io/badge/Platform-Windows-blue) ![](https://img.shields.io/badge/Editor-Visual_Studio_Code-green) ![](https://img.shields.io/badge/Image_Edit-Gimp-purple) ![](https://img.shields.io/badge/SVG_Edit-Inkscape-darkorchid)",
   "main": "index.js",
   "scripts": {
-    "prepare": "git config core.hooksPath .githooks",
+    "prepare": "git config core.hooksPath .githooks || exit 0",
     "test:build": "node --test tests/build/*.test.mjs",
     "test:e2e": "playwright test",
     "test": "npm run test:build && npm run test:e2e"

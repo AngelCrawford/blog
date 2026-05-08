@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://article-time.de/schemas/frontmatter/article.schema.json",
   "title": "Article / Log Frontmatter",
-  "description": "Single source of truth for content/articles/**/*.md and content/logs/**/*.md frontmatter. Consumed by the Zed YAML LSP (Layer 1) and the Husky pre-commit validator (Layer 2). Hugo's build-time partial (Layer 3) hardcodes the growth_stage enum independently — keep them in sync when adding values.",
+  "description": "Single source of truth for content/articles/**/*.md and content/logs/**/*.md frontmatter. Consumed by the Zed YAML LSP (Layer 1) and the git pre-commit hook validator at scripts/validate-frontmatter.js (Layer 2). Hugo's build-time partial (Layer 3) hardcodes the growth_stage enum independently — keep them in sync when adding values.",
   "type": "object",
   "additionalProperties": true,
   "properties": {

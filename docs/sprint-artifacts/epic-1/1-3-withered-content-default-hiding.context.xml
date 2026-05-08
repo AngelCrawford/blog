@@ -338,7 +338,7 @@
         <path>package.json</path>
         <kind>config</kind>
         <symbol>npm package manifest (REFERENCE)</symbol>
-        <reason>REFERENCE only. Story 1.3 does NOT add new dependencies. Reuses Story 1.1's `@playwright/test`, `husky`, `ajv-cli`, `gray-matter` and the `test`/`test:build`/`test:e2e` scripts. CURRENT STATE (2026-05-06): package.json still has only `@fullhuman/postcss-purgecss`, `postcss`, `postcss-cli` and the placeholder `"test": "echo \"Error: no test specified\" && exit 1"` script. Story 1.1 must land first.</reason>
+        <reason>REFERENCE only. Story 1.3 does NOT add new dependencies. Reuses Story 1.1's `@playwright/test`, `ajv`, `ajv-formats`, `gray-matter` (Husky was prescribed but replaced mid-review with plain git hooks via `core.hooksPath`) and the `test`/`test:build`/`test:e2e` scripts. As of Story 1.1 landing, those devDependencies are present and the `prepare` script wires `core.hooksPath` to `.githooks/`.</reason>
       </artifact>
     </code>
 
