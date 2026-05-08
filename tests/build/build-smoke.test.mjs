@@ -8,6 +8,12 @@
 //
 // Each test cleans up its own temp content directory in a finally block so
 // failures never leave the working tree dirty.
+//
+// Test builds write to `public-test/` (not `public/`) so a developer can keep
+// `hugo server` running on `public/` without colliding with the test build.
+// On Windows, hugo's static-file copy fails with "directory not empty" if any
+// file inside `public/articles/` is held open by another process — separating
+// the output dirs eliminates that race entirely.
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
@@ -20,6 +26,15 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const repoRoot = resolve(__dirname, "..", "..");
 const fixturesDir = resolve(__dirname, "fixtures");
+const testPublic = resolve(repoRoot, "public-test");
+const hugoArgs = [
+  "--logLevel",
+  "error",
+  "--environment",
+  "production",
+  "--destination",
+  testPublic,
+];
 
 function runHugoWithFixture(fixtureFile, slug) {
   const tempSection = `_test_growth_stage_${slug}`;
@@ -32,15 +47,11 @@ function runHugoWithFixture(fixtureFile, slug) {
   try {
     // NOTE: --quiet suppresses errorf output, which we need to assert on.
     // We use --logLevel error to keep noise low while preserving error messages.
-    const result = spawnSync(
-      "hugo",
-      ["--logLevel", "error", "--environment", "production"],
-      {
-        cwd: repoRoot,
-        encoding: "utf8",
-        shell: process.platform === "win32",
-      }
-    );
+    const result = spawnSync("hugo", hugoArgs, {
+      cwd: repoRoot,
+      encoding: "utf8",
+      shell: process.platform === "win32",
+    });
     return {
       status: result.status,
       stdout: result.stdout || "",
@@ -50,20 +61,16 @@ function runHugoWithFixture(fixtureFile, slug) {
     if (existsSync(tempDir)) {
       rmSync(tempDir, { recursive: true, force: true });
     }
-    // Hugo writes to ./public; not cleaning that up — `.gitignore` already excludes it.
+    // Hugo writes to ./public-test; not cleaning that up — `.gitignore` already excludes it.
   }
 }
 
 test("baseline: hugo build succeeds with no test fixtures (regression guard)", () => {
-  const result = spawnSync(
-    "hugo",
-    ["--logLevel", "error", "--environment", "production"],
-    {
-      cwd: repoRoot,
-      encoding: "utf8",
-      shell: process.platform === "win32",
-    }
-  );
+  const result = spawnSync("hugo", hugoArgs, {
+    cwd: repoRoot,
+    encoding: "utf8",
+    shell: process.platform === "win32",
+  });
   assert.equal(
     result.status,
     0,
@@ -130,15 +137,11 @@ function runHugoWithArticleFixture(fixtureFile, slug) {
   copyFileSync(resolve(fixturesDir, fixtureFile), tempIndex);
 
   try {
-    const result = spawnSync(
-      "hugo",
-      ["--logLevel", "error", "--environment", "production"],
-      {
-        cwd: repoRoot,
-        encoding: "utf8",
-        shell: process.platform === "win32",
-      }
-    );
+    const result = spawnSync("hugo", hugoArgs, {
+      cwd: repoRoot,
+      encoding: "utf8",
+      shell: process.platform === "win32",
+    });
     return {
       status: result.status,
       stdout: result.stdout || "",
@@ -160,7 +163,7 @@ test("Story 1.3 AC #1: homepage HTML excludes withered article permalink", () =>
     `Build should succeed with withered fixture. stderr:\n${result.stderr}`
   );
 
-  const homeHtml = readFileSync(resolve(repoRoot, "public", "index.html"), "utf8");
+  const homeHtml = readFileSync(resolve(repoRoot, "public-test","index.html"), "utf8");
   assert.doesNotMatch(
     homeHtml,
     /_test_withered_ac1/,
@@ -178,7 +181,7 @@ test("Story 1.3 AC #4: withered article direct URL is still rendered to public/"
 
   const witheredPage = resolve(
     repoRoot,
-    "public",
+    "public-test",
     "articles",
     "_test_withered_ac4",
     "index.html"
@@ -207,7 +210,7 @@ test("Story 1.3 AC #5: search index (index.json) keeps withered content", () => 
     `Build should succeed with withered fixture. stderr:\n${result.stderr}`
   );
 
-  const indexJsonPath = resolve(repoRoot, "public", "index.json");
+  const indexJsonPath = resolve(repoRoot, "public-test","index.json");
   assert.ok(
     existsSync(indexJsonPath),
     "public/index.json should be generated"
@@ -228,7 +231,7 @@ test("Story 1.3 AC #6: hidden notice element renders on homepage when withered c
     `Build should succeed with withered fixture. stderr:\n${result.stderr}`
   );
 
-  const homeHtml = readFileSync(resolve(repoRoot, "public", "index.html"), "utf8");
+  const homeHtml = readFileSync(resolve(repoRoot, "public-test","index.html"), "utf8");
   assert.match(
     homeHtml,
     /class="withered-hidden-notice"/,
@@ -249,7 +252,7 @@ test("Story 1.3 AC #6 (a11y): hidden notice carries role='status' + aria-live='p
     `Build should succeed with withered fixture. stderr:\n${result.stderr}`
   );
 
-  const homeHtml = readFileSync(resolve(repoRoot, "public", "index.html"), "utf8");
+  const homeHtml = readFileSync(resolve(repoRoot, "public-test","index.html"), "utf8");
   // The notice element MUST have screen-reader semantics so the hidden
   // count is announced politely without stealing focus.
   assert.match(
@@ -273,7 +276,7 @@ test("Story 1.3 AC #8: 404 page recent-articles widget excludes withered content
     `Build should succeed with withered fixture. stderr:\n${result.stderr}`
   );
 
-  const notFoundHtml = readFileSync(resolve(repoRoot, "public", "404.html"), "utf8");
+  const notFoundHtml = readFileSync(resolve(repoRoot, "public-test","404.html"), "utf8");
   assert.doesNotMatch(
     notFoundHtml,
     /_test_withered_ac8/,
@@ -302,7 +305,7 @@ test("Story 1.4 AC #1+#2+#5: withered banner renders with date+reason+replacemen
 
   const articlePage = resolve(
     repoRoot,
-    "public",
+    "public-test",
     "articles",
     "_test_withered_banner",
     "index.html"
@@ -312,8 +315,8 @@ test("Story 1.4 AC #1+#2+#5: withered banner renders with date+reason+replacemen
 
   assert.match(
     html,
-    /class="withered-banner notification is-warning"/,
-    "Banner element with warning notification class must be present"
+    /class="withered-banner message is-warning"/,
+    "Banner element with Bulma message+warning classes must be present"
   );
   assert.match(
     html,
@@ -358,7 +361,7 @@ test("Story 1.4 AC #2+#6: withered-minimal omits reason and replacement", () => 
 
   const articlePage = resolve(
     repoRoot,
-    "public",
+    "public-test",
     "articles",
     "_test_withered_minimal",
     "index.html"
@@ -368,7 +371,7 @@ test("Story 1.4 AC #2+#6: withered-minimal omits reason and replacement", () => 
 
   assert.match(
     html,
-    /class="withered-banner notification is-warning"/,
+    /class="withered-banner message is-warning"/,
     "Banner must still render for the minimal fixture"
   );
   assert.doesNotMatch(
@@ -439,11 +442,11 @@ function runHugoWithSeriesFixtures(articles) {
   }
 
   try {
-    const result = spawnSync(
-      "hugo",
-      ["--logLevel", "error", "--environment", "production"],
-      { cwd: repoRoot, encoding: "utf8", shell: process.platform === "win32" }
-    );
+    const result = spawnSync("hugo", hugoArgs, {
+      cwd: repoRoot,
+      encoding: "utf8",
+      shell: process.platform === "win32",
+    });
     return {
       status: result.status,
       stdout: result.stdout || "",
@@ -459,7 +462,7 @@ function runHugoWithSeriesFixtures(articles) {
 
 function readArticlePage(slug) {
   return readFileSync(
-    resolve(repoRoot, "public", "articles", `_test_series_${slug}`, "index.html"),
+    resolve(repoRoot, "public-test","articles", `_test_series_${slug}`, "index.html"),
     "utf8"
   );
 }
@@ -651,7 +654,7 @@ test("Story 1.4 AC #11: non-withered articles render without the withered banner
 
   const articlePage = resolve(
     repoRoot,
-    "public",
+    "public-test",
     "articles",
     "_test_withered_evergreen14",
     "index.html"
@@ -677,7 +680,7 @@ test("Story 1.3 AC #11: weight-bucket ordering on homepage is preserved (regress
     `Build should succeed with withered fixture. stderr:\n${result.stderr}`
   );
 
-  const homeHtml = readFileSync(resolve(repoRoot, "public", "index.html"), "utf8");
+  const homeHtml = readFileSync(resolve(repoRoot, "public-test","index.html"), "utf8");
   // At minimum, the homepage must still render the article-card markup;
   // the filter doesn't replace cards, only excludes withered ones.
   assert.match(

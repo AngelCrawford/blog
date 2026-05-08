@@ -45,3 +45,15 @@ If the editor stays silent, that's fine — Layer 2 (`git commit`) and Layer 3 (
 ## Adding a new schema field
 
 Edit `schemas/frontmatter/article.schema.json`. All three layers (Zed, pre-commit, Hugo) pick up schema-only changes automatically — except `growth_stage` enum values, which Layer 3 hardcodes in `layouts/_partials/_base/validate-growth-stage.html`. Update both the schema enum AND the partial when changing growth-stage values.
+
+## Withered metadata fields (Story 1.4)
+
+When marking an article as `growth_stage: "withered"`, fill in these companion frontmatter fields:
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `withered_date` | YYYY-MM-DD | **Yes when withered** | Renders as the deprecation date in the warning banner. Build fails (`errorf`) if missing. |
+| `withered_reason` | string (≤280 chars) | Optional | One short paragraph explaining why the content was deprecated. Plain prose only — no markdown rendering. |
+| `replacement_url` | URL or rel-path | Optional | Link to the replacement article (e.g. `/articles/new-version/`). Rendered as a labelled link in the banner. |
+
+The article and log archetypes (`archetypes/articles/index.md`, `archetypes/logs/index.md`) include a commented-out block of these three fields right under `growth_stage` so you can uncomment and fill them in when the time comes. Both the JSON Schema (Layer 1+2) and the build-time partial (Layer 3) enforce the conditional-required rule.

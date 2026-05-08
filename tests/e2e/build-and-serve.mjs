@@ -1,7 +1,13 @@
-// E2E test entrypoint: write fixtures → hugo build → serve public/.
+// E2E test entrypoint: write fixtures → hugo build → serve public-test/.
 // Replaces both globalSetup and webServer.command-only approaches with a single
 // deterministic startup. Playwright's `webServer.url` ping then waits naturally
-// for the static server to start AFTER the Hugo build has populated public/.
+// for the static server to start AFTER the Hugo build has populated public-test/.
+//
+// Test build writes to `public-test/` (not `public/`) so a developer can keep
+// `hugo server` running on `public/` without colliding with the test build.
+// On Windows, hugo's static-file copy fails with "directory not empty" if any
+// file inside `public/articles/` is held open by another process; isolating
+// the test output dir eliminates that race.
 
 import { spawnSync } from "node:child_process";
 import * as fs from "node:fs";
@@ -110,9 +116,10 @@ fs.writeFileSync(path.join(replacementDir, "index.md"), witheredBannerReplacemen
 
 // 2. Hugo build (production env so PurgeCSS runs).
 process.stdout.write("[build-and-serve] running hugo build\n");
+const TEST_PUBLIC = path.join(REPO_ROOT, "public-test");
 const result = spawnSync(
     "hugo",
-    ["--environment", "production", "--logLevel", "error"],
+    ["--environment", "production", "--logLevel", "error", "--destination", TEST_PUBLIC],
     {
         cwd: REPO_ROOT,
         encoding: "utf8",
@@ -130,7 +137,7 @@ process.stdout.write("[build-and-serve] hugo build OK\n");
 
 // 3. Static server.
 const PORT = parseInt(process.env.PORT || "1314", 10);
-const ROOT = path.join(REPO_ROOT, "public");
+const ROOT = TEST_PUBLIC;
 
 const MIME = {
     ".html": "text/html; charset=utf-8",

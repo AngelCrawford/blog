@@ -3,11 +3,12 @@
 // No cookies, no localStorage by design — re-shows on next visit.
 // Vanilla IIFE; the footer bundle is loaded with `defer`, so DOM is ready.
 //
-// Leading semicolon: resources.Concat splices files with no separator, so an
-// unterminated previous statement (e.g. a function expression in the prior
-// file) would parse `(function(){...})()` as a call applied to it. The `;`
-// forces ASI to terminate whatever came before.
-;(function () {
+// `!function(){}()` (rather than `(function(){})()`) is intentional:
+// resources.Concat splices files without a separator and resources.Minify
+// strips redundant leading semicolons, so a leading `(` would be parsed as a
+// call applied to the previous file's last expression. The unary `!` cleanly
+// terminates whatever came before and consumes the function expression.
+!function () {
     const banner = document.querySelector('.withered-banner[data-banner-key]');
     if (!banner) return;
 
@@ -34,4 +35,4 @@
             // Same fallback as above — visual state stays hidden for this session.
         }
     });
-})();
+}();

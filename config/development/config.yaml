@@ -1,14 +1,23 @@
 baseURL: http://localhost:1313/
 
-# Hide test-fixture content from the dev server.
+# Hide test-fixture content and the test-build output dir from the dev server.
+#
 # Build-smoke (`tests/build/`) and e2e (`tests/e2e/`) suites create disposable
 # page bundles under prefixes like `_test_growth_stage_*` and `_test_withered_*`.
 # Some fixtures (e.g. invalid-stage probes for Story 1.1 AC#2) are deliberately
 # broken so we can assert the build halts. With `hugo server` running in dev,
 # its watcher would otherwise pick them up and turn the dev page red.
 #
+# `public-test/` is the test-build output dir (separate from `public/` so the
+# test build doesn't clash with a running `hugo server` on Windows — see
+# `docs/technical/testing.md`). Even though Hugo's default `publishDir`
+# exclusion only covers `public/`, listing `^public-test/` here makes the
+# intent explicit and immunizes us against future config drift that could
+# otherwise pull the test output into the watcher.
+#
 # These patterns apply ONLY in development — production env (used by both
 # test suites and deploys) still sees and validates them.
 ignoreFiles:
   - "_test_growth_stage_"
   - "_test_withered_"
+  - "^public-test/"

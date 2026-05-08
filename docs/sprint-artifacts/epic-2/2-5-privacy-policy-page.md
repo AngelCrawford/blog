@@ -144,6 +144,26 @@ ACs 1–6 are derived verbatim from `docs/1-planning/epics.md#Story-2.5-Privacy-
     **Wie kannst Du widersprechen?** Klicke das Herz nicht. Es gibt keine andere Erfassung.
     ```
 
+- [ ] **Document withered-banner sessionStorage (Story 1.4 carry-over)** [Source: assets/js/withered-banner.js, layouts/_partials/withered-banner.html]
+  - [ ] Add a short subsection (`### Hinweis-Dismiss bei verwelkten Inhalten`) after the Hearts section. Story 1.4 introduced a per-article dismiss button on the withered-content warning banner that writes one entry to `sessionStorage`. Coverage is required by Art. 13 DSGVO transparency obligations even though no consent is needed (§ 25 Abs. 2 Nr. 2 TTDSG: "unbedingt erforderlich" für die vom Nutzer angeforderte Dismiss-Funktion — siehe DSK-Orientierungshilfe Telemedien 2021/2022). Suggested baseline content (informal `Du`):
+    ```markdown
+    ### Hinweis-Dismiss bei verwelkten Inhalten
+
+    Auf als „verwelkt" (deprecated) markierten Artikelseiten erscheint oben ein gelber Warnhinweis. Wenn Du auf das ✕ klickst, merkt sich Dein Browser **nur für die aktuelle Sitzung**, dass dieser eine Hinweis ausgeblendet bleiben soll.
+
+    **Was wird gespeichert?**
+    - Ein Eintrag im `sessionStorage` Deines Browsers, Schlüssel `withered-banner-dismissed:<artikel-pfad>`, Wert `1`.
+    - Pro Artikel ein eigener Eintrag (das Ausblenden auf einem verwelkten Artikel betrifft keine anderen).
+
+    **Wie lange bleibt das gespeichert?** Bis Du den Tab schließt — `sessionStorage` wird vom Browser automatisch gelöscht, anders als `localStorage` oder Cookies. Beim nächsten Besuch erscheint der Hinweis wieder.
+
+    **Was wird übertragen?** Nichts. Der Eintrag verlässt Deinen Browser nicht.
+
+    **Rechtsgrundlage:** § 25 Abs. 2 Nr. 2 TTDSG — technisch erforderlich, um die von Dir per Klick angeforderte Dismiss-Funktion umzusetzen. Keine Einwilligung nötig.
+    ```
+  - [ ] Position this subsection AFTER the Hearts section (`## Herz-Reaktionen`) and BEFORE the Webmentions section (`## Webmentions`) so the policy reads in order of: pageview tracking → user action with persistence → UI preference with persistence → federated data exchange. Use `###` (subsection under an implicit "Browser-Speicher" umbrella) rather than a top-level `##` because it's a UI preference, not a data flow worth top-level treatment.
+  - [ ] Cross-reference: AC #3's "Was diese Seite NICHT tut" mentions `localStorage` for hearts. Extend that line to also mention `sessionStorage` for the withered-banner dismiss so the umbrella claim stays accurate. Suggested rewrite of the relevant bullet: "**Keine Tracking-Cookies.** Umami arbeitet im Cookieless-Modus. Hearts werden im `localStorage` markiert, der Withered-Hinweis-Dismiss im `sessionStorage` (sitzungsweise, kein Cookie). Webmentions sind serverseitig, kein Browser-Storage."
+
 - [ ] **Add or integrate Webmentions section** (AC: 2) [Source: docs/sprint-artifacts/epic-2/2-3-webmention-endpoint-setup.md (lines 100–120) — baseline content from Story 2.3]
   - [ ] If Story 2.3's Webmentions section is already in the file, integrate it into the new structure (move it to follow Hearts; verify content matches baseline below). Otherwise, add the section verbatim (baseline from Story 2.3's draft, lightly adapted):
     ```markdown
@@ -451,3 +471,4 @@ claude-opus-4-7[1m]
 | Date | Change | Author |
 |---|---|---|
 | 2026-05-06 | Initial draft created from `epics.md` Story 2.5 (FR-048, GitHub Issue #49), `prd/03a-functional-requirements.md` (FR-047 Zero Tracking Cookies, FR-048 Privacy Policy Publication, FR-049 Anonymous Analytics), `digital-garden-integration-architecture.md` (Pattern 2 Dual Anonymous Engagement lines 414–469; Security Architecture lines 999–1064; Client-Side Considerations lines 1056–1062), and sibling Stories 2.1–2.4 drafts. Reconciled epics AC #1 (`/pages/privacy/`) with project state (existing German page at `/pages/datenschutz/`, footer-menu wired) — same language reconciliation pattern Stories 2.2/2.4 used for German UI strings. ACs 1–6 verbatim from epics; ACs 7–9 added as testability/regression guards (cleanup of obsolete content like Spotify section, clean prod build, byte-equivalent unchanged layouts outside `datenschutz.md`). Coordination with Story 2.3's planned `## Webmentions` section documented as integrate-or-create depending on landing order. Avatar-IP-leak disclosure deferred from Story 2.4 picked up here per Story 2.4's explicit hand-off (`2-4-webmention-display-component.md` lines 567–569, 694). Information architecture chosen as reader-prioritized (intro, three engagement-flow sections in chronological visibility order, posture statement, contact + DSGVO rights, hosting/server) rather than legalistic, matching the digital-garden personal-site context. Email obfuscation pattern re-uses `impressum.md` lines 19–24 verbatim. `Stand:` and `Version:` metadata in body (recommended) over frontmatter to keep template untouched. `robotsdisallow: true` retained (privacy policy is intentionally noindex). Spotify section flagged for removal (no Spotify embeds in current codebase, verified by grep). Standalone Google Analytics one-liner subsumed into broader `## Was diese Seite NICHT tut` posture statement. No code, template, asset, or workflow changes — content-only edit to `content/pages/datenschutz.md`. Test strategy: build pass + manual content review + footer-link regression check + diff-based no-regression check + external link resolution. No automated tests added (test infra not yet landed). | SM (create-story workflow) |
+| 2026-05-09 | Carry-over note added: Story 1.4 introduced a sessionStorage-backed dismiss button on the withered-content warning banner (`assets/js/withered-banner.js`). Per Art. 13 DSGVO transparency, this story should add a short `### Hinweis-Dismiss bei verwelkten Inhalten` subsection (placement: after Hearts, before Webmentions) plus extend the AC #3 "no tracking cookies" bullet to mention `sessionStorage`. No consent gate required (§ 25 Abs. 2 Nr. 2 TTDSG: technisch erforderlich für die nutzerangeforderte Dismiss-Funktion). | Dev (Story 1.4 carry-over) |

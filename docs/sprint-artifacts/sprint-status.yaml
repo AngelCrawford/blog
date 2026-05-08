@@ -1,5 +1,5 @@
 # generated: 2026-04-30
-# last_updated: 2026-05-08
+# last_updated: 2026-05-09
 # project: Article Time
 # project_key: article-time-digital-garden
 # tracking_system: file-system
@@ -41,7 +41,7 @@ development_status:
   1-1-growth-stage-frontmatter-field: done
   1-2-growth-stage-badge-component: done
   1-3-withered-content-default-hiding: done
-  1-4-withered-content-warning-banner: in-progress
+  1-4-withered-content-warning-banner: review
   1-5-withered-seo-rss-inclusion: ready-for-dev
   epic-1-retrospective: optional
 

@@ -50,11 +50,13 @@ CI runs the equivalent `npx playwright install --with-deps chromium` step.
 
 ## E2E architecture: static export, not hugo server
 
-The Playwright e2e suite serves the production-built `public/` folder via a tiny Node static server (`tests/e2e/build-and-serve.mjs`) instead of running `hugo server`. The lifecycle:
+The Playwright e2e suite serves a **dedicated `public-test/` folder** (NOT the regular `public/`) via a tiny Node static server (`tests/e2e/build-and-serve.mjs`) instead of running `hugo server`. The lifecycle:
 
-1. **`webServer.command`** runs `build-and-serve.mjs`, which: writes per-stage fixture page bundles into `content/articles/_test_growth_stage_*`, runs `hugo --environment production`, then serves `public/` on port 1314.
+1. **`webServer.command`** runs `build-and-serve.mjs`, which: writes per-stage fixture page bundles into `content/articles/_test_growth_stage_*`, runs `hugo --environment production --destination public-test`, then serves `public-test/` on port 1314.
 2. **Tests run** against the static server — eight parallel workers, no race on shared state.
 3. **`globalTeardown`** (`tests/e2e/global-teardown.ts`) removes the fixture page bundles. `.gitignore` excludes the `_test_growth_stage_` prefix as a backstop in case teardown is skipped.
+
+> **Why `public-test/` and not `public/`**: on Windows, hugo's static-file copy step fails with `error copying static files: unlinkat ...\public\articles: The directory is not empty.` if any file in `public/` is held open by another process — typically a developer's running `hugo server`, an editor preview, or Windows' file indexer. Routing test builds to `public-test/` lets developers keep `hugo server` on `public/` while `npm test` runs concurrently. The same isolation applies to `tests/build/build-smoke.test.mjs` — every spawned hugo build passes `--destination public-test`.
 
 Why this is better than `hugo server` for tests:
 
@@ -97,6 +99,31 @@ A Playwright spec was prototyped but **dropped intentionally**: Hugo's fsnotify 
 
 Pure-function partials `withered-filter.html` (filter) and `withered-count.html` (count) are consumed by `home.html`, `list.html`, `page/archive.html`, `_partials/widgets/archive.html`, `_partials/_base/footer.html`, `404.html`, `single.html` (series + related), and `_partials/card.html` (taxonomy term count). Future stories that list pages and need to hide withered MUST go through these partials rather than re-inlining the predicate.
 
+## Withered Warning Banner (Story 1.4)
+
+Story 1.4 adds the single-page warning banner for `growth_stage: "withered"` content. Coverage spans both layers:
+
+**Build smoke (`tests/build/build-smoke.test.mjs`)**
+- **AC #1+#2+#5** — `withered-with-replacement.md` renders `<aside class="withered-banner message is-warning">` (Bulma `message` component with header bar + body) carrying `role="alert"`, `aria-labelledby`, formatted German date (`time.Format ":date_long"`), the reason paragraph, and the replacement link.
+- **AC #2+#6** — `withered-minimal.md` (only `withered_date` set) renders the banner WITHOUT `.withered-banner-reason` or `.withered-banner-replacement` — the optional-field branch must not emit empty placeholders.
+- **AC #7** — `withered-invalid.md` (`growth_stage: "withered"` without `withered_date`) makes Hugo exit non-zero with a `Missing withered_date` errorf naming the offending file path. Layer 3 build gate, mirrored by the Layer 2 pre-commit `if/then` rule in `schemas/frontmatter/article.schema.json`.
+- **AC #11** — non-withered articles (e.g. `valid-evergreen.md`) render WITHOUT any `withered-banner` markup (regression guard).
+
+Fixtures live alongside the Story 1.1 set: `tests/build/fixtures/withered-with-replacement.md`, `withered-minimal.md`, `withered-invalid.md`.
+
+**Playwright e2e (`tests/e2e/withered-banner.spec.ts`)**
+- Banner visibility on `_test_withered_banner_full` — date, reason, replacement link content + position above the article box.
+- Reuses `_test_growth_stage_withered` (which now includes `withered_date`) as the minimal-banner case — confirms reason/replacement are absent.
+- **Dismiss flow** — click hides banner, reload preserves dismissal (sessionStorage), fresh browser context re-shows the banner.
+- **Per-article isolation** — dismissing on `withered-banner-full` does NOT affect a separate withered article's banner (different sessionStorage keys).
+- **Replacement link click** — navigates to the target fixture (`_test_withered_banner_replacement_target`) with HTTP 200.
+- **Structural a11y** — `role="alert"`, `aria-labelledby`, dismiss `aria-label="Hinweis ausblenden"`, decorative skull svg `aria-hidden="true"`, replacement link visible text + sensible `title`. Following Story 1.3's precedent, `@axe-core/playwright` is **not** integrated; structural attribute checks cover the AC #9 claims and the broader a11y audit is held for Epic 9.
+- **Mobile (375×667)** — banner stays visible, dismiss tap target ≥20px wide/tall.
+
+**Test infrastructure additions**: `tests/e2e/build-and-serve.mjs` writes two banner-specific page bundles (`_test_withered_banner_full`, `_test_withered_banner_replacement_target`) before hugo runs; `tests/e2e/global-teardown.ts` cleans them via the new `WITHERED_BANNER_FIXTURES` export from `tests/e2e/fixtures.ts`. The pre-existing navbar `#resultsWrapper` overlay (`assets/scss/elements/search.scss`) intercepted pointer events on the dismiss button area; the spec hides it via `page.evaluate` after navigation. Out-of-scope UX quirk — leave for a future cleanup story.
+
+> **Side fix shipped with Story 1.4**: `layouts/baseof.html` and `layouts/_partials/_base/head.html` switched the JS bundle `<script src>` from `$script.Permalink` to `$script.RelPermalink`. Permalink emits the production absolute URL (`https://article-time.de/...`) which the page's `script-src 'self'` CSP blocks when the page is served from a different origin (e.g. the e2e static server on `localhost:1314`). Same-origin in production, no behavioral change there. Fixed because the dismiss handler IIFE silently never attached when the head bundle (jQuery) was blocked and the footer bundle's main.js threw `$ is not defined`, halting bundle execution before reaching the withered-banner IIFE.
+
 ## Adding tests in future stories
 
 Per `test-design-system.md`:
@@ -104,7 +131,7 @@ Per `test-design-system.md`:
 | Story / Epic | Test additions |
 |---|---|
 | Story 1.2 (badge component) | ✅ Implemented — see "Growth-stage badge (Story 1.2)" above. Pure structural assertions; visual snapshots deferred (cross-machine font-rendering noise). |
-| Story 1.4 (warning banner) | E2E assertion that withered pages emit the warning banner |
+| Story 1.4 (warning banner) | ✅ Implemented — see "Withered Warning Banner (Story 1.4)" above. |
 | Epic 5 (filter UI) | Journey test: load list, click filter, verify filtered results; client-side JS coverage |
 | Epic 9 (a11y audit) | `@axe-core/playwright` integrated into the e2e suite |
 
