@@ -3,6 +3,7 @@
 
         <div class="columns is-multiline">
             <div class="column is-12">
+                {{ partial "withered-banner.html" . }}
                 <article class="box {{ if .Resources -}} has-image{{- end }} is-single-page">
                     {{- if .Resources -}}
                         <figure class="image is-4by3">
@@ -34,6 +35,7 @@
     {{ else if eq .Page.Type "articles" }}
         <div class="columns is-multiline">
             <div class="column is-12-mobile is-12-tablet is-12-desktop is-9-widescreen is-9-fullhd">
+                {{ partial "withered-banner.html" . }}
                 <article class="box {{ if .Resources }}has-image{{ end }}">
             
                     {{- if .Resources -}}
@@ -152,12 +154,12 @@
                                 {{- $currentPage := . -}}
                                 {{- $series_name := index .Params.series 0 -}}
 
-                                {{/* Story 1.3: filter withered out of the inline series list so
-                                     non-withered articles don't surface withered siblings. The current
-                                     page itself is always rendered (direct URL access stays intact). */}}
-                                {{- $seriesCandidates := partial "withered-filter.html" .Site.RegularPages -}}
+                                {{/* Series widget shows ALL members including withered ones —
+                                     hiding withered breaks the series flow for readers following
+                                     the sequence. Withered members are visually marked with a skull
+                                     icon and dimmed styling so readers know before clicking. */}}
                                 {{- $.Store.Set "series_count" 0 -}}
-                                {{- range $seriesCandidates.ByDate -}}
+                                {{- range .Site.RegularPages.ByDate -}}
                                     {{- if in .Params.series $series_name -}}
                                         {{- $.Store.Add "series_count" 1 -}}
                                     {{- end -}}
@@ -165,13 +167,24 @@
 
                                 <p class="title is-6"><a href="{{ printf "series/%s" ($series_name | urlize) | relURL }}" title="{{ $series_name }}">{{ $series_name }} ({{ $.Store.Get "series_count" }})</a></p>
                                 <ol class="series-list">
-                                    {{- range $seriesCandidates.ByDate -}}
+                                    {{- range .Site.RegularPages.ByDate -}}
                                         {{- if in .Params.series $series_name -}}
-                                            {{- if not (eq $currentPage.RelPermalink .RelPermalink) -}}
-                                                <li><a href="{{ .RelPermalink }}" title="{{ .Title }}">{{ .Title }}</a></li>
-                                            {{- else -}}
-                                                <li class="is-active">{{ .Title }} </li>
-                                            {{- end -}}
+                                            {{- $isCurrent := eq $currentPage.RelPermalink .RelPermalink -}}
+                                            {{- $isWithered := eq .Params.growth_stage "withered" -}}
+                                            <li
+                                                {{- if $isCurrent }} class="is-active{{ if $isWithered }} is-withered{{ end }}"
+                                                {{- else if $isWithered }} class="is-withered"
+                                                {{- end -}}>
+                                                {{- if $isCurrent -}}
+                                                    {{- if $isWithered -}}<svg class="ri-1x" aria-hidden="true"><use xlink:href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ site.Params.remixicon_version }}#skull-2-line"></use></svg>{{- end -}}
+                                                    {{ .Title }}
+                                                {{- else -}}
+                                                    <a href="{{ .RelPermalink }}" title="{{ .Title }}{{ if $isWithered }} — verwelkt{{ end }}">
+                                                        {{- if $isWithered -}}<svg class="ri-1x" aria-hidden="true"><use xlink:href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ site.Params.remixicon_version }}#skull-2-line"></use></svg>{{- end -}}
+                                                        {{ .Title }}
+                                                    </a>
+                                                {{- end -}}
+                                            </li>
                                         {{- end -}}
                                     {{- end -}}
                                 </ol>

@@ -65,6 +65,21 @@
       "default": "seedling",
       "description": "Digital-garden content maturity. seedling = early/draft, budding = developing, evergreen = mature/maintained, withered = deprecated. If omitted, templates fall back to seedling."
     },
+    "withered_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date when the article was marked as withered. Required when growth_stage == 'withered'. ISO 8601 (YYYY-MM-DD). Populates the withered warning banner (Story 1.4)."
+    },
+    "withered_reason": {
+      "type": "string",
+      "maxLength": 280,
+      "description": "Optional one-paragraph plain-prose explanation of why the content is deprecated (e.g., 'Framework deprecated, see new article'). No markdown."
+    },
+    "replacement_url": {
+      "type": "string",
+      "format": "uri-reference",
+      "description": "Optional URL or relative path to replacement content (e.g., '/articles/new-version/'). Rendered as a labelled link in the withered banner."
+    },
     "params": {
       "type": "object",
       "additionalProperties": true,
@@ -90,5 +105,18 @@
         }
       }
     }
-  }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "growth_stage": { "const": "withered" }
+        },
+        "required": ["growth_stage"]
+      },
+      "then": {
+        "required": ["withered_date"]
+      }
+    }
+  ]
 }

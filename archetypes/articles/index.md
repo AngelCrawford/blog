@@ -23,6 +23,11 @@ summary: "" # REQUIRED: Summary for the list view
 # If omitted, templates fall back to "seedling" via `default "seedling" .Params.growth_stage`.
 growth_stage: "seedling"
 
+# Withered metadata — uncomment when growth_stage: "withered"
+# withered_date: ""        # YYYY-MM-DD when this content was deprecated (REQUIRED if withered)
+# withered_reason: ""      # Optional: brief explanation, e.g. "Framework deprecated"
+# replacement_url: ""      # Optional: link to replacement content, e.g. "/articles/new-version/"
+
 params:
   SEO:
     desc: "Seo Desc" # SEO Description for single posts, 120 - 158 characters max -> If not set, Summary will be used

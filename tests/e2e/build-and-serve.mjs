@@ -23,10 +23,18 @@ const FIXTURE_DIRS = {
     default: "_test_growth_stage_default",
 };
 
+// Story 1.4 banner-specific fixtures (mirrors WITHERED_BANNER_FIXTURES in fixtures.ts).
+const WITHERED_BANNER_FIXTURES = {
+    full: "_test_withered_banner_full",
+    replacementTarget: "_test_withered_banner_replacement_target",
+};
+
 function fixtureMarkdown(stage) {
     const stageLine = stage
         ? `growth_stage: "${stage}"`
         : "# growth_stage intentionally omitted (default fallback)";
+    // Story 1.4: withered articles MUST declare withered_date or Hugo build fails.
+    const witheredDate = stage === "withered" ? `withered_date: "2026-05-01"\n` : "";
     return `---
 title: "Growth Stage Test ${stage ?? "Default Fallback"}"
 date: 2026-05-08
@@ -35,7 +43,7 @@ summary: "E2E fixture for growth-stage badge — ${stage ?? "no field (default f
 categories: ["Test"]
 authors: ["angel"]
 ${stageLine}
----
+${witheredDate}---
 
 Body for the ${stage ?? "default"} fixture.
 `;
@@ -53,6 +61,52 @@ const defaultDir = path.join(ARTICLES_DIR, FIXTURE_DIRS.default);
 fs.rmSync(defaultDir, { recursive: true, force: true });
 fs.mkdirSync(defaultDir, { recursive: true });
 fs.writeFileSync(path.join(defaultDir, "index.md"), fixtureMarkdown(null));
+
+// Story 1.4: withered-banner E2E fixtures.
+// `_test_withered_banner_full` — withered article with all three banner fields populated.
+// `_test_withered_banner_replacement_target` — destination of the replacement_url click test.
+function witheredBannerFullMarkdown() {
+    return `---
+title: "Withered Banner Full Fixture"
+date: 2026-04-01
+draft: false
+summary: "E2E fixture for Story 1.4 — full withered banner with date, reason, and replacement link."
+categories: ["Test"]
+authors: ["angel"]
+growth_stage: "withered"
+withered_date: "2026-04-15"
+withered_reason: "E2E reason: framework deprecated."
+replacement_url: "/articles/${WITHERED_BANNER_FIXTURES.replacementTarget}/"
+---
+
+Body for the withered banner full fixture.
+`;
+}
+
+function witheredBannerReplacementTargetMarkdown() {
+    return `---
+title: "Withered Banner Replacement Target"
+date: 2026-04-20
+draft: false
+summary: "E2E fixture for Story 1.4 — destination of the replacement_url click navigation."
+categories: ["Test"]
+authors: ["angel"]
+growth_stage: "evergreen"
+---
+
+Body for the replacement target fixture.
+`;
+}
+
+const fullDir = path.join(ARTICLES_DIR, WITHERED_BANNER_FIXTURES.full);
+fs.rmSync(fullDir, { recursive: true, force: true });
+fs.mkdirSync(fullDir, { recursive: true });
+fs.writeFileSync(path.join(fullDir, "index.md"), witheredBannerFullMarkdown());
+
+const replacementDir = path.join(ARTICLES_DIR, WITHERED_BANNER_FIXTURES.replacementTarget);
+fs.rmSync(replacementDir, { recursive: true, force: true });
+fs.mkdirSync(replacementDir, { recursive: true });
+fs.writeFileSync(path.join(replacementDir, "index.md"), witheredBannerReplacementTargetMarkdown());
 
 // 2. Hugo build (production env so PurgeCSS runs).
 process.stdout.write("[build-and-serve] running hugo build\n");

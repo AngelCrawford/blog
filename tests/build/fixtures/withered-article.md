@@ -4,6 +4,7 @@ date: 2026-05-08T00:00:00Z
 draft: false
 summary: "Build-smoke fixture: explicit withered growth_stage. Used by Story 1.3 to assert default-hiding behaviour and direct-URL accessibility."
 growth_stage: "withered"
+withered_date: "2026-05-01"
 ---
 
 This fixture exercises the withered hide-by-default path: the page MUST NOT

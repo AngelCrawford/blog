@@ -19,3 +19,5 @@ node_modules
 # Build smoke test scratch (created and cleaned up per-test, but failures may leave residue)
 /content/_test_growth_stage_*
 /content/articles/_test_growth_stage_*
+/content/articles/_test_withered_banner_*
+/content/articles/_test_withered_*

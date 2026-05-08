@@ -1,0 +1,56 @@
+@use "../vars/helpers";
+@use "sass:color";
+
+// Withered Warning Banner (Story 1.4)
+//
+// Bulma's `.notification.is-warning` already gives us the orange/yellow
+// background and AA-contrast text — we layer on layout adjustments only.
+// Reuses helpers.$growth-withered (Story 1.2) for the skull icon fill so the
+// banner shares the visual language of the growth-stage badges.
+
+.withered-banner.notification {
+    margin-bottom: 1.5rem;
+    padding-right: 3rem; // room for Bulma's .delete dismiss button
+
+    .withered-banner-heading {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin: 0 0 .5rem;
+        display: flex;
+        align-items: center;
+        gap: .5rem;
+
+        svg {
+            width: 1.4em;
+            height: 1.4em;
+            fill: helpers.$growth-withered; // gray skull, contrasts on warning bg
+            flex-shrink: 0;
+        }
+    }
+
+    .withered-banner-date,
+    .withered-banner-reason,
+    .withered-banner-replacement {
+        margin: .35rem 0;
+    }
+
+    .withered-banner-replacement a {
+        font-weight: 600;
+        text-decoration: underline;
+    }
+
+    // Hidden state set by the dismiss script via the `hidden` attribute.
+    &[hidden] { display: none; }
+
+    // Bump the dismiss tap target on touch devices and reduce heading size
+    // so the banner stays comfortable on small viewports.
+    @include helpers.mobile {
+        .withered-banner-heading {
+            font-size: 1.1rem;
+        }
+        .delete.withered-banner-dismiss {
+            min-width: 1.75rem;
+            min-height: 1.75rem;
+        }
+    }
+}

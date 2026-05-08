@@ -1,0 +1,46 @@
+{{- /*
+  Withered warning banner (Story 1.4).
+  Renders an alert above the article body when growth_stage == "withered".
+  No-op for any other stage so non-withered single pages stay byte-identical.
+
+  Inputs: page context (.).
+  Reads:  .Params.growth_stage, .Params.withered_date, .Params.withered_reason,
+          .Params.replacement_url, .RelPermalink.
+  Output: <aside class="withered-banner ..."> ... </aside>  OR nothing.
+
+  Dismissal contract — withered-banner.js reads/writes
+  sessionStorage[withered-banner-dismissed:<RelPermalink>] (per-article,
+  per-session). Written by the script via the data-banner-key attribute below.
+*/ -}}
+{{- if eq .Params.growth_stage "withered" -}}
+  {{- $date := .Params.withered_date -}}
+  {{- $reason := .Params.withered_reason -}}
+  {{- $replacement := .Params.replacement_url -}}
+  <aside class="withered-banner notification is-warning"
+         role="alert"
+         aria-labelledby="withered-banner-title"
+         data-banner-key="withered-banner-dismissed:{{ .RelPermalink }}">
+    <button class="delete withered-banner-dismiss"
+            type="button"
+            aria-label="Hinweis ausblenden"
+            title="Hinweis ausblenden"></button>
+    <h2 id="withered-banner-title" class="withered-banner-heading">
+      <svg class="ri-1x" aria-hidden="true">
+        <use xlink:href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ site.Params.remixicon_version }}#skull-2-line"></use>
+      </svg>
+      <span>Verwelkter Inhalt</span>
+    </h2>
+    <p class="withered-banner-date">
+      Als veraltet markiert am
+      <time datetime="{{ $date }}">{{ time.Format ":date_long" $date }}</time>.
+    </p>
+    {{- with $reason }}
+    <p class="withered-banner-reason">{{ . }}</p>
+    {{- end }}
+    {{- with $replacement }}
+    <p class="withered-banner-replacement">
+      <a href="{{ . | relURL }}" title="Aktuelle Version dieses Inhalts">Aktuelle Version ansehen →</a>
+    </p>
+    {{- end }}
+  </aside>
+{{- end -}}

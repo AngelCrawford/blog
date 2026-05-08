@@ -10,4 +10,8 @@
   {{- if not (in $allowed $stage) -}}
     {{- errorf "Invalid growth_stage %q in %s — allowed: seedling, budding, evergreen, withered" $stage .File.Path -}}
   {{- end -}}
+  {{- /* Story 1.4: withered articles MUST declare withered_date so the warning banner can render. */ -}}
+  {{- if and (eq $stage "withered") (not .Params.withered_date) -}}
+    {{- errorf "Missing withered_date in %s — growth_stage=%q requires withered_date (YYYY-MM-DD)" .File.Path $stage -}}
+  {{- end -}}
 {{- end -}}

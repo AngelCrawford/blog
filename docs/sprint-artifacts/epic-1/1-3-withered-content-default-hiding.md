@@ -1,6 +1,6 @@
 # Story 1.3: Withered Content Default Hiding
 
-Status: review
+Status: done
 
 ## Story
 
@@ -364,10 +364,19 @@ claude-opus-4-7[1m]
 - `docs/sprint-artifacts/sprint-status.yaml`
 - `docs/sprint-artifacts/epic-1/1-3-withered-content-default-hiding.md`
 
+### Review Findings
+
+- [x] [Review][Patch] Withered current page invisible in its own series widget [`layouts/single.html`:160–178] — `$seriesCandidates` filters out withered pages; when the current page IS withered (valid via AC #4 direct URL), it never matches `$currentPage.RelPermalink`, so `<li class="is-active">` never fires and the series count is 1 lower than actual. Fixed: re-append current page to candidates when it is withered.
+- [x] [Review][Patch] Concurrent Hugo builds sharing `public/` in smoke tests [`tests/build/build-smoke.test.mjs`:433] — Node's test runner (v18+) runs top-level `test()` calls concurrently by default; `runHugoWithArticleFixture` calls `spawnSync("hugo")` which writes to the shared `public/` directory. Fixed: added `--concurrency 1` to `test:build` npm script.
+- [x] [Review][Defer] Path traversal guard edge cases on Windows [`tests/e2e/build-and-serve.mjs`:747] — deferred, pre-existing; guard is `startsWith(ROOT + sep)` which is correct for the common case but has edge cases at drive root on Windows. Low risk for a localhost-only dev server.
+- [x] [Review][Defer] `xlink:href` deprecated in SVG `<use>` elements [multiple templates] — deferred, pre-existing; codebase-wide pattern introduced before this story. Migrate to plain `href` in a future cross-cutting refactor.
+- [x] [Review][Defer] `$hiddenCount` notice renders on every paginated homepage page with the same total [`layouts/home.html`:286] — deferred; technically correct (reflects site-wide hidden total) but could mislead readers on page 2+. Revisit when pagination UX is addressed.
+
 ## Change Log
 
 | Date | Change | Author |
 |---|---|---|
 | 2026-05-06 | Initial draft created from `epics.md` Story 1.3 (FR-004), `digital-garden-integration-architecture.md` (three-tier sort line 408 — withered excluded from all tiers), `ux-design-specification.md` (filter UI downstream consumer in Story 5.3), and Story 1.1/1.2 conventions (default-fallback semantics, SCSS variables, partial structure). Test approach uses build smoke + Playwright e2e + axe-core per `test-design-system.md`. Search index (`index.json`) and RSS (`rss.xml`) explicitly out of scope — Story 1.5 / 9.6 own those. | SM (create-story workflow, Bob) |
 | 2026-05-08 | Implementation complete. Three new partials, withered-notice SCSS, eight template updates, search-index annotation, withered fixture, seven new build-smoke assertions (all 11 passing). Playwright spec dropped due to Hugo-server fsnotify watcher unreliability on Windows for new subdirectories — coverage moved entirely to build-smoke. `@axe-core/playwright` deferred to Epic 9. Status → review. | Dev Agent (Amelia, claude-opus-4-7[1m]) |
+| 2026-05-08 | Code review + post-review fixes: (a) Patch P1: withered current page was invisible as `is-active` in its own series widget — re-added current page to candidates. (b) Patch P2: smoke tests ran concurrent Hugo builds sharing `public/` — added `--test-concurrency 1`. (c) Design revision: series widget no longer filters withered members out entirely; instead all members remain visible with `is-withered` class + skull icon + "— verwelkt" tooltip so readers see the deprecation before clicking (preserves series flow). `assets/scss/elements/withered-notice.scss` extended with `.series-list .is-withered` styles. Three new series smoke tests added. | Code Review (Angel + Claude) |
 | 2026-05-08 | Polish from review feedback: (a) `card.html` log-format icon recolored to `hsl(29, 100%, 80%)` (`$gold-light`) to match the log-card's existing accent; (b) `withered-hidden-notice.html` German pluralization fix — "1 verwelkter Eintrag ist ausgeblendet" / "{n} verwelkte Einträge sind ausgeblendet" (was "Inhalt"/"Inhalte" with grammar-incorrect singular); (c) AC #3 reverted: archive page and sidebar widget now **include** withered (historic discoverability); homepage and category/tag still filter; (d) AC #7 reverted: footer total now includes withered ("11 Einträge — davon 1 verwelkt" reads naturally), per-format counts (Artikel, Logs) include withered too so they sum to the total; site-footer Artikel icon changed from `flower-line` (now Budding) to `article-line` to avoid conflict with the growth-stage system; site-footer Logs icon recolored to gold-light to match `card.html`; (e) `docs/sprint-artifacts/deferred-work.md` merged into `docs/backlog.md`. Toggleable "show withered" UI is Story 5.3 territory (Growth Stage Filter UI) — not added here. | Dev (Amelia) |

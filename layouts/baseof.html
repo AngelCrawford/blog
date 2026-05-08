@@ -32,7 +32,8 @@
         {{- $firework := resources.Get "js/firework.js" -}}
         {{- $navbar := resources.Get "js/navbar.js" -}}
         {{- $header := resources.Get "js/header.js" -}}
-        {{- $script := slice $sunCalc $main $search $firework $navbar $header | resources.Concat "js/footerBundle.js" | resources.Minify | resources.Fingerprint -}}
+        {{- $witheredBanner := resources.Get "js/withered-banner.js" -}}
+        {{- $script := slice $sunCalc $main $search $firework $navbar $header $witheredBanner | resources.Concat "js/footerBundle.js" | resources.Minify | resources.Fingerprint -}}
         <script async defer src="{{ $script.Permalink }}"></script>
 
     </body>

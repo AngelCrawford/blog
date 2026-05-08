@@ -14,7 +14,8 @@
       "Bash(python3 D:/Projects/Hugo/Sites/blog/_bmad/scripts/resolve_customization.py --skill D:/Projects/Hugo/Sites/blog/.claude/skills/bmad-dev-story --key workflow)",
       "Bash(hugo --logLevel error --environment production)",
       "Bash(npm run *)",
-      "Bash(npx playwright *)"
+      "Bash(npx playwright *)",
+      "Bash(python3 D:/Projects/Hugo/Sites/blog/_bmad/scripts/resolve_customization.py --skill \"D:/Projects/Hugo/Sites/blog/.claude/skills/bmad-code-review\" --key workflow)"
     ]
   }
 }

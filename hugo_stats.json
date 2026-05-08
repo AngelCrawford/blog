@@ -93,6 +93,7 @@
       "content",
       "control",
       "copyright",
+      "delete",
       "empty-cell",
       "external-link",
       "field",
@@ -195,6 +196,7 @@
       "is-small",
       "is-success",
       "is-warning",
+      "is-withered",
       "kind-is-404",
       "kind-is-home",
       "kind-is-page",
@@ -226,6 +228,7 @@
       "navbar-start",
       "navi",
       "no-image",
+      "notification",
       "number",
       "pagination",
       "pagination-link",
@@ -277,6 +280,12 @@
       "variable-number",
       "widget",
       "widget-content",
+      "withered-banner",
+      "withered-banner-date",
+      "withered-banner-dismiss",
+      "withered-banner-heading",
+      "withered-banner-reason",
+      "withered-banner-replacement",
       "withered-hidden-notice"
     ],
     "ids": [
@@ -349,6 +358,7 @@
       "turbulence",
       "urheberrechte-und-markenrechte",
       "urheberrechtshinweise",
+      "withered-banner-title",
       "zweite-überschrift",
       "überschrift-weit-unten"
     ]

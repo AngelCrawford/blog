@@ -15,6 +15,11 @@ authors: ["angel"] # Default is angel, can be removed
 #   withered  = deprecated  (kept for history, no longer accurate/maintained)
 # If omitted, templates fall back to "seedling" via `default "seedling" .Params.growth_stage`.
 growth_stage: "seedling"
+
+# Withered metadata — uncomment when growth_stage: "withered"
+# withered_date: ""        # YYYY-MM-DD when this content was deprecated (REQUIRED if withered)
+# withered_reason: ""      # Optional: brief explanation, e.g. "Framework deprecated"
+# replacement_url: ""      # Optional: link to replacement content, e.g. "/articles/new-version/"
 ---
 
 <!-- USE WITH: hugo147.exe new content logs/my-title-name (NO .md at the end, generates folder) -->

@@ -16,6 +16,8 @@ params:
     desc: "Seo Desc"
     keywords: ["Movie Rating", "Movie Test"]
 growth_stage: "withered"
+withered_date: "2020-03-16"
+series: ["Eine Serie"]
 
 ---
 {{< rating value="4.5" showValue="true" >}}

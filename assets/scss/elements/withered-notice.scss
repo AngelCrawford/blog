@@ -4,6 +4,19 @@
 // Sits below paginated lists / archive year groups; small, gray, italic.
 // Uses $growth-withered (defined in vars/_colors.scss by Story 1.2) so the
 // withered family stays color-consistent across badge and notice.
+// Withered series-list items — dimmed + skull icon so readers know before clicking.
+.series-list {
+    .is-withered {
+        svg {
+            fill: helpers.$growth-withered;
+            width: 0.85em;
+            height: 0.85em;
+            vertical-align: -0.1em;
+            margin-right: 0.2em;
+        }
+    }
+}
+
 .withered-hidden-notice {
     color: helpers.$growth-withered;
     font-size: 0.875em;

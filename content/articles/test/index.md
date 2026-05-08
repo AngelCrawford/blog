@@ -7,6 +7,7 @@ weight: 1
 summary: "*SUMMARY:* One morning, when Gregor Samsa woke **from troubled dreams**, he found himself transformed in his bed into a horrible vermin. One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin. One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin. One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin."
 authors: ["jdksaj", "angel"]
 growth_stage: "budding"
+series: ["Eine Serie"]
 ---
 
 ## Introduction
