@@ -78,7 +78,8 @@
     "replacement_url": {
       "type": "string",
       "format": "uri-reference",
-      "description": "Optional URL or relative path to replacement content (e.g., '/articles/new-version/'). Rendered as a labelled link in the withered banner."
+      "pattern": "^(https?://|/)",
+      "description": "Optional URL or root-relative path to replacement content (e.g., '/articles/new-version/'). Must start with https://, http://, or /. Rendered as a labelled link in the withered banner."
     },
     "params": {
       "type": "object",

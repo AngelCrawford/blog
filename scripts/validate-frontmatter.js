@@ -1,9 +1,12 @@
 #!/usr/bin/env node
 // Layer 2 — pre-commit frontmatter validator.
 //
-// Reads .md files staged for commit (filtered to content/articles/ and content/logs/),
-// extracts the YAML frontmatter, validates it against schemas/frontmatter/article.schema.json,
-// and exits non-zero with a per-file error report on failure.
+// Reads .md files staged for commit (filtered to content/articles/ and content/logs/)
+// directly from the git index (git show :path) — NOT from the working tree — so
+// validation matches exactly what will be committed, even if the working tree has
+// unsaved changes. Extracts the YAML frontmatter, validates it against
+// schemas/frontmatter/article.schema.json, and exits non-zero with a per-file error
+// report on failure.
 //
 // Skip-aware: exits 0 silently when no relevant files are staged. Bypass via `git commit --no-verify`.
 
@@ -60,13 +63,13 @@ const validate = ajv.compile(schema);
 let failed = false;
 
 for (const file of targets) {
-  const absPath = resolve(repoRoot, file);
-  if (!existsSync(absPath)) {
-    // File may have been moved/removed between `git diff --cached` and now — skip.
+  let raw;
+  try {
+    raw = execFileSync("git", ["show", `:${file}`], { encoding: "utf8" });
+  } catch {
+    // File removed from index between `git diff --cached` and now — skip.
     continue;
   }
-
-  const raw = readFileSync(absPath, "utf8");
   let parsed;
   try {
     parsed = matter(raw);

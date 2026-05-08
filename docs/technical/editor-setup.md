@@ -57,3 +57,5 @@ When marking an article as `growth_stage: "withered"`, fill in these companion f
 | `replacement_url` | URL or rel-path | Optional | Link to the replacement article (e.g. `/articles/new-version/`). Rendered as a labelled link in the banner. |
 
 The article and log archetypes (`archetypes/articles/index.md`, `archetypes/logs/index.md`) include a commented-out block of these three fields right under `growth_stage` so you can uncomment and fill them in when the time comes. Both the JSON Schema (Layer 1+2) and the build-time partial (Layer 3) enforce the conditional-required rule.
+
+The same `withered_date` and (optionally) `withered_reason` you add for the in-page banner also drive Story 1.5's off-site deprecation signals — RSS title suffix `[Verwelkt MMM. YYYY]`, RSS description warning prepend, sitemap `<priority>0.3</priority>` and `<lastmod>=withered_date`, and Schema.org `creativeWorkStatus: "Obsolete"` plus the German "Veraltet seit …" description prefix. No additional metadata required.

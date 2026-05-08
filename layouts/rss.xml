@@ -23,8 +23,24 @@
     {{ printf "<atom:link href=%q rel=\"self\" type=%q />" .Permalink .MediaType | safeHTML }}
     {{- end }}
     {{- range where .Site.RegularPages "Type" "in" "articles" }}
+    {{- /*
+      Story 1.5: withered articles get a German "[Verwelkt Mon. YYYY]" title
+      suffix and a bold deprecation paragraph prepended to <description>. The
+      conditional gates on $isWithered AND $witheredDate so missing-date pages
+      degrade silently to the unmodified rendering (build-time validation in
+      validate-growth-stage.html should already prevent this).
+    */ -}}
+    {{- $isWithered := eq .Params.growth_stage "withered" -}}
+    {{- $witheredDate := .Params.withered_date -}}
+    {{- $witheredSuffix := "" -}}
+    {{- if and $isWithered $witheredDate -}}
+      {{- $monthsDe := slice "Jan." "Feb." "März" "Apr." "Mai" "Juni" "Juli" "Aug." "Sept." "Okt." "Nov." "Dez." -}}
+      {{- $wt := time $witheredDate -}}
+      {{- $monthIdx := int ($wt.Format "1") -}}
+      {{- $witheredSuffix = printf " [Verwelkt %s %s]" (index $monthsDe (sub $monthIdx 1)) ($wt.Format "2006") -}}
+    {{- end -}}
     <item>
-      <title>{{ .Title }}</title>
+      <title>{{ .Title }}{{ $witheredSuffix }}</title>
       {{- /*
         Cover image as Media RSS thumbnail — semantic, validator-clean, no `length` required.
         Falls back gracefully when no cover Resource exists.
@@ -60,6 +76,20 @@
       {{- /* Strip BOTH double- and single-quoted style attributes (render-link.html uses single) */ -}}
       {{- $content = replaceRE `\s+style="[^"]*"` "" $content -}}
       {{- $content = replaceRE `\s+style='[^']*'` "" $content -}}
+      {{- /*
+        Story 1.5: prepend deprecation warning to withered articles' RSS
+        description AFTER sanitization so the warning HTML is not affected by
+        the <svg>/style regexes above.
+      */ -}}
+      {{- if and $isWithered $witheredDate -}}
+        {{- $longDate := time.Format ":date_long" $witheredDate -}}
+        {{- $reason := .Params.withered_reason -}}
+        {{- $warning := printf "⚠️ Dieser Inhalt ist als veraltet markiert seit %s." $longDate -}}
+        {{- if $reason -}}
+          {{- $warning = printf "%s Grund: %s" $warning $reason -}}
+        {{- end -}}
+        {{- $content = printf "<p><strong>%s</strong></p>\n\n%s" $warning $content -}}
+      {{- end -}}
       <description>{{ $content | html }}</description>
     </item>
     {{- end }}

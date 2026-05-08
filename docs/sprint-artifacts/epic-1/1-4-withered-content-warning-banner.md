@@ -1,6 +1,6 @@
 # Story 1.4: Withered Content Warning Banner
 
-Status: review
+Status: done
 
 ## Story
 
@@ -430,6 +430,21 @@ claude-opus-4-7[1m]
 - `docs/technical/testing.md` — added "Withered Warning Banner (Story 1.4)" subsection
 - `docs/technical/editor-setup.md` — added "Withered metadata fields (Story 1.4)" subsection
 - `docs/sprint-artifacts/sprint-status.yaml` — story status `ready-for-dev` → `in-progress` → `review`
+
+### Review Findings
+
+- [x] [Review][Decision] Icon name: `skull-2-line` used throughout but AC #3 mandates `ri-skull-line` — **Resolved: accept `skull-2-line`**; AC #3 spec comment updated accordingly. No code change.
+- [x] [Review][Patch] Mobile tap-target fix: bump `.delete.withered-banner-dismiss` to `min-width: 2.75rem; min-height: 2.75rem` (~44px) in mobile breakpoint, update E2e assertion to ≥44px [`assets/scss/elements/withered-banner.scss`, `tests/e2e/withered-banner.spec.ts`] — fixed.
+- [x] [Review][Patch] `relURL` corrupts absolute `replacement_url` values [`layouts/_partials/withered-banner.html:46`] — fixed: `hasPrefix` check for `http://`, `https://`, `//` before applying `relURL`; absolute URLs pass through unmodified.
+- [x] [Review][Patch] Invalid/whitespace `withered_date` bypasses validation and panics `time.Format` [`layouts/_partials/_base/validate-growth-stage.html`] — fixed: `strings.TrimSpace` + `findRE` YYYY-MM-DD format guard added; whitespace-only and malformed values now produce a descriptive `errorf` instead of a Hugo build panic.
+- [x] [Review][Defer] `extractSeriesWidget` regex stops at first `</ol>` [`tests/build/build-smoke.test.mjs`] — deferred, test quality, fragile diagnostic on failure
+- [x] [Review][Defer] `toBeHidden()` after reload does not distinguish "hidden by JS" from "not rendered" [`tests/e2e/withered-banner.spec.ts`] — deferred, test quality; strengthen with `toHaveAttribute("hidden", "")`
+- [x] [Review][Defer] `javascript:` URI not blocked by `replacement_url` schema [`schemas/frontmatter/article.schema.json`] — deferred, low risk for a content blog; add `pattern` constraint when schema is next revised
+- [x] [Review][Defer] `async defer` on footer bundle script — `async` silently overrides `defer`; pre-existing from before Story 1.4 [`layouts/baseof.html`] — deferred, pre-existing
+- [x] [Review][Defer] `withered-invalid.md` smoke test uses `runHugoWithFixture` (content root) vs `runHugoWithArticleFixture` (articles section) [`tests/build/build-smoke.test.mjs`] — deferred, test quality, asymmetry vs production page type
+- [x] [Review][Defer] `single.html` has no fallback branch for `Page.Type` outside `"page"`/`"articles"` — pre-existing pattern, not introduced by Story 1.4 — deferred, pre-existing
+- [x] [Review][Defer] `_test_series_*` rendered pages accumulate in `public-test/` across test runs — `finally` block removes source dirs but not Hugo output [`tests/build/build-smoke.test.mjs`] — deferred, minor
+- [x] [Review][Defer] `withered-banner.js` selects only the first `.withered-banner` element — single-page assumption valid today; multi-banner listing reuse would silently fail [`assets/js/withered-banner.js:12`] — deferred, future concern
 
 ## Change Log
 

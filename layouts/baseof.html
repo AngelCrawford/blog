@@ -34,7 +34,7 @@
         {{- $header := resources.Get "js/header.js" -}}
         {{- $witheredBanner := resources.Get "js/withered-banner.js" -}}
         {{- $script := slice $sunCalc $main $search $firework $navbar $header $witheredBanner | resources.Concat "js/footerBundle.js" | resources.Minify | resources.Fingerprint -}}
-        <script async defer src="{{ $script.RelPermalink }}"></script>
+        <script defer src="{{ $script.RelPermalink }}"></script>
 
     </body>
     

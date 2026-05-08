@@ -2,16 +2,26 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
   {{- range .Pages -}}
   {{- if not .Params.robotsdisallow -}}
+    {{- /*
+      Story 1.5: withered pages stay in the sitemap (FR-006: archived, not deleted)
+      but signal deprecation via lastmod=withered_date and priority=0.3 — readers
+      and crawlers can still find them, ranked below evergreen content.
+    */ -}}
+    {{- $isWithered := eq .Params.growth_stage "withered" -}}
     <url>
       <loc>{{ .Permalink }}</loc>
-      {{ if not .Lastmod.IsZero }}
+      {{ if and $isWithered .Params.withered_date }}
+        <lastmod>{{ (time .Params.withered_date).Format "2006-01-02T15:04:05-07:00" | safeHTML }}</lastmod>
+      {{ else if not .Lastmod.IsZero }}
         <lastmod>{{ .Lastmod.Format "2006-01-02T15:04:05-07:00" | safeHTML }}</lastmod>
       {{ end }}
       {{ with .Sitemap.ChangeFreq }}
         <changefreq>{{ . }}</changefreq>
       {{ end }}
-      {{ with .Sitemap.Priority }}
-        <priority>{{ . }}</priority>
+      {{ if $isWithered }}
+        <priority>0.3</priority>
+      {{ else if .Sitemap.Priority }}
+        <priority>{{ .Sitemap.Priority }}</priority>
       {{ end }}
     </url>
   {{- end -}}

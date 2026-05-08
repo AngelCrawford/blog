@@ -96,3 +96,6 @@ related:
 sitemap:
   changefreq: weekly
   filename: sitemap.xml
+  # Story 1.5: explicit baseline so non-withered pages emit <priority>0.8</priority>;
+  # withered pages override to 0.3 in layouts/sitemap.xml.
+  priority: 0.8

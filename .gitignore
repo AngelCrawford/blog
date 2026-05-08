@@ -22,3 +22,6 @@ node_modules
 /content/articles/_test_growth_stage_*
 /content/articles/_test_withered_banner_*
 /content/articles/_test_withered_*
+
+# Local debug logs (e.g. `npm test 2>&1 > test-output.log`, npm-debug.log)
+*.log

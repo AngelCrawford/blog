@@ -86,11 +86,11 @@ test.describe("Withered banner (Story 1.4)", () => {
         await expect(banner).toBeVisible();
 
         await banner.locator(".withered-banner-dismiss").click();
-        await expect(banner).toBeHidden();
+        await expect(banner).toHaveAttribute("hidden", "");
 
         // Reload — same context preserves sessionStorage → banner stays hidden.
         await page.reload();
-        await expect(page.locator(".withered-banner")).toBeHidden();
+        await expect(page.locator(".withered-banner")).toHaveAttribute("hidden", "");
 
         // Fresh context → fresh sessionStorage → banner reappears.
         const freshContext = await browser.newContext();
@@ -106,7 +106,7 @@ test.describe("Withered banner (Story 1.4)", () => {
         await page.goto(FULL_URL);
         await hideSearchOverlay(page);
         await page.locator(".withered-banner-dismiss").click();
-        await expect(page.locator(".withered-banner")).toBeHidden();
+        await expect(page.locator(".withered-banner")).toHaveAttribute("hidden", "");
 
         await page.goto(MINIMAL_URL);
         await expect(page.locator(".withered-banner")).toBeVisible();
@@ -177,8 +177,24 @@ test.describe("Withered banner (Story 1.4)", () => {
         await expect(dismiss).toBeVisible();
         const box = await dismiss.boundingBox();
         expect(box, "dismiss button needs a bounding box").not.toBeNull();
-        // Mobile breakpoint bumps the Bulma .delete to ≥1.75rem (~28px) for tap comfort.
-        expect(box!.width).toBeGreaterThanOrEqual(20);
-        expect(box!.height).toBeGreaterThanOrEqual(20);
+        // Mobile breakpoint bumps the dismiss button to ≥2.75rem (~44px) for AC #10 tap comfort.
+        expect(box!.width).toBeGreaterThanOrEqual(44);
+        expect(box!.height).toBeGreaterThanOrEqual(44);
+    });
+
+    // Story 1.5: lightweight cross-cutting check that the RSS endpoint is
+    // actually reachable AND that withered articles' titles carry the German
+    // [Verwelkt …] marker after the live serving pipeline. Build smoke covers
+    // the rendered XML byte-by-byte; this asserts the marker survives HTTP.
+    test("Story 1.5: RSS feed includes [Verwelkt …] suffix on withered article titles", async ({
+        page,
+    }) => {
+        const response = await page.request.get("/index.xml");
+        expect(response.status(), "RSS feed must respond 200").toBe(200);
+        const body = await response.text();
+        expect(
+            body,
+            "RSS body must include the [Verwelkt MMM. YYYY] suffix on the e2e withered fixture"
+        ).toMatch(/Withered Banner Full Fixture \[Verwelkt Apr\. 2026\]/);
     });
 });

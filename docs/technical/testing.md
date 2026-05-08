@@ -124,6 +124,25 @@ Fixtures live alongside the Story 1.1 set: `tests/build/fixtures/withered-with-r
 
 > **Side fix shipped with Story 1.4**: `layouts/baseof.html` and `layouts/_partials/_base/head.html` switched the JS bundle `<script src>` from `$script.Permalink` to `$script.RelPermalink`. Permalink emits the production absolute URL (`https://article-time.de/...`) which the page's `script-src 'self'` CSP blocks when the page is served from a different origin (e.g. the e2e static server on `localhost:1314`). Same-origin in production, no behavioral change there. Fixed because the dismiss handler IIFE silently never attached when the head bundle (jQuery) was blocked and the footer bundle's main.js threw `$ is not defined`, halting bundle execution before reaching the withered-banner IIFE.
 
+## Withered SEO & RSS (Story 1.5)
+
+Story 1.5 surfaces deprecation context to off-site consumers — RSS subscribers and search engines — without removing withered articles from indexing. Coverage is split between build smoke and a single Playwright check.
+
+**Build smoke (`tests/build/build-smoke.test.mjs`)** — `Story 1.5 AC #…` tests:
+
+- **AC #1 (RSS title suffix)** — withered RSS items end with ` [Verwelkt Mon. YYYY]` (German month abbreviation built from a literal slice in `layouts/rss.xml`; locale-aware `time.Format` does not localize literal layout strings).
+- **AC #2 (RSS description prepend)** — `<description>` is prefixed with `⚠️ Dieser Inhalt ist als veraltet markiert seit <long-date>.` after content sanitization. When `withered_reason` is present, ` Grund: <reason>` is appended; absent reason → no `Grund:` label.
+- **AC #4 (sitemap lastmod)** — withered URLs emit `<lastmod>` derived from `withered_date` (ISO-8601); non-withered URLs continue to use Hugo's computed `.Lastmod`.
+- **AC #5 (sitemap priority)** — withered URLs override to `<priority>0.3</priority>`; non-withered URLs inherit the site-default `0.8` newly added to `config/_default/config.yaml`. The `cascade.sitemap.priority: 0.5` previously set in `content/articles/_index.md` was removed in this story so the site-default applies (the homepage's explicit `0.9` cascade still wins for `_index.md`).
+- **AC #6 (Schema.org JSON-LD)** — withered `BlogPosting` objects include `"creativeWorkStatus": "Obsolete"`, `"dateModified"` set to `withered_date`, and a `"description"` prefixed with `Veraltet seit DATE[: REASON] — `. Without `withered_reason` the prefix collapses to `Veraltet seit DATE — ` (no orphaned colon). Tests `JSON.parse` the rendered `<script type="application/ld+json">` block, which required adding `| safeJS` to all `jsonify` filters in `layouts/_partials/_base/seo.html` to suppress the html/template double-escape inside `<script>` tags (a pre-existing bug exposed by the new tests).
+- **AC #7 (regression)** — non-withered RSS items, sitemap entries, and JSON-LD remain unchanged: no `[Verwelkt …]` suffix, no warning prepend, no `creativeWorkStatus`, no description prefix.
+
+**XML well-formedness** is asserted via structural probes (`assertWellFormedXml` helper in the test file): XML declaration present, root element open + close, no unescaped ampersands. `xmllint` is intentionally NOT a CI dependency — Hugo's templates produce well-formed output by construction whenever the build exits 0, so the probes serve as a regression guard rather than a parser.
+
+**Playwright e2e (`tests/e2e/withered-banner.spec.ts`)** — one cross-cutting check confirms the RSS endpoint is reachable AND the `[Verwelkt …]` marker survives the live serving pipeline (`page.request.get("/index.xml")`). Build smoke covers the byte-exact rendered XML.
+
+**Manual smoke gates** — before marking the story done, drop `public/index.xml` into the W3C feed validator (`https://validator.w3.org/feed/`) and `public/sitemap.xml` into Google Search Console "Test sitemap" (or `https://www.xml-sitemaps.com/validate-xml-sitemap.html`) and confirm no new errors versus the pre-change baseline.
+
 ## Adding tests in future stories
 
 Per `test-design-system.md`:
@@ -132,6 +151,7 @@ Per `test-design-system.md`:
 |---|---|
 | Story 1.2 (badge component) | ✅ Implemented — see "Growth-stage badge (Story 1.2)" above. Pure structural assertions; visual snapshots deferred (cross-machine font-rendering noise). |
 | Story 1.4 (warning banner) | ✅ Implemented — see "Withered Warning Banner (Story 1.4)" above. |
+| Story 1.5 (SEO & RSS) | ✅ Implemented — see "Withered SEO & RSS (Story 1.5)" above. |
 | Epic 5 (filter UI) | Journey test: load list, click filter, verify filtered results; client-side JS coverage |
 | Epic 9 (a11y audit) | `@axe-core/playwright` integrated into the e2e suite |
 

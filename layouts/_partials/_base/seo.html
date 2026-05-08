@@ -55,31 +55,65 @@ Keywords precedence:
 
     <script type="application/ld+json">
         {{- if eq .Section "articles" }}
+        {{- /*
+          Story 1.5: deprecation metadata for withered articles.
+            - dateModified  := withered_date (overrides .Lastmod for withered)
+            - creativeWorkStatus := "Obsolete" (Schema.org deprecation marker)
+            - description prefix := "Veraltet seit DATE[: REASON] — <original>"
+        */ -}}
+        {{- $isWithered := eq .Params.growth_stage "withered" -}}
+        {{- $witheredDate := .Params.withered_date -}}
+        {{- $witheredReason := .Params.withered_reason -}}
+        {{- $rawDesc := "" -}}
+        {{- with or .Params.Seo.desc .Summary | plainify | htmlUnescape -}}
+          {{- $rawDesc = trim . "\n\r\t " -}}
+        {{- end -}}
+        {{- if and $isWithered $witheredDate -}}
+          {{- $prefix := printf "Veraltet seit %s" (time.Format ":date_long" $witheredDate) -}}
+          {{- if $witheredReason -}}
+            {{- $prefix = printf "%s: %s" $prefix $witheredReason -}}
+          {{- end -}}
+          {{- $rawDesc = printf "%s — %s" $prefix $rawDesc -}}
+        {{- end -}}
+        {{- /*
+          `jsonify | safeJS` is required: Hugo's html/template applies JS-context
+          escaping inside <script>, which double-escapes plain `jsonify` output
+          (turning `"foo"` into `"\"foo\""`). `safeJS` tells the template engine
+          the string is already a valid JS literal — preserves Story 1.5's AC
+          contract that JSON-LD parses cleanly and fixes a pre-existing
+          double-escape bug. Bare strings without quotes (e.g. literal "Obsolete")
+          are unaffected; the template engine only escapes interpolations.
+        */ -}}
         {
             "@context": "https://schema.org",
             "@type": "BlogPosting",
-            "headline": {{ .Title | jsonify }},
+            "headline": {{ .Title | jsonify | safeJS }},
             {{- $articleImages := .Resources.ByType "image" }}
             {{- $articleFeatured := $articleImages.GetMatch "*cover*" }}
             {{- with $articleFeatured }}
-            "image": {{ .Permalink | jsonify }},
+            "image": {{ .Permalink | jsonify | safeJS }},
             {{- end }}
-            "datePublished": {{ .PublishDate.Format "2006-01-02T15:04:05Z07:00" | jsonify }},
-            "dateModified": {{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" | jsonify }},
+            "datePublished": {{ .PublishDate.Format "2006-01-02T15:04:05Z07:00" | jsonify | safeJS }},
+            {{- if and $isWithered $witheredDate }}
+            "dateModified": {{ (time $witheredDate).Format "2006-01-02T15:04:05Z07:00" | jsonify | safeJS }},
+            "creativeWorkStatus": "Obsolete",
+            {{- else }}
+            "dateModified": {{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" | jsonify | safeJS }},
+            {{- end }}
         {{- range .GetTerms "authors" }}
             "author": {
                 "@type": "Person",
-                "name": "{{ .Title }}"
+                "name": {{ .Title | jsonify | safeJS }}
             },
         {{- else }}
             "author": {
                 "@type": "Person",
-                "name": {{ (or .Site.Params.author.name .Site.Params.default_author_name .Site.Title) | jsonify }}
+                "name": {{ (or .Site.Params.author.name .Site.Params.default_author_name .Site.Title) | jsonify | safeJS }}
             },
         {{- end }}
             "mainEntityOfPage": { "@type": "WebPage" },
-            "description": {{ with or .Params.Seo.desc .Summary | plainify | htmlUnescape }}{{ trim . "\n\r\t " }}{{ end }},
-            "keywords": [{{ range $i, $e := $keywords }}{{ if $i }}, {{ end }}{{ $e }}{{ end }}]
+            "description": {{ $rawDesc | jsonify | safeJS }},
+            "keywords": [{{ range $i, $e := $keywords }}{{ if $i }}, {{ end }}{{ $e | jsonify | safeJS }}{{ end }}]
         }
         {{- end }}
     </script>

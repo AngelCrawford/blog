@@ -11,7 +11,12 @@
     {{- errorf "Invalid growth_stage %q in %s — allowed: seedling, budding, evergreen, withered" $stage .File.Path -}}
   {{- end -}}
   {{- /* Story 1.4: withered articles MUST declare withered_date so the warning banner can render. */ -}}
-  {{- if and (eq $stage "withered") (not .Params.withered_date) -}}
-    {{- errorf "Missing withered_date in %s — growth_stage=%q requires withered_date (YYYY-MM-DD)" .File.Path $stage -}}
+  {{- if eq $stage "withered" -}}
+    {{- $dateVal := strings.TrimSpace (string .Params.withered_date) -}}
+    {{- if not $dateVal -}}
+      {{- errorf "Missing withered_date in %s — growth_stage=%q requires withered_date (YYYY-MM-DD)" .File.Path $stage -}}
+    {{- else if not (findRE `^\d{4}-\d{2}-\d{2}$` $dateVal) -}}
+      {{- errorf "Invalid withered_date %q in %s — must be YYYY-MM-DD (e.g. 2026-04-15)" $dateVal .File.Path -}}
+    {{- end -}}
   {{- end -}}
 {{- end -}}

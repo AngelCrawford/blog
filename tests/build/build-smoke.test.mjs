@@ -387,7 +387,10 @@ test("Story 1.4 AC #2+#6: withered-minimal omits reason and replacement", () => 
 });
 
 test("Story 1.4 AC #7: build fails when withered article lacks withered_date", () => {
-  const result = runHugoWithFixture("withered-invalid.md", "withered_invalid");
+  // Use runHugoWithArticleFixture so the fixture is placed under content/articles/
+  // (Type=articles), matching the production template path that exercises
+  // validate-growth-stage.html via baseof.html.
+  const result = runHugoWithArticleFixture("withered-invalid.md", "withered_invalid");
   assert.notEqual(
     result.status,
     0,
@@ -401,7 +404,7 @@ test("Story 1.4 AC #7: build fails when withered article lacks withered_date", (
   );
   assert.match(
     combined,
-    /_test_growth_stage_withered_invalid/,
+    /_test_withered_withered_invalid/,
     "Error message should reference the offending file path"
   );
 });
@@ -436,6 +439,13 @@ function runHugoWithSeriesFixtures(articles) {
     resolve(repoRoot, "content", "articles", `_test_series_${a.slug}`)
   );
 
+  // Clean stale Hugo output from previous runs before building, not after —
+  // tests read from public-test after this function returns.
+  for (const a of articles) {
+    const outDir = resolve(testPublic, "articles", `_test_series_${a.slug}`);
+    if (existsSync(outDir)) rmSync(outDir, { recursive: true, force: true });
+  }
+
   for (const [i, article] of articles.entries()) {
     mkdirSync(dirs[i], { recursive: true });
     writeFileSync(resolve(dirs[i], "index.md"), articleFrontmatter(article));
@@ -468,10 +478,11 @@ function readArticlePage(slug) {
 }
 
 function extractSeriesWidget(html) {
-  // Pull out the content of the <div class="serie widget ..."> block only,
-  // so assertions don't accidentally match the related-articles widget or
-  // other parts of the page that also mention article titles.
-  const match = html.match(/<div class="serie widget[^"]*">([\s\S]*?)<\/ol>/);
+  // Pull out the <div class="serie widget ..."> block only, so assertions don't
+  // accidentally match the related-articles widget or other parts of the page.
+  // Terminated at </ol>\s*</div> rather than bare </ol> to survive nested <ol>
+  // elements that may be added inside list items in the future.
+  const match = html.match(/<div class="serie widget[^"]*">[\s\S]*?<\/ol>\s*<\/div>/);
   return match ? match[0] : "";
 }
 
@@ -665,6 +676,259 @@ test("Story 1.4 AC #11: non-withered articles render without the withered banner
     html,
     /class="withered-banner/,
     "Non-withered article must NOT contain any withered-banner markup"
+  );
+});
+
+// =============================================================================
+// Story 1.5: Withered SEO & RSS Inclusion
+//
+// Drops withered / non-withered fixtures into content/articles/_test_withered_<slug>/,
+// runs hugo, asserts on rendered RSS (public-test/index.xml), sitemap
+// (public-test/sitemap.xml), and JSON-LD inside the article HTML.
+//
+// XML well-formedness is validated via structural probes (XML decl, root tags,
+// no unescaped ampersands) — xmllint is intentionally NOT a dependency here.
+// Hugo's templates produce well-formed output by construction whenever the
+// build exits 0, so the probes are a regression guard rather than a parser.
+// =============================================================================
+
+const PUBLIC_TEST = resolve(repoRoot, "public-test");
+const RSS_PATH = resolve(PUBLIC_TEST, "index.xml");
+const SITEMAP_PATH = resolve(PUBLIC_TEST, "sitemap.xml");
+
+function assertWellFormedXml(filePath, rootElement) {
+  assert.ok(existsSync(filePath), `${filePath} should exist`);
+  const xml = readFileSync(filePath, "utf8");
+  assert.match(
+    xml,
+    /^<\?xml\s+version="1\.0"/,
+    `${filePath} must start with an XML declaration`
+  );
+  assert.match(
+    xml,
+    new RegExp(`<${rootElement}[\\s>]`),
+    `${filePath} must contain a <${rootElement}> root element`
+  );
+  assert.match(
+    xml,
+    new RegExp(`</${rootElement}>\\s*$`),
+    `${filePath} must close with </${rootElement}>`
+  );
+  // Common XML well-formedness bug: unescaped ampersand. Allow the standard
+  // entity refs and numeric character refs.
+  const badAmp = xml.match(/&(?!(?:amp|lt|gt|apos|quot|#\d+|#x[0-9a-fA-F]+);)/);
+  assert.equal(
+    badAmp,
+    null,
+    `${filePath} contains an unescaped ampersand near: ${badAmp ? xml.slice(Math.max(0, badAmp.index - 20), badAmp.index + 30) : ""}`
+  );
+  return xml;
+}
+
+function extractJsonLd(html) {
+  const match = html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/);
+  if (!match) return null;
+  return JSON.parse(match[1].trim());
+}
+
+// Extract the single <tag>…</tag> block that contains `marker`. Lazy regex like
+// `<item>[\s\S]*?MARKER[\s\S]*?<\/item>` would over-match across sibling blocks
+// (the leading `<item>` anchors at the FIRST occurrence, then expands through
+// intervening blocks until MARKER is reached) — that's the bug this helper fixes.
+function findBlock(xml, tag, marker) {
+  const blocks = xml.match(new RegExp(`<${tag}>[\\s\\S]*?<\\/${tag}>`, "g")) || [];
+  return blocks.find((b) => b.includes(marker)) || "";
+}
+
+test("Story 1.5 AC #1: withered RSS title carries [Verwelkt Mon. YYYY] suffix", () => {
+  const result = runHugoWithArticleFixture("withered-with-replacement.md", "rss15a");
+  assert.equal(result.status, 0, `Build failed:\n${result.stderr}`);
+  const rss = assertWellFormedXml(RSS_PATH, "rss");
+  // withered_date 2026-04-15 → German abbreviation "Apr. 2026"
+  assert.match(
+    rss,
+    /<title>Withered With Replacement Fixture \[Verwelkt Apr\. 2026\]<\/title>/,
+    "Withered RSS item title must include the [Verwelkt Mon. YYYY] suffix"
+  );
+});
+
+test("Story 1.5 AC #2: withered RSS description prepends warning + 'Grund:' when reason present", () => {
+  const result = runHugoWithArticleFixture("withered-with-replacement.md", "rss15b");
+  assert.equal(result.status, 0, `Build failed:\n${result.stderr}`);
+  const rss = assertWellFormedXml(RSS_PATH, "rss");
+  // RSS feeds emit description as escaped HTML — ⚠️ and the German long-form
+  // date pass through verbatim; <p>/<strong> are HTML-escaped by `| html`.
+  assert.match(
+    rss,
+    /⚠️ Dieser Inhalt ist als veraltet markiert seit 15\. April 2026\./,
+    "Description warning must include the long-form German withered_date"
+  );
+  assert.match(
+    rss,
+    /Grund: Beispiel: das alte Framework wird nicht mehr gepflegt\./,
+    "Description must include withered_reason after 'Grund:' label"
+  );
+});
+
+test("Story 1.5 AC #2: withered RSS description omits 'Grund:' when withered_reason absent", () => {
+  const result = runHugoWithArticleFixture("withered-minimal.md", "rss15c");
+  assert.equal(result.status, 0, `Build failed:\n${result.stderr}`);
+  const rss = assertWellFormedXml(RSS_PATH, "rss");
+  const item = findBlock(rss, "item", "Withered Minimal Fixture");
+  assert.ok(item.length > 0, "Minimal fixture's RSS <item> must be present");
+  assert.match(
+    item,
+    /⚠️ Dieser Inhalt ist als veraltet markiert seit 15\. April 2026\./,
+    "Minimal fixture must still carry the date warning"
+  );
+  assert.doesNotMatch(
+    item,
+    /Grund:/,
+    "Minimal fixture must NOT include the 'Grund:' label (no empty reason)"
+  );
+});
+
+test("Story 1.5 AC #7: non-withered RSS items unchanged (no [Verwelkt suffix, no warning prepend)", () => {
+  const result = runHugoWithArticleFixture("valid-evergreen.md", "rss15d");
+  assert.equal(result.status, 0, `Build failed:\n${result.stderr}`);
+  const rss = assertWellFormedXml(RSS_PATH, "rss");
+  const item = findBlock(rss, "item", "Valid Evergreen Fixture");
+  assert.ok(item.length > 0, "Evergreen fixture's RSS <item> must be present");
+  assert.doesNotMatch(
+    item,
+    /\[Verwelkt/,
+    "Non-withered RSS title must NOT carry the [Verwelkt …] suffix"
+  );
+  assert.doesNotMatch(
+    item,
+    /⚠️ Dieser Inhalt/,
+    "Non-withered RSS description must NOT have the deprecation prepend"
+  );
+});
+
+test("Story 1.5 AC #5: withered sitemap entry has <priority>0.3</priority>", () => {
+  const result = runHugoWithArticleFixture("withered-with-replacement.md", "sm15a");
+  assert.equal(result.status, 0, `Build failed:\n${result.stderr}`);
+  const sm = assertWellFormedXml(SITEMAP_PATH, "urlset");
+  const url = findBlock(sm, "url", "_test_withered_sm15a");
+  assert.ok(url.length > 0, "Withered fixture URL must be present in sitemap");
+  assert.match(
+    url,
+    /<priority>0\.3<\/priority>/,
+    "Withered fixture must have <priority>0.3</priority>"
+  );
+});
+
+test("Story 1.5 AC #4: withered sitemap <lastmod> equals withered_date", () => {
+  const result = runHugoWithArticleFixture("withered-with-replacement.md", "sm15b");
+  assert.equal(result.status, 0, `Build failed:\n${result.stderr}`);
+  const sm = assertWellFormedXml(SITEMAP_PATH, "urlset");
+  const url = findBlock(sm, "url", "_test_withered_sm15b");
+  assert.ok(url.length > 0, "Withered fixture URL must be present in sitemap");
+  // withered_date 2026-04-15 in site timezone Europe/Berlin
+  assert.match(
+    url,
+    /<lastmod>2026-04-15T/,
+    "Withered fixture <lastmod> must start with the withered_date ISO prefix"
+  );
+});
+
+test("Story 1.5 AC #5+#7: non-withered sitemap entry inherits <priority>0.8</priority>", () => {
+  const result = runHugoWithArticleFixture("valid-evergreen.md", "sm15c");
+  assert.equal(result.status, 0, `Build failed:\n${result.stderr}`);
+  const sm = assertWellFormedXml(SITEMAP_PATH, "urlset");
+  const url = findBlock(sm, "url", "_test_withered_sm15c");
+  assert.ok(url.length > 0, "Evergreen fixture URL must be present in sitemap");
+  assert.match(
+    url,
+    /<priority>0\.8<\/priority>/,
+    "Non-withered fixture must inherit the site-default <priority>0.8</priority>"
+  );
+});
+
+test("Story 1.5 AC #4+#7: non-withered sitemap <lastmod> is NOT a withered_date", () => {
+  const result = runHugoWithArticleFixture("valid-evergreen.md", "sm15d");
+  assert.equal(result.status, 0, `Build failed:\n${result.stderr}`);
+  const sm = assertWellFormedXml(SITEMAP_PATH, "urlset");
+  const url = findBlock(sm, "url", "_test_withered_sm15d");
+  assert.ok(url.length > 0, "Evergreen fixture URL must be present in sitemap");
+  assert.doesNotMatch(
+    url,
+    /<lastmod>2026-04-15T/,
+    "Non-withered <lastmod> must NOT match a withered_date"
+  );
+});
+
+test("Story 1.5 AC #6: withered JSON-LD has creativeWorkStatus=Obsolete + dateModified=withered_date + description prefix with reason", () => {
+  const result = runHugoWithArticleFixture("withered-with-replacement.md", "jsonld15a");
+  assert.equal(result.status, 0, `Build failed:\n${result.stderr}`);
+  const html = readFileSync(
+    resolve(repoRoot, "public-test", "articles", "_test_withered_jsonld15a", "index.html"),
+    "utf8"
+  );
+  const ld = extractJsonLd(html);
+  assert.ok(ld, "JSON-LD block must be present and JSON-parseable");
+  assert.equal(
+    ld.creativeWorkStatus,
+    "Obsolete",
+    "creativeWorkStatus must equal 'Obsolete' for withered articles"
+  );
+  assert.match(
+    ld.dateModified,
+    /^2026-04-15T/,
+    "dateModified must start with the withered_date ISO prefix"
+  );
+  assert.match(
+    ld.description,
+    /^Veraltet seit 15\. April 2026: Beispiel: das alte Framework wird nicht mehr gepflegt\. — /,
+    "description must start with 'Veraltet seit DATE: REASON — ' prefix"
+  );
+});
+
+test("Story 1.5 AC #6: withered-minimal JSON-LD description has no orphaned colon when reason absent", () => {
+  const result = runHugoWithArticleFixture("withered-minimal.md", "jsonld15b");
+  assert.equal(result.status, 0, `Build failed:\n${result.stderr}`);
+  const html = readFileSync(
+    resolve(repoRoot, "public-test", "articles", "_test_withered_jsonld15b", "index.html"),
+    "utf8"
+  );
+  const ld = extractJsonLd(html);
+  assert.ok(ld, "JSON-LD block must be present and JSON-parseable");
+  assert.match(
+    ld.description,
+    /^Veraltet seit 15\. April 2026 — /,
+    "description must format 'Veraltet seit DATE — ...' (no orphaned colon)"
+  );
+  assert.doesNotMatch(
+    ld.description,
+    /Veraltet seit 15\. April 2026:/,
+    "description must NOT carry a colon between date and em-dash when reason absent"
+  );
+});
+
+test("Story 1.5 AC #6+#7: non-withered JSON-LD has no creativeWorkStatus, no Veraltet prefix, dateModified is not a withered_date", () => {
+  const result = runHugoWithArticleFixture("valid-evergreen.md", "jsonld15c");
+  assert.equal(result.status, 0, `Build failed:\n${result.stderr}`);
+  const html = readFileSync(
+    resolve(repoRoot, "public-test", "articles", "_test_withered_jsonld15c", "index.html"),
+    "utf8"
+  );
+  const ld = extractJsonLd(html);
+  assert.ok(ld, "JSON-LD block must be present and JSON-parseable");
+  assert.equal(
+    ld.creativeWorkStatus,
+    undefined,
+    "Non-withered JSON-LD must NOT include creativeWorkStatus"
+  );
+  assert.doesNotMatch(
+    ld.dateModified || "",
+    /^2026-04-15T/,
+    "Non-withered dateModified must NOT match a withered_date"
+  );
+  assert.doesNotMatch(
+    ld.description || "",
+    /^Veraltet seit/,
+    "Non-withered description must NOT carry the German deprecation prefix"
   );
 });
 

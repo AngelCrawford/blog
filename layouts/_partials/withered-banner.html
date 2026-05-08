@@ -43,7 +43,8 @@
       {{- end }}
       {{- with $replacement }}
       <p class="withered-banner-replacement">
-        <a href="{{ . | relURL }}" title="Aktuelle Version dieses Inhalts">Aktuelle Version ansehen →</a>
+        {{- $isAbsolute := or (hasPrefix . "http://") (hasPrefix . "https://") (hasPrefix . "//") -}}
+        <a href="{{ cond $isAbsolute . (. | relURL) }}" title="Aktuelle Version dieses Inhalts">Aktuelle Version ansehen →</a>
       </p>
       {{- end }}
     </div>
