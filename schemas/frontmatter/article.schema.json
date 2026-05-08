@@ -1,0 +1,94 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://article-time.de/schemas/frontmatter/article.schema.json",
+  "title": "Article / Log Frontmatter",
+  "description": "Single source of truth for content/articles/**/*.md and content/logs/**/*.md frontmatter. Consumed by the Zed YAML LSP (Layer 1) and the Husky pre-commit validator (Layer 2). Hugo's build-time partial (Layer 3) hardcodes the growth_stage enum independently — keep them in sync when adding values.",
+  "type": "object",
+  "additionalProperties": true,
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Page title. SEO meta title. 60–70 characters max."
+    },
+    "slug": {
+      "type": "string",
+      "description": "Optional URL slug override. Use when title contains umlauts (Ä, Ö, Ü, ß) or other special characters."
+    },
+    "subtitle": {
+      "type": "string"
+    },
+    "date": {
+      "description": "Publication date. Hugo accepts ISO 8601 strings or YAML timestamps; both are valid here. Type intentionally unconstrained so YAML auto-parsed dates (Date objects after gray-matter) don't trip the validator."
+    },
+    "lastmod": {
+      "description": "Last-modification date. Override Hugo's git-based default. Type intentionally unconstrained (see `date`)."
+    },
+    "publishdate": {
+      "description": "Future publish date (only useful when running Hugo on a server). Type intentionally unconstrained (see `date`)."
+    },
+    "draft": {
+      "type": "boolean",
+      "default": true,
+      "description": "true = excluded from production builds. Flip to false to publish."
+    },
+    "weight": {
+      "type": "integer",
+      "default": 0,
+      "description": "Sort weight. 1 makes the article sticky on the homepage; other numbers sort articles."
+    },
+    "categories": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Only the first entry is rendered as the category ribbon."
+    },
+    "tags": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "series": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Use the same series name across articles to group them."
+    },
+    "authors": {
+      "type": "array",
+      "items": { "type": "string" },
+      "default": ["angel"]
+    },
+    "summary": {
+      "type": "string",
+      "description": "Required for articles. Used as the list-view excerpt and SEO description fallback."
+    },
+    "growth_stage": {
+      "type": "string",
+      "enum": ["seedling", "budding", "evergreen", "withered"],
+      "default": "seedling",
+      "description": "Digital-garden content maturity. seedling = early/draft, budding = developing, evergreen = mature/maintained, withered = deprecated. If omitted, templates fall back to seedling."
+    },
+    "params": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "SEO": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "desc": {
+              "type": "string",
+              "description": "SEO meta description. 120–158 characters. Falls back to summary if empty."
+            },
+            "keywords": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "1–3 keywords. Auto-derived from tags if empty."
+            },
+            "canonicalURL": {
+              "type": "string",
+              "description": "Use when the post is republished from another platform."
+            }
+          }
+        }
+      }
+    }
+  }
+}

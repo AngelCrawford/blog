@@ -1,0 +1,13 @@
+{{- /*
+  Layer 3 of the digital-garden growth_stage validation (single source: schemas/frontmatter/article.schema.json).
+  Halts the Hugo build with errorf when .Params.growth_stage is set to a value outside the allowed enum.
+  Missing/empty values are intentionally NOT errored here — consumers use `default "seedling" .Params.growth_stage`.
+  Mirrors the errorf style used in layouts/_partials/card.html.
+*/ -}}
+{{- $allowed := slice "seedling" "budding" "evergreen" "withered" -}}
+{{- $stage := .Params.growth_stage -}}
+{{- if $stage -}}
+  {{- if not (in $allowed $stage) -}}
+    {{- errorf "Invalid growth_stage %q in %s — allowed: seedling, budding, evergreen, withered" $stage .File.Path -}}
+  {{- end -}}
+{{- end -}}

@@ -4,7 +4,10 @@
   "description": "![](https://img.shields.io/badge/Hugo-0.6.7.0-darkgreen) ![](https://img.shields.io/badge/Platform-Windows-blue) ![](https://img.shields.io/badge/Editor-Visual_Studio_Code-green) ![](https://img.shields.io/badge/Image_Edit-Gimp-purple) ![](https://img.shields.io/badge/SVG_Edit-Inkscape-darkorchid)",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "prepare": "git config core.hooksPath .githooks",
+    "test:build": "node --test tests/build/*.test.mjs",
+    "test:e2e": "playwright test",
+    "test": "npm run test:build && npm run test:e2e"
   },
   "repository": {
     "type": "git",
@@ -20,5 +23,11 @@
     "@fullhuman/postcss-purgecss": "^8.0.0",
     "postcss": "^8.5.14",
     "postcss-cli": "^11.0.1"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.49.0",
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1",
+    "gray-matter": "^4.0.3"
   }
 }

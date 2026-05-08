@@ -1,0 +1,2 @@
+# Git hooks must use LF so they execute correctly on Linux/macOS clones.
+.githooks/* text eol=lf

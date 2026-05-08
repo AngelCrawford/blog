@@ -37,7 +37,7 @@ See [`docs/1-planning/epics.md`](docs/1-planning/epics.md) for the 9-epic / 48-s
 ## Local Development
 
 ```powershell
-# Install dependencies (Bulma + PurgeCSS via npm)
+# Install dependencies (Bulma + PurgeCSS + dev tooling via npm)
 npm install
 
 # Dev server with live reload
@@ -49,6 +49,26 @@ hugo server --environment production
 # One-shot production build (output to public/)
 hugo --environment production --minify
 ```
+
+### Tests
+
+```powershell
+npm run test:build   # Hugo build smoke (node --test, ~9s)
+npm run test:e2e     # Playwright homepage smoke (chromium)
+npm test             # Both, sequentially
+```
+
+First-time Playwright setup: `npx playwright install chromium`. CI runs the equivalent step automatically.
+
+### Frontmatter validation
+
+Three layers, all driven by the same JSON Schema (`schemas/frontmatter/article.schema.json`):
+
+1. **Editor** — Zed YAML LSP via `.zed/settings.json` (see [`docs/technical/editor-setup.md`](docs/technical/editor-setup.md)).
+2. **Pre-commit** — git hook + ajv (`.githooks/pre-commit` → `scripts/validate-frontmatter.js`). The npm `prepare` script wires it via `git config core.hooksPath .githooks` on first install.
+3. **Build** — Hugo `errorf` in `layouts/_partials/_base/validate-growth-stage.html`.
+
+Test strategy and what to add per upcoming story is documented in [`docs/technical/testing.md`](docs/technical/testing.md).
 
 ## Architecture & Workflow
 

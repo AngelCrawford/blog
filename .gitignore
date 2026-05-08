@@ -10,3 +10,11 @@ hugo_stats.json
 
 # node
 node_modules
+
+# Playwright
+/playwright-report
+/test-results
+/playwright/.cache
+
+# Build smoke test scratch (created and cleaned up per-test, but failures may leave residue)
+/content/_test_growth_stage_*

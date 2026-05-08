@@ -6,4 +6,27 @@
   "file_types": {
     "Go HTML Template": ["html"],
   },
+  // YAML language server configuration for content frontmatter validation (Layer 1).
+  // Source schema: schemas/frontmatter/article.schema.json
+  // CAVEAT: Zed's YAML LSP validates .yaml/.yml files reliably; embedded YAML
+  //         frontmatter inside .md files may not always be picked up. If editor
+  //         feedback is missing, fall back to the modeline `# yaml-language-server: $schema=...`
+  //         described in docs/technical/editor-setup.md, and rely on the
+  //         pre-commit hook (Layer 2) as the authoritative gate.
+  "lsp": {
+    "yaml-language-server": {
+      "settings": {
+        "yaml": {
+          "schemas": {
+            "schemas/frontmatter/article.schema.json": [
+              "content/articles/**/*.md",
+              "content/logs/**/*.md"
+            ]
+          },
+          "validate": true,
+          "format": { "enable": false }
+        }
+      }
+    }
+  }
 }

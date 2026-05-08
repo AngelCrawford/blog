@@ -15,6 +15,14 @@ authors: ["angel"] # Default is angel, can be removed
 
 summary: "" # REQUIRED: Summary for the list view
 
+# Digital-Garden growth stage. One of:
+#   seedling  = early/draft (rough idea, may have errors, expect change)
+#   budding   = developing  (in progress, partial coverage)
+#   evergreen = mature/maintained (vetted, kept up to date)
+#   withered  = deprecated  (kept for history, no longer accurate/maintained)
+# If omitted, templates fall back to "seedling" via `default "seedling" .Params.growth_stage`.
+growth_stage: "seedling"
+
 params:
   SEO:
     desc: "Seo Desc" # SEO Description for single posts, 120 - 158 characters max -> If not set, Summary will be used
