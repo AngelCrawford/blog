@@ -6,7 +6,7 @@
 # overrides baseURL at the CLI for the actual deploy; the value here is only
 # used by local `hugo --environment maintenance` smoke checks.
 title: Article Time
-baseURL: https://angelcrawford.github.io/blog/
+baseURL: https://article-time.de/
 
 build:
   buildStats:
