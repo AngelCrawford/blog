@@ -78,7 +78,7 @@ Wenn eine andere Website auf einen meiner Artikel verweist und eine Webmention s
 * Autorenname und Avatar (sofern von der sendenden Seite bereitgestellt)
 * Antworttext oder Auszug der Erwähnung (sofern von der sendenden Seite bereitgestellt)
 
-Es werden **keine** IP-Adressen, Cookies oder personenbezogenen Daten der Webmention-Sender bei mir gespeichert. Die Erfassung erfolgt einmal täglich durch einen automatischen Build-Prozess.
+Es werden **keine** IP-Adressen oder Cookies der Webmention-Sender bei mir gespeichert. Die Erfassung erfolgt regelmäßig durch einen automatischen Build-Prozess.
 
 ### Verarbeitung durch webmention.io
 
@@ -90,4 +90,4 @@ Die Verarbeitung erfolgt auf Grundlage von Art. 6 Abs. 1 lit. f DSGVO (berechtig
 
 ### Widerspruch / Löschung
 
-Du kannst eine Webmention zurückziehen, indem Du den Link auf der ursprünglich verweisenden Seite entfernst — die Webmention wird beim nächsten Build automatisch entfernt. Alternativ kannst Du mich über das [Impressum](/impressum/) kontaktieren und um Löschung bitten.
+Du kannst eine Webmention zurückziehen, indem Du den Link auf der ursprünglich verweisenden Seite entfernst — die Webmention wird beim nächsten Build automatisch entfernt. Bei Erwähnungen, die über Drittplattformen weitergeleitet wurden (z. B. Mastodon-Boosts), ist eine Rücknahme per Link-Entfernung nicht immer möglich. In allen Fällen kannst Du mich direkt über das [Impressum](/impressum/) kontaktieren und um Löschung bitten.

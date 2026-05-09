@@ -1,5 +1,5 @@
 title: Article Time
-baseURL: https://angelcrawford.github.io/blog/
+baseURL: https://article-time.de/
 
 build:
   buildStats:

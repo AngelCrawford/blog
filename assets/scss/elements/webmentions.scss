@@ -1,0 +1,117 @@
+// elements/webmentions.scss — Story 2.4 Webmention Display (FR-012)
+//
+// Mirrors the @use pattern of elements/engagement.scss. Dark theme only.
+@use "../vars/helpers";
+@use "sass:color";
+
+.webmentions {
+    margin-top: 3rem;
+
+    &__empty {
+        font-style: italic;
+        color: rgba(helpers.$gold-light, 0.6);
+        margin: 0;
+    }
+
+    &__group {
+        margin-bottom: 2rem;
+
+        &-heading {
+            margin-bottom: 1rem;
+            color: helpers.$gold-light;
+        }
+    }
+
+    &__list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+}
+
+.webmention {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    padding: 0.75rem 1rem;
+    border-left: 3px solid helpers.$gold-dark;
+    background-color: color.adjust(helpers.$dark, $lightness: -2%);
+    border-radius: 0 0.25rem 0.25rem 0;
+
+    &__avatar {
+        flex: 0 0 auto;
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+
+    &__body {
+        flex: 1 1 auto;
+        min-width: 0;
+    }
+
+    &__author {
+        font-weight: 600;
+        display: inline-block;
+        color: helpers.$gold-light;
+
+        &:hover,
+        &:focus {
+            color: helpers.$gold;
+        }
+    }
+
+    &__content {
+        margin: 0.5rem 0;
+        word-wrap: break-word;
+        overflow-wrap: anywhere;
+    }
+
+    &__source {
+        display: inline-block;
+        font-size: 0.85em;
+        color: rgba(helpers.$gold-light, 0.7);
+
+        &:hover,
+        &:focus {
+            color: helpers.$gold-light;
+        }
+    }
+
+    // Type-specific accent
+    &[data-wm-type="like"] {
+        border-left-color: helpers.$gold;
+    }
+    &[data-wm-type="repost"] {
+        border-left-color: helpers.$gold-light;
+    }
+
+    @include helpers.mobile {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+}
+
+// Count line lives in the sidebar info widget below the heart button.
+.widget.info span.webmention-count-line {
+    display: block;
+
+    a {
+        display: inline-flex;
+        align-items: center;
+        color: helpers.$gold;
+
+        &:hover,
+        &:focus {
+            color: helpers.$gold-light;
+        }
+
+        svg {
+            @include helpers.translate(0, 0);
+            fill: currentColor;
+            width: 1em;
+            height: 1em;
+        }
+    }
+}

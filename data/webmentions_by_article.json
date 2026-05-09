@@ -1,0 +1,44 @@
+{
+  "/articles/rss-test/": [
+    {
+      "type": "reply",
+      "author": "Jane Doe",
+      "author_url": "https://janedoe.example/",
+      "author_photo": "https://picsum.photos/200/300",
+      "content": "Schöner Artikel! Ich sehe das ähnlich.",
+      "url": "https://janedoe.example/posts/reply-to-article-time/",
+      "published": "2026-04-15T10:30:00Z"
+    },
+    {
+      "type": "reply",
+      "author": "Bob Smith",
+      "author_url": "https://mastodon.social/@bob",
+      "author_photo": "https://picsum.photos/200/300",
+      "content": "Interessante Perspektive!",
+      "url": "https://mastodon.social/@bob/12345",
+      "published": "2026-04-16T14:00:00Z"
+    },
+    {
+      "type": "like",
+      "author": "Alice Chen",
+      "author_url": "https://alicechen.example/",
+      "author_photo": "https://picsum.photos/200/300",
+      "url": "https://alicechen.example/likes/12345",
+      "published": "2026-04-17T08:15:00Z"
+    },
+    {
+      "type": "repost",
+      "author": "Carlos García",
+      "author_url": "https://micro.blog/carlos",
+      "url": "https://micro.blog/carlos/repost/67890",
+      "published": "2026-04-18T16:45:00Z"
+    },
+    {
+      "type": "mention",
+      "author": "Dana Müller",
+      "author_url": "https://danamueller.example/",
+      "url": "https://danamueller.example/articles/related-thoughts/",
+      "published": "2026-04-19T09:00:00Z"
+    }
+  ]
+}
