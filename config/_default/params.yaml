@@ -1,6 +1,17 @@
 remixicon_version: 2605081942
 reading_speed: 179
 
+# Maintenance mode — when true, every HTML page renders a static "Wartung läuft"
+# screen instead of the real site. Toggle by setting `maintenance_mode: true`,
+# committing, and pushing — GitHub Actions deploys automatically. Static-site
+# limitation: response stays HTTP 200 OK (no 503). RSS / sitemap.xml are not
+# affected. Consumed by layouts/baseof.html → _base/maintenance partial.
+maintenance_mode: false
+maintenance:
+  title: "Wartung läuft"
+  message: "Bin gleich wieder da."
+  expected_back: "" # optional, e.g. "Voraussichtlich zurück am 9. Mai um 18 Uhr"
+
 # Author identity — consumed by SEO (Schema.org Person, OG article:author),
 # footer copyright, and any partial that needs author metadata.
 default_author: "angel" # taxonomy slug (legacy, used by .GetTerms "authors")

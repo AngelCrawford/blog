@@ -1,0 +1,78 @@
+{{- /* Maintenance page — Site.Params.maintenance_mode toggle.
+       Renders a self-contained doc: full main.scss bundle for typography/colors,
+       no Umami, no SEO, no nav/hero/footer/scripts, noindex meta. */ -}}
+{{- $sass := resources.Get "scss/main.scss" -}}
+{{- $toCssOpt := (dict "targetPath" "style.css" "transpiler" "dartsass" "enableSourceMap" true) -}}
+{{- $style := $sass | toCSS $toCssOpt | postCSS -}}
+{{- if hugo.IsProduction -}}
+    {{- $style = $style | minify | fingerprint | resources.PostProcess -}}
+{{- end -}}
+{{- $title := .Site.Params.maintenance.title | default "Wartung läuft" -}}
+{{- $message := .Site.Params.maintenance.message | default "Bin gleich wieder da." -}}
+<!DOCTYPE html>
+<html lang="de" data-theme="dark">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, minimum-scale=1">
+        {{ hugo.Generator }}
+        <meta name="robots" content="noindex, nofollow, noarchive">
+        <meta name="referrer" content="strict-origin-when-cross-origin">
+        <title>{{ $title }} — {{ .Site.Title }}</title>
+        <link href="{{ $style.RelPermalink }}" rel="stylesheet">
+        <link rel="preload" as="font" href="{{ "fonts/Montserrat/MontserratAlternates-Regular.ttf" | relURL }}" crossorigin="anonymous">
+        <link rel="preload" as="font" href="{{ "fonts/Montserrat/Montserrat-VariableFont_wght.ttf" | relURL }}" crossorigin="anonymous">
+        <link rel="icon" type="image/png" href="{{ "images/favicon/favicon-96x96.png" | relURL }}" sizes="96x96">
+        <link rel="icon" type="image/svg+xml" href="{{ "images/favicon/favicon.svg" | relURL }}">
+        <link rel="shortcut icon" href="{{ "images/favicon/favicon.ico" | relURL }}">
+        <link rel="apple-touch-icon" sizes="180x180" href="{{ "images/favicon/apple-touch-icon.png" | relURL }}">
+        <meta name="apple-mobile-web-app-title" content="{{ .Site.Title }}">
+        <style>
+            .maintenance-page {
+                min-height: 100vh;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                padding: 2rem;
+                text-align: center;
+                gap: 1rem;
+            }
+            .maintenance-brand {
+                font-size: clamp(1.5rem, 5vw, 2.5rem);
+                opacity: 0.7;
+                margin-bottom: 1.5rem;
+                letter-spacing: 0.05em;
+            }
+            .maintenance-brand a { color: inherit; text-decoration: none; }
+            .maintenance-title {
+                font-size: clamp(2rem, 7vw, 3.5rem);
+                margin: 0;
+                line-height: 1.2;
+            }
+            .maintenance-message {
+                font-size: clamp(1rem, 2.5vw, 1.25rem);
+                margin: 0;
+                max-width: 38rem;
+            }
+            .maintenance-eta {
+                font-size: clamp(0.875rem, 2vw, 1rem);
+                opacity: 0.7;
+                margin-top: 1rem;
+                max-width: 38rem;
+            }
+        </style>
+    </head>
+    <body class="kind-is-maintenance">
+        <main class="maintenance-page">
+            <div class="maintenance-brand">
+                <a href="{{ .Site.BaseURL }}" title="{{ .Site.Title }}">{{ .Site.Title }}</a>
+            </div>
+            <h1 class="maintenance-title">{{ $title }}</h1>
+            <p class="maintenance-message">{{ $message }}</p>
+            {{- with .Site.Params.maintenance.expected_back }}
+            <p class="maintenance-eta">{{ . }}</p>
+            {{- end }}
+        </main>
+    </body>
+</html>

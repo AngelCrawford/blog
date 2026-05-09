@@ -1,3 +1,6 @@
+{{- if .Site.Params.maintenance_mode -}}
+{{ partial "_base/maintenance" . }}
+{{- else -}}
 <!DOCTYPE html>
 <html lang="de" data-theme="dark">
     {{ partial "_base/head" . }}
@@ -37,5 +40,6 @@
         <script defer src="{{ $script.RelPermalink }}"></script>
 
     </body>
-    
+
 </html>
+{{- end -}}
