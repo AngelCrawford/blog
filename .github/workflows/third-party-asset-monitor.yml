@@ -43,13 +43,24 @@ jobs:
       - name: Fetch live homepage
         run: curl -sSLf "${{ steps.config.outputs.base_url }}/" -o /tmp/home.html
 
-      # Generic extraction: every src=/href= attribute pointing to https whose
-      # host is NOT the deploy host. Filtering happens by host comparison, so
-      # new third-parties are picked up automatically the day they ship.
+      # Extract URLs that the browser actually LOADS — not user-clickable links.
+      # Two-pass to handle Hugo's --minify (which strips attribute quotes when
+      # values contain no special chars, e.g. `src=https://cloud.umami.is/...`):
+      #   1. First grep narrows to opening tags of asset-loading elements only
+      #      (script/link/img/iframe/source/embed/audio/video/track) — this
+      #      excludes <a href> attribution links (e.g. shutterstock photographer
+      #      pages) which are clicks, not auto-loads.
+      #   2. Second grep extracts the src=/href= URL value, optionally quoted.
+      # Then host-filter to exclude self-host. New third-parties are picked up
+      # automatically the day they ship.
+      #
+      # Known limitation: CSS-embedded URLs (`background: url(https://...)`,
+      # `@import url(...)`) are NOT caught — none in this project as of 2026-05.
       - name: Extract third-party asset URLs
         run: |
-          grep -oE '(src|href)="https://[^"]+"' /tmp/home.html \
-            | sed -E 's/.*"(https:[^"]+)"/\1/' \
+          grep -oE '<(script|link|img|iframe|source|embed|audio|video|track)\b[^>]*' /tmp/home.html \
+            | grep -oE '(src|href)="?https://[^" >]+' \
+            | sed -E 's/^(src|href)="?//' \
             | grep -v "^https://${{ steps.config.outputs.self_host }}" \
             | sort -u > /tmp/external-urls.txt
           echo "Found $(wc -l < /tmp/external-urls.txt) external URLs:"

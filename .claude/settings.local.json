@@ -18,7 +18,8 @@
       "Bash(python3 D:/Projects/Hugo/Sites/blog/_bmad/scripts/resolve_customization.py*)",
       "Bash(curl * https://angelcrawford.github.io/blog/)",
       "Bash(hugo --logLevel error --environment production --destination public-test)",
-      "Bash(hugo --logLevel error --environment production --destination public-dev-test)"
+      "Bash(hugo --logLevel error --environment production --destination public-dev-test)",
+      "Bash(git -C *)"
     ]
   }
 }

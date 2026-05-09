@@ -1447,14 +1447,13 @@ test("Story 2.4 AC #2+#3+#7: fixture-targeted article renders all four type-grou
   );
 
   // AC #2: four type-groups, in order, with count badges from the fixture
-  // (replies × 2, repost × 1, mention × 1, like × 1).
+  // (replies × 2, repost × 1, mention × 2, like × 1).
   assert.match(articleHtml, /Antworten \(2\)/, "Replies group heading must show count 2");
   assert.match(articleHtml, /Reposts \(1\)/, "Reposts group heading must show count 1");
-  assert.match(articleHtml, /Erwähnungen \(1\)/, "Mentions group heading must show count 1");
+  assert.match(articleHtml, /Erwähnungen \(2\)/, "Mentions group heading must show count 2");
   assert.match(articleHtml, /Likes \(1\)/, "Likes group heading must show count 1");
 
-  // AC #7: count line appears, links to #webmentions, with German plural
-  // ("5 Antworten" — total mentions in fixture).
+  // AC #7: count line appears, links to #webmentions, with German plural.
   assert.match(
     articleHtml,
     /class="article-meta webmention-count-line"/,
@@ -1467,8 +1466,8 @@ test("Story 2.4 AC #2+#3+#7: fixture-targeted article renders all four type-grou
   );
   assert.match(
     articleHtml,
-    /5 Antworten/,
-    "Count line must show total count with German plural ('Antworten' for >1)"
+    /6 Antworten/,
+    "Count line must show total count (6) with German plural ('Antworten' for >1)"
   );
 
   // AC #3 sample: avatar rendered for replies that have author_photo.
@@ -1548,6 +1547,59 @@ test("Story 2.4 AC #6: every <a> inside .webmention block carries rel with noope
       link,
       /target="_blank"/,
       `Webmention link missing target="_blank": ${link}`
+    );
+  }
+});
+
+test("Story 2.4 AC #6 patch: empty author_url and empty published render <span> fallbacks (not broken <a href=\"\"> or invalid <time>—</time>)", () => {
+  // The fixture's last mention entry has empty author_url, empty url, and
+  // empty published — exercising all three guards added during Story 2.5 review:
+  // - empty author_url → <span class="webmention__author">
+  // - empty url        → <span class="webmention__source"> (no <a href="">)
+  // - empty published  → <span>—</span> (no invalid <time>—</time> without datetime)
+  const result = spawnSync("hugo", hugoArgs, {
+    cwd: repoRoot,
+    encoding: "utf8",
+    shell: process.platform === "win32",
+  });
+  assert.equal(result.status, 0, `Production build failed.\n${result.stderr}`);
+
+  const articleHtml = readFileSync(
+    resolve(testPublic, "articles", "rss-test", "index.html"),
+    "utf8"
+  );
+
+  // Pull out the Mentions group (the second one — the fallback fixture entry
+  // has type=mention) and assert the fallback <span> elements are present.
+  assert.match(
+    articleHtml,
+    /<span class="webmention__author">Anonymous Sender<\/span>/,
+    "Empty author_url must render <span class=\"webmention__author\">, not <a href=\"\">"
+  );
+  assert.match(
+    articleHtml,
+    /<span class="webmention__source">[\s\S]*?<\/span>/,
+    "Empty url must render <span class=\"webmention__source\">, not <a class=\"webmention__source\" href=\"\">"
+  );
+  // Empty published must render <span>—</span>, not <time>—</time>.
+  // <time> without datetime and with non-machine-readable content ("—") is
+  // invalid HTML per the spec.
+  assert.doesNotMatch(
+    articleHtml,
+    /<time>—<\/time>/,
+    "Empty published must NOT render bare <time>—</time> (invalid HTML — <time> requires datetime or machine-readable text content)"
+  );
+
+  // Regression guard for the empty-href bug: no webmention-block <a> may have
+  // an empty href. (`<a href="">` reloads the current page on click.)
+  const webmentionBlocks = articleHtml.match(
+    /<article class="webmention"[\s\S]*?<\/article>/g
+  ) || [];
+  for (const block of webmentionBlocks) {
+    assert.doesNotMatch(
+      block,
+      /<a [^>]*\bhref=""/,
+      `Webmention block must not contain <a href=""> — page-reload bug. Block: ${block.slice(0, 200)}…`
     );
   }
 });
@@ -1657,6 +1709,27 @@ test("Story 2.5 AC #3+#5: privacy page renders posture statement and contact-wit
       `Privacy page contact section must cite ${article}`
     );
   }
+
+  // Email-obfuscation regression guard (Story 2.5 review patch): the literal
+  // `[at]` / `[dot]` form must survive Goldmark intact — no mailto autolink,
+  // no entity-decoded plain "@", no transformation to a clickable link. A
+  // future Goldmark upgrade or markup-extras change that re-enables square-
+  // bracket-aware linkification would silently defeat the obfuscation.
+  assert.match(
+    html,
+    /mail \[at\] article-time \[dot\] de/,
+    "Privacy page contact email must render literally as 'mail [at] article-time [dot] de' (obfuscation intact)"
+  );
+  assert.doesNotMatch(
+    html,
+    /mailto:mail@article-time\.de/,
+    "Privacy page contact email must NOT be auto-linked to mailto:mail@article-time.de (would defeat obfuscation)"
+  );
+  assert.doesNotMatch(
+    html,
+    /\bmail@article-time\.de\b/,
+    "Privacy page must NOT render the unobfuscated address 'mail@article-time.de' anywhere (markdown entity-decode regression)"
+  );
 });
 
 test("Story 2.5 AC #7: privacy page no longer mentions Spotify (removed obsolete section)", () => {

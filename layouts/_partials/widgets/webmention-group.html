@@ -28,6 +28,7 @@
                         {{- if and (eq .type "reply") .content }}
                             <p class="webmention__content">{{ .content }}</p>
                         {{- end }}
+                        {{- if .url }}
                         <a class="webmention__source"
                            href="{{ .url }}"
                            rel="noopener noreferrer external"
@@ -36,9 +37,18 @@
                             {{- with .published }}
                             <time datetime="{{ . }}">{{ time.Format ":date_long" . }}</time>
                             {{- else }}
-                            <time>—</time>
+                            <span>—</span>
                             {{- end }}
                         </a>
+                        {{- else }}
+                        <span class="webmention__source">
+                            {{- with .published }}
+                            <time datetime="{{ . }}">{{ time.Format ":date_long" . }}</time>
+                            {{- else }}
+                            <span>—</span>
+                            {{- end }}
+                        </span>
+                        {{- end }}
                     </div>
                 </article>
             </li>
