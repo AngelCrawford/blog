@@ -1,0 +1,44 @@
+// elements/article-info.scss — sidebar "Artikel" info widget on single pages.
+//
+// Hosts the tile container that surfaces metadata (Rubrik, Veröffentlicht,
+// Bearbeitet, Lesezeit, Status / growth-stage, Herzen, Reaktionen / webmentions)
+// next to article body content. Tile styling itself co-locates with this file
+// so the whole "Artikel" widget design is editable in one place.
+//
+// Sibling element files: engagement.scss (heart button variants),
+// webmentions.scss (webmention list and grouping). This file is the container;
+// those are the contents.
+@use "../vars/helpers";
+@use "sass:color";
+
+.widget.info {
+    .widget-content {
+        display: flex;
+        flex-direction: column;
+        gap: .4em;
+        margin-left: .4em;
+
+        > * {
+            width: fit-content;
+        }
+    }
+
+    .ribbon {
+        position: relative;
+        max-width: fit-content;
+        margin: 0 0 .75em -.4em;
+    }
+
+    .time {
+        display: flex;
+        gap: 2em;
+    }
+
+    svg {
+        width: 20px;
+        height: 20px;
+        fill: color.scale(helpers.$dark, $lightness: 40%);
+        margin-right: 10px;
+        @include helpers.translate(0, 4px);
+    }
+}
