@@ -1,4 +1,4 @@
-baseURL: https://article-time.de/
+baseURL: angelcrawford.github.io/blog/
 
 build:
   buildStats:

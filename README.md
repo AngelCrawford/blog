@@ -6,33 +6,6 @@ A personal Hugo blog being transformed into a **Digital Garden** — content tha
 
 - 🌐 Live: [https://angelcrawford.github.io/blog/](https://angelcrawford.github.io/blog/) (custom domain `article-time.de` planned)
 - 🌱 Languages: German / English
-- 🛠 Built with [Hugo Extended](https://gohugo.io) v0.161.1
-
-## Project Status
-
-### ✅ Phase 0: Foundation Complete
-
-**Completed:** 2026-05-06
-
-- ✅ Umami Cloud analytics API key configured (Phase 1A activates tracking)
-- ✅ GitHub Actions daily rebuild workflow (`.github/workflows/daily-rebuild.yml`)
-- ✅ `data-updates` branch as orphan for automated data commits
-- ✅ GitHub Pages deployment via official `actions/deploy-pages` (no `gh-pages` branch)
-- ✅ Subpath-aware build (`relURL` everywhere — works on `/blog/` and root)
-- ✅ Hybrid CSP (9 directives via `<meta>` tag)
-- ✅ Author block + dynamic build date + version (from `git describe --tags`)
-- ✅ Placeholder fetch scripts (`scripts/fetch-umami-hearts.js`, `scripts/process-webmentions.js`, `scripts/calculate-popularity.js`)
-- ✅ RSS feed validated (Media RSS namespace, cover thumbnails)
-- ✅ Schema.org structured data on articles
-- ✅ Privacy policy + Imprint pages
-
-**Next:** Phase 1A — Core Garden (Engagement Infrastructure, Growth Stages, Three-Tier Sorting)
-See [`docs/1-planning/epics.md`](docs/1-planning/epics.md) for the 9-epic / 48-story breakdown.
-
-### Deferred (tracked in `docs/todo.md`)
-
-- 🌐 Custom domain `article-time.de` setup (DNS + GitHub Pages settings)
-- 📝 Manual migration: assign `growth_stage` to existing ~31 articles (after Story 1.1 lands)
 
 ## Local Development
 
@@ -69,6 +42,20 @@ Three layers, all driven by the same JSON Schema (`schemas/frontmatter/article.s
 3. **Build** — Hugo `errorf` in `layouts/_partials/_base/validate-growth-stage.html`.
 
 Test strategy and what to add per upcoming story is documented in [`docs/technical/testing.md`](docs/technical/testing.md).
+
+## Deployment
+
+Live deploys run automatically via the `daily-rebuild` GitHub Actions workflow on cron `0 2 * * *` UTC. To trigger a deploy now (instead of waiting for the next scheduled run):
+
+```powershell
+# Trigger the deploy
+gh workflow run daily-rebuild.yml --ref main
+
+# Optional: follow it to completion
+gh run watch
+```
+
+The deployed URL is whatever `baseURL` in [`config/production/config.yaml`](config/production/config.yaml) points at. Update that single file when switching between the GitHub Pages default (`https://angelcrawford.github.io/blog/`) and the planned custom domain (`https://article-time.de/`); the third-party-asset-monitor workflow (Story 2.6) reads the same value, so it retargets automatically.
 
 ## Architecture & Workflow
 

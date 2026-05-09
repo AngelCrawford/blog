@@ -61,9 +61,21 @@ so that popularity scores and sorting stay current.
 
 9. **No automated tests added in this story** (testability guard). The workflow file is itself a test artifact (it runs daily; a successful run IS the test). At drafting time, `tests/build/` and `tests/e2e/` infrastructure does NOT exist (Story 1.1 status: ready-for-dev, not landed). If those infrastructures land before this story implements, an OPTIONAL build-test assertion validating the workflow YAML syntax (`actionlint` or `yamllint`) could be added — total ~10 lines of CI config. Skip if test infra absent.
 
+10. **Third-party asset monitor workflow exists at `.github/workflows/third-party-asset-monitor.yml`.** Separate workflow file (NOT a step inside `daily-rebuild.yml` — different cadence, different blast radius, different failure semantics). Behaviour:
+    - Schedule: weekly via cron (suggested `0 6 * * 1` — Mondays 06:00 UTC, off-peak; manual `workflow_dispatch` trigger also enabled).
+    - **URL source of truth:** `config/production/config.yaml` `baseURL`. The monitor reads the file via `yq` at runtime and uses that as the live URL it fetches AND as the self-host filter for the third-party regex. **Why config, not `actions/configure-pages` output:** Angel's preference for explicit config-as-source-of-truth — when the deployment moves to a custom domain (`article-time.de`), the same one-line `baseURL` edit that the Hugo site already needs **also** retargets the monitor automatically. No GitHub-API roundtrip, no separate place to update. The trade-off is a manual `baseURL` edit at domain switch (Angel's known accepted cost).
+    - Step 1 — read deploy URL from config: `BASE_URL=$(yq '.baseURL' config/production/config.yaml)`. Extract host: `HOST=$(echo "$BASE_URL" | sed -E 's|^https?://([^/]+).*|\1|')`.
+    - Step 2 — fetch the live homepage: `curl -sSLf "$BASE_URL" -o /tmp/home.html` (fails the workflow on non-2xx). The `-f` flag turns 4xx/5xx into a non-zero exit.
+    - Step 3 — extract third-party asset URLs from the rendered HTML by regex. **Generic extraction, not a hardcoded list:** match all `src="https://..."` and `href="https://..."` attributes whose host is not the deploy host (computed from `baseURL` in step 1). Filtering to host `cloud.umami.is` (Story 2.1), `webmention.io` (Story 2.3), `brid.gy` (Story 2.4 if used), and any future external CDN happens automatically as those stories ship.
+    - Step 4 — for each extracted URL, run `curl -sIL --max-time 10 -o /dev/null -w "%{http_code}"` and assert the final status is `200` (follow redirects up to 5). Collect failures into a list.
+    - Step 5 — on any failure, reuse the AC #6 pattern (`actions/github-script@v7`) to create a GitHub Issue titled `Third-party asset drift detected on YYYY-MM-DD` with body listing each broken URL + final status code + run URL. Labels: `third-party-drift`, `automated`. Reuse the `issues: write` permissions pattern.
+    - Step 6 — on success, exit 0 with no notification.
+    - **Why a separate workflow:** an asset-drift failure is informational (alert-only) and must not break the daily rebuild. Daily rebuild's `if: failure()` would otherwise have to differentiate "build failed" from "external asset drifted" with conditional logic. Separation also lets the cadences diverge — the monitor needn't run every day; weekly is plenty for catching URL-drift within ~7 days of breakage.
+    - **Origin:** added to Story 2.6 scope on 2026-05-09 during Story 2.1 review. Driver: Angel's prior incident — Umami silently changed their script domain and the breakage went unnoticed for 2 months because build-smoke tests check our emitted markup, not the live URL's reachability. AC #10 closes that gap for Umami **and** generalises so all current and future third-party externals (webmention.io, brid.gy, Mastodon API for POSSE) inherit the monitoring without per-asset code.
+
 ### AC Source & Reconciliation Note
 
-ACs 1–7 are derived verbatim from `docs/1-planning/epics.md#Story-2.6-Daily-Rebuild-GitHub-Actions-Workflow` (lines 358–388 of `epics.md`). ACs 8–9 are testability/regression guards added by the create-story workflow (no-regression after AC #6 patch, no automated tests scope-limit). They are NOT in the original epics list — they exist solely to make ACs 1–7 verifiable and to keep this story's scope from creeping into Phase 1A test infrastructure (which is Story 1.1's territory).
+ACs 1–7 are derived verbatim from `docs/1-planning/epics.md#Story-2.6-Daily-Rebuild-GitHub-Actions-Workflow` (lines 358–388 of `epics.md`). ACs 8–9 are testability/regression guards added by the create-story workflow (no-regression after AC #6 patch, no automated tests scope-limit). AC #10 is a scope addition made on 2026-05-09 during Story 2.1's dev-review discussion — Angel flagged a real incident where Umami silently changed their script URL and the breakage went unnoticed for 2 months. It is NOT in the original epics list and is NOT a testability guard for ACs 1–9; it is a small new feature (one ~30-line monitor workflow) that fits in Story 2.6's scope because it is a sibling GitHub-Actions infrastructure concern with a reusable failure-notification pattern (AC #6's `actions/github-script` issue creation). Adding it here avoids creating a one-task standalone story.
 
 **Convention reconciliation (epics AC #4 wording vs. actual workflow shape):** Epics AC #4 says "Fetch engagement data (placeholder)" implying an inline `echo '{}'` step. Actual workflow invokes Phase 0 placeholder scripts (`scripts/fetch-umami-hearts.js`, `scripts/process-webmentions.js`, `scripts/calculate-popularity.js`). The rendered effect — empty data files generated and consumed by Hugo — is identical to the AC's intent. Same defer-and-integrate pattern Stories 2.1 / 2.3 used (deferred work shaped to fit the actual implementation surface). The script-based shape is preferable because Phase 1A Stories 3.1 / 3.2 / 3.3 replace script bodies in-place without touching the workflow — minimising churn in the Critical-Path file `daily-rebuild.yml`.
 
@@ -156,6 +168,98 @@ ACs 1–7 are derived verbatim from `docs/1-planning/epics.md#Story-2.6-Daily-Re
   - [ ] **Action:** add a one-line item to `docs/todo.md` under the "Architecture doc cleanup" section: "Update `digital-garden-integration-architecture.md` line 770 Hugo version pin to match actual workflow (`0.161.1`) OR generalise the rule to 'pin Hugo version (current: see `daily-rebuild.yml`)'." This avoids the next story-drafter quoting the stale `'0.152.2'` value.
   - [ ] Do NOT change the Hugo version in the workflow during this story — that is a separate Hugo-upgrade decision belonging to a future story.
 
+- [ ] **Add third-party asset monitor workflow** (AC: 10) [Source: AC #10 above; origin: Story 2.1 review, 2026-05-09]
+  - [ ] Create new file `.github/workflows/third-party-asset-monitor.yml`. Do NOT add this as a step inside `daily-rebuild.yml` — they have different cadences, different failure semantics (alert-only vs. fail-the-deploy), and merging them would require conditional `if:` plumbing that obscures both jobs.
+  - [ ] Suggested skeleton (adjust during implementation, especially the regex if the rendered HTML uses different attribute quoting):
+    ```yaml
+    name: Third-Party Asset Monitor
+
+    on:
+      schedule:
+        - cron: "0 6 * * 1"  # Mondays 06:00 UTC
+      workflow_dispatch:
+
+    permissions:
+      contents: read
+      issues: write
+
+    jobs:
+      check-assets:
+        runs-on: ubuntu-latest
+        steps:
+          - uses: actions/checkout@v4  # need the repo to read config/production/config.yaml
+
+          - name: Read deploy URL from production config (single source of truth)
+            id: config
+            run: |
+              # mikefarah/yq is pre-installed on ubuntu-latest runners; outputs raw scalar.
+              BASE_URL=$(yq '.baseURL' config/production/config.yaml)
+              # Strip trailing slash → cleaner curl + grep-friendly host comparison.
+              BASE_URL="${BASE_URL%/}"
+              HOST=$(echo "$BASE_URL" | sed -E 's|^https?://([^/]+).*|\1|')
+              echo "base_url=$BASE_URL"   >> "$GITHUB_OUTPUT"
+              echo "self_host=$HOST"      >> "$GITHUB_OUTPUT"
+              echo "Monitoring: $BASE_URL  (self-host: $HOST)"
+
+          - name: Fetch live homepage
+            run: curl -sSLf "${{ steps.config.outputs.base_url }}/" -o /tmp/home.html
+
+          - name: Extract third-party asset URLs
+            run: |
+              # Pull every https URL appearing in src= or href= whose host is not the deploy host.
+              # `sort -u` dedupes; `grep -v` excludes self-host.
+              grep -oE '(src|href)="https://[^"]+"' /tmp/home.html \
+                | sed -E 's/.*"(https:[^"]+)"/\1/' \
+                | grep -v "^https://${{ steps.config.outputs.self_host }}" \
+                | sort -u > /tmp/external-urls.txt
+              echo "Found $(wc -l < /tmp/external-urls.txt) external URLs:"
+              cat /tmp/external-urls.txt
+
+          - name: HEAD-check each URL
+            id: check
+            run: |
+              FAILED=""
+              while IFS= read -r url; do
+                code=$(curl -sIL --max-time 10 -o /dev/null -w "%{http_code}" "$url" || echo "000")
+                if [ "$code" != "200" ]; then
+                  FAILED="$FAILED\n- $url → HTTP $code"
+                fi
+              done < /tmp/external-urls.txt
+              if [ -n "$FAILED" ]; then
+                echo "failed_list<<EOF" >> "$GITHUB_OUTPUT"
+                printf "%b" "$FAILED" >> "$GITHUB_OUTPUT"
+                echo "" >> "$GITHUB_OUTPUT"
+                echo "EOF" >> "$GITHUB_OUTPUT"
+                exit 1
+              fi
+
+          - name: Notify on drift
+            if: failure()
+            uses: actions/github-script@v7
+            with:
+              script: |
+                const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+                const date = new Date().toISOString().slice(0, 10);
+                await github.rest.issues.create({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  title: `Third-party asset drift detected on ${date}`,
+                  body: `One or more third-party asset URLs referenced from the live site (\`baseURL\` in \`config/production/config.yaml\`) returned a non-200 status. The site likely still renders, but a feature backed by the broken asset (analytics, webmentions, syndication, etc.) is silently degraded.\n\nRun: ${runUrl}\n\nResolve by updating the consuming story's config (e.g., \`config/_default/params.yaml umami.script_url\`) or replacing the third-party.`,
+                  labels: ['third-party-drift', 'automated']
+                });
+    ```
+  - [ ] Pre-create the labels `third-party-drift` (color `fbca04` amber — drift is a warning, not a hard failure) and reuse the existing `automated` label from AC #6:
+    ```bash
+    gh label create third-party-drift --description "Third-party asset URL no longer reachable" --color "fbca04" || true
+    ```
+  - [ ] **Force-test the drift-detection path** (parallel to the AC #6 force-test for daily-rebuild):
+    - On a feature branch: temporarily edit the `Extract third-party asset URLs` step to inject a known-broken URL (e.g., `echo "https://example.invalid/missing.js" >> /tmp/external-urls.txt` after the existing extraction).
+    - Push and trigger via `workflow_dispatch`. Confirm the workflow fails at "HEAD-check" and the "Notify on drift" step creates a GitHub Issue with the broken URL listed.
+    - Revert the temporary injection — do NOT merge it.
+    - Close the test-issue manually with a comment "Force-test for AC #10 — see PR #N".
+  - [ ] Verify the homepage's actual URL list at implementation time. Story 2.1 ships `cloud.umami.is/script.js` so it WILL be in the list once 2.1 is deployed. Story 2.3 (Webmention endpoint) and 2.4 (Webmention display) may add `webmention.io` URLs to the rendered head. **Important:** if a URL in the list is expected to redirect (e.g., `webmention.io` returning 301 to a versioned path), `curl -sIL` follows redirects so the final status check still works — but if a 30x final state is the correct answer, adjust the assertion (`-w "%{http_code}"` returns the LAST status after redirects, not the first).
+  - [ ] **Edge case to document in completion notes:** if the homepage's external URL list is empty (e.g., during a temporary rollback that strips all third-parties), the workflow currently exits 0 (nothing to check). That is the correct outcome. If you want a sanity warning ("0 external URLs found — did the site rollback?"), add a `[ -s /tmp/external-urls.txt ] || echo "::warning::no external URLs found"` check before the HEAD loop. Optional.
+
 - [ ] **Documentation updates** (AC: all)
   - [ ] In completion notes, record:
     - The PR/commit hash that adds the failure-notification step.
@@ -163,6 +267,8 @@ ACs 1–7 are derived verbatim from `docs/1-planning/epics.md#Story-2.6-Daily-Re
     - The verified Layer 1 GitHub notification setting (failed-only / all-runs / disabled).
     - The force-test outcome (test-issue # opened during force-test, confirmed email received).
     - The first successful scheduled-trigger run URL (AC #5 evidence).
+    - The third-party-asset-monitor force-test outcome (test-issue # for the AC #10 force-test, confirmed drift detection email received).
+    - The list of third-party URLs extracted from the homepage at implementation time (snapshot — useful to compare against future drift-monitor failures).
     - Any other side-fixes applied during the audit (architecture-doc drift logged, etc.).
   - [ ] Update `docs/todo.md` with the architecture-doc cleanup follow-up (Hugo version pin rule).
   - [ ] Close GitHub Issue [#67 Merge and Deploy](https://github.com/AngelCrawford/blog/issues/67) when the story is `done` (epics.md line 366: "teilweise — GitHub Actions Setup; ältere Punkte des Issues evtl. schon erledigt"). If older issue points remain (e.g., legacy gh-pages branch cleanup, pre-Phase-0 housekeeping), leave the issue open and add a comment listing what THIS story closed; SM can then triage remaining points.
@@ -368,3 +474,4 @@ claude-opus-4-7[1m]
 | Date | Change | Author |
 |---|---|---|
 | 2026-05-06 | Initial draft created from `epics.md` Story 2.6 (lines 358–388, FR-034, GitHub Issue #67), `prd/03a-functional-requirements.md` (FR-034 Automated Daily Rebuild, FR-035–037 Epic 3 dependencies), `prd/architecture-notes.md` (lines 458–549 canonical workflow YAML), `digital-garden-integration-architecture.md` (Build & Deployment decisions lines 28–32, System Component Diagram lines 252–294, Server-Side workflow YAML lines 470–549, Error Handling lines 675–696, Critical Agent Rules lines 762–771), `phase-0-task-breakdown.md` (Day 1 secrets, Task 1.3 orphan branch, Day 2 workflow creation), and current `.github/workflows/daily-rebuild.yml` + `scripts/*.js` Phase 0 placeholders. Reconciled epics AC #1 ("workflow file created") with project state (workflow exists from Phase 0 Day 2 work) — same existing-file-update pattern Story 2.5 used for `datenschutz.md`. Reconciled epics AC #4 ("Fetch engagement data placeholder") with actual implementation (real placeholder scripts at `scripts/*.js` instead of inline `echo '{}'`) — preferable contract surface for Epic 3 substitutions. ACs 1–7 verbatim from epics; ACs 8–9 added as testability/regression guards (no-regression after AC #6 patch, no-automated-tests scope-limit). Primary code change: AC #6 patch — add `permissions: issues: write` and `if: failure()` step using `actions/github-script@v7` to create a GitHub Issue on workflow failure (layered with GitHub's built-in failed-workflow email notification). Force-test of failure path required to validate AC #6. Hugo version pin drift logged for `docs/todo.md` (architecture doc says `0.152.2`, actual is `0.161.1`). No template, partial, asset, config, or content changes — CI/CD-only edit. Test strategy: optional local actionlint + manual `workflow_dispatch` trigger + force-test failure path + schedule-verification on next 02:00 UTC cycle + external-effect verification (data-updates commit, Pages deploy, issue label). No automated tests added (test infra not yet landed). | SM (create-story workflow) |
+| 2026-05-09 | Scope addition: AC #10 + new task block for `.github/workflows/third-party-asset-monitor.yml`. Driven by Angel's Umami URL-drift incident discussed during Story 2.1 dev review — markup-level build-smoke tests don't catch silent third-party URL changes. Generic monitor: weekly cron, regex-extracts external URLs from the live homepage, HEAD-checks each, creates a `third-party-drift`-labelled GitHub Issue on non-200. Reuses AC #6's `actions/github-script@v7` notification pattern. Separate workflow file (NOT a step inside daily-rebuild.yml) so drift alerts don't break the deploy. Generalises so Stories 2.3 (webmention.io), 2.4 (Bridgy), 7.1 (Mastodon API) inherit monitoring with no per-asset code. | Dev (bmad-dev-story workflow, claude-opus-4-7[1m]) — added during Story 2.1 review |

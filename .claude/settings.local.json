@@ -17,7 +17,9 @@
       "Bash(npx playwright *)",
       "Bash(python3 D:/Projects/Hugo/Sites/blog/_bmad/scripts/resolve_customization.py --skill \"D:/Projects/Hugo/Sites/blog/.claude/skills/bmad-code-review\" --key workflow)",
       "Bash(npm test *)",
-      "Bash(python3 D:/Projects/Hugo/Sites/blog/_bmad/scripts/resolve_customization.py --skill D:/Projects/Hugo/Sites/blog/.claude/skills/bmad-retrospective --key workflow)"
+      "Bash(python3 D:/Projects/Hugo/Sites/blog/_bmad/scripts/resolve_customization.py --skill D:/Projects/Hugo/Sites/blog/.claude/skills/bmad-retrospective --key workflow)",
+      "Bash(curl -sI https://angelcrawford.github.io/blog/)",
+      "Bash(curl -sSL https://angelcrawford.github.io/blog/)"
     ]
   }
 }
