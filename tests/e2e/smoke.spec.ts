@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { test, expect } from "./fixtures";
 
 // E2E smoke test — Hugo-update regression canary.
 // One assertion: homepage loads with HTTP 200 AND emits a Hugo generator meta tag.

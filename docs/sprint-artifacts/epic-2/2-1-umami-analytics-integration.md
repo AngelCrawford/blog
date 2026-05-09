@@ -1,6 +1,6 @@
 # Story 2.1: Umami Analytics Integration
 
-Status: review
+Status: done
 
 ## Story
 
@@ -77,6 +77,15 @@ ACs 1–6 are derived from `docs/1-planning/epics.md#Story-2.1-Umami-Analytics-I
 - [x] **Documentation**
   - [x] Inline comment in `head.html` references Story 2.1 and explains the gate / cookieless intent.
   - [x] `params.yaml` umami block carries inline guidance distinguishing the public website_id from the secret UMAMI_API_KEY (the most-likely future-maintainer confusion point).
+
+### Review Findings
+
+- [x] [Review][Patch] Dev-build test leaves `testPublic` in dev-build state — overwrites shared production build dir, hazard for future tests [tests/build/build-smoke.test.mjs:1041] — Fixed: dev test now uses `public-test-dev/` as destination
+- [x] [Review][Patch] `head.html` missing trailing newline [layouts/_partials/_base/head.html] — Fixed: trailing newline added
+- [x] [Review][Dismiss] `connect-src` test regex — false finding; CSP template format string ends with `connect-src %s;">`, so trailing `;` IS present; regex works; 43/43 pass confirms
+- [x] [Review][Dismiss] `scriptsrcelem` in `production/params.yaml` — false finding; fix commit (`cc48c97`) cleared production override to comments-only; `_default` is authoritative for all CSP
+- [x] [Review][Defer] `webmention.io` absent from `production/params.yaml` `connectsrc` — deferred, pre-existing; moot since production override is now comments-only (`_default` carries `webmention.io`)
+- [x] [Review][Defer] Duplicate full Hugo builds in test suite — deferred, minor inefficiency; out of scope for a 0.5-day story
 
 ## Dev Notes
 

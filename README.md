@@ -49,29 +49,48 @@ The `daily-rebuild` GitHub Actions workflow handles all deploys. There are three
 
 | Trigger | When | What it deploys |
 |---|---|---|
-| **Tag push** (`v*`) | Manual `git push origin v0.X.0` | The tagged commit — this is the canonical "release" path |
+| **Tag push** (`v*`) | Manual `git push --follow-tags` after `git tag -a v0.X.0` | The tagged commit — this is the canonical "release" path |
 | **Cron** (`0 2 * * *` UTC) | Daily, automatic | The **latest tag** (NOT main HEAD) with fresh engagement data |
 | **`workflow_dispatch`** | Manual via `gh` or Actions UI | Whatever ref you pick (default `main`) — escape hatch for ad-hoc rebuilds |
 
-**Code changes only reach production via a tagged release.** Pushes to `main` without a tag stay local — the next cron run rebuilds the latest tagged commit, not your WIP. This is the forcing function: tag = release.
+**Code changes only reach production via a tagged release.** Direct pushes to `main` stay local — they don't trigger CI tests, they don't trigger a deploy. The next cron run rebuilds the latest tagged commit, not your WIP. The forcing function is: **tag = release**.
 
-**Tests are a hard gate.** Every trigger runs the full test suite (`npm test` = build-smoke + Playwright e2e) before the build/deploy steps. If tests fail, no deploy happens and the previously deployed site stays live and untouched.
+**Tests are a hard gate at deploy time.** Every release-triggering run (tag push, cron, workflow_dispatch) runs the full test suite (`npm test` = build-smoke + Playwright e2e) before the build/deploy steps. If tests fail, no deploy happens and the previously deployed site stays live and untouched.
 
-### Per-Epic Release
+**PRs run tests too** via `tests.yml` (`pull_request:` trigger). Direct push-to-main does NOT — that would just duplicate the deploy-time gate.
 
-When an epic's stories are all complete and you're ready to ship:
+### Daily flow: WIP commits
+
+For mid-epic work, ad-hoc fixes, doc updates — anything that should NOT go live yet:
 
 ```powershell
-# 1. Tag the epic-end commit on main
-git tag -a v0.X.0 -m "Epic X: <feature name>"
-git push origin v0.X.0
-# → triggers daily-rebuild on the tagged commit; tests run; deploy follows on green
+git add ...
+git commit -m "..."
+git push          # pushes commits to main; no CI, no deploy, just code on the repo
+```
 
-# 2. Optional: GitHub Release with auto-generated notes
+### Release flow: ship a version live
+
+When an epic's stories are complete (or per-story for Epic 2's chained stories) and you're ready to ship:
+
+```powershell
+# 1. Tag the release commit locally (annotated tag, with a message)
+git tag -a v0.X.0 -m "Epic X: <feature name>"
+
+# 2. Push commits + tag in one go
+git push --follow-tags
+# → daily-rebuild triggers on the tag; tests run; deploy follows on green
+# → branch push alone does nothing (test workflow is PR-only, daily-rebuild is tag-only)
+
+# 3. Optional: GitHub Release with auto-generated notes (good for changelog)
 gh release create v0.X.0 --generate-notes
 ```
 
+`--follow-tags` sends the branch commits AND any annotated tags reachable from them in a single push. Without it you'd need `git push && git push origin v0.X.0` separately.
+
 ### Ad-hoc redeploy (without bumping version)
+
+When you want to re-trigger a deploy without bumping a version (e.g., re-run after a CI flake, or refresh engagement data on demand):
 
 ```powershell
 gh workflow run daily-rebuild.yml --ref main   # default ref is main

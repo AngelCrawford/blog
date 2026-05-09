@@ -1,5 +1,4 @@
-import { test, expect } from "@playwright/test";
-import { FIXTURE_DIRS } from "./fixtures";
+import { test, expect, FIXTURE_DIRS } from "./fixtures";
 
 // Visual + structural tests for the growth-stage badge (Story 1.2).
 // Per-stage page-bundle fixtures at `content/articles/_test_growth_stage_<stage>/`

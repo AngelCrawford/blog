@@ -1039,13 +1039,14 @@ test("Story 2.1 AC #7: production CSP <meta> allow-lists cloud.umami.is in scrip
 });
 
 test("Story 2.1 AC #6: development build does NOT emit Umami script (hugo.IsProduction gate)", () => {
+  const testPublicDev = resolve(repoRoot, "public-test-dev");
   const devArgs = [
     "--logLevel",
     "error",
     "--environment",
     "development",
     "--destination",
-    testPublic,
+    testPublicDev,
   ];
   const result = spawnSync("hugo", devArgs, {
     cwd: repoRoot,
@@ -1058,7 +1059,7 @@ test("Story 2.1 AC #6: development build does NOT emit Umami script (hugo.IsProd
     `Development build failed (exit ${result.status}). stderr:\n${result.stderr}`
   );
 
-  const homeHtml = readFileSync(resolve(testPublic, "index.html"), "utf8");
+  const homeHtml = readFileSync(resolve(testPublicDev, "index.html"), "utf8");
   assert.doesNotMatch(
     homeHtml,
     /cloud\.umami\.is\/script\.js/,

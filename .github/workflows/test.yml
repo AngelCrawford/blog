@@ -1,12 +1,15 @@
 name: Tests
 
 # Runs the build smoke suite (Node test runner + Hugo) and the Playwright e2e
-# smoke suite on every push and PR. Both jobs should be marked required for
-# branch protection on `main` (manual config, see PR description).
+# smoke suite on PRs targeting main.
+#
+# NOT triggered on push-to-main: direct commits to main are WIP — they don't
+# reach production until a release tag is pushed, and the tag's deploy workflow
+# (daily-rebuild.yml) re-runs the same suite as a hard deploy gate. Running
+# tests on every push too would just duplicate that gate. PR-triggered runs
+# still gate code review.
 
 on:
-  push:
-    branches: [main]
   pull_request:
     branches: [main]
 

@@ -1,5 +1,4 @@
-import { test, expect } from "@playwright/test";
-import { FIXTURE_DIRS, WITHERED_BANNER_FIXTURES } from "./fixtures";
+import { test, expect, FIXTURE_DIRS, WITHERED_BANNER_FIXTURES } from "./fixtures";
 
 // Story 1.4 — Withered Content Warning Banner E2E coverage.
 // Per-fixture page bundles are written by tests/e2e/build-and-serve.mjs BEFORE
