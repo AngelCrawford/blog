@@ -1,0 +1,39 @@
+{{- /* Webmention type-group — Story 2.4 (FR-012).
+       Receives a dict with keys: items (slice), heading (string), type (string).
+       Renders one named subsection with a count badge and a list of entries.
+       Reply text is rendered only for type == "reply" (likes/reposts/mentions
+       carry no meaningful content per the architecture's data shape).
+       Author + source link are always rendered when their fields are present.
+       Avatar is rendered only when .author_photo is non-empty (with-block
+       skips empty strings and missing keys). External links carry
+       rel="noopener external" target="_blank" per AC #6. */ -}}
+<section class="webmentions__group webmentions__group--{{ .type }}">
+    <h3 class="title is-5 webmentions__group-heading">{{ .heading }} ({{ len .items }})</h3>
+    <ul class="webmentions__list">
+        {{- range .items }}
+            <li>
+                <article class="webmention" data-wm-type="{{ .type }}">
+                    {{- with .author_photo }}
+                        <img class="webmention__avatar" src="{{ . }}" alt="" loading="lazy" width="48" height="48">
+                    {{- end }}
+                    <div class="webmention__body">
+                        <a class="webmention__author"
+                           href="{{ .author_url }}"
+                           rel="noopener external"
+                           target="_blank">{{ .author }}</a>
+                        {{- if and (eq .type "reply") .content }}
+                            <p class="webmention__content">{{ .content }}</p>
+                        {{- end }}
+                        <a class="webmention__source"
+                           href="{{ .url }}"
+                           rel="noopener external"
+                           target="_blank"
+                           title="Quelle ansehen">
+                            <time datetime="{{ .published }}">{{ time.Format ":date_long" .published }}</time>
+                        </a>
+                    </div>
+                </article>
+            </li>
+        {{- end }}
+    </ul>
+</section>

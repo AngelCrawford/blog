@@ -1,5 +1,5 @@
 # generated: 2026-04-30
-# last_updated: 2026-05-09 (story 2-2 done; story 2-3 review)
+# last_updated: 2026-05-09 (story 2-4 review)
 # project: Article Time
 # project_key: article-time-digital-garden
 # tracking_system: file-system
@@ -50,8 +50,8 @@ development_status:
   epic-2: backlog
   2-1-umami-analytics-integration: done
   2-2-heart-button-component: done
-  2-3-webmention-endpoint-setup: review
-  2-4-webmention-display-component: ready-for-dev
+  2-3-webmention-endpoint-setup: done
+  2-4-webmention-display-component: review
   2-5-privacy-policy-page: ready-for-dev
   2-6-daily-rebuild-github-actions-workflow: ready-for-dev
   2-7-cookie-banner-ui: ready-for-dev

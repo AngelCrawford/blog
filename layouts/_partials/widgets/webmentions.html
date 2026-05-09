@@ -1,0 +1,38 @@
+{{- /* Webmention display — Story 2.4 (FR-012).
+       Renders grouped webmentions from data/webmentions_by_article.json.
+       Server-side rendered at build time; no JavaScript on display path.
+       XSS-safe: webmention content is rendered with Hugo's default auto-escape
+       (NOT safeHTML); server-side sanitization is Story 3.2's responsibility.
+       Empty-state path activates when the data file is absent, the article
+       permalink is missing from it, or the entry list is empty. */ -}}
+{{- $mentions := index .Site.Data.webmentions_by_article .RelPermalink | default (slice) -}}
+
+<section id="webmentions" class="webmentions box-footer mt-6">
+    <h2 class="title is-4">Antworten &amp; Erwähnungen</h2>
+
+    {{- if eq (len $mentions) 0 -}}
+        <p class="webmentions__empty">Noch keine Antworten. Sende einen Webmention!</p>
+    {{- else -}}
+
+        {{- /* Group order is fixed: replies, reposts, mentions, likes
+               (epics AC #2 — highest information value first). */ -}}
+        {{- $replies := where $mentions "type" "reply" -}}
+        {{- $reposts := where $mentions "type" "repost" -}}
+        {{- $generic := where $mentions "type" "mention" -}}
+        {{- $likes   := where $mentions "type" "like" -}}
+
+        {{- with $replies }}
+            {{ partial "widgets/webmention-group" (dict "items" . "heading" "Antworten" "type" "reply") }}
+        {{- end }}
+        {{- with $reposts }}
+            {{ partial "widgets/webmention-group" (dict "items" . "heading" "Reposts" "type" "repost") }}
+        {{- end }}
+        {{- with $generic }}
+            {{ partial "widgets/webmention-group" (dict "items" . "heading" "Erwähnungen" "type" "mention") }}
+        {{- end }}
+        {{- with $likes }}
+            {{ partial "widgets/webmention-group" (dict "items" . "heading" "Likes" "type" "like") }}
+        {{- end }}
+
+    {{- end -}}
+</section>

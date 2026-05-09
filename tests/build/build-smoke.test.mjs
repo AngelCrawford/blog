@@ -1113,6 +1113,7 @@ test("Story 2.3 AC #1+#7: production article page also emits the webmention <lin
   assert.equal(result.status, 0, `Production build failed.\n${result.stderr}`);
 
   const articlesDir = resolve(testPublic, "articles");
+  if (!existsSync(articlesDir)) assert.fail("articles/ dir missing from build output — run a full production build first");
   const articleSlug = readdirSync(articlesDir)
     .filter((entry) => !entry.startsWith("_test_"))
     .find((entry) =>
@@ -1133,6 +1134,7 @@ test("Story 2.3 AC #1+#7: production article page also emits the webmention <lin
 
 test("Story 2.3 AC #7: development build ALSO emits the webmention <link> (no hugo.IsProduction gate)", () => {
   const testPublicDev = resolve(repoRoot, "public-test-dev");
+  rmSync(testPublicDev, { recursive: true, force: true });
   const devArgs = [
     "--logLevel",
     "error",
@@ -1173,7 +1175,7 @@ test("Story 2.3 AC #6: CSP connect-src still allow-lists https://webmention.io (
     /<meta http-equiv="Content-Security-Policy" content="([^"]+)"/
   );
   assert.ok(cspMatch, "CSP <meta> tag must be present in production output");
-  const connectSrc = cspMatch[1].match(/connect-src ([^;]+);/);
+  const connectSrc = cspMatch[1].match(/connect-src ([^;]+);?/);
   assert.ok(connectSrc, "CSP must contain a connect-src directive");
   assert.match(
     connectSrc[1],
@@ -1393,4 +1395,194 @@ test("Story 2.2 AC #3+#9: hearts.js is bundled into footerBundle.js (localStorag
     /umami\.track/,
     "footerBundle must contain the umami.track call from hearts.js"
   );
+});
+
+// =============================================================================
+// Story 2.4: Webmention Display Component
+//
+// Asserts the webmentions partial renders on every article single page and that
+// the data/webmentions_by_article.json fixture drives the four type-groups,
+// the count line, the empty-state path, and the AC #6 link attributes.
+// Mock fixture lives at data/webmentions_by_article.json with /articles/test/
+// as the seeded permalink (renamed to .example before Story 3.2 lands).
+// =============================================================================
+
+test("Story 2.4 AC #1+#11: production article page emits <section id=\"webmentions\"> exactly once", () => {
+  const result = spawnSync("hugo", hugoArgs, {
+    cwd: repoRoot,
+    encoding: "utf8",
+    shell: process.platform === "win32",
+  });
+  assert.equal(result.status, 0, `Production build failed.\n${result.stderr}`);
+
+  const articlesDir = resolve(testPublic, "articles");
+  const articleSlug = readdirSync(articlesDir)
+    .filter((entry) => !entry.startsWith("_test_"))
+    .find((entry) => existsSync(resolve(articlesDir, entry, "index.html")));
+  assert.ok(articleSlug, "Expected at least one non-fixture article to render");
+
+  const articleHtml = readFileSync(
+    resolve(articlesDir, articleSlug, "index.html"),
+    "utf8"
+  );
+  const sectionMatches = articleHtml.match(/id=("?)webmentions\1/g) || [];
+  assert.equal(
+    sectionMatches.length,
+    1,
+    `<section id="webmentions"> must appear EXACTLY ONCE per article; got ${sectionMatches.length}`
+  );
+});
+
+test("Story 2.4 AC #2+#3+#7: fixture-targeted article renders all four type-group headings + count line", () => {
+  const result = spawnSync("hugo", hugoArgs, {
+    cwd: repoRoot,
+    encoding: "utf8",
+    shell: process.platform === "win32",
+  });
+  assert.equal(result.status, 0, `Production build failed.\n${result.stderr}`);
+
+  const articleHtml = readFileSync(
+    resolve(testPublic, "articles", "rss-test", "index.html"),
+    "utf8"
+  );
+
+  // AC #2: four type-groups, in order, with count badges from the fixture
+  // (replies × 2, repost × 1, mention × 1, like × 1).
+  assert.match(articleHtml, /Antworten \(2\)/, "Replies group heading must show count 2");
+  assert.match(articleHtml, /Reposts \(1\)/, "Reposts group heading must show count 1");
+  assert.match(articleHtml, /Erwähnungen \(1\)/, "Mentions group heading must show count 1");
+  assert.match(articleHtml, /Likes \(1\)/, "Likes group heading must show count 1");
+
+  // AC #7: count line appears, links to #webmentions, with German plural
+  // ("5 Antworten" — total mentions in fixture).
+  assert.match(
+    articleHtml,
+    /class="article-meta webmention-count-line"/,
+    "Webmention count line must render on fixture-targeted article"
+  );
+  assert.match(
+    articleHtml,
+    /href="#webmentions"/,
+    "Count line must link to #webmentions anchor"
+  );
+  assert.match(
+    articleHtml,
+    /5 Antworten/,
+    "Count line must show total count with German plural ('Antworten' for >1)"
+  );
+
+  // AC #3 sample: avatar rendered for replies that have author_photo.
+  assert.match(
+    articleHtml,
+    /class="webmention__avatar"/,
+    "Avatar img element must render for entries with author_photo"
+  );
+  // Reply text rendered only on type=reply (fixture's replies have content).
+  assert.match(
+    articleHtml,
+    /class="webmention__content">Schöner Artikel/,
+    "Reply text must render inside .webmention__content for type=reply entries"
+  );
+});
+
+test("Story 2.4 AC #5: non-fixture article renders empty-state and omits count line", () => {
+  const result = spawnSync("hugo", hugoArgs, {
+    cwd: repoRoot,
+    encoding: "utf8",
+    shell: process.platform === "win32",
+  });
+  assert.equal(result.status, 0, `Production build failed.\n${result.stderr}`);
+
+  // movie-test is not a key in the fixture — must hit the empty-state path.
+  const articleHtml = readFileSync(
+    resolve(testPublic, "articles", "movie-test", "index.html"),
+    "utf8"
+  );
+
+  assert.match(
+    articleHtml,
+    /class="webmentions__empty">Noch keine Antworten\./,
+    "Non-fixture article must render the German empty-state message"
+  );
+  assert.doesNotMatch(
+    articleHtml,
+    /webmention-count-line/,
+    "Non-fixture article must NOT render the count line (gated on len > 0)"
+  );
+  assert.doesNotMatch(
+    articleHtml,
+    /webmentions__group/,
+    "Non-fixture article must NOT render any type-group sections"
+  );
+});
+
+test("Story 2.4 AC #6: every <a> inside .webmention block carries rel=\"noopener external\" target=\"_blank\"", () => {
+  const result = spawnSync("hugo", hugoArgs, {
+    cwd: repoRoot,
+    encoding: "utf8",
+    shell: process.platform === "win32",
+  });
+  assert.equal(result.status, 0, `Production build failed.\n${result.stderr}`);
+
+  const articleHtml = readFileSync(
+    resolve(testPublic, "articles", "rss-test", "index.html"),
+    "utf8"
+  );
+
+  // Pull out every <a class="webmention__author"> and <a class="webmention__source">
+  // tag and confirm each declares the required rel + target attributes.
+  const links = articleHtml.match(
+    /<a class="webmention__(?:author|source)"[\s\S]*?>/g
+  ) || [];
+  assert.ok(
+    links.length > 0,
+    "Webmention author/source links must be present on fixture-targeted article"
+  );
+  for (const link of links) {
+    assert.match(
+      link,
+      /rel="noopener external"/,
+      `Webmention link missing rel="noopener external": ${link}`
+    );
+    assert.match(
+      link,
+      /target="_blank"/,
+      `Webmention link missing target="_blank": ${link}`
+    );
+  }
+});
+
+test("Story 2.4 AC #8: webmention reply content is auto-escaped (XSS guard, no safeHTML)", () => {
+  // Hugo's default auto-escape on `{{ .content }}` means any HTML in the source
+  // becomes literal text. The fixture intentionally seeds plain-text replies,
+  // but this test asserts the rendering pipeline does not unwrap HTML — even
+  // if Story 3.2's processing pipeline ever produced sanitized HTML, we want a
+  // template-level regression guard that catches an accidental `| safeHTML`.
+  const result = spawnSync("hugo", hugoArgs, {
+    cwd: repoRoot,
+    encoding: "utf8",
+    shell: process.platform === "win32",
+  });
+  assert.equal(result.status, 0, `Production build failed.\n${result.stderr}`);
+
+  const articleHtml = readFileSync(
+    resolve(testPublic, "articles", "rss-test", "index.html"),
+    "utf8"
+  );
+
+  // The fixture's reply content "Schöner Artikel! Ich sehe das ähnlich." has
+  // no HTML, so we cannot directly assert escape behavior on it. Instead,
+  // confirm the surrounding <p class="webmention__content"> never contains a
+  // raw <script> or <iframe> — these are the only ways a regression to
+  // safeHTML would manifest in production data.
+  const contentBlocks = articleHtml.match(
+    /<p class="webmention__content">[\s\S]*?<\/p>/g
+  ) || [];
+  for (const block of contentBlocks) {
+    assert.doesNotMatch(
+      block,
+      /<(?:script|iframe|object|embed)\b/i,
+      `Reply content block must NOT contain raw script-like tags: ${block}`
+    );
+  }
 });

@@ -71,6 +71,10 @@
                         </div>
                     {{ end }}
                 </article>
+
+                {{- /* Webmention display — Story 2.4 (FR-012). Section sibling of <article>. */ -}}
+                {{ partial "widgets/webmentions" . }}
+
             </div>
             <div class="column is-12-mobile is-12-tablet is-12-desktop is-3-widescreen is-3-fullhd pt-0">
                 <div class="columns is-multiline">
@@ -132,6 +136,19 @@
                                 {{- end -}}
 
                                 {{ partial "widgets/heart-button" . }}
+
+                                {{- /* Webmention count link — Story 2.4 (FR-012). Hidden when no mentions. */ -}}
+                                {{- $mentions := index .Site.Data.webmentions_by_article .RelPermalink | default (slice) -}}
+                                {{- if gt (len $mentions) 0 }}
+                                    <p class="article-meta webmention-count-line">
+                                        <a href="#webmentions" title="Zu den Antworten und Erwähnungen springen">
+                                            <svg class="ri-1x" aria-hidden="true">
+                                                <use href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ .Site.Params.remixicon_version }}#chat-3-line"></use>
+                                            </svg>
+                                            {{ len $mentions }} {{ if eq (len $mentions) 1 }}Antwort{{ else }}Antworten{{ end }}
+                                        </a>
+                                    </p>
+                                {{- end }}
                             </div>
                         </div>
                     </div>
