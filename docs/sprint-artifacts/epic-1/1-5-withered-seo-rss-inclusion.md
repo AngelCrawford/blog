@@ -1,6 +1,6 @@
 # Story 1.5: Withered SEO & RSS Inclusion
 
-Status: review
+Status: done
 
 ## Story
 
@@ -390,6 +390,20 @@ claude-opus-4-7[1m]
 - `docs/technical/editor-setup.md` — one-line note that withered metadata also drives RSS / sitemap / JSON-LD deprecation signals.
 - `docs/sprint-artifacts/sprint-status.yaml` — `1-5-withered-seo-rss-inclusion: ready-for-dev → in-progress → review`.
 - `docs/sprint-artifacts/epic-1/1-5-withered-seo-rss-inclusion.md` — Status `ready-for-dev → review`; this Dev Agent Record completed.
+
+### Review Findings
+
+- [x] [Review][Patch] `validate-growth-stage.html` YAML date auto-parse breaks `^\d{4}-\d{2}-\d{2}$` regex [`layouts/_partials/_base/validate-growth-stage.html`] — `string .Params.withered_date` coerces a YAML-auto-parsed `time.Time` value to `"2026-04-15 00:00:00 +0000 UTC"`, which never matches the strict regex, causing an `errorf` on every withered article whose frontmatter uses an unquoted date. Fix: replace `string .Params.withered_date` with `(time .Params.withered_date).Format "2006-01-02"` so the value is normalized regardless of YAML parsing mode.
+- [x] [Review][Patch] `single.html` fallback branch missing Bulma `content` class [`layouts/single.html`] — the uncommitted `{{ else }}` fallback for non-article/non-page types renders `.Content` inside `<div class="box-content">` without a `class="content"` inner wrapper, leaving Bulma typography (h1–h6, p, ul, ol) unstyled. Add `<div class="content">{{ .Content }}</div>` inside the box.
+- [x] [Review][Defer] RSS `<title>` emits raw `.Title` without XML-escaping [`layouts/rss.xml:43`] — pre-existing; a title with `&`, `<`, or `>` produces malformed XML. `assertWellFormedXml` catches unescaped `&` but not `<`/`>`. Deferred, pre-existing.
+- [x] [Review][Defer] Multiple top-level `"author"` JSON-LD keys when article has multiple authors [`layouts/_partials/_base/seo.html`] — pre-existing structural invalid JSON; already tracked in backlog (Story 9.2). Deferred, pre-existing.
+- [x] [Review][Defer] `with or .Params.Seo.desc .Summary | plainify | htmlUnescape` operator precedence — `plainify | htmlUnescape` only applies to `.Summary`, not `Seo.desc` [`layouts/_partials/_base/seo.html`] — pre-existing. Deferred, pre-existing.
+- [x] [Review][Defer] `.Sitemap.Priority` truthy check silently omits `<priority>` for explicit `0` values [`layouts/sitemap.xml:23`] — pre-existing, intentional per completion notes. Deferred, pre-existing.
+- [x] [Review][Defer] `assertWellFormedXml` checks bare `&` but not unescaped `<`/`>` in XML [`tests/build/build-smoke.test.mjs`] — test quality; `<` in article titles would produce malformed XML without triggering the guard. Deferred, test improvement.
+- [x] [Review][Defer] `extractJsonLd` regex stops at first `</script>` — truncates if JSON-LD contains the literal string `</script>` [`tests/build/build-smoke.test.mjs`] — latent fragility, low risk for current content. Deferred, test improvement.
+- [x] [Review][Defer] RSS `range where .Site.RegularPages "Type" "in" "articles"` bypasses the `$limit` variable assembled on lines 4–13 [`layouts/rss.xml`] — pre-existing; RSS item count limit is silently ignored. Deferred, pre-existing.
+- [x] [Review][Defer] `content/articles/_index.md` cascade removal promotes ALL pages under `articles/` to `priority 0.8` — future sub-sections or index pages rooted under `articles/` inherit the site default rather than a section-specific value. Deferred, low risk for current project structure.
+- [x] [Review][Defer] No explicit smoke-test name for AC #3 (sitemap includes withered pages) — covered implicitly by `findBlock` returning a non-empty block in priority/lastmod tests [`tests/build/build-smoke.test.mjs`] — minor test documentation gap. Deferred.
 
 ## Change Log
 

@@ -236,5 +236,16 @@
                 </aside>
             </div>
         </div>
+    {{ else }}
+        <div class="columns is-multiline">
+            <div class="column is-12">
+                <article class="box">
+                    <div class="box-content">
+                        <h1 class="title is-1" data-heading="{{ .Title }}">{{ .Title }}</h1>
+                        <div class="content">{{ .Content }}</div>
+                    </div>
+                </article>
+            </div>
+        </div>
     {{ end }}
 {{ end }}

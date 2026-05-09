@@ -9,30 +9,29 @@
 // call applied to the previous file's last expression. The unary `!` cleanly
 // terminates whatever came before and consumes the function expression.
 !function () {
-    const banner = document.querySelector('.withered-banner[data-banner-key]');
-    if (!banner) return;
+    document.querySelectorAll('.withered-banner[data-banner-key]').forEach(function (banner) {
+        const key = banner.getAttribute('data-banner-key');
+        if (!key) return;
 
-    const key = banner.getAttribute('data-banner-key');
-    if (!key) return;
-
-    // Restore prior dismissal for this session.
-    try {
-        if (sessionStorage.getItem(key) === '1') {
-            banner.hidden = true;
-            return;
-        }
-    } catch (_) {
-        // sessionStorage may throw in strict privacy modes — fail open (banner visible).
-    }
-
-    const dismiss = banner.querySelector('.withered-banner-dismiss');
-    if (!dismiss) return;
-    dismiss.addEventListener('click', function () {
-        banner.hidden = true;
+        // Restore prior dismissal for this session.
         try {
-            sessionStorage.setItem(key, '1');
+            if (sessionStorage.getItem(key) === '1') {
+                banner.hidden = true;
+                return;
+            }
         } catch (_) {
-            // Same fallback as above — visual state stays hidden for this session.
+            // sessionStorage may throw in strict privacy modes — fail open (banner visible).
         }
+
+        const dismiss = banner.querySelector('.withered-banner-dismiss');
+        if (!dismiss) return;
+        dismiss.addEventListener('click', function () {
+            banner.hidden = true;
+            try {
+                sessionStorage.setItem(key, '1');
+            } catch (_) {
+                // Same fallback as above — visual state stays hidden for this session.
+            }
+        });
     });
 }();

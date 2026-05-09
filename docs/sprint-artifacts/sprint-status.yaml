@@ -1,5 +1,5 @@
 # generated: 2026-04-30
-# last_updated: 2026-05-09 (1-5 review)
+# last_updated: 2026-05-09 (epic-1 retrospective done)
 # project: Article Time
 # project_key: article-time-digital-garden
 # tracking_system: file-system
@@ -42,8 +42,8 @@ development_status:
   1-2-growth-stage-badge-component: done
   1-3-withered-content-default-hiding: done
   1-4-withered-content-warning-banner: done
-  1-5-withered-seo-rss-inclusion: review
-  epic-1-retrospective: optional
+  1-5-withered-seo-rss-inclusion: done
+  epic-1-retrospective: done
 
   # Epic 2: Engagement Infrastructure [Phase 1A, Week 1-2]
   epic-2: backlog
