@@ -10,6 +10,4 @@ Routing guidance:
 - Items routed to a not-yet-drafted future story belong in `docs/1-planning/epics.md` under that story as a **Pre-Spec Notes** entry — not here.
 - **Done items are pruned, not preserved** — git log and GitHub PRs/issues are the historical record.
 
-| Date | Story | Type | Status | Notes |
-| ---- | ----- | ---- | ------ | ----- |
-| 2026-05-08 | 1.3 | UX | Deferred | `$hiddenCount` notice on paginated homepage (page 2+) shows the same site-wide total with no contextual anchor (no link to the hidden articles, no "show withered" toggle). Revisit when pagination UX is redesigned — fixing in isolation is a half-step without the larger UX context. |
+_(empty — all known follow-ups are routed to specific stories via Pre-Spec Notes in `docs/1-planning/epics.md`, or covered by deliberate-skip rationale in `docs/technical/testing.md`.)_

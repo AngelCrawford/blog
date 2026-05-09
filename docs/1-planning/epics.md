@@ -770,6 +770,9 @@ Damit der Workflow bereits jetzt grün durchläuft (AC5: „runs successfully on
 
 **Effort:** 1 day
 
+**Pre-Spec Notes (from prior-story reviews):**
+- **Replace static `withered-hidden-notice` with the interactive AC #4 button (from Story 1.3 review, 2026-05-08).** `layouts/_partials/withered-hidden-notice.html` currently renders a passive count ("X verwelkte Einträge sind ausgeblendet") at the bottom of `home.html` and `list.html`. The notice has no contextual anchor and shows the same site-wide total on every paginated page (page 1, page 2, …). AC #4's "Show Withered (3)" button is the proper home for this count — wire it to the same `withered-count.html` data source, then delete the standalone notice partial and remove the `{{ partial "withered-hidden-notice.html" $hiddenCount }}` calls from `home.html` and `list.html`.
+
 ---
 
 ## Story 5.4: Client-Side Filter JavaScript
