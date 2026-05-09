@@ -1,9 +1,17 @@
 # Active WIP (no issue — actively designing)
-- [Backlog](docs/backlog.md)
+- [Backlog](docs/backlog)
 - [Icons austauschen](docs/IconDemo.html)
 - [New Home Design, einbauen](docs/Home.html)
 - [New Artikel Design, einbauen]('docs/Artikel.html')
 - [Noch mini Sachen offen](docs\3-implementation\phase-0-task-breakdown.md)
+
+## These require your GitHub identity / live-site access and cannot be done by me:
+
+1. **T1 — webmention.io account for `article-time.de`** (AC #2). Recommended: GitHub OAuth at https://webmention.io. If signup needs `rel="me"`, fall back to adding `<link rel="me" href="https://github.com/AngelCrawford" />` to `head.html` (1-line, in-scope addition).
+2. **T4 — store `WEBMENTION_IO_TOKEN` in GitHub Secrets** (AC #4). Repo Settings → Secrets and variables → Actions. Pre-positioning for Story 3.2.
+3. **T3 — manual webmention.rocks Test #1** (AC #3) — *post-deploy*. Send to a real article URL → confirm in webmention.io dashboard within ~30s.
+4. **T8 — DevTools smoke on live site** (AC #1, #3) — *post-deploy*. Elements panel: confirm `<link rel="webmention">` rendered; Console: zero CSP violations.
+
 
 # 🔄 Remixicon Updates: Cache-Bust Workflow
 

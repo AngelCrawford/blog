@@ -188,6 +188,11 @@
                             </svg>
                         </span>
                     {{- end -}}
+                    {{- /* Heart — Story 2.2. Lives next to format/growth-stage
+                           icon. Articles render readonly (action lives on the
+                           single page). Logs render interactive (logs have no
+                           detail page, FR-027). */ -}}
+                    {{ partial "widgets/heart-button" (dict "page" . "context" "card") }}
                 </div>
             </footer>
         </article>

@@ -10,4 +10,7 @@ Routing guidance:
 - Items routed to a not-yet-drafted future story belong in `docs/1-planning/epics.md` under that story as a **Pre-Spec Notes** entry — not here.
 - **Done items are pruned, not preserved** — git log and GitHub PRs/issues are the historical record.
 
-_(empty — all known follow-ups are routed to specific stories via Pre-Spec Notes in `docs/1-planning/epics.md`, or covered by deliberate-skip rationale in `docs/technical/testing.md`.)_
+| Date | Story | Type | Status | Notes |
+| ---- | ----- | ---- | ------ | ----- |
+| 2026-05-09 | 2.2 | Bug | Deferred | Multi-tab double Umami `heart` event: two open tabs on the same article can each fire `umami.track('heart', ...)` independently before `localStorage` disables the second. Inherent SSR+optimistic-UI constraint; acceptable per "hearts are signals not votes" policy. Revisit if Umami event counts appear inflated. |
+| 2026-05-09 | 2.2 | UX | Open | **Design für Heart an allen Stellen:** unified visual treatment for the heart across all surfaces — article single page (sidebar pill), article card readonly indicator, log card interactive heart. Current state: single-page is a full pill, both card variants are flat icon+count to match adjacent format icons; no visual distinction between readonly vs interactive on cards. Decide on consistent affordances: how does interactive (log card) differ from readonly (article card)? Sizing/colour parity with surrounding `.formats` icons. Hover/active states on cards. Possibly extend to the `.hearted` post-click state (currently soft-red on the pill, no specific treatment on cards). |
