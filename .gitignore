@@ -1,8 +1,7 @@
 # Hugo
 /resources
 /public
-/public-test
-/public-test-dev
+/public-*
 /themes
 hugo_stats.json
 

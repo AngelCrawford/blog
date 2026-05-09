@@ -1516,7 +1516,7 @@ test("Story 2.4 AC #5: non-fixture article renders empty-state and omits count l
   );
 });
 
-test("Story 2.4 AC #6: every <a> inside .webmention block carries rel=\"noopener external\" target=\"_blank\"", () => {
+test("Story 2.4 AC #6: every <a> inside .webmention block carries rel with noopener+noreferrer+external and target=\"_blank\"", () => {
   const result = spawnSync("hugo", hugoArgs, {
     cwd: repoRoot,
     encoding: "utf8",
@@ -1541,8 +1541,8 @@ test("Story 2.4 AC #6: every <a> inside .webmention block carries rel=\"noopener
   for (const link of links) {
     assert.match(
       link,
-      /rel="noopener external"/,
-      `Webmention link missing rel="noopener external": ${link}`
+      /rel="noopener noreferrer external"/,
+      `Webmention link missing rel="noopener noreferrer external": ${link}`
     );
     assert.match(
       link,
@@ -1585,4 +1585,147 @@ test("Story 2.4 AC #8: webmention reply content is auto-escaped (XSS guard, no s
       `Reply content block must NOT contain raw script-like tags: ${block}`
     );
   }
+});
+
+// =============================================================================
+// Story 2.5: Privacy Policy Page
+//
+// Asserts the rewritten content/pages/datenschutz.md renders the three
+// engagement-flow sections (Umami, Hearts, Webmentions), the "Was diese Seite
+// NICHT tut" posture statement, the contact-with-DSGVO-rights section, that
+// obsolete sections (Spotify, "Datenschutz auf einen Blick") were removed, that
+// the page retains its noindex meta + sitemap exclusion (robotsdisallow: true),
+// and that the footer link from a representative non-privacy page still resolves
+// to /pages/datenschutz/ (AC #4 regression check).
+// =============================================================================
+
+test("Story 2.5 AC #2: privacy page renders Umami, Hearts, and Webmentions section headings", () => {
+  const result = spawnSync("hugo", hugoArgs, {
+    cwd: repoRoot,
+    encoding: "utf8",
+    shell: process.platform === "win32",
+  });
+  assert.equal(result.status, 0, `Production build failed.\n${result.stderr}`);
+
+  const html = readFileSync(
+    resolve(testPublic, "pages", "datenschutz", "index.html"),
+    "utf8"
+  );
+  assert.match(
+    html,
+    /<h2 id="?anonyme-analyse-mit-umami"?[^>]*>\s*Anonyme Analyse mit Umami/,
+    "Privacy page must render the Umami section H2"
+  );
+  assert.match(
+    html,
+    /<h2 id="?herz-reaktionen"?[^>]*>\s*Herz-Reaktionen/,
+    "Privacy page must render the Hearts section H2"
+  );
+  assert.match(
+    html,
+    /<h2 id="?webmentions"?[^>]*>\s*Webmentions/,
+    "Privacy page must render the Webmentions section H2"
+  );
+});
+
+test("Story 2.5 AC #3+#5: privacy page renders posture statement and contact-with-DSGVO-rights sections", () => {
+  const result = spawnSync("hugo", hugoArgs, {
+    cwd: repoRoot,
+    encoding: "utf8",
+    shell: process.platform === "win32",
+  });
+  assert.equal(result.status, 0, `Production build failed.\n${result.stderr}`);
+
+  const html = readFileSync(
+    resolve(testPublic, "pages", "datenschutz", "index.html"),
+    "utf8"
+  );
+  assert.match(
+    html,
+    /<h2 id="?was-diese-seite-nicht-tut"?[^>]*>\s*Was diese Seite NICHT tut/,
+    "Privacy page must render the posture statement section (AC #3)"
+  );
+  assert.match(
+    html,
+    /<h2 id="?kontakt-für-datenschutzanfragen"?[^>]*>\s*Kontakt für Datenschutzanfragen/,
+    "Privacy page must render the contact section (AC #5)"
+  );
+  // Each of the seven DSGVO rights articles must be cited (Art. 15-21 + Art. 77).
+  for (const article of ["Art. 15", "Art. 16", "Art. 17", "Art. 18", "Art. 20", "Art. 21", "Art. 77"]) {
+    assert.ok(
+      html.includes(article),
+      `Privacy page contact section must cite ${article}`
+    );
+  }
+});
+
+test("Story 2.5 AC #7: privacy page no longer mentions Spotify (removed obsolete section)", () => {
+  const result = spawnSync("hugo", hugoArgs, {
+    cwd: repoRoot,
+    encoding: "utf8",
+    shell: process.platform === "win32",
+  });
+  assert.equal(result.status, 0, `Production build failed.\n${result.stderr}`);
+
+  const html = readFileSync(
+    resolve(testPublic, "pages", "datenschutz", "index.html"),
+    "utf8"
+  );
+  assert.doesNotMatch(
+    html,
+    /Spotify/i,
+    "Privacy page must NOT contain the obsolete Spotify section (no Spotify embeds in current codebase)"
+  );
+  // The standalone "Datenschutz auf einen Blick" intro was replaced by "Auf einen Blick".
+  assert.doesNotMatch(
+    html,
+    /Datenschutz auf einen Blick/,
+    "Privacy page must NOT carry the legacy intro heading 'Datenschutz auf einen Blick' (replaced by 'Auf einen Blick')"
+  );
+});
+
+test("Story 2.5 AC #8: privacy page retains noindex meta and is excluded from sitemap (robotsdisallow: true)", () => {
+  const result = spawnSync("hugo", hugoArgs, {
+    cwd: repoRoot,
+    encoding: "utf8",
+    shell: process.platform === "win32",
+  });
+  assert.equal(result.status, 0, `Production build failed.\n${result.stderr}`);
+
+  const html = readFileSync(
+    resolve(testPublic, "pages", "datenschutz", "index.html"),
+    "utf8"
+  );
+  assert.match(
+    html,
+    /<meta name="?robots"? content="noindex/,
+    "Privacy page must emit a noindex robots meta (robotsdisallow: true frontmatter)"
+  );
+
+  const sitemapPath = resolve(testPublic, "sitemap.xml");
+  assert.ok(existsSync(sitemapPath), "sitemap.xml must exist");
+  const sitemap = readFileSync(sitemapPath, "utf8");
+  assert.doesNotMatch(
+    sitemap,
+    /\/pages\/datenschutz\//,
+    "sitemap.xml must NOT include /pages/datenschutz/ (robotsdisallow excludes it)"
+  );
+});
+
+test("Story 2.5 AC #4: footer on a representative non-privacy page still links to /pages/datenschutz/", () => {
+  const result = spawnSync("hugo", hugoArgs, {
+    cwd: repoRoot,
+    encoding: "utf8",
+    shell: process.platform === "win32",
+  });
+  assert.equal(result.status, 0, `Production build failed.\n${result.stderr}`);
+
+  // Sample the homepage footer-menu region. Story 2.5 changed only markdown
+  // content; the menu wiring must remain intact.
+  const homeHtml = readFileSync(resolve(testPublic, "index.html"), "utf8");
+  assert.match(
+    homeHtml,
+    /<a href="?\/pages\/datenschutz\/"?[^>]*>Datenschutz<\/a>/,
+    "Homepage footer must still link to /pages/datenschutz/ (AC #4 regression guard)"
+  );
 });

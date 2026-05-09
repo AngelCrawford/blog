@@ -1,6 +1,6 @@
 # Story 2.4: Webmention Display Component
 
-Status: review
+Status: done
 
 ## Story
 
@@ -429,6 +429,18 @@ ACs 1–7 are derived verbatim from `docs/1-planning/epics.md#Story-2.4-Webmenti
     5. CSP `imgsrc` state (if widened, why; if not, current state is sufficient).
     6. Whether `data/README.md` was added.
 
+### Review Findings
+
+- [x] [Review][Decision] Icon identifier discrepancy — resolved: `question-answer-line` is correct (chat-3-line does not exist in the installed Remix Icon sprite); Completion Notes updated to match code. [`layouts/single.html` sidebar block, Completion Notes AC #7]
+- [x] [Review][Patch] Missing `published` guard — `time.Format ":date_long"` is called unconditionally on `.published`; a nil or non-ISO-8601 value produces a zero-time output or template error at build time. Wrap with `{{- with .published }}…{{- else }}…{{- end }}`. [`layouts/_partials/widgets/webmention-group.html:32`]
+- [x] [Review][Patch] Missing author field guards — `href="{{ .author_url }}"` and `{{ .author }}` are emitted unconditionally; an empty/nil `author_url` produces `href=""` (page-reload link) and an empty `author` produces an inaccessible unlabelled link. Add nil/empty guards or render plain text as fallback. [`layouts/_partials/widgets/webmention-group.html:20-23`]
+- [x] [Review][Patch] `noreferrer` missing from external link `rel` — `rel="noopener external"` on author and source links omits `noreferrer`, leaking the article URL as `Referer` to every third-party domain linked from webmention entries. Add `noreferrer` to both link elements. [`layouts/_partials/widgets/webmention-group.html:22,29`]
+- [x] [Review][Patch] No-op `@include helpers.translate(0, 0)` in sidebar CSS — emits `transform: translate(0, 0)` which does nothing visually but promotes the SVG to a compositing layer unnecessarily. Remove or replace with explicit `vertical-align` alignment. [`assets/scss/elements/webmentions.scss:~109`]
+- [x] [Review][Defer] Datenschutz drops "personenbezogenen Daten" catch-all — new text disclaims only IP addresses and cookies, leaving a coverage gap: author names, URLs, and photos are personal data under DSGVO that the site processes and displays. Story 2.5 should restore an equivalent catch-all or explicitly list what is processed. [`content/pages/datenschutz.md:78`] — deferred; Story 2.5 owns Datenschutz
+- [x] [Review][Defer] Hardcoded article slugs in smoke tests — Story 2.4 assertions reference `rss-test` and `movie-test` by slug; renaming either article silently breaks the tests without touching webmention code. [`tests/build/build-smoke.test.mjs:835,887`] — deferred; pre-existing pattern in test file
+- [x] [Review][Defer] AC #8 XSS smoke test validates only clean fixture data — fixture has no HTML payloads, so the test cannot verify Hugo's auto-escape is active; add an adversarial fixture entry (e.g., `content: "<script>alert(1)</script>"`) to make the assertion meaningful. [`tests/build/build-smoke.test.mjs:945`] — deferred; Playwright is the right venue; Story 3.2 for adversarial fixtures
+- [x] [Review][Defer] RelPermalink key mismatch risk — `index .Site.Data.webmentions_by_article .RelPermalink` silently returns nil if the Story 3.2 data pipeline ever emits keys without trailing slash or with different case, showing the empty-state for every article with no build warning. [`layouts/_partials/widgets/webmentions.html:8`] — deferred; Story 3.2 controls key format
+
 ## Dev Notes
 
 ### Architectural Context
@@ -746,7 +758,7 @@ claude-opus-4-7[1m]
 - **AC #2 — Type-group order:** replies → reposts → mentions → likes (epics-order, highest-information-value first). Group headings render localized: `Antworten`, `Reposts`, `Erwähnungen`, `Likes` (UTF-8). Each group includes a `(N)` count badge in the heading.
 - **AC #3 — Date format:** `time.Format ":date_long" .published` chosen over `dateFormat` for a closer match to the existing `single.html` convention (line 92 uses `time.Format`). German locale renders e.g. `15. April 2026` — verified in build output.
 - **AC #6 — Sub-partial pattern:** factored out `layouts/_partials/widgets/webmention-group.html` to avoid four near-identical `range` blocks. Caller signature is `(dict "items" . "heading" "Antworten" "type" "reply")`. The sub-partial enforces `rel="noopener external" target="_blank"` on every `<a>` (verified by build assertion `Story 2.4 AC #6`).
-- **AC #7 — Icon choice:** `chat-3-line` from Remix Icon, no fallback needed (icon present in sprite). `<use href>` (not `xlink:href`) used to match existing single.html SVG pattern. Pluralization gated: `Antwort` for 1, `Antworten` otherwise; whole block skipped when count is 0.
+- **AC #7 — Icon choice:** `question-answer-line` from Remix Icon (spec named `chat-3-line` but that symbol does not exist in the installed sprite; `question-answer-line` was used as a functionally equivalent replacement). `<use href>` (not `xlink:href`) used to match existing single.html SVG pattern. Pluralization gated: `Antwort` for 1, `Antworten` otherwise; whole block skipped when count is 0.
 - **AC #7 — Count-line placement deviation (user-directed):** the AC literal says "below article title". Initial implementation followed that literally (inside `box-content`, after the subtitle). User asked during review to move it into the **right sidebar info-widget, directly under the heart-button** — same column as date, growth-stage, tags, reading-time, and heart count. This visually groups all per-article engagement metrics together. Final placement is after `{{ partial "widgets/heart-button" . }}` in the info widget. SCSS adjusted (`display: block`, `font-size: 0.85rem`, tighter margin) to fit the sidebar context. AC source intent preserved: count is still rendered prominently with anchor-link to `#webmentions`, just in a different spot than the AC's literal phrasing.
 - **AC #8 — XSS approach:** Option (a) — Hugo's default auto-escape on `{{ .content }}`. **No** `safeHTML` filter. Webmention sender HTML renders as literal text. Story 3.2 owns server-side sanitization (e.g., `sanitize-html` library) when it lands. Build assertion `Story 2.4 AC #8` regression-guards against accidental `safeHTML` reintroduction.
 - **AC #9 — Fixture cleanup decision:** rename to `data/webmentions_by_article.example.json` on Story 3.2's first commit. The architecture's "NEVER commit `data/*.json` to main" rule (Critical Agent Rule #3) is intentionally bypassed for this development crutch. **Coordination flag for Story 3.2:** the story's developer must expect `webmentions_by_article.json` to NOT exist on `main` and rename / remove this fixture as part of 3.2's first commit. Initially the seeded permalink was `/articles/test/`; updated by user to `/articles/rss-test/` for visual demo on a different stable article.

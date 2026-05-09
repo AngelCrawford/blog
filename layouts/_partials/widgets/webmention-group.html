@@ -6,7 +6,7 @@
        Author + source link are always rendered when their fields are present.
        Avatar is rendered only when .author_photo is non-empty (with-block
        skips empty strings and missing keys). External links carry
-       rel="noopener external" target="_blank" per AC #6. */ -}}
+       rel="noopener noreferrer external" target="_blank" per AC #6 + noreferrer patch. */ -}}
 <section class="webmentions__group webmentions__group--{{ .type }}">
     <h3 class="title is-5 webmentions__group-heading">{{ .heading }} ({{ len .items }})</h3>
     <ul class="webmentions__list">
@@ -17,19 +17,27 @@
                         <img class="webmention__avatar" src="{{ . }}" alt="" loading="lazy" width="48" height="48">
                     {{- end }}
                     <div class="webmention__body">
+                        {{- if .author_url }}
                         <a class="webmention__author"
                            href="{{ .author_url }}"
-                           rel="noopener external"
-                           target="_blank">{{ .author }}</a>
+                           rel="noopener noreferrer external"
+                           target="_blank">{{ .author | default "Unbekannt" }}</a>
+                        {{- else }}
+                        <span class="webmention__author">{{ .author | default "Unbekannt" }}</span>
+                        {{- end }}
                         {{- if and (eq .type "reply") .content }}
                             <p class="webmention__content">{{ .content }}</p>
                         {{- end }}
                         <a class="webmention__source"
                            href="{{ .url }}"
-                           rel="noopener external"
+                           rel="noopener noreferrer external"
                            target="_blank"
                            title="Quelle ansehen">
-                            <time datetime="{{ .published }}">{{ time.Format ":date_long" .published }}</time>
+                            {{- with .published }}
+                            <time datetime="{{ . }}">{{ time.Format ":date_long" . }}</time>
+                            {{- else }}
+                            <time>—</time>
+                            {{- end }}
                         </a>
                     </div>
                 </article>

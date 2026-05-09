@@ -68,7 +68,7 @@ Stories mit einem `**GitHub Issue:**`-Eintrag schließen das verlinkte Issue, so
 | Epic | Focus | Stories | Phase | Weeks | FR Coverage |
 |------|-------|---------|-------|-------|-------------|
 | Epic 1 | Growth Stage System | 5 | 1A | Week 3 | FR-001 to FR-007 |
-| Epic 2 | Engagement Infrastructure | 7 | 1A | Week 1-2 | FR-008 to FR-013, FR-047, FR-048, FR-049 |
+| Epic 2 | Engagement Infrastructure | 8 | 1A | Week 1-2 | FR-008 to FR-013, FR-047, FR-048, FR-049 |
 | Epic 3 | Popularity Scoring Engine | 6 | 1A | Week 4-5 | FR-010, FR-013, FR-018, FR-019, FR-035 to FR-037 |
 | Epic 4 | Three-Tier Sorting | 4 | 1A | Week 4-5 | FR-014 to FR-017, FR-020, FR-050, FR-051 |
 | Epic 5 | Badge & Filter System | 7 | 1A | Week 6 | FR-003, FR-005, FR-024, FR-025, FR-032, FR-033 |
@@ -77,7 +77,7 @@ Stories mit einem `**GitHub Issue:**`-Eintrag schließen das verlinkte Issue, so
 | Epic 8 | Format Expansion | 8 | 1B | Week 7-9 | FR-028 to FR-033 |
 | Epic 9 | Polish & Optimization | 12 | 2 | Week 10-11 | FR-006, FR-007, FR-013, FR-042 to FR-046, FR-048 |
 
-**Total:** 57 stories across 9 epics
+**Total:** 58 stories across 9 epics
 
 ---
 
@@ -413,6 +413,42 @@ Damit der Workflow bereits jetzt grün durchläuft (AC5: „runs successfully on
 **Prerequisites:** Story 2.5 (Privacy Policy must exist for link target)
 
 **Dependencies:** None (uses existing `gdpr.js`)
+
+**Effort:** 0.5 days
+
+---
+
+## Story 2.8: Bridgy.fed Setup & Verification
+
+**As a** content creator
+**I want** Mastodon (and Fediverse) replies, boosts, and likes to flow into my site as webmentions
+**So that** federated engagement actually shows up in the webmention display, not just the small IndieWeb-blog subset
+
+**FR Coverage:** FR-011 (extends Webmention Endpoint Setup) — Bridgy.fed is the bridge that makes my webmention.io endpoint receive non-Indie traffic. Without it, the receive-side stories (2.3, 2.4, 3.2) only see mentions from blogs that natively send webmentions.
+
+**GitHub Issue:** [#145 IndieWeb - Webmentions & Pingbacks](https://github.com/AngelCrawford/blog/issues/145) (gemeinsam mit Stories 2.3 + 2.4 — issue erst schließen wenn alle drei done sind)
+
+**Source:** Gap identified during Story 2.5 implementation review. `ux-design-specification.md` lines 711–712, 947, 1624 reference Bridgy as planned infrastructure for "Mastodon → Webmention conversion", but no story implements the setup. Epic 7 covers OUTGOING POSSE (my site → Mastodon), not INCOMING bridging. Bridgy.fed (`https://fed.brid.gy/`) is the canonical IndieWeb bridge for incoming federated engagement.
+
+**Acceptance Criteria:**
+1. Bridgy Fed account connected to a chosen Mastodon (or Bluesky) handle representing article-time.de — handle and instance documented in `docs/technical/runbook.md` or equivalent so a future operator knows where the bridge lives.
+2. Domain verification with Bridgy Fed completed (rel="me" link or `.well-known/webfinger` — choose whichever Bridgy currently requires; document the chosen path).
+3. End-to-end smoke test: a public Mastodon post that mentions or links to an article on article-time.de produces a webmention visible in the webmention.io dashboard within Bridgy's documented latency window. Document the test post URL + observed latency.
+4. Privacy policy (`content/pages/datenschutz.md` → `## Webmentions` section) extended to disclose Bridgy.fed as an additional processor sitting between the originating Fediverse instance and webmention.io. Mention the operator (Ryan Barrett / Bridgy) and the data flow (public Fediverse activity → Bridgy → webmention.io → my site).
+5. README or runbook entry documents how to disconnect / pause the bridge if needed (account suspension, abuse handling, opt-out for harassed mentions).
+6. CSP review: confirm no new `connect-src` / `img-src` allow-list entries are required (Bridgy posts to webmention.io which is already allow-listed; sender avatars come from arbitrary federated instances which are already covered by `img-src https:`).
+7. Bridgy operational status page link added to the runbook (if Bridgy goes down, mentions queue or are dropped — operator needs visibility).
+
+**Prerequisites:** Story 2.3 (webmention endpoint must exist for Bridgy to POST to)
+
+**Dependencies:** Story 3.2 (webmention processing script) — **soft dependency**: Bridgy can be wired up before 3.2 lands; mentions accumulate at webmention.io and are surfaced once 3.2's fetch-and-write loop runs.
+
+**Implementation Note:** Setup at `https://fed.brid.gy/` is largely UI-driven (~5 minutes of clicks). The story-card weight is in (a) deciding the Fediverse identity (which Mastodon instance or Bluesky handle to claim), (b) updating the privacy policy honestly, (c) writing the runbook entry so this isn't a one-person tribal-knowledge item, and (d) the smoke test that proves the loop actually closes. This is an **infrastructure-only story** — no code change to the Hugo site is strictly required (privacy-policy update is content-only). The Bridgy account itself is the deliverable.
+
+**Out of Scope:**
+- Bridgy classic (Twitter) — Twitter killed Bridgy's API access; service is defunct. Don't attempt.
+- Bluesky bridging — Bridgy supports it, but choose Mastodon-only for the initial story to keep the AC list tractable. Bluesky can be a follow-up note in completion notes.
+- Outgoing POSSE (mein Blog → Mastodon-Posts) — that's Epic 7's territory (Stories 7.1, 7.2). Story 2.8 is incoming-only.
 
 **Effort:** 0.5 days
 
@@ -1650,7 +1686,7 @@ Damit der Workflow bereits jetzt grün durchläuft (AC5: „runs successfully on
 | Epic | Stories | Phase | Duration | FR Count | Effort (Days) |
 |------|---------|-------|----------|----------|---------------|
 | Epic 1: Growth Stage System | 5 | 1A | Week 3 | 7 | 7 |
-| Epic 2: Engagement Infrastructure | 7 | 1A | Week 1-2 | 9 | 8 |
+| Epic 2: Engagement Infrastructure | 8 | 1A | Week 1-2 | 9 | 8.5 |
 | Epic 3: Popularity Scoring Engine | 6 | 1A | Week 4-5 | 7 | 7 |
 | Epic 4: Three-Tier Sorting | 4 | 1A | Week 4-5 | 7 | 6.5 |
 | Epic 5: Badge & Filter System | 7 | 1A | Week 6 | 6 | 6.5 |
@@ -1658,7 +1694,7 @@ Damit der Workflow bereits jetzt grün durchläuft (AC5: „runs successfully on
 | Epic 7: POSSE & Advanced Webmentions | 5 | 3 | Week 12-13 | 4 | 8 |
 | Epic 8: Format Expansion | 8 | 1B | Week 7-9 | 6 | 11.5 |
 | Epic 9: Polish & Optimization | 12 | 2 | Week 10-11 | 10 | 12.5 |
-| **TOTAL** | **57** | **All** | **14 weeks** | **52** | **70 days** |
+| **TOTAL** | **58** | **All** | **14 weeks** | **52** | **70.5 days** |
 
 ---
 
