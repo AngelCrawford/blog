@@ -1,10 +1,24 @@
+# Development environment overrides — only values that DIFFER from config/_default/params.yaml.
+#
+# Hugo merges this on top of _default at build time (per
+# https://gohugo.io/configuration/introduction/). Lists at the same key are
+# REPLACED, not concatenated — that's why each list below copies _default's
+# entries verbatim and adds the dev-specific http://localhost:1313/livereload
+# (Hugo has no "extend"/"append" operator for arrays).
+#
+# MAINTENANCE WARNING: when _default's `csp.scriptsrc` or `csp.connectsrc`
+# change, update the corresponding list here too. Production-side regression
+# is caught by the build-smoke assertion in tests/build/build-smoke.test.mjs;
+# dev-side drift is only caught by `hugo server` console errors. Keep in sync.
+
 csp:
-  default: ["'self'"]
-  formaction: ["'self'"]
-  framesrc: ["'self'"]
-  imgsrc: ["'self'", "https://github.com", "https://*.githubusercontent.com", "https://icons.duckduckgo.com"]
-  objectsrc: ["'none'"]
-  stylesrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", "https://unpkg.com"]
-  scriptsrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", "http://localhost:1313/livereload", "https://unpkg.com", "https://api.bloggify.net"]
-  scriptsrcelem: ["'self'", "'unsafe-inline'", "'unsafe-eval'", "http://localhost:1313/livereload", "https://unpkg.com", "https://api.bloggify.net"]
-  connectsrc: ["'self'", "https://api.bloggify.net", "http://localhost:1313/livereload"]
+  scriptsrc:
+    - "'self'"
+    - "https://cloud.umami.is"
+    - "http://localhost:1313/livereload"
+  connectsrc:
+    - "'self'"
+    - "https://cloud.umami.is"
+    - "https://api-gateway.umami.dev"
+    - "https://webmention.io"
+    - "http://localhost:1313/livereload"

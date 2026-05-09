@@ -1,3 +1,4 @@
+title: DEV - Article Time
 baseURL: http://localhost:1313/
 
 # Hide test-fixture content and the test-build output dir from the dev server.

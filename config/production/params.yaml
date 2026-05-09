@@ -1,10 +1,13 @@
-csp:
-  default: ["'self'"]
-  formaction: ["'self'"]
-  framesrc: ["'self'"]
-  imgsrc: ["'self'", "https://github.com", "https://*.githubusercontent.com", "https://icons.duckduckgo.com"]
-  objectsrc: ["'none'"]
-  stylesrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", "https://unpkg.com"]
-  scriptsrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", "https://unpkg.com", "https://api.bloggify.net", "https://cloud.umami.is"] # Story 2.1: Umami Cloud tracker (production-only)
-  scriptsrcelem: ["'self'", "'unsafe-inline'", "'unsafe-eval'", "https://unpkg.com", "https://api.bloggify.net", "https://cloud.umami.is"] # Story 2.1: Umami Cloud tracker (production-only)
-  connectsrc: ["'self'", "https://api.bloggify.net", "https://cloud.umami.is", "https://api-gateway.umami.dev"] # Story 2.1: Umami Cloud tracker — script lives on cloud.umami.is, posts pageviews to api-gateway.umami.dev (split infra)
+# Production environment overrides — only values that DIFFER from config/_default/params.yaml.
+#
+# Hugo merges this on top of _default at build time (per
+# https://gohugo.io/configuration/introduction/). Lists at the same key are
+# REPLACED, not concatenated — so list ONLY env-specific params here.
+#
+# Currently empty: every value production needs is correctly defined in _default,
+# including the canonical CSP (with cloud.umami.is + api-gateway.umami.dev for
+# Umami's split-infra pageview reporting, plus webmention.io for Story 2.3).
+#
+# If a future story introduces a prod-only behaviour (e.g., a different baseURL,
+# a prod-only CSP entry), add ONLY that key/value below — never duplicate values
+# already in _default.
