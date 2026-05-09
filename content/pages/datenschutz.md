@@ -65,3 +65,29 @@ Dadurch kann beim Besuch dieser Website über das Plugin eine direkte Verbindung
 Dadurch kann Spotify den Besuch dieser Website Deinem Benutzerkonto zuordnen. Die Speicherung und Analyse der Daten erfolgt auf Grundlage von Art. 6 Abs. 1 lit. f DSGVO. Der Webseitenbetreiber hat ein berechtigtes Interesse an der ansprechenden akustischen Ausgestaltung seiner Webseite. Sofern eine entsprechende Einwilligung abgefragt wurde (z. B. eine Einwilligung zur Speicherung von Cookies), erfolgt die Verarbeitung ausschließlich auf Grundlage von Art. 6 Abs. 1 lit. a DSGVO; die Einwilligung ist jederzeit widerrufbar.
 
 Weitere Informationen hierzu finden Du in der [Datenschutzerklärung](https://www.spotify.com/de/legal/privacy-policy/) von Spotify.
+
+## Webmentions
+
+Diese Website empfängt **Webmentions** über den Dienst [webmention.io](https://webmention.io/) (betrieben von Aaron Parecki). Webmentions sind ein offener IndieWeb-Standard für federierte Erwähnungen und Antworten zwischen Websites — vergleichbar mit Trackbacks/Pingbacks, aber moderner und spamresistenter.
+
+### Welche Daten werden empfangen?
+
+Wenn eine andere Website auf einen meiner Artikel verweist und eine Webmention sendet, werden folgende Informationen öffentlich auf meiner Seite sichtbar:
+
+* URL der verweisenden Seite (Quell-URL)
+* Autorenname und Avatar (sofern von der sendenden Seite bereitgestellt)
+* Antworttext oder Auszug der Erwähnung (sofern von der sendenden Seite bereitgestellt)
+
+Es werden **keine** IP-Adressen, Cookies oder personenbezogenen Daten der Webmention-Sender bei mir gespeichert. Die Erfassung erfolgt einmal täglich durch einen automatischen Build-Prozess.
+
+### Verarbeitung durch webmention.io
+
+Der Dienst webmention.io empfängt die Webmentions stellvertretend und stellt sie über eine öffentliche API bereit. Verantwortlich für diesen Dienst ist Aaron Parecki. Datenschutzhinweise zu webmention.io: [https://webmention.io/](https://webmention.io/).
+
+### Rechtsgrundlage
+
+Die Verarbeitung erfolgt auf Grundlage von Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an federierter Kommunikation und Sichtbarkeit von Erwähnungen).
+
+### Widerspruch / Löschung
+
+Du kannst eine Webmention zurückziehen, indem Du den Link auf der ursprünglich verweisenden Seite entfernst — die Webmention wird beim nächsten Build automatisch entfernt. Alternativ kannst Du mich über das [Impressum](/impressum/) kontaktieren und um Löschung bitten.

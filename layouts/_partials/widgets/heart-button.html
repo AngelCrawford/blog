@@ -55,6 +55,14 @@
         </svg>
         <span class="heart-count" aria-live="polite">{{ $hearts }}</span>
     </button>
+    <noscript>
+        <span class="heart-readonly" aria-label="Herz-Anzahl: {{ $hearts }}">
+            <svg class="heart-icon ri-1x" aria-hidden="true">
+                <use href="{{ $sprite }}?t={{ $rv }}#heart-line"></use>
+            </svg>
+            <span class="heart-count">{{ $hearts }}</span>
+        </span>
+    </noscript>
 {{- else -}}
     <div class="heart-button-wrapper">
         <button type="button"
@@ -68,7 +76,7 @@
             <span class="heart-count" aria-live="polite">{{ $hearts }}</span>
         </button>
         <noscript>
-            <a class="heart-button heart-button-fallback" href="#share-this" aria-label="Diesen Artikel teilen">
+            <a class="heart-button heart-button-fallback" href="#" aria-label="Diesen Artikel liken">
                 <svg class="heart-icon ri-1x" aria-hidden="true">
                     <use href="{{ $sprite }}?t={{ $rv }}#heart-line"></use>
                 </svg>

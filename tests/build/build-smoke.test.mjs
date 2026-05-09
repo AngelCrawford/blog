@@ -1068,6 +1068,121 @@ test("Story 2.1 AC #6: development build does NOT emit Umami script (hugo.IsProd
 });
 
 // =============================================================================
+// Story 2.3: Webmention Endpoint Setup
+//
+// Asserts the `<link rel="webmention">` discovery tag is emitted on every
+// rendered page in BOTH production and development builds (no hugo.IsProduction
+// gate — the link is HTML metadata, not a runtime fetch). Asserts the URL
+// matches the webmention.io endpoint hardcoded in head.html, and that the tag
+// is emitted EXACTLY ONCE per page (not duplicated through partial inclusion).
+// =============================================================================
+
+test("Story 2.3 AC #1+#7: production homepage emits <link rel=\"webmention\"> with webmention.io endpoint", () => {
+  const result = spawnSync("hugo", hugoArgs, {
+    cwd: repoRoot,
+    encoding: "utf8",
+    shell: process.platform === "win32",
+  });
+  assert.equal(
+    result.status,
+    0,
+    `Production build failed (exit ${result.status}). stderr:\n${result.stderr}`
+  );
+
+  const homeHtml = readFileSync(resolve(testPublic, "index.html"), "utf8");
+  const matches = homeHtml.match(
+    /<link rel="webmention" href="https:\/\/webmention\.io\/article-time\.de\/webmention"\s*\/?>/g
+  );
+  assert.ok(
+    matches,
+    "Production homepage must render the <link rel=\"webmention\"> tag pointing at webmention.io/article-time.de/webmention"
+  );
+  assert.equal(
+    matches.length,
+    1,
+    `Webmention <link> must appear EXACTLY ONCE per page (regression guard against partial-inclusion duplication); got ${matches.length}`
+  );
+});
+
+test("Story 2.3 AC #1+#7: production article page also emits the webmention <link>", () => {
+  const result = spawnSync("hugo", hugoArgs, {
+    cwd: repoRoot,
+    encoding: "utf8",
+    shell: process.platform === "win32",
+  });
+  assert.equal(result.status, 0, `Production build failed.\n${result.stderr}`);
+
+  const articlesDir = resolve(testPublic, "articles");
+  const articleSlug = readdirSync(articlesDir)
+    .filter((entry) => !entry.startsWith("_test_"))
+    .find((entry) =>
+      existsSync(resolve(articlesDir, entry, "index.html"))
+    );
+  assert.ok(articleSlug, "Expected at least one non-fixture article to render");
+
+  const articleHtml = readFileSync(
+    resolve(articlesDir, articleSlug, "index.html"),
+    "utf8"
+  );
+  assert.match(
+    articleHtml,
+    /<link rel="webmention" href="https:\/\/webmention\.io\/article-time\.de\/webmention"\s*\/?>/,
+    "Article page must render the webmention <link> tag (site-wide via head.html partial)"
+  );
+});
+
+test("Story 2.3 AC #7: development build ALSO emits the webmention <link> (no hugo.IsProduction gate)", () => {
+  const testPublicDev = resolve(repoRoot, "public-test-dev");
+  const devArgs = [
+    "--logLevel",
+    "error",
+    "--environment",
+    "development",
+    "--destination",
+    testPublicDev,
+  ];
+  const result = spawnSync("hugo", devArgs, {
+    cwd: repoRoot,
+    encoding: "utf8",
+    shell: process.platform === "win32",
+  });
+  assert.equal(
+    result.status,
+    0,
+    `Development build failed (exit ${result.status}). stderr:\n${result.stderr}`
+  );
+
+  const homeHtml = readFileSync(resolve(testPublicDev, "index.html"), "utf8");
+  assert.match(
+    homeHtml,
+    /<link rel="webmention" href="https:\/\/webmention\.io\/article-time\.de\/webmention"\s*\/?>/,
+    "Development build must ALSO emit the webmention <link> (HTML metadata is harmless in dev; intentionally NOT gated)"
+  );
+});
+
+test("Story 2.3 AC #6: CSP connect-src still allow-lists https://webmention.io (regression guard)", () => {
+  const result = spawnSync("hugo", hugoArgs, {
+    cwd: repoRoot,
+    encoding: "utf8",
+    shell: process.platform === "win32",
+  });
+  assert.equal(result.status, 0, `Production build failed.\n${result.stderr}`);
+
+  const homeHtml = readFileSync(resolve(testPublic, "index.html"), "utf8");
+  const cspMatch = homeHtml.match(
+    /<meta http-equiv="Content-Security-Policy" content="([^"]+)"/
+  );
+  assert.ok(cspMatch, "CSP <meta> tag must be present in production output");
+  const connectSrc = cspMatch[1].match(/connect-src ([^;]+);/);
+  assert.ok(connectSrc, "CSP must contain a connect-src directive");
+  assert.match(
+    connectSrc[1],
+    /https:\/\/webmention\.io/,
+    "CSP connect-src must allow-list https://webmention.io (Phase 0 Task 4.0; required for Story 2.4 / 3.2 downstream consumers)"
+  );
+});
+
+// =============================================================================
 // Story 2.2: Heart Button Component
 //
 // Asserts the heart-button partial renders on article single pages and on log

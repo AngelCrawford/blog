@@ -1624,6 +1624,9 @@ Damit der Workflow bereits jetzt grün durchläuft (AC5: „runs successfully on
 
 **Effort:** 0.5 days
 
+**Pre-Spec Notes:**
+- **Replace/remove the temporary `rel="me"` link in `layouts/_partials/_base/head.html`.** Story 2.3 added `<link rel="me" href="https://github.com/AngelCrawford" />` to the head as a one-line shim required by webmention.io's IndieAuth signup flow (the only `rel="me"` markup site-wide). Story 9.12's `params.social`-driven render replaces this with a structured set (Mastodon, Threads, GitHub, …). When wiring 9.12, **delete** the hardcoded line in `head.html` (and its 6-line preceding comment block) so the only source of `rel="me"` links is the social-follow partial — avoids duplicate GitHub `rel="me"` entries and keeps the IndieAuth identity surface in one place.
+
 ---
 
 # Epic Summary Table

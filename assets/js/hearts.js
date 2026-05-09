@@ -9,7 +9,7 @@
 // localStorage key format: `hearted-${articleUrl}` (e.g.
 // `hearted-/articles/my-post/`). Per-browser only — clearable, not secure;
 // acceptable because hearts are an engagement signal, not a vote.
-(function() {
+;(function() {
     'use strict';
 
     function init() {
@@ -37,6 +37,8 @@
     }
 
     function onHeartClick(button, articleUrl, storageKey) {
+        if (button.disabled || button.classList.contains('hearted')) return;
+
         // Track event via Umami — fire-and-forget. Wrapped in try/catch so any
         // tracker error is non-fatal for the optimistic UI update.
         try {
@@ -57,9 +59,9 @@
         button.classList.add('hearted');
         button.setAttribute('aria-pressed', 'true');
 
-        // Heart-pop animation (Web Animations API; CSS keyframes are the
-        // alternative if button.animate is unavailable).
-        if (typeof button.animate === 'function') {
+        // Heart-pop animation — skipped when the user prefers reduced motion.
+        if (typeof button.animate === 'function' &&
+                !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
             button.animate(
                 [
                     { transform: 'scale(1)' },
@@ -68,6 +70,16 @@
                 ],
                 { duration: 300, easing: 'ease-out' }
             );
+        }
+
+        // Transient "Geherzt!" confirmation via the hint element (single-page
+        // context only — log cards have no .heart-button-hint sibling).
+        var wrapper = button.closest('.heart-button-wrapper');
+        var hintEl = wrapper ? wrapper.querySelector('.heart-button-hint') : null;
+        if (hintEl) {
+            var originalHint = hintEl.textContent;
+            hintEl.textContent = 'Geherzt!';
+            setTimeout(function() { hintEl.textContent = originalHint; }, 1500);
         }
 
         // Persist hearted state and stay disabled. Architecture pattern
