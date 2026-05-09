@@ -18,7 +18,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
-import { copyFileSync, mkdirSync, rmSync, existsSync, readFileSync, writeFileSync } from "node:fs";
+import { copyFileSync, mkdirSync, rmSync, existsSync, readFileSync, writeFileSync, readdirSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -1064,5 +1064,218 @@ test("Story 2.1 AC #6: development build does NOT emit Umami script (hugo.IsProd
     homeHtml,
     /cloud\.umami\.is\/script\.js/,
     "Development build must NOT emit cloud.umami.is/script.js (hugo.IsProduction gate)"
+  );
+});
+
+// =============================================================================
+// Story 2.2: Heart Button Component
+//
+// Asserts the heart-button partial renders on article single pages and on log
+// cards (logs have no detail pages — cascade.build.render: link in
+// content/logs/_index.md), with the right `data-article` attribute and a
+// non-failing data-file lookup (`| default 0`). Also asserts hearts.js is
+// concatenated into the production footerBundle.js fingerprinted output.
+// =============================================================================
+
+test("Story 2.2 AC #1+#2+#6: production article page renders heart-button with data-article, aria-label, and count", () => {
+  const result = spawnSync("hugo", hugoArgs, {
+    cwd: repoRoot,
+    encoding: "utf8",
+    shell: process.platform === "win32",
+  });
+  assert.equal(
+    result.status,
+    0,
+    `Production build failed (exit ${result.status}). stderr:\n${result.stderr}`
+  );
+
+  // Pick the first non-_test_ article that built into public-test/articles/.
+  const articlesDir = resolve(testPublic, "articles");
+  const articleSlug = readdirSync(articlesDir)
+    .filter((entry) => !entry.startsWith("_test_"))
+    .find((entry) =>
+      existsSync(resolve(articlesDir, entry, "index.html"))
+    );
+  assert.ok(articleSlug, "Expected at least one non-fixture article to render");
+
+  const articleHtml = readFileSync(
+    resolve(articlesDir, articleSlug, "index.html"),
+    "utf8"
+  );
+
+  // The native <button> (not the <noscript> fallback) must render.
+  const buttonTag = articleHtml.match(
+    /<button\b[^>]*class="heart-button"[^>]*>/
+  );
+  assert.ok(
+    buttonTag,
+    "Article page must render <button class=\"heart-button\"> (not just the <noscript> fallback)"
+  );
+  assert.match(
+    buttonTag[0],
+    /data-article="\/[^"]+\/"/,
+    "heart-button must carry data-article=\"<RelPermalink>\" (trailing slash, leading slash)"
+  );
+  assert.match(
+    buttonTag[0],
+    /aria-label="[^"]+"/,
+    "heart-button must carry an aria-label"
+  );
+  assert.match(
+    buttonTag[0],
+    /aria-pressed="false"/,
+    "heart-button initial state must be aria-pressed=\"false\""
+  );
+  assert.match(
+    buttonTag[0],
+    /type="button"/,
+    "heart-button must declare type=\"button\" (avoid implicit submit)"
+  );
+
+  // Count span must render with the data-file fallback (`| default 0`) — until
+  // Story 3.1 lands, every article shows count "0".
+  assert.match(
+    articleHtml,
+    /<span class="heart-count"[^>]*aria-live="polite"[^>]*>0<\/span>/,
+    "heart-count must render with 0 fallback (Story 3.1 not yet shipped) and aria-live=\"polite\""
+  );
+
+  // <noscript> fallback must also render (graceful degradation, AC #5).
+  assert.match(
+    articleHtml,
+    /<noscript>\s*<a class="heart-button heart-button-fallback"/,
+    "heart-button must include a <noscript> fallback <a> for JS-disabled clients"
+  );
+});
+
+test("Story 2.2 AC #1: production homepage renders interactive heart-button on log cards", () => {
+  const result = spawnSync("hugo", hugoArgs, {
+    cwd: repoRoot,
+    encoding: "utf8",
+    shell: process.platform === "win32",
+  });
+  assert.equal(result.status, 0, `Production build failed.\n${result.stderr}`);
+
+  const homeHtml = readFileSync(resolve(testPublic, "index.html"), "utf8");
+
+  // Logs have no detail pages, so the heart mounts on log cards as the
+  // interactive `.is-card-heart` variant (compact, sits inside .formats next
+  // to the lightbulb icon). Tolerant class-attribute regex — order of class
+  // tokens isn't load-bearing.
+  const logHearts = homeHtml.match(
+    /<button\b[^>]*class="[^"]*\bheart-button\b[^"]*\bis-card-heart\b[^"]*"[^>]*data-article="[^"]*\/logs\/[^"]+\/"/g
+  );
+  assert.ok(
+    logHearts && logHearts.length >= 1,
+    `Homepage must render at least one interactive heart-button on a log card — found ${logHearts ? logHearts.length : 0}`
+  );
+});
+
+test("Story 2.2 AC #1: production homepage renders readonly heart on article cards (action lives on single page)", () => {
+  const result = spawnSync("hugo", hugoArgs, {
+    cwd: repoRoot,
+    encoding: "utf8",
+    shell: process.platform === "win32",
+  });
+  assert.equal(result.status, 0, `Production build failed.\n${result.stderr}`);
+
+  const homeHtml = readFileSync(resolve(testPublic, "index.html"), "utf8");
+
+  // Article cards on the homepage show a readonly `.heart-readonly` <span>
+  // (social-proof indicator only — the interactive button lives on the
+  // article single page sidebar). Asserts at least one is rendered.
+  const readonly = homeHtml.match(
+    /<span\b[^>]*class="heart-readonly"[^>]*aria-label="[^"]+"/g
+  );
+  assert.ok(
+    readonly && readonly.length >= 1,
+    `Homepage must render at least one readonly heart on an article card — found ${readonly ? readonly.length : 0}`
+  );
+
+  // Readonly heart must NOT carry data-article (it's not interactive — no JS
+  // wiring needed). Verifies hearts.js's `.heart-button:not(.heart-button-fallback)`
+  // selector won't accidentally pick it up.
+  for (const tag of readonly) {
+    assert.doesNotMatch(
+      tag,
+      /data-article=/,
+      "readonly heart must NOT carry data-article (no JS interaction)"
+    );
+  }
+});
+
+test("Story 2.2: hint caption renders ONLY on article single pages, not on cards", () => {
+  const result = spawnSync("hugo", hugoArgs, {
+    cwd: repoRoot,
+    encoding: "utf8",
+    shell: process.platform === "win32",
+  });
+  assert.equal(result.status, 0, `Production build failed.\n${result.stderr}`);
+
+  // Pick a non-fixture article single page.
+  const articlesDir = resolve(testPublic, "articles");
+  const articleSlug = readdirSync(articlesDir)
+    .filter((entry) => !entry.startsWith("_test_"))
+    .find((entry) =>
+      existsSync(resolve(articlesDir, entry, "index.html"))
+    );
+  assert.ok(articleSlug, "Expected at least one non-fixture article to render");
+
+  const articleHtml = readFileSync(
+    resolve(articlesDir, articleSlug, "index.html"),
+    "utf8"
+  );
+  const homeHtml = readFileSync(resolve(testPublic, "index.html"), "utf8");
+
+  assert.match(
+    articleHtml,
+    /<small class="heart-button-hint">/,
+    "Article single page MUST render the 24h-cadence hint caption"
+  );
+  assert.doesNotMatch(
+    homeHtml,
+    /heart-button-hint/,
+    "Homepage MUST NOT render the hint caption (cards are too dense for it)"
+  );
+});
+
+test("Story 2.2 AC #3+#9: hearts.js is bundled into footerBundle.js (localStorage prefix smoke)", () => {
+  const result = spawnSync("hugo", hugoArgs, {
+    cwd: repoRoot,
+    encoding: "utf8",
+    shell: process.platform === "win32",
+  });
+  assert.equal(result.status, 0, `Production build failed.\n${result.stderr}`);
+
+  // The script tag in baseof.html points at the fingerprinted bundle. Pick
+  // the active footerBundle by reading the homepage's <script src=...> and
+  // resolving the path on disk — avoids matching stale fingerprints from
+  // earlier test builds that hugo doesn't clean up.
+  const homeHtml = readFileSync(resolve(testPublic, "index.html"), "utf8");
+  const scriptMatch = homeHtml.match(
+    /<script[^>]*src="([^"]*footerBundle\.min\.[^"]+\.js)"/
+  );
+  assert.ok(scriptMatch, "Homepage must reference the fingerprinted footerBundle.min.<hash>.js");
+
+  // The src is baseURL-relative (e.g. /blog/js/footerBundle.min.<hash>.js);
+  // strip any leading path prefix and resolve against testPublic.
+  const srcPath = scriptMatch[1];
+  const bundleFilename = srcPath.split("/").pop();
+  const bundlePath = resolve(testPublic, "js", bundleFilename);
+  assert.ok(
+    existsSync(bundlePath),
+    `Active footerBundle file must exist at ${bundlePath}`
+  );
+
+  const bundle = readFileSync(bundlePath, "utf8");
+  assert.match(
+    bundle,
+    /hearted-/,
+    "footerBundle must contain the 'hearted-' localStorage key prefix from hearts.js"
+  );
+  assert.match(
+    bundle,
+    /umami\.track/,
+    "footerBundle must contain the umami.track call from hearts.js"
   );
 });

@@ -33,7 +33,8 @@
         {{- $navbar := resources.Get "js/navbar.js" -}}
         {{- $header := resources.Get "js/header.js" -}}
         {{- $witheredBanner := resources.Get "js/withered-banner.js" -}}
-        {{- $script := slice $sunCalc $main $search $firework $navbar $header $witheredBanner | resources.Concat "js/footerBundle.js" | resources.Minify | resources.Fingerprint -}}
+        {{- $hearts := resources.Get "js/hearts.js" -}}
+        {{- $script := slice $sunCalc $main $search $firework $navbar $header $witheredBanner $hearts | resources.Concat "js/footerBundle.js" | resources.Minify | resources.Fingerprint -}}
         <script defer src="{{ $script.RelPermalink }}"></script>
 
     </body>

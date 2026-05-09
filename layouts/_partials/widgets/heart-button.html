@@ -1,0 +1,82 @@
+{{- /* Heart button — Story 2.2 (FR-008, FR-009).
+
+       Two render contexts:
+       - "single" (default): pill-style interactive button + <noscript>
+                             fallback + 24h-cadence hint caption. Used on
+                             article single pages (sidebar info widget).
+       - "card":   compact icon+count, sits inline inside
+                   .card-footer-item.formats next to the format icon
+                   (growth-badge for articles, lightbulb for logs).
+                   Articles are READONLY in card context — the heart action
+                   lives on the single page; the card is a social-proof
+                   indicator only. Logs stay interactive (logs have no
+                   detail page per FR-027 → cascade.build.render: link in
+                   content/logs/_index.md).
+
+       Caller forms (both supported):
+       - Page directly: {{ partial "widgets/heart-button" . }}
+                        → context defaults to "single".
+       - Dict:          {{ partial "widgets/heart-button" (dict "page" . "context" "card") }}
+
+       Counts come from data/umami_hearts.json (Story 3.1 daily fetch).
+       Until 3.1 ships, `| default 0` ensures graceful fallback to 0.
+       Click handler in assets/js/hearts.js fires the Umami `heart` event
+       (window.umami loaded by Story 2.1, production-only). */ -}}
+{{- $page := . -}}
+{{- $context := "single" -}}
+{{- if reflect.IsMap . -}}
+    {{- $page = .page -}}
+    {{- $context = .context | default "single" -}}
+{{- end -}}
+{{- $isCard := eq $context "card" -}}
+{{- $isArticle := eq $page.Type "articles" -}}
+{{- $readonly := and $isCard $isArticle -}}
+{{- $showHint := and (not $isCard) $isArticle -}}
+{{- $hearts := index $page.Site.Data.umami_hearts $page.RelPermalink | default 0 -}}
+{{- $sprite := "fonts/remixicon/remixicon.symbol.svg" | relURL -}}
+{{- $rv := $page.Site.Params.remixicon_version -}}
+
+{{- if $readonly -}}
+    <span class="heart-readonly" data-tooltip="Dieser Artikel hat {{ $hearts }} Herzen erhalten" aria-label="Herz-Anzahl: {{ $hearts }}">
+        <svg class="heart-icon ri-1x" aria-hidden="true">
+            <use href="{{ $sprite }}?t={{ $rv }}#heart-line"></use>
+        </svg>
+        <span class="heart-count">{{ $hearts }}</span>
+    </span>
+{{- else if $isCard -}}
+    <button type="button"
+            class="heart-button is-card-heart"
+            data-tooltip="Diesen Log mit einem Herz markieren"
+            data-article="{{ $page.RelPermalink }}"
+            aria-label="Diesen Log mit einem Herz markieren"
+            aria-pressed="false">
+        <svg class="heart-icon ri-1x" aria-hidden="true">
+            <use href="{{ $sprite }}?t={{ $rv }}#heart-line"></use>
+        </svg>
+        <span class="heart-count" aria-live="polite">{{ $hearts }}</span>
+    </button>
+{{- else -}}
+    <div class="heart-button-wrapper">
+        <button type="button"
+                class="heart-button"
+                data-article="{{ $page.RelPermalink }}"
+                aria-label="Diesen Artikel mit einem Herz markieren"
+                aria-pressed="false">
+            <svg class="heart-icon ri-1x" aria-hidden="true">
+                <use href="{{ $sprite }}?t={{ $rv }}#heart-line"></use>
+            </svg>
+            <span class="heart-count" aria-live="polite">{{ $hearts }}</span>
+        </button>
+        <noscript>
+            <a class="heart-button heart-button-fallback" href="#share-this" aria-label="Diesen Artikel teilen">
+                <svg class="heart-icon ri-1x" aria-hidden="true">
+                    <use href="{{ $sprite }}?t={{ $rv }}#heart-line"></use>
+                </svg>
+                <span class="heart-count">{{ $hearts }}</span>
+            </a>
+        </noscript>
+        {{- if $showHint -}}
+            <small class="heart-button-hint">Counts aktualisieren sich täglich</small>
+        {{- end -}}
+    </div>
+{{- end -}}
