@@ -1025,7 +1025,16 @@ test("Story 2.1 AC #7: production CSP <meta> allow-lists cloud.umami.is in scrip
   assert.match(
     connectSrc[1],
     /https:\/\/cloud\.umami\.is/,
-    "CSP connect-src must allow-list https://cloud.umami.is (Umami pageview reporting endpoint)"
+    "CSP connect-src must allow-list https://cloud.umami.is"
+  );
+  // Umami split its infra: script CDN on cloud.umami.is, pageview POST endpoint
+  // on api-gateway.umami.dev. Without BOTH in connect-src, the script loads but
+  // every pageview is silently CSP-blocked (zero data in Umami dashboard).
+  // First caught live on 2026-05-09 via browser-console CSP violation.
+  assert.match(
+    connectSrc[1],
+    /https:\/\/api-gateway\.umami\.dev/,
+    "CSP connect-src must allow-list https://api-gateway.umami.dev (Umami's pageview-reporting endpoint; without it, all events are silently dropped)"
   );
 });
 

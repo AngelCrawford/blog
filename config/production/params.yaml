@@ -7,4 +7,4 @@ csp:
   stylesrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", "https://unpkg.com"]
   scriptsrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", "https://unpkg.com", "https://api.bloggify.net", "https://cloud.umami.is"] # Story 2.1: Umami Cloud tracker (production-only)
   scriptsrcelem: ["'self'", "'unsafe-inline'", "'unsafe-eval'", "https://unpkg.com", "https://api.bloggify.net", "https://cloud.umami.is"] # Story 2.1: Umami Cloud tracker (production-only)
-  connectsrc: ["'self'", "https://api.bloggify.net", "https://cloud.umami.is"] # Story 2.1: Umami Cloud tracker reports pageviews to /api/send
+  connectsrc: ["'self'", "https://api.bloggify.net", "https://cloud.umami.is", "https://api-gateway.umami.dev"] # Story 2.1: Umami Cloud tracker — script lives on cloud.umami.is, posts pageviews to api-gateway.umami.dev (split infra)

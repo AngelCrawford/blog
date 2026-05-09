@@ -26,7 +26,7 @@ csp:
   # script-src-elem dropped — `script-src` is the canonical fallback for both element and attr.
   # Removing the redundant directive silences Firefox's informational warning about
   # `'unsafe-eval'`/`'wasm-unsafe-eval'` being ignored in element-context.
-  connectsrc: ["'self'", "https://cloud.umami.is", "https://webmention.io"]
+  connectsrc: ["'self'", "https://cloud.umami.is", "https://api-gateway.umami.dev", "https://webmention.io"] # api-gateway.umami.dev is where the cloud.umami.is script POSTs pageview events (split infra; verified via CSP-violation 2026-05-09)
 
 # Umami Cloud anonymous analytics — consumed by layouts/_partials/_base/head.html (Story 2.1).
 # website_id is the public Umami Cloud UUID (rendered into every page's data-website-id attribute);
