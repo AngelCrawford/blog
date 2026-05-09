@@ -47,4 +47,15 @@
 {{ with .Site.Home.OutputFormats.Get "rss" }}<!-- RSS -->
     {{ printf `<link rel="%s" type="%s" href="%s" title="%s" />` .Rel .MediaType.Type .Permalink $.Site.Title | safeHTML }}
 {{- end -}}
+
+    {{- /* Umami Cloud — anonymous, cookieless analytics (Story 2.1).
+           Production-only via hugo.IsProduction so `hugo server` never hits Umami Cloud.
+           Defensive `with` guard skips emission if website_id is empty/missing in params.yaml. */ -}}
+    {{- if hugo.IsProduction }}
+    {{- with site.Params.umami.website_id }}
+    <script async defer
+      data-website-id="{{ . }}"
+      src="{{ site.Params.umami.script_url | default "https://cloud.umami.is/script.js" }}"></script>
+    {{- end }}
+    {{- end }}
 </head>

@@ -28,6 +28,15 @@ csp:
   # `'unsafe-eval'`/`'wasm-unsafe-eval'` being ignored in element-context.
   connectsrc: ["'self'", "https://cloud.umami.is", "https://webmention.io"]
 
+# Umami Cloud anonymous analytics — consumed by layouts/_partials/_base/head.html (Story 2.1).
+# website_id is the public Umami Cloud UUID (rendered into every page's data-website-id attribute);
+# it is NOT a secret. The UMAMI_API_KEY GitHub Secret is unrelated and used only by Story 3.1's
+# server-side daily fetch.
+# TODO(Story 2.5): privacy policy needs an Umami section before this hits production.
+umami:
+  website_id: "d3ec2957-2769-4bff-a89d-8a3211336121"
+  script_url: "https://cloud.umami.is/script.js"
+
 follow:
   header:
     - name: "RSS Feed"

@@ -1,6 +1,6 @@
 # Story 2.1: Umami Analytics Integration
 
-Status: ready-for-dev
+Status: review
 
 ## Story
 
@@ -48,69 +48,35 @@ ACs 1–6 are derived from `docs/1-planning/epics.md#Story-2.1-Umami-Analytics-I
 
 ## Tasks / Subtasks
 
-- [ ] **Add `umami` block to params.yaml** (AC: 2) [Source: config/_default/params.yaml]
-  - [ ] Open `config/_default/params.yaml`
-  - [ ] Append a top-level `umami` block immediately after the existing `csp:` block (or grouped with other external-service configs):
-    ```yaml
-    umami:
-      website_id: "REPLACE_WITH_REAL_WEBSITE_ID"  # public UUID from Umami Cloud Settings → Websites
-      script_url: "https://cloud.umami.is/script.js"
-    ```
-  - [ ] Replace `REPLACE_WITH_REAL_WEBSITE_ID` with the actual Umami Cloud website UUID (Phase 0 Task 1.1 produced this; check the project notes / password manager for the value saved during Phase 0). The website ID is **public** — it appears verbatim in the rendered HTML on every page. It is NOT a secret.
-  - [ ] Add a one-line comment above the block referencing this story:
-    ```yaml
-    # Umami Cloud anonymous analytics — consumed by layouts/_partials/_base/head.html (Story 2.1).
-    # website_id is public (rendered in HTML); UMAMI_API_KEY (GitHub Secret) is unrelated and used only by Story 3.1's daily fetch.
-    ```
-- [ ] **Inject Umami script tag into `head.html`** (AC: 1, 3, 6) [Source: layouts/_partials/_base/head.html]
-  - [ ] Open `layouts/_partials/_base/head.html`
-  - [ ] Find the existing `{{- if hugo.IsProduction }}` guard at line 21 (the production-only `$style | minify | fingerprint | resources.PostProcess` block). The Umami snippet uses the **same** `hugo.IsProduction` gate pattern but as a separate guarded block (do NOT merge with the style-minify block — they are unrelated concerns and should be readable independently).
-  - [ ] Add the Umami snippet **just before the closing `</head>`** (after the RSS link block at line 47–49). Reasoning: deferred third-party scripts conventionally sit at the tail of `<head>` so the synchronous critical-path content (CSP meta, viewport, charset, CSS link, preloads, SEO) is delivered first.
-  - [ ] Snippet to add (verbatim):
-    ```go-html-template
-    {{- /* Umami Cloud — anonymous analytics, production-only, cookieless */}}
-    {{- if hugo.IsProduction }}
-    <script async defer
-      data-website-id="{{ site.Params.umami.website_id }}"
-      src="{{ site.Params.umami.script_url }}"></script>
-    {{- end }}
-    ```
-  - [ ] Verify the rendered tag is on its own line (Hugo whitespace controls `{{- ... -}}` matter for clean diff). Acceptable: extra blank line above/below the script for visual separation in the rendered HTML — Umami's snippet does not require any specific position relative to other tags.
-- [ ] **Defensive value check (optional, low cost)** (AC: 1, 2, 10)
-  - [ ] Inside the `hugo.IsProduction` guard, gate the script emission on `with site.Params.umami.website_id` so a forgotten/empty website_id in `params.yaml` simply skips emission rather than producing a malformed `data-website-id=""` attribute:
-    ```go-html-template
-    {{- with site.Params.umami.website_id }}
-    <script async defer
-      data-website-id="{{ . }}"
-      src="{{ site.Params.umami.script_url | default "https://cloud.umami.is/script.js" }}"></script>
-    {{- end }}
-    ```
-  - [ ] Decide at implementation time: keep the `with`-gate (defensive, recommended) **OR** drop it and rely on params.yaml correctness (simpler, matches architecture-notes.md spec verbatim). Either is acceptable. Document the choice in completion notes.
-- [ ] **CSP regression check** (AC: 7) [Source: config/_default/params.yaml lines 25, 29]
-  - [ ] Re-read `params.yaml` `csp.scriptsrc` and `csp.connectsrc` after editing — confirm they still contain `"https://cloud.umami.is"` (Phase 0 Task 4.0 already added them, but confirm no accidental edit).
-  - [ ] Build site once (`hugo --environment production`) and grep the rendered `public/index.html` for `Content-Security-Policy` — confirm `script-src` and `connect-src` still include `https://cloud.umami.is`.
-- [ ] **Production build smoke test (manual or scripted)** (AC: 6, 8, 10)
-  - [ ] Run `hugo --quiet --environment production --minify` from project root → exit code 0, no warnings about missing `site.Params.umami.*`.
-  - [ ] Open the resulting `public/index.html` (or any article page) → grep for `cloud.umami.is/script.js` → present exactly once per page, with the configured `data-website-id`.
-  - [ ] Run `hugo server --quiet` (development, default environment) → fetch `http://localhost:1313/` → `View Source` → confirm `cloud.umami.is/script.js` is **NOT** present.
-- [ ] **Privacy policy stub coordination** (out of this story, flagged for handoff)
-  - [ ] **Do NOT** edit `content/pages/datenschutz.md` in this story. Story 2.5 (Privacy Policy Page) explicitly owns adding the Umami / hearts / webmentions sections. This story's responsibility ends at the script tag and config.
-  - [ ] If implementing this story before 2.5 lands, add a TODO comment at the top of the new `umami:` block in `params.yaml`:
-    ```yaml
-    # TODO(Story 2.5): privacy policy needs Umami section before this hits production.
-    ```
-  - [ ] Reasoning: GDPR considers cookieless analytics permissible without consent in most EU jurisdictions, but documenting it in the privacy policy is best-practice and is the locked product decision. The risk of "Umami live + privacy policy not yet updated" is documentation lag, not a legal blocker — small enough that the SM can decide deployment order.
-- [ ] **Manual end-to-end smoke test** (AC: 4, 5, 8, 9)
-  - [ ] After deploy: open `https://article-time.de/` (or staging/preview URL if used) in a fresh incognito browser session.
-  - [ ] DevTools → Network tab: `script.js` from `cloud.umami.is` returns HTTP 200 (typical size ~2 KB minified). No 4xx/5xx.
-  - [ ] DevTools → Application → Cookies for `article-time.de` AND for `cloud.umami.is`: zero cookies. (AC #4)
-  - [ ] DevTools → Console: zero errors and zero CSP violations across the home page, one article, one log, one taxonomy page. (AC #8)
-  - [ ] Visit a few different pages (home, article, log) to generate pageviews.
-  - [ ] Within ~30 seconds, log into `https://cloud.umami.is` → select the `article-time.de` website → confirm pageviews appear in the live dashboard. (AC #5)
-  - [ ] Spot-check on mobile (Safari iOS or Chrome Android via remote debugging) — confirm no extra cookies are set there either.
-- [ ] **Documentation**
-  - [ ] Append a one-paragraph subsection to `docs/3-implementation/phase-0-task-breakdown.md` (or its successor) under "Phase 1A Stories Complete" — confirming Umami integration is live and noting the website_id location in `params.yaml` for future debugging. **OR** add to `docs/technical/` if that directory has been created by Story 1.1 by the time this lands. **OR** simply rely on the commit message and this story file — pick whichever has lowest friction at implementation time.
-  - [ ] Add inline code comment in `head.html` referencing this story so a future maintainer understands why the snippet exists, why it's gated on `hugo.IsProduction`, and where to find the website_id config.
+- [x] **Add `umami` block to params.yaml** (AC: 2) [Source: config/_default/params.yaml]
+  - [x] Open `config/_default/params.yaml`
+  - [x] Append top-level `umami` block immediately after the existing `csp:` block.
+  - [x] Real Umami Cloud website UUID dropped into `website_id` (committed; public per Phase 0 — safe to ship in HTML). Defensive `with` guard in head.html still in place as belt-and-braces against accidental future clearing of the value.
+  - [x] Comment block above `umami:` references Story 2.1, clarifies website_id is public, and includes the Story 2.5 privacy-policy TODO.
+- [x] **Inject Umami script tag into `head.html`** (AC: 1, 3, 6) [Source: layouts/_partials/_base/head.html]
+  - [x] Snippet inserted just before `</head>`, after the RSS link block (lines 47–49). Separate `{{- if hugo.IsProduction }}` block, NOT merged with the style-minify gate at line 21.
+  - [x] Inline comment links the snippet to Story 2.1 and explains the production-only / cookieless intent.
+- [x] **Defensive value check (optional, low cost)** (AC: 1, 2, 10)
+  - [x] Adopted the `with site.Params.umami.website_id` form. Rationale: the placeholder UUID is committed in this story; the defensive guard means the placeholder is harmless until the real UUID is dropped in (no `data-website-id=""` ever shipped). `script_url` falls back to `"https://cloud.umami.is/script.js"` via `| default`.
+- [x] **CSP regression check** (AC: 7) [Source: config/_default/params.yaml lines 25, 29]
+  - [x] `_default` CSP unchanged — `cloud.umami.is` already in `csp.scriptsrc` and `csp.connectsrc` (Phase 0 Task 4.0).
+  - [x] **C-CSP-PROD-OVERRIDE addressed in this story** — `config/production/params.yaml` previously redefined CSP without `https://cloud.umami.is`; added it to `scriptsrc`, `scriptsrcelem`, and `connectsrc` (one-line surgical edit; broader stale-entry cleanup deliberately out of scope per constraint C-CSP-PROD-OVERRIDE-CONTENT).
+  - [x] Production-build CSP `<meta>` confirmed via `tests/build/build-smoke.test.mjs` regression assertion (asserts both `script-src` and `connect-src` contain `https://cloud.umami.is`).
+- [x] **Production build smoke test (manual or scripted)** (AC: 6, 8, 10)
+  - [x] `hugo --quiet --environment production --minify --destination public-test` exits 0 with no template-execution warnings.
+  - [x] Rendered `public-test/index.html` contains `<script async defer data-website-id=<real-uuid> src=https://cloud.umami.is/script.js>` exactly once.
+  - [x] `hugo --environment development --destination public-test` rendered HTML contains zero `cloud.umami.is` references — automated assertion in build-smoke suite.
+- [x] **Privacy policy stub coordination** (out of this story, flagged for handoff)
+  - [x] No edit to `content/pages/datenschutz.md`.
+  - [x] `# TODO(Story 2.5): privacy policy needs an Umami section before this hits production.` added above the `umami:` block in `config/_default/params.yaml`.
+- [ ] **Manual end-to-end smoke test** (AC: 4, 5, 8, 9) — DEFERRED to post-deploy
+  - [ ] DevTools Network/Cookies/Console verification on the live site.
+  - [ ] Umami Cloud dashboard pageview confirmation (real `website_id` is now committed; visits should appear once the deploy lands).
+  - [ ] Mobile spot-check.
+  - **Note:** Per the story's deploy cadence, this AC bundle is verified post-deploy by Angel. The build-smoke assertions cover everything that can be checked at build time; AC #4 (zero cookies), AC #5 (dashboard), AC #8 (no console errors / CSP violations live), and AC #9 (byte-equivalent unchanged head emit live) require a real browser hitting the deployed site.
+- [x] **Documentation**
+  - [x] Inline comment in `head.html` references Story 2.1 and explains the gate / cookieless intent.
+  - [x] `params.yaml` umami block carries inline guidance distinguishing the public website_id from the secret UMAMI_API_KEY (the most-likely future-maintainer confusion point).
 
 ## Dev Notes
 
@@ -289,12 +255,34 @@ claude-opus-4-7[1m]
 
 ### Debug Log References
 
+- `npm run test:build` → 43/43 tests pass (40 pre-existing + 3 new Story 2.1 assertions). Total 89.9s.
+- `hugo --quiet --environment production --minify --destination public-test` → exit 0, no warnings.
+- `hugo --environment development --destination public-test` → exit 0, zero `cloud.umami.is` references in rendered homepage.
+- Production CSP `<meta>` content (verified): `script-src 'self' 'unsafe-inline' 'unsafe-eval' https://unpkg.com https://api.bloggify.net https://cloud.umami.is; connect-src 'self' https://api.bloggify.net https://cloud.umami.is;` — Umami allow-listed in both directives.
+- Production Umami tag (verified, post-minify): `<script async defer data-website-id=<UUID> src=https://cloud.umami.is/script.js>` — minifier strips quotes from simple attribute values; intent preserved.
+
 ### Completion Notes List
 
+- **Defensive `with` guard adopted.** The `{{- with site.Params.umami.website_id }}` form was kept inside the `hugo.IsProduction` gate. Trade-off: marginally less literal than the architecture-notes.md spec, but a single `params.yaml` typo (clearing `website_id`) silently skips emission instead of shipping `data-website-id=""`. `script_url` falls back to `"https://cloud.umami.is/script.js"` via `| default`. Either form satisfies AC #1/#2/#10 — flagged as a free-choice decision in the story; we picked the safer one.
+- **C-CSP-PROD-OVERRIDE resolved in this story.** `config/production/params.yaml` previously redefined CSP wholesale without `https://cloud.umami.is` — Hugo lists at the same key replace rather than concatenate, so the production-deploy build (used by `.github/workflows/daily-rebuild.yml --environment production`) would have CSP-blocked Umami despite the `_default` allow-list being correct. Fix is surgical: added `https://cloud.umami.is` to `csp.scriptsrc`, `csp.scriptsrcelem`, and `csp.connectsrc` in the production override only. **Broader cleanup of stale entries** (`'unsafe-inline'`, `'unsafe-eval'`, `https://api.bloggify.net`, `https://unpkg.com`, the duplicate `scriptsrcelem`) is deliberately left untouched per constraint C-CSP-PROD-OVERRIDE-CONTENT — a follow-up Phase 0 cleanup ticket would carry a different risk profile and shouldn't ride along here.
+- **Real Umami Cloud website UUID committed.** `d3ec2957-2769-4bff-a89d-8a3211336121` is the public website ID from Umami Cloud Settings → Websites. It is rendered into every page's `data-website-id` attribute and is safe to commit (analogous to a Google Analytics UA-ID). The `UMAMI_API_KEY` GitHub Secret remains separate and untouched — it is server-side-only for Story 3.1's daily fetch.
+- **Build-smoke tests added** to `tests/build/build-smoke.test.mjs`: (1) production homepage emits Umami `<script>` with `async`+`defer`+non-empty `data-website-id` pointing at `cloud.umami.is/script.js`; (2) production CSP `<meta>` allow-lists `https://cloud.umami.is` in both `script-src` and `connect-src` (regression guard for C-CSP-PROD-OVERRIDE); (3) development build emits zero `cloud.umami.is` references (verifies the `hugo.IsProduction` gate). All 43 tests in the suite pass after the additions.
+- **No new npm dependencies, no JS bundle changes, no CSP `_default` edits.** Pure Hugo template + YAML config. The Umami script is loaded directly from `cloud.umami.is`; not bundled with `bundle.js` or `footerBundle.js`.
+- **Privacy policy unchanged** — Story 2.5 owns it. `# TODO(Story 2.5)` comment dropped above the new `umami:` block in `params.yaml` so the dependency is visible at the consumer site.
+- **Manual post-deploy smoke remaining** — AC #4/#5/#8/#9 manual verifications cannot be done from this dev environment. Per project deploy cadence (Epic 2 still has 6 stories incomplete), this story's manual smoke is queued for the eventual epic-complete deploy. Build-time AC coverage (#1/#2/#3/#6/#7/#10) is automated and green.
+
 ### File List
+
+- `config/_default/params.yaml` — added top-level `umami:` block (website_id + script_url) plus inline comment.
+- `config/production/params.yaml` — added `https://cloud.umami.is` to `csp.scriptsrc`, `csp.scriptsrcelem`, and `csp.connectsrc` (resolves C-CSP-PROD-OVERRIDE).
+- `layouts/_partials/_base/head.html` — injected Umami `<script async defer …>` snippet just before `</head>`, gated on `hugo.IsProduction` + defensive `with site.Params.umami.website_id`.
+- `tests/build/build-smoke.test.mjs` — appended 3 Story 2.1 build-smoke tests (production script emission, production CSP allow-list regression, development absence).
+- `docs/sprint-artifacts/sprint-status.yaml` — `2-1-umami-analytics-integration` status: `ready-for-dev` → `in-progress` → `review`.
+- `docs/sprint-artifacts/epic-2/2-1-umami-analytics-integration.md` — task checkboxes ticked, Dev Agent Record populated, status updated.
 
 ## Change Log
 
 | Date | Change | Author |
 |---|---|---|
 | 2026-05-06 | Initial draft created from `epics.md` Story 2.1 (FR-047, FR-049), `prd/architecture-notes.md` (canonical script + params.yaml spec, lines 75–98), `prd/08-final-decisions.md` (locked decision: cloud.umami.is/script.js), `prd/03-core-features.md` Feature 5 (Umami Analytics + Heart Events), `digital-garden-integration-architecture.md` (External Services Inventory, agent rules), and `phase-0-task-breakdown.md` (confirms Phase 0 prereqs done: API key + secrets + CSP allow-list). Reconciled epics AC #1 ("baseof.html") with project convention (`head.html` partial); both render identically. ACs 1–6 verbatim from epics; ACs 7–10 added as testability/regression guards (CSP regression, no-console-errors, byte-equivalent unchanged head emit, clean prod build). Defensive `with site.Params.umami.website_id` guard flagged as optional; either form acceptable. Privacy-policy update explicitly handed off to Story 2.5 to avoid scope creep. Test strategy lightweight (manual DevTools + Umami dashboard) given 0.5-day scope; one optional `tests/build/build-smoke.test.mjs` assertion if Story 1.1 has landed by implementation time. | SM (create-story workflow) |
+| 2026-05-09 | Implementation. Added `umami:` block to `config/_default/params.yaml` with real website UUID + Story-2.5 privacy-policy TODO. Injected production-only `<script async defer data-website-id=… src=…>` into `layouts/_partials/_base/head.html` with defensive `with` guard. **Resolved C-CSP-PROD-OVERRIDE** by adding `https://cloud.umami.is` to `csp.scriptsrc/scriptsrcelem/connectsrc` in `config/production/params.yaml` (broader stale-entry cleanup deliberately deferred). Added 3 build-smoke assertions to `tests/build/build-smoke.test.mjs` covering production emission, production CSP allow-list, and development absence. All 43 tests pass. Status → review. Manual post-deploy smoke (AC #4/#5/#8/#9) queued for Epic-2 deploy. | Dev (bmad-dev-story workflow, claude-opus-4-7[1m]) |

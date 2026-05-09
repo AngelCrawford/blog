@@ -953,3 +953,106 @@ test("Story 1.3 AC #11: weight-bucket ordering on homepage is preserved (regress
     "Homepage must still render article cards after the withered filter"
   );
 });
+
+// =============================================================================
+// Story 2.1: Umami Analytics Integration
+//
+// Asserts the Umami `<script async defer>` snippet is emitted in production
+// builds (gated on hugo.IsProduction) and absent from development builds, and
+// that the CSP meta tag in the production output continues to allow-list
+// cloud.umami.is in both `script-src` and `connect-src` (regression guard
+// against C-CSP-PROD-OVERRIDE: config/production/params.yaml replaces the
+// _default CSP wholesale, so the allow-list must be present in BOTH files).
+// =============================================================================
+
+test("Story 2.1 AC #1+#3+#6: production homepage emits Umami script with async+defer+data-website-id", () => {
+  const result = spawnSync("hugo", hugoArgs, {
+    cwd: repoRoot,
+    encoding: "utf8",
+    shell: process.platform === "win32",
+  });
+  assert.equal(
+    result.status,
+    0,
+    `Production build failed (exit ${result.status}). stderr:\n${result.stderr}`
+  );
+
+  const homeHtml = readFileSync(resolve(testPublic, "index.html"), "utf8");
+  // The whole tag, on one logical block. Order of async/defer is not
+  // guaranteed by Hugo's whitespace-control output, so match each attribute
+  // independently within the matched script tag.
+  const scriptTag = homeHtml.match(
+    /<script[^>]*data-website-id="[^"]+"[^>]*src="https:\/\/cloud\.umami\.is\/script\.js"[^>]*>/
+  );
+  assert.ok(
+    scriptTag,
+    "Production homepage must render the Umami <script> tag pointing at cloud.umami.is/script.js"
+  );
+  assert.match(scriptTag[0], /\basync\b/, "Umami script tag must carry the `async` attribute");
+  assert.match(scriptTag[0], /\bdefer\b/, "Umami script tag must carry the `defer` attribute");
+  assert.doesNotMatch(
+    scriptTag[0],
+    /data-website-id=""/,
+    "data-website-id must be non-empty (defensive `with` guard would otherwise skip emission)"
+  );
+});
+
+test("Story 2.1 AC #7: production CSP <meta> allow-lists cloud.umami.is in script-src and connect-src", () => {
+  const result = spawnSync("hugo", hugoArgs, {
+    cwd: repoRoot,
+    encoding: "utf8",
+    shell: process.platform === "win32",
+  });
+  assert.equal(result.status, 0, `Production build failed.\n${result.stderr}`);
+
+  const homeHtml = readFileSync(resolve(testPublic, "index.html"), "utf8");
+  const cspMatch = homeHtml.match(
+    /<meta http-equiv="Content-Security-Policy" content="([^"]+)"/
+  );
+  assert.ok(cspMatch, "CSP <meta> tag must be present in production output");
+  const csp = cspMatch[1];
+
+  const scriptSrc = csp.match(/script-src ([^;]+);/);
+  assert.ok(scriptSrc, "CSP must contain a script-src directive");
+  assert.match(
+    scriptSrc[1],
+    /https:\/\/cloud\.umami\.is/,
+    "CSP script-src must allow-list https://cloud.umami.is (regression guard for C-CSP-PROD-OVERRIDE)"
+  );
+
+  const connectSrc = csp.match(/connect-src ([^;]+);/);
+  assert.ok(connectSrc, "CSP must contain a connect-src directive");
+  assert.match(
+    connectSrc[1],
+    /https:\/\/cloud\.umami\.is/,
+    "CSP connect-src must allow-list https://cloud.umami.is (Umami pageview reporting endpoint)"
+  );
+});
+
+test("Story 2.1 AC #6: development build does NOT emit Umami script (hugo.IsProduction gate)", () => {
+  const devArgs = [
+    "--logLevel",
+    "error",
+    "--environment",
+    "development",
+    "--destination",
+    testPublic,
+  ];
+  const result = spawnSync("hugo", devArgs, {
+    cwd: repoRoot,
+    encoding: "utf8",
+    shell: process.platform === "win32",
+  });
+  assert.equal(
+    result.status,
+    0,
+    `Development build failed (exit ${result.status}). stderr:\n${result.stderr}`
+  );
+
+  const homeHtml = readFileSync(resolve(testPublic, "index.html"), "utf8");
+  assert.doesNotMatch(
+    homeHtml,
+    /cloud\.umami\.is\/script\.js/,
+    "Development build must NOT emit cloud.umami.is/script.js (hugo.IsProduction gate)"
+  );
+});

@@ -5,6 +5,6 @@ csp:
   imgsrc: ["'self'", "https://github.com", "https://*.githubusercontent.com", "https://icons.duckduckgo.com"]
   objectsrc: ["'none'"]
   stylesrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", "https://unpkg.com"]
-  scriptsrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", "https://unpkg.com", "https://api.bloggify.net"]
-  scriptsrcelem: ["'self'", "'unsafe-inline'", "'unsafe-eval'", "https://unpkg.com", "https://api.bloggify.net"]
-  connectsrc: ["'self'", "https://api.bloggify.net"]
+  scriptsrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", "https://unpkg.com", "https://api.bloggify.net", "https://cloud.umami.is"] # Story 2.1: Umami Cloud tracker (production-only)
+  scriptsrcelem: ["'self'", "'unsafe-inline'", "'unsafe-eval'", "https://unpkg.com", "https://api.bloggify.net", "https://cloud.umami.is"] # Story 2.1: Umami Cloud tracker (production-only)
+  connectsrc: ["'self'", "https://api.bloggify.net", "https://cloud.umami.is"] # Story 2.1: Umami Cloud tracker reports pageviews to /api/send

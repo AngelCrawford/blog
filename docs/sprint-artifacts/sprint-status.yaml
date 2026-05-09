@@ -1,5 +1,5 @@
 # generated: 2026-04-30
-# last_updated: 2026-05-09 (epic-1 retrospective done)
+# last_updated: 2026-05-09 (story 2-1 ready for review)
 # project: Article Time
 # project_key: article-time-digital-garden
 # tracking_system: file-system
@@ -48,7 +48,7 @@ development_status:
 
   # Epic 2: Engagement Infrastructure [Phase 1A, Week 1-2]
   epic-2: backlog
-  2-1-umami-analytics-integration: ready-for-dev
+  2-1-umami-analytics-integration: review
   2-2-heart-button-component: ready-for-dev
   2-3-webmention-endpoint-setup: ready-for-dev
   2-4-webmention-display-component: ready-for-dev
