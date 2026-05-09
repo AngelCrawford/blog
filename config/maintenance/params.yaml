@@ -1,0 +1,8 @@
+# Maintenance environment overrides. Hugo merges this on top of
+# config/_default/params.yaml at build time, so only env-specific keys go here.
+#
+# Toggle is via `.maintenance` sentinel file at the repo root + the
+# daily-rebuild workflow's `--environment maintenance` switch.
+# Maintenance copy (title, message, expected_back) inherits from _default —
+# edit there to change the displayed text.
+maintenance_mode: true

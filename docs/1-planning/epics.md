@@ -451,6 +451,9 @@ Damit der Workflow bereits jetzt grün durchläuft (AC5: „runs successfully on
 
 **Effort:** 1.5 days
 
+**Pre-Spec Notes (from prior-story reviews):**
+- **Key-format validation (from Story 2.2 review, 2026-05-09).** `layouts/_partials/widgets/heart-button.html` looks up counts via `index .Site.Data.umami_hearts .RelPermalink` (e.g. `/articles/my-post/`). This script MUST write keys in exactly that format — trailing slash, no `baseURL` prefix, no leading scheme/host. Add an explicit validation step in the script (or a smoke test) that asserts every emitted key matches `^/[^?#]*/$` before writing `data/umami_hearts.json`, so a key-format drift breaks the fetch loudly rather than silently zeroing out heart counts on the live site.
+
 ---
 
 ## Story 3.2: Webmention Processing Script
@@ -769,6 +772,9 @@ Damit der Workflow bereits jetzt grün durchläuft (AC5: „runs successfully on
 **Dependencies:** Story 5.4 (JavaScript filter logic)
 
 **Effort:** 1 day
+
+**Pre-Spec Notes (from prior-story reviews):**
+- **Replace static `withered-hidden-notice` with the interactive AC #4 button (from Story 1.3 review, 2026-05-08).** `layouts/_partials/withered-hidden-notice.html` currently renders a passive count ("X verwelkte Einträge sind ausgeblendet") at the bottom of `home.html` and `list.html`. The notice has no contextual anchor and shows the same site-wide total on every paginated page (page 1, page 2, …). AC #4's "Show Withered (3)" button is the proper home for this count — wire it to the same `withered-count.html` data source, then delete the standalone notice partial and remove the `{{ partial "withered-hidden-notice.html" $hiddenCount }}` calls from `home.html` and `list.html`.
 
 ---
 
@@ -1125,6 +1131,9 @@ Damit der Workflow bereits jetzt grün durchläuft (AC5: „runs successfully on
 
 **Effort:** 0.5 days
 
+**Pre-Spec Notes (from prior-story reviews):**
+- **Format-icon SCSS variables sweep (from Story 1.3 review, 2026-05-08).** Extract format-icon colors into named SCSS variables (`$format-article`, `$format-log`, …) in `assets/scss/vars/_colors.scss` parallel to the existing `$growth-*` variables. Currently inline as hex/HSL on `<svg style="fill: …">` in `card.html` and `_base/footer.html`. Time as a sweep when this story lands so all format colors share the same convention from the start (Link, Video, Gallery, Portfolio added in Epic 8).
+
 ---
 
 ## Story 8.2: Link Format - Card & Template
@@ -1357,6 +1366,10 @@ Damit der Workflow bereits jetzt grün durchläuft (AC5: „runs successfully on
 
 **Effort:** 1 day
 
+**Pre-Spec Notes (from prior-story reviews):**
+- **BlogPosting multi-author duplicate-key bug (from Story 1.5 review, 2026-05-09).** `layouts/_partials/_base/seo.html` BlogPosting emits multiple top-level `"author":` keys when an article has multiple authors (duplicate-key JSON; parsers pick last/first inconsistently, Schema.org consumers see only one). Fix: build a `[]` of author objects in the `range`, `jsonify` once.
+- **`safeJS`/`jsonify` double-escape sweep (from Story 1.5 review, 2026-05-09).** `| safeJS` after `| jsonify` only applied to the BlogPosting JSON-LD block in `seo.html`. Same double-escape risk applies to any other `<script>` block using `jsonify` in the codebase — sweep when adding more JSON-LD types in this story.
+
 ---
 
 ## Story 9.3: No-JavaScript Fallback Banner
@@ -1407,6 +1420,9 @@ Damit der Workflow bereits jetzt grün durchläuft (AC5: „runs successfully on
 **Dependencies:** None
 
 **Effort:** 2 days
+
+**Pre-Spec Notes (from prior-story reviews):**
+- **Automated WCAG-AA contrast verification for growth-stage colors (from Story 1.2 review, 2026-05-08).** Color values come from the UX spec (verified manually at design time). Include in this audit using axe-core + contrast tooling so the structural Story 1.2 suite gets an automated complement.
 
 ---
 

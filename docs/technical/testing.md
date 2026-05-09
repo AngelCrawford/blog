@@ -81,6 +81,8 @@ Parallel workers are safe because fixtures are created **once** by `build-and-se
 
 To regenerate the fixtures or update assertions, run `npm run test:e2e -- --grep "Growth-stage"`.
 
+**Visual regression snapshots (`toHaveScreenshot()`) deliberately skipped.** Cross-machine font rendering (Windows ClearType vs CI's headless chromium on Ubuntu) introduces sub-pixel drift that produces flaky baselines. The structural assertions above (`data-stage`, `<svg use[xlink:href]>`, `title` regex, viewport-conditional visibility) cover the same ACs without the flake surface. Only revisit if a regression actually slips past the structural suite — at that point the cost of per-OS baselines is justified by a real failure mode, not a hypothetical one.
+
 ## Withered Content Default Hiding (Story 1.3)
 
 Story 1.3 introduces the first behavioural consumer of `growth_stage` — listings filter out withered pages by default while direct URLs keep working. Coverage lives entirely in `tests/build/build-smoke.test.mjs`: each assertion copies `tests/build/fixtures/withered-article.md` into a unique `content/articles/_test_withered_<slug>/` bundle, runs `hugo --logLevel error --environment production`, and asserts against the rendered `public/`:

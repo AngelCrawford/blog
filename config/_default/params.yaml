@@ -1,6 +1,21 @@
 remixicon_version: 2605081942
 reading_speed: 179
 
+# Maintenance mode — `maintenance_mode: false` here is the production fallback.
+# To activate maintenance: create a `.maintenance` sentinel file at the repo
+# root and push. The daily-rebuild workflow detects the file and builds with
+# `--environment maintenance`, which loads config/maintenance/{config,params}.yaml
+# (sets `disableKinds` for RSS/sitemap/etc, overrides `maintenance_mode: true`).
+# layouts/baseof.html reads the flag and renders _base/maintenance partial.
+# Static-site limitation: response stays HTTP 200 OK (GitHub Pages cannot 503).
+# Edit copy below — it inherits into the maintenance environment.
+# See docs/technical/runbook.md for full operating instructions.
+maintenance_mode: false
+maintenance:
+  title: "Wartung läuft"
+  message: "Bin gleich wieder da."
+  expected_back: "" # optional, e.g. "Voraussichtlich zurück am 9. Mai um 18 Uhr"
+
 # Author identity — consumed by SEO (Schema.org Person, OG article:author),
 # footer copyright, and any partial that needs author metadata.
 default_author: "angel" # taxonomy slug (legacy, used by .GetTerms "authors")

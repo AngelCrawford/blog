@@ -1,0 +1,42 @@
+# Maintenance environment — applied when a `.maintenance` sentinel file exists
+# at the repo root and the daily-rebuild workflow passes `--environment maintenance`.
+#
+# title and baseURL mirror config/production/config.yaml because per-env config
+# files do NOT inherit from production (only from _default). The workflow
+# overrides baseURL at the CLI for the actual deploy; the value here is only
+# used by local `hugo --environment maintenance` smoke checks.
+title: Article Time
+baseURL: https://angelcrawford.github.io/blog/
+
+build:
+  buildStats:
+    enable: true
+module:
+  hugoVersion:
+    extended: true
+    min: "0.115.0"
+  mounts:
+    - source: "assets"
+      target: "assets"
+    - source: "hugo_stats.json"
+      target: "assets/watching/hugo_stats.json"
+#
+# `disableKinds` prevents the listed output types from rendering at all, which
+# is what makes this approach cleaner than a pure template-level toggle: RSS
+# and sitemap.xml are not regenerated during a maintenance build, so consumers
+# don't see stale content masquerading as fresh.
+#
+# Page bundles, section pages, and the homepage stay enabled — they all route
+# through layouts/baseof.html, which checks `Site.Params.maintenance_mode`
+# (overridden to true in config/maintenance/params.yaml) and renders
+# layouts/_partials/_base/maintenance.html instead of the real layout.
+#
+# Result: every URL on the site (homepage, /articles/<slug>/, /logs/<slug>/,
+# section landings) serves the maintenance HTML — but RSS, sitemap.xml,
+# robots.txt, and taxonomy listings simply don't exist in the build output.
+disableKinds:
+  - RSS
+  - sitemap
+  - robotsTXT
+  - taxonomy
+  - term
