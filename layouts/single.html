@@ -135,20 +135,20 @@
                                     </span>
                                 {{- end -}}
 
-                                {{ partial "widgets/heart-button" . }}
-
                                 {{- /* Webmention count link — Story 2.4 (FR-012). Hidden when no mentions. */ -}}
                                 {{- $mentions := index .Site.Data.webmentions_by_article .RelPermalink | default (slice) -}}
                                 {{- if gt (len $mentions) 0 }}
-                                    <p class="article-meta webmention-count-line">
+                                    <span class="article-meta webmention-count-line">
                                         <a href="#webmentions" title="Zu den Antworten und Erwähnungen springen">
                                             <svg class="ri-1x" aria-hidden="true">
-                                                <use href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ .Site.Params.remixicon_version }}#chat-3-line"></use>
+                                                <use href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ .Site.Params.remixicon_version }}#question-answer-line"></use>
                                             </svg>
                                             {{ len $mentions }} {{ if eq (len $mentions) 1 }}Antwort{{ else }}Antworten{{ end }}
                                         </a>
-                                    </p>
+                                    </span>
                                 {{- end }}
+
+                                {{ partial "widgets/heart-button" . }}
                             </div>
                         </div>
                     </div>

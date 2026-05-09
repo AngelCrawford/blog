@@ -1,6 +1,6 @@
 # Story 2.3: Webmention Endpoint Setup
 
-Status: review
+Status: done
 
 ## Story
 
@@ -154,6 +154,18 @@ ACs 1–5 are derived verbatim from `docs/1-planning/epics.md#Story-2.3-Webmenti
   - [x] Inline code comment added in `head.html` (3-line block above the new `<link>` tag, references Story 2.3 + FR-011, explains the no-gate decision and hardcoded-URL choice).
   - [x] Completion notes (Dev Agent Record below) document chosen GitHub Secret name (`WEBMENTION_IO_TOKEN`), why C-CSP-PROD-OVERRIDE-WEBMENTION needed no edit, and the deferred-task list for Angel.
   - [x] **No `phase-0-task-breakdown.md` sub-paragraph added** — the story file + Change Log + sprint-status.yaml provide sufficient historical record (lean tracking docs convention; git log + GitHub are the historical record).
+
+### Review Findings
+
+- [x] [Review][Patch] Datenschutz opt-out claim inaccurate for bridged Fediverse webmentions — resolved: added caveat sentence to Widerspruch section noting link-removal retraction is not always possible for bridged platform mentions; fallback via Impressum contact applies in all cases. [`content/pages/datenschutz.md`]
+- [x] [Review][Patch] "Einmal täglich" build-frequency claim in a legal document — resolved: replaced with "regelmäßig" to decouple the legal notice from the build cadence. [`content/pages/datenschutz.md`]
+- [x] [Review][Patch] Dev-build test reads potentially stale `public-test-dev/` output — resolved: added `rmSync(testPublicDev, { recursive: true, force: true })` before `spawnSync`. [`tests/build/build-smoke.test.mjs`]
+- [x] [Review][Patch] CSP regex silently fails when `connect-src` is the last directive (no trailing semicolon) — resolved: changed to `/connect-src ([^;]+);?/`. [`tests/build/build-smoke.test.mjs`]
+- [x] [Review][Patch] `articlesDir` existence not guarded before `readdirSync` — resolved: added `existsSync` guard with `assert.fail` before `readdirSync`. [`tests/build/build-smoke.test.mjs`]
+- [x] [Review][Patch] Hugo comment whitespace trim inconsistency — resolved: changed `*/}}` to `*/ -}}` on both Story 2.3 comment blocks. [`layouts/_partials/_base/head.html`]
+- [x] [Review][Patch] Privacy policy contradicts itself on personal data — resolved: narrowed disclaimer to "keine IP-Adressen oder Cookies der Webmention-Sender." [`content/pages/datenschutz.md`]
+- [x] [Review][Defer] No automated test for `rel="me"` presence [`tests/build/build-smoke.test.mjs`] — deferred; link is explicitly temporary (Pre-Spec Note in epics.md Story 9.12); adding a test would add churn when 9.12 removes the shim.
+- [x] [Review][Defer] Redundant full `hugo` production builds per test function [`tests/build/build-smoke.test.mjs`] — deferred; pre-existing pattern throughout build-smoke.test.mjs, not introduced by this story.
 
 ## Dev Notes
 

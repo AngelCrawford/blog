@@ -94,17 +94,13 @@
 }
 
 // Count line lives in the sidebar info widget below the heart button.
-.webmention-count-line {
+.widget.info span.webmention-count-line {
     display: block;
-    font-size: 0.85rem;
-    line-height: 1.2;
-    margin: 0.5em 0 0;
 
     a {
         display: inline-flex;
         align-items: center;
-        gap: 0.4em;
-        color: rgba(helpers.$gold-light, 0.8);
+        color: helpers.$gold;
 
         &:hover,
         &:focus {
@@ -112,6 +108,7 @@
         }
 
         svg {
+            @include helpers.translate(0, 0);
             fill: currentColor;
             width: 1em;
             height: 1em;
