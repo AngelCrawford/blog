@@ -69,8 +69,8 @@ test.describe("Growth-stage badge (Story 1.2)", () => {
             await expect(badge.locator("span")).toHaveText(capitalize(stage));
 
             const useEl = badge.locator("svg use");
-            const xlink = await useEl.getAttribute("xlink:href");
-            expect(xlink, `svg use[xlink:href] should reference ${ICONS[stage]}`).toMatch(
+            const href = await useEl.getAttribute("href");
+            expect(href, `svg use[href] should reference ${ICONS[stage]}`).toMatch(
                 new RegExp(`#${ICONS[stage]}$`)
             );
         });

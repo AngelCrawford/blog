@@ -10,6 +10,7 @@
 # Epic Status:
 #   - backlog: Epic exists in epic file but not contexted
 #   - contexted: Next epic tech context created by *epic-tech-context (required)
+#   - done: All stories done AND retrospective completed
 #
 # Story Status:
 #   - backlog: Story only exists in epic file
@@ -37,7 +38,7 @@ story_location: docs/sprint-artifacts
 
 development_status:
   # Epic 1: Growth Stage System [Phase 1A, Week 3]
-  epic-1: backlog
+  epic-1: done
   1-1-growth-stage-frontmatter-field: done
   1-2-growth-stage-badge-component: done
   1-3-withered-content-default-hiding: done
