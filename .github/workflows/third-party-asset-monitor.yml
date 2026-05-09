@@ -1,0 +1,101 @@
+name: Third-Party Asset Monitor
+
+# Story 2.6 AC #10 — weekly health check of every third-party https URL the
+# rendered homepage references. Origin: Umami silently changed their script
+# domain in early 2026 and the breakage went unnoticed for 2 months because
+# build-smoke tests check our emitted markup, not live URL reachability. This
+# workflow closes that gap generically: any new third-party (webmention.io,
+# brid.gy, future Mastodon API for POSSE, …) inherits monitoring with no
+# per-asset code.
+#
+# Separate workflow (NOT a step inside daily-rebuild.yml) so an asset-drift
+# alert never blocks the deploy. Different cadence (weekly vs daily), different
+# blast radius (informational vs blocking).
+
+on:
+  schedule:
+    - cron: "0 6 * * 1" # Mondays 06:00 UTC, off-peak
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write # create on-failure issue (reuses AC #6 pattern)
+
+jobs:
+  check-assets:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout (need config/production/config.yaml)
+        uses: actions/checkout@v6
+
+      # Source of truth for the live URL is the Hugo production config — same
+      # one-line edit that retargets the deploy also retargets this monitor.
+      - name: Read deploy URL from production config
+        id: config
+        run: |
+          BASE_URL=$(yq '.baseURL' config/production/config.yaml)
+          BASE_URL="${BASE_URL%/}"
+          HOST=$(echo "$BASE_URL" | sed -E 's|^https?://([^/]+).*|\1|')
+          echo "base_url=$BASE_URL"   >> "$GITHUB_OUTPUT"
+          echo "self_host=$HOST"      >> "$GITHUB_OUTPUT"
+          echo "Monitoring: $BASE_URL  (self-host: $HOST)"
+
+      - name: Fetch live homepage
+        run: curl -sSLf "${{ steps.config.outputs.base_url }}/" -o /tmp/home.html
+
+      # Generic extraction: every src=/href= attribute pointing to https whose
+      # host is NOT the deploy host. Filtering happens by host comparison, so
+      # new third-parties are picked up automatically the day they ship.
+      - name: Extract third-party asset URLs
+        run: |
+          grep -oE '(src|href)="https://[^"]+"' /tmp/home.html \
+            | sed -E 's/.*"(https:[^"]+)"/\1/' \
+            | grep -v "^https://${{ steps.config.outputs.self_host }}" \
+            | sort -u > /tmp/external-urls.txt
+          echo "Found $(wc -l < /tmp/external-urls.txt) external URLs:"
+          cat /tmp/external-urls.txt
+
+      # Empty list → exit 0 (correct outcome on a fully-self-hosted snapshot).
+      # Non-empty → HEAD-check each, follow redirects, assert final status 200.
+      - name: HEAD-check each URL
+        run: |
+          if [ ! -s /tmp/external-urls.txt ]; then
+            echo "::notice::No external URLs found — skipping HEAD checks"
+            exit 0
+          fi
+          FAILED=""
+          while IFS= read -r url; do
+            code=$(curl -sIL --max-time 10 -o /dev/null -w "%{http_code}" "$url" || echo "000")
+            if [ "$code" != "200" ]; then
+              FAILED="${FAILED}- ${url} → HTTP ${code}"$'\n'
+            fi
+          done < /tmp/external-urls.txt
+          if [ -n "$FAILED" ]; then
+            echo "::error::Third-party asset drift detected"
+            printf "%s" "$FAILED"
+            {
+              echo "failed_list<<EOF"
+              printf "%s" "$FAILED"
+              echo "EOF"
+            } >> "$GITHUB_OUTPUT"
+            exit 1
+          fi
+        id: check
+
+      - name: Notify on drift
+        if: failure() && steps.check.outputs.failed_list != ''
+        uses: actions/github-script@v9
+        env:
+          FAILED_LIST: ${{ steps.check.outputs.failed_list }}
+        with:
+          script: |
+            const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+            const date = new Date().toISOString().slice(0, 10);
+            const failed = process.env.FAILED_LIST || '(see run logs)';
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `Third-party asset drift detected on ${date}`,
+              body: `One or more third-party asset URLs referenced from the live site (\`baseURL\` in \`config/production/config.yaml\`) returned a non-200 status. The site likely still renders, but a feature backed by the broken asset (analytics, webmentions, syndication, …) is silently degraded.\n\n**Failing URLs:**\n\n${failed}\n\n**Run:** ${runUrl}\n\nResolve by updating the consuming story's config (e.g., \`config/_default/params.yaml umami.script_url\`) or by replacing the third-party.`,
+              labels: ['third-party-drift', 'automated']
+            });
