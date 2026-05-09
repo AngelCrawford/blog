@@ -7,6 +7,8 @@ A personal Hugo blog being transformed into a **Digital Garden** — content tha
 - 🌐 Live: [https://angelcrawford.github.io/blog/](https://angelcrawford.github.io/blog/) (custom domain `article-time.de` planned)
 - 🌱 Languages: German / English
 
+📖 **Operations runbook:** [`docs/technical/runbook.md`](docs/technical/runbook.md) — setup, tests, maintenance mode toggle, deploy. Read that for *how to do X*; this README is the project overview.
+
 ## Local Development
 
 ```powershell
@@ -100,6 +102,21 @@ gh run watch                                   # optional: follow to completion
 ### Deploy URL
 
 The deployed URL is whatever `baseURL` in [`config/production/config.yaml`](config/production/config.yaml) points at. Update that single file when switching between the GitHub Pages default (`https://angelcrawford.github.io/blog/`) and the planned custom domain (`https://article-time.de/`); the third-party-asset-monitor workflow (Story 2.6) reads the same value, so it retargets automatically.
+
+### Maintenance mode
+
+Toggle a "Wartung läuft" page on every URL (RSS/sitemap/robots.txt are not regenerated; static-site so response stays HTTP 200 OK):
+
+```powershell
+# Toggle ON
+"" | Out-File .maintenance -Encoding ASCII -NoNewline
+git add -f .maintenance && git commit -m "Maintenance ON" && git push --follow-tags
+
+# Toggle OFF
+git rm .maintenance && git commit -m "Maintenance OFF" && git push --follow-tags
+```
+
+Full mechanism, customisable copy, and verification steps in [`docs/technical/runbook.md`](docs/technical/runbook.md#maintenance-mode).
 
 ## Architecture & Workflow
 

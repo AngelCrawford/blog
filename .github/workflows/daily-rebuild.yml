@@ -165,12 +165,27 @@ jobs:
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
           echo "Build version: $VERSION"
 
+      # Detect maintenance mode via sentinel file at the repo root.
+      # Toggle ON:  `touch .maintenance && git add -f .maintenance && git commit && git push`
+      # Toggle OFF: `git rm .maintenance && git commit && git push`
+      # When active, hugo loads config/maintenance/{config,params}.yaml on top of
+      # _default — disabling RSS/sitemap/taxonomy and flipping maintenance_mode to true.
+      - name: Detect maintenance mode
+        id: maint
+        run: |
+          if [ -f .maintenance ]; then
+            echo "env=maintenance" >> "$GITHUB_OUTPUT"
+            echo "::notice title=Maintenance mode active::Sentinel file '.maintenance' present — building with --environment maintenance"
+          else
+            echo "env=production" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Build Hugo site
         env:
           HUGO_PARAMS_VERSION: ${{ steps.version.outputs.version }}
         run: |
           hugo \
-            --environment production \
+            --environment ${{ steps.maint.outputs.env }} \
             --minify \
             --baseURL "${{ steps.pages.outputs.base_url }}"
 
