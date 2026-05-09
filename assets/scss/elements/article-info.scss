@@ -1,9 +1,8 @@
 // elements/article-info.scss — sidebar "Artikel" info widget on single pages.
 //
-// Hosts the tile container that surfaces metadata (Rubrik, Veröffentlicht,
-// Bearbeitet, Lesezeit, Status / growth-stage, Herzen, Reaktionen / webmentions)
-// next to article body content. Tile styling itself co-locates with this file
-// so the whole "Artikel" widget design is editable in one place.
+// Tile-based layout: each metadata atom (Rubrik, Veröffentlicht, Bearbeitet,
+// Lesezeit, Status, Herzen, Reaktionen, Serie) renders as its own tile in a
+// 2-column grid. Tags row sits below the grid as a full-width strip.
 //
 // Sibling element files: engagement.scss (heart button variants),
 // webmentions.scss (webmention list and grouping). This file is the container;
@@ -11,34 +10,203 @@
 @use "../vars/helpers";
 @use "sass:color";
 
-.widget.info {
-    .widget-content {
-        display: flex;
-        flex-direction: column;
-        gap: .4em;
-        margin-left: .4em;
+$tile-bg: color.adjust(helpers.$dark, $lightness: -1%);
+$tile-border: rgba(helpers.$gold-dark, 0.4);
+$label-color: color.scale(helpers.$dark, $lightness: 40%);
+$value-color: helpers.$gold;
 
-        > * {
-            width: fit-content;
+.widget.info {
+    .info-tiles {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.6rem;
+        margin-top: 0.5rem;
+
+        @media screen and (max-width: 360px) {
+            grid-template-columns: 1fr;
         }
     }
 
-    .ribbon {
-        position: relative;
-        max-width: fit-content;
-        margin: 0 0 .75em -.4em;
-    }
-
-    .time {
+    .info-tile {
         display: flex;
-        gap: 2em;
+        flex-direction: column;
+        gap: 0.35rem;
+        padding: 0.65rem 0.8rem;
+        background: $tile-bg;
+        border: 1px solid $tile-border;
+        border-radius: 0.45rem;
+
+        &--wide {
+            grid-column: 1 / -1;
+        }
     }
 
-    svg {
-        width: 20px;
-        height: 20px;
-        fill: color.scale(helpers.$dark, $lightness: 40%);
-        margin-right: 10px;
-        @include helpers.translate(0, 4px);
+    .info-tile__label {
+        display: flex;
+        align-items: center;
+        gap: 0.35em;
+        font-size: 0.7rem;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: $label-color;
+        line-height: 1;
+    }
+
+    .info-tile__icon {
+        width: 0.95em;
+        height: 0.95em;
+        fill: currentColor;
+        flex-shrink: 0;
+    }
+
+    .info-tile__value {
+        font-size: 0.875rem;
+        line-height: 1.2;
+        color: $value-color;
+
+        // Links inside value (category ribbon, series, reactions count)
+        // inherit their own coloring from element styles; keep the tile from
+        // flattening them. Only override for plain anchor descendants.
+        > a:not(.ribbon) {
+            color: helpers.$gold-light;
+            text-decoration: none;
+
+            &:hover,
+            &:focus {
+                color: helpers.$gold;
+            }
+        }
+
+        time {
+            font-variant-numeric: tabular-nums;
+        }
+    }
+
+    // Rubrik-tile: strip tile chrome. Single-page max-width: 100% of the
+    // tile column (overrides the 10em card default in ribbon.scss).
+    .info-tile[data-tile="rubrik"] {
+        border: none;
+        background: transparent;
+        padding: 0;
+        justify-content: center;
+
+        .info-tile__label {
+            display: none;
+        }
+
+        .info-tile__value {
+            a.ribbon {
+                position: relative;
+                display: inline-block;
+                max-width: 100%;
+            }
+        }
+    }
+
+    // Hearts-line: full-width tile below tags — same box as info-tile/Serie.
+    // Icon IS the button (no pill); gold-light at rest, red on hover.
+    .hearts-line {
+        margin-top: 1.1rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.35rem;
+        padding: 0.65rem 0.8rem;
+        background: $tile-bg;
+        border: 1px solid $tile-border;
+        border-radius: 0.45rem;
+
+        .heart-button-wrapper {
+            gap: 0.2em;
+        }
+
+        .heart-button {
+            padding: 0;
+            border: none;
+            background: transparent;
+            box-shadow: none;
+            color: helpers.$gold-light;
+
+            &:hover:not(:disabled) {
+                background: transparent;
+                border: none;
+                box-shadow: none;
+                color: hsl(0, 70%, 65%);
+                transform: none;
+            }
+
+            .heart-icon {
+                width: 1.6em;
+                height: 1.6em;
+                fill: currentColor;
+                transform-origin: left center;
+                transition: transform 0.15s ease-out;
+            }
+
+            &:hover:not(:disabled) .heart-icon {
+                transform: scale(1.25);
+            }
+        }
+
+        .heart-count {
+            font-variant-numeric: tabular-nums;
+            font-weight: 600;
+            color: $value-color;
+        }
+
+        .heart-button-hint {
+            margin-left: 0.4em;
+            font-size: 0.72rem;
+            color: $label-color;
+            font-style: italic;
+        }
+    }
+
+    // Status-tile: growth-badge carries its own stage icon + colored fill.
+    .info-tile[data-tile="status"] .growth-stage {
+        font-size: 0.875rem;
+    }
+
+    // Reactions-tile: anchor inherits the tile a:not(.ribbon) rule.
+    .info-tile[data-tile="reactions"] .info-tile__value a {
+        font-weight: 600;
+    }
+
+    // Reactions empty state — TODO: design pass pending.
+    .info-tile[data-tile="reactions"] .reactions-empty {
+        font-weight: 400;
+    }
+
+    // Tags row sits below the tile grid — full width, separated by an air
+    // gap so it doesn't read as another tile.
+    .tags-line {
+        margin-top: 1.1rem;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.4em;
+
+        > svg {
+            width: 1em;
+            height: 1em;
+            fill: $label-color;
+            flex-shrink: 0;
+        }
+
+        .hashtags {
+            display: inline-block;
+            padding: 0.18em 0.55em;
+            font-size: 0.78rem;
+            color: helpers.$gold;
+            background: color.adjust(helpers.$dark, $lightness: 2%);
+            border-radius: 999px;
+            text-decoration: none;
+            transition: color 0.15s ease-out;
+
+            &:hover,
+            &:focus {
+                color: helpers.$gold-light;
+            }
+        }
     }
 }

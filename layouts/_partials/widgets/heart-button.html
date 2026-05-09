@@ -73,18 +73,18 @@
             <svg class="heart-icon ri-1x" aria-hidden="true">
                 <use href="{{ $sprite }}?t={{ $rv }}#heart-line"></use>
             </svg>
-            <span class="heart-count" aria-live="polite">{{ $hearts }}</span>
         </button>
+        <span class="heart-count" aria-live="polite">{{ $hearts }}</span>
+        {{- if $showHint -}}
+            <small class="heart-button-hint">Zähler aktualisiert täglich</small>
+        {{- end -}}
         <noscript>
             <a class="heart-button heart-button-fallback" href="#" aria-label="Diesen Artikel liken">
                 <svg class="heart-icon ri-1x" aria-hidden="true">
                     <use href="{{ $sprite }}?t={{ $rv }}#heart-line"></use>
                 </svg>
-                <span class="heart-count">{{ $hearts }}</span>
             </a>
+            <span class="heart-count">{{ $hearts }}</span>
         </noscript>
-        {{- if $showHint -}}
-            <small class="heart-button-hint">Counts aktualisieren sich täglich</small>
-        {{- end -}}
     </div>
 {{- end -}}

@@ -93,25 +93,5 @@
     }
 }
 
-// Count line lives in the sidebar info widget below the heart button.
-.widget.info span.webmention-count-line {
-    display: block;
-
-    a {
-        display: inline-flex;
-        align-items: center;
-        color: helpers.$gold;
-
-        &:hover,
-        &:focus {
-            color: helpers.$gold-light;
-        }
-
-        svg {
-            @include helpers.translate(0, 0);
-            fill: currentColor;
-            width: 1em;
-            height: 1em;
-        }
-    }
-}
+// Webmention count surface in the sidebar moved to the tile system
+// (data-tile="reactions") on 2026-05-09 — see elements/article-info.scss.

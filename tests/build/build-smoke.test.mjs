@@ -1453,22 +1453,24 @@ test("Story 2.4 AC #2+#3+#7: fixture-targeted article renders all four type-grou
   assert.match(articleHtml, /Erwähnungen \(1\)/, "Mentions group heading must show count 1");
   assert.match(articleHtml, /Likes \(1\)/, "Likes group heading must show count 1");
 
-  // AC #7: count line appears, links to #webmentions, with German plural
-  // ("5 Antworten" — total mentions in fixture).
+  // AC #7: reactions tile appears in the sidebar info widget, links to
+  // #webmentions, with German plural ("5 Antworten" — total mentions in
+  // fixture). The container class moved from .webmention-count-line to the
+  // tile system (data-tile="reactions") in the 2026-05-09 sidebar redesign.
   assert.match(
     articleHtml,
-    /class="article-meta webmention-count-line"/,
-    "Webmention count line must render on fixture-targeted article"
+    /data-tile="reactions"/,
+    "Reactions tile must render on fixture-targeted article"
   );
   assert.match(
     articleHtml,
     /href="#webmentions"/,
-    "Count line must link to #webmentions anchor"
+    "Reactions tile must link to #webmentions anchor"
   );
   assert.match(
     articleHtml,
     /5 Antworten/,
-    "Count line must show total count with German plural ('Antworten' for >1)"
+    "Reactions tile must show total count with German plural ('Antworten' for >1)"
   );
 
   // AC #3 sample: avatar rendered for replies that have author_photo.
@@ -1504,10 +1506,15 @@ test("Story 2.4 AC #5: non-fixture article renders empty-state and omits count l
     /class="webmentions__empty">Noch keine Antworten\./,
     "Non-fixture article must render the German empty-state message"
   );
-  assert.doesNotMatch(
+  assert.match(
     articleHtml,
-    /webmention-count-line/,
-    "Non-fixture article must NOT render the count line (gated on len > 0)"
+    /data-tile="reactions"/,
+    "Non-fixture article must render the reactions tile (always visible)"
+  );
+  assert.match(
+    articleHtml,
+    /reactions-empty/,
+    "Non-fixture article must render the empty-state anchor inside the reactions tile"
   );
   assert.doesNotMatch(
     articleHtml,
