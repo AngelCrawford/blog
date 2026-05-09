@@ -7,8 +7,16 @@ name: Daily Rebuild with Engagement Data
 
 on:
   schedule:
-    - cron: "0 2 * * *" # 2 AM UTC daily
-  workflow_dispatch: # Manual trigger button
+    - cron: "0 2 * * *" # 2 AM UTC daily — rebuilds the LATEST TAG with fresh engagement data
+  workflow_dispatch:    # Manual trigger; pick a ref to deploy
+    inputs:
+      ref:
+        description: "Ref to deploy (branch, tag, or SHA)"
+        default: "main"
+        required: false
+  push:
+    tags:
+      - "v*"            # Tag-triggered release deploy
 
 # Permissions for the workflow
 # - contents: write   → push to data-updates branch
@@ -33,16 +41,35 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
-      - name: Checkout main branch
+      # Ref selection per trigger:
+      #   - workflow_dispatch: inputs.ref (default 'main', user can pick any branch/tag/SHA)
+      #   - push (tag): refs/tags/v*  (the tag itself)
+      #   - schedule: refs/heads/main  (then overridden to latest tag below)
+      - name: Checkout
         uses: actions/checkout@v4
         with:
-          ref: main
-          fetch-depth: 0 # Full history (needed for branch switching)
+          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.ref || github.ref }}
+          fetch-depth: 0  # full history for git describe + worktree
+
+      # Cron rebuilds the LATEST TAGGED commit, not main HEAD.
+      # Code changes only reach production via a tagged release; the daily cron
+      # just refreshes the latest release with fresh engagement data.
+      - name: Checkout latest tag (cron only)
+        if: github.event_name == 'schedule'
+        run: |
+          LATEST=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+          if [ -n "$LATEST" ]; then
+            git checkout "$LATEST"
+            echo "Cron rebuild from tag: $LATEST"
+          else
+            echo "::warning::No tags found — cron rebuild from main HEAD"
+          fi
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "22"
+          cache: "npm"
 
       - name: Setup Hugo
         # Pinned to SHA for supply-chain hardening (third-party action). Bump by
@@ -60,6 +87,16 @@ jobs:
 
       - name: Install dependencies
         run: npm install
+
+      # === Test gate ===
+      # Tests must pass before any deploy step runs. If tests fail (build-smoke
+      # regressions or e2e smoke broken), the workflow exits here and no deploy
+      # happens — the previously deployed site stays live and untouched.
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Run tests (build-smoke + e2e)
+        run: npm test
 
       # === Generate data files via Phase-0-Placeholder-Scripts ===
       # Scripts run on main (where scripts/ exists) and write to main's data/ as
@@ -107,18 +144,30 @@ jobs:
         id: pages
         uses: actions/configure-pages@v5
 
-      # Generate version.txt for the footer.
-      # `git describe` returns:
-      # - The latest tag if HEAD is at one (e.g. "v1.2.3")
-      # - "tag-N-gSHA" if HEAD is N commits past the latest tag (e.g. "v1.2.3-5-gabc12345")
-      # - The short SHA if no tags exist yet (e.g. "abc12345")
-      # Read in footer.html via readFile (with fileExists guard for local dev).
-      - name: Generate version.txt
+      # Generate version string for the footer (passed via HUGO_PARAMS_VERSION env).
+      # Footer reads this via `site.Params.version` — clean replacement for the old
+      # `version.txt` + `readFile` pattern (no on-disk artefact).
+      # Output:
+      #   - exact tag if HEAD is at a tag         → e.g. "v0.1.0"
+      #   - "<tag>+<commits-past>" otherwise      → e.g. "v0.1.0+3"
+      #   - "dev" if no tags exist yet
+      - name: Generate version string
+        id: version
         run: |
-          git describe --tags --always --abbrev=8 > version.txt
-          echo "Build version: $(cat version.txt)"
+          if EXACT=$(git describe --tags --exact-match HEAD 2>/dev/null); then
+            VERSION="$EXACT"
+          elif LATEST=$(git describe --tags --abbrev=0 2>/dev/null); then
+            COUNT=$(git rev-list "$LATEST"..HEAD --count)
+            VERSION="${LATEST}+${COUNT}"
+          else
+            VERSION="dev"
+          fi
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "Build version: $VERSION"
 
       - name: Build Hugo site
+        env:
+          HUGO_PARAMS_VERSION: ${{ steps.version.outputs.version }}
         run: |
           hugo \
             --environment production \

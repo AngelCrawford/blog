@@ -6,7 +6,6 @@
 hugo_stats.json
 
 # Generated at build time — never committed
-/version.txt
 /buildDate.txt
 
 # node

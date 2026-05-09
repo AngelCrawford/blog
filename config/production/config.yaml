@@ -1,4 +1,4 @@
-baseURL: angelcrawford.github.io/blog/
+baseURL: https://angelcrawford.github.io/blog/
 
 build:
   buildStats:

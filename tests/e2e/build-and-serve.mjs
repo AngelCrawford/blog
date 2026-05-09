@@ -115,11 +115,22 @@ fs.mkdirSync(replacementDir, { recursive: true });
 fs.writeFileSync(path.join(replacementDir, "index.md"), witheredBannerReplacementTargetMarkdown());
 
 // 2. Hugo build (production env so PurgeCSS runs).
+// Override `baseURL` to the test server's origin: the production config points at
+// `https://angelcrawford.github.io/blog/`, which would emit `/blog/...` asset
+// URLs that the test server (root = public-test/) can't resolve. With this
+// override `.RelPermalink` becomes root-relative (`/articles/foo/`,
+// `/style.min.XXX.css`) and the tests' `/articles/...` URLs work as-is.
 process.stdout.write("[build-and-serve] running hugo build\n");
 const TEST_PUBLIC = path.join(REPO_ROOT, "public-test");
+const TEST_BASE_URL = `http://localhost:${process.env.PORT || "1314"}/`;
 const result = spawnSync(
     "hugo",
-    ["--environment", "production", "--logLevel", "error", "--destination", TEST_PUBLIC],
+    [
+        "--environment", "production",
+        "--baseURL", TEST_BASE_URL,
+        "--logLevel", "error",
+        "--destination", TEST_PUBLIC,
+    ],
     {
         cwd: REPO_ROOT,
         encoding: "utf8",

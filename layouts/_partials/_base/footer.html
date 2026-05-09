@@ -93,11 +93,12 @@
 </div>
 
 <div class="copyright has-text-centered">
-    {{- $version := "dev" -}}
-    {{- if (fileExists "version.txt") -}}
-        {{- $version = readFile "version.txt" | strings.TrimSpace -}}
-        {{- if not (hasPrefix $version "v") -}}{{- $version = printf "v%s" $version -}}{{- end -}}
-    {{- end -}}
+    {{- /* Build version: the daily-rebuild workflow passes git-describe via
+           HUGO_PARAMS_VERSION → exact tag at a tag commit, "<tag>+<n>" otherwise.
+           Local `hugo server` shows "dev" unless you set HUGO_PARAMS_VERSION yourself.
+           (hugo.CommitHash is the Hugo binary's build commit, not the project's,
+           so it's a misleading fallback — intentionally not used.) */ -}}
+    {{- $version := site.Params.version | default "dev" -}}
     &copy; 2020 - {{ dateFormat "2006" now }} {{ or .Site.Params.author.name .Site.Params.default_author_name .Site.Title }} | <abbr title='Build Date: {{ now.Format "2006-01-02 15:04 UTC" }}'>{{ $version }}</abbr>
     | <span>{{ .Site.Copyright | safeHTML }}</span>
 

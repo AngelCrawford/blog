@@ -45,15 +45,40 @@ Test strategy and what to add per upcoming story is documented in [`docs/technic
 
 ## Deployment
 
-Live deploys run automatically via the `daily-rebuild` GitHub Actions workflow on cron `0 2 * * *` UTC. To trigger a deploy now (instead of waiting for the next scheduled run):
+The `daily-rebuild` GitHub Actions workflow handles all deploys. There are three triggers:
+
+| Trigger | When | What it deploys |
+|---|---|---|
+| **Tag push** (`v*`) | Manual `git push origin v0.X.0` | The tagged commit — this is the canonical "release" path |
+| **Cron** (`0 2 * * *` UTC) | Daily, automatic | The **latest tag** (NOT main HEAD) with fresh engagement data |
+| **`workflow_dispatch`** | Manual via `gh` or Actions UI | Whatever ref you pick (default `main`) — escape hatch for ad-hoc rebuilds |
+
+**Code changes only reach production via a tagged release.** Pushes to `main` without a tag stay local — the next cron run rebuilds the latest tagged commit, not your WIP. This is the forcing function: tag = release.
+
+**Tests are a hard gate.** Every trigger runs the full test suite (`npm test` = build-smoke + Playwright e2e) before the build/deploy steps. If tests fail, no deploy happens and the previously deployed site stays live and untouched.
+
+### Per-Epic Release
+
+When an epic's stories are all complete and you're ready to ship:
 
 ```powershell
-# Trigger the deploy
-gh workflow run daily-rebuild.yml --ref main
+# 1. Tag the epic-end commit on main
+git tag -a v0.X.0 -m "Epic X: <feature name>"
+git push origin v0.X.0
+# → triggers daily-rebuild on the tagged commit; tests run; deploy follows on green
 
-# Optional: follow it to completion
-gh run watch
+# 2. Optional: GitHub Release with auto-generated notes
+gh release create v0.X.0 --generate-notes
 ```
+
+### Ad-hoc redeploy (without bumping version)
+
+```powershell
+gh workflow run daily-rebuild.yml --ref main   # default ref is main
+gh run watch                                   # optional: follow to completion
+```
+
+### Deploy URL
 
 The deployed URL is whatever `baseURL` in [`config/production/config.yaml`](config/production/config.yaml) points at. Update that single file when switching between the GitHub Pages default (`https://angelcrawford.github.io/blog/`) and the planned custom domain (`https://article-time.de/`); the third-party-asset-monitor workflow (Story 2.6) reads the same value, so it retargets automatically.
 
