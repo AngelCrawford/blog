@@ -12,6 +12,4 @@ Routing guidance:
 
 | Date | Story | Type | Status | Notes |
 | ---- | ----- | ---- | ------ | ----- |
-| 2026-05-08 | 1.2 | Test | Deferred | Visual regression snapshots (`toHaveScreenshot()`) for the growth-stage badge. Story 1.2 covers all ACs via structural assertions; visual baselines were intentionally skipped (cross-machine font-rendering drift). Revisit if a regression slips past the structural suite. |
-| 2026-05-08 | 1.3 | UX | Deferred | `$hiddenCount` notice on paginated homepage (page 2+) shows the same site-wide total with no contextual anchor. Revisit when pagination UX is addressed. |
-| 2026-05-09 | 1.5 | Test | Deferred | Sitemap XSD-schema validation (against `sitemap-0.9.xsd`) was listed as optional in the story tasks and skipped — current coverage is a structural well-formedness probe plus Hugo build success. Add when CI-grade strictness is needed. |
+| 2026-05-08 | 1.3 | UX | Deferred | `$hiddenCount` notice on paginated homepage (page 2+) shows the same site-wide total with no contextual anchor (no link to the hidden articles, no "show withered" toggle). Revisit when pagination UX is redesigned — fixing in isolation is a half-step without the larger UX context. |
