@@ -1558,6 +1558,9 @@ Damit der Workflow bereits jetzt grün durchläuft (AC5: „runs successfully on
 
 **Effort:** 0.5 days
 
+**Pre-Spec Notes (from prior-story reviews):**
+- **Replace, don't add.** `layouts/_markup/render-heading.html` already exists and injects an anchor `<a class="anchor-link">` with a Remix `links-fill` `<svg class="remix">` after the heading text. The current state is visually broken — no `.anchor-link` / `.remix` CSS exists in `assets/scss/`, so the chain-link glyph renders at the SVG's intrinsic size (oversized, always visible, no opacity/hover behaviour) right next to every `<h2>`/`<h3>` on every page (visible on `/pages/datenschutz/` per 2026-05-09 screenshot review). This story must **replace** the existing markup or add the missing styles — do NOT assume a clean slate. Confirm AC #7 (no anchors on `<h1>`) by adding `{{ if gt $level 1 }}` or similar guard, since the current implementation injects on ALL levels.
+
 ---
 
 ## Story 9.10: Author-Box with Socials on Single-Page
