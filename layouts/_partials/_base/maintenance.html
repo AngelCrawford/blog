@@ -24,8 +24,8 @@
         <meta name="referrer" content="strict-origin-when-cross-origin">
         <title>{{ $title }} — {{ .Site.Title }}</title>
         <link href="{{ $style.RelPermalink }}" rel="stylesheet">
-        <link rel="preload" as="font" href="{{ "fonts/Montserrat/MontserratAlternates-Regular.ttf" | relURL }}" crossorigin="anonymous">
-        <link rel="preload" as="font" href="{{ "fonts/Montserrat/Montserrat-VariableFont_wght.ttf" | relURL }}" crossorigin="anonymous">
+        <link rel="preload" as="font" type="font/ttf" href="{{ "fonts/Montserrat/MontserratAlternates-Regular.ttf" | relURL }}" crossorigin="anonymous">
+        <link rel="preload" as="font" type="font/ttf" href="{{ "fonts/Montserrat/Montserrat-VariableFont_wght.ttf" | relURL }}" crossorigin="anonymous">
         <link rel="icon" type="image/png" href="{{ "images/favicon/favicon-96x96.png" | relURL }}" sizes="96x96">
         <link rel="icon" type="image/svg+xml" href="{{ "images/favicon/favicon.svg" | relURL }}">
         <link rel="shortcut icon" href="{{ "images/favicon/favicon.ico" | relURL }}">

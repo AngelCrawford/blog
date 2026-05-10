@@ -11,9 +11,16 @@
 {{- end }}
 
     <meta name="referrer" content="strict-origin-when-cross-origin" />
-    {{ printf `<meta http-equiv="Content-Security-Policy" content="default-src %s; form-action %s; frame-src %s; frame-ancestors %s; img-src %s; object-src %s; style-src %s; script-src %s; connect-src %s;">` (delimit .Site.Params.csp.default " ") (delimit .Site.Params.csp.formaction " ") (delimit .Site.Params.csp.framesrc " ") (delimit .Site.Params.csp.frameancestors " ") (delimit .Site.Params.csp.imgsrc " ") (delimit .Site.Params.csp.objectsrc " ") (delimit .Site.Params.csp.stylesrc " ") (delimit .Site.Params.csp.scriptsrc " ") (delimit .Site.Params.csp.connectsrc " ") | safeHTML }}
+    {{/* frame-ancestors per CSP-Spec ignoriert, wenn via <meta> ausgeliefert — wirkt nur als HTTP-Header. GitHub Pages erlaubt keine Custom-Header, daher hier weggelassen, um die Browser-Konsolen-Warnung zu vermeiden. Wert in params.toml beibehalten für späteren CDN-Wechsel (Cloudflare etc.). */}}
+    {{ printf `<meta http-equiv="Content-Security-Policy" content="default-src %s; form-action %s; frame-src %s; img-src %s; object-src %s; style-src %s; script-src %s; connect-src %s;">` (delimit .Site.Params.csp.default " ") (delimit .Site.Params.csp.formaction " ") (delimit .Site.Params.csp.framesrc " ") (delimit .Site.Params.csp.imgsrc " ") (delimit .Site.Params.csp.objectsrc " ") (delimit .Site.Params.csp.stylesrc " ") (delimit .Site.Params.csp.scriptsrc " ") (delimit .Site.Params.csp.connectsrc " ") | safeHTML }}
 
     <title>{{- if .IsHome }}{{ .Site.Title }}{{ else }}{{ block "title" . }}{{ .Site.Title }}{{ with .Params.Title }} | {{ . }}{{ end }}{{ end }}{{ end -}}</title>
+<!-- Preloads vor Stylesheet/Script — sonst startet @font-face-Fetch aus dem CSS, bevor der Preload gesehen wird, und Firefox meldet "preloaded ... not used". -->
+    <link rel="preload" as="font" type="font/ttf" href="{{ "fonts/Montserrat/MontserratAlternates-Regular.ttf" | relURL }}" crossorigin="anonymous">
+    <link rel="preload" as="font" type="font/ttf" href="{{ "fonts/Montserrat/Montserrat-VariableFont_wght.ttf" | relURL }}" crossorigin="anonymous">
+    <link rel="preload" href="{{ "images/header/city.svg" | relURL }}" as="image" type="image/svg+xml">
+    <link rel="preload" href="{{ "images/header/clock.webp" | relURL }}" as="image" type="image/webp">
+
 <!-- Style and Script -->
 {{- $sass := resources.Get "scss/main.scss" }}
 {{- $toCssOpt := (dict "targetPath" "style.css" "transpiler" "dartsass" "enableSourceMap" true) }}
@@ -22,17 +29,12 @@
     {{ $style = $style | minify | fingerprint | resources.PostProcess }}
 {{- end }}
     <link href="{{ $style.RelPermalink }}" rel="stylesheet">
-  
+
     {{- $jQuery := resources.Get "js/jquery.js" }}
     {{- $gdpr := resources.Get "js/gdpr.js" }}
     <!-- TODO: gdpr.js mit Cookie Consent verbinden -->
-    {{- $script := slice $jQuery $gdpr | resources.Concat "js/bundle.js" | resources.Minify | resources.Fingerprint -}}    
+    {{- $script := slice $jQuery $gdpr | resources.Concat "js/bundle.js" | resources.Minify | resources.Fingerprint -}}
     <script src="{{ $script.RelPermalink }}"></script>
-   
-    <link rel="preload" as="font" href="{{ "fonts/Montserrat/MontserratAlternates-Regular.ttf" | relURL }}" crossorigin="anonymous">
-    <link rel="preload" as="font" href="{{ "fonts/Montserrat/Montserrat-VariableFont_wght.ttf" | relURL }}" crossorigin="anonymous">
-    <link rel="preload" href="{{ "images/header/city.svg" | relURL }}" as="image" type="image/svg+xml">
-    <link rel="preload" href="{{ "images/header/clock.webp" | relURL }}" as="image" type="image/png">
 
     <link rel="icon" type="image/png" href="{{ "images/favicon/favicon-96x96.png" | relURL }}" sizes="96x96" /> <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="{{ "images/favicon/favicon.svg" | relURL }}" />

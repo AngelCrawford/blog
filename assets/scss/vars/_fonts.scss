@@ -5,29 +5,29 @@ $family-secondary: "Montserrat Alternates", BlinkMacSystemFont, -apple-system, "
 // THANKS: Google Fonts Montserrat und Montserrat Alternates
 @font-face {
     font-family: 'Montserrat Alternates';
-    src: local('Montserrat Alternates'), url('fonts/Montserrat/MontserratAlternates-Regular.ttf') format('truetype');
+    src: url('fonts/Montserrat/MontserratAlternates-Regular.ttf') format('truetype');
     font-display: swap;
 }
-  
+
 @font-face {
     font-family: 'Montserrat Alternates Bold';
-    src: local('Montserrat Alternates'), url('fonts/Montserrat/MontserratAlternates-Medium.ttf') format('truetype');
+    src: url('fonts/Montserrat/MontserratAlternates-Medium.ttf') format('truetype');
     font-display: swap;
 }
-  
+
 @font-face {
     font-family: 'Montserrat-Light';
-    src: local('Montserrat'), local('Montserrat-Light'), url('fonts/Montserrat/Montserrat-VariableFont_wght.ttf') format('truetype');
+    src: url('fonts/Montserrat/Montserrat-VariableFont_wght.ttf') format('truetype');
     font-display: swap;
 }
 @font-face {
     font-family: 'Montserrat-Regular';
-    src: local('Montserrat'), local('Montserrat-Regular'), url('fonts/Montserrat/Montserrat-VariableFont_wght.ttf') format('truetype');
+    src: url('fonts/Montserrat/Montserrat-VariableFont_wght.ttf') format('truetype');
     font-display: swap;
 }
 @font-face {
     font-family: 'Montserrat-Bold';
-    src: local('Montserrat'), local('Montserrat-Bold'), url('fonts/Montserrat/Montserrat-VariableFont_wght.ttf') format('truetype');
+    src: url('fonts/Montserrat/Montserrat-VariableFont_wght.ttf') format('truetype');
     font-display: swap;
 }
   

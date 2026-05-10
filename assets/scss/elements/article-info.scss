@@ -29,8 +29,9 @@ $value-color: helpers.$gold;
 
     .info-tile {
         display: flex;
-        flex-direction: column;
-        gap: 0.35rem;
+        flex-direction: row;
+        align-items: center;
+        gap: 0.65rem;
         padding: 0.65rem 0.8rem;
         background: $tile-bg;
         border: 1px solid $tile-border;
@@ -41,23 +42,28 @@ $value-color: helpers.$gold;
         }
     }
 
-    .info-tile__label {
+    .info-tile__icon {
+        width: 1.6rem;
+        height: 1.6rem;
+        fill: $label-color;
+        flex-shrink: 0;
+    }
+
+    .info-tile__body {
         display: flex;
-        align-items: center;
-        gap: 0.35em;
+        flex-direction: column;
+        gap: 0.2rem;
+        min-width: 0;
+        flex: 1;
+    }
+
+    .info-tile__label {
         font-size: 0.7rem;
         font-weight: 600;
         letter-spacing: 0.08em;
         text-transform: uppercase;
         color: $label-color;
         line-height: 1;
-    }
-
-    .info-tile__icon {
-        width: 0.95em;
-        height: 0.95em;
-        fill: currentColor;
-        flex-shrink: 0;
     }
 
     .info-tile__value {
@@ -91,6 +97,7 @@ $value-color: helpers.$gold;
         padding: 0;
         justify-content: center;
 
+        > .info-tile__icon,
         .info-tile__label {
             display: none;
         }
@@ -102,6 +109,29 @@ $value-color: helpers.$gold;
                 max-width: 100%;
             }
         }
+    }
+
+    // Status-tile: standalone icon left already shows the growth-stage glyph
+    // (mirrors growth-badge.html mapping in single.html). Hide the duplicate
+    // inline icon inside the badge to keep the label as text-only.
+    .info-tile[data-tile="status"] .growth-stage > svg {
+        display: none;
+    }
+
+    // Status-tile per-stage color cue — only on the standalone left icon.
+    // Text label keeps the default gold value-color.
+    // Token source: vars/_colors.scss (mirrors growth-badge.scss fills).
+    .info-tile[data-tile="status"][data-stage="seedling"] .info-tile__icon {
+        fill: helpers.$growth-seedling;
+    }
+    .info-tile[data-tile="status"][data-stage="budding"] .info-tile__icon {
+        fill: helpers.$growth-budding;
+    }
+    .info-tile[data-tile="status"][data-stage="evergreen"] .info-tile__icon {
+        fill: helpers.$growth-evergreen;
+    }
+    .info-tile[data-tile="status"][data-stage="withered"] .info-tile__icon {
+        fill: helpers.$growth-withered;
     }
 
     // Hearts-line: full-width tile below tags — same box as info-tile/Serie.

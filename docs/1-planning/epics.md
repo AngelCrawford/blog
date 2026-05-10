@@ -454,6 +454,57 @@ Damit der Workflow bereits jetzt grün durchläuft (AC5: „runs successfully on
 
 ---
 
+## Story 2.9: Epic 2 Hardening & Follow-ups
+
+**As a** maintainer
+**I want** the security, robustness, and CI/UX gaps that Epic 2 reviews tagged `[Review][Defer]` closed in one bundled story
+**So that** the engagement infrastructure shipped in 2.1–2.6 is hardened against known edge cases without each fix dragging its own ad-hoc PR or being forgotten
+
+**FR Coverage:** None directly — bundled hardening story collecting deferred review items from done-stories 2.2, 2.4, and 2.6.
+
+**Source:** Items collected from Epic 2 done-stories' Review Findings that were tagged `[Review][Defer]` and explicitly out-of-scope at original-story implementation time (each story scoped to 0.5–1 day; security/robustness/CI follow-ups bundled here instead of expanding scope per-story). Originating entries: `2-2-heart-button-component.md` (items "reflect.IsMap" and "storageKey baseURL"), `2-4-webmention-display-component.md` (adversarial XSS fixture), `2-6-daily-rebuild-github-actions-workflow.md` (javascript:-URI XSS in webmention links, issue dedup, failing-step name, context.sha for cron, markdown injection).
+
+**Acceptance Criteria:**
+1. **Security: `javascript:` / `data:` URI guard for webmention author + source links.** `layouts/_partials/widgets/webmention-group.html` (currently around lines 20–34) emits `<a href="{{ .author_url }}">` and `<a href="{{ .url }}">` without scheme filtering — Hugo's auto-escape covers HTML injection but **not** protocol injection, so a webmention.io payload with `author_url: "javascript:alert(1)"` would render as an executable link in production. Add an allowlist filter that emits `href` only if the URL scheme is `http://`, `https://`, or `mailto:`; otherwise fall through to the plain-text/`<span>` branch already established by Story 2.4's review patch. Add a build-smoke assertion covering the guard (a fixture entry with `author_url: "javascript:alert(1)"` must render as a `<span>`, not an `<a href>`).
+
+2. **Robustness: heart-button `reflect.IsMap` future-proofing.** `layouts/_partials/widgets/heart-button.html:27` currently branches on `{{ if reflect.IsMap . }}` to detect the dict-context card-invocation pattern (vs. single-page Page-context invocation). In a future Hugo version, `reflect.IsMap` may return true for Page objects, causing wrong-branch render and broken cards. Replace with a stricter positive check that the context actually carries the expected dict keys — e.g. `{{ if and (reflect.IsMap .) (isset . "page") }}` — so only true dict contexts hit the card branch.
+
+3. **Robustness: hearts.js `storageKey` baseURL-independence.** `assets/js/hearts.js` (around line 25) builds the localStorage key from `data-article` which is rendered as `$page.RelPermalink`. If `baseURL` ever changes (subpath deploy, custom-domain migration, prod→staging mirror), `RelPermalink` shifts and every existing `hearted-…` entry silently orphans → users lose visible hearted-state. Stabilise the key: either use `window.location.pathname` directly (browser-side resolved, never carries baseURL prefix), or strip a known prefix from the stored `data-article` before use. Add a code comment explaining the design intent so future-maintainer doesn't "fix" it back to the simpler raw form.
+
+4. **CI: GitHub Issue deduplication for persistent workflow failures.** `.github/workflows/daily-rebuild.yml` and `.github/workflows/third-party-asset-monitor.yml` currently create a new GitHub Issue on every failed run — persistent failures spawn one issue per cron tick (daily / weekly). Add search-first-or-reopen logic: query for an open issue with the same title (e.g. `daily-rebuild failed: <date>` → match on `daily-rebuild failed`); if found, append a comment ("Failure recurred on `<date>`, run: `<url>`") instead of opening a duplicate. If the existing issue is closed, reopen + comment. Net effect: an issue tracker that surfaces *one* item per persistent failure mode, not N items per N days.
+
+5. **CI: Failure-notification body quality.** Two improvements to the Notify-on-failure step bodies in both workflows:
+   - **Include the failing step name** (not just "check the run logs"). Capture via `${{ steps.<id>.conclusion }}` or the GitHub API call. Goal: the issue body shows e.g. "Failed step: `Build Hugo site`", short-circuiting the operator's drill-down from issue → run → step.
+   - **Use the actually-built commit SHA, not `context.sha`.** For cron builds the workflow checks out the latest tag, but `context.sha` resolves to HEAD-of-main at schedule time — misleading when investigating a build failure against tag content. Resolve the actual checkout SHA (`steps.checkout.outputs.commit` or equivalent) and embed that instead.
+
+6. **CI: Markdown-injection sanitization in issue bodies.** `FAILED_LIST` and failure messages in `.github/workflows/third-party-asset-monitor.yml`'s Notify-on-drift script are embedded verbatim — URLs with Markdown control chars (`_`, `*`, backticks, `[]`) render as unintended formatting in the rendered issue. Wrap embedded URLs in backticks (or run a small escape pass over Markdown control chars) so they render literally. Cosmetic; no security impact (operator-curated URLs, not attacker-controlled).
+
+7. **Test quality: adversarial XSS fixture for webmention build-smoke test.** `tests/build/build-smoke.test.mjs` (around line 1661 — Story 2.4 AC #8 XSS auto-escape test) currently uses clean fixture data with no HTML payloads, so the assertion "Hugo auto-escape is active" is technically unverified. Add one fixture entry to `data/webmentions_by_article.json` with `content: "<script>alert(1)</script>"` (and an analogous payload for `author`) and explicit assertions that the rendered HTML contains the escaped form `&lt;script&gt;alert(1)&lt;/script&gt;` and does **NOT** contain the raw `<script>` tag. Note: Story 2.4's [Defer] entry routed this to "Playwright / Story 3.2"; the build-smoke fixture is a strictly additive layer that does not block the Playwright/3.2 work.
+
+**Prerequisites:** Stories 2.2, 2.4, 2.6 (all `done`).
+
+**Dependencies:** None — all changes are localised to files already shipped; no new infra, no new external dependencies.
+
+**Implementation Note:** All seven ACs are independent and can ship in any order. Suggested PR-splitting if Angel prefers smaller PRs:
+- **(a)** AC #1 (security — javascript: URI guard) — should ship first; it's the only security-grade item.
+- **(b)** ACs #2 + #3 (heart-button + hearts.js robustness) — same file family, small.
+- **(c)** ACs #4 + #5 + #6 (workflow notification quality) — same files (`.github/workflows/*.yml`), need a `workflow_dispatch` validation run per change.
+- **(d)** AC #7 (build-smoke fixture) — touches only `tests/` and `data/`, independent.
+All seven fit in one PR if Angel prefers a single Epic-2-hardening commit cluster.
+
+**Out of Scope** (each tracked in `docs/backlog.md` — not for this story):
+- Heart visual design unification (backlog row "Design für Heart an allen Stellen") — UX redesign, not a hardening fix.
+- Webmention visual design unification (backlog row "Design für Webmentions an allen Stellen") — same reasoning.
+- Shared Hugo-build test fixture (backlog row "Redundant full hugo production builds") — test-infra refactor, not hardening.
+- GitHub Actions version drift (backlog row "GitHub Actions version drift in `daily-rebuild.yml`") — dependency-bump cluster, validated per-action via `workflow_dispatch`, separate effort.
+- Lighthouse audit (backlog row "Lighthouse Check und Anpassungen") — audit/measurement story.
+- i18n migration (backlog row "Site-wide audit + migration of hardcoded UI strings to Hugo i18n") — cross-cutting refactor, not Epic-2-scoped.
+- TOC frontmatter toggle (backlog row "TOC frontmatter toggle") — unrelated to Epic 2.
+
+**Effort:** 1–1.5 days (seven small fixes spanning ~6 files: `webmention-group.html`, `heart-button.html`, `hearts.js`, `daily-rebuild.yml`, `third-party-asset-monitor.yml`, `build-smoke.test.mjs`, fixture `data/webmentions_by_article.json`).
+
+---
+
 # Epic 3: Popularity Scoring Engine [Phase 1A, Week 4-5]
 
 **Goal:** Calculate and store engagement-based popularity scores
@@ -1694,7 +1745,7 @@ Damit der Workflow bereits jetzt grün durchläuft (AC5: „runs successfully on
 | Epic | Stories | Phase | Duration | FR Count | Effort (Days) |
 |------|---------|-------|----------|----------|---------------|
 | Epic 1: Growth Stage System | 5 | 1A | Week 3 | 7 | 7 |
-| Epic 2: Engagement Infrastructure | 8 | 1A | Week 1-2 | 9 | 8.5 |
+| Epic 2: Engagement Infrastructure | 9 | 1A | Week 1-2 | 9 | 10 |
 | Epic 3: Popularity Scoring Engine | 6 | 1A | Week 4-5 | 7 | 7 |
 | Epic 4: Three-Tier Sorting | 4 | 1A | Week 4-5 | 7 | 6.5 |
 | Epic 5: Badge & Filter System | 7 | 1A | Week 6 | 6 | 6.5 |
@@ -1702,7 +1753,7 @@ Damit der Workflow bereits jetzt grün durchläuft (AC5: „runs successfully on
 | Epic 7: POSSE & Advanced Webmentions | 5 | 3 | Week 12-13 | 4 | 8 |
 | Epic 8: Format Expansion | 8 | 1B | Week 7-9 | 6 | 11.5 |
 | Epic 9: Polish & Optimization | 12 | 2 | Week 10-11 | 10 | 12.5 |
-| **TOTAL** | **58** | **All** | **14 weeks** | **52** | **70.5 days** |
+| **TOTAL** | **59** | **All** | **14 weeks** | **52** | **72 days** |
 
 ---
 

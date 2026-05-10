@@ -84,87 +84,91 @@
                         {{- $hasUpdated := not (eq (.Date.Format "02.01.06") (.Lastmod.Format "02.01.06")) -}}
                         {{- $readingTime := math.Ceil (div (float .WordCount) .Site.Params.reading_speed) -}}
                         {{- $mentions := index hugo.Data.webmentions_by_article .RelPermalink | default (slice) -}}
+                        {{- /* Status-Icon: mirrors growth-badge.html mapping. Keep in sync. */ -}}
+                        {{- $growthIcons := dict "seedling" "seedling-line" "budding" "flower-line" "evergreen" "tree-line" "withered" "skull-2-line" -}}
+                        {{- $stage := default "seedling" .Params.growth_stage -}}
+                        {{- $statusIcon := index $growthIcons $stage -}}
                         <div class="info widget mt-6">
                             <p class="title is-5">Artikel</p>
 
                             <div class="info-tiles">
                                 {{- if .GetTerms "categories" -}}
                                     <div class="info-tile" data-tile="rubrik">
-                                        <div class="info-tile__label">
-                                            <svg class="info-tile__icon" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#bookmark-3-line"></use></svg>
-                                            <span>Rubrik</span>
-                                        </div>
-                                        <div class="info-tile__value">
-                                            {{- range first 1 (.GetTerms "categories") -}}
-                                                <a href="{{ .RelPermalink }}" title="{{- .LinkTitle -}}" class="ribbon" style="{{if .Params.categoryColor }}background-color:{{.Params.categoryColor }}{{end}}">{{- .LinkTitle -}}</a>
-                                            {{- end -}}
+                                        <svg class="info-tile__icon" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#bookmark-3-line"></use></svg>
+                                        <div class="info-tile__body">
+                                            <div class="info-tile__label"><span>Rubrik</span></div>
+                                            <div class="info-tile__value">
+                                                {{- range first 1 (.GetTerms "categories") -}}
+                                                    <a href="{{ .RelPermalink }}" title="{{- .LinkTitle -}}" class="ribbon" style="{{if .Params.categoryColor }}background-color:{{.Params.categoryColor }}{{end}}">{{- .LinkTitle -}}</a>
+                                                {{- end -}}
+                                            </div>
                                         </div>
                                     </div>
                                 {{- end -}}
 
-                                <div class="info-tile" data-tile="status">
-                                    <div class="info-tile__label">
-                                        <svg class="info-tile__icon" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#seedling-line"></use></svg>
-                                        <span>Status</span>
-                                    </div>
-                                    <div class="info-tile__value">
-                                        {{ partial "growth-badge.html" . }}
+                                <div class="info-tile" data-tile="status" data-stage="{{ $stage }}">
+                                    <svg class="info-tile__icon" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#{{ $statusIcon }}"></use></svg>
+                                    <div class="info-tile__body">
+                                        <div class="info-tile__label"><span>Status</span></div>
+                                        <div class="info-tile__value">
+                                            {{ partial "growth-badge.html" . }}
+                                        </div>
                                     </div>
                                 </div>
 
                                 <div class="info-tile" data-tile="published">
-                                    <div class="info-tile__label">
-                                        <svg class="info-tile__icon" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#calendar-line"></use></svg>
-                                        <span>Veröffentlicht</span>
-                                    </div>
-                                    <div class="info-tile__value">
-                                        <time datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Date | time.Format ":date_long" }}</time>
+                                    <svg class="info-tile__icon" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#calendar-line"></use></svg>
+                                    <div class="info-tile__body">
+                                        <div class="info-tile__label"><span>Publiziert</span></div>
+                                        <div class="info-tile__value">
+                                            <time datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Date | time.Format ":date_long" }}</time>
+                                        </div>
                                     </div>
                                 </div>
 
                                 {{- if $hasUpdated }}
                                     <div class="info-tile" data-tile="updated">
-                                        <div class="info-tile__label">
-                                            <svg class="info-tile__icon" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#pencil-line"></use></svg>
-                                            <span>Bearbeitet</span>
-                                        </div>
-                                        <div class="info-tile__value">
-                                            <time datetime="{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Lastmod | time.Format ":date_long" }}</time>
+                                        <svg class="info-tile__icon" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#pencil-line"></use></svg>
+                                        <div class="info-tile__body">
+                                            <div class="info-tile__label"><span>Bearbeitet</span></div>
+                                            <div class="info-tile__value">
+                                                <time datetime="{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Lastmod | time.Format ":date_long" }}</time>
+                                            </div>
                                         </div>
                                     </div>
                                 {{- end }}
 
                                 <div class="info-tile" data-tile="reading-time">
-                                    <div class="info-tile__label">
-                                        <svg class="info-tile__icon" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#timer-line"></use></svg>
-                                        <span>Lesezeit</span>
+                                    <svg class="info-tile__icon" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#timer-line"></use></svg>
+                                    <div class="info-tile__body">
+                                        <div class="info-tile__label"><span>Lesezeit</span></div>
+                                        <div class="info-tile__value">{{ $readingTime }} Min.</div>
                                     </div>
-                                    <div class="info-tile__value">{{ $readingTime }} Min.</div>
                                 </div>
 
                                 <div class="info-tile" data-tile="reactions">
-                                    <div class="info-tile__label">
-                                        <svg class="info-tile__icon" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#question-answer-line"></use></svg>
-                                        <span>Reaktionen</span>
-                                    </div>
-                                    <div class="info-tile__value">
-                                        {{- if gt (len $mentions) 0 -}}
-                                            <a href="#webmentions" title="Zu den Antworten und Erwähnungen springen">{{ len $mentions }} {{ if eq (len $mentions) 1 }}Antwort{{ else }}Antworten{{ end }}</a>
-                                        {{- else -}}
-                                            <a href="#webmentions" class="reactions-empty" title="Zu den Webmentions springen">Noch keine</a>
-                                        {{- end -}}
+                                    <svg class="info-tile__icon" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#question-answer-line"></use></svg>
+                                    <div class="info-tile__body">
+                                        <div class="info-tile__label"><span>Reaktionen</span></div>
+                                        <div class="info-tile__value">
+                                            {{- if gt (len $mentions) 0 -}}
+                                                <a href="#webmentions" title="Zu den Antworten und Erwähnungen springen">{{ len $mentions }} {{ if eq (len $mentions) 1 }}Antwort{{ else }}Antworten{{ end }}</a>
+                                            {{- else -}}
+                                                <a href="#webmentions" class="reactions-empty" title="Zu den Webmentions springen">Noch keine</a>
+                                            {{- end -}}
+                                        </div>
                                     </div>
                                 </div>
 
                                 {{- if .Params.series }}
                                     {{- $name := index .Params.series 0 }}
                                     <div class="info-tile info-tile--wide" data-tile="series">
-                                        <div class="info-tile__label">
-                                            <svg class="info-tile__icon" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#stack-line"></use></svg>
-                                            <span>Serie</span>
-                                        </div>
-                                        <div class="info-tile__value">
-                                            <a href="{{ printf "series/%s" ($name | urlize) | relURL }}" title="{{ $name }}">{{ $name }}</a>
+                                        <svg class="info-tile__icon" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#stack-line"></use></svg>
+                                        <div class="info-tile__body">
+                                            <div class="info-tile__label"><span>Serie</span></div>
+                                            <div class="info-tile__value">
+                                                <a href="{{ printf "series/%s" ($name | urlize) | relURL }}" title="{{ $name }}">{{ $name }}</a>
+                                            </div>
                                         </div>
                                     </div>
                                 {{- end }}
