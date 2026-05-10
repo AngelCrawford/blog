@@ -10,10 +10,9 @@
 @use "../vars/helpers";
 @use "sass:color";
 
-$tile-bg: color.adjust(helpers.$dark, $lightness: -1%);
-$tile-border: rgba(helpers.$gold-dark, 0.4);
-$label-color: color.scale(helpers.$dark, $lightness: 40%);
-$value-color: helpers.$gold;
+// Tokens consolidated to vars/_colors.scss: $tile-bg, $tile-border,
+// $tile-radius, $text-label, $text-muted — referenced via `helpers.$<token>`
+// or through the `helpers.tile-box` mixin.
 
 .widget.info {
     .info-tiles {
@@ -28,14 +27,12 @@ $value-color: helpers.$gold;
     }
 
     .info-tile {
+        @include helpers.tile-box;
         display: flex;
         flex-direction: row;
         align-items: center;
         gap: 0.65rem;
         padding: 0.65rem 0.8rem;
-        background: $tile-bg;
-        border: 1px solid $tile-border;
-        border-radius: 0.45rem;
 
         &--wide {
             grid-column: 1 / -1;
@@ -45,7 +42,7 @@ $value-color: helpers.$gold;
     .info-tile__icon {
         width: 1.6rem;
         height: 1.6rem;
-        fill: $label-color;
+        fill: helpers.$text-label;
         flex-shrink: 0;
     }
 
@@ -62,14 +59,14 @@ $value-color: helpers.$gold;
         font-weight: 600;
         letter-spacing: 0.08em;
         text-transform: uppercase;
-        color: $label-color;
+        color: helpers.$text-label;
         line-height: 1;
     }
 
     .info-tile__value {
         font-size: 0.875rem;
         line-height: 1.2;
-        color: $value-color;
+        color: helpers.$gold;
 
         // Links inside value (category tag, reactions count) inherit their
         // own coloring from element styles; keep the tile from flattening
@@ -178,12 +175,12 @@ $value-color: helpers.$gold;
             .heart-count {
                 font-variant-numeric: tabular-nums;
                 font-weight: 400;
-                color: $label-color;
+                color: helpers.$text-label;
             }
 
             .heart-button-hint {
                 font-size: 0.7rem;
-                color: $label-color;
+                color: helpers.$text-label;
                 font-style: italic;
                 line-height: 1.2;
             }
@@ -205,7 +202,7 @@ $value-color: helpers.$gold;
     }
 
     .info-tile[data-tile="reactions"] .info-tile__value > a.reactions-empty {
-        color: $label-color;
+        color: helpers.$text-label;
         font-weight: 400;
         font-style: italic;
 
@@ -227,7 +224,7 @@ $value-color: helpers.$gold;
         > svg {
             width: 1em;
             height: 1em;
-            fill: $label-color;
+            fill: helpers.$text-label;
             flex-shrink: 0;
         }
 

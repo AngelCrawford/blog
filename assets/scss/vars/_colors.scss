@@ -1,3 +1,5 @@
+@use "sass:color";
+
 // Theme color palette
 $dark: hsl(190, 11%, 11%);
 $light: hsl(190, 20%, 90%);
@@ -6,6 +8,18 @@ $light: hsl(190, 20%, 90%);
 $gold-light: hsl(29, 100%, 80%);
 $gold: hsl(35, 45%, 50%);
 $gold-dark: hsl(35, 45%, 26%);
+
+// Surface tokens — recurring box/tile chrome for info-tile, author-card,
+// series-sidebar, etc. Defined here so a palette tweak doesn't need a hunt
+// across element files. Consumed via the `tile-box` mixin in _helpers.scss
+// or directly as `helpers.$tile-*`.
+$tile-bg: color.adjust($dark, $lightness: -1%);
+$tile-border: rgba($gold-dark, 0.4);
+$tile-radius: 0.45rem;
+
+// Text tokens — muted variants on the dark background.
+$text-label: color.scale($dark, $lightness: 40%); // UI labels (uppercase / counter prefixes)
+$text-muted: color.scale($dark, $lightness: 60%); // body / secondary text
 
 // Growth stage colors (Digital Garden, Story 1.2)
 // Source: docs/1-planning/ux-design-specification.md §1.4 (lines 283–292)

@@ -1,7 +1,8 @@
 // elements/series-sidebar.scss — series widget on single article pages.
 //
-// Outer box chrome mirrors info-tile / author-card (same `$tile-bg`,
-// gold-dark border, rounded corners, no shadow). Three inner sections:
+// Outer chrome via `helpers.tile-box` mixin — same surface tokens as
+// info-tile and author-card (vars/_colors.scss: $tile-bg, $tile-border,
+// $tile-radius). Three inner sections:
 //   1. .series-sidebar__head   — "SERIE" label left, "N Teile" pill right
 //   2. .series-sidebar__title  — series name on a tinted band
 //   3. .series-sidebar__list   — numbered list with CSS-counter leading-zero
@@ -18,18 +19,14 @@
 @use "../vars/helpers";
 @use "sass:color";
 
-$series-label-color: color.scale(helpers.$dark, $lightness: 40%);
-$series-box-bg: color.adjust(helpers.$dark, $lightness: -1%);
-$series-box-border: rgba(helpers.$gold-dark, 0.4);
-$series-band-bg: rgba(helpers.$gold, 0.08);
-$series-rail: rgba(helpers.$gold-dark, 0.3);
+// Series-specific tint for the active item's row. Intentionally low-alpha
+// gold so it reads as "selected" without competing with the box chrome.
+// Not promoted to a global token — used only here.
 
 .series-sidebar {
+    @include helpers.tile-box;
     margin-top: 1.5rem;
     padding: 0.9rem 1rem;
-    background: $series-box-bg;
-    border: 1px solid $series-box-border;
-    border-radius: 0.45rem;
 
     .series-sidebar__head {
         display: flex;
@@ -38,7 +35,7 @@ $series-rail: rgba(helpers.$gold-dark, 0.3);
         gap: 0.5rem;
         padding-bottom: 0.7rem;
         margin-bottom: 0.7rem;
-        border-bottom: 1px solid $series-box-border;
+        border-bottom: 1px solid helpers.$tile-border;
     }
 
     .series-sidebar__label {
@@ -46,7 +43,7 @@ $series-rail: rgba(helpers.$gold-dark, 0.3);
         font-weight: 600;
         letter-spacing: 0.08em;
         text-transform: uppercase;
-        color: $series-label-color;
+        color: helpers.$text-label;
     }
 
     .series-sidebar__count {
@@ -104,7 +101,7 @@ $series-rail: rgba(helpers.$gold-dark, 0.3);
         margin: 0;
 
         &.is-current .series-sidebar__link {
-            background: $series-band-bg;
+            background: rgba(helpers.$gold, 0.08);
             color: helpers.$gold-light;
             font-weight: 600;
 
