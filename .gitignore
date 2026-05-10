@@ -6,6 +6,8 @@
 /public-*
 /themes
 hugo_stats.json
+# Transient build lock — Hugo creates and cleans up; stale on hard kill.
+.hugo_build.lock
 
 # Generated at build time — never committed
 /buildDate.txt

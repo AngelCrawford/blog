@@ -79,77 +79,110 @@
             <div class="column is-12-mobile is-12-tablet is-12-desktop is-3-widescreen is-3-fullhd pt-0">
                 <div class="columns is-multiline">
                     <div class="column is-12-mobile is-6-tablet is-4-desktop is-12-widescreen is-12-fullhd">
+                        {{- $sprite := "fonts/remixicon/remixicon.symbol.svg" | relURL -}}
+                        {{- $rv := .Site.Params.remixicon_version -}}
+                        {{- $hasUpdated := not (eq (.Date.Format "02.01.06") (.Lastmod.Format "02.01.06")) -}}
+                        {{- $readingTime := math.Ceil (div (float .WordCount) .Site.Params.reading_speed) -}}
+                        {{- $mentions := index .Site.Data.webmentions_by_article .RelPermalink | default (slice) -}}
                         <div class="info widget mt-6">
                             <p class="title is-5">Artikel</p>
 
-                            <div class="widget-content">
+                            <div class="info-tiles">
                                 {{- if .GetTerms "categories" -}}
-                                    {{- range first 1 (.GetTerms "categories") -}}
-                                        <a href="{{ .RelPermalink }}" title="{{- .LinkTitle -}}" class="ribbon" style="{{if .Params.categoryColor }}background-color:{{.Params.categoryColor }}{{end}}">{{- .LinkTitle -}}</a>
-                                    {{- end -}}
-                                {{- end -}}
-
-                                <div class="time">
-                                    <time class="publish" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}" data-tooltip="Veröffentlichungsdatum" title="Veröffentlichungsdatum">
-                                        <svg class='ri-1x'>
-                                            <use href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ .Site.Params.remixicon_version}}#calendar-line"></use>
-                                        </svg> {{ .Date | time.Format ":date_long" }}
-                                    </time>
-
-                                    {{ if not ( eq (.Date.Format "02.01.06") (.Lastmod.Format "02.01.06") ) }}
-                                        <time class="updated" datetime="{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}" data-tooltip="Letztes Bearbeitungsdatum" title="Letztes Bearbeitungsdatum">
-                                            <svg class='ri-1x'>
-                                                <use href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ .Site.Params.remixicon_version}}#pencil-line"></use>
-                                            </svg> {{ .Lastmod | time.Format ":date_long" }}
-                                        </time>
-                                    {{ end }}
-                                </div>
-
-                                {{ partial "growth-badge.html" . }}
-
-                                {{- if .Params.tags -}}
-                                    <div class="tags-line">
-                                        <svg class='ri-1x'>
-                                            <use href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ .Site.Params.remixicon_version}}#price-tag-3-line"></use>
-                                        </svg>
-                                        {{- range (.GetTerms "tags") -}}
-                                            <a href="{{ .RelPermalink }}" title="{{ .LinkTitle }}" class="hashtags">#{{ .LinkTitle }} </a>
-                                        {{- end -}}
+                                    <div class="info-tile" data-tile="rubrik">
+                                        <div class="info-tile__label">
+                                            <svg class="info-tile__icon" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#bookmark-3-line"></use></svg>
+                                            <span>Rubrik</span>
+                                        </div>
+                                        <div class="info-tile__value">
+                                            {{- range first 1 (.GetTerms "categories") -}}
+                                                <a href="{{ .RelPermalink }}" title="{{- .LinkTitle -}}" class="ribbon" style="{{if .Params.categoryColor }}background-color:{{.Params.categoryColor }}{{end}}">{{- .LinkTitle -}}</a>
+                                            {{- end -}}
+                                        </div>
                                     </div>
                                 {{- end -}}
 
-                                {{ $readingTime := div (float .WordCount) .Site.Params.reading_speed }}
-                                {{ $readingTime = math.Ceil $readingTime }}
-                                <span data-tooltip="{{ $readingTime }} Minuten Lesezeit">
-                                    <svg class='ri-1x'>
-                                        <use href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ .Site.Params.remixicon_version}}#timer-line"></use>
-                                    </svg>{{ $readingTime }} Min.
-                                </span>
+                                <div class="info-tile" data-tile="status">
+                                    <div class="info-tile__label">
+                                        <svg class="info-tile__icon" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#seedling-line"></use></svg>
+                                        <span>Status</span>
+                                    </div>
+                                    <div class="info-tile__value">
+                                        {{ partial "growth-badge.html" . }}
+                                    </div>
+                                </div>
 
-                                {{- if .Params.series -}}
-                                    <span data-tooltip="Teil einer Serie">
-                                        {{ $name := index .Params.series 0 }}
-                                        <svg class='ri-1x'>
-                                            <use href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ .Site.Params.remixicon_version}}#stack-line"></use>
-                                        </svg><a href="{{ printf "series/%s" ($name | urlize) | relURL }}" title="{{ $name }}">{{ $name }}</a>
-                                    </span>
-                                {{- end -}}
+                                <div class="info-tile" data-tile="published">
+                                    <div class="info-tile__label">
+                                        <svg class="info-tile__icon" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#calendar-line"></use></svg>
+                                        <span>Veröffentlicht</span>
+                                    </div>
+                                    <div class="info-tile__value">
+                                        <time datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Date | time.Format ":date_long" }}</time>
+                                    </div>
+                                </div>
 
-                                {{- /* Webmention count link — Story 2.4 (FR-012). Hidden when no mentions. */ -}}
-                                {{- $mentions := index .Site.Data.webmentions_by_article .RelPermalink | default (slice) -}}
-                                {{- if gt (len $mentions) 0 }}
-                                    <span class="article-meta webmention-count-line">
-                                        <a href="#webmentions" title="Zu den Antworten und Erwähnungen springen">
-                                            <svg class="ri-1x" aria-hidden="true">
-                                                <use href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ .Site.Params.remixicon_version }}#question-answer-line"></use>
-                                            </svg>
-                                            {{ len $mentions }} {{ if eq (len $mentions) 1 }}Antwort{{ else }}Antworten{{ end }}
-                                        </a>
-                                    </span>
+                                {{- if $hasUpdated }}
+                                    <div class="info-tile" data-tile="updated">
+                                        <div class="info-tile__label">
+                                            <svg class="info-tile__icon" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#pencil-line"></use></svg>
+                                            <span>Bearbeitet</span>
+                                        </div>
+                                        <div class="info-tile__value">
+                                            <time datetime="{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Lastmod | time.Format ":date_long" }}</time>
+                                        </div>
+                                    </div>
                                 {{- end }}
 
-                                {{ partial "widgets/heart-button" . }}
+                                <div class="info-tile" data-tile="reading-time">
+                                    <div class="info-tile__label">
+                                        <svg class="info-tile__icon" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#timer-line"></use></svg>
+                                        <span>Lesezeit</span>
+                                    </div>
+                                    <div class="info-tile__value">{{ $readingTime }} Min.</div>
+                                </div>
+
+                                <div class="info-tile" data-tile="reactions">
+                                    <div class="info-tile__label">
+                                        <svg class="info-tile__icon" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#question-answer-line"></use></svg>
+                                        <span>Reaktionen</span>
+                                    </div>
+                                    <div class="info-tile__value">
+                                        {{- if gt (len $mentions) 0 -}}
+                                            <a href="#webmentions" title="Zu den Antworten und Erwähnungen springen">{{ len $mentions }} {{ if eq (len $mentions) 1 }}Antwort{{ else }}Antworten{{ end }}</a>
+                                        {{- else -}}
+                                            <a href="#webmentions" class="reactions-empty" title="Zu den Webmentions springen">Noch keine</a>
+                                        {{- end -}}
+                                    </div>
+                                </div>
+
+                                {{- if .Params.series }}
+                                    {{- $name := index .Params.series 0 }}
+                                    <div class="info-tile info-tile--wide" data-tile="series">
+                                        <div class="info-tile__label">
+                                            <svg class="info-tile__icon" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#stack-line"></use></svg>
+                                            <span>Serie</span>
+                                        </div>
+                                        <div class="info-tile__value">
+                                            <a href="{{ printf "series/%s" ($name | urlize) | relURL }}" title="{{ $name }}">{{ $name }}</a>
+                                        </div>
+                                    </div>
+                                {{- end }}
                             </div>
+
+                            {{- if .Params.tags -}}
+                                <div class="tags-line">
+                                    <svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#price-tag-3-line"></use></svg>
+                                    {{- range (.GetTerms "tags") -}}
+                                        <a href="{{ .RelPermalink }}" title="{{ .LinkTitle }}" class="hashtags">#{{ .LinkTitle }} </a>
+                                    {{- end -}}
+                                </div>
+                            {{- end -}}
+                            {{- if eq .Page.Type "articles" -}}
+                                <div class="hearts-line">
+                                    {{ partial "widgets/heart-button" . }}
+                                </div>
+                            {{- end -}}
                         </div>
                     </div>
 
