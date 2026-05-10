@@ -62,6 +62,13 @@
         line-height: 1;
     }
 
+    // Empty-state placeholder inside a tile value (e.g. Editiert when
+    // Date == Lastmod). Muted so it reads as "kein Wert" instead of
+    // competing with real values.
+    .info-tile__empty {
+        color: helpers.$text-label;
+    }
+
     .info-tile__value {
         font-size: 0.875rem;
         line-height: 1.2;

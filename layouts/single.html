@@ -124,17 +124,22 @@
                                     </div>
                                 </div>
 
-                                {{- if $hasUpdated }}
-                                    <div class="info-tile" data-tile="updated">
-                                        <svg class="info-tile__icon" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#pencil-line"></use></svg>
-                                        <div class="info-tile__body">
-                                            <div class="info-tile__label"><span>Editiert</span></div>
-                                            <div class="info-tile__value">
+                                {{- /* Editiert renders unconditionally so the 2-column grid stays
+                                       paritätskonform (no orphan cell before the wide Tags tile when
+                                       Date == Lastmod). Empty state shows a muted em-dash. */ -}}
+                                <div class="info-tile" data-tile="updated">
+                                    <svg class="info-tile__icon" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#pencil-line"></use></svg>
+                                    <div class="info-tile__body">
+                                        <div class="info-tile__label"><span>Editiert</span></div>
+                                        <div class="info-tile__value">
+                                            {{- if $hasUpdated -}}
                                                 <time datetime="{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Lastmod | time.Format "02.01.2006" }}</time>
-                                            </div>
+                                            {{- else -}}
+                                                <span class="info-tile__empty">—</span>
+                                            {{- end -}}
                                         </div>
                                     </div>
-                                {{- end }}
+                                </div>
 
                                 {{- if .Params.tags -}}
                                     <div class="info-tile info-tile--wide" data-tile="tags">
