@@ -3,7 +3,7 @@
        summary middle, round-button right. Chrome mirrors the info-tile
        pattern from article-info.scss (same dark background, gold-dark
        border, rounded corners, no shadow). Styles: elements/author-card.scss. */ -}}
-<article class="author-card">
+<article class="author-card mb-5">
     {{- if .Resources -}}
         {{- range first 1 (.Resources.ByType "image") -}}
             {{- $img := .Fill "96x96" -}}

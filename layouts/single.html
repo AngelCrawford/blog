@@ -201,27 +201,11 @@
 
 
                     <div class="column is-12-mobile is-6-tablet is-4-desktop is-12-widescreen is-12-fullhd">
-                        <div class="related widget mt-6">
-                            <p class="title is-5">Ähnliche Artikel</p>
-                            <div class="widget-content">
-                                <ul>
-                                    {{/* Story 1.3: filter withered out of related candidates so
-                                         non-withered articles never surface withered ones. */}}
-                                    {{ $relatedCandidates := partial "withered-filter.html" .Site.RegularPages }}
-                                    {{ $related := $relatedCandidates.Related . }}
-                                    {{ range first 5 (where $related "Type" "articles") }}
-                                        <li>
-                                            <span class="name"><a href="{{ .RelPermalink }}" title="{{ .Title }}">{{ .Title }}</a></span>
-                                            <span class="number">{{ .Date | time.Format ":date_short" }}</span>
-                                        </li>
-                                    {{ end }}
-                                </ul>
-                            </div>
-                        </div>
+                        {{ partial "widgets/related-articles" . }}
                     </div>
                 </div>
 
-                <aside class="widget mt-6 mb-6">
+                <aside class="widget">
                     {{- if .Params.authors -}}
                         {{ range (.GetTerms "authors") }}
                             {{ partial "widgets/author-card" . }}
