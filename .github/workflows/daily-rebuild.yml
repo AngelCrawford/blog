@@ -67,6 +67,26 @@ jobs:
             echo "::warning::No tags found — cron rebuild from main HEAD"
           fi
 
+      # Detect maintenance mode via sentinel file at the repo root.
+      # Toggle ON:  `touch .maintenance && git add -f .maintenance && git commit && git push`
+      # Toggle OFF: `git rm .maintenance && git commit && git push`
+      # When active, hugo loads config/maintenance/{config,params}.yaml on top of
+      # _default — disabling RSS/sitemap/taxonomy and flipping maintenance_mode to true.
+      #
+      # Runs early (after the cron-tag-checkout) so downstream steps can gate
+      # themselves on maintenance mode — the test gate, Playwright install, data
+      # generation, and data commit are all skipped when `.maintenance` is present
+      # so emergency maintenance flips finish in ~60s instead of ~150s.
+      - name: Detect maintenance mode
+        id: maint
+        run: |
+          if [ -f .maintenance ]; then
+            echo "env=maintenance" >> "$GITHUB_OUTPUT"
+            echo "::notice title=Maintenance mode active::Sentinel file '.maintenance' present — skipping tests + data generation, building with --environment maintenance"
+          else
+            echo "env=production" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -94,10 +114,15 @@ jobs:
       # Tests must pass before any deploy step runs. If tests fail (build-smoke
       # regressions or e2e smoke broken), the workflow exits here and no deploy
       # happens — the previously deployed site stays live and untouched.
+      # Skipped in maintenance mode: the previously-deployed site already has
+      # a problem, the whole point is to put the maintenance page up NOW. The
+      # maintenance template is hand-curated and tiny — accepted trade-off.
       - name: Install Playwright browsers
+        if: steps.maint.outputs.env != 'maintenance'
         run: npx playwright install --with-deps chromium
 
       - name: Run tests (build-smoke + e2e)
+        if: steps.maint.outputs.env != 'maintenance'
         run: npm test
 
       # === Generate data files via Phase-0-Placeholder-Scripts ===
@@ -105,7 +130,11 @@ jobs:
       # untracked files. Hugo build (later step) consumes them directly.
       # Phase 1A replaces the script bodies with real Umami/webmention.io fetch logic
       # (Stories 2.1, 2.3, 3.1, 3.2, 3.3).
+      # Skipped in maintenance mode: maintenance.html doesn't read data files,
+      # and an emergency flip shouldn't waste an Umami API call or commit
+      # redundant data to the data-updates branch.
       - name: Generate data files via scripts
+        if: steps.maint.outputs.env != 'maintenance'
         env:
           UMAMI_API_KEY: ${{ secrets.UMAMI_API_KEY }}
           UMAMI_WEBSITE_ID: ${{ secrets.UMAMI_WEBSITE_ID }}
@@ -123,7 +152,9 @@ jobs:
       #   - data-updates is an orphan branch with only data/ — no scripts/
       #   - Switching branches would lose scripts/ access
       # Worktree gives us a parallel checkout of data-updates without disturbing main.
+      # Skipped in maintenance mode: no data was generated, no commit needed.
       - name: Commit data to data-updates branch
+        if: steps.maint.outputs.env != 'maintenance'
         run: |
           git config user.name "GitHub Actions Bot"
           git config user.email "actions@github.com"
@@ -166,21 +197,6 @@ jobs:
           fi
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
           echo "Build version: $VERSION"
-
-      # Detect maintenance mode via sentinel file at the repo root.
-      # Toggle ON:  `touch .maintenance && git add -f .maintenance && git commit && git push`
-      # Toggle OFF: `git rm .maintenance && git commit && git push`
-      # When active, hugo loads config/maintenance/{config,params}.yaml on top of
-      # _default — disabling RSS/sitemap/taxonomy and flipping maintenance_mode to true.
-      - name: Detect maintenance mode
-        id: maint
-        run: |
-          if [ -f .maintenance ]; then
-            echo "env=maintenance" >> "$GITHUB_OUTPUT"
-            echo "::notice title=Maintenance mode active::Sentinel file '.maintenance' present — building with --environment maintenance"
-          else
-            echo "env=production" >> "$GITHUB_OUTPUT"
-          fi
 
       - name: Build Hugo site
         env:
