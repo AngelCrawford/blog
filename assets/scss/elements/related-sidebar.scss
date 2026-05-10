@@ -1,26 +1,27 @@
-// elements/related-articles.scss — "Ähnliche Artikel" widget on single
+// elements/related-sidebar.scss — "Ähnliche Artikel" widget on single
 // article pages.
 //
 // Chrome via `helpers.tile-box` (same surface tokens as info-tile,
-// author-card, series-sidebar). Header is the uppercase label pattern, then
+// author-sidebar, series-sidebar, toc-sidebar). Header is the uppercase
+// label pattern, then
 // a list of rows: title left (wraps), date right (tabular nums, top-aligned
 // so wrapped titles don't push the date down). Items separated by a dashed
 // divider; first/last item shed the redundant padding/border.
 //
-// Markup: layouts/_partials/widgets/related-articles.html
+// Markup: layouts/_partials/widgets/related-sidebar.html
 //
 // Specificity note: full article body is wrapped in `<main class="content">`
 // (baseof.html), so Bulma's `.content ul` rules apply. The list selector
-// below is qualified with `ul` and nested under `.related-articles` to clear
+// below is qualified with `ul` and nested under `.related-sidebar` to clear
 // `.content ul` (0,1,1) — without it the default disc markers + 2em
 // indent leak through.
 @use "../vars/helpers";
 
-.related-articles {
+.related-sidebar {
     @include helpers.tile-box;
     padding: 0.9rem 1rem;
 
-    .related-articles__title {
+    .related-sidebar__title {
         font-size: 0.7rem;
         font-weight: 600;
         letter-spacing: 0.08em;
@@ -31,13 +32,13 @@
         border-bottom: 1px solid helpers.$tile-border;
     }
 
-    ul.related-articles__list {
+    ul.related-sidebar__list {
         list-style: none;
         margin: 0;
         padding: 0;
     }
 
-    li.related-articles__item {
+    li.related-sidebar__item {
         display: flex;
         align-items: flex-start;
         gap: 0.8rem;
@@ -55,7 +56,7 @@
         }
     }
 
-    .related-articles__link {
+    .related-sidebar__link {
         flex: 1;
         min-width: 0;
         color: rgba(helpers.$gold-light, 0.85);
@@ -69,7 +70,7 @@
         }
     }
 
-    .related-articles__date {
+    .related-sidebar__date {
         flex-shrink: 0;
         color: helpers.$text-label;
         font-size: 0.75rem;

@@ -152,10 +152,11 @@
     }
 }
   
-// Standard tile/card chrome — recurring surface for info-tile, author-card,
-// series-sidebar. Background + border + rounded corners. Padding stays at
-// the call site since each surface has its own rhythm. Tokens live in
-// vars/_colors.scss so a palette change touches one file.
+// Standard tile/card chrome — recurring surface for info-tile,
+// author-sidebar, related-sidebar, series-sidebar, toc-sidebar. Background
+// + border + rounded corners. Padding stays at the call site since each
+// surface has its own rhythm. Tokens live in vars/_colors.scss so a palette
+// change touches one file.
 @mixin tile-box {
     background: c.$tile-bg;
     border: 1px solid c.$tile-border;

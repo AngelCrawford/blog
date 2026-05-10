@@ -3,18 +3,18 @@
        filtered to non-withered candidates (Story 1.3: non-withered articles
        never surface withered ones in related). Layout: title left
        (wraps to multiple lines), date right (tabular nums). Dashed divider
-       between items. Styles: elements/related-articles.scss. */ -}}
+       between items. Styles: elements/related-sidebar.scss. */ -}}
 {{- $candidates := partial "withered-filter.html" .Site.RegularPages -}}
 {{- $related := $candidates.Related . -}}
 {{- $articles := first 5 (where $related "Type" "articles") -}}
 {{- if $articles -}}
-<section class="related-articles">
-    <h2 class="related-articles__title">Ähnliche Artikel</h2>
-    <ul class="related-articles__list">
+<section class="related-sidebar">
+    <h2 class="related-sidebar__title">Ähnliche Artikel</h2>
+    <ul class="related-sidebar__list">
         {{ range $articles }}
-        <li class="related-articles__item">
-            <a class="related-articles__link" href="{{ .RelPermalink }}" title="{{ .Title }}">{{ .Title }}</a>
-            <time class="related-articles__date" datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date | time.Format "02.01.06" }}</time>
+        <li class="related-sidebar__item">
+            <a class="related-sidebar__link" href="{{ .RelPermalink }}" title="{{ .Title }}">{{ .Title }}</a>
+            <time class="related-sidebar__date" datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date | time.Format "02.01.06" }}</time>
         </li>
         {{ end }}
     </ul>

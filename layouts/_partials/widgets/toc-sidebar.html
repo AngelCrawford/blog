@@ -1,0 +1,12 @@
+{{- /* Table-of-contents widget for single article pages. Receives the
+       current article (`.`). Renders Hugo's `.TableOfContents` (which emits
+       `<nav id="TableOfContents"><ul>…</ul></nav>`) inside the standard
+       tile-box chrome with an uppercase "ÜBERSICHT" header.
+
+       The length heuristic (≥ 100 chars) lives at the call site in
+       layouts/single.html so callers can opt in/out by frontmatter later
+       without changing this partial. Styles: elements/toc-sidebar.scss. */ -}}
+<section class="toc-sidebar">
+    <h2 class="toc-sidebar__title">Inhaltsangabe</h2>
+    {{ .TableOfContents }}
+</section>

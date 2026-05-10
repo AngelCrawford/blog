@@ -1,13 +1,13 @@
-// elements/author-card.scss — author box on single article pages.
+// elements/author-sidebar.scss — author box on single article pages.
 //
 // Chrome via `helpers.tile-box` mixin — same surface tokens as info-tile
 // and series-sidebar (vars/_colors.scss: $tile-bg, $tile-border, $tile-radius).
 // Horizontal 3-column layout: round image · (name + 3-line clamped summary) · round-button.
 //
-// Markup: layouts/_partials/widgets/author-card.html
+// Markup: layouts/_partials/widgets/author-sidebar.html
 @use "../vars/helpers";
 
-.author-card {
+.author-sidebar {
     @include helpers.tile-box;
     display: flex;
     flex-direction: row;
@@ -15,7 +15,7 @@
     gap: 0.85rem;
     padding: 0.85rem 1rem;
 
-    .author-card__image {
+    .author-sidebar__image {
         width: 64px;
         height: 64px;
         flex-shrink: 0;
@@ -41,7 +41,7 @@
         }
     }
 
-    .author-card__body {
+    .author-sidebar__body {
         flex: 1;
         min-width: 0; // enables ellipsis on overflowing children
         display: flex;
@@ -49,7 +49,7 @@
         gap: 0.25rem;
     }
 
-    .author-card__name {
+    .author-sidebar__name {
         font-size: 0.875rem;
         margin: 0;
         line-height: 1.2;
@@ -66,7 +66,7 @@
         }
     }
 
-    .author-card__summary {
+    .author-sidebar__summary {
         font-size: 0.875rem;
         color: helpers.$text-muted;
         line-height: 1.35;
@@ -80,7 +80,7 @@
         text-overflow: ellipsis;
     }
 
-    .author-card__more {
+    .author-sidebar__more {
         flex-shrink: 0;
     }
 }

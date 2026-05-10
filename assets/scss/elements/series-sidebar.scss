@@ -1,8 +1,8 @@
 // elements/series-sidebar.scss — series widget on single article pages.
 //
 // Outer chrome via `helpers.tile-box` mixin — same surface tokens as
-// info-tile and author-card (vars/_colors.scss: $tile-bg, $tile-border,
-// $tile-radius). Three inner sections:
+// info-tile and the sibling *-sidebar widgets (vars/_colors.scss:
+// $tile-bg, $tile-border, $tile-radius). Three inner sections:
 //   1. .series-sidebar__head   — "SERIE" label left, "N Teile" pill right
 //   2. .series-sidebar__title  — series name on a tinted band
 //   3. .series-sidebar__list   — numbered list with CSS-counter leading-zero
@@ -25,7 +25,6 @@
 
 .series-sidebar {
     @include helpers.tile-box;
-    margin-top: 1.5rem;
     padding: 0.9rem 1rem;
 
     .series-sidebar__head {

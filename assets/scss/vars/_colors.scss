@@ -9,10 +9,10 @@ $gold-light: hsl(29, 100%, 80%);
 $gold: hsl(35, 45%, 50%);
 $gold-dark: hsl(35, 45%, 26%);
 
-// Surface tokens — recurring box/tile chrome for info-tile, author-card,
-// series-sidebar, etc. Defined here so a palette tweak doesn't need a hunt
-// across element files. Consumed via the `tile-box` mixin in _helpers.scss
-// or directly as `helpers.$tile-*`.
+// Surface tokens — recurring box/tile chrome for info-tile and the
+// *-sidebar widgets (author, related, series, toc). Defined here so a
+// palette tweak doesn't need a hunt across element files. Consumed via
+// the `tile-box` mixin in _helpers.scss or directly as `helpers.$tile-*`.
 $tile-bg: color.adjust($dark, $lightness: -1%);
 $tile-border: rgba($gold-dark, 0.4);
 $tile-radius: 0.45rem;

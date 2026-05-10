@@ -183,13 +183,7 @@
 
                     {{- if ge (len .TableOfContents) 100 -}}
                         <div class="column is-12-mobile is-6-tablet is-4-desktop is-12-widescreen is-12-fullhd">
-                            <div class="toc widget mt-6">
-                                <p class="title is-5">Übersicht</p>
-
-                                <div class="widget-content">
-                                    {{ .TableOfContents }}
-                                </div>
-                            </div>
+                            {{ partial "widgets/toc-sidebar" . }}
                         </div>
                     {{- end -}}
 
@@ -201,18 +195,18 @@
 
 
                     <div class="column is-12-mobile is-6-tablet is-4-desktop is-12-widescreen is-12-fullhd">
-                        {{ partial "widgets/related-articles" . }}
+                        {{ partial "widgets/related-sidebar" . }}
                     </div>
                 </div>
 
                 <aside class="widget">
                     {{- if .Params.authors -}}
                         {{ range (.GetTerms "authors") }}
-                            {{ partial "widgets/author-card" . }}
+                            {{ partial "widgets/author-sidebar" . }}
                         {{ end }}
                     {{ else }}
                         {{ with $.Site.GetPage (printf "/authors/%s" $.Site.Params.default_author) }}
-                            {{ partial "widgets/author-card" . }}
+                            {{ partial "widgets/author-sidebar" . }}
                         {{ end }}
                     {{- end -}}
                 </aside>
