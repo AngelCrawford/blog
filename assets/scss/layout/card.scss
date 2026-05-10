@@ -573,35 +573,6 @@ article.card.is-horizontal.is-log {
   }
 }
 
-// Author Single Page
-.is-small.author-single-page article.card.is-horizontal.is-author {
-  background: color.adjust(helpers.$dark, $lightness: -2%);
-
-  .card-content {
-
-    .title {
-      text-align: left;
-    }
-    .subtitle {
-      display: none;
-    }
-    .content {
-      text-align: left;
-    }
-    .author-summary {
-      display: block;
-    }
-    .author-articles {
-      display: none;
-    }
-  }
-  .card-footer-item {
-    svg.ri-1x {
-      margin-right: 5px;
-    }
-  }
-}
-
 @include helpers.mobile {
 
   .grid.is-col-min-19,

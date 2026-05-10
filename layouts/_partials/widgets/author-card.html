@@ -1,0 +1,28 @@
+{{- /* Author card for single article pages. Receives an author term page (`.`).
+       Compact horizontal layout: round image left, name + 3-line clamped
+       summary middle, round-button right. Chrome mirrors the info-tile
+       pattern from article-info.scss (same dark background, gold-dark
+       border, rounded corners, no shadow). Styles: elements/author-card.scss. */ -}}
+<article class="author-card">
+    {{- if .Resources -}}
+        {{- range first 1 (.Resources.ByType "image") -}}
+            {{- $img := .Fill "96x96" -}}
+            <figure class="author-card__image">
+                <a href="{{ $.RelPermalink }}" title="{{ $.LinkTitle }}">
+                    <img src="{{ $img.RelPermalink }}" alt="{{ $.Title }}" width="96" height="96" loading="lazy">
+                </a>
+            </figure>
+        {{- end -}}
+    {{- end -}}
+    <div class="author-card__body">
+        <div class="author-card__name">
+            <a href="{{ .RelPermalink }}" title="{{ .Title }}">{{ .Title }}</a>
+        </div>
+        <div class="author-card__summary">{{ .Summary | plainify }}</div>
+    </div>
+    <a class="button round-button inset author-card__more" title="Mehr zum Autor" href="{{ .RelPermalink }}" aria-label="Mehr zum Autor {{ .Title }}">
+        <svg class="ri-1x" aria-hidden="true">
+            <use href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ .Site.Params.remixicon_version }}#arrow-right-s-line"></use>
+        </svg>
+    </a>
+</article>
