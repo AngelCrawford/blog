@@ -9,19 +9,16 @@ params:
 ---
 
 Es handelt sich hier um eine rein private Website.
-* Ich speicher keine Daten
 * Verwende keinen Google Analytics Dienst
 * Nutze keine Bilder ohne Genehmigung
-* **Fazit:** Meine Daten
 
-Ich halte mir somit vor, meine private Adresse hier nicht zu Veröffentlichen, da ich aufgrund der DSGVO etwas geschädigt wurde.
+Details zur Datenverarbeitung findest Du in der [Datenschutzerklärung](/pages/datenschutz/).
 
-E-Mail:
-<span class="ltrText">
-  e<!--- .com >@ -->d<span class="addSeparatorDot"></span>
-  d<!-- kommentar@testfatte.de -->rof<!-- >@. -->warc<!-- >@. -->-legna<span class="addSeparatorAt"></span>
-  l<span class="removeText">REMOVE_ME!</span>i<!-- kommentar@falle -->am
-</span>
+Ich halte mir somit vor, meine private Adresse hier nicht zu veröffentlichen, da ich aufgrund der DSGVO etwas geschädigt wurde.
+
+E-Mail (gegen Spam-Bots leicht verfremdet — bitte vor dem Senden einmal manuell zusammensetzen, [at] → `@`, [dot] → `.`):
+
+> **mail [at] article-time [dot] de**
 
 ## Information
 Gebaut mit Hugo CMS und auf Github Pages Veröffentlicht. Du kannst den Code dazu auf [Github](https://github.com/AngelCrawford/profilecard-public) finden.

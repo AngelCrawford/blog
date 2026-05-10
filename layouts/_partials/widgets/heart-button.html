@@ -32,7 +32,7 @@
 {{- $isArticle := eq $page.Type "articles" -}}
 {{- $readonly := and $isCard $isArticle -}}
 {{- $showHint := and (not $isCard) $isArticle -}}
-{{- $hearts := index $page.Site.Data.umami_hearts $page.RelPermalink | default 0 -}}
+{{- $hearts := index hugo.Data.umami_hearts $page.RelPermalink | default 0 -}}
 {{- $sprite := "fonts/remixicon/remixicon.symbol.svg" | relURL -}}
 {{- $rv := $page.Site.Params.remixicon_version -}}
 

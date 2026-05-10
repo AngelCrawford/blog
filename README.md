@@ -4,7 +4,7 @@
 
 A personal Hugo blog being transformed into a **Digital Garden** — content that grows and evolves through reader engagement, where quality naturally rises and updates are rewarded with visibility.
 
-- 🌐 Live: [https://angelcrawford.github.io/blog/](https://angelcrawford.github.io/blog/) (custom domain `article-time.de` planned)
+- 🌐 Live: [article-time.de](https://article-time.de)
 - 🌱 Languages: German / English
 
 📖 **Operations runbook:** [`docs/technical/runbook.md`](docs/technical/runbook.md) — setup, tests, maintenance mode toggle, deploy. Read that for *how to do X*; this README is the project overview.
@@ -98,10 +98,6 @@ When you want to re-trigger a deploy without bumping a version (e.g., re-run aft
 gh workflow run daily-rebuild.yml --ref main   # default ref is main
 gh run watch                                   # optional: follow to completion
 ```
-
-### Deploy URL
-
-The deployed URL is whatever `baseURL` in [`config/production/config.yaml`](config/production/config.yaml) points at. Update that single file when switching between the GitHub Pages default (`https://angelcrawford.github.io/blog/`) and the planned custom domain (`https://article-time.de/`); the third-party-asset-monitor workflow (Story 2.6) reads the same value, so it retargets automatically.
 
 ### Maintenance mode
 

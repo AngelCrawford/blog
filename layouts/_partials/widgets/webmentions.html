@@ -5,7 +5,7 @@
        (NOT safeHTML); server-side sanitization is Story 3.2's responsibility.
        Empty-state path activates when the data file is absent, the article
        permalink is missing from it, or the entry list is empty. */ -}}
-{{- $mentions := index .Site.Data.webmentions_by_article .RelPermalink | default (slice) -}}
+{{- $mentions := index hugo.Data.webmentions_by_article .RelPermalink | default (slice) -}}
 
 <section id="webmentions" class="webmentions box-footer mt-6">
     <h2 class="title is-4">Antworten &amp; Erwähnungen</h2>

@@ -1,0 +1,10 @@
+# Hugo i18n strings — German (defaultContentLanguage: de).
+#
+# Bootstrapped 2026-05-10 from the webmention-author-unknown fallback (Story 2.5
+# review item). Site is currently monolingual de-DE; this file is the seed for a
+# planned site-wide migration of hardcoded German UI strings (see backlog).
+#
+# Convention: keys are dot-separated component scopes (widget.section.string).
+# Use `{{ i18n "key" }}` in templates; combine with `default` for fallback chains.
+
+webmention_author_unknown: Unbekannt

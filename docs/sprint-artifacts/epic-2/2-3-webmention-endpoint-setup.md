@@ -164,7 +164,7 @@ ACs 1–5 are derived verbatim from `docs/1-planning/epics.md#Story-2.3-Webmenti
 - [x] [Review][Patch] `articlesDir` existence not guarded before `readdirSync` — resolved: added `existsSync` guard with `assert.fail` before `readdirSync`. [`tests/build/build-smoke.test.mjs`]
 - [x] [Review][Patch] Hugo comment whitespace trim inconsistency — resolved: changed `*/}}` to `*/ -}}` on both Story 2.3 comment blocks. [`layouts/_partials/_base/head.html`]
 - [x] [Review][Patch] Privacy policy contradicts itself on personal data — resolved: narrowed disclaimer to "keine IP-Adressen oder Cookies der Webmention-Sender." [`content/pages/datenschutz.md`]
-- [x] [Review][Defer] No automated test for `rel="me"` presence [`tests/build/build-smoke.test.mjs`] — deferred; link is explicitly temporary (Pre-Spec Note in epics.md Story 9.12); adding a test would add churn when 9.12 removes the shim.
+- [x] [Review][Defer→Routed 2026-05-10] No automated test for `rel="me"` presence [`tests/build/build-smoke.test.mjs`] — deferred; link is explicitly temporary (Pre-Spec Note in epics.md Story 9.12); adding a test would add churn when 9.12 removes the shim. Routed to Story 9.12 Pre-Spec Notes: when 9.12 deletes the shim, no orphaned test needs cleanup — absence is correct. Backlog row pruned 2026-05-10.
 - [x] [Review][Defer] Redundant full `hugo` production builds per test function [`tests/build/build-smoke.test.mjs`] — deferred; pre-existing pattern throughout build-smoke.test.mjs, not introduced by this story.
 
 ## Dev Notes

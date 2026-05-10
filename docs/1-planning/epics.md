@@ -488,7 +488,7 @@ Damit der Workflow bereits jetzt grün durchläuft (AC5: „runs successfully on
 **Effort:** 1.5 days
 
 **Pre-Spec Notes (from prior-story reviews):**
-- **Key-format validation (from Story 2.2 review, 2026-05-09).** `layouts/_partials/widgets/heart-button.html` looks up counts via `index .Site.Data.umami_hearts .RelPermalink` (e.g. `/articles/my-post/`). This script MUST write keys in exactly that format — trailing slash, no `baseURL` prefix, no leading scheme/host. Add an explicit validation step in the script (or a smoke test) that asserts every emitted key matches `^/[^?#]*/$` before writing `data/umami_hearts.json`, so a key-format drift breaks the fetch loudly rather than silently zeroing out heart counts on the live site.
+- **Key-format validation (from Story 2.2 review, 2026-05-09).** `layouts/_partials/widgets/heart-button.html` looks up counts via `index hugo.Data.umami_hearts .RelPermalink` (e.g. `/articles/my-post/`). This script MUST write keys in exactly that format — trailing slash, no `baseURL` prefix, no leading scheme/host. Add an explicit validation step in the script (or a smoke test) that asserts every emitted key matches `^/[^?#]*/$` before writing `data/umami_hearts.json`, so a key-format drift breaks the fetch loudly rather than silently zeroing out heart counts on the live site.
 
 ---
 
@@ -515,6 +515,10 @@ Damit der Workflow bereits jetzt grün durchläuft (AC5: „runs successfully on
 **Dependencies:** None
 
 **Effort:** 2 days
+
+**Pre-Spec Notes (from prior-story reviews):**
+- **Key-format validation for `webmentions_by_article.json` (from Story 2.4 review, 2026-05-09).** `layouts/_partials/widgets/webmention-group.html` looks up grouped mentions via `index hugo.Data.webmentions_by_article .RelPermalink` (e.g. `/articles/my-post/`). This script MUST emit keys in exactly that format — trailing slash, no `baseURL` prefix, no leading scheme/host. Add an explicit validation step (or smoke test) asserting every emitted key matches `^/[^?#]*/$` before writing `data/webmentions_by_article.json`, so a key drift breaks the build loudly rather than silently zeroing out webmention groups on the live site. Mirrors the same convention captured for `umami_hearts.json` in Story 3.1's Pre-Spec.
+- **Adversarial XSS fixture for webmention content (from Story 2.4 review, 2026-05-09).** Story 2.4's AC #8 XSS smoke test validates Hugo auto-escape only against clean fixture data — no HTML payloads in `data/webmentions_by_article.json`, so the test cannot confirm escape is active. When this script lands (or at the latest when Playwright is set up under Epic 9), include at least one adversarial fixture entry (e.g. `content` containing `<script>alert(1)</script>` or `<img onerror=…>`) so the display path actually exercises the escape.
 
 ---
 
@@ -1681,6 +1685,7 @@ Damit der Workflow bereits jetzt grün durchläuft (AC5: „runs successfully on
 
 **Pre-Spec Notes:**
 - **Replace/remove the temporary `rel="me"` link in `layouts/_partials/_base/head.html`.** Story 2.3 added `<link rel="me" href="https://github.com/AngelCrawford" />` to the head as a one-line shim required by webmention.io's IndieAuth signup flow (the only `rel="me"` markup site-wide). Story 9.12's `params.social`-driven render replaces this with a structured set (Mastodon, Threads, GitHub, …). When wiring 9.12, **delete** the hardcoded line in `head.html` (and its 6-line preceding comment block) so the only source of `rel="me"` links is the social-follow partial — avoids duplicate GitHub `rel="me"` entries and keeps the IndieAuth identity surface in one place.
+- **No orphaned `rel="me"` test to clean up (from Story 2.3 review, 2026-05-09).** Story 2.3's review flagged the absence of an automated `rel="me"`-presence test. Adding one was deliberately deferred because this story removes the shim being tested — a test added at 2.3 would have created churn here. When 9.12 lands and the shim is deleted, no test cleanup is required; the absence is correct. Add a fresh assertion targeting the new `params.social`-driven output if AC coverage demands one.
 
 ---
 

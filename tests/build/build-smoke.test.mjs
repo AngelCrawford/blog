@@ -1407,6 +1407,35 @@ test("Story 2.2 AC #3+#9: hearts.js is bundled into footerBundle.js (localStorag
 // as the seeded permalink (renamed to .example before Story 3.2 lands).
 // =============================================================================
 
+// Derive fixture-targeted article slug from data/webmentions_by_article.json so
+// renames of the fixture article propagate automatically (data file is the
+// source of truth — the test no longer hardcodes the slug). The first key in
+// the data file is treated as THE fixture target; if multiple fixture entries
+// exist later, only the first one drives the fixture-targeted assertions.
+const webmentionFixtureKeys = Object.keys(
+  JSON.parse(
+    readFileSync(
+      resolve(repoRoot, "data", "webmentions_by_article.json"),
+      "utf8"
+    )
+  )
+);
+if (webmentionFixtureKeys.length === 0) {
+  throw new Error(
+    "data/webmentions_by_article.json has no entries — Story 2.4 tests require at least one fixture entry"
+  );
+}
+const webmentionFixtureKeySet = new Set(webmentionFixtureKeys);
+const fixtureSlugMatch = webmentionFixtureKeys[0].match(
+  /^\/articles\/([^/]+)\/?$/
+);
+if (!fixtureSlugMatch) {
+  throw new Error(
+    `Unexpected webmention fixture key format (expected /articles/<slug>/): ${webmentionFixtureKeys[0]}`
+  );
+}
+const webmentionFixtureSlug = fixtureSlugMatch[1];
+
 test("Story 2.4 AC #1+#11: production article page emits <section id=\"webmentions\"> exactly once", () => {
   const result = spawnSync("hugo", hugoArgs, {
     cwd: repoRoot,
@@ -1442,7 +1471,7 @@ test("Story 2.4 AC #2+#3+#7: fixture-targeted article renders all four type-grou
   assert.equal(result.status, 0, `Production build failed.\n${result.stderr}`);
 
   const articleHtml = readFileSync(
-    resolve(testPublic, "articles", "rss-test", "index.html"),
+    resolve(testPublic, "articles", webmentionFixtureSlug, "index.html"),
     "utf8"
   );
 
@@ -1495,9 +1524,21 @@ test("Story 2.4 AC #5: non-fixture article renders empty-state and omits count l
   });
   assert.equal(result.status, 0, `Production build failed.\n${result.stderr}`);
 
-  // movie-test is not a key in the fixture — must hit the empty-state path.
+  // Pick any rendered article whose URL is NOT in the webmention fixture —
+  // the empty-state path doesn't depend on which non-fixture article we use,
+  // so we derive it from the actual build output.
+  const articlesDir = resolve(testPublic, "articles");
+  const nonFixtureSlug = readdirSync(articlesDir)
+    .filter((slug) => !slug.startsWith("_test_"))
+    .filter((slug) => existsSync(resolve(articlesDir, slug, "index.html")))
+    .filter((slug) => !webmentionFixtureKeySet.has(`/articles/${slug}/`))
+    .sort()[0];
+  assert.ok(
+    nonFixtureSlug,
+    "Expected at least one non-fixture article in public-test/articles/ for empty-state assertion"
+  );
   const articleHtml = readFileSync(
-    resolve(testPublic, "articles", "movie-test", "index.html"),
+    resolve(articlesDir, nonFixtureSlug, "index.html"),
     "utf8"
   );
 
@@ -1532,7 +1573,7 @@ test("Story 2.4 AC #6: every <a> inside .webmention block carries rel with noope
   assert.equal(result.status, 0, `Production build failed.\n${result.stderr}`);
 
   const articleHtml = readFileSync(
-    resolve(testPublic, "articles", "rss-test", "index.html"),
+    resolve(testPublic, "articles", webmentionFixtureSlug, "index.html"),
     "utf8"
   );
 
@@ -1545,12 +1586,17 @@ test("Story 2.4 AC #6: every <a> inside .webmention block carries rel with noope
     links.length > 0,
     "Webmention author/source links must be present on fixture-targeted article"
   );
+  const requiredRelTokens = ["noopener", "noreferrer", "external"];
   for (const link of links) {
-    assert.match(
-      link,
-      /rel="noopener noreferrer external"/,
-      `Webmention link missing rel="noopener noreferrer external": ${link}`
-    );
+    const relMatch = link.match(/\srel="([^"]*)"/);
+    assert.ok(relMatch, `Webmention link missing rel attribute: ${link}`);
+    const relTokens = new Set(relMatch[1].split(/\s+/).filter(Boolean));
+    for (const token of requiredRelTokens) {
+      assert.ok(
+        relTokens.has(token),
+        `Webmention link rel missing "${token}" token: ${link}`
+      );
+    }
     assert.match(
       link,
       /target="_blank"/,
@@ -1573,7 +1619,7 @@ test("Story 2.4 AC #6 patch: empty author_url and empty published render <span> 
   assert.equal(result.status, 0, `Production build failed.\n${result.stderr}`);
 
   const articleHtml = readFileSync(
-    resolve(testPublic, "articles", "rss-test", "index.html"),
+    resolve(testPublic, "articles", webmentionFixtureSlug, "index.html"),
     "utf8"
   );
 
@@ -1626,7 +1672,7 @@ test("Story 2.4 AC #8: webmention reply content is auto-escaped (XSS guard, no s
   assert.equal(result.status, 0, `Production build failed.\n${result.stderr}`);
 
   const articleHtml = readFileSync(
-    resolve(testPublic, "articles", "rss-test", "index.html"),
+    resolve(testPublic, "articles", webmentionFixtureSlug, "index.html"),
     "utf8"
   );
 
@@ -1707,7 +1753,10 @@ test("Story 2.5 AC #3+#5: privacy page renders posture statement and contact-wit
   );
   assert.match(
     html,
-    /<h2 id="?kontakt-für-datenschutzanfragen"?[^>]*>\s*Kontakt für Datenschutzanfragen/,
+    // `id` slug accepts both `für` and `fur` so the test survives Hugo slugify
+    // changes / `removePathAccents: true` — the heading content remains the
+    // authoritative assertion.
+    /<h2 id="?kontakt-f[üu]r-datenschutzanfragen"?[^>]*>\s*Kontakt für Datenschutzanfragen/,
     "Privacy page must render the contact section (AC #5)"
   );
   // Each of the seven DSGVO rights articles must be cited (Art. 15-21 + Art. 77).
@@ -1790,6 +1839,70 @@ test("Story 2.5 AC #8: privacy page retains noindex meta and is excluded from si
     sitemap,
     /\/pages\/datenschutz\//,
     "sitemap.xml must NOT include /pages/datenschutz/ (robotsdisallow excludes it)"
+  );
+});
+
+test("Story 2.5 AC #8 (regression guard): every page emitting noindex robots meta is excluded from sitemap.xml", () => {
+  // Behavioural assertion across ALL pages with effective `robotsdisallow: true`,
+  // not just /pages/datenschutz/. Catches regressions where the sitemap template's
+  // `{{ if not .Params.robotsdisallow }}` gate breaks for other pages while the
+  // head.html noindex meta keeps working (or vice versa).
+  const result = spawnSync("hugo", hugoArgs, {
+    cwd: repoRoot,
+    encoding: "utf8",
+    shell: process.platform === "win32",
+  });
+  assert.equal(result.status, 0, `Production build failed.\n${result.stderr}`);
+
+  const sitemapPath = resolve(testPublic, "sitemap.xml");
+  assert.ok(existsSync(sitemapPath), "sitemap.xml must exist");
+  const sitemap = readFileSync(sitemapPath, "utf8");
+
+  // Parse `<loc>https://host/path/</loc>` values into a Set of host-relative paths.
+  const sitemapPaths = new Set(
+    [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) =>
+      m[1].replace(/^https?:\/\/[^/]+/, "")
+    )
+  );
+
+  // Walk public-test/ for every rendered index.html, collect host-relative URLs
+  // whose HTML emits the noindex robots meta.
+  function* walkIndexHtml(dir) {
+    for (const entry of readdirSync(dir, { withFileTypes: true })) {
+      const full = resolve(dir, entry.name);
+      if (entry.isDirectory()) {
+        yield* walkIndexHtml(full);
+      } else if (entry.isFile() && entry.name === "index.html") {
+        yield full;
+      }
+    }
+  }
+
+  const noindexRegex = /<meta name="?robots"? content="noindex/;
+  const noindexUrls = [];
+  for (const file of walkIndexHtml(testPublic)) {
+    const html = readFileSync(file, "utf8");
+    if (noindexRegex.test(html)) {
+      const rel = file
+        .slice(testPublic.length)
+        .replace(/\\/g, "/")
+        .replace(/\/index\.html$/, "/");
+      noindexUrls.push(rel === "" ? "/" : rel);
+    }
+  }
+
+  // Sanity: if no noindex pages render at all, the test is a no-op (something
+  // upstream silently broke noindex emission). Fail loudly instead.
+  assert.ok(
+    noindexUrls.length > 0,
+    "Expected at least one rendered page with noindex robots meta — none found, test would be a no-op"
+  );
+
+  const leaks = noindexUrls.filter((url) => sitemapPaths.has(url));
+  assert.deepEqual(
+    leaks,
+    [],
+    `sitemap.xml leaks noindex pages (sitemap-exclusion gate broken for these): ${leaks.join(", ")}`
   );
 });
 

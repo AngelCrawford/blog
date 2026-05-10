@@ -21,9 +21,9 @@
                         <a class="webmention__author"
                            href="{{ .author_url }}"
                            rel="noopener noreferrer external"
-                           target="_blank">{{ .author | default "Unbekannt" }}</a>
+                           target="_blank">{{ .author | default (i18n "webmention_author_unknown") }}</a>
                         {{- else }}
-                        <span class="webmention__author">{{ .author | default "Unbekannt" }}</span>
+                        <span class="webmention__author">{{ .author | default (i18n "webmention_author_unknown") }}</span>
                         {{- end }}
                         {{- if and (eq .type "reply") .content }}
                             <p class="webmention__content">{{ .content }}</p>

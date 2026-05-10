@@ -299,8 +299,8 @@ Hugo reads JSON files from `data/` directory:
 
 ```hugo
 <!-- Access in templates -->
-{{ $hearts := .Site.Data.umami_hearts }}
-{{ $webmentions := .Site.Data.webmentions_by_article }}
+{{ $hearts := hugo.Data.umami_hearts }}
+{{ $webmentions := hugo.Data.webmentions_by_article }}
 
 <!-- Lookup by permalink -->
 {{ $myHearts := index $hearts .RelPermalink | default 0 }}
@@ -541,8 +541,8 @@ jobs:
 
 ```hugo
 <!-- layouts/_partials/popularity-score.html -->
-{{ $hearts := index .Site.Data.umami_hearts .RelPermalink | default 0 }}
-{{ $webmentions := index .Site.Data.webmentions_by_article .RelPermalink | default (slice) | len }}
+{{ $hearts := index hugo.Data.umami_hearts .RelPermalink | default 0 }}
+{{ $webmentions := index hugo.Data.webmentions_by_article .RelPermalink | default (slice) | len }}
 {{ $weight := .Params.weight | default 0 }}
 
 {{ $score := add (mul $hearts 1) (add (mul $webmentions 3) (mul $weight 2)) }}
@@ -698,11 +698,11 @@ try {
 **Missing Data Files (Hugo):**
 ```hugo
 <!-- Always use | default for data file access -->
-{{ $hearts := index .Site.Data.umami_hearts .RelPermalink | default 0 }}
-{{ $webmentions := index .Site.Data.webmentions_by_article .RelPermalink | default (slice) }}
+{{ $hearts := index hugo.Data.umami_hearts .RelPermalink | default 0 }}
+{{ $webmentions := index hugo.Data.webmentions_by_article .RelPermalink | default (slice) }}
 
 <!-- Never assume data exists -->
-{{ if .Site.Data.umami_hearts }}
+{{ if hugo.Data.umami_hearts }}
   <!-- Safe to proceed -->
 {{ else }}
   <!-- Graceful fallback -->
@@ -767,7 +767,7 @@ try {
 4. **ALWAYS use the `popularity-score.html` partial** (don't recalculate score inline)
 5. **NEVER use jQuery** (use vanilla JavaScript for all new features)
 6. **ALWAYS add `| default` when accessing data files** (graceful fallback)
-7. **ALWAYS pin Hugo version in GitHub Actions** (use `hugo-version: '0.152.2'`)
+7. **ALWAYS pin Hugo version in GitHub Actions** (set `hugo-version:` to a specific version in every workflow that runs Hugo — `.github/workflows/daily-rebuild.yml`, `.github/workflows/test.yml`, etc.; the canonical source-of-truth pin lives in `daily-rebuild.yml`)
 
 ---
 

@@ -278,7 +278,7 @@ ACs 1–7 are derived from `docs/1-planning/epics.md#Story-2.2-Heart-Button-Comp
 - [x] [Review][Patch] Animation fires without `prefers-reduced-motion` check — wrapped in `!matchMedia('(prefers-reduced-motion: reduce)').matches` [`assets/js/hearts.js`]
 - [x] [Review][Patch] IIFE leading `(function` concat ambiguity — added `;` prefix [`assets/js/hearts.js`]
 
-- [x] [Review][Defer] Multi-tab count drift — inherent SSR+optimistic-UI limitation; Umami may double-fire from two open tabs [`assets/js/hearts.js`] — deferred, inherent architecture constraint
+- [x] [Review][Defer→Won't-Fix 2026-05-10] Multi-tab count drift — inherent SSR+optimistic-UI limitation; Umami may double-fire from two open tabs [`assets/js/hearts.js`] — deferred, inherent architecture constraint. **Pruned from backlog 2026-05-10**: traffic volume too low for double-fires to materially distort signal-grade hearts (per "hearts are signals not votes" policy). Watch-trigger remains: revisit if Umami event counts ever appear materially inflated for an article.
 - [x] [Review][Defer] `reflect.IsMap .` may return true for Hugo Page objects in future Hugo versions; safer guard: `if and (reflect.IsMap .) (isset . "page")` [`layouts/_partials/widgets/heart-button.html:27`] — deferred, theoretical
 - [x] [Review][Defer] `storageKey` uses `RelPermalink` raw — hearted state silently resets if `baseURL` changes (e.g. subpath deploy) [`assets/js/hearts.js:~14`] — deferred, low probability
 - [x] [Review][Defer] Key format mismatch risk with Story 3.1 — `umami_hearts.json` key format must match Hugo `RelPermalink` exactly; validate during Story 3.1 implementation [`layouts/_partials/widgets/heart-button.html:~11`] — deferred to Story 3.1

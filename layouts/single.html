@@ -83,7 +83,7 @@
                         {{- $rv := .Site.Params.remixicon_version -}}
                         {{- $hasUpdated := not (eq (.Date.Format "02.01.06") (.Lastmod.Format "02.01.06")) -}}
                         {{- $readingTime := math.Ceil (div (float .WordCount) .Site.Params.reading_speed) -}}
-                        {{- $mentions := index .Site.Data.webmentions_by_article .RelPermalink | default (slice) -}}
+                        {{- $mentions := index hugo.Data.webmentions_by_article .RelPermalink | default (slice) -}}
                         <div class="info widget mt-6">
                             <p class="title is-5">Artikel</p>
 
