@@ -72,11 +72,19 @@ git push --follow-tags
 
 The `daily-rebuild` workflow detects `.maintenance`, builds with `--environment maintenance`, deploys. Within ~3 minutes the live site shows the maintenance page.
 
-To verify locally before pushing:
+To verify locally before pushing, use the dev server (the static build emits absolute CSS paths like `/style.css` that don't resolve under `file://` — opening `public-test/index.html` directly shows an unstyled page):
+
+```powershell
+hugo server --environment maintenance
+# Open http://localhost:1313/ in a browser.
+```
+
+If you really want a static build to inspect on disk:
 
 ```powershell
 hugo --environment maintenance --destination public-test
-# Then open public-test/index.html in a browser.
+# Then serve it over HTTP, e.g.: python -m http.server 8000 --directory public-test
+# Open http://localhost:8000/ in a browser (NOT the file:// URL — it strips the CSS).
 ```
 
 ### Toggle off
