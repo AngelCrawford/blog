@@ -61,8 +61,8 @@ ACs 1–7 are derived verbatim from `docs/1-planning/epics.md#Story-2.8-Bridgy.f
 [Source: docs/sprint-artifacts/epic-2/2-5-privacy-policy-page.md — as-shipped privacy-policy structure (bold-label sub-sections within `## Webmentions`); German `Du`-voice convention]
 [Source: docs/1-planning/epics.md (lines 1660–1688) — Story 9.12 Pre-Spec Notes documenting the planned removal of all `head.html` `rel="me"` shims via `params.social`-driven set]
 [Source: content/pages/datenschutz.md (lines 85–108) — existing `## Webmentions` section to extend (AC #4 target)]
-[Source: layouts/_partials/_base/head.html (lines 51–62) — webmention `<link>` block + existing GitHub `rel="me"` shim (AC #2 insertion-adjacent point)]
-[Source: docs/technical/runbook.md (lines 126–132) — `## Deploy` end-of-file position (AC #5 insertion-adjacent point)]
+[Source: layouts/_partials/_base/head.html (lines 53–64) — webmention `<link>` block + existing GitHub `rel="me"` shim (AC #2 insertion-adjacent point)]
+[Source: docs/technical/runbook.md (lines 134–140) — `## Deploy` end-of-file position (AC #5 insertion-adjacent point)]
 [Source: config/_default/params.yaml (lines 37, 44) — current `csp.imgsrc` and `csp.connectsrc` directives (AC #6 regression-check targets)]
 [Source: https://fed.brid.gy/ — Bridgy Fed signup + setup flow (UI-driven, ~5 minutes per epics implementation note)]
 [Source: https://fed.brid.gy/docs — Bridgy Fed operator documentation (verify at implementation time for the current setup procedure — Bridgy's UI evolves)]
@@ -86,9 +86,9 @@ ACs 1–7 are derived verbatim from `docs/1-planning/epics.md#Story-2.8-Bridgy.f
     3. If no checkmark appears: confirm the head.html change is live (`view-source:https://article-time.de/` should show the new `<link rel="me">` line), then trigger Mastodon to re-verify by editing & re-saving the profile metadata field.
   - [ ] **Save credentials** in the project's password manager (instance URL, handle, login email/password, app passwords if any).
 
-- [ ] **Add Mastodon `rel="me"` link to `head.html`** (AC: 2, 8) [Source: layouts/_partials/_base/head.html lines 51–62 — existing webmention + GitHub rel="me" block]
+- [ ] **Add Mastodon `rel="me"` link to `head.html`** (AC: 2, 8) [Source: layouts/_partials/_base/head.html lines 53–64 — existing webmention + GitHub rel="me" block]
   - [ ] Open `layouts/_partials/_base/head.html`.
-  - [ ] **Insertion point:** immediately after the existing GitHub `rel="me"` block (currently line 62), before the Umami block (currently lines 64–73). The Mastodon line shares the same "TEMPORARY / SUPERSEDED BY Story 9.12" rationale as the GitHub line — keep them visually adjacent so a future reader (or 9.12's implementer) sees them as a single replaceable cluster.
+  - [ ] **Insertion point:** immediately after the existing GitHub `rel="me"` block (currently line 64; was line 62 at original draft — `head.html` grew on 2026-05-10 with reordered preloads + frame-ancestors removal), before the Umami block (currently lines 66–75). The Mastodon line shares the same "TEMPORARY / SUPERSEDED BY Story 9.12" rationale as the GitHub line — keep them visually adjacent so a future reader (or 9.12's implementer) sees them as a single replaceable cluster.
   - [ ] **Snippet to add** (using the decided handle from Task 1; example shown for `@articletime@mastodon.social`):
     ```go-html-template
     {{- /* Mastodon identity — second rel="me" link for Bridgy.fed verification (Story 2.8).
@@ -148,7 +148,7 @@ ACs 1–7 are derived verbatim from `docs/1-planning/epics.md#Story-2.8-Bridgy.f
   - [ ] **Do NOT modify** the existing line-108 caveat ("Bei Erwähnungen, die über Drittplattformen weitergeleitet wurden (z. B. Mastodon-Boosts)…"). That sentence already covers the opt-out reality for bridged mentions; the new Bridgy paragraph cross-references it via the closing clause "greift der Hinweis zur Rücknahme weiter unten ebenfalls."
   - [ ] **Verification:** the section now has three `**bold-label:**` paragraphs (Welche Daten / Verarbeitung durch webmention.io / Verarbeitung durch Bridgy.fed) followed by `**Rechtsgrundlage:**` and `**Wie kannst Du widersprechen?**`. Open `hugo server` → navigate to `/pages/datenschutz/` → confirm the new paragraph renders correctly (bold label, paragraph text, working link to fed.brid.gy).
 
-- [ ] **Add `## Bridgy.fed (Fediverse Bridge)` section to runbook** (AC: 1, 5, 7) [Source: docs/technical/runbook.md lines 126–132 end-of-file]
+- [ ] **Add `## Bridgy.fed (Fediverse Bridge)` section to runbook** (AC: 1, 5, 7) [Source: docs/technical/runbook.md lines 134–140 end-of-file]
   - [ ] Open `docs/technical/runbook.md`.
   - [ ] **Insertion point:** at end-of-file, after the `## Deploy` section's last line. Maintain the document's existing `##` heading hierarchy.
   - [ ] **Section template** (English to match the existing runbook; fill in the actual handle/instance from Task 1):
@@ -258,7 +258,7 @@ The Hugo-side code change is **one line**: a second `<link rel="me" href="https:
 
 **Why no test file change:** the `rel="me"` Mastodon link is **explicitly temporary** — Story 9.12's Pre-Spec Notes already flag the `rel="me"` block (including the new Mastodon line) for removal when the `params.social`-driven set lands. Adding a test now creates churn at 9.12 (test would have to be rewritten or deleted). Story 2.3's review reached the same conclusion for the GitHub shim and deliberately deferred — this story follows the same precedent.
 
-[Source: layouts/_partials/_base/head.html (lines 51–62) — existing webmention + GitHub rel="me" block; Story 2.8 adds one adjacent line]
+[Source: layouts/_partials/_base/head.html (lines 53–64) — existing webmention + GitHub rel="me" block; Story 2.8 adds one adjacent line]
 [Source: docs/sprint-artifacts/epic-2/2-3-webmention-endpoint-setup.md (lines 60–73, 224–229) — established the rel="me" shim pattern with documented retirement path]
 [Source: docs/1-planning/epics.md (lines 1686–1688) — Story 9.12 Pre-Spec Notes documenting the full retirement of all head.html rel="me" lines]
 

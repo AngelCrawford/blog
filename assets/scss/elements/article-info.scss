@@ -95,6 +95,12 @@
     // Rubrik-tag inside the Rubrik tile value. Rounded corners (not fully
     // pill-shaped like the tags-tile `.hashtags`). Background color is set
     // inline from .Params.categoryColor; we provide a safe default.
+    //
+    // Truncation lives on the inner `.info-tile__tag-text` span, NOT on the
+    // outer `<a>`. The `<a>` carries `data-tooltip` (Projekt-Tooltip via
+    // `::before`/`::after`); if we put `overflow: hidden` on the `<a>`, those
+    // pseudo-elements get clipped because the tooltip sits at `bottom: 100%`
+    // outside the tag's box.
     .info-tile__tag {
         display: inline-block;
         max-width: 100%;
@@ -107,11 +113,6 @@
         text-decoration: none;
         text-shadow: 1px 1px 2px rgba(#000, 0.4);
         transition: filter 0.15s ease-out;
-        // Lange Kategorienamen kürzen statt umzubrechen — Vollname über
-        // data-tooltip (Projekt-Tooltip) + title (Fallback) erreichbar.
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
         vertical-align: top;
 
         &:hover,
@@ -121,11 +122,32 @@
         }
     }
 
+    .info-tile__tag-text {
+        display: inline-block;
+        max-width: 100%;
+        vertical-align: top;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
     // Status-tile: standalone icon left already shows the growth-stage glyph
     // (mirrors growth-badge.html mapping in single.html). Hide the duplicate
     // inline icon inside the badge to keep the label as text-only.
     .info-tile[data-tile="status"] .growth-stage > svg {
         display: none;
+    }
+
+    // Status-tile: keep the stage text-label visible on mobile inside this
+    // tile. The growth-badge.scss base hides it for narrow viewports (Story
+    // 1.2 AC #7 — compactness in the original card/inline-footer layout),
+    // but the new tile has its own row with ample width, and a hidden text +
+    // hidden inline svg would leave the wrapper visually empty (collapses
+    // `toBeVisible()` in e2e).
+    .info-tile[data-tile="status"] .growth-stage > span {
+        @include helpers.mobile {
+            display: inline;
+        }
     }
 
     // Status-tile per-stage color cue — only on the standalone left icon.

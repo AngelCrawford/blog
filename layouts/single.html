@@ -97,7 +97,7 @@
                                             <div class="info-tile__label"><span>Rubrik</span></div>
                                             <div class="info-tile__value">
                                                 {{- range first 1 (.GetTerms "categories") -}}
-                                                    <a href="{{ .RelPermalink }}" title="{{- .LinkTitle -}}" data-tooltip="{{- .LinkTitle -}}" class="info-tile__tag" style="{{if .Params.categoryColor }}background-color:{{.Params.categoryColor }}{{end}}">{{- .LinkTitle -}}</a>
+                                                    <a href="{{ .RelPermalink }}" title="{{- .LinkTitle -}}" data-tooltip="{{- .LinkTitle -}}" class="info-tile__tag" style="{{if .Params.categoryColor }}background-color:{{.Params.categoryColor }}{{end}}"><span class="info-tile__tag-text">{{- .LinkTitle -}}</span></a>
                                                 {{- end -}}
                                             </div>
                                         </div>

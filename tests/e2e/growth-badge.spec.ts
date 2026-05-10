@@ -92,15 +92,24 @@ test.describe("Growth-stage badge (Story 1.2)", () => {
         await expect(badge.locator("svg")).toHaveAttribute("aria-hidden", "true");
     });
 
-    test("AC #7: mobile viewport (≤640px) hides text label, preserves title tooltip", async ({
+    test("AC #7 (revised): mobile viewport (≤640px) keeps stage text and title tooltip in the status tile", async ({
         page,
     }) => {
+        // Story 1.2 AC #7 originally asserted "mobile hides text label" for
+        // the legacy inline/card badge layout (compact card-footer context).
+        // The 2026-05 redesign moves the single-page badge into its own
+        // status tile (article-info.scss, `.info-tile[data-tile="status"]`)
+        // with a dedicated row — text fits even at narrow widths, and
+        // hiding it on mobile would leave the wrapper visually empty
+        // (the inline svg is also suppressed inside the tile, since the
+        // standalone tile-left icon already renders the stage glyph).
         await page.setViewportSize({ width: 375, height: 667 });
         await page.goto(fixtureUrl("budding"));
 
         const badge = page.locator(`.info.widget span.growth-stage[data-stage="budding"]`);
         await expect(badge).toBeVisible();
-        await expect(badge.locator("span")).toBeHidden();
+        await expect(badge.locator("span")).toBeVisible();
+        await expect(badge.locator("span")).toHaveText("Budding");
         await expect(badge).toHaveAttribute("title", /^Budding[;—] /);
     });
 });

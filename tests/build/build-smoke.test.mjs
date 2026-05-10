@@ -1224,13 +1224,17 @@ test("Story 2.2 AC #1+#2+#6: production article page renders heart-button with d
     "utf8"
   );
 
-  // The native <button> (not the <noscript> fallback) must render.
+  // The native <button> (not the <noscript> fallback) must render. The class
+  // attribute carries additional decorator classes since Story 2.2 ("button
+  // round-button inset heart-button"), so match `heart-button` as a word in
+  // any position of the class list — same pattern as the log-card heart test
+  // below.
   const buttonTag = articleHtml.match(
-    /<button\b[^>]*class="heart-button"[^>]*>/
+    /<button\b[^>]*class="[^"]*\bheart-button\b[^"]*"[^>]*>/
   );
   assert.ok(
     buttonTag,
-    "Article page must render <button class=\"heart-button\"> (not just the <noscript> fallback)"
+    "Article page must render <button class=\"... heart-button ...\"> (not just the <noscript> fallback)"
   );
   assert.match(
     buttonTag[0],
