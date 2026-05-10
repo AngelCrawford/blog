@@ -47,7 +47,7 @@ development_status:
   epic-1-retrospective: done
 
   # Epic 2: Engagement Infrastructure [Phase 1A, Week 1-2]
-  epic-2: backlog
+  epic-2: in-progress
   2-1-umami-analytics-integration: done
   2-2-heart-button-component: done
   2-3-webmention-endpoint-setup: done

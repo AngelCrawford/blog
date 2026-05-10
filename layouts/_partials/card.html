@@ -162,7 +162,7 @@
                     {{- else -}}
                         {{ $readingTime := div (float .WordCount) .Site.Params.reading_speed }}
                         {{ $readingTime = math.Ceil $readingTime }}
-                        <span data-tooltip="{{ $readingTime }} Minuten Lesezeit">
+                        <span data-tooltip="{{ $readingTime }} Minuten Lesedauer">
                             <svg class='ri-1x'>
                                 <use href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ .Site.Params.remixicon_version}}#timer-line"></use>
                             </svg> {{ $readingTime }} Min.

@@ -94,12 +94,12 @@
                             <div class="info-tiles">
                                 {{- if .GetTerms "categories" -}}
                                     <div class="info-tile" data-tile="rubrik">
-                                        <svg class="info-tile__icon" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#bookmark-3-line"></use></svg>
+                                        <svg class="info-tile__icon" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#article-line"></use></svg>
                                         <div class="info-tile__body">
                                             <div class="info-tile__label"><span>Rubrik</span></div>
                                             <div class="info-tile__value">
                                                 {{- range first 1 (.GetTerms "categories") -}}
-                                                    <a href="{{ .RelPermalink }}" title="{{- .LinkTitle -}}" class="ribbon" style="{{if .Params.categoryColor }}background-color:{{.Params.categoryColor }}{{end}}">{{- .LinkTitle -}}</a>
+                                                    <a href="{{ .RelPermalink }}" title="{{- .LinkTitle -}}" data-tooltip="{{- .LinkTitle -}}" class="info-tile__tag" style="{{if .Params.categoryColor }}background-color:{{.Params.categoryColor }}{{end}}">{{- .LinkTitle -}}</a>
                                                 {{- end -}}
                                             </div>
                                         </div>
@@ -109,7 +109,7 @@
                                 <div class="info-tile" data-tile="status" data-stage="{{ $stage }}">
                                     <svg class="info-tile__icon" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#{{ $statusIcon }}"></use></svg>
                                     <div class="info-tile__body">
-                                        <div class="info-tile__label"><span>Status</span></div>
+                                        <div class="info-tile__label"><span>Stadium</span></div>
                                         <div class="info-tile__value">
                                             {{ partial "growth-badge.html" . }}
                                         </div>
@@ -121,7 +121,7 @@
                                     <div class="info-tile__body">
                                         <div class="info-tile__label"><span>Publiziert</span></div>
                                         <div class="info-tile__value">
-                                            <time datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Date | time.Format ":date_long" }}</time>
+                                            <time datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Date | time.Format "02.01.2006" }}</time>
                                         </div>
                                     </div>
                                 </div>
@@ -130,9 +130,9 @@
                                     <div class="info-tile" data-tile="updated">
                                         <svg class="info-tile__icon" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#pencil-line"></use></svg>
                                         <div class="info-tile__body">
-                                            <div class="info-tile__label"><span>Bearbeitet</span></div>
+                                            <div class="info-tile__label"><span>Editiert</span></div>
                                             <div class="info-tile__value">
-                                                <time datetime="{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Lastmod | time.Format ":date_long" }}</time>
+                                                <time datetime="{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Lastmod | time.Format "02.01.2006" }}</time>
                                             </div>
                                         </div>
                                     </div>
@@ -141,7 +141,7 @@
                                 <div class="info-tile" data-tile="reading-time">
                                     <svg class="info-tile__icon" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#timer-line"></use></svg>
                                     <div class="info-tile__body">
-                                        <div class="info-tile__label"><span>Lesezeit</span></div>
+                                        <div class="info-tile__label"><span>Lesedauer</span></div>
                                         <div class="info-tile__value">{{ $readingTime }} Min.</div>
                                     </div>
                                 </div>
@@ -160,18 +160,14 @@
                                     </div>
                                 </div>
 
-                                {{- if .Params.series }}
-                                    {{- $name := index .Params.series 0 }}
-                                    <div class="info-tile info-tile--wide" data-tile="series">
-                                        <svg class="info-tile__icon" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#stack-line"></use></svg>
-                                        <div class="info-tile__body">
-                                            <div class="info-tile__label"><span>Serie</span></div>
-                                            <div class="info-tile__value">
-                                                <a href="{{ printf "series/%s" ($name | urlize) | relURL }}" title="{{ $name }}">{{ $name }}</a>
-                                            </div>
-                                        </div>
+                                {{- if eq .Page.Type "articles" -}}
+                                    {{- /* `.heart-button-wrapper` class carried on the tile so
+                                           assets/js/hearts.js can still find `.heart-button-hint`
+                                           via `closest('.heart-button-wrapper')`. */ -}}
+                                    <div class="info-tile info-tile--wide heart-button-wrapper" data-tile="hearts">
+                                        {{ partial "widgets/heart-button" . }}
                                     </div>
-                                {{- end }}
+                                {{- end -}}
                             </div>
 
                             {{- if .Params.tags -}}
@@ -180,11 +176,6 @@
                                     {{- range (.GetTerms "tags") -}}
                                         <a href="{{ .RelPermalink }}" title="{{ .LinkTitle }}" class="hashtags">#{{ .LinkTitle }} </a>
                                     {{- end -}}
-                                </div>
-                            {{- end -}}
-                            {{- if eq .Page.Type "articles" -}}
-                                <div class="hearts-line">
-                                    {{ partial "widgets/heart-button" . }}
                                 </div>
                             {{- end -}}
                         </div>

@@ -64,27 +64,36 @@
         </span>
     </noscript>
 {{- else -}}
-    <div class="heart-button-wrapper">
-        <button type="button"
-                class="heart-button"
-                data-article="{{ $page.RelPermalink }}"
-                aria-label="Diesen Artikel mit einem Herz markieren"
-                aria-pressed="false">
+    {{- /* Single-page render: bare fragments designed to slot into the
+           article-info hearts tile. Caller (layouts/single.html) wraps these
+           in `.info-tile[data-tile="hearts"]`, which doubles as the JS
+           wrapper (carries the `.heart-button-wrapper` class) so
+           assets/js/hearts.js still finds `.heart-button-hint` via
+           `closest('.heart-button-wrapper')`. */ -}}
+    <button type="button"
+            class="button round-button inset heart-button"
+            data-article="{{ $page.RelPermalink }}"
+            aria-label="Diesen Artikel mit einem Herz markieren"
+            aria-pressed="false">
+        <svg class="heart-icon ri-1x" aria-hidden="true">
+            <use href="{{ $sprite }}?t={{ $rv }}#heart-line"></use>
+        </svg>
+    </button>
+    <div class="info-tile__body">
+        <div class="info-tile__label"><span>Herzen</span></div>
+        <div class="info-tile__value">
+            <span class="heart-count" aria-live="polite">{{ $hearts }}</span>
+            {{- if $showHint -}}
+                <small class="heart-button-hint">(Zähler aktualisiert täglich)</small>
+            {{- end -}}
+        </div>
+    </div>
+    <noscript>
+        <a class="heart-button heart-button-fallback" href="#" aria-label="Diesen Artikel liken">
             <svg class="heart-icon ri-1x" aria-hidden="true">
                 <use href="{{ $sprite }}?t={{ $rv }}#heart-line"></use>
             </svg>
-        </button>
-        <span class="heart-count" aria-live="polite">{{ $hearts }}</span>
-        {{- if $showHint -}}
-            <small class="heart-button-hint">Zähler aktualisiert täglich</small>
-        {{- end -}}
-        <noscript>
-            <a class="heart-button heart-button-fallback" href="#" aria-label="Diesen Artikel liken">
-                <svg class="heart-icon ri-1x" aria-hidden="true">
-                    <use href="{{ $sprite }}?t={{ $rv }}#heart-line"></use>
-                </svg>
-            </a>
-            <span class="heart-count">{{ $hearts }}</span>
-        </noscript>
-    </div>
+        </a>
+        <span class="heart-count">{{ $hearts }}</span>
+    </noscript>
 {{- end -}}

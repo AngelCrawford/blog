@@ -71,10 +71,10 @@ $value-color: helpers.$gold;
         line-height: 1.2;
         color: $value-color;
 
-        // Links inside value (category ribbon, series, reactions count)
-        // inherit their own coloring from element styles; keep the tile from
-        // flattening them. Only override for plain anchor descendants.
-        > a:not(.ribbon) {
+        // Links inside value (category tag, reactions count) inherit their
+        // own coloring from element styles; keep the tile from flattening
+        // them. Only override for plain anchor descendants.
+        > a:not(.info-tile__tag) {
             color: helpers.$gold-light;
             text-decoration: none;
 
@@ -89,25 +89,32 @@ $value-color: helpers.$gold;
         }
     }
 
-    // Rubrik-tile: strip tile chrome. Single-page max-width: 100% of the
-    // tile column (overrides the 10em card default in ribbon.scss).
-    .info-tile[data-tile="rubrik"] {
-        border: none;
-        background: transparent;
-        padding: 0;
-        justify-content: center;
+    // Rubrik-tag inside the Rubrik tile value. Rounded corners (not fully
+    // pill-shaped like .tags-line .hashtags). Background color is set
+    // inline from .Params.categoryColor; we provide a safe default.
+    .info-tile__tag {
+        display: inline-block;
+        max-width: 100%;
+        padding: 0.25em 0.6em;
+        background: helpers.$gold-dark;
+        color: helpers.$light;
+        border-radius: 0.35rem;
+        font-size: 0.8rem;
+        line-height: 1.2;
+        text-decoration: none;
+        text-shadow: 1px 1px 2px rgba(#000, 0.4);
+        transition: filter 0.15s ease-out;
+        // Lange Kategorienamen kürzen statt umzubrechen — Vollname über
+        // data-tooltip (Projekt-Tooltip) + title (Fallback) erreichbar.
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        vertical-align: top;
 
-        > .info-tile__icon,
-        .info-tile__label {
-            display: none;
-        }
-
-        .info-tile__value {
-            a.ribbon {
-                position: relative;
-                display: inline-block;
-                max-width: 100%;
-            }
+        &:hover,
+        &:focus {
+            color: helpers.$light;
+            filter: brightness(1.1);
         }
     }
 
@@ -134,61 +141,52 @@ $value-color: helpers.$gold;
         fill: helpers.$growth-withered;
     }
 
-    // Hearts-line: full-width tile below tags — same box as info-tile/Serie.
-    // Icon IS the button (no pill); gold-light at rest, red on hover.
-    .hearts-line {
-        margin-top: 1.1rem;
-        display: flex;
-        flex-direction: column;
-        gap: 0.35rem;
-        padding: 0.65rem 0.8rem;
-        background: $tile-bg;
-        border: 1px solid $tile-border;
-        border-radius: 0.45rem;
+    // Hearts-tile: button takes the icon-left position (no pill chrome, just
+    // the heart glyph). Explicit width/height match `.info-tile__icon` so the
+    // button column aligns pixel-perfect with the static icons in the other
+    // tiles — without these the button intrinsic-sizes to the SVG and ends
+    // up a hair narrower, drifting left.
+    .info-tile[data-tile="hearts"] {
+        button.heart-button {
+            position: absolute;
+            margin-left: -10px;
+            @include helpers.round-button(false, 43px);
 
-        .heart-button-wrapper {
-            gap: 0.2em;
-        }
+            svg.heart-icon {
+                fill: hsl(0, 70%, 65%);
+                @include helpers.translate(0, 2px);
+            }
 
-        .heart-button {
-            padding: 0;
-            border: none;
-            background: transparent;
-            box-shadow: none;
-            color: helpers.$gold-light;
-
-            &:hover:not(:disabled) {
-                background: transparent;
-                border: none;
+            &.hearted {
+                @include helpers.translate(0, 0);
                 box-shadow: none;
-                color: hsl(0, 70%, 65%);
-                transform: none;
-            }
-
-            .heart-icon {
-                width: 1.6em;
-                height: 1.6em;
-                fill: currentColor;
-                transform-origin: left center;
-                transition: transform 0.15s ease-out;
-            }
-
-            &:hover:not(:disabled) .heart-icon {
-                transform: scale(1.25);
+                border: 1px solid transparent;
+                background: transparent;
             }
         }
 
-        .heart-count {
-            font-variant-numeric: tabular-nums;
-            font-weight: 600;
-            color: $value-color;
-        }
+        .info-tile__body {
+            margin-left: 38px;
 
-        .heart-button-hint {
-            margin-left: 0.4em;
-            font-size: 0.72rem;
-            color: $label-color;
-            font-style: italic;
+            .info-tile__value {
+                display: flex;
+                flex-direction: row;
+                align-items: baseline;
+                gap: 0.5em;
+            }
+
+            .heart-count {
+                font-variant-numeric: tabular-nums;
+                font-weight: 400;
+                color: $label-color;
+            }
+
+            .heart-button-hint {
+                font-size: 0.7rem;
+                color: $label-color;
+                font-style: italic;
+                line-height: 1.2;
+            }
         }
     }
 
@@ -197,14 +195,24 @@ $value-color: helpers.$gold;
         font-size: 0.875rem;
     }
 
-    // Reactions-tile: anchor inherits the tile a:not(.ribbon) rule.
-    .info-tile[data-tile="reactions"] .info-tile__value a {
+    // Reactions-tile: bold the value only when there's a real count.
+    // `.reactions-empty` opts out — the "Noch keine" empty state should
+    // recede visually so real values stay the loudest element.
+    .info-tile[data-tile="reactions"]
+        .info-tile__value
+        > a:not(.reactions-empty) {
         font-weight: 600;
     }
 
-    // Reactions empty state — TODO: design pass pending.
-    .info-tile[data-tile="reactions"] .reactions-empty {
+    .info-tile[data-tile="reactions"] .info-tile__value > a.reactions-empty {
+        color: $label-color;
         font-weight: 400;
+        font-style: italic;
+
+        &:hover,
+        &:focus {
+            color: helpers.$gold-light;
+        }
     }
 
     // Tags row sits below the tile grid — full width, separated by an air
