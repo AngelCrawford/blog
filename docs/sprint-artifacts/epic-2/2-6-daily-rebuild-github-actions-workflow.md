@@ -1,6 +1,6 @@
 # Story 2.6: Daily Rebuild GitHub Actions Workflow
 
-Status: review
+Status: done
 
 ## Story
 
@@ -280,6 +280,20 @@ ACs 1–7 are derived verbatim from `docs/1-planning/epics.md#Story-2.6-Daily-Re
   - [x] Diff the deployed `public/index.html` (before the patch vs after) to confirm the Hugo build output is byte-equivalent — the workflow change is meta-only (CI configuration), not a content change. **Inferred: workflow patch is CI-only (`permissions:` + new step at end of job). No template, partial, asset, config, content, or layout file touched. `public/index.html` cannot diverge from the change. Skipped explicit byte-diff verification.**
   - [x] Confirm the `data-updates` branch received a fresh commit from the run (`git fetch origin data-updates && git log origin/data-updates --format="%an %s" -1`). **No new commit from the no-regression run. Expected — Phase 0 placeholder scripts always write `{}`, so `git commit` exits non-zero ("nothing to commit") and the workflow's `|| echo "No changes to commit"` swallows it. The data-updates flow path itself ran (Generate data files via scripts ✓ → Commit data to data-updates branch ✓) — the no-commit outcome is by design until Epic 3 swaps in real-data scripts. Latest data-updates commit remains `0f18983 GitHub Actions Bot: chore: update data 2026-05-06`.**
 
+### Review Findings
+
+_From `bmad-code-review` (2026-05-10) on commits `ae2fc53`–`ab707bd`. All findings resolved: 2 decisions (1 defer, 1 patch), 3 patches applied ✅, 6 deferred, ~26 dismissed._
+
+- [x] [Review][Decision] **`Notify on drift` silent when homepage is unreachable — deferred, accepted** — Angel uses an external site-monitoring service for homepage-down scenarios; the drift monitor's scope is intentionally limited to URL-drift detection on third-party assets. Gap is by design for this workflow. [`.github/workflows/third-party-asset-monitor.yml`, `Notify on drift` step]
+- [x] [Review][Patch] **AC #10 force-test re-run on fixed extraction code** — ✅ Verified 2026-05-10. Branch `chore/test-ac10-retest`, run https://github.com/AngelCrawford/blog/actions/runs/25629115730 (`failure`, ~13s). Step results: Checkout ✓ → Read deploy URL ✓ → Fetch homepage ✓ → Extract URLs ✓ (real extraction ran first on live site, inject added after) → HEAD-check ✗ (`example.invalid` → HTTP 000) → Notify on drift ✓ (Issue [#207](https://github.com/AngelCrawford/blog/issues/207) created with broken URL in body, both labels). Issue #207 closed with explanatory comment. Branch deleted local + remote. AC #10 end-to-end pipeline confirmed on fixed regex code.
+- [x] [Review][Patch] **AC matrix row 6 still references `github-script@v7`** — updated to `@v9`. [`docs/sprint-artifacts/epic-2/2-6-daily-rebuild-github-actions-workflow.md`, Completion Notes row 6]
+- [x] [Review][Patch] **AC matrix row 8 still shows `⏳ pending`** — updated to `✅ verified` with run URL. [`docs/sprint-artifacts/epic-2/2-6-daily-rebuild-github-actions-workflow.md`, Completion Notes row 8]
+- [x] [Review][Defer] **Issue spam / no deduplication** — persistent failures create one GitHub Issue per scheduled run (daily for `daily-rebuild.yml`, weekly for the monitor); no search-first-or-reopen logic. [`.github/workflows/daily-rebuild.yml`, `.github/workflows/third-party-asset-monitor.yml`]
+- [x] [Review][Defer] **Failure issue body omits failing step name** — `context.sha` + run URL require log drill-down to identify the specific failing step; body says "check the run logs" but doesn't short-circuit to the step. [`.github/workflows/daily-rebuild.yml`, Notify step body]
+- [x] [Review][Defer] **`context.sha` misleading for cron runs** — SHA in the notify body is HEAD of main at schedule time, not the checked-out tag commit (cron builds use tag content). Confusing if the failure is in the Hugo build against tag content. [`.github/workflows/daily-rebuild.yml`, line ~220]
+- [x] [Review][Defer] **Markdown injection in issue bodies** — `FAILED_LIST` and failure messages are embedded verbatim; URLs with Markdown control chars render as formatting (cosmetic, no security impact). [`.github/workflows/third-party-asset-monitor.yml`, Notify on drift script]
+- [x] [Review][Defer] **XSS via `javascript:` URIs in webmention links** — `<a href="{{ .author_url }}">` and `<a href="{{ .url }}">` pass `javascript:` URIs unguarded; Hugo auto-escaping blocks HTML injection but not protocol injection. Pre-existing, not introduced by this diff. [`layouts/_partials/widgets/webmention-group.html`]
+
 ## Dev Notes
 
 ### Architectural Context
@@ -486,9 +500,9 @@ claude-opus-4-7[1m]
 | 3 — workflow_dispatch | ✅ pre-existing | lines 11–16: `workflow_dispatch:` with optional `ref` input (improved over draft — supports branch/tag/SHA selection) |
 | 4 — Checkout/Node/Hugo/Fetch/Build/Deploy steps | ✅ pre-existing | lines 50–201; all 7 expected steps present plus side-fixes (Dart Sass install, test gate, version string, maintenance-mode detection) |
 | 5 — successful scheduled run | ✅ verified | most recent: https://github.com/AngelCrawford/blog/actions/runs/25592887604 (2026-05-09 05:27 UTC, `event: schedule`, `conclusion: success`); plus 2026-05-08 + 2026-05-07 |
-| 6 — failure notification | ✅ NEW (this story) | `permissions.issues: write` (line 30) + `Notify on failure` step (lines 209–222) using `actions/github-script@v7` with `if: failure()` to create labelled GitHub Issue. Layer-1 verification (Angel's personal account Notification setting) **pending**. |
+| 6 — failure notification | ✅ NEW (this story) | `permissions.issues: write` (line 30) + `Notify on failure` step (lines 209–222) using `actions/github-script@v9` with `if: failure()` to create labelled GitHub Issue. Layer-1 verification (Angel's personal account Notification setting) confirmed by screenshot. |
 | 7 — Git user for commits | ✅ verified | `git log origin/data-updates -1` → `GitHub Actions Bot <actions@github.com>` |
-| 8 — no regression after AC #6 | ⏳ pending | local diff is meta-only (4-line `permissions:` addition + 22-line notify step); workflow_dispatch verification pending after merge |
+| 8 — no regression after AC #6 | ✅ verified | run https://github.com/AngelCrawford/blog/actions/runs/25613099368 (`success`, 2m37s, dispatched with `inputs.ref=v0.1.5`); all 17 steps green; `Notify on failure` step `skipped` as expected |
 | 9 — no automated tests added | ✅ guard met | only edits: workflow YAML + new monitor YAML + backlog entry + story file |
 | 10 — third-party asset monitor | ✅ NEW (this story) | new file `.github/workflows/third-party-asset-monitor.yml` (~110 lines); weekly cron `0 6 * * 1`; `baseURL` from `config/production/config.yaml` is single source of truth; reuses AC #6 issue-creation pattern |
 
