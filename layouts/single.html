@@ -195,48 +195,8 @@
 
                     {{- if .Params.series -}}
                         <div class="column is-12-mobile is-6-tablet is-4-desktop is-12-widescreen is-12-fullhd">
-                            <div class="serie widget mt-6">
-                                <p class="title is-5">Serie</p>
-                                {{- $currentPage := . -}}
-                                {{- $series_name := index .Params.series 0 -}}
-
-                                {{/* Series widget shows ALL members including withered ones —
-                                     hiding withered breaks the series flow for readers following
-                                     the sequence. Withered members are visually marked with a skull
-                                     icon and dimmed styling so readers know before clicking. */}}
-                                {{- $.Store.Set "series_count" 0 -}}
-                                {{- range .Site.RegularPages.ByDate -}}
-                                    {{- if in .Params.series $series_name -}}
-                                        {{- $.Store.Add "series_count" 1 -}}
-                                    {{- end -}}
-                                {{- end -}}
-
-                                <p class="title is-6"><a href="{{ printf "series/%s" ($series_name | urlize) | relURL }}" title="{{ $series_name }}">{{ $series_name }} ({{ $.Store.Get "series_count" }})</a></p>
-                                <ol class="series-list">
-                                    {{- range .Site.RegularPages.ByDate -}}
-                                        {{- if in .Params.series $series_name -}}
-                                            {{- $isCurrent := eq $currentPage.RelPermalink .RelPermalink -}}
-                                            {{- $isWithered := eq .Params.growth_stage "withered" -}}
-                                            <li
-                                                {{- if $isCurrent }} class="is-active{{ if $isWithered }} is-withered{{ end }}"
-                                                {{- else if $isWithered }} class="is-withered"
-                                                {{- end -}}>
-                                                {{- if $isCurrent -}}
-                                                    {{- if $isWithered -}}<svg class="ri-1x" aria-hidden="true"><use href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ site.Params.remixicon_version }}#skull-2-line"></use></svg>{{- end -}}
-                                                    {{ .Title }}
-                                                {{- else -}}
-                                                    <a href="{{ .RelPermalink }}" title="{{ .Title }}{{ if $isWithered }} — verwelkt{{ end }}">
-                                                        {{- if $isWithered -}}<svg class="ri-1x" aria-hidden="true"><use href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ site.Params.remixicon_version }}#skull-2-line"></use></svg>{{- end -}}
-                                                        {{ .Title }}
-                                                    </a>
-                                                {{- end -}}
-                                            </li>
-                                        {{- end -}}
-                                    {{- end -}}
-                                </ol>
-                            </div>
+                            {{ partial "widgets/series-sidebar" . }}
                         </div>
-                        {{ $.Store.Delete "series_count" }}
                     {{- end -}}
 
 

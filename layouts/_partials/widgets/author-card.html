@@ -20,7 +20,7 @@
         </div>
         <div class="author-card__summary">{{ .Summary | plainify }}</div>
     </div>
-    <a class="button round-button inset author-card__more" title="Mehr zum Autor" href="{{ .RelPermalink }}" aria-label="Mehr zum Autor {{ .Title }}">
+    <a class="button round-button inset author-card__more" title="Mehr zum Autor" data-tooltip="Mehr zum Autor" href="{{ .RelPermalink }}" aria-label="Mehr zum Autor {{ .Title }}">
         <svg class="ri-1x" aria-hidden="true">
             <use href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ .Site.Params.remixicon_version }}#arrow-right-s-line"></use>
         </svg>
