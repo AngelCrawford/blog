@@ -1,8 +1,8 @@
 // elements/article-info.scss — sidebar "Artikel" info widget on single pages.
 //
-// Tile-based layout: each metadata atom (Rubrik, Veröffentlicht, Bearbeitet,
-// Lesezeit, Status, Herzen, Reaktionen, Serie) renders as its own tile in a
-// 2-column grid. Tags row sits below the grid as a full-width strip.
+// Tile-based layout: each metadata atom (Rubrik, Stadium, Publiziert,
+// Editiert, Tags, Lesedauer, Reaktionen, Herzen) renders as its own tile in
+// a 2-column grid. Tags and Herzen are `info-tile--wide` (span both columns).
 //
 // Sibling element files: engagement.scss (heart button variants),
 // webmentions.scss (webmention list and grouping). This file is the container;
@@ -19,7 +19,6 @@
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 0.6rem;
-        margin-top: 0.5rem;
 
         @media screen and (max-width: 360px) {
             grid-template-columns: 1fr;
@@ -87,7 +86,7 @@
     }
 
     // Rubrik-tag inside the Rubrik tile value. Rounded corners (not fully
-    // pill-shaped like .tags-line .hashtags). Background color is set
+    // pill-shaped like the tags-tile `.hashtags`). Background color is set
     // inline from .Params.categoryColor; we provide a safe default.
     .info-tile__tag {
         display: inline-block;
@@ -212,21 +211,12 @@
         }
     }
 
-    // Tags row sits below the tile grid — full width, separated by an air
-    // gap so it doesn't read as another tile.
-    .tags-line {
-        margin-top: 1.1rem;
+    // Tags-tile: full-width info-tile slotted between the date row and
+    // Lesedauer/Reaktionen. Value column holds wrap-flowing hashtag pills.
+    .info-tile[data-tile="tags"] .info-tile__value {
         display: flex;
         flex-wrap: wrap;
-        align-items: center;
-        gap: 0.4em;
-
-        > svg {
-            width: 1em;
-            height: 1em;
-            fill: helpers.$text-label;
-            flex-shrink: 0;
-        }
+        gap: 0.35em 0.4em;
 
         .hashtags {
             display: inline-block;

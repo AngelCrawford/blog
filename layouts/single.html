@@ -88,9 +88,7 @@
                         {{- $growthIcons := dict "seedling" "seedling-line" "budding" "flower-line" "evergreen" "tree-line" "withered" "skull-2-line" -}}
                         {{- $stage := default "seedling" .Params.growth_stage -}}
                         {{- $statusIcon := index $growthIcons $stage -}}
-                        <div class="info widget mt-6">
-                            <p class="title is-5">Artikel</p>
-
+                        <div class="info widget mt-4">
                             <div class="info-tiles">
                                 {{- if .GetTerms "categories" -}}
                                     <div class="info-tile" data-tile="rubrik">
@@ -138,6 +136,20 @@
                                     </div>
                                 {{- end }}
 
+                                {{- if .Params.tags -}}
+                                    <div class="info-tile info-tile--wide" data-tile="tags">
+                                        <svg class="info-tile__icon" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#price-tag-3-line"></use></svg>
+                                        <div class="info-tile__body">
+                                            <div class="info-tile__label"><span>Tags</span></div>
+                                            <div class="info-tile__value">
+                                                {{- range (.GetTerms "tags") -}}
+                                                    <a href="{{ .RelPermalink }}" title="{{ .LinkTitle }}" class="hashtags">#{{ .LinkTitle }}</a>
+                                                {{- end -}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                {{- end -}}
+
                                 <div class="info-tile" data-tile="reading-time">
                                     <svg class="info-tile__icon" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#timer-line"></use></svg>
                                     <div class="info-tile__body">
@@ -170,14 +182,6 @@
                                 {{- end -}}
                             </div>
 
-                            {{- if .Params.tags -}}
-                                <div class="tags-line">
-                                    <svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#price-tag-3-line"></use></svg>
-                                    {{- range (.GetTerms "tags") -}}
-                                        <a href="{{ .RelPermalink }}" title="{{ .LinkTitle }}" class="hashtags">#{{ .LinkTitle }} </a>
-                                    {{- end -}}
-                                </div>
-                            {{- end -}}
                         </div>
                     </div>
 
