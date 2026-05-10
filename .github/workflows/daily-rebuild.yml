@@ -22,10 +22,12 @@ on:
 # - contents: write   → push to data-updates branch
 # - pages: write      → deploy to GitHub Pages
 # - id-token: write   → OIDC token used by actions/deploy-pages
+# - issues: write     → create on-failure issue (Story 2.6 AC #6)
 permissions:
   contents: write
   pages: write
   id-token: write
+  issues: write
 
 # Allow only one concurrent Pages deployment.
 # Queued runs after the one in progress will not be cancelled.
@@ -197,3 +199,24 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+      # Story 2.6 AC #6 — Layer 2 (workflow-enforced) failure notification.
+      # Layer 1 (built-in failed-workflow email) depends on the repo owner's
+      # personal Notifications setting, which is not auditable from the workflow
+      # file. This step creates a GitHub Issue on any prior-step failure so the
+      # alert is also visible in the repo's Issues tab and triggers an email via
+      # GitHub's standard issue-notification path (no SMTP secret needed).
+      - name: Notify on failure
+        if: failure()
+        uses: actions/github-script@v9
+        with:
+          script: |
+            const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+            const date = new Date().toISOString().slice(0, 10);
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `Daily rebuild failed on ${date}`,
+              body: `The daily-rebuild workflow failed.\n\n- Triggered by: \`${context.eventName}\`\n- Ref: \`${context.ref}\`\n- Commit: \`${context.sha}\`\n- Run: ${runUrl}\n\nCheck the run logs and resolve before the next scheduled rebuild.`,
+              labels: ['ci-failure', 'automated']
+            });

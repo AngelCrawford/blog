@@ -39,6 +39,13 @@
       "author_url": "https://danamueller.example/",
       "url": "https://danamueller.example/articles/related-thoughts/",
       "published": "2026-04-19T09:00:00Z"
+    },
+    {
+      "type": "mention",
+      "author": "Anonymous Sender",
+      "author_url": "",
+      "url": "",
+      "published": ""
     }
   ]
 }

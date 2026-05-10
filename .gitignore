@@ -1,8 +1,9 @@
 # Hugo
 /resources
 /public
-/public-test
-/public-test-dev
+# /public-* covers test-build scratch dirs (public-test, public-test-dev) plus the
+# AC #9 regression-check baselines (public-before, public-after) — see Story 2.5.
+/public-*
 /themes
 hugo_stats.json
 # Transient build lock — Hugo creates and cleans up; stale on hard kill.

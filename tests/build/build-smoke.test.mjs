@@ -1447,14 +1447,14 @@ test("Story 2.4 AC #2+#3+#7: fixture-targeted article renders all four type-grou
   );
 
   // AC #2: four type-groups, in order, with count badges from the fixture
-  // (replies × 2, repost × 1, mention × 1, like × 1).
+  // (replies × 2, repost × 1, mention × 2, like × 1).
   assert.match(articleHtml, /Antworten \(2\)/, "Replies group heading must show count 2");
   assert.match(articleHtml, /Reposts \(1\)/, "Reposts group heading must show count 1");
-  assert.match(articleHtml, /Erwähnungen \(1\)/, "Mentions group heading must show count 1");
+  assert.match(articleHtml, /Erwähnungen \(2\)/, "Mentions group heading must show count 2");
   assert.match(articleHtml, /Likes \(1\)/, "Likes group heading must show count 1");
 
   // AC #7: reactions tile appears in the sidebar info widget, links to
-  // #webmentions, with German plural ("5 Antworten" — total mentions in
+  // #webmentions, with German plural ("Antworten" — total mentions in
   // fixture). The container class moved from .webmention-count-line to the
   // tile system (data-tile="reactions") in the 2026-05-09 sidebar redesign.
   assert.match(
@@ -1469,8 +1469,8 @@ test("Story 2.4 AC #2+#3+#7: fixture-targeted article renders all four type-grou
   );
   assert.match(
     articleHtml,
-    /5 Antworten/,
-    "Reactions tile must show total count with German plural ('Antworten' for >1)"
+    /6 Antworten/,
+    "Reactions tile must show total count (6) with German plural ('Antworten' for >1)"
   );
 
   // AC #3 sample: avatar rendered for replies that have author_photo.
@@ -1523,7 +1523,7 @@ test("Story 2.4 AC #5: non-fixture article renders empty-state and omits count l
   );
 });
 
-test("Story 2.4 AC #6: every <a> inside .webmention block carries rel=\"noopener external\" target=\"_blank\"", () => {
+test("Story 2.4 AC #6: every <a> inside .webmention block carries rel with noopener+noreferrer+external and target=\"_blank\"", () => {
   const result = spawnSync("hugo", hugoArgs, {
     cwd: repoRoot,
     encoding: "utf8",
@@ -1548,13 +1548,66 @@ test("Story 2.4 AC #6: every <a> inside .webmention block carries rel=\"noopener
   for (const link of links) {
     assert.match(
       link,
-      /rel="noopener external"/,
-      `Webmention link missing rel="noopener external": ${link}`
+      /rel="noopener noreferrer external"/,
+      `Webmention link missing rel="noopener noreferrer external": ${link}`
     );
     assert.match(
       link,
       /target="_blank"/,
       `Webmention link missing target="_blank": ${link}`
+    );
+  }
+});
+
+test("Story 2.4 AC #6 patch: empty author_url and empty published render <span> fallbacks (not broken <a href=\"\"> or invalid <time>—</time>)", () => {
+  // The fixture's last mention entry has empty author_url, empty url, and
+  // empty published — exercising all three guards added during Story 2.5 review:
+  // - empty author_url → <span class="webmention__author">
+  // - empty url        → <span class="webmention__source"> (no <a href="">)
+  // - empty published  → <span>—</span> (no invalid <time>—</time> without datetime)
+  const result = spawnSync("hugo", hugoArgs, {
+    cwd: repoRoot,
+    encoding: "utf8",
+    shell: process.platform === "win32",
+  });
+  assert.equal(result.status, 0, `Production build failed.\n${result.stderr}`);
+
+  const articleHtml = readFileSync(
+    resolve(testPublic, "articles", "rss-test", "index.html"),
+    "utf8"
+  );
+
+  // Pull out the Mentions group (the second one — the fallback fixture entry
+  // has type=mention) and assert the fallback <span> elements are present.
+  assert.match(
+    articleHtml,
+    /<span class="webmention__author">Anonymous Sender<\/span>/,
+    "Empty author_url must render <span class=\"webmention__author\">, not <a href=\"\">"
+  );
+  assert.match(
+    articleHtml,
+    /<span class="webmention__source">[\s\S]*?<\/span>/,
+    "Empty url must render <span class=\"webmention__source\">, not <a class=\"webmention__source\" href=\"\">"
+  );
+  // Empty published must render <span>—</span>, not <time>—</time>.
+  // <time> without datetime and with non-machine-readable content ("—") is
+  // invalid HTML per the spec.
+  assert.doesNotMatch(
+    articleHtml,
+    /<time>—<\/time>/,
+    "Empty published must NOT render bare <time>—</time> (invalid HTML — <time> requires datetime or machine-readable text content)"
+  );
+
+  // Regression guard for the empty-href bug: no webmention-block <a> may have
+  // an empty href. (`<a href="">` reloads the current page on click.)
+  const webmentionBlocks = articleHtml.match(
+    /<article class="webmention"[\s\S]*?<\/article>/g
+  ) || [];
+  for (const block of webmentionBlocks) {
+    assert.doesNotMatch(
+      block,
+      /<a [^>]*\bhref=""/,
+      `Webmention block must not contain <a href=""> — page-reload bug. Block: ${block.slice(0, 200)}…`
     );
   }
 });
@@ -1592,4 +1645,168 @@ test("Story 2.4 AC #8: webmention reply content is auto-escaped (XSS guard, no s
       `Reply content block must NOT contain raw script-like tags: ${block}`
     );
   }
+});
+
+// =============================================================================
+// Story 2.5: Privacy Policy Page
+//
+// Asserts the rewritten content/pages/datenschutz.md renders the three
+// engagement-flow sections (Umami, Hearts, Webmentions), the "Was diese Seite
+// NICHT tut" posture statement, the contact-with-DSGVO-rights section, that
+// obsolete sections (Spotify, "Datenschutz auf einen Blick") were removed, that
+// the page retains its noindex meta + sitemap exclusion (robotsdisallow: true),
+// and that the footer link from a representative non-privacy page still resolves
+// to /pages/datenschutz/ (AC #4 regression check).
+// =============================================================================
+
+test("Story 2.5 AC #2: privacy page renders Umami, Hearts, and Webmentions section headings", () => {
+  const result = spawnSync("hugo", hugoArgs, {
+    cwd: repoRoot,
+    encoding: "utf8",
+    shell: process.platform === "win32",
+  });
+  assert.equal(result.status, 0, `Production build failed.\n${result.stderr}`);
+
+  const html = readFileSync(
+    resolve(testPublic, "pages", "datenschutz", "index.html"),
+    "utf8"
+  );
+  assert.match(
+    html,
+    /<h2 id="?anonyme-analyse-mit-umami"?[^>]*>\s*Anonyme Analyse mit Umami/,
+    "Privacy page must render the Umami section H2"
+  );
+  assert.match(
+    html,
+    /<h2 id="?herz-reaktionen"?[^>]*>\s*Herz-Reaktionen/,
+    "Privacy page must render the Hearts section H2"
+  );
+  assert.match(
+    html,
+    /<h2 id="?webmentions"?[^>]*>\s*Webmentions/,
+    "Privacy page must render the Webmentions section H2"
+  );
+});
+
+test("Story 2.5 AC #3+#5: privacy page renders posture statement and contact-with-DSGVO-rights sections", () => {
+  const result = spawnSync("hugo", hugoArgs, {
+    cwd: repoRoot,
+    encoding: "utf8",
+    shell: process.platform === "win32",
+  });
+  assert.equal(result.status, 0, `Production build failed.\n${result.stderr}`);
+
+  const html = readFileSync(
+    resolve(testPublic, "pages", "datenschutz", "index.html"),
+    "utf8"
+  );
+  assert.match(
+    html,
+    /<h2 id="?was-diese-seite-nicht-tut"?[^>]*>\s*Was diese Seite NICHT tut/,
+    "Privacy page must render the posture statement section (AC #3)"
+  );
+  assert.match(
+    html,
+    /<h2 id="?kontakt-für-datenschutzanfragen"?[^>]*>\s*Kontakt für Datenschutzanfragen/,
+    "Privacy page must render the contact section (AC #5)"
+  );
+  // Each of the seven DSGVO rights articles must be cited (Art. 15-21 + Art. 77).
+  for (const article of ["Art. 15", "Art. 16", "Art. 17", "Art. 18", "Art. 20", "Art. 21", "Art. 77"]) {
+    assert.ok(
+      html.includes(article),
+      `Privacy page contact section must cite ${article}`
+    );
+  }
+
+  // Email-obfuscation regression guard (Story 2.5 review patch): the literal
+  // `[at]` / `[dot]` form must survive Goldmark intact — no mailto autolink,
+  // no entity-decoded plain "@", no transformation to a clickable link. A
+  // future Goldmark upgrade or markup-extras change that re-enables square-
+  // bracket-aware linkification would silently defeat the obfuscation.
+  assert.match(
+    html,
+    /mail \[at\] article-time \[dot\] de/,
+    "Privacy page contact email must render literally as 'mail [at] article-time [dot] de' (obfuscation intact)"
+  );
+  assert.doesNotMatch(
+    html,
+    /mailto:mail@article-time\.de/,
+    "Privacy page contact email must NOT be auto-linked to mailto:mail@article-time.de (would defeat obfuscation)"
+  );
+  assert.doesNotMatch(
+    html,
+    /\bmail@article-time\.de\b/,
+    "Privacy page must NOT render the unobfuscated address 'mail@article-time.de' anywhere (markdown entity-decode regression)"
+  );
+});
+
+test("Story 2.5 AC #7: privacy page no longer mentions Spotify (removed obsolete section)", () => {
+  const result = spawnSync("hugo", hugoArgs, {
+    cwd: repoRoot,
+    encoding: "utf8",
+    shell: process.platform === "win32",
+  });
+  assert.equal(result.status, 0, `Production build failed.\n${result.stderr}`);
+
+  const html = readFileSync(
+    resolve(testPublic, "pages", "datenschutz", "index.html"),
+    "utf8"
+  );
+  assert.doesNotMatch(
+    html,
+    /Spotify/i,
+    "Privacy page must NOT contain the obsolete Spotify section (no Spotify embeds in current codebase)"
+  );
+  // The standalone "Datenschutz auf einen Blick" intro was replaced by "Auf einen Blick".
+  assert.doesNotMatch(
+    html,
+    /Datenschutz auf einen Blick/,
+    "Privacy page must NOT carry the legacy intro heading 'Datenschutz auf einen Blick' (replaced by 'Auf einen Blick')"
+  );
+});
+
+test("Story 2.5 AC #8: privacy page retains noindex meta and is excluded from sitemap (robotsdisallow: true)", () => {
+  const result = spawnSync("hugo", hugoArgs, {
+    cwd: repoRoot,
+    encoding: "utf8",
+    shell: process.platform === "win32",
+  });
+  assert.equal(result.status, 0, `Production build failed.\n${result.stderr}`);
+
+  const html = readFileSync(
+    resolve(testPublic, "pages", "datenschutz", "index.html"),
+    "utf8"
+  );
+  assert.match(
+    html,
+    /<meta name="?robots"? content="noindex/,
+    "Privacy page must emit a noindex robots meta (robotsdisallow: true frontmatter)"
+  );
+
+  const sitemapPath = resolve(testPublic, "sitemap.xml");
+  assert.ok(existsSync(sitemapPath), "sitemap.xml must exist");
+  const sitemap = readFileSync(sitemapPath, "utf8");
+  assert.doesNotMatch(
+    sitemap,
+    /\/pages\/datenschutz\//,
+    "sitemap.xml must NOT include /pages/datenschutz/ (robotsdisallow excludes it)"
+  );
+});
+
+test("Story 2.5 AC #4: footer on a representative non-privacy page still links to /pages/datenschutz/", () => {
+  const result = spawnSync("hugo", hugoArgs, {
+    cwd: repoRoot,
+    encoding: "utf8",
+    shell: process.platform === "win32",
+  });
+  assert.equal(result.status, 0, `Production build failed.\n${result.stderr}`);
+
+  // Sample the homepage footer-menu region. Story 2.5 changed only markdown
+  // content; the menu wiring must remain intact.
+  const homeHtml = readFileSync(resolve(testPublic, "index.html"), "utf8");
+  assert.match(
+    homeHtml,
+    /<a href="?\/pages\/datenschutz\/"?[^>]*>Datenschutz<\/a>/,
+    "Homepage footer must still link to /pages/datenschutz/ (AC #4 regression guard)"
+  );
 });

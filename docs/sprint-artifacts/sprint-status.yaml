@@ -1,5 +1,5 @@
 # generated: 2026-04-30
-# last_updated: 2026-05-09 (story 2-4 review)
+# last_updated: 2026-05-09 (story 2-5 review patches applied → done; 2-6 review; 2-8 added to backlog)
 # project: Article Time
 # project_key: article-time-digital-garden
 # tracking_system: file-system
@@ -51,10 +51,11 @@ development_status:
   2-1-umami-analytics-integration: done
   2-2-heart-button-component: done
   2-3-webmention-endpoint-setup: done
-  2-4-webmention-display-component: review
-  2-5-privacy-policy-page: ready-for-dev
-  2-6-daily-rebuild-github-actions-workflow: ready-for-dev
+  2-4-webmention-display-component: done
+  2-5-privacy-policy-page: done
+  2-6-daily-rebuild-github-actions-workflow: review
   2-7-cookie-banner-ui: ready-for-dev
+  2-8-bridgy-fed-setup: backlog
   epic-2-retrospective: optional
 
   # Epic 3: Popularity Scoring Engine [Phase 1A, Week 4-5]
