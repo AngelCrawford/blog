@@ -478,11 +478,12 @@ function readArticlePage(slug) {
 }
 
 function extractSeriesWidget(html) {
-  // Pull out the <div class="serie widget ..."> block only, so assertions don't
-  // accidentally match the related-articles widget or other parts of the page.
-  // Terminated at </ol>\s*</div> rather than bare </ol> to survive nested <ol>
-  // elements that may be added inside list items in the future.
-  const match = html.match(/<div class="serie widget[^"]*">[\s\S]*?<\/ol>\s*<\/div>/);
+  // Pull out the <section class="series-sidebar">…</section> block only, so
+  // assertions don't accidentally match the related-sidebar widget or other
+  // parts of the page. Terminated at </section> (the partial's outermost
+  // element) which scopes assertions cleanly even if nested <ol>/<section>
+  // elements get added inside list items later.
+  const match = html.match(/<section class="series-sidebar"[^>]*>[\s\S]*?<\/section>/);
   return match ? match[0] : "";
 }
 
@@ -519,14 +520,15 @@ test("Story 1.3 series: withered siblings remain visible but marked in the serie
   const widget = extractSeriesWidget(readArticlePage("s1a"));
   assert.ok(widget.length > 0, "Series widget must be present on s1a's page");
 
+  assert.match(widget, /Smoke Series/, "Series name must appear in the widget");
   assert.match(
     widget,
-    /Smoke Series \(3\)/,
-    "Series count must include all members, including withered"
+    /3 Teile/,
+    "Series count pill must include all 3 members (including withered)"
   );
   assert.match(
     widget,
-    /class="is-withered"/,
+    /\bis-withered\b/,
     "Withered sibling must carry the is-withered class"
   );
   assert.match(
@@ -546,15 +548,15 @@ test("Story 1.3 series: withered siblings remain visible but marked in the serie
   );
   assert.match(
     widget,
-    /<li class="is-active">[\s\S]*?Series Smoke Part 1/,
-    "Current non-withered article must be marked is-active"
+    /<li class="series-sidebar__item is-current[^"]*">[\s\S]*?Series Smoke Part 1/,
+    "Current non-withered article must be marked is-current"
   );
 });
 
 test("Story 1.3 series: withered article is marked active in its own series widget (regression)", () => {
   // Same three articles. On B's page (withered, direct URL):
   // - count must be 3 (current page is included even though withered)
-  // - B must be is-active
+  // - B must be is-current
   // - A and C must appear as links
   const result = runHugoWithSeriesFixtures([
     {
@@ -586,15 +588,16 @@ test("Story 1.3 series: withered article is marked active in its own series widg
   const widget = extractSeriesWidget(readArticlePage("s2b"));
   assert.ok(widget.length > 0, "Series widget must be present on s2b's page");
 
+  assert.match(widget, /Smoke Series 2/, "Series name must appear in the widget");
   assert.match(
     widget,
-    /Smoke Series 2 \(3\)/,
-    "Series count on the withered page itself must include all members"
+    /3 Teile/,
+    "Series count pill on the withered page itself must include all 3 members"
   );
   assert.match(
     widget,
-    /class="is-active is-withered"/,
-    "Withered current page must carry both is-active and is-withered classes"
+    /class="series-sidebar__item is-current is-withered"/,
+    "Withered current page must carry both is-current and is-withered classes"
   );
   assert.match(
     widget,
@@ -643,12 +646,13 @@ test("Story 1.3 series: all-non-withered series renders complete count and all m
   const widget = extractSeriesWidget(readArticlePage("s3b"));
   assert.ok(widget.length > 0, "Series widget must be present on s3b's page");
 
-  assert.match(widget, /Clean Series \(3\)/, "All-non-withered series must show count=3");
+  assert.match(widget, /Clean Series/, "Series name must appear in the widget");
+  assert.match(widget, /3 Teile/, "All-non-withered series must show count=3 (3 Teile)");
   assert.match(widget, /Clean Series Part 1/, "Part 1 must appear in the widget");
   assert.match(
     widget,
-    /<li class="is-active">Clean Series Part 2/,
-    "Current page (s3b) must be is-active"
+    /<li class="series-sidebar__item is-current[^"]*">[\s\S]*?Clean Series Part 2/,
+    "Current page (s3b) must be is-current"
   );
   assert.match(widget, /Clean Series Part 3/, "Part 3 must appear in the widget");
 });

@@ -57,10 +57,19 @@
     .series-sidebar__title {
         display: block;
         @include helpers.font-header;
-        padding: 0.55rem 0;
-        margin-bottom: 0.5rem;
-        color: helpers.$gold-light;
-        line-height: 1.3;
+        // `& { ... }` wraps post-include decls so Dart Sass doesn't warn about
+        // mixed declarations after nested rules — `font-header` injects an
+        // `& { font-family: …; font-weight: … }` block, so anything after it
+        // would otherwise trigger the [mixed-decls] deprecation. CSS output
+        // is identical to a flat declaration list. Same pattern as the
+        // `@include helpers.font-header` call sites in main.scss, footer.scss,
+        // ribbon.scss, etc.
+        & {
+            padding: 0.55rem 0;
+            margin-bottom: 0.5rem;
+            color: helpers.$gold-light;
+            line-height: 1.3;
+        }
 
         &:hover,
         &:focus {

@@ -3,7 +3,9 @@
 // Growth-stage badge — Story 1.2.
 // Color is applied to the SVG glyph (not the wrapper background) for a tone-on-tone aesthetic.
 // Inside the card list the badge nests in `.card-footer-item.formats` alongside format icons.
-// On single pages it sits in `.info.widget > .widget-content`.
+// On single pages it sits inside the Status info-tile value (see article-info.scss
+// `.info-tile[data-tile="status"]` — the inline svg is hidden there because the
+// stage glyph already renders as the tile's standalone left icon).
 span.growth-stage {
     display: inline;
 
