@@ -1,3 +1,11 @@
+IndieWeb! Schauen wie ich mich mit anderen Seiten verbinden kann!
+1. POSSE: Ich will auf meiner Seite schreiben, einen Log, ein Bild, etc
+2. webring (linking of other cool sites, with articles?)
+3. write in deutsch, translate to english, with banner (translated from german in En for better reach in the indieweb community)
+4. first pinned post, about me (will be later on the about me page.)
+5. Idea: A little tamagotchi pet! >.< I want it
+6. 
+
 # Active WIP (no issue — actively designing)
 - [Backlog](docs/backlog)
 - [Icons austauschen](docs/IconDemo.html)
