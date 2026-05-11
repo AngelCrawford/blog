@@ -1931,3 +1931,135 @@ test("Story 2.5 AC #4: footer on a representative non-privacy page still links t
     "Homepage footer must still link to /pages/datenschutz/ (AC #4 regression guard)"
   );
 });
+
+// =============================================================================
+// Story 2.7: Cookie-Banner UI
+//
+// Asserts the banner partial is rendered on indexable pages (home, articles),
+// suppressed via `robotsdisallow: true` on transparency pages (datenschutz,
+// impressum), that its vanilla-JS dismissal logic survives bundle concat +
+// minify, and that the full ARIA wiring (role/aria-modal/labelledby/
+// describedby/live) is intact on the rendered home banner.
+// =============================================================================
+
+test("Story 2.7 AC #1+#7: production homepage renders <div id=\"cookie-banner\" hidden ...> exactly once", () => {
+  const result = spawnSync("hugo", hugoArgs, {
+    cwd: repoRoot,
+    encoding: "utf8",
+    shell: process.platform === "win32",
+  });
+  assert.equal(result.status, 0, `Production build failed.\n${result.stderr}`);
+
+  const homeHtml = readFileSync(resolve(testPublic, "index.html"), "utf8");
+  const matches = homeHtml.match(/<div id="cookie-banner"\s+hidden/g) || [];
+  assert.equal(
+    matches.length,
+    1,
+    `Homepage must render the cookie-banner block EXACTLY ONCE; got ${matches.length}`
+  );
+});
+
+test("Story 2.7 AC #1+#7: production article page also renders the cookie-banner block", () => {
+  const result = spawnSync("hugo", hugoArgs, {
+    cwd: repoRoot,
+    encoding: "utf8",
+    shell: process.platform === "win32",
+  });
+  assert.equal(result.status, 0, `Production build failed.\n${result.stderr}`);
+
+  const articlesDir = resolve(testPublic, "articles");
+  if (!existsSync(articlesDir)) {
+    assert.fail("articles/ dir missing from build output — run a full production build first");
+  }
+  const articleSlug = readdirSync(articlesDir)
+    .filter((entry) => !entry.startsWith("_test_"))
+    .find((entry) => existsSync(resolve(articlesDir, entry, "index.html")));
+  assert.ok(articleSlug, "Expected at least one non-fixture article to render");
+
+  const articleHtml = readFileSync(
+    resolve(articlesDir, articleSlug, "index.html"),
+    "utf8"
+  );
+  assert.match(
+    articleHtml,
+    /<div id="cookie-banner"\s+hidden/,
+    "Article page must render the cookie-banner block (site-wide via baseof.html partial)"
+  );
+});
+
+test("Story 2.7 AC #7: cookie-banner is suppressed on robotsdisallow pages (datenschutz, impressum)", () => {
+  const result = spawnSync("hugo", hugoArgs, {
+    cwd: repoRoot,
+    encoding: "utf8",
+    shell: process.platform === "win32",
+  });
+  assert.equal(result.status, 0, `Production build failed.\n${result.stderr}`);
+
+  for (const slug of ["datenschutz", "impressum"]) {
+    const pagePath = resolve(testPublic, "pages", slug, "index.html");
+    assert.ok(existsSync(pagePath), `${slug} page must exist in build output`);
+    const html = readFileSync(pagePath, "utf8");
+    assert.ok(
+      !html.includes('id="cookie-banner"'),
+      `pages/${slug}/ must NOT render the cookie-banner block (robotsdisallow: true gates it server-side)`
+    );
+  }
+});
+
+test("Story 2.7 AC #2+#4: cookie-banner-dismissed flag survives gdpr.js minification + concat into bundle.js", () => {
+  const result = spawnSync("hugo", hugoArgs, {
+    cwd: repoRoot,
+    encoding: "utf8",
+    shell: process.platform === "win32",
+  });
+  assert.equal(result.status, 0, `Production build failed.\n${result.stderr}`);
+
+  // Resolve the active head-bundle filename from the homepage's <script src=...>
+  // (avoids matching stale fingerprints from earlier test builds).
+  const homeHtml = readFileSync(resolve(testPublic, "index.html"), "utf8");
+  const scriptMatch = homeHtml.match(
+    /<script[^>]*src="([^"]*bundle\.min\.[^"]+\.js)"/
+  );
+  assert.ok(scriptMatch, "Homepage must reference the fingerprinted bundle.min.<hash>.js (head bundle)");
+
+  const srcPath = scriptMatch[1];
+  const bundleFilename = srcPath.split("/").pop();
+  const bundlePath = resolve(testPublic, "js", bundleFilename);
+  assert.ok(existsSync(bundlePath), `Active head bundle must exist at ${bundlePath}`);
+
+  const bundle = readFileSync(bundlePath, "utf8");
+  assert.match(
+    bundle,
+    /cookie-banner-dismissed/,
+    "Head bundle must contain the 'cookie-banner-dismissed' sessionStorage key from gdpr.js (Story 2.7)"
+  );
+});
+
+test("Story 2.7 AC #6: rendered banner carries full ARIA wiring (role, modal, labelledby, describedby, live)", () => {
+  const result = spawnSync("hugo", hugoArgs, {
+    cwd: repoRoot,
+    encoding: "utf8",
+    shell: process.platform === "win32",
+  });
+  assert.equal(result.status, 0, `Production build failed.\n${result.stderr}`);
+
+  const homeHtml = readFileSync(resolve(testPublic, "index.html"), "utf8");
+  // Capture the opening <div id="cookie-banner" ...> tag (everything up to the
+  // first '>' that closes it). Multiline because attributes wrap.
+  const tagMatch = homeHtml.match(/<div id="cookie-banner"[\s\S]*?>/);
+  assert.ok(tagMatch, "Homepage must render the cookie-banner opening tag");
+  const tag = tagMatch[0];
+
+  for (const needle of [
+    'role="dialog"',
+    'aria-modal="false"',
+    'aria-labelledby="cookie-banner-title"',
+    'aria-describedby="cookie-banner-text"',
+    'aria-live="polite"',
+  ]) {
+    assert.ok(
+      tag.includes(needle),
+      `cookie-banner opening tag must include ${needle} (AC #6)`
+    );
+  }
+});

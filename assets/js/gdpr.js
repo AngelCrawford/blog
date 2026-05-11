@@ -1,57 +1,53 @@
-// $(document).ready(function() {
+// ***************** Cookie Banner (Story 2.7) — vanilla JS, no jQuery.
+// Privacy notice surfaced once per browser session. State is held in
+// sessionStorage (key: `cookie-banner-dismissed`) — NOT a cookie. The flag
+// clears with the browser session, so a returning visitor in a fresh session
+// sees the banner again. Architecture rule: digital-garden-integration-
+// architecture.md Critical Agent Rule #5 (no jQuery for new features).
+(function () {
+    var DISMISS_KEY = 'cookie-banner-dismissed';
+    var ANIM_MS = 300;
 
-//   var cookieBanner = document.querySelector('#cookie-banner');
-//   var hasCookieConsent = getCookie('cookies-consent');
+    function init() {
+        var banner = document.getElementById('cookie-banner');
+        if (!banner) return;
 
-//   // console.log(hasCookieConsent);
+        try {
+            if (sessionStorage.getItem(DISMISS_KEY) === '1') return;
+        } catch (e) {
+            // sessionStorage unavailable (private mode, quota, disabled) —
+            // banner shows every page-load. Acceptable degraded behaviour.
+        }
 
-//   if (!hasCookieConsent) {
-//     cookieBanner.classList.remove('closed');
-//     cookieBanner.classList.add('opened');
-//     $('#remove-cookies').css('display', 'none');
-//   } 
-//   if (hasCookieConsent == 'false') {
-//     cookieBanner.classList.add('closed');
-//     $('#reject-cookies').attr('disabled', true);
-//     $('#reject-cookies').removeAttr('data-tooltip');
-//   }
-//   if (hasCookieConsent == 'true') {
-//     cookieBanner.classList.add('closed');
-//     getFavForExternalLinks();
-//     $('#consent-cookies').attr('disabled', true);
-//   }
+        banner.removeAttribute('hidden');
+        // Defer .is-visible one frame so the CSS transition triggers.
+        requestAnimationFrame(function () { banner.classList.add('is-visible'); });
 
-//   var consentCta = cookieBanner.querySelector('#consent-cookies');
-//   var rejectCta = cookieBanner.querySelector('#reject-cookies');
-//   var removeAll = cookieBanner.querySelector('#remove-cookies');
+        function dismiss() {
+            try { sessionStorage.setItem(DISMISS_KEY, '1'); } catch (e) { /* ignore */ }
+            banner.classList.remove('is-visible');
+            banner.classList.add('is-dismissing');
+            setTimeout(function () {
+                if (banner.parentNode) banner.parentNode.removeChild(banner);
+            }, ANIM_MS);
+        }
 
-//   consentCta.addEventListener('click', () => {
-//     cookieBanner.classList.add('closed');
-//     cookieBanner.classList.remove('opened');
-//     setCookie('cookies-consent', 'true', 365);
-//     location.reload();
-//   });
+        var closeBtn = banner.querySelector('.cookie-banner-close');
+        if (closeBtn) closeBtn.addEventListener('click', dismiss);
 
-//   rejectCta.addEventListener('click', () => {
-//     cookieBanner.classList.add('closed');
-//     cookieBanner.classList.remove('opened');
-//     setCookie('cookies-consent', 'false', 365);
-//     location.reload();
-//   });
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && banner.classList.contains('is-visible')) {
+                dismiss();
+            }
+        });
+    }
 
-//   removeAll.addEventListener('click', () => {
-//     cookieBanner.classList.add('opened');
-//     cookieBanner.classList.remove('closed');
-//     deleteCookie('cookies-consent');
-//     location.reload();
-//   });
-
-//   $('#cookie-banner-opener').click(function(){
-//     $('#cookie-banner').toggleClass('closed');
-//     cookieBanner.classList.add('opened');
-//   });
-
-// });
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
+})();
 
 
 // ***************** Cookie Functions getCookie() and setCookie()

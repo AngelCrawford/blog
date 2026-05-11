@@ -32,7 +32,6 @@
 
     {{- $jQuery := resources.Get "js/jquery.js" }}
     {{- $gdpr := resources.Get "js/gdpr.js" }}
-    <!-- TODO: gdpr.js mit Cookie Consent verbinden -->
     {{- $script := slice $jQuery $gdpr | resources.Concat "js/bundle.js" | resources.Minify | resources.Fingerprint -}}
     <script src="{{ $script.RelPermalink }}"></script>
 

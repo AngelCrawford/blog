@@ -1,0 +1,129 @@
+// elements/cookie-banner.scss — Story 2.7 Cookie-Banner UI
+//
+// Transient floating overlay (position: fixed, slide-up animation,
+// semi-transparent + backdrop-filter blur). Deliberately does NOT use
+// `@mixin tile-box` — that mixin is for opaque content surfaces, not
+// floating chrome. The translucent dark surface + blur is the visual
+// signature that distinguishes overlay from page content.
+//
+// z-index: 100 — sits above page content, below #back-to-top (999999 in
+// main.scss). Sets a reusable convention for future overlays (Story 9.3
+// no-JS fallback banner, etc.).
+@use "../vars/helpers";
+@use "sass:color";
+
+#cookie-banner {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    right: auto;
+    transform: translate(-50%, 100%);
+    width: calc(100% - 2rem);
+    max-width: 960px;
+    z-index: 99999;
+    padding: 1rem 1.25rem;
+    background-color: rgba(helpers.$dark, 0.95);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    color: helpers.$light;
+    border-top: 1px solid rgba(helpers.$gold-dark, 0.5);
+    border-left: 1px solid rgba(helpers.$gold-dark, 0.5);
+    border-right: 1px solid rgba(helpers.$gold-dark, 0.5);
+    border-top-left-radius: helpers.$tile-radius;
+    border-top-right-radius: helpers.$tile-radius;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    transition: transform 300ms ease-out;
+
+    &.is-visible {
+        transform: translate(-50%, 0);
+    }
+
+    &.is-dismissing {
+        transform: translate(-50%, 100%);
+    }
+
+    .cookie-banner-inner {
+        flex: 1;
+        font-size: 0.9rem;
+        line-height: 1.4;
+    }
+
+    #cookie-banner-title {
+        display: block;
+        color: helpers.$gold-light;
+        margin-bottom: 0.3em;
+        font-size: 1rem;
+    }
+
+    #cookie-banner-text {
+        margin: 0;
+    }
+
+    a {
+        color: helpers.$gold-light;
+        text-decoration: underline;
+
+        &:hover,
+        &:focus-visible {
+            color: helpers.$gold;
+        }
+    }
+
+    .cookie-banner-close {
+        @include helpers.round-button(false, 30px);
+        svg {
+            @include helpers.translate(0, 0);
+        }
+    }
+
+    @include helpers.mobile {
+        left: 0;
+        right: 0;
+        width: 100%;
+        max-width: none;
+        flex-direction: row;
+        align-items: flex-start;
+        padding: 0.75rem 1rem;
+        border-left: none;
+        border-right: none;
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+        transform: translateY(100%);
+
+        &.is-visible {
+            transform: translateY(0);
+        }
+
+        &.is-dismissing {
+            transform: translateY(100%);
+        }
+
+        .cookie-banner-inner {
+            font-size: 0.85rem;
+        }
+
+        #cookie-banner-title {
+            font-size: 0.95rem;
+        }
+    }
+}
+
+// Print suppression (AC #7) — `!important` is required because `.is-visible`
+// is the dynamic show-state and `display: none` from a print-media rule must
+// beat the dynamic class.
+@media print {
+    #cookie-banner {
+        display: none !important;
+    }
+}
+
+// Reduced motion (AC #6) — users with the OS-level preference don't see
+// the slide animation.
+@media (prefers-reduced-motion: reduce) {
+    #cookie-banner {
+        transition: none;
+    }
+}

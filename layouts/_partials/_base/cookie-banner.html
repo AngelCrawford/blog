@@ -1,0 +1,34 @@
+{{- /* Cookie-Banner UI — Story 2.7 (FR-048 extension).
+       Transient privacy-notice overlay. NOT a consent gate — Umami runs cookieless,
+       no tracking cookies are set, so there is nothing to consent to. Banner is a
+       transparency signal pointing to the privacy policy.
+
+       Hidden by default via the `hidden` attribute (FOUC avoidance). gdpr.js removes
+       the attribute and toggles `.is-visible` once it has read the sessionStorage
+       dismissal flag. If JavaScript is disabled, the banner stays hidden — acceptable
+       degraded state for a notice-only UI.
+
+       Inclusion site: layouts/baseof.html, gated by `{{- if not .Params.robotsdisallow -}}`
+       (server-side suppression on transparency pages — datenschutz, impressum). */ -}}
+<div id="cookie-banner" hidden
+     role="dialog"
+     aria-modal="false"
+     aria-labelledby="cookie-banner-title"
+     aria-describedby="cookie-banner-text"
+     aria-live="polite">
+    <div class="cookie-banner-inner">
+        <strong id="cookie-banner-title">Hinweis zur Datenverarbeitung</strong>
+        <p id="cookie-banner-text">
+            Diese Seite nutzt <a href="https://umami.is" rel="external noreferrer">Umami</a> für anonyme,
+            <strong>cookielose</strong> Reichweitenmessung. Es werden <strong>keine Tracking-Cookies</strong>
+            gesetzt und keine personenbezogenen Daten erhoben. Lokal merkt sich Dein Browser nur Herz-Klicks
+            und gelesene Artikel; <strong>Webmentions</strong> zeigen Erwähnungen anderer Seiten. Details und
+            Deine Rechte findest Du in der <a href="{{ "pages/datenschutz/" | relURL }}">Datenschutzerklärung</a>.
+        </p>
+    </div>
+    <button type="button" class="cookie-banner-close" aria-label="Hinweis schließen">
+        <svg class="icon ri-1x">
+            <use href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ .Site.Params.remixicon_version }}#close-fill"></use>
+        </svg>
+    </button>
+</div>

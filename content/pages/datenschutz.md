@@ -8,15 +8,16 @@ params:
   robotsdisallow: true
 ---
 
-*Stand: 09. Mai 2026 · Version: 1.0*
+*Stand: 11. Mai 2026 · Version: 1.1*
 
 ## Auf einen Blick
 
-Diese Seite respektiert Deine Privatsphäre — und ist dabei ehrlich darüber, was passiert. Es gibt **keine Tracking-Cookies, keine personalisierte Werbung, keine Newsletter-Anmeldung, kein Kommentarsystem**. Aber drei Dinge wirst Du wissen wollen, weil sie Daten betreffen:
+Diese Seite respektiert Deine Privatsphäre — und ist dabei ehrlich darüber, was passiert. Es gibt **keine Tracking-Cookies, keine personalisierte Werbung, keine Newsletter-Anmeldung, kein Kommentarsystem**. Aber vier Dinge wirst Du wissen wollen, weil sie Daten betreffen:
 
 1. **Umami** — anonyme Seitenaufrufe ohne Cookies (siehe Abschnitt unten).
 2. **Herz-Reaktionen** — Du kannst Artikeln ein Herz geben; das wird als anonymes Event gezählt.
 3. **Webmentions** — wenn andere Seiten auf meine Artikel verweisen, erscheinen diese Erwähnungen öffentlich.
+4. **Hinweis-Dismiss bei verwelkten Inhalten** — blendest Du einen Warnhinweis aus, merkt sich Dein Browser das nur für die aktuelle Sitzung.
 
 Im Detail:
 
@@ -67,21 +68,6 @@ Unter jedem Artikel findest Du eine Herz-Schaltfläche. Wenn Du sie anklickst, w
 
 **Wie kannst Du widersprechen?** Klicke das Herz nicht. Es gibt keine andere Erfassung.
 
-### Hinweis-Dismiss bei verwelkten Inhalten
-
-Auf als „verwelkt" (deprecated) markierten Artikelseiten erscheint oben ein gelber Warnhinweis. Wenn Du auf das ✕ klickst, merkt sich Dein Browser **nur für die aktuelle Sitzung**, dass dieser eine Hinweis ausgeblendet bleiben soll.
-
-**Was wird gespeichert?**
-
-* Ein Eintrag im `sessionStorage` Deines Browsers, Schlüssel `withered-banner-dismissed:<artikel-pfad>`, Wert `1`.
-* Pro Artikel ein eigener Eintrag (das Ausblenden auf einem verwelkten Artikel betrifft keine anderen).
-
-**Wie lange bleibt das gespeichert?** Bis Du den Tab schließt — `sessionStorage` wird vom Browser automatisch gelöscht, anders als `localStorage` oder Cookies. Beim nächsten Besuch erscheint der Hinweis wieder.
-
-**Was wird übertragen?** Nichts. Der Eintrag verlässt Deinen Browser nicht.
-
-**Rechtsgrundlage:** § 25 Abs. 2 Nr. 2 TTDSG — technisch erforderlich, um die von Dir per Klick angeforderte Dismiss-Funktion umzusetzen. Keine Einwilligung nötig.
-
 ## Webmentions
 
 Diese Website empfängt **Webmentions** über den Dienst [webmention.io](https://webmention.io/) (betrieben von Aaron Parecki). Webmentions sind ein offener IndieWeb-Standard für föderierte Erwähnungen und Antworten zwischen Websites — vergleichbar mit Trackbacks/Pingbacks, aber moderner und spamresistenter.
@@ -106,6 +92,21 @@ Es werden **keine** IP-Adressen, Cookies oder personenbezogenen Daten der Webmen
 * Sende keine Webmentions an Artikel auf dieser Seite.
 * Du kannst eine bereits gesendete Webmention zurückziehen, indem Du den Link auf der ursprünglich verweisenden Seite entfernst — die Webmention wird beim nächsten Build automatisch entfernt.
 * Bei Erwähnungen, die über Drittplattformen weitergeleitet wurden (z. B. Mastodon-Boosts), ist eine Rücknahme per Link-Entfernung nicht immer möglich. In diesen Fällen kontaktiere mich direkt — siehe Abschnitt **Kontakt für Datenschutzanfragen**.
+
+## Hinweis-Dismiss bei verwelkten Inhalten
+
+Auf als „verwelkt" (deprecated) markierten Artikelseiten erscheint oben ein gelber Warnhinweis. Wenn Du auf das ✕ klickst, merkt sich Dein Browser **nur für die aktuelle Sitzung**, dass dieser eine Hinweis ausgeblendet bleiben soll.
+
+**Was wird gespeichert?**
+
+* Ein Eintrag im `sessionStorage` Deines Browsers, Schlüssel `withered-banner-dismissed:<artikel-pfad>`, Wert `1`.
+* Pro Artikel ein eigener Eintrag (das Ausblenden auf einem verwelkten Artikel betrifft keine anderen).
+
+**Wie lange bleibt das gespeichert?** Bis Du den Tab schließt — `sessionStorage` wird vom Browser automatisch gelöscht, anders als `localStorage` oder Cookies. Beim nächsten Besuch erscheint der Hinweis wieder.
+
+**Was wird übertragen?** Nichts. Der Eintrag verlässt Deinen Browser nicht.
+
+**Rechtsgrundlage:** § 25 Abs. 2 Nr. 2 TTDSG — technisch erforderlich, um die von Dir per Klick angeforderte Dismiss-Funktion umzusetzen. Keine Einwilligung nötig.
 
 ## Was diese Seite NICHT tut
 

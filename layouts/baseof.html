@@ -27,6 +27,14 @@
             {{ block "footer" . }}{{ partial "_base/footer" . }}{{ end }}
         </footer>
 
+        {{- /* Cookie-Banner UI — Story 2.7. Server-side suppressed on transparency
+               pages (robotsdisallow: true) so the privacy policy itself isn't
+               decorated with a meta-notice about privacy. JS in assets/js/gdpr.js
+               decides whether to show or stay hidden based on sessionStorage. */ -}}
+        {{- if not .Params.robotsdisallow }}
+            {{ partial "_base/cookie-banner" . }}
+        {{- end }}
+
         <!-- Footer Scripts -->
         {{- $sunCalc := resources.Get "js/suncalc.js" -}}
         {{- $main := resources.Get "js/main.js" -}}
