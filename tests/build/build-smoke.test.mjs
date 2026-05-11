@@ -1987,7 +1987,7 @@ test("Story 2.7 AC #1+#7: production article page also renders the cookie-banner
   );
 });
 
-test("Story 2.7 AC #7: cookie-banner is suppressed on robotsdisallow pages (datenschutz, impressum)", () => {
+test("Story 2.7 AC #7: cookie-banner is suppressed on suppress_banner pages (datenschutz, impressum)", () => {
   const result = spawnSync("hugo", hugoArgs, {
     cwd: repoRoot,
     encoding: "utf8",
@@ -2001,7 +2001,7 @@ test("Story 2.7 AC #7: cookie-banner is suppressed on robotsdisallow pages (date
     const html = readFileSync(pagePath, "utf8");
     assert.ok(
       !html.includes('id="cookie-banner"'),
-      `pages/${slug}/ must NOT render the cookie-banner block (robotsdisallow: true gates it server-side)`
+      `pages/${slug}/ must NOT render the cookie-banner block (suppress_banner: true gates it server-side)`
     );
   }
 });

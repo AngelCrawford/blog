@@ -1,6 +1,6 @@
 # Story 2.7: Cookie-Banner UI
 
-Status: review
+Status: done
 
 ## Story
 
@@ -20,8 +20,9 @@ so that I understand the site's privacy posture without being interrupted on eve
    <p id="cookie-banner-text">
      Diese Seite nutzt <a href="https://umami.is" rel="external noreferrer">Umami</a> für anonyme,
      <strong>cookielose</strong> Reichweitenmessung. Es werden <strong>keine Tracking-Cookies</strong>
-     gesetzt und keine personenbezogenen Daten erhoben. Details und Deine Rechte findest Du in der
-     <a href="/pages/datenschutz/">Datenschutzerklärung</a>.
+     gesetzt und keine personenbezogenen Daten erhoben. Lokal merkt sich Dein Browser nur Herz-Klicks
+     und gelesene Artikel; <strong>Webmentions</strong> zeigen Erwähnungen anderer Seiten. Details und
+     Deine Rechte findest Du in der <a href="/pages/datenschutz/">Datenschutzerklärung</a>.
    </p>
    ```
    **URL reconciliation (AC #3 vs Story 2.5):** epics AC #3 names "Privacy Policy (Story 2.5)" — Story 2.5's reconciliation pinned the actual URL to `/pages/datenschutz/` (German slug, existing footer-menu wired) rather than the originally-named `/pages/privacy/`. This story uses `/pages/datenschutz/` to match. Same German-language reconciliation pattern Stories 2.2 / 2.4 / 2.5 followed. Verification at implementation time: confirm `content/pages/datenschutz.md` resolves to `/pages/datenschutz/` (e.g., `hugo --quiet && grep "datenschutz" public/sitemap.xml` or open the rendered home page and inspect the footer's "Datenschutz" link). If Story 2.5 has landed and shifted the slug for some reason, follow the actual deployed URL.
@@ -314,16 +315,16 @@ ACs 1–7 are derived verbatim from `docs/1-planning/epics.md#Story-2.7-Cookie-B
 
 <!-- Decisions resolved (2026-05-11) -->
 - [x] [Review][Decision → Dismissed] `role="dialog"` + `aria-live="polite"` — Angel confirmed: keep both. Spec's "belt-and-braces" rationale stands; double-announcement risk accepted.
-- [ ] [Review][Patch] Update AC #3 text to match approved production banner copy — Code is correct; spec text shows older draft. Update story spec AC #3 baseline to include the approved second sentence (localStorage/Webmentions acknowledgement per review-feedback round 1).
-- [ ] [Review][Patch] Introduce `suppress_banner` frontmatter param, update baseof.html gate — Decouple banner suppression from the SEO `robotsdisallow` flag. Change `{{- if not .Params.robotsdisallow }}` to `{{- if not .Params.suppress_banner }}` in `baseof.html`. Add `suppress_banner: true` to `content/pages/datenschutz.md` and `content/pages/impressum.md` (the two transparency pages; add more as needed).
+- [x] [Review][Patch] Update AC #3 text to match approved production banner copy — ✓ applied 2026-05-11.
+- [x] [Review][Patch] Introduce `suppress_banner` frontmatter param, update baseof.html gate — ✓ applied 2026-05-11. Gate changed to `{{- if not .Params.suppress_banner -}}`; `suppress_banner: true` added to datenschutz.md + impressum.md; test description + assertion updated.
 - [x] [Review][Decision → Dismissed] Icon glyph / button design — Angel confirmed icon and design adjusted manually. `helpers.round-button` mixin from `assets/scss/vars/` already used. Memory saved: use SCSS helper mixins wherever possible.
-- [ ] [Review][Action] Manual QA required before marking `done` — Angel confirmed: execute the 9-scenario browser QA matrix before this story is closed (AC #6 runtime verification: session flow, keyboard Escape, screen reader, reduced motion, mobile).
+- [x] [Review][Action] Manual QA executed 2026-05-11 — 9 scenarios passed. Additional QA finding: footer links inaccessible under banner → fixed with dynamic `updateBottom()` scroll listener (banner pins at main/footer boundary). SessionStorage vs cookie behavior confirmed expected.
 
 <!-- Patches — unambiguous fixes -->
-- [ ] [Review][Patch] Missing `dismissed` guard — double-dismiss race + stale keydown listener [`assets/js/gdpr.js`] — `dismiss()` has no re-entrancy guard: a click followed by Escape during the 300 ms animation window calls `dismiss()` twice. `document` keydown listener is never removed after dismiss. Fix: add `var dismissed = false` inside `init()`; set `dismissed = true` and check `if (dismissed) return;` at the top of `dismiss()`; update keydown condition to `if (!dismissed && banner.classList.contains('is-visible'))`.
-- [ ] [Review][Patch] Mobile `flex-direction: row` should be `column` — AC #5 deviation [`assets/scss/elements/cookie-banner.scss:87`] — AC #5 specifies mobile layout should "stack title/text/close vertically". The `@include helpers.mobile` block uses `flex-direction: row`. Fix: change line 87 to `flex-direction: column;`.
-- [ ] [Review][Patch] Stale z-index comment in SCSS header [`assets/scss/elements/cookie-banner.scss:9`] — Comment says `z-index: 100`; actual property is `z-index: 99999`. Fix: update the comment.
-- [ ] [Review][Patch] Hugo whitespace right-trim missing on `if` gate [`layouts/baseof.html:34`] — `{{- if not .Params.robotsdisallow }}` (no right-trim); will be replaced by the `suppress_banner` patch above with proper trim on both sides.
+- [x] [Review][Patch] Missing `dismissed` guard — double-dismiss race + stale keydown listener [`assets/js/gdpr.js`] — ✓ applied 2026-05-11. `var dismissed = false` added inside `init()`; `dismiss()` guards with `if (dismissed) return; dismissed = true;`; keydown checks `!dismissed`.
+- [x] [Review][Patch] Mobile `flex-direction: row` should be `column` — AC #5 deviation [`assets/scss/elements/cookie-banner.scss:87`] — ✓ applied 2026-05-11.
+- [x] [Review][Patch] Stale z-index comment in SCSS header [`assets/scss/elements/cookie-banner.scss:9`] — skipped per Angel (comment is intentional).
+- [x] [Review][Patch] Hugo whitespace right-trim missing on `if` gate [`layouts/baseof.html:34`] — ✓ fixed as part of suppress_banner patch (2026-05-11).
 
 <!-- Deferred findings — pre-existing or minor -->
 - [x] [Review][Defer] JS timing edge cases (rAF 1-frame pattern, backgrounded-tab setTimeout clamping) [`assets/js/gdpr.js:22-32`] — deferred, standard FOUC-avoidance pattern; no impact with `position: fixed`

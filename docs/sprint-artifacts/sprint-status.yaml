@@ -1,5 +1,5 @@
 # generated: 2026-04-30
-# last_updated: 2026-05-11 (2-7 implemented → review)
+# last_updated: 2026-05-11 (2-7 done)
 # project: Article Time
 # project_key: article-time-digital-garden
 # tracking_system: file-system
@@ -54,7 +54,7 @@ development_status:
   2-4-webmention-display-component: done
   2-5-privacy-policy-page: done
   2-6-daily-rebuild-github-actions-workflow: done
-  2-7-cookie-banner-ui: review
+  2-7-cookie-banner-ui: done
   2-8-bridgy-fed-setup: ready-for-dev
   2-9-epic-2-hardening: backlog
   epic-2-retrospective: optional

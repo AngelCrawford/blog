@@ -6,6 +6,7 @@ menu:
     weight: 30
 params:
   robotsdisallow: true
+  suppress_banner: true
 ---
 
 Es handelt sich hier um eine rein private Website.

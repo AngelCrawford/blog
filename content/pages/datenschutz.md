@@ -6,6 +6,7 @@ menu:
     weight: 20
 params:
   robotsdisallow: true
+  suppress_banner: true
 ---
 
 *Stand: 11. Mai 2026 · Version: 1.1*

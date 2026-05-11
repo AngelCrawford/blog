@@ -19,11 +19,29 @@
             // banner shows every page-load. Acceptable degraded behaviour.
         }
 
+        // Keep banner pinned at the main/footer boundary: at viewport bottom
+        // while scrolling through content; follows the reveal edge when footer appears.
+        function updateBottom() {
+            var main = document.querySelector('main');
+            if (!main) return;
+            var excess = window.innerHeight - main.getBoundingClientRect().bottom;
+            banner.style.bottom = (excess > 0 ? excess : 0) + 'px';
+        }
+        window.addEventListener('scroll', updateBottom, { passive: true });
+        window.addEventListener('resize', updateBottom, { passive: true });
+
         banner.removeAttribute('hidden');
+        updateBottom();
         // Defer .is-visible one frame so the CSS transition triggers.
         requestAnimationFrame(function () { banner.classList.add('is-visible'); });
 
+        var dismissed = false;
+
         function dismiss() {
+            if (dismissed) return;
+            dismissed = true;
+            window.removeEventListener('scroll', updateBottom);
+            window.removeEventListener('resize', updateBottom);
             try { sessionStorage.setItem(DISMISS_KEY, '1'); } catch (e) { /* ignore */ }
             banner.classList.remove('is-visible');
             banner.classList.add('is-dismissing');
@@ -36,7 +54,7 @@
         if (closeBtn) closeBtn.addEventListener('click', dismiss);
 
         document.addEventListener('keydown', function (e) {
-            if (e.key === 'Escape' && banner.classList.contains('is-visible')) {
+            if (e.key === 'Escape' && !dismissed && banner.classList.contains('is-visible')) {
                 dismiss();
             }
         });

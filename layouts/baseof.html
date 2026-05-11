@@ -28,10 +28,10 @@
         </footer>
 
         {{- /* Cookie-Banner UI — Story 2.7. Server-side suppressed on transparency
-               pages (robotsdisallow: true) so the privacy policy itself isn't
+               pages (suppress_banner: true) so the privacy policy itself isn't
                decorated with a meta-notice about privacy. JS in assets/js/gdpr.js
                decides whether to show or stay hidden based on sessionStorage. */ -}}
-        {{- if not .Params.robotsdisallow }}
+        {{- if not .Params.suppress_banner -}}
             {{ partial "_base/cookie-banner" . }}
         {{- end }}
 
