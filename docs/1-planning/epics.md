@@ -540,6 +540,7 @@ All seven fit in one PR if Angel prefers a single Epic-2-hardening commit cluste
 
 **Pre-Spec Notes (from prior-story reviews):**
 - **Key-format validation (from Story 2.2 review, 2026-05-09).** `layouts/_partials/widgets/heart-button.html` looks up counts via `index hugo.Data.umami_hearts .RelPermalink` (e.g. `/articles/my-post/`). This script MUST write keys in exactly that format — trailing slash, no `baseURL` prefix, no leading scheme/host. Add an explicit validation step in the script (or a smoke test) that asserts every emitted key matches `^/[^?#]*/$` before writing `data/umami_hearts.json`, so a key-format drift breaks the fetch loudly rather than silently zeroing out heart counts on the live site.
+- **Phase-1/Phase-3 permalink-prefix split (from domain-migration ADR, Story 9.15 AC16).** Heart custom-events tracked by Umami carry the article permalink. Hearts accrued during Phase 1 (live on `article-time.de`) are tagged with `https://article-time.de/...`-prefixed permalinks in Umami; hearts after Story 9.15 cutover are tagged with `https://angel-crawford.de/...`. The fetch-and-aggregate logic MUST normalize permalinks to a domain-agnostic form (parse → use `URL.pathname` only) before grouping per article — otherwise the same article shows two separate heart counts. This normalization step is independent of and additive to the key-format validation above (the output `^/[^?#]*/$` shape is identical; only the input parsing differs). Acceptable to implement as: read raw permalink from Umami event → strip scheme + host → enforce trailing slash → that becomes the aggregation key. If Story 9.15 (Cutover) has not yet happened at Story 3.1 implementation time, the input-normalization logic still applies (defensive against the upcoming switch).
 
 ---
 
@@ -1795,7 +1796,7 @@ All seven fit in one PR if Angel prefers a single Epic-2-hardening commit cluste
 
 **Domain track:**
 1. **Maintenance-mode parking page prepared.** Static `index.html` written for post-cutover `article-time.de`. Plain HTML, no Hugo, no JS, no external deps. Copy per resolved ADR Open Question #3 (see AC8). File stored per AC7-decision location.
-2. **Hardcoded-URL audit.** Sweep the repo for hardcoded `article-time.de` strings; commit inventory to `docs/2-solutioning/adr-domain-migration.md` Implementation Tracking section. Per match: file path, line number(s), whether re-pointing is required at cutover or handled automatically by `baseURL`/`absURL`/`absLangURL`. Inventory must cover at least: `config/_default/config.yaml` (baseURL), `CNAME`, Hugo data files, templates with absolute URLs, content frontmatter with absolute `permalink`/`canonical`, `static/robots.txt`, webmention.io endpoint string in `layouts/_partials/_base/head.html`, and any `static/` HTML referencing `article-time.de`.
+2. **Hardcoded-URL audit.** Sweep the repo for hardcoded `article-time.de` strings; commit inventory to `docs/2-solutioning/adr-domain-migration.md` Implementation Tracking section. Per match: file path, line number(s), whether re-pointing is required at cutover or handled automatically by `baseURL`/`absURL`/`absLangURL`. Inventory must cover at least: `config/_default/config.yaml` (baseURL), `CNAME`, Hugo data files, templates with absolute URLs, content frontmatter with absolute `permalink`/`canonical`, `static/robots.txt`, webmention.io endpoint string in `layouts/_partials/_base/head.html`, and any `static/` HTML referencing `article-time.de`. Inventory must also cover **Umami-bound config**: `params.umami.website_id` and `params.umami.script_url` in `config/_default/params.yaml` (and any environment overrides) — note whether the Umami-Cloud website-Eintrag is being kept (same `website_id`) or replaced (new `website_id` requires config edit). If Story 3.1's `scripts/fetch-umami-hearts.js` has been implemented at audit time, flag its domain-filter parameter (if any) for re-pointing.
 3. **Inventory cross-checked against epics-encoded AC URLs.** Stories 2.3 (AC1, AC2), 2.8 (AC1, AC3), 3.2 (AC1), 9.8 (AC7) reference `article-time.de` literally in `epics.md`. Inventory marks these as "epic-doc references — DO NOT edit retroactively; runtime re-pointing in Story 9.15." (See ADR § Consequences > Neutral.)
 4. **GitHub Pages custom-domain change procedure documented.** Step-list (and/or screenshots) for `Settings → Pages → Custom domain` on both repos (blog repo AND `angel-crawford.de` profile-card repo) committed to the ADR.
 5. **`CNAME` change procedure documented.** Current `CNAME` file location in blog repo recorded; target content (`angel-crawford.de`) noted.
@@ -1865,17 +1866,28 @@ All seven fit in one PR if Angel prefers a single Epic-2-hardening commit cluste
 11. **Retire old profile-card repo.** Execute the route chosen in Story 9.14 AC7 (archive / delete / repurpose-as-parking-page-source).
 12. **Re-register webmention.io endpoint.** Log into webmention.io, register `angel-crawford.de` (new endpoint: `https://webmention.io/angel-crawford.de/webmention`). Update endpoint URL anywhere it's hardcoded post-AC8. Per ADR: dropping `article-time.de` webmention.io history is acceptable (no live mentions to preserve).
 13. **Update Bridgy.fed domain verification.** Re-verify Bridgy account against `angel-crawford.de`. Document the new verification artifact (`rel="me"` or webfinger path) in the runbook.
-14. **Deploy parking page to `article-time.de`.** Whichever GitHub Pages repo serves `article-time.de` now → confirm parking-page `index.html` from Story 9.14 AC1 is live. `article-time.de` shows "moved" copy.
+
+**Engagement-tracking switch:**
+14. **Update Umami-Cloud website registration.** Sign into Umami Cloud, locate the `article-time.de` website entry, choose route:
+    - **Route A (preferred):** edit the existing website's domain field to `angel-crawford.de`. `website_id` unchanged → no `params.umami.website_id` edit needed.
+    - **Route B (if Umami doesn't support domain edit):** create new website for `angel-crawford.de`, capture the new `website_id`, update `params.umami.website_id` in `config/_default/params.yaml` (same commit as AC2/3/4). Archive the old `article-time.de` website (Umami Cloud's "Archive" or equivalent action — do NOT delete; the historical data is the only remaining evidence of Phase-1 traffic).
+    Document the chosen route + outcome in the runbook entry.
+15. **Verify Umami script tag.** Re-check `params.umami.script_url` against Umami Cloud's currently-served URL (per `feedback_third_party_drift.md` — Umami has silently changed script URLs before). If drift is detected, update in the same commit as AC2/3/4.
+16. **Heart-events permalink-prefix split awareness.** Story 3.1's fetch-script does not yet exist (backlog). When it lands, it must handle the case where hearts may exist under two permalink prefixes (`https://article-time.de/...` Phase-1 + `https://angel-crawford.de/...` post-cutover). This is a Story 3.1 implementation concern, NOT a 9.15 AC — Story 3.1 has a Pre-Spec Note covering it. No 9.15 action required.
+
+**Deployment finish:**
+17. **Deploy parking page to `article-time.de`.** Whichever GitHub Pages repo serves `article-time.de` now → confirm parking-page `index.html` from Story 9.14 AC1 is live. `article-time.de` shows "moved" copy.
 
 **Post-flight:**
-15. **Deactivate maintenance-mode on blog.** Remove `.maintenance` toggle, tag/push per README.
-16. **Validation pass:**
+18. **Deactivate maintenance-mode on blog.** Remove `.maintenance` toggle, tag/push per README.
+19. **Validation pass:**
     - Mastodon `rel="me"` verification still green on `norden.social/@Angel_Crawford_ftw` (target domain unchanged from Mastodon's side — should be transparent).
     - `indiewebify.me` h-card AND h-entry tests both pass on `https://angel-crawford.de/`.
     - Blog loads at `https://angel-crawford.de/`, returns 200, content renders, h-card self-link `href` is `https://angel-crawford.de/` (auto-resolved from new `baseURL` per Story 9.13 AC5).
     - `https://article-time.de/` returns the parking page.
     - Smoke test: send a test webmention from webmention.rocks targeting an article on `angel-crawford.de` → arrives in webmention.io dashboard within minutes.
-17. **Update ADR status.** `docs/2-solutioning/adr-domain-migration.md` → Status: `Accepted` → `Implemented`, with implementation date.
+    - Umami pageview event from a live page on `https://angel-crawford.de/` registers in Umami Cloud under the new website entry (AC14).
+20. **Update ADR status.** `docs/2-solutioning/adr-domain-migration.md` → Status: `Accepted` → `Implemented`, with implementation date.
 
 **Prerequisites:**
 - Story 9.13 (Representative h-card in Base Layout) — DONE.

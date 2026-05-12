@@ -91,6 +91,13 @@ infrastructure).
   `angel-crawford.de` (currently `article-time.de` per Story 2.3 AC).
 - Bridgy.fed account (Story 2.8) bridges Fediverse traffic to
   `angel-crawford.de`.
+- Umami Analytics website registration (Story 2.1) moves to
+  `angel-crawford.de`. Pageview history under `article-time.de`
+  remains in Umami Cloud but stops accruing new data post-cutover.
+  Heart custom-events (Story 2.2) accrue under the new permalink
+  prefix from cutover onward; Story 3.1's fetch-script (when
+  implemented) needs to handle the permalink-prefix split if Phase-1
+  hearts existed.
 
 ---
 
