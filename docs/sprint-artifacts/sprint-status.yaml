@@ -1,5 +1,5 @@
 # generated: 2026-04-30
-# last_updated: 2026-05-11 (2-7 done)
+# last_updated: 2026-05-12 (added 9-13/9-14/9-15 per ADR domain-migration)
 # project: Article Time
 # project_key: article-time-digital-garden
 # tracking_system: file-system
@@ -130,4 +130,7 @@ development_status:
   9-10-author-box-with-socials: backlog
   9-11-rich-index-json-webmentions-count: backlog
   9-12-social-follow-icon-row: backlog
+  9-13-representative-h-card-base-layout: backlog
+  9-14-domain-brand-migration-prep: backlog
+  9-15-domain-brand-migration-cutover: backlog
   epic-9-retrospective: optional

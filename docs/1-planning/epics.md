@@ -1740,6 +1740,159 @@ All seven fit in one PR if Angel prefers a single Epic-2-hardening commit cluste
 
 ---
 
+## Story 9.13: Representative h-card in Base Layout
+
+**As a** site owner
+**I want** a full h-card microformat in the base layout (rendered site-wide via the footer partial)
+**So that** IndieWeb tooling (webmention.io, Bridgy.fed, Mastodon rel="me" verification, indiewebify.me) treats the personal-identity domain as a coherent IndieWeb identity surface
+
+**FR Coverage:** None directly — IndieWeb identity infrastructure that the engagement/POSSE epics depend on. Closest match: FR-011, FR-012 (webmentions assume identity coherence).
+
+**GitHub Issue:** TBD (fits under [#124 IndieWeb](https://github.com/AngelCrawford/blog/issues/124) umbrella).
+
+**Source:** Gap identified in `docs/2-solutioning/adr-domain-migration.md` § Follow-up task. ADR concluded that no existing story (9.2 Schema.org JSON-LD, 9.10 Author-Box on article pages, 9.12 Social-Follow icon row) covers full h-card microformat markup site-wide. Codebase verification on 2026-05-12 confirmed: no h-card markup exists anywhere in the repo. This story is first-time creation, not migration. The blog-side h-card is the artefact that replaces the old profile card on `angel-crawford.de` during the Phase 3 cutover (Story 9.15). Without it, Phase 3 ships an h-card-less site under the personal-identity domain.
+
+**Acceptance Criteria:**
+1. h-card markup added to base layout (rendered on every page via footer-partial). Block contains: display name, profile photo, short bio, canonical self-link.
+2. Display name marked with `class="p-name"`.
+3. Profile photo marked with `class="u-photo"`. NEW ASSET: site currently has no personal avatar — the Article Time clock-logo (`static/images/header/clock_small.webp`) is brand artwork, not a personal photo. A new Angel Crawford avatar must be added (path stored in `params.identity.photo` per AC7). Acceptable interim: a placeholder avatar can be used during implementation if a final photo isn't ready, with a TODO in completion notes to swap to final asset before Story 9.15 cutover.
+4. Short bio marked with `class="p-note"`.
+5. Canonical self-link rendered as `<a class="u-url" rel="me" href="{{ .Site.BaseURL }}">…</a>`. Phase 1: Hugo resolves to `article-time.de`. Phase 3: after `baseURL` update in Story 9.15, automatically resolves to `angel-crawford.de`. No code-touch in 9.15 required for this link.
+6. Markup lives in `layouts/_partials/_base/footer.html` OR a new sub-partial `layouts/_partials/_base/h-card.html` included by the footer. Existing footer "Article Time" identity column (`footer.html` lines 24–34) is the coordination point — extend, wrap, or sit adjacent. Implementer-choice; no visual redesign required.
+7. Content (name, bio text, photo path) sourced from `config/_default/params.yaml` (new `params.identity` block with keys: `name`, `photo`, `note`, `url`) — NOT hardcoded in the template.
+8. `indiewebify.me` h-card test passes against any page URL during implementation (validates the markup, not the live domain).
+9. No CSP changes required (no new external dependencies).
+
+**Prerequisites:** None.
+
+**Dependencies:**
+- Soft coordination with Story 9.12 (Social-Follow Icon Row). Once 9.12 lands, the `params.social`-driven `rel="me"` silo links should sit INSIDE the h-card wrapper to count as h-card-relative `rel="me"` links. If 9.13 lands before 9.12: implement only the canonical self-link (AC5); the silo `rel="me"` links are added by 9.12 inside the same wrapper.
+- Soft coordination with Story 9.10 (Author-Box on article pages). 9.10 renders an author block at article footer (`<aside>`), not site-wide — no direct conflict. If 9.10 ALSO adopts h-card classes for the per-article author, that is valid microformats2 (multiple h-cards per site are allowed).
+
+**Effort:** 0.5 days
+
+**Pre-Spec Notes:**
+- **Codebase verification 2026-05-12.** Grep for `h-card|p-name|u-photo|p-note|u-url|h-entry|p-author|microformat` returned no real matches (only Bulma `button.scss` class names and unrelated BMAD tooling). Story is first-time h-card creation, not refactor.
+- **Single-author identity surface.** The site-wide h-card identifies the ONE site owner. This story is unaffected by the separate Multi-Author → Co-Author decision (deferred to its own ADR) — per-article co-author markup is a property of the h-entry on article pages (Story 9.10 / 9.2 territory), not of this site-wide h-card.
+- **Self-link absolute via `baseURL`, not relative.** AC5 must use `{{ .Site.BaseURL }}`, not `/`. Microformats2 parsers and IndieWeb tooling do resolve relative URLs in most cases, but `rel="me"` round-trip validators have known issues with relative `href` — absolute keeps the verification path robust AND lets Story 9.15's `baseURL` switch carry the domain change automatically.
+- **Brand vs. person separation.** The h-card identifies the person (Angel Crawford), not the site brand (currently "Article Time", transitioning to "Angel Crawford" per ADR § Brand Identity Transition). h-card content is sourced from `params.identity` (the person), not from `Site.Title` (the brand). This makes the h-card stable across the brand transition — no AC change required in 9.15. During Phase 1/2 the site brand says "Article Time" while the h-card identifies "Angel Crawford"; this is a tolerated interim mismatch per ADR.
+
+---
+
+## Story 9.14: Domain & Brand Migration Preparation
+
+**As a** site owner
+**I want** all preparatory work for the article-time.de → angel-crawford.de cutover AND the "Article Time" → "Angel Crawford" brand transition done BEFORE the cutover window
+**So that** Story 9.15 (the actual cutover) is a deterministic execution of pre-staged changes, not live problem-solving under maintenance-mode pressure
+
+**FR Coverage:** None — operational migration story per ADR.
+
+**GitHub Issue:** TBD (fits under [#124 IndieWeb](https://github.com/AngelCrawford/blog/issues/124) umbrella).
+
+**Source:** `docs/2-solutioning/adr-domain-migration.md` § Phase 2 (Cutover Preparation) AND § Brand Identity Transition.
+
+**Acceptance Criteria:**
+
+**Domain track:**
+1. **Maintenance-mode parking page prepared.** Static `index.html` written for post-cutover `article-time.de`. Plain HTML, no Hugo, no JS, no external deps. Copy per resolved ADR Open Question #3 (see AC8). File stored per AC7-decision location.
+2. **Hardcoded-URL audit.** Sweep the repo for hardcoded `article-time.de` strings; commit inventory to `docs/2-solutioning/adr-domain-migration.md` Implementation Tracking section. Per match: file path, line number(s), whether re-pointing is required at cutover or handled automatically by `baseURL`/`absURL`/`absLangURL`. Inventory must cover at least: `config/_default/config.yaml` (baseURL), `CNAME`, Hugo data files, templates with absolute URLs, content frontmatter with absolute `permalink`/`canonical`, `static/robots.txt`, webmention.io endpoint string in `layouts/_partials/_base/head.html`, and any `static/` HTML referencing `article-time.de`.
+3. **Inventory cross-checked against epics-encoded AC URLs.** Stories 2.3 (AC1, AC2), 2.8 (AC1, AC3), 3.2 (AC1), 9.8 (AC7) reference `article-time.de` literally in `epics.md`. Inventory marks these as "epic-doc references — DO NOT edit retroactively; runtime re-pointing in Story 9.15." (See ADR § Consequences > Neutral.)
+4. **GitHub Pages custom-domain change procedure documented.** Step-list (and/or screenshots) for `Settings → Pages → Custom domain` on both repos (blog repo AND `angel-crawford.de` profile-card repo) committed to the ADR.
+5. **`CNAME` change procedure documented.** Current `CNAME` file location in blog repo recorded; target content (`angel-crawford.de`) noted.
+
+**Brand track:**
+6. **Final brand decisions recorded in ADR.** ADR § Brand Identity Transition captures:
+   - Final Site Title: exact string (e.g., `Angel Crawford`; optional tagline captured separately if desired).
+   - Footer slogan replacement copy: replaces `footer.html` lines 18–19 ("Du willst schreiben…Be a part of Article Time!"). Final wording approved.
+   - Logo policy: clock-logo (`static/images/header/clock_small.webp`) replacement or removal decided; replacement asset path identified if applicable.
+   - Personal avatar asset for `params.identity.photo` (Story 9.13 AC7): final Angel Crawford photo produced or sourced; path captured.
+7. **Profile-card repo decision finalized.** ADR Open Question #1 resolved: archive read-only / delete entirely / repurpose as parking-page source. Decision + rationale recorded; determines parking-page hosting location (AC1).
+8. **Parking-page copy approved.** Final wording recorded in ADR (Open Question #3 closed).
+
+**Validation:**
+9. **Pre-cutover validation in preview branch.** Build a preview/branch with: new Site Title, new logo (if any), new avatar, `params.identity` fully populated. Run `indiewebify.me` h-card test against the preview URL — confirms brand-transition assets do not break h-card markup from Story 9.13.
+
+**Prerequisites:** Story 9.13 (Representative h-card in Base Layout) — DONE.
+
+**Dependencies:** None.
+
+**Effort:** 0.5–1 days (depending on whether brand-asset creation — new logo/avatar design — happens inside or outside this story; external design work, if needed, is outside-scope time).
+
+**Out of Scope:**
+- The cutover itself (Story 9.15).
+- Retroactive edits to existing Story-2.x or Story-3.2 ACs in `epics.md` (Story 9.15 re-points them at the code level only).
+- DNS work (both domains already resolve via GitHub Pages — per ADR).
+- 301 redirect setup (no inbound URLs to preserve — per ADR).
+
+---
+
+## Story 9.15: Domain & Brand Migration Cutover
+
+**As a** site owner
+**I want** the blog deployment switched from article-time.de to angel-crawford.de AND the site brand switched from "Article Time" to "Angel Crawford" in one deterministic execution window
+**So that** the IndieWeb identity becomes coherent (one domain = one brand = one person) and the old profile-card site is retired in the same act
+
+**FR Coverage:** None — operational migration story per ADR.
+
+**GitHub Issue:** TBD (fits under [#124 IndieWeb](https://github.com/AngelCrawford/blog/issues/124) umbrella).
+
+**Source:** `docs/2-solutioning/adr-domain-migration.md` § Phase 3 AND § Brand Identity Transition.
+
+**Acceptance Criteria:** *(execution order matters — follow numbered sequence)*
+
+**Pre-flight:**
+1. **Activate maintenance-mode on blog.** `echo "" > .maintenance && git tag → push` (per README → Maintenance Mode). Verify maintenance page renders on `article-time.de` before proceeding.
+
+**Domain config (single commit):**
+2. **Update `baseURL`.** `config/_default/config.yaml` → `baseURL: "https://angel-crawford.de"`.
+3. **Update `CNAME` file.** Blog repo top-level `CNAME` → `angel-crawford.de`.
+
+**Brand config (same commit as 2 + 3 is acceptable):**
+4. **Update Site Title.** `config/_default/config.yaml` → `title: "Angel Crawford"` (or final string per Story 9.14 AC6).
+5. **Replace footer slogan.** `layouts/_partials/_base/footer.html` lines 18–19 ("Du willst schreiben…Be a part of Article Time!") → final copy per 9.14 AC6.
+6. **Swap logo asset (if decided in 9.14 AC6).** Replace/remove `static/images/header/clock_small.webp` and any references; ensure new logo path is wired into templates (`footer.html` line 26 and any other usage).
+7. **Verify `params.identity` populated.** Story 9.13's `params.identity.photo` must point at final Angel Crawford avatar from 9.14 AC6 (not placeholder).
+
+**Re-point hardcoded `article-time.de` in active code (inventory from 9.14 AC2):**
+8. **Apply re-point inventory.** Walk the inventory committed in Story 9.14 AC2 and edit each flagged code location. Specifically (non-exhaustive — full list lives in ADR Implementation Tracking):
+   - `layouts/_partials/_base/head.html` — webmention.io endpoint URL (the code instance of Story 2.3 AC1).
+   - `scripts/fetch-webmentions.js` (or equivalent) — `domain=article-time.de` curl param (code instance of Story 3.2 AC1, when that story is implemented).
+   - Any other code locations flagged by the inventory.
+9. **Epic-doc references intentionally untouched.** Story 2.3/2.8/3.2/9.8 ACs in `epics.md` still reference `article-time.de` literally. Per ADR § Consequences > Neutral, this is intentional — `epics.md` is a planning snapshot, not a runtime artifact. Git history is the audit trail; no retroactive edit.
+
+**Deployment switch:**
+10. **GitHub Pages custom-domain change (blog repo).** `Settings → Pages → Custom domain` → `angel-crawford.de`. Wait for green "DNS check successful".
+11. **Retire old profile-card repo.** Execute the route chosen in Story 9.14 AC7 (archive / delete / repurpose-as-parking-page-source).
+12. **Re-register webmention.io endpoint.** Log into webmention.io, register `angel-crawford.de` (new endpoint: `https://webmention.io/angel-crawford.de/webmention`). Update endpoint URL anywhere it's hardcoded post-AC8. Per ADR: dropping `article-time.de` webmention.io history is acceptable (no live mentions to preserve).
+13. **Update Bridgy.fed domain verification.** Re-verify Bridgy account against `angel-crawford.de`. Document the new verification artifact (`rel="me"` or webfinger path) in the runbook.
+14. **Deploy parking page to `article-time.de`.** Whichever GitHub Pages repo serves `article-time.de` now → confirm parking-page `index.html` from Story 9.14 AC1 is live. `article-time.de` shows "moved" copy.
+
+**Post-flight:**
+15. **Deactivate maintenance-mode on blog.** Remove `.maintenance` toggle, tag/push per README.
+16. **Validation pass:**
+    - Mastodon `rel="me"` verification still green on `norden.social/@Angel_Crawford_ftw` (target domain unchanged from Mastodon's side — should be transparent).
+    - `indiewebify.me` h-card AND h-entry tests both pass on `https://angel-crawford.de/`.
+    - Blog loads at `https://angel-crawford.de/`, returns 200, content renders, h-card self-link `href` is `https://angel-crawford.de/` (auto-resolved from new `baseURL` per Story 9.13 AC5).
+    - `https://article-time.de/` returns the parking page.
+    - Smoke test: send a test webmention from webmention.rocks targeting an article on `angel-crawford.de` → arrives in webmention.io dashboard within minutes.
+17. **Update ADR status.** `docs/2-solutioning/adr-domain-migration.md` → Status: `Accepted` → `Implemented`, with implementation date.
+
+**Prerequisites:**
+- Story 9.13 (Representative h-card in Base Layout) — DONE.
+- Story 9.14 (Domain & Brand Migration Preparation) — DONE; all preparatory artifacts in place (parking page, inventory, brand assets, decisions).
+
+**Dependencies:** None — but coordinate with Epic 7 (POSSE) if it's in flight: any Mastodon-API integration must target `angel-crawford.de` post-cutover.
+
+**Effort:** 0.5–1 days (execution window; preparatory work all in Story 9.14).
+
+**Implementation Note:** This is a coordinated execution story, not a code-design story. "Coding" is small (text edits per AC2–8); weight is in the deterministic execution sequence + validation pass at AC16. Recommend low-traffic window (weekend morning German time).
+
+**Out of Scope:**
+- 301 redirects from `article-time.de/*` to `angel-crawford.de/*` — per ADR, no inbound links to preserve. If this changes between now and cutover (some external link points at an `article-time.de` URL), the parking page can be enhanced post-cutover with `<meta refresh>` or per-URL redirects.
+- `article-time.de` domain registration changes — domain stays registered per ADR § Consequences > Negative.
+
+---
+
 # Epic Summary Table
 
 | Epic | Stories | Phase | Duration | FR Count | Effort (Days) |
@@ -1752,8 +1905,8 @@ All seven fit in one PR if Angel prefers a single Epic-2-hardening commit cluste
 | Epic 6: History Timeline | 3 | 2 | Week 10 | 3 | 3 |
 | Epic 7: POSSE & Advanced Webmentions | 5 | 3 | Week 12-13 | 4 | 8 |
 | Epic 8: Format Expansion | 8 | 1B | Week 7-9 | 6 | 11.5 |
-| Epic 9: Polish & Optimization | 12 | 2 | Week 10-11 | 10 | 12.5 |
-| **TOTAL** | **59** | **All** | **14 weeks** | **52** | **72 days** |
+| Epic 9: Polish & Optimization | 15 | 2 | Week 10-11 | 10 | 14.5 |
+| **TOTAL** | **62** | **All** | **14 weeks** | **52** | **74 days** |
 
 ---
 
@@ -1769,6 +1922,7 @@ All seven fit in one PR if Angel prefers a single Epic-2-hardening commit cluste
 - Story 9.9 (Headline-Hash Auto-Anchor)
 - Story 9.10 (Author-Box with Socials)
 - Story 9.12 (Social-Follow Icon Row)
+- Story 9.13 (Representative h-card in Base Layout)
 - All archetype stories (8.1, 8.3, 8.5, 8.7)
 
 **Critical Path:**
