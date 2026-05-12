@@ -1405,6 +1405,8 @@ All seven fit in one PR if Angel prefers a single Epic-2-hardening commit cluste
 
 **FR Coverage:** FR-006, FR-007, FR-042, FR-043, FR-044, FR-045, FR-046, FR-048
 
+**Implementation order — Identity-Unification chain (Stories 9.13–9.16):** `9.16 → 9.13 → 9.14 → 9.15`. These four stories form a hard-prerequisite chain driven by [`adr-domain-migration.md`](../2-solutioning/adr-domain-migration.md) and [`adr-multi-author-to-coauthor.md`](../2-solutioning/adr-multi-author-to-coauthor.md). Story 9.16 defines `params.identity`; 9.13 populates the h-card from it; 9.14 prepares the domain+brand cutover; 9.15 executes it. Do NOT create stories out of this order. Stories 9.1–9.12 are independent and can be sequenced freely within Epic 9.
+
 ---
 
 ## Story 9.1: OG Image Template & Generation
@@ -1990,6 +1992,9 @@ Epic 2 → Epic 3 → Epic 4 → Epic 5
 - Epic 1 can develop parallel to Epic 2
 - Epic 6 can develop parallel to Epic 8
 - Epic 7 independent, only needs Epic 2 complete
+
+**Intra-epic chains:**
+- Epic 9 Identity-Unification: `9.16 → 9.13 → 9.14 → 9.15` (hard prerequisites; driven by ADRs `adr-domain-migration.md` + `adr-multi-author-to-coauthor.md`). Stories 9.1–9.12 are independent.
 
 **No Forward Dependencies:** Validated - all stories only depend on previous work, never on future stories.
 
