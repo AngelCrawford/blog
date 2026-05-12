@@ -1458,7 +1458,7 @@ All seven fit in one PR if Angel prefers a single Epic-2-hardening commit cluste
 **Effort:** 1 day
 
 **Pre-Spec Notes (from prior-story reviews):**
-- **BlogPosting multi-author duplicate-key bug (from Story 1.5 review, 2026-05-09).** `layouts/_partials/_base/seo.html` BlogPosting emits multiple top-level `"author":` keys when an article has multiple authors (duplicate-key JSON; parsers pick last/first inconsistently, Schema.org consumers see only one). Fix: build a `[]` of author objects in the `range`, `jsonify` once.
+- **BlogPosting multi-author duplicate-key bug — structurally obsolete by ADR multi-author → coauthor.** Originally flagged in Story 1.5 review (2026-05-09): `seo.html` BlogPosting emitted multiple top-level `"author":` keys when an article had multiple authors. **Resolved structurally by [`adr-multi-author-to-coauthor.md`](../2-solutioning/adr-multi-author-to-coauthor.md) (Accepted 2026-05-12) / Story 9.16:** new schema has at most one main author + optional coauthors array → single `"author":` key (value scalar or array, never duplicate). No fix needed in Story 9.2 scope.
 - **`safeJS`/`jsonify` double-escape sweep (from Story 1.5 review, 2026-05-09).** `| safeJS` after `| jsonify` only applied to the BlogPosting JSON-LD block in `seo.html`. Same double-escape risk applies to any other `<script>` block using `jsonify` in the codebase — sweep when adding more JSON-LD types in this story.
 
 ---
@@ -1666,9 +1666,9 @@ All seven fit in one PR if Angel prefers a single Epic-2-hardening commit cluste
 
 **Acceptance Criteria:**
 1. Partial created at `layouts/_partials/widgets/author-box.html`
-2. Box displays: avatar, name, bio (from author taxonomy term content), social links from term frontmatter (website, mastodon, github, etc.)
+2. Box displays main author: avatar (`params.identity.photo`), name (`params.identity.name`), bio (`params.identity.bio` — long form), social links (`params.identity.socials`). NO taxonomy term lookup — sources are `params.identity` from `config/_default/params.yaml` per [`adr-multi-author-to-coauthor.md`](../2-solutioning/adr-multi-author-to-coauthor.md).
 3. Box rendered at end of `layouts/single.html` for articles + logs (after webmentions, before related-articles)
-4. Multiple authors: all displayed; if more than 3, collapse with "+N more" toggle
+4. Co-author block: if article frontmatter has a `coauthors:` array, render an additional compact block per entry below the main author block — name + optional u-url link only (no avatar, no bio, since co-authors are external IndieWeb identities pointing to their own sites). No collapse/toggle UI — `coauthors` is bounded to small N in practice.
 5. Social-icons use Remix Icon glyphs (matching existing icon system)
 6. Box hidden if author has no bio AND no socials
 7. Box responsive (stacks on mobile)
@@ -1763,7 +1763,7 @@ All seven fit in one PR if Angel prefers a single Epic-2-hardening commit cluste
 8. `indiewebify.me` h-card test passes against any page URL during implementation (validates the markup, not the live domain).
 9. No CSP changes required (no new external dependencies).
 
-**Prerequisites:** None.
+**Prerequisites:** Story 9.16 (Multi-Author Schema Migration) — defines `params.identity` block that this story populates.
 
 **Dependencies:**
 - Soft coordination with Story 9.12 (Social-Follow Icon Row). Once 9.12 lands, the `params.social`-driven `rel="me"` silo links should sit INSIDE the h-card wrapper to count as h-card-relative `rel="me"` links. If 9.13 lands before 9.12: implement only the canonical self-link (AC5); the silo `rel="me"` links are added by 9.12 inside the same wrapper.
@@ -1893,6 +1893,52 @@ All seven fit in one PR if Angel prefers a single Epic-2-hardening commit cluste
 
 ---
 
+## Story 9.16: Multi-Author Schema Migration → Single + Optional Co-Author
+
+**As a** site owner
+**I want** the multi-author taxonomy model retired in favour of a single-author default with optional inline co-author objects
+**So that** the data model matches the project reality (single-author digital garden) and the IndieWeb identity story has a single canonical source
+
+**FR Coverage:** None — schema/identity refactor driven by ADR.
+
+**GitHub Issue:** TBD (fits under [#124 IndieWeb](https://github.com/AngelCrawford/blog/issues/124) umbrella).
+
+**Source:** `docs/2-solutioning/adr-multi-author-to-coauthor.md` (Accepted 2026-05-12).
+
+**Acceptance Criteria:** *(all atomic in one PR)*
+
+1. **`params.identity` block defined in `config/_default/params.yaml`** with final shape: `name`, `photo`, `note` (short bio for h-card `p-note`), `bio` (longer paragraph for Author-Box / about page), `url` (leave empty → resolves via `baseURL`), `socials` (array migrated from `content/authors/angel/_index.md`).
+2. **`taxonomies.author: authors` removed** from `config/_default/config.yaml`.
+3. **`content/authors/` directory deleted** (all three files: `_index.md`, `angel/_index.md`, `jdksaj/_index.md`). No redirects, no backwards compatibility — site is in maintenance mode (per ADR Resolved Open Question #4).
+4. **Frontmatter migration** in all four content files:
+   - `content/articles/rss-test/index.md`, `content/logs/log-test-2/index.md`, `content/logs/log-testing/index.md`: remove `authors:` line entirely (defaults to `params.identity.name`).
+   - `content/articles/test/index.md`: replace `authors: ["jdksaj", "angel"]` with `coauthors:` array — single entry `{name: "HJKHJ Udsanhjs", url: "https://en.wikipedia.org/wiki/Bruce_Willis"}` (preserves the test-render path Angel wants).
+5. **`layouts/single.html` line 212 author render block refactored.** Main author rendered from `params.identity` (or `.Params.author` override if set); `coauthors` array (if present) rendered as additional `p-author h-card` blocks per entry (name + optional u-url link).
+6. **`layouts/_partials/_base/seo.html` line 111 JSON-LD author field refactored.** Emit single `"author":` key with value = scalar (main author only) OR array (main + coauthors). Structurally impossible to emit duplicate top-level `"author":` keys — incidentally retires Story 9.2's flagged multi-author duplicate-key bug.
+7. **`layouts/_partials/_base/footer.html` line 102 copyright refactored.** Fallback chain `or .Site.Params.author.name .Site.Params.default_author_name .Site.Title` collapses to `.Site.Params.identity.name`.
+8. **Cleanup:** remove `params.author` and `params.default_author_name` entries from `config/_default/params.yaml` and any environment overrides. Remove any unused `.Site.Params.author.*` references found by grep.
+9. **Build-smoke regression check:** existing test suite passes without modification. Any test that asserted on the old schema must be updated as part of this PR.
+10. **Documentation:** completion notes record that `/authors/<slug>/` URLs (formerly: `/authors/angel/`, `/authors/jdksaj/`) now return 404. Acceptable per ADR Resolved Open Question #4.
+
+**Prerequisites:** None (Foundation Story).
+
+**Dependencies:** Soft coordination with Story 9.13 (h-card in Base Layout). Story 9.13 has 9.16 as hard prerequisite per ADR. If 9.13 is in flight when 9.16 starts, pause 9.13.
+
+**Effort:** ~1 day.
+
+**Pre-Spec Notes:**
+- **Long-form bio on `/about/` is a follow-up content task, NOT in this story's scope.** Create the `content/pages/about.md` file as a separate effort once `params.identity.bio` (short) is in place. Birthdate (`05.02.1987`) and other long-bio context live ONLY in `/about/` per ADR Resolved Open Question #3 — not in `params.identity`.
+- **Final logo and avatar assets** are produced/sourced in Story 9.14 (Domain & Brand Migration Preparation). This story can ship `params.identity.photo` with a placeholder path; Story 9.14 swaps in the final asset.
+- **Coordination with Story 9.13.** If 9.13's `params.identity` shape (`name`, `photo`, `note`, `url`) was already committed before 9.16 lands, this story EXTENDS that block (`bio`, `socials`); it does not redefine the keys 9.13 introduced.
+
+**Out of Scope:**
+- `/about/` page creation (follow-up content task).
+- 301 redirects for retired `/authors/*` URLs (ADR-decided: none).
+- Story 9.2 implementation (Story 9.2 itself is unchanged; only its Pre-Spec Note is updated to reflect the structural fix).
+- Story 9.10 implementation (Story 9.10 ACs are updated in this course-correction; the story itself ships later).
+
+---
+
 # Epic Summary Table
 
 | Epic | Stories | Phase | Duration | FR Count | Effort (Days) |
@@ -1905,8 +1951,8 @@ All seven fit in one PR if Angel prefers a single Epic-2-hardening commit cluste
 | Epic 6: History Timeline | 3 | 2 | Week 10 | 3 | 3 |
 | Epic 7: POSSE & Advanced Webmentions | 5 | 3 | Week 12-13 | 4 | 8 |
 | Epic 8: Format Expansion | 8 | 1B | Week 7-9 | 6 | 11.5 |
-| Epic 9: Polish & Optimization | 15 | 2 | Week 10-11 | 10 | 14.5 |
-| **TOTAL** | **62** | **All** | **14 weeks** | **52** | **74 days** |
+| Epic 9: Polish & Optimization | 16 | 2 | Week 10-11 | 10 | 15.5 |
+| **TOTAL** | **63** | **All** | **14 weeks** | **52** | **75 days** |
 
 ---
 
@@ -1922,7 +1968,7 @@ All seven fit in one PR if Angel prefers a single Epic-2-hardening commit cluste
 - Story 9.9 (Headline-Hash Auto-Anchor)
 - Story 9.10 (Author-Box with Socials)
 - Story 9.12 (Social-Follow Icon Row)
-- Story 9.13 (Representative h-card in Base Layout)
+- Story 9.16 (Multi-Author Schema Migration)
 - All archetype stories (8.1, 8.3, 8.5, 8.7)
 
 **Critical Path:**
