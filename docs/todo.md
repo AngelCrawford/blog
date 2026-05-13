@@ -4,7 +4,8 @@ IndieWeb! Schauen wie ich mich mit anderen Seiten verbinden kann!
 3. write in deutsch, translate to english, with banner (translated from german in En for better reach in the indieweb community)
 4. first pinned post, about me (will be later on the about me page.)
 5. Idea: A little tamagotchi pet! >.< I want it
-6. 
+
+[!'docs/Screenshot 2026-05-13 013044.png']
 
 # Active WIP (no issue — actively designing)
 - [Backlog](docs/backlog)
