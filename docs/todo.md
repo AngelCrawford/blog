@@ -1,9 +1,5 @@
-IndieWeb! Schauen wie ich mich mit anderen Seiten verbinden kann!
+Write in deutsch, translate to english, with banner → [#195](https://github.com/AngelCrawford/blog/issues/195), [#198](https://github.com/AngelCrawford/blog/issues/198), [#182](https://github.com/AngelCrawford/blog/issues/182)
 
-1. POSSE: Ich will auf meiner Seite schreiben, einen Log, ein Bild, etc → [#147](https://github.com/AngelCrawford/blog/issues/147)
-2. Webring (linking of other cool sites, with articles?) → [#146](https://github.com/AngelCrawford/blog/issues/146)
-3. Write in deutsch, translate to english, with banner → [#195](https://github.com/AngelCrawford/blog/issues/195), [#198](https://github.com/AngelCrawford/blog/issues/198), [#182](https://github.com/AngelCrawford/blog/issues/182)
-5. A little tamagotchi pet! >.< I want it → [#217](https://github.com/AngelCrawford/blog/issues/217)
 
 ## Testen für nachdem alles live ist, vor meinem ersten Blogeintrag
 
@@ -13,10 +9,8 @@ IndieWeb! Schauen wie ich mich mit anderen Seiten verbinden kann!
   - Withered content nicht mehr drin?
 
 ## Erste gute Seiten zum Interagieren (noch aktiv!)
-
+> IndieWeb! Schauen wie ich mich mit anderen Seiten verbinden kann!
 - https://minutestomidnight.co.uk/
-
-Screenshot: `ideas/Screenshot 2026-05-13 013044.png`
 
 # Tools
 - [IndieWeb Events](https://events.indieweb.org/)
