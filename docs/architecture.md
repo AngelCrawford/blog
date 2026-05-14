@@ -1,13 +1,5 @@
 # Digital Garden Integration Architecture
 
-**Project:** Article Time Digital Garden Transformation
-**Date:** 2025-11-15
-**Architect:** Winston (BMad Method)
-**Owner:** Angel Crawford
-**Status:** ✅ Ready for Implementation
-
----
-
 ## Executive Summary
 
 This architecture document defines the technical integration strategy for transforming the existing Article Time Hugo blog into a Digital Garden. The architecture extends the current JAMstack foundation with growth stage tracking, three-tier sorting, anonymous engagement (hearts + webmentions), and automated daily rebuilds—all without breaking existing functionality.
