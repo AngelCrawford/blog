@@ -130,3 +130,22 @@ See README's "Deployment" section for the full release flow (tag push, cron, wor
 - **Tag = release.** `git tag -a v0.X.0 -m "..."` then `git push --follow-tags` ships the tagged commit through the daily-rebuild workflow.
 - **Direct push to main does NOT deploy.** WIP commits stay local until you tag.
 - **Daily cron rebuilds the latest tag**, not main HEAD — refreshes engagement data without re-shipping unreleased code.
+
+## Asset updates — Remixicon cache-bust workflow
+
+When the icon sprite or font files change, browsers need a cache-bust trigger.
+
+### Sprite (`remixicon.symbol.svg`)
+
+1. Replace file in `static/fonts/remixicon/`
+2. `config/_default/params.yaml` → bump `remixicon_version` (Unix-timestamp ms)
+3. Commit + push
+
+### Font files (`.woff2` / `.woff` / `.ttf` / `.eot` / `.svg`)
+
+1. Replace files in `static/fonts/remixicon/`
+2. `_icons.scss` → whitespace bump (forces a new CSS fingerprint, so browsers re-fetch the fonts)
+3. Optional: bump `remixicon_version` as well
+4. Commit + push
+
+> Background + cleaner SCSS-template-partial alternative: ask when needed, or grep git log for `feat(seo): CSP block`.
