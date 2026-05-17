@@ -80,7 +80,19 @@
         text-overflow: ellipsis;
     }
 
+    // CTA link under the summary (replaces the old round-button "more").
+    // Tucks the "Mehr über mich →" affordance into the body column.
     .author-sidebar__more {
-        flex-shrink: 0;
+        align-self: flex-start;
+        margin-top: 0.15rem;
+        font-size: 0.8rem;
+        color: helpers.$gold;
+        text-decoration: none;
+
+        &:hover,
+        &:focus {
+            color: helpers.$gold-light;
+            text-decoration: underline;
+        }
     }
 }

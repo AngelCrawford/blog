@@ -1,6 +1,15 @@
 ---
 title: Über mich
 type: page
+layout: profile
+birthdate: "1987-02-05"
+taglines:
+  - main: "Web Entwickler. Sonnenliebhaber. Goth."
+    sub: "{age} Jahre jung"
+  - main: "Kuchen, 🐐 oder goldfarbene Dinge"
+    sub: "Damit bin ich durchaus bestechbar"
+  - main: "Musik-, Serien- und Filmsüchtig"
+    sub: "♡ Trash-Filme!"
 menu:
   footer:
     weight: 10
@@ -10,5 +19,3 @@ sitemap:
     changefreq: monthly
     priority: 0.3
 ---
-
-This is an example of a custom shortcode that you can put right into your content. You will need to add a form action to the the shortcode to make it work. Check out [Formspree](https://formspree.io/) for a simple, free form service. 

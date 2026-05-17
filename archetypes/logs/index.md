@@ -6,7 +6,9 @@ draft: true # true/false, turn to false if you want to publish the post
 
 categories: ["Allgemein"] # Only the first one will get used
 tags: [""] # Array of tags ["tag1", "tag2"]
-authors: ["angel"] # Default is angel, can be removed
+
+# Main author defaults to params.identity.name (site owner). Override only for guest posts.
+# author: "Guest Author Name"
 
 # Digital-Garden growth stage. One of:
 #   seedling  = early/draft (rough idea, may have errors, expect change)

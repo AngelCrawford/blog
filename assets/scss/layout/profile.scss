@@ -1,0 +1,121 @@
+// layout/profile.scss — /ueber-mich/ profile page rendered by
+// layouts/page/profile.html. Picked up via `layout: profile` frontmatter.
+// Mirrors the angel-crawford.de profile-card layout but uses the blog's
+// gold token palette instead of the external site's teal.
+@use "../vars/helpers";
+
+.profile-page {
+    &__socials-col {
+        display: flex;
+        justify-content: center;
+    }
+}
+
+.profile-socials {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+
+    @media (max-width: 768px) {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 1rem;
+    }
+
+    a {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 2.5rem;
+        height: 2.5rem;
+        color: helpers.$gold;
+        transition: color 0.15s ease, transform 0.15s ease;
+
+        &:hover,
+        &:focus {
+            color: helpers.$gold-light;
+            transform: scale(1.15);
+        }
+
+        svg {
+            width: 1.75rem;
+            height: 1.75rem;
+            fill: currentColor;
+        }
+    }
+}
+
+.profile-card {
+    max-width: 36rem;
+    margin: 0 auto;
+
+    &__avatar {
+        margin: 0 auto 1.5rem;
+        width: 16rem;
+        height: 16rem;
+
+        img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid helpers.$gold-dark;
+        }
+    }
+
+    &__name {
+        color: helpers.$gold-light;
+        margin-bottom: 2rem !important;
+    }
+
+    &__taglines {
+        list-style: none;
+        margin: 0 auto 2rem;
+        padding: 0;
+        display: inline-block;
+        text-align: left;
+
+        li {
+            position: relative;
+            padding-left: 1.25rem;
+            margin-bottom: 0.75rem;
+            line-height: 1.5;
+
+            &::before {
+                content: "";
+                position: absolute;
+                left: 0;
+                top: 0.55rem;
+                width: 0.5rem;
+                height: 0.5rem;
+                background: helpers.$gold;
+            }
+        }
+    }
+
+    &__tagline-main {
+        font-weight: 600;
+        color: helpers.$light;
+    }
+
+    &__tagline-sub {
+        color: helpers.$text-muted;
+        margin-left: 0.35rem;
+
+        &::before {
+            content: "| ";
+            margin-right: 0.15rem;
+            color: helpers.$gold-dark;
+        }
+    }
+
+    &__body {
+        margin-top: 2rem;
+        text-align: left;
+    }
+}

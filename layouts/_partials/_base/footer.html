@@ -99,7 +99,7 @@
            (hugo.CommitHash is the Hugo binary's build commit, not the project's,
            so it's a misleading fallback — intentionally not used.) */ -}}
     {{- $version := site.Params.version | default "dev" -}}
-    &copy; 2020 - {{ dateFormat "2006" now }} {{ or .Site.Params.author.name .Site.Params.default_author_name .Site.Title }} | <abbr title='Build Date: {{ now.Format "2006-01-02 15:04 UTC" }}'>{{ $version }}</abbr>
+    &copy; 2020 - {{ dateFormat "2006" now }} {{ .Site.Params.identity.name }} | <abbr title='Build Date: {{ now.Format "2006-01-02 15:04 UTC" }}'>{{ $version }}</abbr>
     | <span>{{ .Site.Copyright | safeHTML }}</span>
 
     <p>

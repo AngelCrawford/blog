@@ -26,10 +26,9 @@ tags:
 categories: Movie
 series: Seriennummer
 
-authors: angel
-authors: 
-- angel
-- jdksaj
+coauthors:
+- name: "Guest Author"
+  url: "https://guest-site.example"
 
 contains:
   - image

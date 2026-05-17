@@ -5,7 +5,9 @@ tags: ["scene"]
 categories: ["Eine Sehr Lange Kategorie zum testen"]
 weight: 1
 summary: "*SUMMARY:* One morning, when Gregor Samsa woke **from troubled dreams**, he found himself transformed in his bed into a horrible vermin. One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin. One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin. One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin."
-authors: ["jdksaj", "angel"]
+coauthors:
+  - name: "HJKHJ Udsanhjs"
+    url: "https://en.wikipedia.org/wiki/Bruce_Willis"
 growth_stage: "budding"
 series: ["Eine Serie"]
 ---

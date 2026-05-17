@@ -88,7 +88,7 @@
                         {{- $growthIcons := dict "seedling" "seedling-line" "budding" "flower-line" "evergreen" "tree-line" "withered" "skull-2-line" -}}
                         {{- $stage := default "seedling" .Params.growth_stage -}}
                         {{- $statusIcon := index $growthIcons $stage -}}
-                        <div class="info widget mt-4">
+                        <div class="info widget mt-4 mb-5">
                             <div class="info-tiles">
                                 {{- if .GetTerms "categories" -}}
                                     <div class="info-tile" data-tile="rubrik">
@@ -202,23 +202,15 @@
                         </div>
                     {{- end -}}
 
-
+<!--                <!-- TODO: Ausblenden wenn keine Related Articles vorhanden sind -->
                     <div class="column is-12-mobile is-6-tablet is-4-desktop is-12-widescreen is-12-fullhd">
                         {{ partial "widgets/related-sidebar" . }}
                     </div>
-                </div>
 
-                <aside class="widget">
-                    {{- if .Params.authors -}}
-                        {{ range (.GetTerms "authors") }}
-                            {{ partial "widgets/author-sidebar" . }}
-                        {{ end }}
-                    {{ else }}
-                        {{ with $.Site.GetPage (printf "/authors/%s" $.Site.Params.default_author) }}
-                            {{ partial "widgets/author-sidebar" . }}
-                        {{ end }}
-                    {{- end -}}
-                </aside>
+                    <aside class="mt-5 column is-12-mobile is-6-tablet is-4-desktop is-12-widescreen is-12-fullhd">
+                        {{ partial "widgets/author-sidebar" . }}
+                    </aside>
+                </div>
             </div>
         </div>
     {{ else }}

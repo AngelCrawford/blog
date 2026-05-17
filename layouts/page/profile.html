@@ -1,0 +1,70 @@
+{{ define "main" }}
+{{- $identity := .Site.Params.identity -}}
+{{- /* Compute age from page-level birthdate (YYYY-MM-DD). Empty string if no
+       birthdate set, so the {age} tagline placeholder degrades gracefully. */ -}}
+{{- $age := "" -}}
+{{- with .Params.birthdate -}}
+  {{- $birth := time . -}}
+  {{- $today := now -}}
+  {{- $a := sub $today.Year $birth.Year -}}
+  {{- if or (lt $today.Month $birth.Month) (and (eq $today.Month $birth.Month) (lt $today.Day $birth.Day)) -}}
+    {{- $a = sub $a 1 -}}
+  {{- end -}}
+  {{- $age = printf "%d" $a -}}
+{{- end -}}
+
+<section class="profile-page h-card">
+    <div class="columns is-multiline is-variable is-6">
+        <aside class="column is-narrow profile-page__socials-col" aria-label="Soziale Profile">
+            <ul class="profile-socials">
+                {{ range $identity.socials }}
+                    <li>
+                        <a href="{{ .src }}" target="_blank" rel="noopener me" title="{{ .name }}" aria-label="{{ .name }}">
+                            {{- /* TODO(@angel): swap `instagram-line` back to `.icon` once the Remix sprite
+                                   has the missing brand glyphs (mastodon-line, facebook-circle-line,
+                                   spotify-line, reddit-line, gamepad-line, github-line, codepen-line,
+                                   stack-overflow-line). Sprite lives at static/fonts/remixicon/remixicon.symbol.svg */ -}}
+                            <svg class="ri-2x" aria-hidden="true">
+                                <use href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ $.Site.Params.remixicon_version }}#instagram-line"></use>
+                            </svg>
+                        </a>
+                    </li>
+                {{ end }}
+            </ul>
+        </aside>
+
+        <div class="column profile-page__main-col">
+            <article class="profile-card has-text-centered">
+                {{ with $identity.photo }}
+                    <figure class="profile-card__avatar">
+                        <img class="u-photo" src="{{ . | relURL }}" alt="{{ $identity.name }}" width="300" height="300">
+                    </figure>
+                {{ end }}
+
+                <h1 class="profile-card__name p-name title is-1" data-heading="{{ $identity.name }}">{{ $identity.name }}</h1>
+
+                {{ with .Params.taglines }}
+                    <ul class="profile-card__taglines">
+                        {{ range . }}
+                            <li>
+                                <strong class="profile-card__tagline-main">{{ .main }}</strong>
+                                {{ with .sub }}
+                                    <span class="profile-card__tagline-sub">{{ replace . "{age}" $age }}</span>
+                                {{ end }}
+                            </li>
+                        {{ end }}
+                    </ul>
+                {{ end }}
+
+                {{ with .Content }}
+                    <div class="profile-card__body content e-content">{{ . }}</div>
+                {{ end }}
+
+                {{- /* Hidden canonical self-link for h-card validators (rel=me + u-url). */ -}}
+                <a class="u-url" rel="me" href="{{ "/" | absURL }}" hidden>{{ $identity.name }}</a>
+                {{- with $identity.note }}<p class="p-note" hidden>{{ . }}</p>{{ end }}
+            </article>
+        </div>
+    </div>
+</section>
+{{ end }}

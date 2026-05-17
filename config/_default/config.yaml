@@ -12,7 +12,6 @@ frontmatter:
 taxonomies:
   category: categories
   tag: tags
-  author: authors
   series: series
 
 markup:
@@ -89,8 +88,6 @@ related:
       weight: 3
     - name: categories
       weight: 2
-    - name: authors
-      weight: 1
 
 sitemap:
   changefreq: weekly

@@ -11,7 +11,14 @@ weight: 0 # 1 = makes the article sticky, every other number will sort the artic
 categories: ["Allgemein"] # Only the first one will get used
 tags: [""] # Array of tags ["tag1", "tag2"]
 series: [""] # Needs to be the same name, if you want to group articles
-authors: ["angel"] # Default is angel, can be removed
+
+# Main author defaults to params.identity.name (site owner). Override only for guest posts.
+# author: "Guest Author Name"
+#
+# Co-authors render as additional p-author h-card blocks (IndieWeb). Optional.
+# coauthors:
+#   - name: "Co-Author"
+#     url: "https://co-author-site.example"
 
 summary: "" # REQUIRED: Summary for the list view
 

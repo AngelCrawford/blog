@@ -50,10 +50,22 @@
       "items": { "type": "string" },
       "description": "Use the same series name across articles to group them."
     },
-    "authors": {
+    "author": {
+      "type": "string",
+      "description": "Optional main-author override. Defaults to params.identity.name (site owner) when omitted. Set only for guest posts."
+    },
+    "coauthors": {
       "type": "array",
-      "items": { "type": "string" },
-      "default": ["angel"]
+      "description": "Optional co-authors rendered as additional p-author h-card blocks. IndieWeb-aligned.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "url": { "type": "string", "format": "uri" }
+        },
+        "required": ["name"],
+        "additionalProperties": false
+      }
     },
     "summary": {
       "type": "string",
