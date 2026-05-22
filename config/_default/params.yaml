@@ -1,4 +1,4 @@
-remixicon_version: 2605081942
+remixicon_version: 2605222304
 reading_speed: 179
 
 # Maintenance mode — `maintenance_mode: false` here is the production fallback.
@@ -12,66 +12,71 @@ reading_speed: 179
 # See docs/technical/runbook.md for full operating instructions.
 maintenance_mode: false
 maintenance:
-  title: "Wartung läuft"
-  message: "Bin gleich wieder da."
-  expected_back: "" # optional, e.g. "Voraussichtlich zurück am 9. Mai um 18 Uhr"
+    title: "Wartung läuft"
+    message: "Bin gleich wieder da."
+    expected_back: "" # optional, e.g. "Voraussichtlich zurück am 9. Mai um 18 Uhr"
 
 # Site-owner identity — canonical single source consumed by SEO (Schema.org
 # Person, OG article:author), footer copyright, h-card on the home page,
 # Author-Box, and any partial that needs author metadata. See ADR
 # `docs/decisions/adr-multi-author-to-coauthor.md` (Accepted 2026-05-12).
 identity:
-  name: "Angel Crawford"
-  photo: "/images/identity/angel.webp" # final asset; swap path here when Story 9.14 lands the brand-cutover avatar
-  url: "" # empty → Hugo resolves to baseURL; set explicitly only for off-site canonical identity
-  about_url: "/pages/ueber-mich/" # author-sidebar links here; profile-page (layouts/page/profile.html) lives at this path
-  note: "Web Entwickler. Sonnenliebhaber. Goth." # short bio — h-card p-note + sidebar tagline
-  socials:
-    - name: "Mastodon"
-      src: "https://norden.social/@Angel_Crawford_ftw"
-      icon: "mastodon-line"
-    - name: "Instagram"
-      src: "https://www.instagram.com/angel_crawford_ftw"
-      icon: "instagram-line"
-    - name: "Facebook"
-      src: "https://www.facebook.com/angel.crawford.ftw"
-      icon: "facebook-circle-line"
-    - name: "Spotify"
-      src: "https://open.spotify.com/user/l73ksvrl7vnidevukda1z0kwj"
-      icon: "spotify-line"
-    - name: "Reddit"
-      src: "https://www.reddit.com/user/Angel_Crawford"
-      icon: "reddit-line"
-    - name: "The Sims 4 Gallery"
-      src: "https://www.ea.com/games/the-sims/the-sims-4/pc/gallery/browse?category=all&searchtype=ea_origin_id&searchquery=Angel_Noidat&maxis=false"
-      icon: "gamepad-line"
-    - name: "GitHub"
-      src: "https://github.com/AngelCrawford"
-      icon: "github-line"
-    - name: "CodePen"
-      src: "https://codepen.io/angel_crawford"
-      icon: "codepen-line"
-    - name: "Stack Overflow"
-      src: "https://stackoverflow.com/u/3206211"
-      icon: "stack-overflow-line"
+    name: "Angel Crawford"
+    photo: "/images/identity/angel.webp" # final asset; swap path here when Story 9.14 lands the brand-cutover avatar
+    url: "" # empty → Hugo resolves to baseURL; set explicitly only for off-site canonical identity
+    about_url: "/pages/ueber-mich/" # author-sidebar links here; profile-page (layouts/page/profile.html) lives at this path
+    note: "Web Entwickler. Sonnenliebhaber. Goth." # short bio — h-card p-note + sidebar tagline
+    socials:
+        - name: "Mastodon"
+          src: "https://norden.social/@Angel_Crawford_ftw"
+          icon: "mastodon-line"
+        - name: "Instagram"
+          src: "https://www.instagram.com/angel_crawford_ftw"
+          icon: "instagram-line"
+        - name: "Facebook"
+          src: "https://www.facebook.com/angel.crawford.ftw"
+          icon: "facebook-circle-line"
+        - name: "Spotify"
+          src: "https://open.spotify.com/user/l73ksvrl7vnidevukda1z0kwj"
+          icon: "spotify-line"
+        - name: "Reddit"
+          src: "https://www.reddit.com/user/Angel_Crawford"
+          icon: "reddit-line"
+        - name: "The Sims 4 Gallery"
+          src: "https://www.ea.com/games/the-sims/the-sims-4/pc/gallery/browse?category=all&searchtype=ea_origin_id&searchquery=Angel_Noidat&maxis=false"
+          icon: "gamepad-line"
+        - name: "GitHub"
+          src: "https://github.com/AngelCrawford"
+          icon: "github-line"
+        - name: "CodePen"
+          src: "https://codepen.io/angel_crawford"
+          icon: "codepen-line"
+        - name: "Stack Overflow"
+          src: "https://stackoverflow.com/u/3206211"
+          icon: "stack-overflow-line"
 
 # Content Security Policy — consumed by layouts/_partials/_base/head.html:14
 # Each list is space-delimited into a CSP directive value.
 # WARNING: only loosen these (add hosts) when you actually integrate that service.
 # Stricter is better — every entry is a hole in the policy.
 csp:
-  default: ["'self'"]
-  formaction: ["'self'"]
-  framesrc: ["'self'", "https://www.youtube-nocookie.com"]
-  frameancestors: ["'none'"] # Modern X-Frame-Options replacement — Clickjacking-Schutz, niemand darf die Site embedden
-  imgsrc: ["'self'", "data:", "https:"]
-  objectsrc: ["'none'"]
-  stylesrc: ["'self'", "'unsafe-inline'"] # 'unsafe-inline' required for inline SVG style attrs (sea-filter, fill colors)
-  scriptsrc: ["'self'", "https://cloud.umami.is"] # umami integrated in Phase 1A (Story 2.1)
-  # script-src-elem dropped — `script-src` is the canonical fallback for both element and attr.
-  # Removing the redundant directive silences Firefox's informational warning about
-  # `'unsafe-eval'`/`'wasm-unsafe-eval'` being ignored in element-context.
-  connectsrc: ["'self'", "https://cloud.umami.is", "https://api-gateway.umami.dev", "https://webmention.io"] # api-gateway.umami.dev is where the cloud.umami.is script POSTs pageview events (split infra; verified via CSP-violation 2026-05-09)
+    default: ["'self'"]
+    formaction: ["'self'"]
+    framesrc: ["'self'", "https://www.youtube-nocookie.com"]
+    frameancestors: ["'none'"] # Modern X-Frame-Options replacement — Clickjacking-Schutz, niemand darf die Site embedden
+    imgsrc: ["'self'", "data:", "https:"]
+    objectsrc: ["'none'"]
+    stylesrc: ["'self'", "'unsafe-inline'"] # 'unsafe-inline' required for inline SVG style attrs (sea-filter, fill colors)
+    scriptsrc: ["'self'", "https://cloud.umami.is"] # umami integrated in Phase 1A (Story 2.1)
+    # script-src-elem dropped — `script-src` is the canonical fallback for both element and attr.
+    # Removing the redundant directive silences Firefox's informational warning about
+    # `'unsafe-eval'`/`'wasm-unsafe-eval'` being ignored in element-context.
+    connectsrc: [
+            "'self'",
+            "https://cloud.umami.is",
+            "https://api-gateway.umami.dev",
+            "https://webmention.io",
+        ] # api-gateway.umami.dev is where the cloud.umami.is script POSTs pageview events (split infra; verified via CSP-violation 2026-05-09)
 
 # Umami Cloud anonymous analytics — consumed by layouts/_partials/_base/head.html (Story 2.1).
 # website_id is the public Umami Cloud UUID (rendered into every page's data-website-id attribute);
@@ -79,15 +84,15 @@ csp:
 # server-side daily fetch.
 # TODO(Story 2.5): privacy policy needs an Umami section before this hits production.
 umami:
-  website_id: "d3ec2957-2769-4bff-a89d-8a3211336121"
-  script_url: "https://cloud.umami.is/script.js"
+    website_id: "d3ec2957-2769-4bff-a89d-8a3211336121"
+    script_url: "https://cloud.umami.is/script.js"
 
 follow:
-  header:
-    - name: "RSS Feed"
-      src: "index.xml"
-      icon: "rss-line"
-  footer:
-    - name: "RSS Feed"
-      src: "index.xml"
-      icon: "rss-line"
+    header:
+        - name: "RSS Feed"
+          src: "index.xml"
+          icon: "rss-line"
+    footer:
+        - name: "RSS Feed"
+          src: "index.xml"
+          icon: "rss-line"
