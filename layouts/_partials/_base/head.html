@@ -54,13 +54,11 @@
            Hardcoded URL is intentional (single-tenant project, never varies). */ -}}
     <link rel="webmention" href="https://webmention.io/article-time.de/webmention" />
 
-    {{- /* IndieAuth identity — minimal rel="me" link to GitHub.
-           Required by webmention.io's IndieAuth signup flow (Story 2.3 T1):
-           webmention.io fetches this domain, follows the rel="me" → GitHub OAuth → verifies ownership.
-           TEMPORARY / SUPERSEDED BY: Story 9.12 (Social-Follow Icon Row) will introduce a
-           params.social-driven rel="me" set (Mastodon, Threads, GitHub, …) rendered from a config array.
-           When 9.12 lands, REMOVE this hardcoded line in favour of the structured set. */ -}}
-    <link rel="me" href="https://github.com/AngelCrawford" />
+    {{- /* IndieAuth/RelMeAuth identity: rel="me" links now come from the
+           site-wide footer h-card (Story 9.13/9.12), rendered from
+           identity.socials (Mastodon + GitHub flagged footer:true). The old
+           hardcoded GitHub rel="me" shim (Story 2.3) was removed here to avoid
+           a duplicate GitHub rel="me" — single source is the footer h-card. */ -}}
 
     {{- /* Umami Cloud — anonymous, cookieless analytics (Story 2.1).
            Production-only via hugo.IsProduction so `hugo server` never hits Umami Cloud.

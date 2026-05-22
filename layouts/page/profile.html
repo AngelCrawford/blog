@@ -20,12 +20,8 @@
                 {{ range $identity.socials }}
                     <li>
                         <a href="{{ .src }}" target="_blank" rel="noopener me" title="{{ .name }}" aria-label="{{ .name }}">
-                            {{- /* TODO(@angel): swap `instagram-line` back to `.icon` once the Remix sprite
-                                   has the missing brand glyphs (mastodon-line, facebook-circle-line,
-                                   spotify-line, reddit-line, gamepad-line, github-line, codepen-line,
-                                   stack-overflow-line). Sprite lives at static/fonts/remixicon/remixicon.symbol.svg */ -}}
                             <svg class="ri-2x" aria-hidden="true">
-                                <use href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ $.Site.Params.remixicon_version }}#instagram-line"></use>
+                                <use href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ $.Site.Params.remixicon_version }}#{{ .icon }}"></use>
                             </svg>
                         </a>
                     </li>

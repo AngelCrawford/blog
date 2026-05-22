@@ -24,15 +24,20 @@ identity:
     name: "Angel Crawford"
     photo: "/images/identity/angel.webp" # final asset; swap path here when Story 9.14 lands the brand-cutover avatar
     url: "" # empty → Hugo resolves to baseURL; set explicitly only for off-site canonical identity
-    about_url: "/pages/ueber-mich/" # author-sidebar links here; profile-page (layouts/page/profile.html) lives at this path
+    about_url: "/pages/ueber-mich/" # footer h-card "Über mich" button links here; profile-page = layouts/page/profile.html
     note: "Web Entwickler. Sonnenliebhaber. Goth." # short bio — h-card p-note + sidebar tagline
+    # `footer: true` surfaces the entry in the footer h-card (the IndieWeb-relevant
+    # rel=me silos). Entries without the flag appear only on the /pages/ueber-mich/
+    # profile page. RSS lives separately in `follow` below.
     socials:
         - name: "Mastodon"
           src: "https://norden.social/@Angel_Crawford_ftw"
-          icon: "mastodon-line"
+          icon: "mastodon-fill"
+          footer: true
         - name: "Instagram"
           src: "https://www.instagram.com/angel_crawford_ftw"
           icon: "instagram-line"
+          footer: true
         - name: "Facebook"
           src: "https://www.facebook.com/angel.crawford.ftw"
           icon: "facebook-circle-line"
@@ -48,12 +53,10 @@ identity:
         - name: "GitHub"
           src: "https://github.com/AngelCrawford"
           icon: "github-line"
+          footer: true
         - name: "CodePen"
           src: "https://codepen.io/angel_crawford"
           icon: "codepen-line"
-        - name: "Stack Overflow"
-          src: "https://stackoverflow.com/u/3206211"
-          icon: "stack-overflow-line"
 
 # Content Security Policy — consumed by layouts/_partials/_base/head.html:14
 # Each list is space-delimited into a CSP directive value.
@@ -87,12 +90,10 @@ umami:
     website_id: "d3ec2957-2769-4bff-a89d-8a3211336121"
     script_url: "https://cloud.umami.is/script.js"
 
+# RSS lives in the header only. The footer's social row is driven by
+# identity.socials[].footer (see above).
 follow:
     header:
-        - name: "RSS Feed"
-          src: "index.xml"
-          icon: "rss-line"
-    footer:
         - name: "RSS Feed"
           src: "index.xml"
           icon: "rss-line"

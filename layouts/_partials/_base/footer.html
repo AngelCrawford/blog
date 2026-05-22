@@ -22,15 +22,52 @@
     </div>
 
     <div class="column is-12-mobile is-6-tablet is-6-desktop is-3-widescreen is-3-fullhd social">
-        <p class="title is-5">Article Time</p>
-        <div class="has-text-centered logo"><img src="{{ "images/header/clock_small.webp" | relURL }}" width="150" height="150" alt="Logo" title="Logo" /></div>
-        <div class="follow-icons">
-            {{ range .Site.Params.follow.footer }}
-            <a href="{{ .src | relURL }}" title="{{ .name }}" alt="{{ .name }}" target="_blank" rel="noreferrer">
-                <svg><use href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ $.Site.Params.remixicon_version}}#{{ .icon }}"></use></svg>
-            </a>
-            {{ end }}
-        </div>
+        {{- /* Site-wide representative h-card (Story 9.13). Identifies the person
+               (params.identity) site-wide for IndieWeb tooling — webmention.io,
+               Bridgy, Mastodon rel=me, indiewebify.me. The full profile (long bio
+               + all socials) lives at identity.about_url. Footer shows the
+               IndieWeb-relevant rel=me silos only (socials flagged `footer: true`)
+               plus RSS. */ -}}
+        {{- $identity := .Site.Params.identity -}}
+        <article class="footer-hcard h-card">
+            <p class="title is-5 p-name">{{ $identity.name }}</p>
+            {{- $avatarLink := or $identity.about_url $identity.url -}}
+            {{- with $identity.photo }}
+            <div class="has-text-centered footer-hcard__avatar">
+                {{- if $avatarLink -}}
+                <a href="{{ $avatarLink | relURL }}" aria-label="Mehr über {{ $identity.name }}">
+                    <img class="u-photo" src="{{ . | relURL }}" width="120" height="120" alt="{{ $identity.name }}" title="{{ $identity.name }}" />
+                </a>
+                {{- else -}}
+                <img class="u-photo" src="{{ . | relURL }}" width="120" height="120" alt="{{ $identity.name }}" title="{{ $identity.name }}" />
+                {{- end -}}
+            </div>
+            {{- end }}
+            {{- with $identity.note }}
+            <p class="footer-hcard__note p-note has-text-centered">{{ . }}</p>
+            {{- end }}
+            <div class="follow-icons">
+                {{- range where $identity.socials "footer" true }}
+                <a href="{{ .src }}" title="{{ .name }}" aria-label="{{ .name }}" target="_blank" rel="noopener me">
+                    <svg><use href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ $.Site.Params.remixicon_version}}#{{ .icon }}"></use></svg>
+                </a>
+                {{- end }}
+            </div>
+            {{- with $identity.about_url }}
+            <div class="has-text-centered footer-hcard__more">
+                <a href="{{ . | relURL }}" class="button is-primary is-outlined" title="Über mich">
+                    <svg class='ri-1x' aria-hidden="true">
+                        <use href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ $.Site.Params.remixicon_version}}#arrow-right-s-line"></use>
+                    </svg>
+                    Über mich
+                </a>
+            </div>
+            {{- end }}
+            {{- /* Canonical self-link for IndieWeb (h-card u-url + rel=me). Avatar/button
+                   link to the about page for UX, so the canonical identity URL lives
+                   here as a non-visual element — still parsed by mf2 tools + RelMeAuth. */ -}}
+            <a class="u-url u-uid" rel="me" href="{{ .Site.BaseURL }}" hidden>{{ $identity.name }}</a>
+        </article>
     </div>
 
     <div class="column is-12-mobile is-6-tablet is-6-desktop is-3-widescreen is-3-fullhd ">
