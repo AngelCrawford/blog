@@ -29,34 +29,46 @@ identity:
     # `footer: true` surfaces the entry in the footer h-card (the IndieWeb-relevant
     # rel=me silos). Entries without the flag appear only on the /pages/ueber-mich/
     # profile page. RSS lives separately in `follow` below.
+    # `color` = brand colour used on the profile page (svg fill); `opacity` optional.
     socials:
         - name: "Mastodon"
           src: "https://norden.social/@Angel_Crawford_ftw"
           icon: "mastodon-fill"
+          color: "#6364FF"
+          # opacity: ".5"
           footer: true
         - name: "Instagram"
           src: "https://www.instagram.com/angel_crawford_ftw"
           icon: "instagram-line"
+          color: "#c13584"
           footer: true
         - name: "Facebook"
           src: "https://www.facebook.com/angel.crawford.ftw"
           icon: "facebook-circle-line"
+          color: "#4267B2"
         - name: "Spotify"
           src: "https://open.spotify.com/user/l73ksvrl7vnidevukda1z0kwj"
           icon: "spotify-line"
+          color: "#1DB954"
         - name: "Reddit"
           src: "https://www.reddit.com/user/Angel_Crawford"
           icon: "reddit-line"
+          color: "#FF5700"
+          # opacity: "0.85"
         - name: "The Sims 4 Gallery"
           src: "https://www.ea.com/games/the-sims/the-sims-4/pc/gallery/browse?category=all&searchtype=ea_origin_id&searchquery=Angel_Noidat&maxis=false"
           icon: "gamepad-line"
+          color: "#a6e329"
+          # opacity: "0.85"
         - name: "GitHub"
           src: "https://github.com/AngelCrawford"
           icon: "github-line"
+          color: "#bbbbbb"
           footer: true
         - name: "CodePen"
           src: "https://codepen.io/angel_crawford"
           icon: "codepen-line"
+          color: "#cccccc"
 
 # Content Security Policy — consumed by layouts/_partials/_base/head.html:14
 # Each list is space-delimited into a CSP directive value.

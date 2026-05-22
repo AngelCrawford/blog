@@ -48,8 +48,8 @@
             {{- end }}
             <div class="follow-icons">
                 {{- range where $identity.socials "footer" true }}
-                <a href="{{ .src }}" title="{{ .name }}" aria-label="{{ .name }}" target="_blank" rel="noopener me">
-                    <svg><use href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ $.Site.Params.remixicon_version}}#{{ .icon }}"></use></svg>
+                <a href="{{ .src }}" data-tooltip="{{ .name }}" aria-label="{{ .name }}" target="_blank" rel="noopener me">
+                    <svg style="fill: {{ .color }};{{ with .opacity }} opacity: {{ . }};{{ end }}"><use href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ $.Site.Params.remixicon_version}}#{{ .icon }}"></use></svg>
                 </a>
                 {{- end }}
             </div>

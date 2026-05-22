@@ -173,6 +173,13 @@ main {
     }
   }
 
+  // Gold list markers across all content lists — single source, consistent
+  // everywhere (articles, profile page, …). Lists with `list-style: none`
+  // (icon rows, footer nav) have no marker box and are unaffected.
+  li::marker {
+    color: helpers.$gold;
+  }
+
   &.section {
     @media screen and (min-width: 560px) and (max-width: 1024px) {
       padding: var(--bulma-section-padding-desktop);

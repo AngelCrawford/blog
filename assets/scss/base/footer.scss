@@ -2,250 +2,281 @@
 @use "sass:color";
 
 footer.footer {
-  margin: 0;
-  padding: 0 0 2em 0;
-  background-color: color.adjust(helpers.$dark, $lightness: -5%);
-  @include helpers.box-shadow(true, 10px, 10px, 15px, rgba(#000, .3), rgba(helpers.$light, .1));
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  z-index: -1;
-  overflow: hidden;
-
-  a {
-    color: helpers.$gold !important;
-
-    &:hover {
-      color: helpers.$gold-light !important;
-    }
-  }
-
-  > svg {
-    position: absolute;
-  }
-
-  .footer-bg {
-    // Background container for the city skyline
-    position: absolute;
-    top: 0;
+    margin: 0;
+    padding: 0 0 2em 0;
+    background-color: color.adjust(helpers.$dark, $lightness: -5%);
+    @include helpers.box-shadow(
+        true,
+        10px,
+        10px,
+        15px,
+        rgba(#000, 0.3),
+        rgba(helpers.$light, 0.1)
+    );
+    position: fixed;
+    bottom: 0;
     left: 0;
     width: 100%;
-    height: 300px;
-    z-index: 1;
-    pointer-events: none;
-    
-    &:before,
-    &:after {
-      content: "";
-      position: absolute;
-      width: 100%;
-      height: 300px;
-      background-image: url("images/header/city.svg");
-      background-repeat: repeat-x;
-      background-size: auto 300px;
-      opacity: .4;
-      filter: sepia(.6);
-    }
-    
-    &:before {
-      top: -260px;
-    }
-    
-    &:after {
-      top: 37px;
-      transform: rotate(180deg) scaleX(-1);
-      filter: sepia(.7) blur(.1em) url("#turbulence");
-    }
-  }
+    z-index: -1;
+    overflow: hidden;
 
-  .columns {
-    padding: 3em;
-    position: relative;
-    z-index: 5;
-    color: color.scale(helpers.$dark, $lightness: 40%);
-
-    .slogan {
-      color: color.scale(helpers.$dark, $lightness: 60%);
-      text-shadow: 3px 3px 4px rgba(#000, .5);
-      background: linear-gradient(270deg, transparent 0%, rgba(0,0,0,.3) 50%, transparent 100%);
-      @include helpers.font-header;
-      & {
-        line-height: 1.5;
-        width: fit-content;
-        margin: 0 auto;
-        padding: .3em;
-      }
-  
-      &::before, &::after {
-        font-family: "remixicon" !important;
-        color: helpers.$gold;
-        font-size: 1.7rem;
-        position: relative;
-        top: -10px;
-        display: inline-block;
-      }
-      &::before {
-        content: "\ec51";
-      }
-      &::after {
-        content: "\ec52";
-      }
-    }
-    
-    .title.is-5 {
-      @include helpers.lined-title;
-    }
-    
-    .stats {
-      ul {
-        width: 100%;
-        margin: .75em 0 0 0;
-    
-        li {
-          display: flex;
-          width: 100%;
-          padding: .1em 0;
-
-          svg {
-            @include helpers.translate(-5px, 2px);
-          }
-          
-          .variable-number {
-            order: 3;
-          }
-          .variable {
-            order: 1;
-            padding-left: 0.3em;
-            color: color.scale(helpers.$dark, $lightness: 40%);
-          }
-      
-          &::after {
-            content: "";
-            flex-grow: 1;
-            order: 2;
-            background-image: radial-gradient(circle, rgba(helpers.$gold-dark, .5) 1px, transparent 1px);
-            background-position-y: calc(100% - 6px);
-            background-size: 1ex 3px;
-            background-repeat: repeat-x;
-            height: auto;
-          }
-        }
-      }
-    }
-  }
-  
-  .social {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-
-    // Site-wide representative h-card (Story 9.13). Markup:
-    // layouts/_partials/_base/footer.html. Sources: params.identity.
-    .footer-hcard {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-
-      // align-items:center shrinks block children to content width, which
-      // collapses lined-title's ::before/::after rules (they need full width).
-      // Stretch the title back to full column width so the gold lines render.
-      .title.is-5 {
-        align-self: stretch;
-      }
-    }
-
-    .footer-hcard__avatar {
-      width: 120px;
-      height: 120px;
-      margin: .25rem auto 1rem;
-
-      img {
-        width: 100%;
-        height: 100%;
-        border-radius: 50%;
-        object-fit: cover;
-        border: 2px solid helpers.$gold-dark;
-        transition: border-color .3s;
-      }
-
-      a:hover img {
-        border-color: helpers.$gold;
-      }
-    }
-
-    .footer-hcard__note {
-      color: color.scale(helpers.$dark, $lightness: 55%);
-      font-size: .9rem;
-      margin-bottom: 1rem;
-      max-width: 18rem;
-    }
-
-    .footer-hcard__more {
-      margin-top: 1rem;
-    }
-
-    .follow-icons {
-      display: flex;
-      justify-content: center;
-      gap: 1.5em;
-      a {
-        font-size: 1.4em;
-        width: 1.4em;
-        height: 1.4em;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        svg {
-          fill: helpers.$gold-light;
-          width: 1.4em;
-          height: 1.4em;
-          transition: fill .4s;
-        }
+    a {
+        color: helpers.$gold !important;
 
         &:hover {
-          svg {
-            fill: helpers.$gold;
-          }
+            color: helpers.$gold-light !important;
         }
-      }
     }
-  }
 
-  .navi {
-    ul {
-      list-style: none;
-      margin: 0 0 .5em 0;
+    > svg {
+        position: absolute;
+    }
 
-      li {
-        line-height: 1.5em;
-        display: inline-block;
-          
-        &:first-of-type:before {
-          content: ""; 
+    .footer-bg {
+        // Background container for the city skyline
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 300px;
+        z-index: 1;
+        pointer-events: none;
+
+        &:before,
+        &:after {
+            content: "";
+            position: absolute;
+            width: 100%;
+            height: 300px;
+            background-image: url("images/header/city.svg");
+            background-repeat: repeat-x;
+            background-size: auto 300px;
+            opacity: 0.4;
+            filter: sepia(0.6);
         }
+
         &:before {
-          content: "|";
-          color: helpers.$gold-dark;
-          padding: 0 .2em;
+            top: -260px;
         }
-      }
-    }
-  }
 
-  .copyright {
-    font-size: 90%;
-    opacity: .7;
-  }
+        &:after {
+            top: 37px;
+            transform: rotate(180deg) scaleX(-1);
+            filter: sepia(0.7) blur(0.1em) url("#turbulence");
+        }
+    }
+
+    .columns {
+        padding: 3em;
+        position: relative;
+        z-index: 5;
+        color: color.scale(helpers.$dark, $lightness: 40%);
+
+        .slogan {
+            color: color.scale(helpers.$dark, $lightness: 60%);
+            text-shadow: 3px 3px 4px rgba(#000, 0.5);
+            background: linear-gradient(
+                270deg,
+                transparent 0%,
+                rgba(0, 0, 0, 0.3) 50%,
+                transparent 100%
+            );
+            @include helpers.font-header;
+            & {
+                line-height: 1.5;
+                width: fit-content;
+                margin: 0 auto;
+                padding: 0.3em;
+            }
+
+            &::before,
+            &::after {
+                font-family: "remixicon" !important;
+                color: helpers.$gold;
+                font-size: 1.7rem;
+                position: relative;
+                top: -10px;
+                display: inline-block;
+            }
+            &::before {
+                content: "\ec51";
+            }
+            &::after {
+                content: "\ec52";
+            }
+        }
+
+        .title.is-5 {
+            @include helpers.lined-title;
+        }
+
+        .stats {
+            ul {
+                width: 100%;
+                margin: 0.75em 0 0 0;
+
+                li {
+                    display: flex;
+                    width: 100%;
+                    padding: 0.1em 0;
+
+                    svg {
+                        @include helpers.translate(-5px, 2px);
+                    }
+
+                    .variable-number {
+                        order: 3;
+                    }
+                    .variable {
+                        order: 1;
+                        padding-left: 0.3em;
+                        color: color.scale(helpers.$dark, $lightness: 40%);
+                    }
+
+                    &::after {
+                        content: "";
+                        flex-grow: 1;
+                        order: 2;
+                        background-image: radial-gradient(
+                            circle,
+                            rgba(helpers.$gold-dark, 0.5) 1px,
+                            transparent 1px
+                        );
+                        background-position-y: calc(100% - 6px);
+                        background-size: 1ex 3px;
+                        background-repeat: repeat-x;
+                        height: auto;
+                    }
+                }
+            }
+        }
+    }
+
+    .social {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+
+        // Site-wide representative h-card (Story 9.13). Markup:
+        // layouts/_partials/_base/footer.html. Sources: params.identity.
+        .footer-hcard {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+
+            // align-items:center shrinks block children to content width, which
+            // collapses lined-title's ::before/::after rules (they need full width).
+            // Stretch the title back to full column width so the gold lines render.
+            .title.is-5 {
+                align-self: stretch;
+            }
+        }
+
+        .footer-hcard__avatar {
+            width: 120px;
+            height: 120px;
+            margin: 0.25rem auto 1rem;
+
+            img {
+                width: 100%;
+                height: 100%;
+                border-radius: 50%;
+                object-fit: cover;
+                border: 2px solid helpers.$gold-dark;
+                transition: border-color 0.3s;
+            }
+
+            a:hover img {
+                border-color: helpers.$gold;
+            }
+        }
+
+        .footer-hcard__note {
+            color: color.scale(helpers.$dark, $lightness: 55%);
+            margin-bottom: 1rem;
+            max-width: 18rem;
+        }
+
+        .footer-hcard__more {
+            margin-top: 1rem;
+        }
+
+        .follow-icons {
+            display: flex;
+            justify-content: center;
+            gap: 1.5em;
+
+            // Same hover as the profile icons: scale the hovered icon, dim the rest.
+            // `filter: opacity()` composes with any per-icon inline opacity.
+            &:hover a {
+                filter: opacity(0.35);
+            }
+            a:hover {
+                filter: none;
+            }
+
+            a {
+                font-size: 1.4em;
+                width: 1.4em;
+                height: 1.4em;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition:
+                    transform 0.2s ease,
+                    filter 0.2s ease;
+
+                // Brand colour comes from an inline `fill` on the <svg> (set in
+                // footer.html from identity.socials[].color). The gold here is just a
+                // fallback for any entry without a colour. Hover = scale, so the brand
+                // colour stays visible.
+                svg {
+                    fill: helpers.$gold-light;
+                    width: 1.4em;
+                    height: 1.4em;
+                }
+
+                &:hover {
+                    transform: scale(1.18);
+                }
+            }
+        }
+    }
+
+    .navi {
+        ul {
+            list-style: none;
+            margin: 0 0 0.5em 0;
+
+            li {
+                line-height: 1.5em;
+                display: inline-block;
+
+                &:first-of-type:before {
+                    content: "";
+                }
+                &:before {
+                    content: "|";
+                    color: helpers.$gold-dark;
+                    padding: 0 0.2em;
+                }
+            }
+        }
+    }
+
+    .copyright {
+        font-size: 90%;
+        opacity: 0.7;
+    }
 }
 
 @include helpers.tablet {
-  footer.footer .title.slogan {
-    font-size: 1.5rem;
-    &::before, &::after {
-      font-size: 1rem;
+    footer.footer .title.slogan {
+        font-size: 1.5rem;
+        &::before,
+        &::after {
+            font-size: 1rem;
+        }
     }
-  }
 }
