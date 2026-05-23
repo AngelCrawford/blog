@@ -1,4 +1,4 @@
-Wäre es sinnvoll für articles und notes je eigene design templates anzulegen? mit einem layout key im frontmatter? wie hugo es eigentlich vorsieht? würde das den code eventuell auflockern und lesbarer machen für mich? Ich hatte es damals nur so gemacht, weil ich Hugo anfänger war 😅
+fds
 
 ---
 
