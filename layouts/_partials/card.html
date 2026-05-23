@@ -1,11 +1,11 @@
-{{ if or (eq .Type "articles") (eq .Type "logs") }}
+{{ if or (eq .Type "articles") (eq .Type "notes") }}
 
     <div class='cell {{ if .Resources }} {{ if eq .Kind "term" }} is-row-span-2 {{ end }} {{ end }}'>
         {{ $cssClasses := "card is-horizontal" }}
         {{ if .Resources }}{{ $cssClasses = add $cssClasses " has-image" }}{{ end }}
         {{ if .GetTerms "categories" }}{{ $cssClasses = add $cssClasses " has-ribbon" }}{{ end }}
         {{ if eq .Params.weight 1 }}{{ $cssClasses = add $cssClasses " is-fixed" }}{{ end }}
-        {{ if eq .Params.format "log" }}{{ $cssClasses = add $cssClasses " is-log" }}{{ end }}
+        {{ if eq .Params.format "note" }}{{ $cssClasses = add $cssClasses " is-note" }}{{ end }}
         <article class="{{ $cssClasses }} h-entry">
             <!-- TODO: Footer generell weiter machen -->
 
@@ -20,8 +20,8 @@
                     <figure class="image is-2by3">
                         {{- $img := (.Resources.ByType "image").GetMatch "cover*" -}}
                         {{- with $img -}}
-                            {{- if not (eq $.Params.format "log") }}<a href="{{ $.Permalink }}" title="{{ $.Title }}">{{- end -}}
-                                {{ if eq $.Params.format "log" }}
+                            {{- if not (eq $.Params.format "note") }}<a href="{{ $.Permalink }}" title="{{ $.Title }}">{{- end -}}
+                                {{ if eq $.Params.format "note" }}
                                     <!-- Resize to a width of 600px and a height of 480px -->
                                     {{ $image := $img.Process "fill 600x480 webp" }}
                                     <picture>
@@ -36,7 +36,7 @@
                                         <img src="{{ $portraitImage.RelPermalink }}" alt="{{ $.Title }}" loading="lazy">
                                     </picture>
                                 {{ end }}
-                            {{- if not (eq $.Params.format "log") }}</a>{{- end -}}
+                            {{- if not (eq $.Params.format "note") }}</a>{{- end -}}
 
                             {{ with .Meta.Exif }}{{ with .Tags.ImageDescription  }}
                                 <figcaption>
@@ -50,7 +50,7 @@
             {{- end -}}
 
             <div class="card-content">
-                {{ if ne .Params.format "log" }}
+                {{ if ne .Params.format "note" }}
                     <h2 class="title is-5" aria-label="{{ .Title }}">
                         <a class="p-name u-url" href="{{ .RelPermalink }}" title="{{ .Title }}">{{ .Title }}</a>
                         <span aria-hidden="true"></span>
@@ -72,9 +72,9 @@
                     </p>
                 {{- end -}}
 
-                <div class="content{{ if eq .Params.format "log" }} e-content{{ end }}">
+                <div class="content{{ if eq .Params.format "note" }} e-content{{ end }}">
                     <!-- If article has no image, show more content instead -->
-                    {{ if eq .Params.format "log" }}
+                    {{ if eq .Params.format "note" }}
                         {{ .Summary | markdownify }}
                     {{ else }}
                         {{ if .Params.summary }}
@@ -91,7 +91,7 @@
                     {{- end -}}
                 </div>
 
-                {{ if ne .Params.format "log" }}
+                {{ if ne .Params.format "note" }}
                     {{- if (.GetTerms "tags") -}}
                         <div class="tags-wrapper">
                             <svg class='ri-1x'>
@@ -106,7 +106,7 @@
             </div>
 
             <footer class="card-footer">
-                {{- if not (eq .Params.format "log") }}
+                {{- if not (eq .Params.format "note") }}
                     <a class="button round-button inset" title="Weiterlesen" href="{{ .RelPermalink }}">
                         <svg class='ri-1x'>
                             <use href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ .Site.Params.remixicon_version}}#arrow-right-s-line"></use>
@@ -114,8 +114,8 @@
                     </a>
                 {{- end -}}
 
-                <div class="card-footer-item log-date">
-                    {{- if eq .Params.format "log" -}}
+                <div class="card-footer-item note-date">
+                    {{- if eq .Params.format "note" -}}
                         <time class="dt-published" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}" data-tooltip="Veröffentlichungsdatum" title="Veröffentlichungsdatum">
                             <svg class='ri-1x'>
                                 <use href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ .Site.Params.remixicon_version}}#calendar-line"></use>
@@ -141,8 +141,8 @@
 
                 <div class="card-footer-item formats">
 
-                    {{- if eq .Params.format "log" -}}
-                        <span data-tooltip="Log">
+                    {{- if eq .Params.format "note" -}}
+                        <span data-tooltip="Notiz">
                             <svg class='ri-1x' style="fill: hsl(29, 100%, 80%)">
                                 <use href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ .Site.Params.remixicon_version}}#lightbulb-flash-line"></use>
                             </svg>

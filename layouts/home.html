@@ -10,7 +10,7 @@
                  Withered content is filtered out before pagination so all
                  three weight-bucket ranges and pagination counts reflect
                  non-withered totals. See Story 1.3 (`withered-filter.html`). */}}
-            {{ $all := where .Site.RegularPages "Type" "in" (slice "articles" "logs") }}
+            {{ $all := where .Site.RegularPages "Type" "in" (slice "articles" "notes") }}
             {{ $visible := partial "withered-filter.html" $all }}
             {{ $hiddenCount := partial "withered-count.html" $all }}
             {{ $paginator := .Paginate $visible }}

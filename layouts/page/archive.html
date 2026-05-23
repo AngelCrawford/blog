@@ -40,7 +40,7 @@
 			{{ range (where .Site.Pages "Type" "articles") }}
 				{{ $combinedPages = $combinedPages | append .Pages }}
 			{{ end }}
-			{{ range (where .Site.Pages "Type" "logs") }}
+			{{ range (where .Site.Pages "Type" "notes") }}
 				{{ $combinedPages = $combinedPages | append .Pages }}
 			{{ end }}
 

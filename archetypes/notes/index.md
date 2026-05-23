@@ -24,7 +24,7 @@ growth_stage: "seedling"
 # replacement_url: ""      # Optional: link to replacement content, e.g. "/articles/new-version/"
 ---
 
-<!-- USE WITH: hugo147.exe new content logs/my-title-name (NO .md at the end, generates folder) -->
+<!-- USE WITH: hugo147.exe new content notes/my-title-name (NO .md at the end, generates folder) -->
 
 <!--
 - Place your main image as "cover.[format]" in the same folder
@@ -32,4 +32,4 @@ growth_stage: "seedling"
 - Use the image Properties as figcaption. Windows: Properties -> Details -> Description -> Title -> Add here for figcaption
 -->
 
-<!-- Use only onle line for logs, no summary -> HEADLESS PAGE, see content/logs/_index.md -->
+<!-- Use only one line for notes, no summary -> HEADLESS PAGE, see content/notes/_index.md -->

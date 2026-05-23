@@ -31,7 +31,7 @@ module:
 # (overridden to true in config/maintenance/params.yaml) and renders
 # layouts/_partials/_base/maintenance.html instead of the real layout.
 #
-# Result: every URL on the site (homepage, /articles/<slug>/, /logs/<slug>/,
+# Result: every URL on the site (homepage, /articles/<slug>/, /notes/<slug>/,
 # section landings) serves the maintenance HTML — but RSS, sitemap.xml,
 # robots.txt, and taxonomy listings simply don't exist in the build output.
 disableKinds:

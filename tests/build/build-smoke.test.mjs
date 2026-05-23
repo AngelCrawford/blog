@@ -1191,9 +1191,9 @@ test("Story 2.3 AC #6: CSP connect-src still allow-lists https://webmention.io (
 // =============================================================================
 // Story 2.2: Heart Button Component
 //
-// Asserts the heart-button partial renders on article single pages and on log
-// cards (logs have no detail pages — cascade.build.render: link in
-// content/logs/_index.md), with the right `data-article` attribute and a
+// Asserts the heart-button partial renders on article single pages and on note
+// cards (notes have no detail pages — cascade.build.render: link in
+// content/notes/_index.md), with the right `data-article` attribute and a
 // non-failing data-file lookup (`| default 0`). Also asserts hearts.js is
 // concatenated into the production footerBundle.js fingerprinted output.
 // =============================================================================
@@ -1227,7 +1227,7 @@ test("Story 2.2 AC #1+#2+#6: production article page renders heart-button with d
   // The native <button> (not the <noscript> fallback) must render. The class
   // attribute carries additional decorator classes since Story 2.2 ("button
   // round-button inset heart-button"), so match `heart-button` as a word in
-  // any position of the class list — same pattern as the log-card heart test
+  // any position of the class list — same pattern as the note-card heart test
   // below.
   const buttonTag = articleHtml.match(
     /<button\b[^>]*class="[^"]*\bheart-button\b[^"]*"[^>]*>/
@@ -1287,12 +1287,12 @@ test("Story 2.2 AC #1: production homepage renders interactive heart-button on l
   // interactive `.is-card-heart` variant (compact, sits inside .formats next
   // to the lightbulb icon). Tolerant class-attribute regex — order of class
   // tokens isn't load-bearing.
-  const logHearts = homeHtml.match(
-    /<button\b[^>]*class="[^"]*\bheart-button\b[^"]*\bis-card-heart\b[^"]*"[^>]*data-article="[^"]*\/logs\/[^"]+\/"/g
+  const noteHearts = homeHtml.match(
+    /<button\b[^>]*class="[^"]*\bheart-button\b[^"]*\bis-card-heart\b[^"]*"[^>]*data-article="[^"]*\/notes\/[^"]+\/"/g
   );
   assert.ok(
-    logHearts && logHearts.length >= 1,
-    `Homepage must render at least one interactive heart-button on a log card — found ${logHearts ? logHearts.length : 0}`
+    noteHearts && noteHearts.length >= 1,
+    `Homepage must render at least one interactive heart-button on a note card — found ${noteHearts ? noteHearts.length : 0}`
   );
 });
 

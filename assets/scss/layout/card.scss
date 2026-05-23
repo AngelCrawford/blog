@@ -28,7 +28,7 @@ article.card.is-horizontal {
       transition: width .2s ease-out;
     }
 
-    &:not(.is-log):hover {
+    &:not(.is-note):hover {
       @include helpers.box-shadow(false, 5px, 5px, 5px, rgba(#000, .55), rgba(helpers.$light, .1));
       // transform: scale(1.01);
 
@@ -37,7 +37,7 @@ article.card.is-horizontal {
       }
     }
 
-    &:not(.is-log) .card-content {
+    &:not(.is-note) .card-content {
       display: flex;
       flex-direction: column;
 
@@ -46,7 +46,7 @@ article.card.is-horizontal {
       }
     }
 
-    &:not(.is-log) .title a {
+    &:not(.is-note) .title a {
       color: helpers.$gold-light;
       @include helpers.font-header-bold;
       &:hover {
@@ -54,7 +54,7 @@ article.card.is-horizontal {
       }
     }
 
-    &:not(.is-log) .subtitle {
+    &:not(.is-note) .subtitle {
       color: color.scale(helpers.$dark, $lightness: 50%);
       font-size: 80%;
 
@@ -71,7 +71,7 @@ article.card.is-horizontal {
       }
     }
 
-    &:not(.is-log) .card-content {
+    &:not(.is-note) .card-content {
       max-height: 435px;
       .content {
         overflow: hidden;
@@ -213,7 +213,7 @@ article.card.is-horizontal {
     }
 }
 
-article.card.is-horizontal:not(.has-image):not(.is-log) {
+article.card.is-horizontal:not(.has-image):not(.is-note) {
     display: grid;
     grid-template-rows: 1fr auto;
     grid-template-areas: "content" "footer";
@@ -241,7 +241,7 @@ article.card.is-horizontal.has-image {
       transition: filter 0.3s ease;
     }
     
-    &:not(.is-log):hover .card-image figure img {
+    &:not(.is-note):hover .card-image figure img {
       filter: sepia(0);
     }
   
@@ -256,7 +256,7 @@ article.card.is-horizontal.has-image {
     }
 }
 
-article.card.is-horizontal.is-log {
+article.card.is-horizontal.is-note {
     display: grid;
     min-height: 400px;
     grid-template-rows: 1fr auto;
@@ -365,7 +365,7 @@ article.card.is-horizontal.is-log {
       }
     }
 
-    .card-footer-item.log-date {      
+    .card-footer-item.note-date {
       color: color.scale(helpers.$dark, $lightness: 40%);
 
       time {
@@ -394,7 +394,7 @@ article.card.is-horizontal.is-log {
   }
   
 
-  &.is-log {
+  &.is-note {
     display: grid;
     min-height: 350px;
     
@@ -430,7 +430,7 @@ article.card.is-horizontal.is-log {
     
   }
 
-  &:not(.is-log) {
+  &:not(.is-note) {
     .card-content {
       height: fit-content;
       flex: 1;
@@ -474,7 +474,7 @@ article.card.is-horizontal.is-log {
     }
   }
 
-  &:not(.has-image):not(.is-log) {
+  &:not(.has-image):not(.is-note) {
     display: flex;
 
     .card-content {
@@ -580,7 +580,7 @@ article.card.is-horizontal.is-log {
     --bulma-grid-column-min: 100%;
   }
 
-  article.card.is-horizontal:not(.is-log) {
+  article.card.is-horizontal:not(.is-note) {
     min-width: unset;
     width: unset;
     max-width: 100%;
@@ -612,7 +612,7 @@ article.card.is-horizontal.is-log {
     }
   }
   
-  .grid:not(.is-medium) article.card.is-horizontal.is-log {
+  .grid:not(.is-medium) article.card.is-horizontal.is-note {
 
     &.has-image {
       .card-image {

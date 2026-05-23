@@ -24,8 +24,8 @@ article.card.is-horizontal.visited .title a::after {
 }
 
 // Add a "New" label to articles
-article.card.is-horizontal.is-new:not(.is-log):not(.visited) .title a::after,
-article.card.is-horizontal.is-new.is-log::before {
+article.card.is-horizontal.is-new:not(.is-note):not(.visited) .title a::after,
+article.card.is-horizontal.is-new.is-note::before {
     content: "☀ Neu";
     @include helpers.font-regular;
     & {

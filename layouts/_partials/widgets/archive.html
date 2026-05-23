@@ -7,7 +7,7 @@
 			{{ range (where .context.Site.Pages "Type" "articles") }}
 				{{ $combinedPages = $combinedPages | append .Pages }}
 			{{ end }}
-			{{ range (where .context.Site.Pages "Type" "logs") }}
+			{{ range (where .context.Site.Pages "Type" "notes") }}
 				{{ $combinedPages = $combinedPages | append .Pages }}
 			{{ end }}
 			
