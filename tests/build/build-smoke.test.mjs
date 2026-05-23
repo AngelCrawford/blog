@@ -18,7 +18,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
-import { copyFileSync, mkdirSync, rmSync, existsSync, readFileSync, writeFileSync, readdirSync } from "node:fs";
+import { copyFileSync, mkdirSync, rmSync, existsSync, readFileSync, writeFileSync, readdirSync, statSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -36,6 +36,53 @@ const hugoArgs = [
   testPublic,
 ];
 
+// Fixture builds (runHugoWithFixture) write to a SEPARATE destination so they
+// never clobber the shared production output in `public-test` that the
+// output-assertion tests read.
+const fixtureArgs = [
+  "--logLevel",
+  "error",
+  "--environment",
+  "production",
+  "--destination",
+  resolve(repoRoot, "public-test-fixture"),
+];
+
+// Memoized build runner. The suite runs serially (`--test-concurrency 1`), so
+// the first call for a given args set runs `hugo` once and every later call
+// with the same args reuses the cached result — collapsing ~30 identical
+// production builds into a single one. Fixture builds vary their content per
+// call and therefore bypass this (they call spawnSync directly).
+const buildCache = new Map();
+function runBuild(args) {
+  const key = args.join(" ");
+  if (!buildCache.has(key)) {
+    buildCache.set(
+      key,
+      spawnSync("hugo", args, {
+        cwd: repoRoot,
+        encoding: "utf8",
+        shell: process.platform === "win32",
+      })
+    );
+  }
+  return buildCache.get(key);
+}
+
+// For content-mutating tests (those that drop temp fixtures into content/ before
+// building and then read public-test): build FRESH so the temp content is
+// present, then drop the memoized production build so the next runBuild() makes
+// a clean public-test again. Lets these tests keep reading public-test unchanged.
+function freshBuild() {
+  const result = spawnSync("hugo", hugoArgs, {
+    cwd: repoRoot,
+    encoding: "utf8",
+    shell: process.platform === "win32",
+  });
+  buildCache.delete(hugoArgs.join(" "));
+  return result;
+}
+
 function runHugoWithFixture(fixtureFile, slug) {
   const tempSection = `_test_growth_stage_${slug}`;
   const tempDir = resolve(repoRoot, "content", tempSection);
@@ -47,7 +94,9 @@ function runHugoWithFixture(fixtureFile, slug) {
   try {
     // NOTE: --quiet suppresses errorf output, which we need to assert on.
     // We use --logLevel error to keep noise low while preserving error messages.
-    const result = spawnSync("hugo", hugoArgs, {
+    // Builds to a separate destination (fixtureArgs) and bypasses runBuild —
+    // each fixture has different content, so these must not be memoized.
+    const result = spawnSync("hugo", fixtureArgs, {
       cwd: repoRoot,
       encoding: "utf8",
       shell: process.platform === "win32",
@@ -66,11 +115,7 @@ function runHugoWithFixture(fixtureFile, slug) {
 }
 
 test("baseline: hugo build succeeds with no test fixtures (regression guard)", () => {
-  const result = spawnSync("hugo", hugoArgs, {
-    cwd: repoRoot,
-    encoding: "utf8",
-    shell: process.platform === "win32",
-  });
+  const result = runBuild(hugoArgs);
   assert.equal(
     result.status,
     0,
@@ -137,11 +182,7 @@ function runHugoWithArticleFixture(fixtureFile, slug) {
   copyFileSync(resolve(fixturesDir, fixtureFile), tempIndex);
 
   try {
-    const result = spawnSync("hugo", hugoArgs, {
-      cwd: repoRoot,
-      encoding: "utf8",
-      shell: process.platform === "win32",
-    });
+    const result = freshBuild();
     return {
       status: result.status,
       stdout: result.stdout || "",
@@ -452,11 +493,7 @@ function runHugoWithSeriesFixtures(articles) {
   }
 
   try {
-    const result = spawnSync("hugo", hugoArgs, {
-      cwd: repoRoot,
-      encoding: "utf8",
-      shell: process.platform === "win32",
-    });
+    const result = freshBuild();
     return {
       status: result.status,
       stdout: result.stdout || "",
@@ -970,11 +1007,7 @@ test("Story 1.3 AC #11: weight-bucket ordering on homepage is preserved (regress
 // =============================================================================
 
 test("Story 2.1 AC #1+#3+#6: production homepage emits Umami script with async+defer+data-website-id", () => {
-  const result = spawnSync("hugo", hugoArgs, {
-    cwd: repoRoot,
-    encoding: "utf8",
-    shell: process.platform === "win32",
-  });
+  const result = runBuild(hugoArgs);
   assert.equal(
     result.status,
     0,
@@ -1002,11 +1035,7 @@ test("Story 2.1 AC #1+#3+#6: production homepage emits Umami script with async+d
 });
 
 test("Story 2.1 AC #7: production CSP <meta> allow-lists cloud.umami.is in script-src and connect-src", () => {
-  const result = spawnSync("hugo", hugoArgs, {
-    cwd: repoRoot,
-    encoding: "utf8",
-    shell: process.platform === "win32",
-  });
+  const result = runBuild(hugoArgs);
   assert.equal(result.status, 0, `Production build failed.\n${result.stderr}`);
 
   const homeHtml = readFileSync(resolve(testPublic, "index.html"), "utf8");
@@ -1052,11 +1081,7 @@ test("Story 2.1 AC #6: development build does NOT emit Umami script (hugo.IsProd
     "--destination",
     testPublicDev,
   ];
-  const result = spawnSync("hugo", devArgs, {
-    cwd: repoRoot,
-    encoding: "utf8",
-    shell: process.platform === "win32",
-  });
+  const result = runBuild(devArgs);
   assert.equal(
     result.status,
     0,
@@ -1082,11 +1107,7 @@ test("Story 2.1 AC #6: development build does NOT emit Umami script (hugo.IsProd
 // =============================================================================
 
 test("Story 2.3 AC #1+#7: production homepage emits <link rel=\"webmention\"> with webmention.io endpoint", () => {
-  const result = spawnSync("hugo", hugoArgs, {
-    cwd: repoRoot,
-    encoding: "utf8",
-    shell: process.platform === "win32",
-  });
+  const result = runBuild(hugoArgs);
   assert.equal(
     result.status,
     0,
@@ -1109,11 +1130,7 @@ test("Story 2.3 AC #1+#7: production homepage emits <link rel=\"webmention\"> wi
 });
 
 test("Story 2.3 AC #1+#7: production article page also emits the webmention <link>", () => {
-  const result = spawnSync("hugo", hugoArgs, {
-    cwd: repoRoot,
-    encoding: "utf8",
-    shell: process.platform === "win32",
-  });
+  const result = runBuild(hugoArgs);
   assert.equal(result.status, 0, `Production build failed.\n${result.stderr}`);
 
   const articlesDir = resolve(testPublic, "articles");
@@ -1138,7 +1155,8 @@ test("Story 2.3 AC #1+#7: production article page also emits the webmention <lin
 
 test("Story 2.3 AC #7: development build ALSO emits the webmention <link> (no hugo.IsProduction gate)", () => {
   const testPublicDev = resolve(repoRoot, "public-test-dev");
-  rmSync(testPublicDev, { recursive: true, force: true });
+  // No teardown here: both dev tests share the same memoized runBuild(devArgs)
+  // output; deleting it would leave the second test with no files to read.
   const devArgs = [
     "--logLevel",
     "error",
@@ -1147,11 +1165,7 @@ test("Story 2.3 AC #7: development build ALSO emits the webmention <link> (no hu
     "--destination",
     testPublicDev,
   ];
-  const result = spawnSync("hugo", devArgs, {
-    cwd: repoRoot,
-    encoding: "utf8",
-    shell: process.platform === "win32",
-  });
+  const result = runBuild(devArgs);
   assert.equal(
     result.status,
     0,
@@ -1167,11 +1181,7 @@ test("Story 2.3 AC #7: development build ALSO emits the webmention <link> (no hu
 });
 
 test("Story 2.3 AC #6: CSP connect-src still allow-lists https://webmention.io (regression guard)", () => {
-  const result = spawnSync("hugo", hugoArgs, {
-    cwd: repoRoot,
-    encoding: "utf8",
-    shell: process.platform === "win32",
-  });
+  const result = runBuild(hugoArgs);
   assert.equal(result.status, 0, `Production build failed.\n${result.stderr}`);
 
   const homeHtml = readFileSync(resolve(testPublic, "index.html"), "utf8");
@@ -1199,11 +1209,7 @@ test("Story 2.3 AC #6: CSP connect-src still allow-lists https://webmention.io (
 // =============================================================================
 
 test("Story 2.2 AC #1+#2+#6: production article page renders heart-button with data-article, aria-label, and count", () => {
-  const result = spawnSync("hugo", hugoArgs, {
-    cwd: repoRoot,
-    encoding: "utf8",
-    shell: process.platform === "win32",
-  });
+  const result = runBuild(hugoArgs);
   assert.equal(
     result.status,
     0,
@@ -1274,11 +1280,7 @@ test("Story 2.2 AC #1+#2+#6: production article page renders heart-button with d
 });
 
 test("Story 2.2 AC #1: production homepage renders interactive heart-button on log cards", () => {
-  const result = spawnSync("hugo", hugoArgs, {
-    cwd: repoRoot,
-    encoding: "utf8",
-    shell: process.platform === "win32",
-  });
+  const result = runBuild(hugoArgs);
   assert.equal(result.status, 0, `Production build failed.\n${result.stderr}`);
 
   const homeHtml = readFileSync(resolve(testPublic, "index.html"), "utf8");
@@ -1297,11 +1299,7 @@ test("Story 2.2 AC #1: production homepage renders interactive heart-button on l
 });
 
 test("Story 2.2 AC #1: production homepage renders readonly heart on article cards (action lives on single page)", () => {
-  const result = spawnSync("hugo", hugoArgs, {
-    cwd: repoRoot,
-    encoding: "utf8",
-    shell: process.platform === "win32",
-  });
+  const result = runBuild(hugoArgs);
   assert.equal(result.status, 0, `Production build failed.\n${result.stderr}`);
 
   const homeHtml = readFileSync(resolve(testPublic, "index.html"), "utf8");
@@ -1330,11 +1328,7 @@ test("Story 2.2 AC #1: production homepage renders readonly heart on article car
 });
 
 test("Story 2.2: hint caption renders ONLY on article single pages, not on cards", () => {
-  const result = spawnSync("hugo", hugoArgs, {
-    cwd: repoRoot,
-    encoding: "utf8",
-    shell: process.platform === "win32",
-  });
+  const result = runBuild(hugoArgs);
   assert.equal(result.status, 0, `Production build failed.\n${result.stderr}`);
 
   // Pick a non-fixture article single page.
@@ -1365,11 +1359,7 @@ test("Story 2.2: hint caption renders ONLY on article single pages, not on cards
 });
 
 test("Story 2.2 AC #3+#9: hearts.js is bundled into footerBundle.js (localStorage prefix smoke)", () => {
-  const result = spawnSync("hugo", hugoArgs, {
-    cwd: repoRoot,
-    encoding: "utf8",
-    shell: process.platform === "win32",
-  });
+  const result = runBuild(hugoArgs);
   assert.equal(result.status, 0, `Production build failed.\n${result.stderr}`);
 
   // The script tag in baseof.html points at the fingerprinted bundle. Pick
@@ -1445,11 +1435,7 @@ if (!fixtureSlugMatch) {
 const webmentionFixtureSlug = fixtureSlugMatch[1];
 
 test("Story 2.4 AC #1+#11: production article page emits <section id=\"webmentions\"> exactly once", () => {
-  const result = spawnSync("hugo", hugoArgs, {
-    cwd: repoRoot,
-    encoding: "utf8",
-    shell: process.platform === "win32",
-  });
+  const result = runBuild(hugoArgs);
   assert.equal(result.status, 0, `Production build failed.\n${result.stderr}`);
 
   const articlesDir = resolve(testPublic, "articles");
@@ -1471,11 +1457,7 @@ test("Story 2.4 AC #1+#11: production article page emits <section id=\"webmentio
 });
 
 test("Story 2.4 AC #2+#3+#7: fixture-targeted article renders all four type-group headings + count line", () => {
-  const result = spawnSync("hugo", hugoArgs, {
-    cwd: repoRoot,
-    encoding: "utf8",
-    shell: process.platform === "win32",
-  });
+  const result = runBuild(hugoArgs);
   assert.equal(result.status, 0, `Production build failed.\n${result.stderr}`);
 
   const articleHtml = readFileSync(
@@ -1525,11 +1507,7 @@ test("Story 2.4 AC #2+#3+#7: fixture-targeted article renders all four type-grou
 });
 
 test("Story 2.4 AC #5: non-fixture article renders empty-state and omits count line", () => {
-  const result = spawnSync("hugo", hugoArgs, {
-    cwd: repoRoot,
-    encoding: "utf8",
-    shell: process.platform === "win32",
-  });
+  const result = runBuild(hugoArgs);
   assert.equal(result.status, 0, `Production build failed.\n${result.stderr}`);
 
   // Pick any rendered article whose URL is NOT in the webmention fixture —
@@ -1573,11 +1551,7 @@ test("Story 2.4 AC #5: non-fixture article renders empty-state and omits count l
 });
 
 test("Story 2.4 AC #6: every <a> inside .webmention block carries rel with noopener+noreferrer+external and target=\"_blank\"", () => {
-  const result = spawnSync("hugo", hugoArgs, {
-    cwd: repoRoot,
-    encoding: "utf8",
-    shell: process.platform === "win32",
-  });
+  const result = runBuild(hugoArgs);
   assert.equal(result.status, 0, `Production build failed.\n${result.stderr}`);
 
   const articleHtml = readFileSync(
@@ -1619,11 +1593,7 @@ test("Story 2.4 AC #6 patch: empty author_url and empty published render <span> 
   // - empty author_url → <span class="webmention__author">
   // - empty url        → <span class="webmention__source"> (no <a href="">)
   // - empty published  → <span>—</span> (no invalid <time>—</time> without datetime)
-  const result = spawnSync("hugo", hugoArgs, {
-    cwd: repoRoot,
-    encoding: "utf8",
-    shell: process.platform === "win32",
-  });
+  const result = runBuild(hugoArgs);
   assert.equal(result.status, 0, `Production build failed.\n${result.stderr}`);
 
   const articleHtml = readFileSync(
@@ -1672,11 +1642,7 @@ test("Story 2.4 AC #8: webmention reply content is auto-escaped (XSS guard, no s
   // but this test asserts the rendering pipeline does not unwrap HTML — even
   // if Story 3.2's processing pipeline ever produced sanitized HTML, we want a
   // template-level regression guard that catches an accidental `| safeHTML`.
-  const result = spawnSync("hugo", hugoArgs, {
-    cwd: repoRoot,
-    encoding: "utf8",
-    shell: process.platform === "win32",
-  });
+  const result = runBuild(hugoArgs);
   assert.equal(result.status, 0, `Production build failed.\n${result.stderr}`);
 
   const articleHtml = readFileSync(
@@ -1714,11 +1680,7 @@ test("Story 2.4 AC #8: webmention reply content is auto-escaped (XSS guard, no s
 // =============================================================================
 
 test("Story 2.5 AC #2: privacy page renders Umami, Hearts, and Webmentions section headings", () => {
-  const result = spawnSync("hugo", hugoArgs, {
-    cwd: repoRoot,
-    encoding: "utf8",
-    shell: process.platform === "win32",
-  });
+  const result = runBuild(hugoArgs);
   assert.equal(result.status, 0, `Production build failed.\n${result.stderr}`);
 
   const html = readFileSync(
@@ -1743,11 +1705,7 @@ test("Story 2.5 AC #2: privacy page renders Umami, Hearts, and Webmentions secti
 });
 
 test("Story 2.5 AC #3+#5: privacy page renders posture statement and contact-with-DSGVO-rights sections", () => {
-  const result = spawnSync("hugo", hugoArgs, {
-    cwd: repoRoot,
-    encoding: "utf8",
-    shell: process.platform === "win32",
-  });
+  const result = runBuild(hugoArgs);
   assert.equal(result.status, 0, `Production build failed.\n${result.stderr}`);
 
   const html = readFileSync(
@@ -1798,11 +1756,7 @@ test("Story 2.5 AC #3+#5: privacy page renders posture statement and contact-wit
 });
 
 test("Story 2.5 AC #7: privacy page no longer mentions Spotify (removed obsolete section)", () => {
-  const result = spawnSync("hugo", hugoArgs, {
-    cwd: repoRoot,
-    encoding: "utf8",
-    shell: process.platform === "win32",
-  });
+  const result = runBuild(hugoArgs);
   assert.equal(result.status, 0, `Production build failed.\n${result.stderr}`);
 
   const html = readFileSync(
@@ -1823,11 +1777,7 @@ test("Story 2.5 AC #7: privacy page no longer mentions Spotify (removed obsolete
 });
 
 test("Story 2.5 AC #8: privacy page retains noindex meta and is excluded from sitemap (robotsdisallow: true)", () => {
-  const result = spawnSync("hugo", hugoArgs, {
-    cwd: repoRoot,
-    encoding: "utf8",
-    shell: process.platform === "win32",
-  });
+  const result = runBuild(hugoArgs);
   assert.equal(result.status, 0, `Production build failed.\n${result.stderr}`);
 
   const html = readFileSync(
@@ -1855,11 +1805,7 @@ test("Story 2.5 AC #8 (regression guard): every page emitting noindex robots met
   // not just /pages/datenschutz/. Catches regressions where the sitemap template's
   // `{{ if not .Params.robotsdisallow }}` gate breaks for other pages while the
   // head.html noindex meta keeps working (or vice versa).
-  const result = spawnSync("hugo", hugoArgs, {
-    cwd: repoRoot,
-    encoding: "utf8",
-    shell: process.platform === "win32",
-  });
+  const result = runBuild(hugoArgs);
   assert.equal(result.status, 0, `Production build failed.\n${result.stderr}`);
 
   const sitemapPath = resolve(testPublic, "sitemap.xml");
@@ -1915,11 +1861,7 @@ test("Story 2.5 AC #8 (regression guard): every page emitting noindex robots met
 });
 
 test("Story 2.5 AC #4: footer on a representative non-privacy page still links to /pages/datenschutz/", () => {
-  const result = spawnSync("hugo", hugoArgs, {
-    cwd: repoRoot,
-    encoding: "utf8",
-    shell: process.platform === "win32",
-  });
+  const result = runBuild(hugoArgs);
   assert.equal(result.status, 0, `Production build failed.\n${result.stderr}`);
 
   // Sample the homepage footer-menu region. Story 2.5 changed only markdown
@@ -1943,11 +1885,7 @@ test("Story 2.5 AC #4: footer on a representative non-privacy page still links t
 // =============================================================================
 
 test("Story 2.7 AC #1+#7: production homepage renders <div id=\"cookie-banner\" hidden ...> exactly once", () => {
-  const result = spawnSync("hugo", hugoArgs, {
-    cwd: repoRoot,
-    encoding: "utf8",
-    shell: process.platform === "win32",
-  });
+  const result = runBuild(hugoArgs);
   assert.equal(result.status, 0, `Production build failed.\n${result.stderr}`);
 
   const homeHtml = readFileSync(resolve(testPublic, "index.html"), "utf8");
@@ -1960,11 +1898,7 @@ test("Story 2.7 AC #1+#7: production homepage renders <div id=\"cookie-banner\" 
 });
 
 test("Story 2.7 AC #1+#7: production article page also renders the cookie-banner block", () => {
-  const result = spawnSync("hugo", hugoArgs, {
-    cwd: repoRoot,
-    encoding: "utf8",
-    shell: process.platform === "win32",
-  });
+  const result = runBuild(hugoArgs);
   assert.equal(result.status, 0, `Production build failed.\n${result.stderr}`);
 
   const articlesDir = resolve(testPublic, "articles");
@@ -1988,11 +1922,7 @@ test("Story 2.7 AC #1+#7: production article page also renders the cookie-banner
 });
 
 test("Story 2.7 AC #7: cookie-banner is suppressed on suppress_banner pages (datenschutz, impressum)", () => {
-  const result = spawnSync("hugo", hugoArgs, {
-    cwd: repoRoot,
-    encoding: "utf8",
-    shell: process.platform === "win32",
-  });
+  const result = runBuild(hugoArgs);
   assert.equal(result.status, 0, `Production build failed.\n${result.stderr}`);
 
   for (const slug of ["datenschutz", "impressum"]) {
@@ -2007,11 +1937,7 @@ test("Story 2.7 AC #7: cookie-banner is suppressed on suppress_banner pages (dat
 });
 
 test("Story 2.7 AC #2+#4: cookie-banner-dismissed flag survives gdpr.js minification + concat into bundle.js", () => {
-  const result = spawnSync("hugo", hugoArgs, {
-    cwd: repoRoot,
-    encoding: "utf8",
-    shell: process.platform === "win32",
-  });
+  const result = runBuild(hugoArgs);
   assert.equal(result.status, 0, `Production build failed.\n${result.stderr}`);
 
   // Resolve the active head-bundle filename from the homepage's <script src=...>
@@ -2036,11 +1962,7 @@ test("Story 2.7 AC #2+#4: cookie-banner-dismissed flag survives gdpr.js minifica
 });
 
 test("Story 2.7 AC #6: rendered banner carries full ARIA wiring (role, modal, labelledby, describedby, live)", () => {
-  const result = spawnSync("hugo", hugoArgs, {
-    cwd: repoRoot,
-    encoding: "utf8",
-    shell: process.platform === "win32",
-  });
+  const result = runBuild(hugoArgs);
   assert.equal(result.status, 0, `Production build failed.\n${result.stderr}`);
 
   const homeHtml = readFileSync(resolve(testPublic, "index.html"), "utf8");
@@ -2060,6 +1982,46 @@ test("Story 2.7 AC #6: rendered banner carries full ARIA wiring (role, modal, la
     assert.ok(
       tag.includes(needle),
       `cookie-banner opening tag must include ${needle} (AC #6)`
+    );
+  }
+});
+
+// =============================================================================
+// PurgeCSS regression guard — BEHAVIOUR, not byte budget.
+//
+// The production build runs PurgeCSS (postcss.config.js, gated on
+// HUGO_ENVIRONMENT=production, which `hugo --environment production` sets for
+// the postcss subprocess). Rather than asserting an absolute size (fragile —
+// would trip on legitimate CSS growth), we assert that PurgeCSS DID ITS JOB:
+// Bulma component classes the site never uses (.breadcrumb/.tabs/.panel-block)
+// must be stripped. They exist in the full ~870 KB dev bundle but must be
+// absent here. If PurgeCSS silently stops running, full Bulma ships and they
+// reappear — independent of how much custom CSS is added.
+// =============================================================================
+
+test("PurgeCSS strips unused Bulma component classes from production CSS", () => {
+  const result = runBuild(hugoArgs);
+  assert.equal(result.status, 0, `Production build failed.\n${result.stderr}`);
+
+  // Newest fingerprinted bundle (Hugo never GCs old ones in public-test, so a
+  // few accumulate — all are purged; pick the most recent deterministically).
+  const cssFiles = readdirSync(testPublic)
+    .filter((f) => /^style\.min\..*\.css$/.test(f))
+    .map((f) => resolve(testPublic, f));
+  assert.ok(
+    cssFiles.length >= 1,
+    "Expected a fingerprinted style.min.*.css in public-test"
+  );
+  const newest = cssFiles.sort(
+    (a, b) => statSync(b).mtimeMs - statSync(a).mtimeMs
+  )[0];
+  const css = readFileSync(newest, "utf8");
+
+  for (const unused of ["breadcrumb", "tabs", "panel-block"]) {
+    assert.doesNotMatch(
+      css,
+      new RegExp(`\\.${unused}\\b`),
+      `Unused Bulma class ".${unused}" is present in production CSS — PurgeCSS appears not to be running (the full ~870 KB Bulma bundle is shipping).`
     );
   }
 });
