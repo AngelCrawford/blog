@@ -12,30 +12,39 @@
     <ul class="webmentions__list">
         {{- range .items }}
             <li>
-                <article class="webmention" data-wm-type="{{ .type }}">
-                    {{- with .author_photo }}
-                        <img class="webmention__avatar" src="{{ . }}" alt="" loading="lazy" width="48" height="48">
-                    {{- end }}
+                {{- /* h-cite — incoming webmention marked up so parsers reading OUR
+                       page get structured reply-context (#218). p-author is a nested
+                       h-card containing the avatar (u-photo) + name (p-name); the
+                       author link is u-url. The citation's own source link is u-url
+                       on .webmention__source; published → dt-published; reply text →
+                       p-content. Vertical stack: author header, content, source. */ -}}
+                <article class="webmention h-cite" data-wm-type="{{ .type }}">
                     <div class="webmention__body">
                         {{- if .author_url }}
-                        <a class="webmention__author"
+                        <a class="webmention__author p-author h-card u-url"
                            href="{{ .author_url }}"
                            rel="noopener noreferrer external"
-                           target="_blank">{{ .author | default (i18n "webmention_author_unknown") }}</a>
+                           target="_blank">
+                            {{- with .author_photo }}<img class="webmention__avatar u-photo" src="{{ . }}" alt="" loading="lazy" width="40" height="40">{{- end -}}
+                            <span class="p-name">{{ .author | default (i18n "webmention_author_unknown") }}</span>
+                        </a>
                         {{- else }}
-                        <span class="webmention__author">{{ .author | default (i18n "webmention_author_unknown") }}</span>
+                        <span class="webmention__author p-author h-card">
+                            {{- with .author_photo }}<img class="webmention__avatar u-photo" src="{{ . }}" alt="" loading="lazy" width="40" height="40">{{- end -}}
+                            <span class="p-name">{{ .author | default (i18n "webmention_author_unknown") }}</span>
+                        </span>
                         {{- end }}
                         {{- if and (eq .type "reply") .content }}
-                            <p class="webmention__content">{{ .content }}</p>
+                            <p class="webmention__content p-content">{{ .content }}</p>
                         {{- end }}
                         {{- if .url }}
-                        <a class="webmention__source"
+                        <a class="webmention__source u-url"
                            href="{{ .url }}"
                            rel="noopener noreferrer external"
                            target="_blank"
                            title="Quelle ansehen">
                             {{- with .published }}
-                            <time datetime="{{ . }}">{{ time.Format ":date_long" . }}</time>
+                            <time class="dt-published" datetime="{{ . }}">{{ time.Format ":date_long" . }}</time>
                             {{- else }}
                             <span>—</span>
                             {{- end }}
@@ -43,7 +52,7 @@
                         {{- else }}
                         <span class="webmention__source">
                             {{- with .published }}
-                            <time datetime="{{ . }}">{{ time.Format ":date_long" . }}</time>
+                            <time class="dt-published" datetime="{{ . }}">{{ time.Format ":date_long" . }}</time>
                             {{- else }}
                             <span>—</span>
                             {{- end }}

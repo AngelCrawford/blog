@@ -6,7 +6,7 @@
         {{ if .GetTerms "categories" }}{{ $cssClasses = add $cssClasses " has-ribbon" }}{{ end }}
         {{ if eq .Params.weight 1 }}{{ $cssClasses = add $cssClasses " is-fixed" }}{{ end }}
         {{ if eq .Params.format "log" }}{{ $cssClasses = add $cssClasses " is-log" }}{{ end }}
-        <article class="{{ $cssClasses }}">
+        <article class="{{ $cssClasses }} h-entry">
             <!-- TODO: Footer generell weiter machen -->
 
             {{- if .GetTerms "categories" -}}
@@ -52,18 +52,18 @@
             <div class="card-content">
                 {{ if ne .Params.format "log" }}
                     <h2 class="title is-5" aria-label="{{ .Title }}">
-                        <a href="{{ .RelPermalink }}" title="{{ .Title }}">{{ .Title }}</a>
+                        <a class="p-name u-url" href="{{ .RelPermalink }}" title="{{ .Title }}">{{ .Title }}</a>
                         <span aria-hidden="true"></span>
                     </h2>
 
                     <p class="subtitle">
-                        <time datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}" title="Veröffentlichungsdatum">
+                        <time class="dt-published" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}" title="Veröffentlichungsdatum">
                             <svg class='ri-1x'>
                                 <use href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ .Site.Params.remixicon_version}}#calendar-line"></use>
                             </svg> {{ .Date.Format "02.01.06" }}
                         </time>
                         {{ if not ( eq (.Date.Format "02.01.06") (.Lastmod.Format "02.01.06") ) }}
-                            <time class="updated" datetime="{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}" title="Letztes Bearbeitungsdatum">
+                            <time class="updated dt-updated" datetime="{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}" title="Letztes Bearbeitungsdatum">
                                 <svg class='ri-1x'>
                                     <use href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ .Site.Params.remixicon_version}}#pencil-line"></use>
                                 </svg> {{ .Lastmod.Format "02.01.06" }}
@@ -72,7 +72,7 @@
                     </p>
                 {{- end -}}
 
-                <div class="content">
+                <div class="content{{ if eq .Params.format "log" }} e-content{{ end }}">
                     <!-- If article has no image, show more content instead -->
                     {{ if eq .Params.format "log" }}
                         {{ .Summary | markdownify }}
@@ -116,13 +116,13 @@
 
                 <div class="card-footer-item log-date">
                     {{- if eq .Params.format "log" -}}
-                        <time datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}" data-tooltip="Veröffentlichungsdatum" title="Veröffentlichungsdatum">
+                        <time class="dt-published" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}" data-tooltip="Veröffentlichungsdatum" title="Veröffentlichungsdatum">
                             <svg class='ri-1x'>
                                 <use href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ .Site.Params.remixicon_version}}#calendar-line"></use>
                             </svg> {{ .Date.Format "02.01.06" }}
                         </time>
                         {{ if not ( eq (.Date.Format "02.01.06") (.Lastmod.Format "02.01.06") ) }}
-                            <time class="updated" datetime="{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}" data-tooltip="Letztes Bearbeitungsdatum" title="Letztes Bearbeitungsdatum">
+                            <time class="updated dt-updated" datetime="{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}" data-tooltip="Letztes Bearbeitungsdatum" title="Letztes Bearbeitungsdatum">
                                 <svg class='ri-1x'>
                                     <use href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ .Site.Params.remixicon_version}}#pencil-line"></use>
                                 </svg> {{ .Lastmod.Format "02.01.06" }}

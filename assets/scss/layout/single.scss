@@ -215,3 +215,26 @@ body.type-is-articles {
         }
     }
 }
+
+// Article byline (#218 h-entry p-author). Kept subtle — the visible date/tags
+// live in the sidebar info-tiles; this line carries the author(s) + mf2 props.
+.article-byline {
+    color: helpers.$text-muted;
+    font-size: 0.95rem;
+    margin: 0 0 1.5rem;
+
+    a {
+        color: helpers.$gold;
+        text-decoration: none;
+
+        &:hover,
+        &:focus {
+            color: helpers.$gold-light;
+            text-decoration: underline;
+        }
+    }
+
+    .byline-sep {
+        color: helpers.$gold-dark;
+    }
+}

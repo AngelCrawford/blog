@@ -30,36 +30,36 @@
 }
 
 .webmention {
-    display: flex;
-    gap: 1rem;
     margin-bottom: 1.5rem;
     padding: 0.75rem 1rem;
     border-left: 3px solid helpers.$gold-dark;
     background-color: color.adjust(helpers.$dark, $lightness: -2%);
     border-radius: 0 0.25rem 0.25rem 0;
 
-    &__avatar {
-        flex: 0 0 auto;
-        width: 48px;
-        height: 48px;
-        border-radius: 50%;
-        object-fit: cover;
-    }
-
     &__body {
-        flex: 1 1 auto;
         min-width: 0;
     }
 
+    // p-author h-card: avatar (u-photo) + name (p-name) sit inline on the header row.
     &__author {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
         font-weight: 600;
-        display: inline-block;
         color: helpers.$gold-light;
 
         &:hover,
         &:focus {
             color: helpers.$gold;
         }
+    }
+
+    &__avatar {
+        flex: 0 0 auto;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        object-fit: cover;
     }
 
     &__content {
@@ -85,11 +85,6 @@
     }
     &[data-wm-type="repost"] {
         border-left-color: helpers.$gold-light;
-    }
-
-    @include helpers.mobile {
-        flex-direction: column;
-        gap: 0.5rem;
     }
 }
 

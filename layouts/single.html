@@ -36,7 +36,7 @@
         <div class="columns is-multiline">
             <div class="column is-12-mobile is-12-tablet is-12-desktop is-9-widescreen is-9-fullhd">
                 {{ partial "withered-banner.html" . }}
-                <article class="box {{ if .Resources }}has-image{{ end }}">
+                <article class="box h-entry {{ if .Resources }}has-image{{ end }}">
 
                     {{- if .Resources -}}
                         <figure class="image is-2by3">
@@ -47,7 +47,7 @@
                                 <picture>
                                     <source media="(max-width: 640px)" srcset="{{ $landscapeImage.RelPermalink }}">
                                     <source media="(min-width: 641px)" srcset="{{ $portraitImage.RelPermalink }}">
-                                    <img src="{{ $portraitImage.RelPermalink }}" alt="{{ $.Title }}" loading="lazy">
+                                    <img class="u-photo" src="{{ $portraitImage.RelPermalink }}" alt="{{ $.Title }}" loading="lazy">
                                 </picture>
                                 {{ with .Meta.Exif }}{{ with .Tags.ImageDescription  }}
                                     <figcaption>
@@ -60,9 +60,40 @@
                     {{- end -}}
 
                     <div class="box-content">
-                        <h1 class="title is-1" data-heading="{{ .Title }}">{{ .Title }}</h1>
+                        <h1 class="title is-1 p-name" data-heading="{{ .Title }}">{{ .Title }}</h1>
                         {{ with .Params.subtitle }}<p class="subtitle is-4">{{ . }}</p>{{ end }}
-                        {{ .Content }}
+
+                        {{- /* Byline (Story 9.16 + #218). p-author h-card lives inside the
+                               h-entry: main author from params.identity, plus optional coauthors.
+                               Visible dates live in the sidebar info-tiles; the dt-published /
+                               dt-updated / u-url here are hidden mf2 properties for parsers. */ -}}
+                        {{- $identity := .Site.Params.identity -}}
+                        {{- $authorLink := or $identity.about_url $identity.url -}}
+                        {{- $hasUpdated := not (eq (.Date.Format "02.01.06") (.Lastmod.Format "02.01.06")) -}}
+                        <p class="article-byline">
+                            von
+                            <span class="p-author h-card">
+                                {{- if $authorLink -}}
+                                    <a class="p-name u-url" href="{{ $authorLink | relURL }}">{{ or .Params.author $identity.name }}</a>
+                                {{- else -}}
+                                    <span class="p-name">{{ or .Params.author $identity.name }}</span>
+                                {{- end -}}
+                            </span>
+                            {{- with .Params.coauthors }}
+                                {{- range . }} <span class="byline-sep">·</span> <span class="p-author h-card">
+                                    {{- if .url -}}
+                                        <a class="p-name u-url" href="{{ .url }}" rel="noopener">{{ .name }}</a>
+                                    {{- else -}}
+                                        <span class="p-name">{{ .name }}</span>
+                                    {{- end -}}
+                                </span>{{- end }}
+                            {{- end }}
+                            <time class="dt-published" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}" hidden></time>
+                            {{- if $hasUpdated }}<time class="dt-updated" datetime="{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}" hidden></time>{{- end }}
+                            <a class="u-url u-uid" href="{{ .Permalink }}" hidden></a>
+                        </p>
+
+                        <div class="e-content">{{ .Content }}</div>
                     </div>
 
                     {{ if .Params.series }}

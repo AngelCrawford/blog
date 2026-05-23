@@ -1513,13 +1513,13 @@ test("Story 2.4 AC #2+#3+#7: fixture-targeted article renders all four type-grou
   // AC #3 sample: avatar rendered for replies that have author_photo.
   assert.match(
     articleHtml,
-    /class="webmention__avatar"/,
+    /class="webmention__avatar[^"]*"/,
     "Avatar img element must render for entries with author_photo"
   );
   // Reply text rendered only on type=reply (fixture's replies have content).
   assert.match(
     articleHtml,
-    /class="webmention__content">Schöner Artikel/,
+    /class="webmention__content[^"]*">Schöner Artikel/,
     "Reply text must render inside .webmention__content for type=reply entries"
   );
 });
@@ -1588,7 +1588,7 @@ test("Story 2.4 AC #6: every <a> inside .webmention block carries rel with noope
   // Pull out every <a class="webmention__author"> and <a class="webmention__source">
   // tag and confirm each declares the required rel + target attributes.
   const links = articleHtml.match(
-    /<a class="webmention__(?:author|source)"[\s\S]*?>/g
+    /<a class="webmention__(?:author|source)[^"]*"[\s\S]*?>/g
   ) || [];
   assert.ok(
     links.length > 0,
@@ -1635,8 +1635,8 @@ test("Story 2.4 AC #6 patch: empty author_url and empty published render <span> 
   // has type=mention) and assert the fallback <span> elements are present.
   assert.match(
     articleHtml,
-    /<span class="webmention__author">Anonymous Sender<\/span>/,
-    "Empty author_url must render <span class=\"webmention__author\">, not <a href=\"\">"
+    /<span class="webmention__author[^"]*">[\s\S]*?<span class="p-name">Anonymous Sender<\/span>/,
+    "Empty author_url must render <span class=\"webmention__author\"> (p-author h-card, no href), not <a href=\"\">"
   );
   assert.match(
     articleHtml,
@@ -1655,7 +1655,7 @@ test("Story 2.4 AC #6 patch: empty author_url and empty published render <span> 
   // Regression guard for the empty-href bug: no webmention-block <a> may have
   // an empty href. (`<a href="">` reloads the current page on click.)
   const webmentionBlocks = articleHtml.match(
-    /<article class="webmention"[\s\S]*?<\/article>/g
+    /<article class="webmention[^"]*"[\s\S]*?<\/article>/g
   ) || [];
   for (const block of webmentionBlocks) {
     assert.doesNotMatch(
@@ -1690,7 +1690,7 @@ test("Story 2.4 AC #8: webmention reply content is auto-escaped (XSS guard, no s
   // raw <script> or <iframe> — these are the only ways a regression to
   // safeHTML would manifest in production data.
   const contentBlocks = articleHtml.match(
-    /<p class="webmention__content">[\s\S]*?<\/p>/g
+    /<p class="webmention__content[^"]*">[\s\S]*?<\/p>/g
   ) || [];
   for (const block of contentBlocks) {
     assert.doesNotMatch(

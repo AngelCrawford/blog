@@ -57,7 +57,9 @@
         {{ $hiddenCount = partial "withered-count.html" .Pages }}
     {{ end }}
 
-    <div class="grid is-row-gap-4 is-multiline {{if eq .Kind "taxonomy"}} is-column-gap-4 is-col-min-13 is-small {{else}} is-column-gap-7 is-col-min-19 {{end}}">
+    {{- /* h-feed only on post listings (section/term), not on the taxonomy index
+           (which lists category/tag term-cards, not posts). */ -}}
+    <div class="grid is-row-gap-4 is-multiline {{if eq .Kind "taxonomy"}} is-column-gap-4 is-col-min-13 is-small {{else}} is-column-gap-7 is-col-min-19 h-feed {{end}}">
         {{ $pageCount := len $visible }}
         {{ if eq .Kind "taxonomy" }}
             {{ $terms := slice }}
