@@ -21,7 +21,7 @@
   "homepage": "https://github.com/AngelCrawford/blog#readme",
   "dependencies": {
     "@fullhuman/postcss-purgecss": "^8.0.0",
-    "postcss": "^8.5.16",
+    "postcss": "^8.5.19",
     "postcss-cli": "^11.0.1"
   },
   "devDependencies": {
