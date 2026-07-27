@@ -21,11 +21,11 @@
   "homepage": "https://github.com/AngelCrawford/blog#readme",
   "dependencies": {
     "@fullhuman/postcss-purgecss": "^8.0.0",
-    "postcss": "^8.5.19",
+    "postcss": "^8.5.23",
     "postcss-cli": "^11.0.1"
   },
   "devDependencies": {
-    "@playwright/test": "^1.61.1",
+    "@playwright/test": "^1.62.0",
     "ajv": "^8.17.1",
     "ajv-formats": "^3.0.1",
     "gray-matter": "^4.0.3"
