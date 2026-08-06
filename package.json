@@ -7,7 +7,11 @@
     "prepare": "git config core.hooksPath .githooks || exit 0",
     "test:build": "node --test --test-concurrency 1 tests/build/*.test.mjs",
     "test:e2e": "playwright test",
-    "test": "npm run test:build && npm run test:e2e"
+    "test": "npm run test:build && npm run test:e2e",
+    "clean": "node scripts/clean-test-artifacts.mjs",
+    "posttest": "npm run clean",
+    "posttest:build": "npm run clean",
+    "posttest:e2e": "npm run clean"
   },
   "repository": {
     "type": "git",
@@ -26,6 +30,7 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.62.0",
+    "@tailwindcss/cli": "^4.3.3",
     "ajv": "^8.17.1",
     "ajv-formats": "^3.0.1",
     "gray-matter": "^4.0.3"

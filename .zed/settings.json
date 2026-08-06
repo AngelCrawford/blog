@@ -6,6 +6,25 @@
     "file_types": {
         "Go HTML Template": ["html"]
     },
+    // Build output and caches: hidden from the project tree and, more importantly,
+    // from search. Without this, every search matches the same markup three or four
+    // times over — once in the source, once per copy of the rendered site.
+    // `npm test` deletes the test dirs on success (scripts/clean-test-artifacts.mjs);
+    // these entries also cover them mid-run and cover public/ and resources/, which
+    // are never auto-deleted.
+    "file_scan_exclusions": [
+        "**/.git",
+        "**/node_modules",
+        "**/public",
+        "**/public-test",
+        "**/public-test-dev",
+        "**/public-test-fixture",
+        "**/resources",
+        "**/test-results",
+        "**/playwright-report",
+        "**/.hugo_build.lock",
+        "**/hugo_stats.json"
+    ],
     // YAML language server configuration for content frontmatter validation (Layer 1).
     // Source schema: schemas/frontmatter/article.schema.json
     // CAVEAT: Zed's YAML LSP validates .yaml/.yml files reliably; embedded YAML

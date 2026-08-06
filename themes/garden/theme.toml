@@ -1,0 +1,7 @@
+name = "Garden"
+license = "ISC"
+description = "Design-system theme: Tailwind 4 tokens plus components migrated off Bulma. Composed in front of article-time, which serves everything not yet migrated."
+min_version = "0.128.0"
+
+[author]
+  name = "Angel Crawford"

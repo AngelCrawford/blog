@@ -156,6 +156,8 @@ Browsers need a trigger when the icon sprite or fonts change.
 
 Scope and working rules live in [`CLAUDE.md`](CLAUDE.md) — the single source of truth for *what this project is* and *what it is not*.
 
+- [`docs/migration.md`](docs/migration.md) — **where the Bulma → Tailwind migration stands**
+- [`docs/design.md`](docs/design.md) — design system: tokens, decisions, and the 2020 history
 - [`docs/testing.md`](docs/testing.md) — test architecture and deliberate non-decisions
 - [`docs/authoring.md`](docs/authoring.md) — frontmatter validation, withered metadata
 - [`docs/decisions.md`](docs/decisions.md) — accepted decisions (single author, domain migration)

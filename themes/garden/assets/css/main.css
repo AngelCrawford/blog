@@ -1,0 +1,177 @@
+/* Garden — design-system stylesheet.
+ *
+ * Loaded IN ADDITION to article-time's Bulma bundle for as long as both themes
+ * are composed. That is why Preflight is deliberately absent: Tailwind's reset
+ * and Bulma's own normalize would fight, and the still-Bulma-styled parts of the
+ * site (header, cards, article body) would visibly break.
+ *
+ * Importing the layers individually is the supported way to opt out — the
+ * `base` layer, which is where Preflight lives, simply never gets filled.
+ *
+ * WHEN THE LAST BULMA TEMPLATE IS GONE: add
+ *     @import "tailwindcss/preflight.css" layer(base);
+ * and delete themes/article-time. That is the milestone where Tailwind stops
+ * running with one hand tied behind its back. See docs/migration.md.
+ */
+
+/* Utilities are deliberately NOT wrapped in a cascade layer.
+ *
+ * Unlayered declarations beat every layered one, regardless of source order or
+ * specificity. article-time's compiled Bulma stylesheet contains no layers at
+ * all, so utilities sitting in `layer(utilities)` could never override anything
+ * Bulma styled — the migrated navigation silently kept its Bulma layout for
+ * exactly this reason.
+ *
+ * Leaving utilities unlayered puts both stylesheets on the same footing, and
+ * garden's link comes second in the document head, so ties go to Tailwind.
+ *
+ * The theme layer stays layered: it only declares custom properties, which
+ * never conflict with anything. */
+
+@import "tailwindcss/theme.css" layer(theme);
+
+/* `source(none)` disables Tailwind's automatic source detection. Without it,
+ * Tailwind scans outward from the project directory and picks up the BUILT
+ * HTML under the public output directories, which is full of Bulma class
+ * names — generating a utility for every collision. Sources are declared
+ * explicitly below instead. */
+@import "tailwindcss/utilities.css" source(none);
+
+/* Path is relative to the PROJECT ROOT, not to this file: Hugo pipes the
+ * stylesheet to the Tailwind CLI on stdin, so there is no containing directory
+ * to resolve against. A file-relative path silently produces zero utilities. */
+@source "themes/garden/layouts";
+
+/* JavaScript that builds DOM nodes carries class names too — search.js styles
+ * every result row it generates. Forgetting this source produced a correctly
+ * working search with completely unstyled results. */
+@source "themes/garden/assets/js";
+
+/* ===========================================================================
+ * DESIGN TOKENS — the single source of every design value.
+ *
+ * Component styles compose from these. Nothing outside this block may hardcode
+ * a colour, size, radius or shadow. See docs/design.md for the reasoning and
+ * the styleguide page at /pages/styleguide/ for what they look like.
+ *
+ * `static` forces every variable into the output even when no utility
+ * references it yet, so the tokens are reliably available to component CSS and
+ * to the styleguide.
+ * =========================================================================== */
+@theme static {
+  /* --- Surfaces ---------------------------------------------------------
+   * Dark plus gold, minimal — settled in 2020 and unchanged since. Four steps
+   * of dark are enough: page, raised, sunken, and the hairline between them. */
+  --color-dark: hsl(190 11% 11%); /* default surface */
+  --color-dark-lighter: hsl(190 11% 15%); /* raised: cards, panels */
+  --color-dark-darker: hsl(190 11% 8%); /* sunken: page background, wells */
+
+  --color-light: hsl(190 20% 90%); /* body text */
+  --color-light-lighter: hsl(190 20% 95%); /* headings on dark */
+  --color-light-darker: hsl(190 20% 72%); /* secondary text, captions */
+
+  --color-gold: hsl(35 45% 50%); /* accent: links, focus, active */
+  --color-gold-light: hsl(29 100% 80%); /* accent on hover */
+  --color-gold-dark: hsl(35 45% 26%); /* borders, dividers */
+
+  /* --- Growth stages ----------------------------------------------------
+   * The digital-garden signal. Contrast-checked against the raised surface. */
+  --color-seedling: hsl(75 60% 60%);
+  --color-budding: hsl(295 60% 60%);
+  --color-evergreen: rgb(78 151 78);
+  --color-withered: hsl(0 0% 50%);
+
+  /* --- Type -------------------------------------------------------------
+   * Montserrat Alternates for headings, Montserrat for body — decided 2020,
+   * self-hosted for GDPR, unchanged. See docs/design.md.
+   *
+   * The scale is explicit rather than inherited so that changing it is one
+   * edit here, never a hunt through components. */
+  --font-heading: "Montserrat Alternates", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Montserrat-Regular", ui-sans-serif, system-ui, sans-serif;
+
+  --text-xs: 0.75rem; /* 12px  timestamps, counters */
+  --text-sm: 0.875rem; /* 14px  captions, metadata */
+  --text-base: 1rem; /* 16px  body */
+  --text-lg: 1.125rem; /* 18px  lead paragraphs */
+  --text-xl: 1.375rem; /* 22px  card titles */
+  --text-2xl: 1.75rem; /* 28px  section headings */
+  --text-3xl: 2.25rem; /* 36px  page titles */
+  --text-4xl: 3rem; /* 48px  hero */
+
+  /* --- Space ------------------------------------------------------------
+   * Airy: 4px base unit, 24px between related blocks, 80px between sections.
+   * Use the named steps for layout rhythm; the numeric scale (p-2, gap-6, …)
+   * stays available for fine adjustment inside a component. */
+  --spacing: 0.25rem; /* 4px  base unit for the numeric scale */
+  --spacing-gutter: 1.5rem; /* 24px between related blocks */
+  --spacing-section: 5rem; /* 80px between page sections */
+
+  /* --- Radius -----------------------------------------------------------
+   * Lightly rounded. Three steps, no more — a fourth only invites debate. */
+  --radius-sm: 0.25rem; /* 4px   buttons, inputs, badges */
+  --radius-md: 0.5rem; /* 8px   cards, panels */
+  --radius-lg: 0.75rem; /* 12px  dialogs, overlays */
+
+  /* --- Depth ------------------------------------------------------------
+   * Restrained. On a very dark surface a shadow reads as a slightly darker
+   * halo, not as lift, so these stay soft and are used sparingly. Separation
+   * is carried mainly by surface contrast plus a gold hairline. */
+  --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.3);
+  --shadow-md: 0 4px 12px rgb(0 0 0 / 0.35);
+  --shadow-lg: 0 8px 28px rgb(0 0 0 / 0.45);
+}
+
+/* ===========================================================================
+ * COMPONENT CSS
+ *
+ * Only for what genuinely cannot live on an element: positioning against a
+ * distant ancestor, pseudo-elements, vendor resets. Everything else is
+ * utilities in the template.
+ * =========================================================================== */
+
+/* --- Search results panel --------------------------------------------------
+ * Positioned against the <nav>, not against its own parent, and the pointer is
+ * a pseudo-element. The result rows themselves are utility-styled — that markup
+ * is generated in assets/js/search.js.
+ *
+ * Visibility is driven by the `hidden` utility, toggled from JS. Nothing here
+ * sets a display value, or it would fight that. */
+#resultsWrapper {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  z-index: 9999;
+  width: min(50rem, calc(100vw - 2rem));
+  margin-top: 0.75rem;
+}
+
+#results {
+  max-height: 60vh;
+  overflow: auto;
+  padding: var(--spacing-gutter);
+  border: 1px solid --alpha(var(--color-gold) / 20%);
+  border-radius: var(--radius-lg);
+  background-color: var(--color-dark-lighter);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Pointer towards the search field. */
+#results::before {
+  content: "";
+  position: absolute;
+  top: -0.6rem;
+  right: 2.5rem;
+  border-right: 0.6rem solid transparent;
+  border-bottom: 0.6rem solid var(--color-dark-lighter);
+  border-left: 0.6rem solid transparent;
+}
+
+/* Browsers add their own clear affordance to type=search; we render our own. */
+#searchBox::-webkit-search-decoration,
+#searchBox::-webkit-search-cancel-button,
+#searchBox::-webkit-search-results-button,
+#searchBox::-webkit-search-results-decoration {
+  display: none;
+  -webkit-appearance: none;
+}

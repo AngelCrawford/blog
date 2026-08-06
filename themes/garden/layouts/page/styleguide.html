@@ -1,0 +1,230 @@
+{{ define "main" }}
+{{- /* Living styleguide.
+ *
+ * Every swatch, step and sample below is rendered FROM the tokens in
+ * themes/garden/assets/css/main.css. Change a token and this page follows.
+ * A styleguide maintained by hand drifts within a month.
+ *
+ * WHY THE CLASS NAMES ARE SPELLED OUT IN FULL BELOW, never assembled:
+ * Tailwind extracts complete literal strings from the source. A template that
+ * writes bg- followed by a variable produces nothing at all — the utility is
+ * simply never generated, with no warning, and the swatch renders transparent.
+ * So each entry carries its finished class name as data.
+ *
+ * When adding a token, add its row here in the same commit.
+ */ -}}
+
+{{- $surfaces := slice
+  (dict "token" "--color-dark" "swatch" "bg-dark" "use" "Standardfläche")
+  (dict "token" "--color-dark-lighter" "swatch" "bg-dark-lighter" "use" "Erhöht: Karten, Panels")
+  (dict "token" "--color-dark-darker" "swatch" "bg-dark-darker" "use" "Vertieft: Seitenhintergrund")
+-}}
+{{- $inks := slice
+  (dict "token" "--color-light" "swatch" "bg-light" "ink" "text-light" "use" "Fließtext")
+  (dict "token" "--color-light-lighter" "swatch" "bg-light-lighter" "ink" "text-light-lighter" "use" "Überschriften")
+  (dict "token" "--color-light-darker" "swatch" "bg-light-darker" "ink" "text-light-darker" "use" "Sekundärtext")
+-}}
+{{- $accents := slice
+  (dict "token" "--color-gold" "swatch" "bg-gold" "ink" "text-gold" "use" "Links, Fokus, aktiv")
+  (dict "token" "--color-gold-light" "swatch" "bg-gold-light" "ink" "text-gold-light" "use" "Hover")
+  (dict "token" "--color-gold-dark" "swatch" "bg-gold-dark" "ink" "text-gold-dark" "use" "Ränder, Trenner")
+-}}
+{{- $stages := slice
+  (dict "label" "seedling" "token" "--color-seedling" "swatch" "bg-seedling" "use" "Keimling — frisch, unfertig")
+  (dict "label" "budding" "token" "--color-budding" "swatch" "bg-budding" "use" "Knospend — in Entwicklung")
+  (dict "label" "evergreen" "token" "--color-evergreen" "swatch" "bg-evergreen" "use" "Immergrün — ausgereift")
+  (dict "label" "withered" "token" "--color-withered" "swatch" "bg-withered" "use" "Verwelkt — veraltet")
+-}}
+{{- $sizes := slice
+  (dict "cls" "text-xs" "px" "12" "use" "Zeitstempel, Zähler")
+  (dict "cls" "text-sm" "px" "14" "use" "Bildunterschriften, Metadaten")
+  (dict "cls" "text-base" "px" "16" "use" "Fließtext")
+  (dict "cls" "text-lg" "px" "18" "use" "Einleitungsabsätze")
+  (dict "cls" "text-xl" "px" "22" "use" "Kartentitel")
+  (dict "cls" "text-2xl" "px" "28" "use" "Abschnittsüberschriften")
+  (dict "cls" "text-3xl" "px" "36" "use" "Seitentitel")
+  (dict "cls" "text-4xl" "px" "48" "use" "Hero")
+-}}
+{{- $spaces := slice
+  (dict "cls" "w-1" "name" "1" "px" "4" "use" "Basiseinheit")
+  (dict "cls" "w-2" "name" "2" "px" "8" "use" "Innerhalb einer Zeile")
+  (dict "cls" "w-3" "name" "3" "px" "12" "use" "Icon zu Text")
+  (dict "cls" "w-4" "name" "4" "px" "16" "use" "Innerhalb einer Komponente")
+  (dict "cls" "w-gutter" "name" "gutter" "px" "24" "use" "Zwischen Blöcken")
+  (dict "cls" "w-section" "name" "section" "px" "80" "use" "Zwischen Abschnitten")
+-}}
+{{- $radii := slice
+  (dict "cls" "rounded-sm" "px" "4" "use" "Buttons, Felder, Badges")
+  (dict "cls" "rounded-md" "px" "8" "use" "Karten, Panels")
+  (dict "cls" "rounded-lg" "px" "12" "use" "Dialoge, Overlays")
+-}}
+{{- $shadows := slice
+  (dict "cls" "shadow-sm" "use" "Kaum abheben — Badges, Chips")
+  (dict "cls" "shadow-md" "use" "Karten, Panels")
+  (dict "cls" "shadow-lg" "use" "Overlays, Suchergebnisse")
+-}}
+
+<div class="mx-auto max-w-4xl px-gutter py-section text-light">
+
+  <header class="mb-section">
+    <h1 class="mb-4 font-heading text-4xl text-light-lighter">{{ .Title }}</h1>
+    <div class="max-w-prose text-lg text-light-darker">{{ .Content }}</div>
+  </header>
+
+  {{- /* ------------------------------------------------------------------ */ -}}
+  <section class="mb-section">
+    <h2 class="mb-2 font-heading text-2xl text-light-lighter">Farben</h2>
+    <p class="mb-gutter max-w-prose text-light-darker">
+      Dunkel plus Gold, minimalistisch — 2020 entschieden und seitdem unverändert.
+      Drei Flächenstufen reichen; eine vierte lädt nur zur Diskussion ein.
+    </p>
+
+    {{- range slice
+      (dict "title" "Flächen" "items" $surfaces)
+      (dict "title" "Text" "items" $inks)
+      (dict "title" "Akzent" "items" $accents)
+      (dict "title" "Wachstumsstufen" "items" $stages) }}
+    <h3 class="mt-gutter mb-3 font-heading text-lg text-gold">{{ .title }}</h3>
+    <ul class="grid gap-3 sm:grid-cols-3">
+      {{- range .items }}
+      <li class="rounded-md border border-gold-dark/40 bg-dark p-3">
+        <span class="mb-2 block h-10 rounded-sm {{ .swatch }}"></span>
+        <code class="block text-sm text-light">{{ .token }}</code>
+        <span class="text-xs text-light-darker">{{ .use }}</span>
+      </li>
+      {{- end }}
+    </ul>
+    {{- end }}
+  </section>
+
+  {{- /* ------------------------------------------------------------------ */ -}}
+  <section class="mb-section">
+    <h2 class="mb-2 font-heading text-2xl text-light-lighter">Schrift</h2>
+    <p class="mb-gutter max-w-prose text-light-darker">
+      Montserrat Alternates für Überschriften, Montserrat für den Fließtext.
+      Selbst gehostet, damit nichts von extern nachgeladen wird.
+    </p>
+
+    <ul class="space-y-4">
+      {{- range $sizes }}
+      <li class="flex flex-wrap items-baseline gap-4 border-b border-gold-dark/30 pb-4">
+        <code class="w-24 shrink-0 text-sm text-gold">{{ .cls }}</code>
+        <span class="w-14 shrink-0 text-xs text-light-darker">{{ .px }} px</span>
+        <span class="{{ .cls }} text-light">Illegal — Ill 1l</span>
+        <span class="text-xs text-light-darker">{{ .use }}</span>
+      </li>
+      {{- end }}
+    </ul>
+
+    <h3 class="mt-gutter mb-3 font-heading text-lg text-gold">Schriftschnitte</h3>
+    <p class="mb-2 font-heading text-2xl text-light-lighter">Montserrat Alternates — Überschrift</p>
+    <p class="max-w-prose text-base text-light">
+      Montserrat — Fließtext. Ein Satz, um Laufweite und Zeilenabstand zu beurteilen:
+      Franz jagt im komplett verwahrlosten Taxi quer durch Bayern.
+    </p>
+  </section>
+
+  {{- /* ------------------------------------------------------------------ */ -}}
+  <section class="mb-section">
+    <h2 class="mb-2 font-heading text-2xl text-light-lighter">Abstände</h2>
+    <p class="mb-gutter max-w-prose text-light-darker">
+      Luftig: 4 px Basiseinheit, 24 px zwischen zusammengehörenden Blöcken,
+      80 px zwischen Abschnitten. Für den Seitenrhythmus die benannten Stufen
+      benutzen, die Zahlenskala nur zur Feinjustierung innerhalb einer Komponente.
+    </p>
+    <ul class="space-y-2">
+      {{- range $spaces }}
+      <li class="flex items-center gap-4">
+        <code class="w-24 shrink-0 text-sm text-gold">{{ .name }}</code>
+        <span class="w-14 shrink-0 text-xs text-light-darker">{{ .px }} px</span>
+        <span class="{{ .cls }} h-4 rounded-sm bg-gold"></span>
+        <span class="text-xs text-light-darker">{{ .use }}</span>
+      </li>
+      {{- end }}
+    </ul>
+  </section>
+
+  {{- /* ------------------------------------------------------------------ */ -}}
+  <section class="mb-section">
+    <h2 class="mb-2 font-heading text-2xl text-light-lighter">Radien und Tiefe</h2>
+    <p class="mb-gutter max-w-prose text-light-darker">
+      Leicht gerundet, dezente Schatten. Auf sehr dunklem Grund liest sich ein
+      Schatten eher als dunkler Hof denn als Abheben — Trennung trägt vor allem
+      der Flächenkontrast und eine goldene Haarlinie.
+    </p>
+
+    <div class="grid gap-gutter sm:grid-cols-2">
+      <div>
+        <h3 class="mb-3 font-heading text-lg text-gold">Radien</h3>
+        <ul class="space-y-3">
+          {{- range $radii }}
+          <li class="flex items-center gap-4">
+            <span class="size-12 shrink-0 {{ .cls }} border border-gold-dark bg-dark-lighter"></span>
+            <span><code class="text-sm text-gold">{{ .cls }}</code>
+              <span class="block text-xs text-light-darker">{{ .px }} px · {{ .use }}</span></span>
+          </li>
+          {{- end }}
+        </ul>
+      </div>
+      <div>
+        <h3 class="mb-3 font-heading text-lg text-gold">Schatten</h3>
+        <ul class="space-y-3">
+          {{- range $shadows }}
+          <li class="flex items-center gap-4">
+            <span class="size-12 shrink-0 rounded-md bg-dark-lighter {{ .cls }}"></span>
+            <span><code class="text-sm text-gold">{{ .cls }}</code>
+              <span class="block text-xs text-light-darker">{{ .use }}</span></span>
+          </li>
+          {{- end }}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  {{- /* ------------------------------------------------------------------ */ -}}
+  <section class="mb-section">
+    <h2 class="mb-2 font-heading text-2xl text-light-lighter">Bausteine</h2>
+    <p class="mb-gutter max-w-prose text-light-darker">
+      Aus den Tokens abgeleitet. Wächst mit jeder migrierten Komponente —
+      Reihenfolge und Stand siehe <code class="text-gold">docs/migration.md</code>.
+    </p>
+
+    <h3 class="mb-3 font-heading text-lg text-gold">Flächen</h3>
+    <div class="mb-gutter grid gap-4 sm:grid-cols-3">
+      <div class="rounded-md border border-gold-dark/40 bg-dark-darker p-4">
+        <span class="text-sm text-light-darker">vertieft</span>
+      </div>
+      <div class="rounded-md border border-gold-dark/40 bg-dark p-4">
+        <span class="text-sm text-light-darker">Standard</span>
+      </div>
+      <div class="rounded-md border border-gold-dark/40 bg-dark-lighter p-4 shadow-md">
+        <span class="text-sm text-light-darker">erhöht</span>
+      </div>
+    </div>
+
+    <h3 class="mb-3 font-heading text-lg text-gold">Interaktiv</h3>
+    <div class="flex flex-wrap items-center gap-4">
+      <button type="button" class="rounded-sm bg-gold px-4 py-2 text-sm text-dark-darker hover:bg-gold-light">
+        Primär
+      </button>
+      <button type="button" class="rounded-sm border border-gold px-4 py-2 text-sm text-gold hover:bg-gold hover:text-dark-darker">
+        Sekundär
+      </button>
+      <a href="#bausteine" class="text-gold underline underline-offset-4 hover:text-gold-light">Textlink</a>
+      <input type="text" aria-label="Beispielfeld" placeholder="Eingabefeld"
+             class="rounded-sm border border-gold-dark bg-dark px-3 py-1.5 text-sm text-light focus:border-gold focus:outline-none">
+    </div>
+
+    <h3 class="mt-gutter mb-3 font-heading text-lg text-gold">Wachstumsstufen-Badges</h3>
+    <div class="flex flex-wrap gap-3">
+      {{- range $stages }}
+      <span class="inline-flex items-center gap-2 rounded-sm border border-gold-dark/40 bg-dark-lighter px-3 py-1 text-sm">
+        <span class="size-2 shrink-0 rounded-sm {{ .swatch }}"></span>
+        <span class="text-light">{{ .label }}</span>
+      </span>
+      {{- end }}
+    </div>
+  </section>
+
+</div>
+{{ end }}

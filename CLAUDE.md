@@ -18,8 +18,10 @@ Diese Liste ist der **Filter**: Wenn ein Feature-Vorschlag oder ein GitHub-Issue
 2. **Keine hartkodierten Design-Werte.** Farben, Abstände, Radien, Schatten, Schriftgrößen kommen aus den Tokens — nie direkt ins Komponenten-SCSS. Wer eine Komponente baut, wählt aus dem Styleguide aus, statt neu zu erfinden.
 3. **Design und Programmierung getrennt.** Erst funktioniert es, dann sieht es gut aus. Nicht gleichzeitig.
 4. **Lorem-Ipsum-Content ist Absicht.** Der Content unter `content/` ist bewusst Fixture-Material für die Entwicklung. Nicht als „fehlender Inhalt" behandeln und nicht ungefragt ersetzen.
-5. **Backlog lebt in GitHub Issues**, nicht in Dateien. Keine Epics, keine Stories, keine Sprint-Artefakte im Repo.
-6. **Issues fasse ich nicht an.** Anlegen, schließen, labeln macht Angel selbst.
+5. **Kein jQuery.** Neuer JavaScript-Code ist Vanilla, ausnahmslos. jQuery ist noch im Bundle, weil `gdpr.js`, `header.js`, `main.js` und `search.js` daran hängen — aber es kommt nichts mehr dazu. Wenn eine Komponente nach `garden` wandert, wandert ihr JS jQuery-frei mit. Das Ziel ist, `jquery.js` (285 KB Quelltext) mit dem letzten dieser vier Skripte zu löschen.
+6. **Fertige Test-Ordner werden gelöscht.** `npm test` räumt bei Erfolg selbst auf (`scripts/clean-test-artifacts.mjs`). Bei Fehlschlag bleiben sie liegen — dann braucht man sie zum Debuggen. Wer neue Build-Ziele einführt, trägt sie dort ein.
+7. **Backlog lebt in GitHub Issues**, nicht in Dateien. Keine Epics, keine Stories, keine Sprint-Artefakte im Repo.
+8. **Issues fasse ich nicht an.** Anlegen, schließen, labeln macht Angel selbst.
 
 ## Struktur
 
@@ -33,9 +35,21 @@ Diese Liste ist der **Filter**: Wenn ein Feature-Vorschlag oder ein GitHub-Issue
 | `scripts/`, `schemas/`, `tests/` | Tooling, bleiben im Root |
 | `docs/ideas/` | Angels Design-Gedanken und Mockups. **Nicht anfassen.** |
 
-**Theme-Komposition:** `config/_default/config.yaml` setzt `theme`. Hugo löst von links nach rechts auf — das erste Theme, das eine Datei definiert, gewinnt; der Projekt-Root schlägt beide. Sobald `themes/garden/` (Design-System) existiert, wird daraus `theme: ["garden", "article-time"]`. So kann eine Komponente nach der anderen migriert werden, ohne dass zwischendurch etwas kaputt ist.
+**Theme-Komposition:** `theme: ["garden", "article-time"]`. Hugo löst von links nach rechts auf — das erste Theme, das eine Datei definiert, gewinnt; der Projekt-Root schlägt beide. `garden` trägt das Tailwind-4-Design-System und übernimmt Komponente für Komponente, `article-time` liefert alles Übrige weiter aus. Eine Datei in `garden` anzulegen aktiviert sie automatisch.
 
-Wer eine Datei im Theme sucht: `themes/article-time/layouts/…`, nicht `layouts/…`.
+Wer eine Datei sucht: `themes/<theme>/layouts/…`, nicht `layouts/…`.
+
+**Wo stehe ich gerade?** → [`docs/migration.md`](docs/migration.md). Dort steht, welche Komponente schon in `garden` liegt, welche noch nicht, und was die nächsten Meilensteine sind. Die Datei wird im selben Commit aktualisiert, der eine Komponente verschiebt.
+
+## Tailwind-Regeln (teuer gelernt)
+
+Solange beide Themes laufen, gilt in `themes/garden/assets/css/main.css`:
+
+1. **Kein Preflight.** Tailwinds Reset und Bulmas Normalize würden sich prügeln, der noch Bulma-gestylte Teil der Seite bräche sichtbar. Erst anschalten, wenn das letzte Bulma-Template weg ist — das ist der Meilenstein, an dem `themes/article-time/` gelöscht wird.
+2. **`source(none)` plus explizites `@source`.** Ohne das scannt Tailwind vom Projektverzeichnis aus und findet das *gebaute* HTML voller Bulma-Klassen — gemessen 44 ungewollte Utilities, die Bulma überschrieben hätten.
+3. **`@source`-Pfade sind projektrelativ**, nicht dateirelativ. Hugo pipet das CSS über stdin an die CLI, es gibt kein umgebendes Verzeichnis. Ein falscher Pfad erzeugt stillschweigend null Utilities.
+4. **Tailwind liest auch Kommentare.** Ein bloßes Wort in einem Template-Kommentar, das zufällig ein Utility-Name ist, wird als echte Regel erzeugt und gewinnt gegen Bulma. Ist genau so passiert. In Prosa umschreiben oder trennen.
+5. **Tokens gehören in `@theme static`**, sonst wirft Tailwind ungenutzte Variablen weg und der Styleguide steht ohne da.
 
 ## Beim Schreiben von Artikeln
 

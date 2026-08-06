@@ -1,0 +1,93 @@
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, minimum-scale=1">
+    {{ hugo.Generator }}
+
+{{- with .Params.robotsdisallow }} <!-- Robots -->
+    <meta name="robots" content="noindex, nofollow, noarchive">
+{{- else }}
+    <meta name="robots" content="index, follow, archive">
+{{- end }}
+
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    {{/* frame-ancestors per CSP-Spec ignoriert, wenn via <meta> ausgeliefert — wirkt nur als HTTP-Header. GitHub Pages erlaubt keine Custom-Header, daher hier weggelassen, um die Browser-Konsolen-Warnung zu vermeiden. Wert in params.toml beibehalten für späteren CDN-Wechsel (Cloudflare etc.). */}}
+    {{ printf `<meta http-equiv="Content-Security-Policy" content="default-src %s; form-action %s; frame-src %s; img-src %s; object-src %s; style-src %s; script-src %s; connect-src %s;">` (delimit .Site.Params.csp.default " ") (delimit .Site.Params.csp.formaction " ") (delimit .Site.Params.csp.framesrc " ") (delimit .Site.Params.csp.imgsrc " ") (delimit .Site.Params.csp.objectsrc " ") (delimit .Site.Params.csp.stylesrc " ") (delimit .Site.Params.csp.scriptsrc " ") (delimit .Site.Params.csp.connectsrc " ") | safeHTML }}
+
+    <title>{{- if .IsHome }}{{ .Site.Title }}{{ else }}{{ block "title" . }}{{ .Site.Title }}{{ with .Params.Title }} | {{ . }}{{ end }}{{ end }}{{ end -}}</title>
+<!-- Preloads vor Stylesheet/Script — sonst startet @font-face-Fetch aus dem CSS, bevor der Preload gesehen wird, und Firefox meldet "preloaded ... not used". -->
+    <link rel="preload" as="font" type="font/ttf" href="{{ "fonts/Montserrat/MontserratAlternates-Regular.ttf" | relURL }}" crossorigin="anonymous">
+    <link rel="preload" as="font" type="font/ttf" href="{{ "fonts/Montserrat/Montserrat-VariableFont_wght.ttf" | relURL }}" crossorigin="anonymous">
+    <link rel="preload" href="{{ "images/header/city.svg" | relURL }}" as="image" type="image/svg+xml">
+    <link rel="preload" href="{{ "images/header/clock.webp" | relURL }}" as="image" type="image/webp">
+
+{{- /* ===================================================================
+       TRANSITIONAL: two stylesheets on purpose.
+
+       1. article-time's Bulma bundle — still styles everything not yet
+          migrated (header, cards, article body, footer).
+       2. garden's Tailwind build — styles the migrated components only.
+          Preflight is off (see assets/css/main.css), so it adds utilities
+          without resetting anything underneath it.
+
+       Bulma's link comes FIRST so Tailwind utilities win on equal
+       specificity. When the last Bulma template is gone, delete block 1,
+       switch Preflight on, and remove themes/article-time.
+       =================================================================== */ -}}
+<!-- Style and Script -->
+{{- $sass := resources.Get "scss/main.scss" }}
+{{- $toCssOpt := (dict "targetPath" "style.css" "transpiler" "dartsass" "enableSourceMap" true) }}
+{{- $style := $sass | toCSS $toCssOpt | postCSS }}
+{{- if hugo.IsProduction }}
+    {{ $style = $style | minify | fingerprint | resources.PostProcess }}
+{{- end }}
+    <link href="{{ $style.RelPermalink }}" rel="stylesheet">
+
+{{- /* Tailwind runs through resources.PostProcess in production so it executes
+       AFTER every template has rendered — that is what fills hugo_stats.json,
+       which main.css scans via @source for the classes actually used. */ -}}
+{{- $tw := resources.Get "css/main.css" | css.TailwindCSS (dict "minify" hugo.IsProduction) }}
+{{- if hugo.IsProduction }}
+    {{ $tw = $tw | fingerprint | resources.PostProcess }}
+{{- end }}
+    <link href="{{ $tw.RelPermalink }}" rel="stylesheet">
+
+    {{- $jQuery := resources.Get "js/jquery.js" }}
+    {{- $gdpr := resources.Get "js/gdpr.js" }}
+    {{- $script := slice $jQuery $gdpr | resources.Concat "js/bundle.js" | resources.Minify | resources.Fingerprint -}}
+    <script src="{{ $script.RelPermalink }}"></script>
+
+    <link rel="icon" type="image/png" href="{{ "images/favicon/favicon-96x96.png" | relURL }}" sizes="96x96" /> <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="{{ "images/favicon/favicon.svg" | relURL }}" />
+    <link rel="shortcut icon" href="{{ "images/favicon/favicon.ico" | relURL }}" />
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ "images/favicon/apple-touch-icon.png" | relURL }}" />
+    <link rel="manifest" href="{{ "images/favicon/site.webmanifest" | relURL }}" />
+    <meta name="apple-mobile-web-app-title" content="Article Time" />
+
+    {{- /* SEO PARTS */}}
+    {{ partial "_base/seo.html" . }}
+
+{{ with .Site.Home.OutputFormats.Get "rss" }}<!-- RSS -->
+    {{ printf `<link rel="%s" type="%s" href="%s" title="%s" />` .Rel .MediaType.Type .Permalink $.Site.Title | safeHTML }}
+{{- end -}}
+
+    {{- /* Webmention endpoint — receives federated mentions via webmention.io.
+           No hugo.IsProduction gate: this is HTML discovery metadata, not a runtime fetch.
+           Hardcoded URL is intentional (single-tenant project, never varies). */ -}}
+    <link rel="webmention" href="https://webmention.io/article-time.de/webmention" />
+
+    {{- /* IndieAuth/RelMeAuth identity: rel="me" links come from the site-wide
+           footer h-card, rendered from identity.socials (Mastodon + GitHub
+           flagged footer:true). Single source is the footer h-card. */ -}}
+
+    {{- /* Umami Cloud — anonymous, cookieless analytics.
+           Production-only via hugo.IsProduction so `hugo server` never hits Umami Cloud.
+           Defensive `with` guard skips emission if website_id is empty/missing in params.yaml. */ -}}
+    {{- if hugo.IsProduction }}
+    {{- with site.Params.umami.website_id }}
+    <script async defer
+      data-website-id="{{ . }}"
+      src="{{ site.Params.umami.script_url | default "https://cloud.umami.is/script.js" }}"></script>
+    {{- end }}
+    {{- end }}
+</head>

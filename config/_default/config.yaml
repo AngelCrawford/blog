@@ -1,8 +1,8 @@
 # Theme composition. Hugo resolves left to right — the first theme that defines
 # a file wins, later ones fill the gaps, and the project root overrides both.
-# `garden` (design system) will be prepended here once it exists; until then
-# `article-time` supplies everything.
-theme: article-time
+# `garden` holds the Tailwind design system and takes over component by
+# component; `article-time` keeps serving everything not migrated yet.
+theme: ["garden", "article-time"]
 
 defaultContentLanguage: de
 languages:

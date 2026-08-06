@@ -41,11 +41,10 @@
         {{- /* search.js needs baseURL injection — process as Hugo template */ -}}
         {{- $search := resources.Get "js/search.js" | resources.ExecuteAsTemplate "js/search.js" . -}}
         {{- $firework := resources.Get "js/firework.js" -}}
-        {{- $navbar := resources.Get "js/navbar.js" -}}
         {{- $header := resources.Get "js/header.js" -}}
         {{- $witheredBanner := resources.Get "js/withered-banner.js" -}}
         {{- $hearts := resources.Get "js/hearts.js" -}}
-        {{- $script := slice $sunCalc $main $search $firework $navbar $header $witheredBanner $hearts | resources.Concat "js/footerBundle.js" | resources.Minify | resources.Fingerprint -}}
+        {{- $script := slice $sunCalc $main $search $firework $header $witheredBanner $hearts | resources.Concat "js/footerBundle.js" | resources.Minify | resources.Fingerprint -}}
         <script defer src="{{ $script.RelPermalink }}"></script>
 
     </body>

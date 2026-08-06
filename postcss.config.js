@@ -29,13 +29,13 @@ const purgecss = purgeCSSPlugin({
   // Configure safelist with standard classes and patterns for pseudo-elements
   safelist: {
     standard: [
-      // Classes used in search.js
-      'title', 'is-5', 'subtitle', 'ri-1x', 'read-more',
-      'column', 'search-bottom', 'remix', 'lens', 'close',
+      // Formerly injected by the jQuery search.js. That script now lives in
+      // themes/garden and generates Tailwind-classed markup, so only the names
+      // still used by other templates remain — and those PurgeCSS finds on its
+      // own. Kept as a belt-and-braces measure for the Bulma components.
+      'title', 'subtitle', 'column',
       // Classes used in header.js
       'shimmer-animation', 'is-night', 'is-dawn', 'is-day', 'is-dusk',
-      // Classes used in navbar.js
-      'is-opened', 'is-fixed-top',
       // Classes used in gdpr.js
       'opened', 'closed', 'is-rounded',
       // Classes used in main.js

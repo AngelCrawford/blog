@@ -107,8 +107,12 @@ jobs:
       - name: Install Dart Sass
         run: sudo snap install dart-sass
 
+      # `npm ci` (not `npm install`) so the resolved tree matches package-lock
+      # exactly — matters now that Tailwind pulls platform-specific native
+      # binaries (@tailwindcss/oxide-*) as optional dependencies. Also fails
+      # loudly on lockfile drift instead of silently resolving something else.
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
       # === Test gate ===
       # Tests must pass before any deploy step runs. If tests fail (build-smoke
