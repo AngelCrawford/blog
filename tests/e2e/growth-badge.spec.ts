@@ -2,9 +2,8 @@ import { test, expect, FIXTURE_DIRS } from "./fixtures";
 
 // Visual + structural tests for the growth-stage badge (Story 1.2).
 // Per-stage page-bundle fixtures at `content/articles/_test_growth_stage_<stage>/`
-// are created by `tests/e2e/global-setup.ts` BEFORE Playwright spawns hugo
-// server, so hugo's initial content scan picks them up — no Windows fsnotify
-// watcher race. Cleanup happens in `tests/e2e/global-teardown.ts`.
+// are written by `tests/e2e/build-and-serve.mjs` BEFORE hugo runs, so the static
+// export picks them up. Cleanup happens in `tests/e2e/global-teardown.ts`.
 // `.gitignore` excludes the `_test_growth_stage_` prefix as a backstop.
 
 const STAGES = ["seedling", "budding", "evergreen", "withered"] as const;

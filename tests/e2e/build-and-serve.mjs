@@ -4,10 +4,7 @@
 // for the static server to start AFTER the Hugo build has populated public-test/.
 //
 // Test build writes to `public-test/` (not `public/`) so a developer can keep
-// `hugo server` running on `public/` without colliding with the test build.
-// On Windows, hugo's static-file copy fails with "directory not empty" if any
-// file inside `public/articles/` is held open by another process; isolating
-// the test output dir eliminates that race.
+// `hugo server` running on `public/` while the suite builds.
 
 import { spawnSync } from "node:child_process";
 import * as fs from "node:fs";

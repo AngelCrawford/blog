@@ -128,7 +128,7 @@ The `daily-rebuild` workflow detects the `.maintenance` sentinel and builds with
 hugo server --environment maintenance    # then open http://localhost:1313/
 ```
 
-> ⚠️ **A maintenance build overwrites `hugo_stats.json`.** That file is tracked and feeds PurgeCSS; a maintenance build renders only the maintenance page, so the file shrinks to a handful of elements. Committing it in that state makes the next production build purge nearly all CSS — silently, with a green build. After any local maintenance build, run a production build to regenerate it, or `git checkout -- hugo_stats.json` before committing.
+Note that a maintenance build rewrites `hugo_stats.json` with just the maintenance page's elements. That file is no longer tracked (PurgeCSS reads the theme templates directly since the move to `themes/`), so this is harmless — but don't re-add it to git.
 
 Copy lives in `config/_default/params.yaml` under `maintenance:` (`title`, `message`, optional `expected_back`) and inherits into the maintenance environment.
 

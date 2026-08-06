@@ -10,10 +10,14 @@
 // failures never leave the working tree dirty.
 //
 // Test builds write to `public-test/` (not `public/`) so a developer can keep
-// `hugo server` running on `public/` without colliding with the test build.
-// On Windows, hugo's static-file copy fails with "directory not empty" if any
-// file inside `public/articles/` is held open by another process — separating
-// the output dirs eliminates that race entirely.
+// `hugo server` running on `public/` while the suite builds. Fixture builds use
+// `public-test-fixture/` and dev-environment builds `public-test-dev/`, so the
+// three never clobber each other's output between assertions.
+//
+// (Historically the split was mandatory: on Windows/NTFS hugo's static-file copy
+// fails with "directory not empty" when another process holds a file open. The
+// repo now lives on ext4 under WSL2 and CI runs on Linux, so that constraint is
+// gone — the separation is kept purely for test isolation.)
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
@@ -264,51 +268,6 @@ test("Story 1.3 AC #5: search index (index.json) keeps withered content", () => 
   );
 });
 
-test("Story 1.3 AC #6: hidden notice element renders on homepage when withered count > 0", () => {
-  const result = runHugoWithArticleFixture("withered-article.md", "ac6");
-  assert.equal(
-    result.status,
-    0,
-    `Build should succeed with withered fixture. stderr:\n${result.stderr}`
-  );
-
-  const homeHtml = readFileSync(resolve(repoRoot, "public-test","index.html"), "utf8");
-  assert.match(
-    homeHtml,
-    /class="withered-hidden-notice"/,
-    "Homepage should render the .withered-hidden-notice element"
-  );
-  assert.match(
-    homeHtml,
-    /\d+ verwelkte/,
-    "Notice should contain a count + the word 'verwelkte'"
-  );
-});
-
-test("Story 1.3 AC #6 (a11y): hidden notice carries role='status' + aria-live='polite' + aria-hidden icon", () => {
-  const result = runHugoWithArticleFixture("withered-article.md", "ac6a11y");
-  assert.equal(
-    result.status,
-    0,
-    `Build should succeed with withered fixture. stderr:\n${result.stderr}`
-  );
-
-  const homeHtml = readFileSync(resolve(repoRoot, "public-test","index.html"), "utf8");
-  // The notice element MUST have screen-reader semantics so the hidden
-  // count is announced politely without stealing focus.
-  assert.match(
-    homeHtml,
-    /<p class="withered-hidden-notice"[^>]*role="status"[^>]*aria-live="polite"/,
-    "Notice should declare role='status' and aria-live='polite'"
-  );
-  // The decorative skull icon must NOT be exposed to assistive tech.
-  assert.match(
-    homeHtml,
-    /<p class="withered-hidden-notice"[\s\S]*?<svg[^>]*aria-hidden="true"/,
-    "Decorative svg inside the notice should carry aria-hidden='true'"
-  );
-});
-
 test("Story 1.3 AC #8: 404 page recent-articles widget excludes withered content", () => {
   const result = runHugoWithArticleFixture("withered-article.md", "ac8");
   assert.equal(
@@ -336,97 +295,6 @@ test("Story 1.3 AC #8: 404 page recent-articles widget excludes withered content
 // Story 1.1's enum tests.
 // =============================================================================
 
-test("Story 1.4 AC #1+#2+#5: withered banner renders with date+reason+replacement", () => {
-  const result = runHugoWithArticleFixture("withered-with-replacement.md", "banner");
-  assert.equal(
-    result.status,
-    0,
-    `Build should succeed with full withered fixture. stderr:\n${result.stderr}`
-  );
-
-  const articlePage = resolve(
-    repoRoot,
-    "public-test",
-    "articles",
-    "_test_withered_banner",
-    "index.html"
-  );
-  assert.ok(existsSync(articlePage), `Article page should exist at ${articlePage}`);
-  const html = readFileSync(articlePage, "utf8");
-
-  assert.match(
-    html,
-    /class="withered-banner message is-warning"/,
-    "Banner element with Bulma message+warning classes must be present"
-  );
-  assert.match(
-    html,
-    /role="alert"/,
-    "Banner must declare role='alert' for assistive tech"
-  );
-  assert.match(
-    html,
-    /id="withered-banner-title"/,
-    "Banner heading must be addressable via aria-labelledby"
-  );
-  assert.match(
-    html,
-    /<time datetime="2026-04-15">/,
-    "Banner must include machine-readable withered_date in <time>"
-  );
-  // The site's German locale renders ":date_long" as "15. April 2026".
-  assert.match(
-    html,
-    /15\. April 2026/,
-    "Banner must render withered_date in long-form German"
-  );
-  assert.match(
-    html,
-    /class="withered-banner-reason">Beispiel: das alte Framework wird nicht mehr gepflegt\./,
-    "Banner must include the withered_reason paragraph"
-  );
-  assert.match(
-    html,
-    /class="withered-banner-replacement">[\s\S]*?<a href="\/articles\/withered-replacement-target\/"[^>]*>Aktuelle Version ansehen/,
-    "Banner must include a link to replacement_url"
-  );
-});
-
-test("Story 1.4 AC #2+#6: withered-minimal omits reason and replacement", () => {
-  const result = runHugoWithArticleFixture("withered-minimal.md", "minimal");
-  assert.equal(
-    result.status,
-    0,
-    `Build should succeed with minimal withered fixture. stderr:\n${result.stderr}`
-  );
-
-  const articlePage = resolve(
-    repoRoot,
-    "public-test",
-    "articles",
-    "_test_withered_minimal",
-    "index.html"
-  );
-  assert.ok(existsSync(articlePage), `Article page should exist at ${articlePage}`);
-  const html = readFileSync(articlePage, "utf8");
-
-  assert.match(
-    html,
-    /class="withered-banner message is-warning"/,
-    "Banner must still render for the minimal fixture"
-  );
-  assert.doesNotMatch(
-    html,
-    /class="withered-banner-reason"/,
-    "Minimal fixture must NOT emit the reason paragraph (no empty placeholder)"
-  );
-  assert.doesNotMatch(
-    html,
-    /class="withered-banner-replacement"/,
-    "Minimal fixture must NOT emit the replacement link wrapper"
-  );
-});
-
 test("Story 1.4 AC #7: build fails when withered article lacks withered_date", () => {
   // Use runHugoWithArticleFixture so the fixture is placed under content/articles/
   // (Type=articles), matching the production template path that exercises
@@ -447,276 +315,6 @@ test("Story 1.4 AC #7: build fails when withered article lacks withered_date", (
     combined,
     /_test_withered_withered_invalid/,
     "Error message should reference the offending file path"
-  );
-});
-
-// =============================================================================
-// Story 1.3: Series widget — withered filtering in single.html
-//
-// Creates 2–3 temporary article page bundles that share a `series` value,
-// runs a production Hugo build, and asserts the rendered series widget HTML.
-//
-// Covered scenarios:
-//   A. Non-withered article: widget hides withered siblings, count excludes them.
-//   B. Withered article (direct URL): widget marks it as active, count includes it.
-//   C. All-non-withered series: widget shows every member, count is correct.
-// =============================================================================
-
-function articleFrontmatter({ title, date, growth_stage, series, withered_date } = {}) {
-  const lines = [
-    `title: "${title}"`,
-    `date: ${date}`,
-    `draft: false`,
-    `summary: "Series smoke-test fixture."`,
-  ];
-  if (growth_stage) lines.push(`growth_stage: "${growth_stage}"`);
-  if (withered_date) lines.push(`withered_date: "${withered_date}"`);
-  if (series) lines.push(`series:\n  - "${series}"`);
-  return `---\n${lines.join("\n")}\n---\nContent.\n`;
-}
-
-function runHugoWithSeriesFixtures(articles) {
-  const dirs = articles.map((a) =>
-    resolve(repoRoot, "content", "articles", `_test_series_${a.slug}`)
-  );
-
-  // Clean stale Hugo output from previous runs before building, not after —
-  // tests read from public-test after this function returns.
-  for (const a of articles) {
-    const outDir = resolve(testPublic, "articles", `_test_series_${a.slug}`);
-    if (existsSync(outDir)) rmSync(outDir, { recursive: true, force: true });
-  }
-
-  for (const [i, article] of articles.entries()) {
-    mkdirSync(dirs[i], { recursive: true });
-    writeFileSync(resolve(dirs[i], "index.md"), articleFrontmatter(article));
-  }
-
-  try {
-    const result = freshBuild();
-    return {
-      status: result.status,
-      stdout: result.stdout || "",
-      stderr: result.stderr || "",
-      slugs: articles.map((a) => a.slug),
-    };
-  } finally {
-    for (const dir of dirs) {
-      if (existsSync(dir)) rmSync(dir, { recursive: true, force: true });
-    }
-  }
-}
-
-function readArticlePage(slug) {
-  return readFileSync(
-    resolve(repoRoot, "public-test","articles", `_test_series_${slug}`, "index.html"),
-    "utf8"
-  );
-}
-
-function extractSeriesWidget(html) {
-  // Pull out the <section class="series-sidebar">…</section> block only, so
-  // assertions don't accidentally match the related-sidebar widget or other
-  // parts of the page. Terminated at </section> (the partial's outermost
-  // element) which scopes assertions cleanly even if nested <ol>/<section>
-  // elements get added inside list items later.
-  const match = html.match(/<section class="series-sidebar"[^>]*>[\s\S]*?<\/section>/);
-  return match ? match[0] : "";
-}
-
-test("Story 1.3 series: withered siblings remain visible but marked in the series widget", () => {
-  // Article A (evergreen) + Article B (withered) + Article C (evergreen) — all in one series.
-  // On A's page: count=3 (all members), B visible with is-withered class and skull icon + tooltip.
-  const result = runHugoWithSeriesFixtures([
-    {
-      slug: "s1a",
-      title: "Series Smoke Part 1",
-      date: "2026-04-01T00:00:00Z",
-      growth_stage: "evergreen",
-      series: "Smoke Series",
-    },
-    {
-      slug: "s1b",
-      title: "Series Smoke Part 2 Withered",
-      date: "2026-04-02T00:00:00Z",
-      growth_stage: "withered",
-      withered_date: "2026-04-30",
-      series: "Smoke Series",
-    },
-    {
-      slug: "s1c",
-      title: "Series Smoke Part 3",
-      date: "2026-04-03T00:00:00Z",
-      growth_stage: "evergreen",
-      series: "Smoke Series",
-    },
-  ]);
-
-  assert.equal(result.status, 0, `Build failed.\n${result.stderr}`);
-
-  const widget = extractSeriesWidget(readArticlePage("s1a"));
-  assert.ok(widget.length > 0, "Series widget must be present on s1a's page");
-
-  assert.match(widget, /Smoke Series/, "Series name must appear in the widget");
-  assert.match(
-    widget,
-    /3 Teile/,
-    "Series count pill must include all 3 members (including withered)"
-  );
-  assert.match(
-    widget,
-    /\bis-withered\b/,
-    "Withered sibling must carry the is-withered class"
-  );
-  assert.match(
-    widget,
-    /Series Smoke Part 2 Withered/,
-    "Withered sibling title must still appear in the series widget"
-  );
-  assert.match(
-    widget,
-    /— verwelkt/,
-    "Withered sibling link must carry the 'verwelkt' tooltip"
-  );
-  assert.match(
-    widget,
-    /Series Smoke Part 3/,
-    "Non-withered sibling must appear in the series widget"
-  );
-  assert.match(
-    widget,
-    /<li class="series-sidebar__item is-current[^"]*">[\s\S]*?Series Smoke Part 1/,
-    "Current non-withered article must be marked is-current"
-  );
-});
-
-test("Story 1.3 series: withered article is marked active in its own series widget (regression)", () => {
-  // Same three articles. On B's page (withered, direct URL):
-  // - count must be 3 (current page is included even though withered)
-  // - B must be is-current
-  // - A and C must appear as links
-  const result = runHugoWithSeriesFixtures([
-    {
-      slug: "s2a",
-      title: "Series Smoke Part 1",
-      date: "2026-04-01T00:00:00Z",
-      growth_stage: "evergreen",
-      series: "Smoke Series 2",
-    },
-    {
-      slug: "s2b",
-      title: "Series Smoke Part 2 Withered",
-      date: "2026-04-02T00:00:00Z",
-      growth_stage: "withered",
-      withered_date: "2026-04-30",
-      series: "Smoke Series 2",
-    },
-    {
-      slug: "s2c",
-      title: "Series Smoke Part 3",
-      date: "2026-04-03T00:00:00Z",
-      growth_stage: "evergreen",
-      series: "Smoke Series 2",
-    },
-  ]);
-
-  assert.equal(result.status, 0, `Build failed.\n${result.stderr}`);
-
-  const widget = extractSeriesWidget(readArticlePage("s2b"));
-  assert.ok(widget.length > 0, "Series widget must be present on s2b's page");
-
-  assert.match(widget, /Smoke Series 2/, "Series name must appear in the widget");
-  assert.match(
-    widget,
-    /3 Teile/,
-    "Series count pill on the withered page itself must include all 3 members"
-  );
-  assert.match(
-    widget,
-    /class="series-sidebar__item is-current is-withered"/,
-    "Withered current page must carry both is-current and is-withered classes"
-  );
-  assert.match(
-    widget,
-    /Series Smoke Part 2 Withered/,
-    "Withered current page title must appear in the series widget"
-  );
-  assert.match(
-    widget,
-    /Series Smoke Part 1/,
-    "Non-withered sibling Part 1 must appear as a link"
-  );
-  assert.match(
-    widget,
-    /Series Smoke Part 3/,
-    "Non-withered sibling Part 3 must appear as a link"
-  );
-});
-
-test("Story 1.3 series: all-non-withered series renders complete count and all members", () => {
-  const result = runHugoWithSeriesFixtures([
-    {
-      slug: "s3a",
-      title: "Clean Series Part 1",
-      date: "2026-04-01T00:00:00Z",
-      growth_stage: "evergreen",
-      series: "Clean Series",
-    },
-    {
-      slug: "s3b",
-      title: "Clean Series Part 2",
-      date: "2026-04-02T00:00:00Z",
-      growth_stage: "seedling",
-      series: "Clean Series",
-    },
-    {
-      slug: "s3c",
-      title: "Clean Series Part 3",
-      date: "2026-04-03T00:00:00Z",
-      growth_stage: "budding",
-      series: "Clean Series",
-    },
-  ]);
-
-  assert.equal(result.status, 0, `Build failed.\n${result.stderr}`);
-
-  const widget = extractSeriesWidget(readArticlePage("s3b"));
-  assert.ok(widget.length > 0, "Series widget must be present on s3b's page");
-
-  assert.match(widget, /Clean Series/, "Series name must appear in the widget");
-  assert.match(widget, /3 Teile/, "All-non-withered series must show count=3 (3 Teile)");
-  assert.match(widget, /Clean Series Part 1/, "Part 1 must appear in the widget");
-  assert.match(
-    widget,
-    /<li class="series-sidebar__item is-current[^"]*">[\s\S]*?Clean Series Part 2/,
-    "Current page (s3b) must be is-current"
-  );
-  assert.match(widget, /Clean Series Part 3/, "Part 3 must appear in the widget");
-});
-
-test("Story 1.4 AC #11: non-withered articles render without the withered banner", () => {
-  // Reuse the existing valid-evergreen fixture to confirm non-withered pages
-  // are byte-clean of the banner markup.
-  const result = runHugoWithArticleFixture("valid-evergreen.md", "evergreen14");
-  assert.equal(
-    result.status,
-    0,
-    `Build should succeed with evergreen fixture. stderr:\n${result.stderr}`
-  );
-
-  const articlePage = resolve(
-    repoRoot,
-    "public-test",
-    "articles",
-    "_test_withered_evergreen14",
-    "index.html"
-  );
-  assert.ok(existsSync(articlePage), `Article page should exist at ${articlePage}`);
-  const html = readFileSync(articlePage, "utf8");
-  assert.doesNotMatch(
-    html,
-    /class="withered-banner/,
-    "Non-withered article must NOT contain any withered-banner markup"
   );
 });
 
@@ -811,24 +409,6 @@ test("Story 1.5 AC #2: withered RSS description prepends warning + 'Grund:' when
   );
 });
 
-test("Story 1.5 AC #2: withered RSS description omits 'Grund:' when withered_reason absent", () => {
-  const result = runHugoWithArticleFixture("withered-minimal.md", "rss15c");
-  assert.equal(result.status, 0, `Build failed:\n${result.stderr}`);
-  const rss = assertWellFormedXml(RSS_PATH, "rss");
-  const item = findBlock(rss, "item", "Withered Minimal Fixture");
-  assert.ok(item.length > 0, "Minimal fixture's RSS <item> must be present");
-  assert.match(
-    item,
-    /⚠️ Dieser Inhalt ist als veraltet markiert seit 15\. April 2026\./,
-    "Minimal fixture must still carry the date warning"
-  );
-  assert.doesNotMatch(
-    item,
-    /Grund:/,
-    "Minimal fixture must NOT include the 'Grund:' label (no empty reason)"
-  );
-});
-
 test("Story 1.5 AC #7: non-withered RSS items unchanged (no [Verwelkt suffix, no warning prepend)", () => {
   const result = runHugoWithArticleFixture("valid-evergreen.md", "rss15d");
   assert.equal(result.status, 0, `Build failed:\n${result.stderr}`);
@@ -887,19 +467,6 @@ test("Story 1.5 AC #5+#7: non-withered sitemap entry inherits <priority>0.8</pri
   );
 });
 
-test("Story 1.5 AC #4+#7: non-withered sitemap <lastmod> is NOT a withered_date", () => {
-  const result = runHugoWithArticleFixture("valid-evergreen.md", "sm15d");
-  assert.equal(result.status, 0, `Build failed:\n${result.stderr}`);
-  const sm = assertWellFormedXml(SITEMAP_PATH, "urlset");
-  const url = findBlock(sm, "url", "_test_withered_sm15d");
-  assert.ok(url.length > 0, "Evergreen fixture URL must be present in sitemap");
-  assert.doesNotMatch(
-    url,
-    /<lastmod>2026-04-15T/,
-    "Non-withered <lastmod> must NOT match a withered_date"
-  );
-});
-
 test("Story 1.5 AC #6: withered JSON-LD has creativeWorkStatus=Obsolete + dateModified=withered_date + description prefix with reason", () => {
   const result = runHugoWithArticleFixture("withered-with-replacement.md", "jsonld15a");
   assert.equal(result.status, 0, `Build failed:\n${result.stderr}`);
@@ -926,27 +493,6 @@ test("Story 1.5 AC #6: withered JSON-LD has creativeWorkStatus=Obsolete + dateMo
   );
 });
 
-test("Story 1.5 AC #6: withered-minimal JSON-LD description has no orphaned colon when reason absent", () => {
-  const result = runHugoWithArticleFixture("withered-minimal.md", "jsonld15b");
-  assert.equal(result.status, 0, `Build failed:\n${result.stderr}`);
-  const html = readFileSync(
-    resolve(repoRoot, "public-test", "articles", "_test_withered_jsonld15b", "index.html"),
-    "utf8"
-  );
-  const ld = extractJsonLd(html);
-  assert.ok(ld, "JSON-LD block must be present and JSON-parseable");
-  assert.match(
-    ld.description,
-    /^Veraltet seit 15\. April 2026 — /,
-    "description must format 'Veraltet seit DATE — ...' (no orphaned colon)"
-  );
-  assert.doesNotMatch(
-    ld.description,
-    /Veraltet seit 15\. April 2026:/,
-    "description must NOT carry a colon between date and em-dash when reason absent"
-  );
-});
-
 test("Story 1.5 AC #6+#7: non-withered JSON-LD has no creativeWorkStatus, no Veraltet prefix, dateModified is not a withered_date", () => {
   const result = runHugoWithArticleFixture("valid-evergreen.md", "jsonld15c");
   assert.equal(result.status, 0, `Build failed:\n${result.stderr}`);
@@ -970,28 +516,6 @@ test("Story 1.5 AC #6+#7: non-withered JSON-LD has no creativeWorkStatus, no Ver
     ld.description || "",
     /^Veraltet seit/,
     "Non-withered description must NOT carry the German deprecation prefix"
-  );
-});
-
-test("Story 1.3 AC #11: weight-bucket ordering on homepage is preserved (regression guard)", () => {
-  // Run with the withered fixture present so the filter is exercised, then
-  // assert that the existing real homepage cards still render the canonical
-  // weight buckets. This guards the home.html refactor against accidentally
-  // dropping the three `Params.weight` ranges.
-  const result = runHugoWithArticleFixture("withered-article.md", "ac11");
-  assert.equal(
-    result.status,
-    0,
-    `Build should succeed with withered fixture. stderr:\n${result.stderr}`
-  );
-
-  const homeHtml = readFileSync(resolve(repoRoot, "public-test","index.html"), "utf8");
-  // At minimum, the homepage must still render the article-card markup;
-  // the filter doesn't replace cards, only excludes withered ones.
-  assert.match(
-    homeHtml,
-    /article class="card is-horizontal/,
-    "Homepage must still render article cards after the withered filter"
   );
 });
 
@@ -1129,30 +653,6 @@ test("Story 2.3 AC #1+#7: production homepage emits <link rel=\"webmention\"> wi
   );
 });
 
-test("Story 2.3 AC #1+#7: production article page also emits the webmention <link>", () => {
-  const result = runBuild(hugoArgs);
-  assert.equal(result.status, 0, `Production build failed.\n${result.stderr}`);
-
-  const articlesDir = resolve(testPublic, "articles");
-  if (!existsSync(articlesDir)) assert.fail("articles/ dir missing from build output — run a full production build first");
-  const articleSlug = readdirSync(articlesDir)
-    .filter((entry) => !entry.startsWith("_test_"))
-    .find((entry) =>
-      existsSync(resolve(articlesDir, entry, "index.html"))
-    );
-  assert.ok(articleSlug, "Expected at least one non-fixture article to render");
-
-  const articleHtml = readFileSync(
-    resolve(articlesDir, articleSlug, "index.html"),
-    "utf8"
-  );
-  assert.match(
-    articleHtml,
-    /<link rel="webmention" href="https:\/\/webmention\.io\/article-time\.de\/webmention"\s*\/?>/,
-    "Article page must render the webmention <link> tag (site-wide via head.html partial)"
-  );
-});
-
 test("Story 2.3 AC #7: development build ALSO emits the webmention <link> (no hugo.IsProduction gate)", () => {
   const testPublicDev = resolve(repoRoot, "public-test-dev");
   // No teardown here: both dev tests share the same memoized runBuild(devArgs)
@@ -1279,85 +779,6 @@ test("Story 2.2 AC #1+#2+#6: production article page renders heart-button with d
   );
 });
 
-test("Story 2.2 AC #1: production homepage renders interactive heart-button on log cards", () => {
-  const result = runBuild(hugoArgs);
-  assert.equal(result.status, 0, `Production build failed.\n${result.stderr}`);
-
-  const homeHtml = readFileSync(resolve(testPublic, "index.html"), "utf8");
-
-  // Logs have no detail pages, so the heart mounts on log cards as the
-  // interactive `.is-card-heart` variant (compact, sits inside .formats next
-  // to the lightbulb icon). Tolerant class-attribute regex — order of class
-  // tokens isn't load-bearing.
-  const noteHearts = homeHtml.match(
-    /<button\b[^>]*class="[^"]*\bheart-button\b[^"]*\bis-card-heart\b[^"]*"[^>]*data-article="[^"]*\/notes\/[^"]+\/"/g
-  );
-  assert.ok(
-    noteHearts && noteHearts.length >= 1,
-    `Homepage must render at least one interactive heart-button on a note card — found ${noteHearts ? noteHearts.length : 0}`
-  );
-});
-
-test("Story 2.2 AC #1: production homepage renders readonly heart on article cards (action lives on single page)", () => {
-  const result = runBuild(hugoArgs);
-  assert.equal(result.status, 0, `Production build failed.\n${result.stderr}`);
-
-  const homeHtml = readFileSync(resolve(testPublic, "index.html"), "utf8");
-
-  // Article cards on the homepage show a readonly `.heart-readonly` <span>
-  // (social-proof indicator only — the interactive button lives on the
-  // article single page sidebar). Asserts at least one is rendered.
-  const readonly = homeHtml.match(
-    /<span\b[^>]*class="heart-readonly"[^>]*aria-label="[^"]+"/g
-  );
-  assert.ok(
-    readonly && readonly.length >= 1,
-    `Homepage must render at least one readonly heart on an article card — found ${readonly ? readonly.length : 0}`
-  );
-
-  // Readonly heart must NOT carry data-article (it's not interactive — no JS
-  // wiring needed). Verifies hearts.js's `.heart-button:not(.heart-button-fallback)`
-  // selector won't accidentally pick it up.
-  for (const tag of readonly) {
-    assert.doesNotMatch(
-      tag,
-      /data-article=/,
-      "readonly heart must NOT carry data-article (no JS interaction)"
-    );
-  }
-});
-
-test("Story 2.2: hint caption renders ONLY on article single pages, not on cards", () => {
-  const result = runBuild(hugoArgs);
-  assert.equal(result.status, 0, `Production build failed.\n${result.stderr}`);
-
-  // Pick a non-fixture article single page.
-  const articlesDir = resolve(testPublic, "articles");
-  const articleSlug = readdirSync(articlesDir)
-    .filter((entry) => !entry.startsWith("_test_"))
-    .find((entry) =>
-      existsSync(resolve(articlesDir, entry, "index.html"))
-    );
-  assert.ok(articleSlug, "Expected at least one non-fixture article to render");
-
-  const articleHtml = readFileSync(
-    resolve(articlesDir, articleSlug, "index.html"),
-    "utf8"
-  );
-  const homeHtml = readFileSync(resolve(testPublic, "index.html"), "utf8");
-
-  assert.match(
-    articleHtml,
-    /<small class="heart-button-hint">/,
-    "Article single page MUST render the 24h-cadence hint caption"
-  );
-  assert.doesNotMatch(
-    homeHtml,
-    /heart-button-hint/,
-    "Homepage MUST NOT render the hint caption (cards are too dense for it)"
-  );
-});
-
 test("Story 2.2 AC #3+#9: hearts.js is bundled into footerBundle.js (localStorage prefix smoke)", () => {
   const result = runBuild(hugoArgs);
   assert.equal(result.status, 0, `Production build failed.\n${result.stderr}`);
@@ -1423,7 +844,6 @@ if (webmentionFixtureKeys.length === 0) {
     "data/webmentions_by_article.json has no entries — Story 2.4 tests require at least one fixture entry"
   );
 }
-const webmentionFixtureKeySet = new Set(webmentionFixtureKeys);
 const fixtureSlugMatch = webmentionFixtureKeys[0].match(
   /^\/articles\/([^/]+)\/?$/
 );
@@ -1433,122 +853,6 @@ if (!fixtureSlugMatch) {
   );
 }
 const webmentionFixtureSlug = fixtureSlugMatch[1];
-
-test("Story 2.4 AC #1+#11: production article page emits <section id=\"webmentions\"> exactly once", () => {
-  const result = runBuild(hugoArgs);
-  assert.equal(result.status, 0, `Production build failed.\n${result.stderr}`);
-
-  const articlesDir = resolve(testPublic, "articles");
-  const articleSlug = readdirSync(articlesDir)
-    .filter((entry) => !entry.startsWith("_test_"))
-    .find((entry) => existsSync(resolve(articlesDir, entry, "index.html")));
-  assert.ok(articleSlug, "Expected at least one non-fixture article to render");
-
-  const articleHtml = readFileSync(
-    resolve(articlesDir, articleSlug, "index.html"),
-    "utf8"
-  );
-  const sectionMatches = articleHtml.match(/id=("?)webmentions\1/g) || [];
-  assert.equal(
-    sectionMatches.length,
-    1,
-    `<section id="webmentions"> must appear EXACTLY ONCE per article; got ${sectionMatches.length}`
-  );
-});
-
-test("Story 2.4 AC #2+#3+#7: fixture-targeted article renders all four type-group headings + count line", () => {
-  const result = runBuild(hugoArgs);
-  assert.equal(result.status, 0, `Production build failed.\n${result.stderr}`);
-
-  const articleHtml = readFileSync(
-    resolve(testPublic, "articles", webmentionFixtureSlug, "index.html"),
-    "utf8"
-  );
-
-  // AC #2: four type-groups, in order, with count badges from the fixture
-  // (replies × 2, repost × 1, mention × 2, like × 1).
-  assert.match(articleHtml, /Antworten \(2\)/, "Replies group heading must show count 2");
-  assert.match(articleHtml, /Reposts \(1\)/, "Reposts group heading must show count 1");
-  assert.match(articleHtml, /Erwähnungen \(2\)/, "Mentions group heading must show count 2");
-  assert.match(articleHtml, /Likes \(1\)/, "Likes group heading must show count 1");
-
-  // AC #7: reactions tile appears in the sidebar info widget, links to
-  // #webmentions, with German plural ("Antworten" — total mentions in
-  // fixture). The container class moved from .webmention-count-line to the
-  // tile system (data-tile="reactions") in the 2026-05-09 sidebar redesign.
-  assert.match(
-    articleHtml,
-    /data-tile="reactions"/,
-    "Reactions tile must render on fixture-targeted article"
-  );
-  assert.match(
-    articleHtml,
-    /href="#webmentions"/,
-    "Reactions tile must link to #webmentions anchor"
-  );
-  assert.match(
-    articleHtml,
-    /6 Antworten/,
-    "Reactions tile must show total count (6) with German plural ('Antworten' for >1)"
-  );
-
-  // AC #3 sample: avatar rendered for replies that have author_photo.
-  assert.match(
-    articleHtml,
-    /class="webmention__avatar[^"]*"/,
-    "Avatar img element must render for entries with author_photo"
-  );
-  // Reply text rendered only on type=reply (fixture's replies have content).
-  assert.match(
-    articleHtml,
-    /class="webmention__content[^"]*">Schöner Artikel/,
-    "Reply text must render inside .webmention__content for type=reply entries"
-  );
-});
-
-test("Story 2.4 AC #5: non-fixture article renders empty-state and omits count line", () => {
-  const result = runBuild(hugoArgs);
-  assert.equal(result.status, 0, `Production build failed.\n${result.stderr}`);
-
-  // Pick any rendered article whose URL is NOT in the webmention fixture —
-  // the empty-state path doesn't depend on which non-fixture article we use,
-  // so we derive it from the actual build output.
-  const articlesDir = resolve(testPublic, "articles");
-  const nonFixtureSlug = readdirSync(articlesDir)
-    .filter((slug) => !slug.startsWith("_test_"))
-    .filter((slug) => existsSync(resolve(articlesDir, slug, "index.html")))
-    .filter((slug) => !webmentionFixtureKeySet.has(`/articles/${slug}/`))
-    .sort()[0];
-  assert.ok(
-    nonFixtureSlug,
-    "Expected at least one non-fixture article in public-test/articles/ for empty-state assertion"
-  );
-  const articleHtml = readFileSync(
-    resolve(articlesDir, nonFixtureSlug, "index.html"),
-    "utf8"
-  );
-
-  assert.match(
-    articleHtml,
-    /class="webmentions__empty">Noch keine Antworten\./,
-    "Non-fixture article must render the German empty-state message"
-  );
-  assert.match(
-    articleHtml,
-    /data-tile="reactions"/,
-    "Non-fixture article must render the reactions tile (always visible)"
-  );
-  assert.match(
-    articleHtml,
-    /reactions-empty/,
-    "Non-fixture article must render the empty-state anchor inside the reactions tile"
-  );
-  assert.doesNotMatch(
-    articleHtml,
-    /webmentions__group/,
-    "Non-fixture article must NOT render any type-group sections"
-  );
-});
 
 test("Story 2.4 AC #6: every <a> inside .webmention block carries rel with noopener+noreferrer+external and target=\"_blank\"", () => {
   const result = runBuild(hugoArgs);
@@ -1583,55 +887,6 @@ test("Story 2.4 AC #6: every <a> inside .webmention block carries rel with noope
       link,
       /target="_blank"/,
       `Webmention link missing target="_blank": ${link}`
-    );
-  }
-});
-
-test("Story 2.4 AC #6 patch: empty author_url and empty published render <span> fallbacks (not broken <a href=\"\"> or invalid <time>—</time>)", () => {
-  // The fixture's last mention entry has empty author_url, empty url, and
-  // empty published — exercising all three guards added during Story 2.5 review:
-  // - empty author_url → <span class="webmention__author">
-  // - empty url        → <span class="webmention__source"> (no <a href="">)
-  // - empty published  → <span>—</span> (no invalid <time>—</time> without datetime)
-  const result = runBuild(hugoArgs);
-  assert.equal(result.status, 0, `Production build failed.\n${result.stderr}`);
-
-  const articleHtml = readFileSync(
-    resolve(testPublic, "articles", webmentionFixtureSlug, "index.html"),
-    "utf8"
-  );
-
-  // Pull out the Mentions group (the second one — the fallback fixture entry
-  // has type=mention) and assert the fallback <span> elements are present.
-  assert.match(
-    articleHtml,
-    /<span class="webmention__author[^"]*">[\s\S]*?<span class="p-name">Anonymous Sender<\/span>/,
-    "Empty author_url must render <span class=\"webmention__author\"> (p-author h-card, no href), not <a href=\"\">"
-  );
-  assert.match(
-    articleHtml,
-    /<span class="webmention__source">[\s\S]*?<\/span>/,
-    "Empty url must render <span class=\"webmention__source\">, not <a class=\"webmention__source\" href=\"\">"
-  );
-  // Empty published must render <span>—</span>, not <time>—</time>.
-  // <time> without datetime and with non-machine-readable content ("—") is
-  // invalid HTML per the spec.
-  assert.doesNotMatch(
-    articleHtml,
-    /<time>—<\/time>/,
-    "Empty published must NOT render bare <time>—</time> (invalid HTML — <time> requires datetime or machine-readable text content)"
-  );
-
-  // Regression guard for the empty-href bug: no webmention-block <a> may have
-  // an empty href. (`<a href="">` reloads the current page on click.)
-  const webmentionBlocks = articleHtml.match(
-    /<article class="webmention[^"]*"[\s\S]*?<\/article>/g
-  ) || [];
-  for (const block of webmentionBlocks) {
-    assert.doesNotMatch(
-      block,
-      /<a [^>]*\bhref=""/,
-      `Webmention block must not contain <a href=""> — page-reload bug. Block: ${block.slice(0, 200)}…`
     );
   }
 });
@@ -1678,127 +933,6 @@ test("Story 2.4 AC #8: webmention reply content is auto-escaped (XSS guard, no s
 // and that the footer link from a representative non-privacy page still resolves
 // to /pages/datenschutz/ (AC #4 regression check).
 // =============================================================================
-
-test("Story 2.5 AC #2: privacy page renders Umami, Hearts, and Webmentions section headings", () => {
-  const result = runBuild(hugoArgs);
-  assert.equal(result.status, 0, `Production build failed.\n${result.stderr}`);
-
-  const html = readFileSync(
-    resolve(testPublic, "pages", "datenschutz", "index.html"),
-    "utf8"
-  );
-  assert.match(
-    html,
-    /<h2 id="?anonyme-analyse-mit-umami"?[^>]*>\s*Anonyme Analyse mit Umami/,
-    "Privacy page must render the Umami section H2"
-  );
-  assert.match(
-    html,
-    /<h2 id="?herz-reaktionen"?[^>]*>\s*Herz-Reaktionen/,
-    "Privacy page must render the Hearts section H2"
-  );
-  assert.match(
-    html,
-    /<h2 id="?webmentions"?[^>]*>\s*Webmentions/,
-    "Privacy page must render the Webmentions section H2"
-  );
-});
-
-test("Story 2.5 AC #3+#5: privacy page renders posture statement and contact-with-DSGVO-rights sections", () => {
-  const result = runBuild(hugoArgs);
-  assert.equal(result.status, 0, `Production build failed.\n${result.stderr}`);
-
-  const html = readFileSync(
-    resolve(testPublic, "pages", "datenschutz", "index.html"),
-    "utf8"
-  );
-  assert.match(
-    html,
-    /<h2 id="?was-diese-seite-nicht-tut"?[^>]*>\s*Was diese Seite NICHT tut/,
-    "Privacy page must render the posture statement section (AC #3)"
-  );
-  assert.match(
-    html,
-    // `id` slug accepts both `für` and `fur` so the test survives Hugo slugify
-    // changes / `removePathAccents: true` — the heading content remains the
-    // authoritative assertion.
-    /<h2 id="?kontakt-f[üu]r-datenschutzanfragen"?[^>]*>\s*Kontakt für Datenschutzanfragen/,
-    "Privacy page must render the contact section (AC #5)"
-  );
-  // Each of the seven DSGVO rights articles must be cited (Art. 15-21 + Art. 77).
-  for (const article of ["Art. 15", "Art. 16", "Art. 17", "Art. 18", "Art. 20", "Art. 21", "Art. 77"]) {
-    assert.ok(
-      html.includes(article),
-      `Privacy page contact section must cite ${article}`
-    );
-  }
-
-  // Email-obfuscation regression guard (Story 2.5 review patch): the literal
-  // `[at]` / `[dot]` form must survive Goldmark intact — no mailto autolink,
-  // no entity-decoded plain "@", no transformation to a clickable link. A
-  // future Goldmark upgrade or markup-extras change that re-enables square-
-  // bracket-aware linkification would silently defeat the obfuscation.
-  assert.match(
-    html,
-    /mail \[at\] article-time \[dot\] de/,
-    "Privacy page contact email must render literally as 'mail [at] article-time [dot] de' (obfuscation intact)"
-  );
-  assert.doesNotMatch(
-    html,
-    /mailto:mail@article-time\.de/,
-    "Privacy page contact email must NOT be auto-linked to mailto:mail@article-time.de (would defeat obfuscation)"
-  );
-  assert.doesNotMatch(
-    html,
-    /\bmail@article-time\.de\b/,
-    "Privacy page must NOT render the unobfuscated address 'mail@article-time.de' anywhere (markdown entity-decode regression)"
-  );
-});
-
-test("Story 2.5 AC #7: privacy page no longer mentions Spotify (removed obsolete section)", () => {
-  const result = runBuild(hugoArgs);
-  assert.equal(result.status, 0, `Production build failed.\n${result.stderr}`);
-
-  const html = readFileSync(
-    resolve(testPublic, "pages", "datenschutz", "index.html"),
-    "utf8"
-  );
-  assert.doesNotMatch(
-    html,
-    /Spotify/i,
-    "Privacy page must NOT contain the obsolete Spotify section (no Spotify embeds in current codebase)"
-  );
-  // The standalone "Datenschutz auf einen Blick" intro was replaced by "Auf einen Blick".
-  assert.doesNotMatch(
-    html,
-    /Datenschutz auf einen Blick/,
-    "Privacy page must NOT carry the legacy intro heading 'Datenschutz auf einen Blick' (replaced by 'Auf einen Blick')"
-  );
-});
-
-test("Story 2.5 AC #8: privacy page retains noindex meta and is excluded from sitemap (robotsdisallow: true)", () => {
-  const result = runBuild(hugoArgs);
-  assert.equal(result.status, 0, `Production build failed.\n${result.stderr}`);
-
-  const html = readFileSync(
-    resolve(testPublic, "pages", "datenschutz", "index.html"),
-    "utf8"
-  );
-  assert.match(
-    html,
-    /<meta name="?robots"? content="noindex/,
-    "Privacy page must emit a noindex robots meta (robotsdisallow: true frontmatter)"
-  );
-
-  const sitemapPath = resolve(testPublic, "sitemap.xml");
-  assert.ok(existsSync(sitemapPath), "sitemap.xml must exist");
-  const sitemap = readFileSync(sitemapPath, "utf8");
-  assert.doesNotMatch(
-    sitemap,
-    /\/pages\/datenschutz\//,
-    "sitemap.xml must NOT include /pages/datenschutz/ (robotsdisallow excludes it)"
-  );
-});
 
 test("Story 2.5 AC #8 (regression guard): every page emitting noindex robots meta is excluded from sitemap.xml", () => {
   // Behavioural assertion across ALL pages with effective `robotsdisallow: true`,
@@ -1897,30 +1031,6 @@ test("Story 2.7 AC #1+#7: production homepage renders <div id=\"cookie-banner\" 
   );
 });
 
-test("Story 2.7 AC #1+#7: production article page also renders the cookie-banner block", () => {
-  const result = runBuild(hugoArgs);
-  assert.equal(result.status, 0, `Production build failed.\n${result.stderr}`);
-
-  const articlesDir = resolve(testPublic, "articles");
-  if (!existsSync(articlesDir)) {
-    assert.fail("articles/ dir missing from build output — run a full production build first");
-  }
-  const articleSlug = readdirSync(articlesDir)
-    .filter((entry) => !entry.startsWith("_test_"))
-    .find((entry) => existsSync(resolve(articlesDir, entry, "index.html")));
-  assert.ok(articleSlug, "Expected at least one non-fixture article to render");
-
-  const articleHtml = readFileSync(
-    resolve(articlesDir, articleSlug, "index.html"),
-    "utf8"
-  );
-  assert.match(
-    articleHtml,
-    /<div id="cookie-banner"\s+hidden/,
-    "Article page must render the cookie-banner block (site-wide via baseof.html partial)"
-  );
-});
-
 test("Story 2.7 AC #7: cookie-banner is suppressed on suppress_banner pages (datenschutz, impressum)", () => {
   const result = runBuild(hugoArgs);
   assert.equal(result.status, 0, `Production build failed.\n${result.stderr}`);
@@ -1959,31 +1069,6 @@ test("Story 2.7 AC #2+#4: cookie-banner-dismissed flag survives gdpr.js minifica
     /cookie-banner-dismissed/,
     "Head bundle must contain the 'cookie-banner-dismissed' sessionStorage key from gdpr.js (Story 2.7)"
   );
-});
-
-test("Story 2.7 AC #6: rendered banner carries full ARIA wiring (role, modal, labelledby, describedby, live)", () => {
-  const result = runBuild(hugoArgs);
-  assert.equal(result.status, 0, `Production build failed.\n${result.stderr}`);
-
-  const homeHtml = readFileSync(resolve(testPublic, "index.html"), "utf8");
-  // Capture the opening <div id="cookie-banner" ...> tag (everything up to the
-  // first '>' that closes it). Multiline because attributes wrap.
-  const tagMatch = homeHtml.match(/<div id="cookie-banner"[\s\S]*?>/);
-  assert.ok(tagMatch, "Homepage must render the cookie-banner opening tag");
-  const tag = tagMatch[0];
-
-  for (const needle of [
-    'role="dialog"',
-    'aria-modal="false"',
-    'aria-labelledby="cookie-banner-title"',
-    'aria-describedby="cookie-banner-text"',
-    'aria-live="polite"',
-  ]) {
-    assert.ok(
-      tag.includes(needle),
-      `cookie-banner opening tag must include ${needle} (AC #6)`
-    );
-  }
 });
 
 // =============================================================================

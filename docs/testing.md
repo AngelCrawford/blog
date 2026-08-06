@@ -2,6 +2,16 @@
 
 The *how* and *what runs where*. Per-story acceptance-criteria catalogues used to live here; the tests themselves are the source of truth for that, so this page keeps only the architecture and the decisions that would otherwise get re-litigated.
 
+## What belongs in the suite
+
+One rule decides it:
+
+> **Would a redesign legitimately break this assertion?**
+
+If yes — it asserts DOM structure, CSS class names, or page prose — it does not belong in the build suite. Either move it to e2e, or drop it. If no — build gates, RSS, sitemap, JSON-LD, CSP, output escaping, bundling — it stays, because it protects behaviour that survives any visual change.
+
+This matters more than usual here: the site is mid-migration to a design-system theme, and a suite that fails every time a class name moves stops being a safety net and becomes a reason not to touch the design.
+
 ## Layers
 
 | Layer | Tool | Covers | Runs |
@@ -29,13 +39,14 @@ Tests are a hard gate at deploy time — a failure means no deploy and the previ
 
 `webServer.command` runs `tests/e2e/build-and-serve.mjs`, which writes fixture page bundles, runs `hugo --environment production --destination public-test`, and serves `public-test/` on port **1314**. `global-teardown.ts` removes the fixtures afterwards; `.gitignore` excludes the `_test_*` prefixes as a backstop.
 
-Three reasons this beats `hugo server` here, all learned the hard way:
+Why this beats `hugo server`:
 
-- **`public-test/`, never `public/`** — on Windows, Hugo's static-copy step dies with `unlinkat ...\public\articles: The directory is not empty` if anything holds a file open in `public/` (a running `hugo server`, an editor preview, the Windows indexer). Separate destination = `npm test` and `hugo server` can run concurrently.
-- **Deterministic** — Hugo's fsnotify watcher on Windows unreliably detects newly-created article subdirectories, which made fixtures sporadically invisible in CI.
-- **PurgeCSS is exercised** — `hugo server` runs in dev mode and skips PurgeCSS. The static export runs production, so over-purge regressions surface before deploy.
+- **PurgeCSS is exercised** — `hugo server` runs in dev mode and skips PurgeCSS. The static export runs production, so over-purge regressions surface before deploy. This is the reason that still carries weight.
+- **No watcher in the path** — fixtures are written before hugo runs, so nothing depends on file-change detection.
 
-Port 1314 rather than 1313 so tests never collide with a developer's own `hugo server`.
+Three separate build destinations keep the suites from clobbering each other: `public-test/` (shared production output the assertion tests read), `public-test-fixture/` (temporary-content builds), `public-test-dev/` (development-environment builds). Port 1314 rather than 1313 so tests never collide with a developer's own `hugo server`.
+
+> **Historical note:** the split away from `public/` was originally mandatory — on Windows/NTFS, Hugo's static-copy step dies with `unlinkat ...\public\articles: The directory is not empty` when another process holds a file open, and its fsnotify watcher missed newly-created article subdirectories. The repo now lives on ext4 under WSL2 and CI runs on Linux, so neither applies. The isolation is kept because it is genuinely useful, not because it is forced.
 
 ## Deliberately not done
 

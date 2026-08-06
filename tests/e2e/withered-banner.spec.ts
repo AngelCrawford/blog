@@ -2,7 +2,7 @@ import { test, expect, FIXTURE_DIRS, WITHERED_BANNER_FIXTURES } from "./fixtures
 
 // Story 1.4 — Withered Content Warning Banner E2E coverage.
 // Per-fixture page bundles are written by tests/e2e/build-and-serve.mjs BEFORE
-// hugo runs (Windows fsnotify is unreliable post-startup); cleanup happens in
+// hugo runs, so a single static export covers them all; cleanup happens in
 // tests/e2e/global-teardown.ts. The existing `_test_growth_stage_withered`
 // fixture (one date, no reason, no replacement) doubles as the "minimal" case.
 //
