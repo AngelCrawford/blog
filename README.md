@@ -2,23 +2,37 @@
 
 # Article Time
 
-A personal Hugo blog being transformed into a **Digital Garden** — content that grows and evolves through reader engagement, where quality naturally rises and updates are rewarded with visibility.
+A private Hugo blog in the **IndieWeb**, single author, with *some* Digital Garden — content carries a growth stage and may wither, but this is a personal blog, not a platform or magazine.
 
 - 🌐 Live: [article-time.de](https://article-time.de)
 - 🌱 Languages: German / English
 
-📖 **Operations runbook:** [`docs/technical/runbook.md`](docs/technical/runbook.md) — setup, tests, maintenance mode toggle, deploy. Read that for *how to do X*; this README is the project overview.
+📖 **Scope and working rules:** [`CLAUDE.md`](CLAUDE.md). This README covers operations — setup, dev, tests, deploy, maintenance.
+
+## Setup
+
+Hugo Extended **0.161.1** is the pinned version — install it however you prefer (`scoop install hugo-extended`, `choco install hugo-extended`, or [gohugo.io/installation](https://gohugo.io/installation/)) and confirm with `hugo version`. Hugo Extended's embedded Dart Sass covers the `transpiler: "dartsass"` setting locally; CI installs `dart-sass` separately.
+
+```powershell
+# Dependencies (PurgeCSS + dev tooling; Bulma is vendored in the theme)
+npm install
+
+# First time only
+npx playwright install chromium
+
+# Verify end-to-end
+npm test
+```
+
+The npm `prepare` script wires the pre-commit hook (`git config core.hooksPath .githooks`) automatically on install.
 
 ## Local Development
 
 ```powershell
-# Install dependencies (Bulma + PurgeCSS + dev tooling via npm)
-npm install
-
-# Dev server with live reload
+# Dev server with live reload (uses config/development/)
 hugo server
 
-# Production build (with PurgeCSS, minification)
+# Production-flavour build with PurgeCSS + minification
 hugo server --environment production
 
 # One-shot production build (output to public/)
@@ -28,22 +42,16 @@ hugo --environment production --minify
 ### Tests
 
 ```powershell
-npm run test:build   # Hugo build smoke (node --test, ~9s)
-npm run test:e2e     # Playwright homepage smoke (chromium)
+npm run test:build   # Hugo build smoke (node --test)
+npm run test:e2e     # Playwright (chromium)
 npm test             # Both, sequentially
 ```
 
-First-time Playwright setup: `npx playwright install chromium`. CI runs the equivalent step automatically.
+CI runs the same commands on every release-triggering workflow. A failure blocks the deploy and the previously deployed site stays live and untouched. Architecture and the deliberate non-decisions are in [`docs/testing.md`](docs/testing.md).
 
 ### Frontmatter validation
 
-Three layers, all driven by the same JSON Schema (`schemas/frontmatter/article.schema.json`):
-
-1. **Editor** — Zed YAML LSP via `.zed/settings.json` (see [`docs/technical/editor-setup.md`](docs/technical/editor-setup.md)).
-2. **Pre-commit** — git hook + ajv (`.githooks/pre-commit` → `scripts/validate-frontmatter.js`). The npm `prepare` script wires it via `git config core.hooksPath .githooks` on first install.
-3. **Build** — Hugo `errorf` in `layouts/_partials/_base/validate-growth-stage.html`.
-
-Test strategy and what to add per upcoming story is documented in [`docs/technical/testing.md`](docs/technical/testing.md).
+Three layers, all driven by `schemas/frontmatter/article.schema.json`: editor (Zed YAML LSP via `.zed/settings.json`), pre-commit (`.githooks/pre-commit` → `scripts/validate-frontmatter.js`), and build (`layouts/_partials/_base/validate-growth-stage.html`). Details and the withered metadata fields: [`docs/authoring.md`](docs/authoring.md).
 
 ## Deployment
 
@@ -112,22 +120,46 @@ git add -f .maintenance && git commit -m "Maintenance ON" && git push --follow-t
 git rm .maintenance && git commit -m "Maintenance OFF" && git push --follow-tags
 ```
 
-Full mechanism, customisable copy, and verification steps in [`docs/technical/runbook.md`](docs/technical/runbook.md#maintenance-mode).
+The `daily-rebuild` workflow detects the `.maintenance` sentinel and builds with `--environment maintenance`; the live site follows within ~3 minutes.
 
-## Architecture & Workflow
+**Preview locally with the dev server, not a static build** — a static build emits absolute CSS paths like `/style.css` that don't resolve under `file://`, so opening `public-test/index.html` directly shows an unstyled page:
 
-This project uses the [BMad Method](https://github.com/bmadcode/BMAD-METHOD) for AI-assisted development. Documentation lives in `docs/`:
+```powershell
+hugo server --environment maintenance    # then open http://localhost:1313/
+```
 
-- `docs/0-discovery/` — project overview, brainstorming, research
-- `docs/1-planning/` — PRD, UX spec, epics
-- `docs/2-solutioning/` — architecture, test design
-- `docs/3-implementation/` — phase task breakdowns
-- `docs/sprint-artifacts/` — sprint status, drafted stories
+Copy lives in `config/_default/params.yaml` under `maintenance:` (`title`, `message`, optional `expected_back`) and inherits into the maintenance environment.
 
-Key documents:
-- 📐 [Integration Architecture](docs/2-solutioning/digital-garden-integration-architecture.md) — technical design
-- 📋 [Epics & Stories](docs/1-planning/epics.md) — 9 epics, 48 stories
-- 📝 [Sprint Status](docs/sprint-artifacts/sprint-status.yaml) — current implementation tracking
+How it fits together:
+
+| File | Role |
+|---|---|
+| `config/_default/params.yaml` | `maintenance_mode: false` fallback + the copy |
+| `config/maintenance/config.yaml` | `disableKinds` for RSS/sitemap/robotsTXT/taxonomy/term; mirrors prod `title` + `baseURL` |
+| `config/maintenance/params.yaml` | `maintenance_mode: true` |
+| `layouts/baseof.html` | Branches on `Site.Params.maintenance_mode` |
+| `layouts/_partials/_base/maintenance.html` | Self-contained page: no Umami, no SEO partial, no JS |
+| `.github/workflows/daily-rebuild.yml` | Detects the sentinel, switches `--environment` |
+
+`tests/build/maintenance-mode.test.mjs` covers both modes and verifies normal builds don't leak maintenance markup.
+
+## Asset updates — Remixicon cache-bust
+
+Browsers need a trigger when the icon sprite or fonts change.
+
+- **Sprite (`remixicon.symbol.svg`)** — replace the file in `static/fonts/remixicon/`, then bump `remixicon_version` (Unix-timestamp ms) in `config/_default/params.yaml`.
+- **Font files** — replace them, then whitespace-bump `_icons.scss` to force a new CSS fingerprint so browsers re-fetch. Bumping `remixicon_version` too does no harm.
+
+## Documentation
+
+Scope and working rules live in [`CLAUDE.md`](CLAUDE.md) — the single source of truth for *what this project is* and *what it is not*.
+
+- [`docs/testing.md`](docs/testing.md) — test architecture and deliberate non-decisions
+- [`docs/authoring.md`](docs/authoring.md) — frontmatter validation, withered metadata
+- [`docs/decisions.md`](docs/decisions.md) — accepted decisions (single author, domain migration)
+- [`docs/ideas/`](docs/ideas/) — design references and mockups
+
+Backlog and feature work are tracked in [GitHub Issues](https://github.com/AngelCrawford/blog/issues), not in files.
 
 ## Stack
 
@@ -135,7 +167,7 @@ Key documents:
 - [Bulma v1.0.4](https://bulma.io) with [PurgeCSS](https://purgecss.com)
 - [Remix Icon](https://remixicon.com)
 - [Google Fonts Montserrat & Montserrat Alternates](https://fonts.google.com/specimen/Montserrat) (self-hosted)
-- [jQuery](https://jquery.com) (vendored — migration to vanilla JS planned, see `docs/todo.md`)
+- [jQuery](https://jquery.com) (vendored)
 
 ### Build & Deploy
 - [Hugo Extended](https://gohugo.io) v0.161.1 with embedded Dart Sass

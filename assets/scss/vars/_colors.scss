@@ -21,8 +21,7 @@ $tile-radius: 0.45rem;
 $text-label: color.scale($dark, $lightness: 40%); // UI labels (uppercase / counter prefixes)
 $text-muted: color.scale($dark, $lightness: 60%); // body / secondary text
 
-// Growth stage colors (Digital Garden, Story 1.2)
-// Source: docs/1-planning/ux-design-specification.md §1.4 (lines 283–292)
+// Growth stage colors (Digital Garden)
 // WCAG-AA contrast verified against the dark card background
 // (`color.adjust($dark, $lightness: 5%)` ≈ hsl(190, 11%, 16%)).
 $growth-seedling: hsl(

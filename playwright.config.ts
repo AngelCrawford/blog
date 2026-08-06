@@ -1,9 +1,7 @@
 import { defineConfig, devices } from "@playwright/test";
 
-// Minimal Playwright bootstrap (Story 1.1).
-// Foundation for downstream visual regression / journey / a11y tests
-// per docs/2-solutioning/test-design-system.md. Keep MINIMAL here:
-// chromium-only, ONE smoke test. Story 1.2+ will expand.
+// Minimal Playwright bootstrap. Chromium-only, kept deliberately small —
+// see docs/testing.md for what runs where.
 //
 // Port choice (1314, NOT 1313): the dev's own `hugo server` typically runs on
 // 1313 — we don't want `npm test` to either steal that port or collide with it.

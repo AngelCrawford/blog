@@ -11,7 +11,7 @@ baseURL: http://localhost:1313/
 #
 # `public-test/` is the test-build output dir (separate from `public/` so the
 # test build doesn't clash with a running `hugo server` on Windows — see
-# `docs/technical/testing.md`). Even though Hugo's default `publishDir`
+# `docs/testing.md`). Even though Hugo's default `publishDir`
 # exclusion only covers `public/`, listing `^public-test/` here makes the
 # intent explicit and immunizes us against future config drift that could
 # otherwise pull the test output into the watcher.

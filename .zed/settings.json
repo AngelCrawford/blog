@@ -11,7 +11,7 @@
     // CAVEAT: Zed's YAML LSP validates .yaml/.yml files reliably; embedded YAML
     //         frontmatter inside .md files may not always be picked up. If editor
     //         feedback is missing, fall back to the modeline `# yaml-language-server: $schema=...`
-    //         described in docs/technical/editor-setup.md, and rely on the
+    //         described in docs/authoring.md, and rely on the
     //         pre-commit hook (Layer 2) as the authoritative gate.
     "lsp": {
         "yaml-language-server": {

@@ -9,7 +9,7 @@ reading_speed: 179
 # layouts/baseof.html reads the flag and renders _base/maintenance partial.
 # Static-site limitation: response stays HTTP 200 OK (GitHub Pages cannot 503).
 # Edit copy below — it inherits into the maintenance environment.
-# See docs/technical/runbook.md for full operating instructions.
+# See README.md for full operating instructions.
 maintenance_mode: false
 maintenance:
     title: "Wartung läuft"
@@ -19,7 +19,7 @@ maintenance:
 # Site-owner identity — canonical single source consumed by SEO (Schema.org
 # Person, OG article:author), footer copyright, h-card on the home page,
 # Author-Box, and any partial that needs author metadata. See ADR
-# `docs/decisions/adr-multi-author-to-coauthor.md` (Accepted 2026-05-12).
+# `docs/decisions.md` (Accepted 2026-05-12).
 identity:
     name: "Angel Crawford"
     photo: "/images/identity/angel.webp" # final asset; swap path here when Story 9.14 lands the brand-cutover avatar

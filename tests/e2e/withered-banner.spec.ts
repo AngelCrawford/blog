@@ -7,7 +7,7 @@ import { test, expect, FIXTURE_DIRS, WITHERED_BANNER_FIXTURES } from "./fixtures
 // fixture (one date, no reason, no replacement) doubles as the "minimal" case.
 //
 // Accessibility coverage uses structural HTML attribute assertions following
-// the precedent set in Story 1.3 (docs/technical/testing.md §axe-core deferred
+// the precedent set in Story 1.3 (docs/testing.md §axe-core deferred
 // to Epic 9). When @axe-core/playwright is introduced in Epic 9, replace the
 // structural checks with a programmatic rules audit on this page.
 
