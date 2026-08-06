@@ -1,0 +1,7 @@
+name = "Article Time"
+license = "ISC"
+description = "The original Article Time theme — Bulma-based, hand-written SCSS. Kept intact as the fallback layer while the design-system theme takes over component by component."
+min_version = "0.115.0"
+
+[author]
+  name = "Angel Crawford"

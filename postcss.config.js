@@ -1,7 +1,15 @@
 const purgeCSSPlugin = require('@fullhuman/postcss-purgecss');
 
 const purgecss = purgeCSSPlugin({
-  content: ["./hugo_stats.json", "./layouts/**/*.html", "./assets/js/**/*.js"],
+  // Templates and JS live in themes/<name>/ — the glob covers every theme so a
+  // new one is picked up without touching this file. Globs that match nothing
+  // fail SILENTLY here: PurgeCSS falls back to hugo_stats.json alone and quietly
+  // over-purges. If style.min.css suddenly shrinks, check these paths first.
+  content: [
+    "./hugo_stats.json",
+    "./themes/*/layouts/**/*.html",
+    "./themes/*/assets/js/**/*.js",
+  ],
   defaultExtractor: (content) => {
     // For HTML and JS files, use a standard extractor
     if (typeof content === 'string') {

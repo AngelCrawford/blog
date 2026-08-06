@@ -27,12 +27,15 @@ Diese Liste ist der **Filter**: Wenn ein Feature-Vorschlag oder ein GitHub-Issue
 |---|---|
 | `content/` | Inhalte (aktuell Fixtures) |
 | `config/` | Hugo-Config, vier Umgebungen: `_default`, `development`, `production`, `maintenance` |
-| `layouts/`, `assets/`, `i18n/`, `archetypes/`, `static/` | Theme-Dateien — ziehen in Phase 1 nach `themes/article-time/` um |
+| `themes/article-time/` | Das bestehende Theme: `layouts`, `assets`, `i18n`, `archetypes`, `static` |
 | `data/` | CI-generierte Laufzeitdaten (Hearts, Webmentions). Bleibt immer im Projekt-Root. |
+| `static/CNAME` | GitHub-Pages-Domain. Gehört zum Projekt, nicht ins Theme. |
 | `scripts/`, `schemas/`, `tests/` | Tooling, bleiben im Root |
 | `docs/ideas/` | Angels Design-Gedanken und Mockups. **Nicht anfassen.** |
 
-Geplant ist Theme-Komposition: `theme: ["garden", "article-time"]` — `garden` trägt das Design-System und überschreibt schrittweise, `article-time` fängt alles ab, was noch nicht migriert ist.
+**Theme-Komposition:** `config/_default/config.yaml` setzt `theme`. Hugo löst von links nach rechts auf — das erste Theme, das eine Datei definiert, gewinnt; der Projekt-Root schlägt beide. Sobald `themes/garden/` (Design-System) existiert, wird daraus `theme: ["garden", "article-time"]`. So kann eine Komponente nach der anderen migriert werden, ohne dass zwischendurch etwas kaputt ist.
+
+Wer eine Datei im Theme sucht: `themes/article-time/layouts/…`, nicht `layouts/…`.
 
 ## Beim Schreiben von Artikeln
 

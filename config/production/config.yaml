@@ -9,7 +9,9 @@ module:
     extended: true
     min: "0.115.0"
   mounts:
-    - source: "assets"
-      target: "assets"
+    # Only hugo_stats.json is mounted at project level — the theme's own default
+    # mount supplies themes/article-time/assets. Declaring any mount under the
+    # `assets` component suppresses the *project* default, which is fine now
+    # that the project root has no assets/ directory of its own.
     - source: "hugo_stats.json"
       target: "assets/watching/hugo_stats.json"

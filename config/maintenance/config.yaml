@@ -16,8 +16,7 @@ module:
     extended: true
     min: "0.115.0"
   mounts:
-    - source: "assets"
-      target: "assets"
+    # Mirrors config/production — see the note there.
     - source: "hugo_stats.json"
       target: "assets/watching/hugo_stats.json"
 #
