@@ -8,17 +8,12 @@
 title: Article Time
 baseURL: https://article-time.de/
 
-build:
-  buildStats:
-    enable: true
+# buildStats, the hugo_stats.json mount and the cachebuster live in
+# config/_default — see the note there.
 module:
   hugoVersion:
     extended: true
     min: "0.115.0"
-  mounts:
-    # Mirrors config/production — see the note there.
-    - source: "hugo_stats.json"
-      target: "assets/watching/hugo_stats.json"
 #
 # `disableKinds` prevents the listed output types from rendering at all, which
 # is what makes this approach cleaner than a pure template-level toggle: RSS

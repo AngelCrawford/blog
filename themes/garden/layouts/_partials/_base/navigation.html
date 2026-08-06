@@ -24,21 +24,21 @@
  * included. A bare word in prose that matches a utility name becomes a real
  * rule. This bit us with the c-o-n-t-a-i-n-e-r utility, which Bulma also
  * defines and five templates still use. Hyphenate or rephrase. */ -}}
-<nav class="relative flex flex-wrap items-center gap-2 bg-dark-darker px-4 py-2 text-light"
+<nav data-garden class="relative flex flex-wrap items-center gap-2 bg-surface-sunken px-4 py-2 font-body text-ink"
      role="navigation" aria-label="main navigation">
     <input id="menu-switch" name="menu-switch" type="checkbox" class="peer sr-only" />
 
     <div class="flex w-full items-center justify-between md:w-auto">
-        <a class="flex items-center gap-2 font-heading hover:text-gold {{ if .IsHome }}text-gold{{ end }}"
+        <a class="flex items-center gap-2 font-heading hover:text-accent {{ if .IsHome }}text-accent{{ end }}"
            href="{{ .Site.Home.RelPermalink }}" title="{{ .Site.Title }}">
             <img src="{{ "images/favicon/favicon.ico" | relURL }}" width="28" height="28" alt="Logo">Artikel
         </a>
         <label for="menu-switch"
                class="flex cursor-pointer flex-col gap-1 p-2 md:hidden"
                role="button" aria-expanded="false" aria-label="Menü">
-            <span aria-hidden="true" class="block h-0.5 w-6 bg-light"></span>
-            <span aria-hidden="true" class="block h-0.5 w-6 bg-light"></span>
-            <span aria-hidden="true" class="block h-0.5 w-6 bg-light"></span>
+            <span aria-hidden="true" class="block h-0.5 w-6 bg-ink"></span>
+            <span aria-hidden="true" class="block h-0.5 w-6 bg-ink"></span>
+            <span aria-hidden="true" class="block h-0.5 w-6 bg-ink"></span>
         </label>
     </div>
 
@@ -49,7 +49,7 @@
             {{- range .Site.Menus.main -}}
               {{- $active := or ($currentPage.IsMenuCurrent "main" .) ($currentPage.HasMenuCurrent "main" .) -}}
               {{- $label := cond (ne .Page.Params.translation.plural nil) .Page.Params.translation.plural .Name -}}
-              <a class="flex items-center gap-2 px-3 py-2 hover:text-gold {{ if $active }}text-gold{{ end }}"
+              <a class="flex items-center gap-2 px-3 py-2 hover:text-accent {{ if $active }}text-accent{{ end }}"
                  {{ if $active }}aria-current="page"{{ end }} href="{{ .URL }}" title="{{ $label }}">
                 {{ if .Params.icon }}<svg class="size-5 shrink-0 fill-current" aria-hidden="true"><use href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ $.Site.Params.remixicon_version}}#{{ .Params.icon }}"></use></svg>{{ end }}
                 {{- $label -}}
@@ -59,7 +59,7 @@
 
         <div class="flex flex-col gap-2 md:flex-row md:items-center">
           {{ range .Site.Params.follow.header }}
-            <a href="{{ .src | relURL }}" title="{{ .name }}" class="flex items-center px-3 py-2 hover:text-gold"
+            <a href="{{ .src | relURL }}" title="{{ .name }}" class="flex items-center px-3 py-2 hover:text-accent"
                target="_blank" rel="noreferrer">
               <svg class="size-5 shrink-0 fill-current" aria-hidden="true"><use href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ $.Site.Params.remixicon_version}}#{{ .icon }}"></use></svg>
             </a>
@@ -73,16 +73,16 @@
                  place — which is exactly what happened. */ -}}
           <div class="relative px-3 py-2">
             <label for="searchBox" class="sr-only">Search</label>
-            <input class="w-full rounded border border-gold-dark bg-dark py-1.5 pr-9 pl-3 text-light focus:border-gold focus:outline-none md:w-56"
+            <input class="w-full rounded border border-accent-muted bg-surface py-1.5 pr-9 pl-3 text-ink focus:border-accent focus:outline-none md:w-56"
                    type="search" name="searchBox" id="searchBox" aria-label="Search" aria-placeholder="Search...">
             {{- /* pointer-events-none on the wrapper so the idle magnifier does not
                    eat clicks meant for the field; re-enabled on the clear icon
                    alone, which search.js binds a click handler to. Without that
                    exception the X is unreachable and the field never clears. */ -}}
-            <span id="searchIcons" class="pointer-events-none absolute inset-y-0 right-6 flex items-center text-gold">
+            <span id="searchIcons" class="pointer-events-none absolute inset-y-0 right-6 flex items-center text-accent">
               <svg class="remix lens size-4 shrink-0 fill-current" aria-hidden="true"><use href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ $.Site.Params.remixicon_version}}#search-2-line"></use></svg>
               <svg class="remix close pointer-events-auto hidden size-4 shrink-0 cursor-pointer fill-current" role="button" tabindex="0" aria-label="Suche leeren"><use href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ $.Site.Params.remixicon_version}}#close-fill"></use></svg>
-              <div id="spinnerLoading" class="hidden size-4 animate-spin rounded-full border-2 border-gold-dark border-t-gold"></div>
+              <div id="spinnerLoading" class="hidden size-4 animate-spin rounded-full border-2 border-accent-muted border-t-accent"></div>
             </span>
           </div>
         </div>

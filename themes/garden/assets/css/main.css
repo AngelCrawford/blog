@@ -59,23 +59,61 @@
  * to the styleguide.
  * =========================================================================== */
 @theme static {
-  /* --- Surfaces ---------------------------------------------------------
-   * Dark plus gold, minimal — settled in 2020 and unchanged since. Four steps
-   * of dark are enough: page, raised, sunken, and the hairline between them. */
-  --color-dark: hsl(190 11% 11%); /* default surface */
-  --color-dark-lighter: hsl(190 11% 15%); /* raised: cards, panels */
-  --color-dark-darker: hsl(190 11% 8%); /* sunken: page background, wells */
+  /* NAMED BY ROLE, NOT BY APPEARANCE.
+   *
+   * The first version named these after what they look like — dark, light,
+   * gold — which produced `--color-dark-lighter` and `--color-light-darker`:
+   * contradictions that say nothing about when to use them. Worse, `dark` was
+   * a surface and `light` was text, so the same naming pattern covered two
+   * unrelated jobs.
+   *
+   * Role names answer the only question that matters at the call site: what is
+   * this for. They also survive a palette change — if the site ever stops being
+   * dark-on-gold, `surface-raised` is still the raised surface.
+   *
+   * The values are unchanged from 2020: dark plus gold, minimal.
+   *
+   * --- Surfaces: what things sit on ------------------------------------- */
+  --color-surface: hsl(190 11% 11%); /* default */
+  --color-surface-raised: hsl(190 11% 15%); /* cards, panels */
+  --color-surface-sunken: hsl(190 11% 8%); /* page background, wells */
 
-  --color-light: hsl(190 20% 90%); /* body text */
-  --color-light-lighter: hsl(190 20% 95%); /* headings on dark */
-  --color-light-darker: hsl(190 20% 72%); /* secondary text, captions */
+  /* --- Ink: what you read ------------------------------------------------
+   * Warm greys, hue 40 — the same family as the gold accent at hue 35, rather
+   * than the cool 190 the surfaces use. Two reasons this changed:
+   *
+   * 1. The old ladder was 95 / 90 / 72 percent lightness. Five points between
+   *    heading and body does not survive antialiasing, so everything read as
+   *    one weight. It is now 96 / 85 / 63.
+   * 2. Cool cyan text next to a warm gold accent sits almost opposite on the
+   *    colour wheel and quietly competes with it. Same family reads calmer.
+   *
+   * Saturation drops as the text gets quieter, so the muted step recedes
+   * instead of turning into a second accent colour.
+   *
+   * Contrast against --color-surface: 15.5 / 12.1 / 6.7 to 1 — all well past
+   * WCAG AA, the muted step included. */
+  --color-ink-strong: hsl(40 25% 96%); /* headings */
+  --color-ink: hsl(40 12% 85%); /* body text */
+  --color-ink-muted: hsl(40 8% 63%); /* secondary text, captions, metadata */
 
-  --color-gold: hsl(35 45% 50%); /* accent: links, focus, active */
-  --color-gold-light: hsl(29 100% 80%); /* accent on hover */
-  --color-gold-dark: hsl(35 45% 26%); /* borders, dividers */
+  /* --- Accent: what you act on ------------------------------------------ */
+  --color-accent: hsl(35 45% 50%); /* links, focus, active */
+  --color-accent-hover: hsl(29 100% 80%); /* hover */
+  --color-accent-muted: hsl(35 45% 26%); /* borders, dividers */
+
+  /* --- State ------------------------------------------------------------
+   * For messages, form validation and build/deploy feedback. Lighter than the
+   * equivalents Bulma was configured with, because those were picked for text
+   * ON the colour; here the colour is the text, on a dark surface. */
+  --color-success: hsl(152 50% 48%);
+  --color-warning: hsl(41 80% 55%);
+  --color-error: hsl(0 65% 60%);
 
   /* --- Growth stages ----------------------------------------------------
-   * The digital-garden signal. Contrast-checked against the raised surface. */
+   * Icon tints only — one colour per stage, never a surface or a text colour.
+   * They are not part of the palette a component picks from, which is why the
+   * styleguide shows them with their icons rather than as swatches. */
   --color-seedling: hsl(75 60% 60%);
   --color-budding: hsl(295 60% 60%);
   --color-evergreen: rgb(78 151 78);
@@ -90,14 +128,42 @@
   --font-heading: "Montserrat Alternates", ui-sans-serif, system-ui, sans-serif;
   --font-body: "Montserrat-Regular", ui-sans-serif, system-ui, sans-serif;
 
-  --text-xs: 0.75rem; /* 12px  timestamps, counters */
-  --text-sm: 0.875rem; /* 14px  captions, metadata */
+  /* 12px was too small to read comfortably and is deliberately removed —
+   * `initial` deletes Tailwind's default, so `text-xs` no longer exists and any
+   * leftover use fails visibly instead of quietly shipping unreadable text.
+   * The smallest step is 14px. */
+  /* EACH SIZE CARRIES ITS OWN LINE HEIGHT.
+   *
+   * Leading is not one value for the whole page: long lines of body text need
+   * air to find the next line, a 48px headline needs the opposite or it falls
+   * apart into loose strips. So it loosens as the type gets smaller and tightens
+   * as it grows.
+   *
+   * Body deliberately sits at 1.7 rather than the usual 1.5. The ink ramp moved
+   * warmer and the muted step dropped from 72% to 63% lightness — dimmer text on
+   * a dark surface needs more room between lines to stay comfortable. */
+  --text-xs: initial;
+
+  --text-sm: 0.875rem; /* 14px  captions, metadata — the smallest allowed */
+  --text-sm--line-height: 1.55;
+
   --text-base: 1rem; /* 16px  body */
+  --text-base--line-height: 1.7;
+
   --text-lg: 1.125rem; /* 18px  lead paragraphs */
+  --text-lg--line-height: 1.6;
+
   --text-xl: 1.375rem; /* 22px  card titles */
+  --text-xl--line-height: 1.4;
+
   --text-2xl: 1.75rem; /* 28px  section headings */
+  --text-2xl--line-height: 1.3;
+
   --text-3xl: 2.25rem; /* 36px  page titles */
+  --text-3xl--line-height: 1.2;
+
   --text-4xl: 3rem; /* 48px  hero */
+  --text-4xl--line-height: 1.1;
 
   /* --- Space ------------------------------------------------------------
    * Airy: 4px base unit, 24px between related blocks, 80px between sections.
@@ -120,6 +186,402 @@
   --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.3);
   --shadow-md: 0 4px 12px rgb(0 0 0 / 0.35);
   --shadow-lg: 0 8px 28px rgb(0 0 0 / 0.45);
+}
+
+/* ===========================================================================
+ * SCOPED BASELINE — a stand-in for Preflight, for garden-owned markup only.
+ *
+ * Garden templates render inside article-time's `main.content`, and Bulma's
+ * `.content` is a typographic container: it styles every descendant element —
+ * discs and a 2em indent on lists, a background and radius on code, sizes and
+ * margins on headings and paragraphs.
+ *
+ * EVERY SELECTOR HERE IS WRAPPED IN `:where()`, which makes its specificity
+ * zero. That is deliberate and only works because Bulma now sits in a cascade
+ * layer (see themes/garden/layouts/_partials/_base/head.html):
+ *
+ *   Bulma          layered      loses to everything below
+ *   this baseline  unlayered, specificity 0
+ *   utilities      unlayered, specificity 0-1-0   ← always wins
+ *
+ * The earlier version used `[data-garden] element` at 0-1-1 to out-specify
+ * Bulma, and that quietly broke the utilities it was meant to let through:
+ * `text-2xl` on a paragraph rendered at 16px, `mb-3` on a heading did nothing,
+ * and `space-y-*` collapsed because Tailwind emits it inside `:where()` too.
+ * Demoting Bulma instead of out-shouting it removes the whole class of bug.
+ *
+ * Put `data-garden` on the outermost element of every garden template. It is
+ * inert markup — no styling of its own, purely a scope marker.
+ *
+ * DELETE THIS BLOCK when Preflight is switched on; it exists only because two
+ * stylesheets currently share the page. See docs/migration.md.
+ * =========================================================================== */
+:where([data-garden] ul, [data-garden] ol) {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+:where([data-garden] li) {
+  margin: 0;
+}
+:where(
+  [data-garden] h1, [data-garden] h2, [data-garden] h3,
+  [data-garden] h4, [data-garden] h5, [data-garden] h6,
+  [data-garden] p, [data-garden] figure, [data-garden] blockquote
+) {
+  margin: 0;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  color: inherit;
+}
+:where([data-garden] code, [data-garden] pre) {
+  padding: 0;
+  border-radius: 0;
+  background-color: transparent;
+  color: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  /* Inline code is usually a class name or a path — no spaces, so it cannot
+   * wrap and it pushes the viewport open. `anywhere` breaks it only when there
+   * is no other option, which is exactly when a 333px path meets a 390px
+   * screen. */
+  overflow-wrap: anywhere;
+}
+
+/* Form controls.
+ *
+ * A reminder about what the cascade layer does and does not do: it decides
+ * CONFLICTS. Where garden sets nothing at all, Bulma still applies unopposed —
+ * and Bulma styles bare `button` elements with a background, a border, padding
+ * and a box-shadow. Every plain button in a garden template inherited that,
+ * which is why the copy buttons in the styleguide looked like sunken boxes
+ * nobody designed.
+ *
+ * Preflight would strip this; until it is switched on, this does the same job
+ * for garden-owned markup. Anything that wants a border or a fill sets it with
+ * utilities, which beat this at 0-1-0. */
+:where(
+  [data-garden] button, [data-garden] input,
+  [data-garden] select, [data-garden] textarea
+) {
+  appearance: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background-color: transparent;
+  box-shadow: none;
+  color: inherit;
+  font: inherit;
+  line-height: inherit;
+}
+:where([data-garden] a) {
+  color: inherit;
+  text-decoration: none;
+}
+:where([data-garden] img, [data-garden] svg) {
+  display: block;
+}
+
+/* ===========================================================================
+ * SURFACES — the depth system.
+ *
+ * Three levels, and the rule is that a level only ever sits on a DIFFERENT
+ * level. Panel on page, card on panel or page, never panel on panel. That
+ * single constraint is what makes depth readable on a palette this dark, where
+ * shadows barely register.
+ *
+ * The dotted page texture comes from article-time's `main` rule and stays; it
+ * is the bottom of the stack, and every surface below reads against it.
+ * =========================================================================== */
+
+/* Page-level block that carries a background — use for prose and controls.
+ * Content that is already made of cards does NOT get one, or you stack two
+ * panels and the depth collapses. */
+[data-garden] .gd-panel {
+  padding: var(--spacing-gutter);
+  border: 1px solid --alpha(var(--color-accent-muted) / 40%);
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface-raised);
+  box-shadow: var(--shadow-md);
+}
+
+/* Same footprint, no fill — for grouping without adding a depth level. */
+[data-garden] .gd-panel-plain {
+  padding: var(--spacing-gutter);
+  border: 1px solid --alpha(var(--color-accent-muted) / 25%);
+  border-radius: var(--radius-md);
+}
+
+/* ===========================================================================
+ * HEADINGS
+ *
+ * The gold gradient on the page title is the site's signature and predates
+ * everything else here — it is carried over from article-time's
+ * `main.content h1.title` rather than reinvented. Two stacked pseudo-elements:
+ * one for the raised shadow, one for the gradient fill, both reading their text
+ * from the `data-heading` attribute.
+ *
+ * Levels are deliberately distinct so a page reads as a hierarchy rather than a
+ * uniform wall:
+ *   h1  gold gradient, largest, once per page
+ *   h2  light, with a gold rule that runs to the edge
+ *   h3  gold, smaller, no decoration
+ * =========================================================================== */
+[data-garden] .gd-h1 {
+  position: relative;
+  display: inline-block;
+  font-family: var(--font-heading);
+  font-size: var(--text-4xl);
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  line-height: 1.15;
+  color: var(--color-surface);
+}
+
+/* Raised shadow layer. */
+[data-garden] .gd-h1::before {
+  content: attr(data-heading);
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  color: var(--color-surface);
+  text-shadow:
+    -1px 0 1px --alpha(var(--color-accent-hover) / 70%),
+    0 1px 1px --alpha(var(--color-accent-hover) / 70%),
+    5px 5px 10px rgb(0 0 0 / 0.5),
+    -2px -2px 5px rgb(255 255 255 / 0.3);
+}
+
+/* Gradient fill layer, painted over the shadow. */
+[data-garden] .gd-h1::after {
+  content: attr(data-heading);
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  background: linear-gradient(
+    to bottom,
+    var(--color-accent) 32%,
+    var(--color-accent-hover) 50%,
+    var(--color-accent-muted) 80%
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: var(--color-surface);
+}
+
+@media (max-width: 640px) {
+  [data-garden] .gd-h1 {
+    font-size: var(--text-3xl);
+  }
+}
+
+/* Section heading: light, with a gold rule filling the remaining width. */
+[data-garden] .gd-h2 {
+  /* The component owns its spacing. `gd-h2 mb-3` appeared eight times and
+   * `gd-h3 mb-4` five — that is not a per-call decision, that is the heading
+   * rhythm, and leaving it at the call site is thirteen chances to drift. */
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-family: var(--font-heading);
+  font-size: var(--text-2xl);
+  font-weight: 600;
+  color: var(--color-ink-strong);
+}
+[data-garden] .gd-h2::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    --alpha(var(--color-accent) / 60%),
+    transparent
+  );
+}
+
+/* Sub-heading: gold, quiet, no decoration. */
+[data-garden] .gd-h3 {
+  margin-bottom: 1rem;
+  font-family: var(--font-heading);
+  font-size: var(--text-lg);
+  font-weight: 600;
+  color: var(--color-accent);
+}
+
+/* ===========================================================================
+ * BUTTONS
+ *
+ * A component, not a pile of utilities repeated at every call site. The reason
+ * is concrete: the scoped baseline sets `font: inherit` on form controls, which
+ * removed `button, a.button { font-weight: 600 }` from the old theme along with
+ * the background and border it was meant to strip. That weight was a real
+ * decision — button labels read as actionable partly because they are a little
+ * heavier than the prose around them — and a reset takes the good with the bad.
+ * Anything worth keeping has to be restated deliberately.
+ *
+ * Restating it here rather than in each template means the next button cannot
+ * forget it.
+ * =========================================================================== */
+[data-garden] .gd-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  background-color: var(--color-accent);
+  color: var(--color-surface-sunken);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  line-height: 1.4;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease-out,
+    border-color 0.2s ease-out,
+    color 0.2s ease-out;
+}
+[data-garden] .gd-button:hover {
+  background-color: var(--color-accent-hover);
+}
+[data-garden] .gd-button:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* Outline variant — same box, no fill, until you point at it. */
+[data-garden] .gd-button-secondary {
+  border-color: var(--color-accent);
+  background-color: transparent;
+  color: var(--color-accent);
+}
+[data-garden] .gd-button-secondary:hover {
+  background-color: var(--color-accent);
+  color: var(--color-surface-sunken);
+}
+
+/* ===========================================================================
+ * ROUND BUTTON
+ *
+ * Carried over from article-time's `round-button` mixin — the back-to-top
+ * control. Kept because it is one of the pieces of the old design worth
+ * keeping, rebuilt on tokens rather than hardcoded values.
+ *
+ * Changes from the original: the inner glow is softer, the focus ring is
+ * visible for keyboard users (the old one had none), and the hover lift is
+ * suppressed for anyone who asked for reduced motion.
+ * =========================================================================== */
+[data-garden] .gd-round-button {
+  --gd-round-size: 3rem; /* 48px */
+
+  /* Icon box, overridable per glyph. The default follows the original mixin
+   * (`$size - 13px`), which was tuned for Remixicon's `-s-` arrows: those draw
+   * a compact shape inside a 24x24 viewBox — `arrow-up-s-fill` covers only
+   * 12x6 of it. A glyph that fills its box, like `heart-line` at 20x18, needs
+   * a smaller container or it dwarfs the arrows in an identical button.
+   * Use .gd-round-button-full for those. */
+  --gd-round-icon: calc(var(--gd-round-size) - 13px);
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--gd-round-size);
+  height: var(--gd-round-size);
+  border: 1px solid --alpha(var(--color-accent-muted) / 50%);
+  border-radius: 50%;
+  background-color: var(--color-surface-sunken);
+  color: var(--color-accent);
+  cursor: pointer;
+
+  /* RAISED. Two shadows, not one: dark below-right, a faint light above-left.
+   * The pair is what makes the surface read as domed rather than as a flat
+   * disc with a drop shadow. An earlier version used only the dark one, and
+   * the button looked stuck on top of the page instead of formed out of it. */
+  box-shadow:
+    4px 4px 8px rgb(0 0 0 / 0.55),
+    -3px -3px 6px --alpha(var(--color-ink) / 9%);
+
+  transition:
+    color 0.3s ease-out,
+    border-color 0.2s ease-out,
+    box-shadow 0.2s ease-out,
+    transform 0.2s ease-out;
+}
+
+/* PRESSED. The same two shadows, inverted to inset, plus 2px of downward
+ * travel. Inverting the pair is the whole trick — it reads as the surface
+ * being pushed in. Lifting the button instead (which is what this did before)
+ * looks like it hops away from the pointer rather than responding to it. */
+[data-garden] .gd-round-button:hover,
+[data-garden] .gd-round-button:focus-visible {
+  border-color: var(--color-accent);
+  color: var(--color-accent-hover);
+  /* Pressed. The values are deliberately stronger than the raised state: an
+   * inset shadow has to darken a surface that is already near-black, so the
+   * same 30% black that reads fine on the outside is invisible on the inside.
+   * The light edge moves to the bottom-right, where a pressed dish catches it. */
+  background-color: rgb(0 0 0 / 0.25);
+  box-shadow:
+    inset 5px 5px 9px rgb(0 0 0 / 0.75),
+    inset -4px -4px 8px --alpha(var(--color-ink) / 12%);
+  transform: translateY(2px);
+}
+[data-garden] .gd-round-button:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+/* This used to name the element twice (`button.gd-round-button svg`) to reach
+ * specificity 0-2-2 and out-shout Bulma's `button:not(.round-button)
+ * :not(.is-round) svg`. Since Bulma moved into a cascade layer that is no
+ * longer necessary — any unlayered rule wins regardless of specificity.
+ *
+ * `transform: none` still is necessary: Bulma also nudges that svg by
+ * translate(-5px, 0), and where garden sets nothing, a layered rule still
+ * applies unopposed. Demoting is not the same as removing. */
+/* Icon size is derived from the button, not fixed: the original mixin used
+ * `$size - 13px`, so a 48px button carries a 35px glyph box. That reads large
+ * as a number, but the drawn shape inside a 24x24 viewBox is far smaller than
+ * its box — at a fixed 20px the arrow came out visibly undersized. */
+[data-garden] .gd-round-button svg {
+  width: var(--gd-round-icon);
+  height: var(--gd-round-icon);
+  /* Bulma also applies `translate(-5px, 0)` here — an optical nudge for buttons
+   * that pair an icon WITH a label. On an icon-only button it just pushes the
+   * glyph off centre, which is exactly how it looked. */
+  transform: none;
+  fill: currentColor;
+}
+
+/* One size variant. Only the custom property changes; width, height and the
+ * icon all follow from it. */
+[data-garden] .gd-round-button-lg {
+  --gd-round-size: 3.4375rem; /* 55px — what the back-to-top button uses */
+}
+
+/* For glyphs that fill their viewBox rather than sitting compactly inside it. */
+[data-garden] .gd-round-button-full {
+  --gd-round-icon: calc(var(--gd-round-size) * 0.45);
+}
+
+/* The shadow inversion stays — it is the feedback, not decoration. Only the
+ * 2px of travel is dropped, since that is the part that moves. */
+@media (prefers-reduced-motion: reduce) {
+  [data-garden] .gd-round-button {
+    transition:
+      color 0.3s ease-out,
+      border-color 0.2s ease-out,
+      box-shadow 0.2s ease-out;
+  }
+  [data-garden] .gd-round-button:hover,
+  [data-garden] .gd-round-button:focus-visible {
+    transform: none;
+  }
 }
 
 /* ===========================================================================
@@ -150,9 +612,9 @@
   max-height: 60vh;
   overflow: auto;
   padding: var(--spacing-gutter);
-  border: 1px solid --alpha(var(--color-gold) / 20%);
+  border: 1px solid --alpha(var(--color-accent) / 20%);
   border-radius: var(--radius-lg);
-  background-color: var(--color-dark-lighter);
+  background-color: var(--color-surface-raised);
   box-shadow: var(--shadow-lg);
 }
 
@@ -163,7 +625,7 @@
   top: -0.6rem;
   right: 2.5rem;
   border-right: 0.6rem solid transparent;
-  border-bottom: 0.6rem solid var(--color-dark-lighter);
+  border-bottom: 0.6rem solid var(--color-surface-raised);
   border-left: 0.6rem solid transparent;
 }
 
@@ -175,3 +637,4 @@
   display: none;
   -webkit-appearance: none;
 }
+

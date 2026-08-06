@@ -4,6 +4,41 @@ The tokens live in `themes/garden/assets/css/main.css`. What they look like
 lives at **`/pages/styleguide/`** — run `hugo server` and open it. This page is
 only the *why*.
 
+**Every code label on the styleguide shows what you TYPE in a template** — the
+complete class name (`text-ink-muted`, `gap-gutter`, `rounded-md`), never a bare
+token stem like `muted` or `4`. The page had both for a while, and mixed
+notation on the reference page is how mixed notation gets into the code that
+copies from it. The `--color-*` form appears only where the CSS custom property
+is genuinely what you want, namely inside component CSS.
+
+## Component or utilities
+
+The old theme did not fail because it had components. It failed because its
+components invented their own values — `card.scss` runs to 552 lines because
+colours, spacing and radii were decided afresh inside it. A component is not the
+problem; a component without tokens is.
+
+So the safeguard is not "avoid components", it is **every component composes
+from tokens**. That is checkable, and currently holds: zero raw colour or size
+values exist outside the token block.
+
+Write a component when one of these is true:
+
+1. **The same decision would repeat and could drift.** `gd-button` exists
+   because its font weight was lost once already — six utilities repeated at
+   every call site is six chances to forget one.
+2. **Utilities cannot express it.** `gd-h1` needs two pseudo-elements for the
+   gradient, `gd-round-button` needs the shadow inversion, `#resultsWrapper`
+   needs positioning against a distant ancestor.
+
+Do not write one because it "looks tidier". Giving every element a class builds
+a private framework, and a private framework becomes something to fight — which
+is precisely the position Bulma has us in now.
+
+Layout stays in the markup. The card is a component; the grid it sits in is not.
+`grid gap-gutter sm:grid-cols-2` at the call site is more honest than
+`gd-card-grid`, because the grid genuinely differs per page.
+
 **Building a component means picking from the styleguide, not inventing.** That
 rule is the whole point. Between 2020 and 2026 every component got its own
 design round, which is how 4.355 lines of SCSS accumulated across 29 files with
@@ -66,14 +101,57 @@ Named steps carry the page rhythm; the numeric scale (`p-2`, `gap-6`, …) is fo
 fine adjustment inside a component. Text-heavy pages benefit more from air than
 from density, and this is a blog before it is anything else.
 
-### Colour — dark and gold
+### Colour — dark and gold, named by role
 
-Unchanged since 2020: *"Eigentlich würde ich gerne Schwarz/Dunkelgrau und Gold
+Values unchanged since 2020: *"Eigentlich würde ich gerne Schwarz/Dunkelgrau und Gold
 verwenden. Ansonsten schlicht halten, eben eher im Minimalistischem Style."*
 
-Three dark surface steps (sunken, default, raised), three text weights, three
-gold steps, plus four growth-stage colours for the digital-garden signal. That
-is the entire palette. New colours need a reason that survives the styleguide.
+Three surface steps, three ink weights, three accent steps, three state
+colours, plus four growth-stage tints. That is the entire palette. New colours
+need a reason that survives the styleguide.
+
+**The tokens are named for their role, not their appearance.** The first
+version used `--color-dark`, `--color-light`, `--color-gold` and produced
+absurdities like `--color-dark-lighter` and `--color-light-darker` — names that
+contradict themselves and say nothing about when to reach for them. Worse,
+`dark` was a surface while `light` was text, so one naming pattern covered two
+unrelated jobs.
+
+| Group | Tokens | Answers |
+|---|---|---|
+| Surface | `surface`, `surface-raised`, `surface-sunken` | what things sit on |
+| Ink | `ink`, `ink-strong`, `ink-muted` | what you read |
+| Accent | `accent`, `accent-hover`, `accent-muted` | what you act on |
+| State | `success`, `warning`, `error` | what happened |
+| Growth | `seedling`, `budding`, `evergreen`, `withered` | icon tints only, never surfaces or text |
+
+Role names also survive a palette change: if the site ever stops being
+dark-on-gold, `surface-raised` is still the raised surface.
+
+#### Ink is warm, surfaces stay cool — on purpose
+
+The ink ramp was rebuilt in 2026 for two reasons. The old steps were 95 / 90 / 72
+percent lightness, and five points between heading and body does not survive
+antialiasing — everything read as one weight, which is exactly how it looked.
+They are now 96 / 85 / 63. And the hue moved from 190 (cyan) to 40, the same
+family as the gold accent at 35, because cool text sitting almost opposite a
+warm accent quietly competes with it.
+
+Saturation falls as the text gets quieter (25 → 12 → 8 percent), so the muted
+step recedes instead of becoming a second accent.
+
+The surfaces were deliberately **not** moved with it. They stay at hue 190,
+which leaves a warm-text-on-cool-surface contrast. Two alternatives were
+computed and rejected: desaturating the surfaces to near-neutral, and rotating
+them to hue 40 with the text. The contrast is kept because it makes text read as
+sitting *in front of* the surface rather than merged into it. If it ever grates,
+the desaturation route (`hsl(190 4% …)`) is the smaller of the two changes.
+
+Contrast against the default surface: 15.5 / 12.1 / 6.7 to 1 — all comfortably
+past WCAG AA, the muted step included.
+
+The styleguide shows hex values **computed from the live tokens** rather than a
+hand-maintained list, because the hand-maintained one had already drifted.
 
 ---
 

@@ -4,6 +4,40 @@
 # component; `article-time` keeps serving everything not migrated yet.
 theme: ["garden", "article-time"]
 
+# Tailwind live reload — Hugo's own mechanism, per the css.TailwindCSS docs.
+#
+# The problem it solves: Tailwind's dependency on the templates lives inside the
+# CLI (`@source` in themes/garden/assets/css/main.css), so Hugo cannot see it.
+# Editing a class in a template leaves main.css untouched, the stylesheet is not
+# regenerated, and `hugo server` keeps serving CSS without the new utility —
+# silently, which is the worst kind of failure.
+#
+# The three pieces work together:
+#   buildStats     writes hugo_stats.json on every build, listing every class,
+#                  id and tag the templates actually emitted
+#   mounts         puts that file under assets/watching/, which is Hugo's
+#                  convention for "watch this and rebuild what depends on it"
+#   cachebusters   expires the cached `css` transform whenever it changes
+#
+# NOTE: hugo_stats.json is NOT read by Tailwind here — `@source` deliberately
+# points at the garden directories instead. Sourcing the stats file would drag
+# in every Bulma class name the old theme still emits, and Tailwind would
+# generate a utility for each collision (measured: 44 of them, overriding Bulma
+# because this stylesheet loads second). The file serves only as a change signal.
+#
+# Use `hugo server --disableFastRender`: in fast-render mode a class that is not
+# yet in hugo_stats.json does not surface until the server is restarted.
+build:
+  buildStats:
+    enable: true
+  cachebusters:
+    - source: 'assets/watching/hugo_stats\.json'
+      target: 'css'
+module:
+  mounts:
+    - source: "hugo_stats.json"
+      target: "assets/watching/hugo_stats.json"
+
 defaultContentLanguage: de
 languages:
   de:

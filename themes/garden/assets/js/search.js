@@ -158,12 +158,12 @@
   function heading(title, subtitle) {
     const frag = document.createDocumentFragment();
     const h2 = document.createElement("h2");
-    h2.className = "mb-2 text-center font-heading text-xl text-light";
+    h2.className = "mb-2 text-center font-heading text-xl text-ink";
     h2.textContent = title;
     frag.appendChild(h2);
     if (subtitle) {
       const h3 = document.createElement("h3");
-      h3.className = "mb-4 text-center text-base text-gold";
+      h3.className = "mb-4 text-center text-base text-accent";
       h3.textContent = subtitle;
       frag.appendChild(h3);
     }
@@ -190,26 +190,26 @@
 
   function resultNode(item) {
     const article = document.createElement("article");
-    article.className = "border-b border-gold-dark/30 py-5 last:border-b-0";
+    article.className = "border-b border-accent-muted/30 py-5 last:border-b-0";
 
     const title = document.createElement("a");
-    title.className = "mb-1 block font-heading text-lg text-gold-light hover:text-gold";
+    title.className = "mb-1 block font-heading text-lg text-accent-hover hover:text-accent";
     title.href = item.permalink;
     title.title = item.showTitle;
     title.textContent = item.showTitle;
 
     const info = document.createElement("p");
-    info.className = "mb-2 text-sm text-light-darker";
+    info.className = "mb-2 text-sm text-ink-muted";
     if (item.rawTags) info.appendChild(meta("price-tag-3-line", item.rawTags));
     if (item.publishedOn) info.appendChild(meta("calendar-line", item.publishedOn));
     if (item.updatedOn) info.appendChild(meta("pencil-line", item.updatedOn));
 
     const excerpt = document.createElement("p");
-    excerpt.className = "text-light";
+    excerpt.className = "text-ink";
     excerpt.textContent = item.showContent.slice(0, 250) + " […] ";
 
     const more = document.createElement("a");
-    more.className = "text-gold hover:text-gold-light";
+    more.className = "text-accent hover:text-accent-hover";
     more.href = item.permalink;
     more.title = item.showTitle;
     more.textContent = "weiterlesen";
@@ -221,7 +221,7 @@
 
   function timing(ms) {
     const div = document.createElement("div");
-    div.className = "pt-4 text-center text-xs text-light-darker";
+    div.className = "pt-4 text-center text-sm text-ink-muted";
     div.textContent = `Die Suche brauchte ${Math.round(ms)} ms.`;
     return div;
   }

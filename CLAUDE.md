@@ -43,13 +43,16 @@ Wer eine Datei sucht: `themes/<theme>/layouts/…`, nicht `layouts/…`.
 
 ## Tailwind-Regeln (teuer gelernt)
 
-Solange beide Themes laufen, gilt in `themes/garden/assets/css/main.css`:
+Solange beide Themes laufen:
 
-1. **Kein Preflight.** Tailwinds Reset und Bulmas Normalize würden sich prügeln, der noch Bulma-gestylte Teil der Seite bräche sichtbar. Erst anschalten, wenn das letzte Bulma-Template weg ist — das ist der Meilenstein, an dem `themes/article-time/` gelöscht wird.
-2. **`source(none)` plus explizites `@source`.** Ohne das scannt Tailwind vom Projektverzeichnis aus und findet das *gebaute* HTML voller Bulma-Klassen — gemessen 44 ungewollte Utilities, die Bulma überschrieben hätten.
-3. **`@source`-Pfade sind projektrelativ**, nicht dateirelativ. Hugo pipet das CSS über stdin an die CLI, es gibt kein umgebendes Verzeichnis. Ein falscher Pfad erzeugt stillschweigend null Utilities.
-4. **Tailwind liest auch Kommentare.** Ein bloßes Wort in einem Template-Kommentar, das zufällig ein Utility-Name ist, wird als echte Regel erzeugt und gewinnt gegen Bulma. Ist genau so passiert. In Prosa umschreiben oder trennen.
-5. **Tokens gehören in `@theme static`**, sonst wirft Tailwind ungenutzte Variablen weg und der Styleguide steht ohne da.
+1. **Bulma liegt in einem Cascade Layer**, Garden nicht. Ungelayertes CSS schlägt *jedes* gelayerte, unabhängig von Spezifität und Reihenfolge — dadurch gewinnt Garden immer, ohne je überbieten zu müssen. Der Versuch, Bulma stattdessen per Spezifität zu schlagen, hat reihenweise Utilities lahmgelegt: `text-2xl` auf einem Absatz kam als 16 px, `mb-3` tat nichts, `space-y-*` fiel zusammen. **Herunterstufen statt überschreien.**
+2. **Kein Preflight.** Tailwinds Reset und Bulmas Normalize würden sich prügeln. Erst anschalten, wenn das letzte Bulma-Template weg ist — dann fällt auch der gescopete Ersatz-Reset weg.
+3. **`source(none)` plus explizites `@source`.** Ohne das scannt Tailwind vom Projektverzeichnis aus und findet das *gebaute* HTML voller Bulma-Klassen — gemessen 44 ungewollte Utilities. `@source` muss auf **jeden** Ort zeigen, an dem Klassennamen stehen, auch auf JavaScript, das DOM baut.
+4. **`@source`-Pfade sind projektrelativ**, nicht dateirelativ. Hugo pipet das CSS über stdin an die CLI. Ein falscher Pfad erzeugt stillschweigend null Utilities.
+5. **Tailwind liest auch Kommentare.** Ein bloßes Wort in Prosa, das zufällig ein Utility-Name ist, wird als echte Regel erzeugt. In Prosa umschreiben oder trennen.
+6. **Klassennamen nie aus Variablen zusammensetzen.** Tailwind extrahiert nur vollständige Strings; `bg-{{ .name }}` erzeugt gar nichts, ohne Warnung.
+7. **Tokens gehören in `@theme static`**, sonst wirft Tailwind ungenutzte Variablen weg.
+8. **Dev-Server mit `--disableFastRender`** starten, sonst tauchen neue Klassen erst nach Neustart auf.
 
 ## Beim Schreiben von Artikeln
 

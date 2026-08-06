@@ -31,7 +31,7 @@ redesign, not top to bottom.
 |---|---|
 | `_partials/_base/head.html` | ✅ garden — loads both stylesheets |
 | `_partials/_base/navigation.html` | ✅ garden — plain scaffold, design still open |
-| `_partials/card.html` | ⬜ article-time — 552 lines of SCSS, the biggest win |
+| `_partials/card.html` | ⬜ article-time — 552 lines of SCSS, the biggest win. **The grid wrapper moves with it**, see below |
 | `_partials/_base/hero.html` | ⬜ article-time — **keep for now** (Angel wants it as is) |
 | `_partials/_base/footer.html` | ⬜ article-time |
 | `_partials/_base/cookie-banner.html` | ⬜ article-time |
@@ -42,6 +42,24 @@ redesign, not top to bottom.
 | `_partials/widgets/*.html` (9 files) | ⬜ article-time |
 | `_markup/render-*.html` (3), `_shortcodes/*.html` (4) | ⬜ article-time — markup only, low priority |
 | `_partials/_base/seo.html`, `validate-growth-stage.html` | ⬜ article-time — no styling, may never need moving |
+
+### The card is not one file
+
+`card.html` renders a single card, but its layout is decided by a wrapper that
+lives in each consumer. Redesigning the card without redesigning the wrapper
+gets you well-designed cards in a broken grid.
+
+- **The wrapper**, currently Bulma's fixed-grid in `home.html:6-7`:
+  `fixed-grid has-1-cols-mobile … has-3-cols-fullhd` plus
+  `grid is-column-gap-7 is-row-gap-4 h-feed`. In Tailwind this becomes plain
+  `grid` with responsive column counts and `gap-gutter`. Keep `h-feed` — it is
+  a microformat, not styling.
+- **The cell**, `card.html:3`: `cell` with a conditional `is-row-span-2` for
+  term pages that carry an image.
+- **Five consumers** must all be migrated or none: `home.html` (three call
+  sites), `list.html` (two), `page/archive.html`, `404.html`.
+
+Card, wrapper and cell are therefore one unit of work, not three.
 
 ## JavaScript
 
@@ -76,13 +94,40 @@ off is the real progress signal.
 - [ ] **Delete `jquery.js`.** When the JS table has no ⬜ left. Remove it from
       the bundle in `head.html` too.
 
+## How the two stylesheets coexist
+
+One arrangement makes everything else work, and it is worth understanding before
+touching either stylesheet:
+
+| Layer | What | Wins against |
+|---|---|---|
+| `@layer bulma` | article-time's whole compiled stylesheet | nothing |
+| unlayered, specificity 0 | garden's scoped baseline (`:where([data-garden] …)`) | Bulma |
+| unlayered, 0-1-0 | Tailwind utilities | both |
+
+**Any unlayered declaration beats every layered one, regardless of specificity
+or source order.** Wrapping Bulma in a cascade layer therefore demotes all of it
+at once, and garden never has to out-specify anything.
+
+The first attempt did the opposite: it raised the baseline to `[data-garden] p`
+(0-1-1) to out-shout Bulma, which then beat the utilities it was meant to let
+through. `text-2xl` on a paragraph rendered at 16px, `mb-3` on a heading did
+nothing, `space-y-*` collapsed, and a Bulma rule at 0-2-2 pushed the round
+button's icon 5px off centre. Each fix broke something else. Demote, do not
+out-shout.
+
+The wrapping happens in `themes/garden/layouts/_partials/_base/head.html` and is
+safe only because the compiled sheet contains no `@charset` and no `@import` —
+both must precede any `@layer`. Keep the published path at the site root:
+Bulma's `url()` references to fonts and header images are relative.
+
 ## Rules of thumb
 
 1. **Never use a Bulma class name in a garden template.** `navbar`, `icon`,
    `input`, `control`, `field`, `card`, `box`, `title`, `content`, `hero`,
-   `columns`, `column`. Reusing one drags Bulma's whole rule set back onto an
-   element you are styling with utilities, and Bulma wins. This produced a
-   visibly broken navigation once already.
+   `columns`, `column`. Bulma's rules are layered now so utilities still win,
+   but the element inherits a pile of styling nobody asked for, and reading the
+   result becomes guesswork.
 2. **Check the JS contract before restyling.** Grep `themes/article-time/assets/js`
    for the IDs and classes the template carries. Keep them verbatim, style
    around them — or port the script in the same step and own both ends.
@@ -97,5 +142,10 @@ off is the real progress signal.
    literal strings; a template writing `bg-` followed by `{{ .name }}` produces
    no rule at all, silently, and the element renders unstyled. Carry the
    finished class name as data instead — see how `page/styleguide.html` does it.
-6. **One component per commit.** Migrated template, its styles, its JS if any,
+6. **Run the dev server with `--disableFastRender`.** Tailwind live reload is
+   wired up natively (`build.buildStats` + `build.cachebusters` + the
+   `assets/watching` mount, see `config/_default/config.yaml`), but in
+   fast-render mode a class that is not yet in `hugo_stats.json` does not
+   surface until the server restarts.
+7. **One component per commit.** Migrated template, its styles, its JS if any,
    and this file updated together.

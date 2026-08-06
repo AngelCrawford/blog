@@ -30,22 +30,43 @@
           Preflight is off (see assets/css/main.css), so it adds utilities
           without resetting anything underneath it.
 
-       Bulma's link comes FIRST so Tailwind utilities win on equal
-       specificity. When the last Bulma template is gone, delete block 1,
-       switch Preflight on, and remove themes/article-time.
+       Bulma is wrapped in a cascade layer — see below. That is what keeps the
+       two stylesheets from fighting. When the last Bulma template is gone,
+       delete block 1, switch Preflight on, and remove themes/article-time.
        =================================================================== */ -}}
 <!-- Style and Script -->
 {{- $sass := resources.Get "scss/main.scss" }}
-{{- $toCssOpt := (dict "targetPath" "style.css" "transpiler" "dartsass" "enableSourceMap" true) }}
-{{- $style := $sass | toCSS $toCssOpt | postCSS }}
+{{- $toCssOpt := (dict "targetPath" "style-raw.css" "transpiler" "dartsass" "enableSourceMap" true) }}
+
+{{- /* BULMA GOES INTO A CASCADE LAYER.
+       In the cascade, ANY unlayered declaration beats EVERY layered one,
+       regardless of specificity or source order. Wrapping the compiled Bulma
+       output in `@layer bulma` therefore demotes all of it below garden's
+       unlayered rules in one move.
+
+       Without this, every collision had to be won by hand, and Bulma kept
+       winning on specificity: `.content ul` (0-1-1) beat utilities (0-1-0),
+       `button:not(.round-button):not(.is-round) svg` (0-2-2) beat
+       `[data-garden] .gd-round-button svg` (0-2-1). Countering each one meant
+       raising the scoped baseline's specificity, which in turn beat the
+       utilities it was supposed to let through — `text-2xl` on a paragraph
+       silently rendered at 16px. Whack-a-mole with no end.
+
+       Safe here because the compiled sheet contains no @charset and no
+       @import, both of which must precede any @layer.
+
+       Wrapped BEFORE postCSS so PurgeCSS still sees and prunes the rules. */ -}}
+{{- /* Target path stays at the site root. Bulma's compiled CSS references its
+       fonts and header images RELATIVELY (`url("fonts/…")`, `url("images/…")`),
+       so those resolve against wherever the stylesheet is published. Moving it
+       to css/style.css silently 404'd every font and background image. */ -}}
+{{- $raw := $sass | toCSS $toCssOpt }}
+{{- $style := printf "@layer bulma {\n%s\n}" $raw.Content | resources.FromString "style.css" | postCSS }}
 {{- if hugo.IsProduction }}
     {{ $style = $style | minify | fingerprint | resources.PostProcess }}
 {{- end }}
     <link href="{{ $style.RelPermalink }}" rel="stylesheet">
 
-{{- /* Tailwind runs through resources.PostProcess in production so it executes
-       AFTER every template has rendered — that is what fills hugo_stats.json,
-       which main.css scans via @source for the classes actually used. */ -}}
 {{- $tw := resources.Get "css/main.css" | css.TailwindCSS (dict "minify" hugo.IsProduction) }}
 {{- if hugo.IsProduction }}
     {{ $tw = $tw | fingerprint | resources.PostProcess }}

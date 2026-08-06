@@ -1,57 +1,66 @@
 {{ define "main" }}
 {{- /* Living styleguide.
  *
- * Every swatch, step and sample below is rendered FROM the tokens in
+ * Every swatch, step and sample is rendered FROM the tokens in
  * themes/garden/assets/css/main.css. Change a token and this page follows.
  * A styleguide maintained by hand drifts within a month.
  *
- * WHY THE CLASS NAMES ARE SPELLED OUT IN FULL BELOW, never assembled:
- * Tailwind extracts complete literal strings from the source. A template that
- * writes bg- followed by a variable produces nothing at all — the utility is
- * simply never generated, with no warning, and the swatch renders transparent.
- * So each entry carries its finished class name as data.
- *
- * When adding a token, add its row here in the same commit.
+ * WHY CLASS NAMES ARE SPELLED OUT IN FULL, never assembled from variables:
+ * Tailwind extracts complete literal strings. A template writing bg- followed
+ * by a variable produces nothing at all — no rule, no warning, and the element
+ * renders unstyled. Each entry therefore carries its finished class as data.
  */ -}}
 
+{{- $sprite := "fonts/remixicon/remixicon.symbol.svg" | relURL -}}
+{{- $v := .Site.Params.remixicon_version -}}
+
 {{- $surfaces := slice
-  (dict "token" "--color-dark" "swatch" "bg-dark" "use" "Standardfläche")
-  (dict "token" "--color-dark-lighter" "swatch" "bg-dark-lighter" "use" "Erhöht: Karten, Panels")
-  (dict "token" "--color-dark-darker" "swatch" "bg-dark-darker" "use" "Vertieft: Seitenhintergrund")
+  (dict "token" "--color-surface" "cls" "bg-surface" "swatch" "bg-surface" "use" "Standardfläche")
+  (dict "token" "--color-surface-raised" "cls" "bg-surface-raised" "swatch" "bg-surface-raised" "use" "Erhöht: Karten, Panels")
+  (dict "token" "--color-surface-sunken" "cls" "bg-surface-sunken" "swatch" "bg-surface-sunken" "use" "Vertieft: Seitengrund")
 -}}
 {{- $inks := slice
-  (dict "token" "--color-light" "swatch" "bg-light" "ink" "text-light" "use" "Fließtext")
-  (dict "token" "--color-light-lighter" "swatch" "bg-light-lighter" "ink" "text-light-lighter" "use" "Überschriften")
-  (dict "token" "--color-light-darker" "swatch" "bg-light-darker" "ink" "text-light-darker" "use" "Sekundärtext")
+  (dict "token" "--color-ink" "cls" "text-ink" "swatch" "bg-ink" "use" "Fließtext")
+  (dict "token" "--color-ink-strong" "cls" "text-ink-strong" "swatch" "bg-ink-strong" "use" "Überschriften")
+  (dict "token" "--color-ink-muted" "cls" "text-ink-muted" "swatch" "bg-ink-muted" "use" "Sekundärtext")
 -}}
 {{- $accents := slice
-  (dict "token" "--color-gold" "swatch" "bg-gold" "ink" "text-gold" "use" "Links, Fokus, aktiv")
-  (dict "token" "--color-gold-light" "swatch" "bg-gold-light" "ink" "text-gold-light" "use" "Hover")
-  (dict "token" "--color-gold-dark" "swatch" "bg-gold-dark" "ink" "text-gold-dark" "use" "Ränder, Trenner")
+  (dict "token" "--color-accent" "cls" "text-accent" "swatch" "bg-accent" "use" "Links, Fokus, aktiv")
+  (dict "token" "--color-accent-hover" "cls" "text-accent-hover" "swatch" "bg-accent-hover" "use" "Hover")
+  (dict "token" "--color-accent-muted" "cls" "border-accent-muted" "swatch" "bg-accent-muted" "use" "Ränder, Trenner")
 -}}
-{{- $stages := slice
-  (dict "label" "seedling" "token" "--color-seedling" "swatch" "bg-seedling" "use" "Keimling — frisch, unfertig")
-  (dict "label" "budding" "token" "--color-budding" "swatch" "bg-budding" "use" "Knospend — in Entwicklung")
-  (dict "label" "evergreen" "token" "--color-evergreen" "swatch" "bg-evergreen" "use" "Immergrün — ausgereift")
-  (dict "label" "withered" "token" "--color-withered" "swatch" "bg-withered" "use" "Verwelkt — veraltet")
+{{- $states := slice
+  (dict "token" "--color-success" "cls" "text-success" "swatch" "bg-success" "ink" "text-success" "edge" "border-l-success" "use" "Erfolg, gültig, fertig")
+  (dict "token" "--color-warning" "cls" "text-warning" "swatch" "bg-warning" "ink" "text-warning" "edge" "border-l-warning" "use" "Warnung, veraltet")
+  (dict "token" "--color-error" "cls" "text-error" "swatch" "bg-error" "ink" "text-error" "edge" "border-l-error" "use" "Fehler, ungültig")
 -}}
+{{- /* Each step carries the ink colour it is meant to be used with, and the
+       sample is rendered in exactly that pairing. Showing size without colour
+       invites the two to be chosen independently, which is how a scale drifts:
+       a 28px heading in muted grey is a decision nobody made on purpose. */ -}}
 {{- $sizes := slice
-  (dict "cls" "text-xs" "px" "12" "use" "Zeitstempel, Zähler")
-  (dict "cls" "text-sm" "px" "14" "use" "Bildunterschriften, Metadaten")
-  (dict "cls" "text-base" "px" "16" "use" "Fließtext")
-  (dict "cls" "text-lg" "px" "18" "use" "Einleitungsabsätze")
-  (dict "cls" "text-xl" "px" "22" "use" "Kartentitel")
-  (dict "cls" "text-2xl" "px" "28" "use" "Abschnittsüberschriften")
-  (dict "cls" "text-3xl" "px" "36" "use" "Seitentitel")
-  (dict "cls" "text-4xl" "px" "48" "use" "Hero")
+  (dict "cls" "text-sm" "px" "14" "ink" "text-ink-muted" "inkToken" "text-ink-muted"
+        "sample" "Veröffentlicht am 6. August" "use" "Metadaten, Bildunterschriften — kleinste Stufe")
+  (dict "cls" "text-base" "px" "16" "ink" "text-ink" "inkToken" "text-ink"
+        "sample" "Der Blog wächst langsam." "use" "Fließtext")
+  (dict "cls" "text-lg" "px" "18" "ink" "text-ink" "inkToken" "text-ink"
+        "sample" "Ein Einleitungsabsatz." "use" "Lead, Intro")
+  (dict "cls" "text-xl" "px" "22" "ink" "text-ink-strong" "inkToken" "text-ink-strong"
+        "sample" "Kartentitel" "use" "Titel auf Karten")
+  (dict "cls" "text-2xl" "px" "28" "ink" "text-ink-strong" "inkToken" "text-ink-strong"
+        "sample" "Abschnitt" "use" "Abschnittsüberschrift · gd-h2")
+  (dict "cls" "text-3xl" "px" "36" "ink" "text-accent" "inkToken" "text-accent"
+        "sample" "Seitentitel" "use" "Seitentitel auf schmalen Bildschirmen")
+  (dict "cls" "text-4xl" "px" "48" "ink" "text-accent" "inkToken" "text-accent"
+        "sample" "Hero" "use" "Größte Stufe · gd-h1 legt den Goldverlauf darüber")
 -}}
 {{- $spaces := slice
-  (dict "cls" "w-1" "name" "1" "px" "4" "use" "Basiseinheit")
-  (dict "cls" "w-2" "name" "2" "px" "8" "use" "Innerhalb einer Zeile")
-  (dict "cls" "w-3" "name" "3" "px" "12" "use" "Icon zu Text")
-  (dict "cls" "w-4" "name" "4" "px" "16" "use" "Innerhalb einer Komponente")
-  (dict "cls" "w-gutter" "name" "gutter" "px" "24" "use" "Zwischen Blöcken")
-  (dict "cls" "w-section" "name" "section" "px" "80" "use" "Zwischen Abschnitten")
+  (dict "cls" "w-1" "name" "1" "beispiel" "gap-1" "px" "4" "use" "Basiseinheit")
+  (dict "cls" "w-2" "name" "2" "beispiel" "gap-2" "px" "8" "use" "Innerhalb einer Zeile")
+  (dict "cls" "w-3" "name" "3" "beispiel" "gap-3" "px" "12" "use" "Icon zu Text")
+  (dict "cls" "w-4" "name" "4" "beispiel" "p-4" "px" "16" "use" "Innerhalb einer Komponente")
+  (dict "cls" "w-gutter" "name" "gutter" "beispiel" "gap-gutter" "px" "24" "use" "Zwischen Blöcken")
+  (dict "cls" "w-section" "name" "section" "beispiel" "mb-section" "px" "80" "use" "Zwischen Abschnitten")
 -}}
 {{- $radii := slice
   (dict "cls" "rounded-sm" "px" "4" "use" "Buttons, Felder, Badges")
@@ -63,34 +72,100 @@
   (dict "cls" "shadow-md" "use" "Karten, Panels")
   (dict "cls" "shadow-lg" "use" "Overlays, Suchergebnisse")
 -}}
+{{- $stages := slice
+  (dict "label" "seedling" "icon" "seedling-line" "ink" "text-seedling" "use" "Keimling — frisch, unfertig")
+  (dict "label" "budding" "icon" "flower-line" "ink" "text-budding" "use" "Knospend — in Entwicklung")
+  (dict "label" "evergreen" "icon" "tree-line" "ink" "text-evergreen" "use" "Immergrün — ausgereift")
+  (dict "label" "withered" "icon" "skull-2-line" "ink" "text-withered" "use" "Verwelkt — veraltet")
+-}}
+{{- /* Every Remixicon the templates currently reference. Adding one to a
+       template means adding it here, or nobody will know it exists. */ -}}
+{{- $icons := slice
+  "article-line" "stack-line" "price-tag-3-line" "bookmark-line"
+  "calendar-line" "pencil-line" "timer-line" "heart-line"
+  "question-answer-line" "lightbulb-flash-line" "links-fill" "search-2-line"
+  "close-fill" "arrow-left-s-line" "arrow-right-s-line" "arrow-up-s-fill"
+  "skip-back-line" "skip-forward-line" "skull-2-line" "check-fill"
+-}}
 
-<div class="mx-auto max-w-4xl px-gutter py-section text-light">
+{{- /* pt-gutter, not pt-section: Bulma's `main.section` already contributes
+       48px of top padding, and stacking 80px on top left a hole under the
+       navigation. */ -}}
+<div data-garden class="mx-auto max-w-5xl px-gutter pt-gutter pb-section font-body text-base text-ink">
 
-  <header class="mb-section">
-    <h1 class="mb-4 font-heading text-4xl text-light-lighter">{{ .Title }}</h1>
-    <div class="max-w-prose text-lg text-light-darker">{{ .Content }}</div>
+  <header class="gd-panel mb-section">
+    <h1 class="gd-h1 mb-4" data-heading="{{ .Title }}">{{ .Title }}</h1>
+    <div class="flex flex-col gap-4 text-lg text-ink">{{ .Content }}</div>
   </header>
 
   {{- /* ------------------------------------------------------------------ */ -}}
   <section class="mb-section">
-    <h2 class="mb-2 font-heading text-2xl text-light-lighter">Farben</h2>
-    <p class="mb-gutter max-w-prose text-light-darker">
+    <h2 class="gd-h2">Farben</h2>
+    <p class="gd-panel mb-gutter">
       Dunkel plus Gold, minimalistisch — 2020 entschieden und seitdem unverändert.
       Drei Flächenstufen reichen; eine vierte lädt nur zur Diskussion ein.
+      Jede Karte zeigt dieselbe Farbe in drei Formen, meistbenutzte zuerst: die
+      Utility-Klasse fürs Template, die CSS-Variable für Komponenten-Stylesheets,
+      den Hex-Wert für alles andere. <strong class="text-ink-strong">Jede Zeile
+      ist per Klick kopierbar.</strong>
     </p>
 
     {{- range slice
       (dict "title" "Flächen" "items" $surfaces)
       (dict "title" "Text" "items" $inks)
       (dict "title" "Akzent" "items" $accents)
-      (dict "title" "Wachstumsstufen" "items" $stages) }}
-    <h3 class="mt-gutter mb-3 font-heading text-lg text-gold">{{ .title }}</h3>
-    <ul class="grid gap-3 sm:grid-cols-3">
+      (dict "title" "Status" "items" $states) }}
+    <h3 class="gd-h3 mt-gutter">{{ .title }}</h3>
+    <ul class="grid gap-gutter sm:grid-cols-2 lg:grid-cols-3">
       {{- range .items }}
-      <li class="rounded-md border border-gold-dark/40 bg-dark p-3">
-        <span class="mb-2 block h-10 rounded-sm {{ .swatch }}"></span>
-        <code class="block text-sm text-light">{{ .token }}</code>
-        <span class="text-xs text-light-darker">{{ .use }}</span>
+      {{- /* One flat block per colour. An earlier version nested bordered
+             buttons inside a bordered card — two frames around one thing,
+             which read as cards inside cards. */ -}}
+      <li class="overflow-hidden rounded-md border border-accent-muted/40 bg-surface-raised">
+        {{- /* Bottom rule, or a swatch whose colour matches the card it sits on
+                 has no visible edge at all — bg-surface-raised on a raised card
+                 was simply invisible. */ -}}
+        <span class="block h-20 w-full border-b border-accent-muted/40 {{ .swatch }}"></span>
+        <div class="flex flex-col gap-3 p-4">
+          {{- /* Three forms of the same colour, most-used first:
+                   1. the utility class you type in a template
+                   2. the custom property, for component CSS
+                   3. the hex value, for anywhere else
+                 Showing only the custom property — as this card did — meant the
+                 page named colours one way and the type scale another.
+
+                 Only a bottom rule separates the rows; a framed control inside
+                 an already framed card reads as a box in a box. */ -}}
+          <button type="button" data-copy="{{ .cls }}"
+                  class="group flex cursor-pointer items-baseline justify-between gap-3 border-b border-accent-muted/30 pb-3 text-left hover:border-accent">
+            <span class="flex min-w-0 items-center gap-2">
+              <svg data-copy-icon class="size-4 shrink-0 fill-current text-ink-muted transition-colors group-hover:text-accent" aria-hidden="true"><use href="{{ $sprite }}?t={{ $v }}#stack-line"></use></svg>
+              <code class="truncate text-sm text-accent">{{ .cls }}</code>
+            </span>
+            <span data-copy-label class="shrink-0 text-sm text-accent opacity-0 transition-opacity group-hover:opacity-100">kopieren</span>
+          </button>
+          <button type="button" data-copy="{{ .token }}"
+                  class="group flex cursor-pointer items-baseline justify-between gap-3 border-b border-accent-muted/30 pb-3 text-left hover:border-accent">
+            <span class="flex min-w-0 items-center gap-2">
+              <svg data-copy-icon class="size-4 shrink-0 fill-current text-ink-muted transition-colors group-hover:text-accent" aria-hidden="true"><use href="{{ $sprite }}?t={{ $v }}#stack-line"></use></svg>
+              <code class="truncate text-sm text-accent">{{ .token }}</code>
+            </span>
+            <span data-copy-label class="shrink-0 text-sm text-accent opacity-0 transition-opacity group-hover:opacity-100">kopieren</span>
+          </button>
+          {{- /* No hardcoded hex here. styleguide.js reads the computed value
+                 of the token and fills both the label and the copy target, so
+                 the page cannot drift from main.css — hand-typed values had
+                 already drifted by a digit or two. */ -}}
+          <button type="button" data-hex-for="{{ .token }}"
+                  class="group flex cursor-pointer items-baseline justify-between gap-3 border-b border-accent-muted/30 pb-3 text-left hover:border-accent">
+            <span class="flex min-w-0 items-center gap-2">
+              <svg data-copy-icon class="size-4 shrink-0 fill-current text-ink-muted transition-colors group-hover:text-accent" aria-hidden="true"><use href="{{ $sprite }}?t={{ $v }}#stack-line"></use></svg>
+              <code class="truncate text-sm text-accent" data-hex-label>…</code>
+            </span>
+            <span data-copy-label class="shrink-0 text-sm text-accent opacity-0 transition-opacity group-hover:opacity-100">kopieren</span>
+          </button>
+          <span class="text-sm text-ink-muted">{{ .use }}</span>
+        </div>
       </li>
       {{- end }}
     </ul>
@@ -99,81 +174,198 @@
 
   {{- /* ------------------------------------------------------------------ */ -}}
   <section class="mb-section">
-    <h2 class="mb-2 font-heading text-2xl text-light-lighter">Schrift</h2>
-    <p class="mb-gutter max-w-prose text-light-darker">
-      Montserrat Alternates für Überschriften, Montserrat für den Fließtext.
-      Selbst gehostet, damit nichts von extern nachgeladen wird.
+    <h2 class="gd-h2">Flächen und Tiefe</h2>
+    <p class="gd-panel mb-gutter">
+      Drei Ebenen, und die Regel dazu: eine Ebene sitzt nur auf einer
+      <em>anderen</em> Ebene. Panel auf Seite, Karte auf Panel oder Seite — nie
+      Panel auf Panel. Genau diese Einschränkung macht Tiefe auf so dunklem
+      Grund lesbar, weil Schatten hier kaum wirken.
     </p>
-
-    <ul class="space-y-4">
-      {{- range $sizes }}
-      <li class="flex flex-wrap items-baseline gap-4 border-b border-gold-dark/30 pb-4">
-        <code class="w-24 shrink-0 text-sm text-gold">{{ .cls }}</code>
-        <span class="w-14 shrink-0 text-xs text-light-darker">{{ .px }} px</span>
-        <span class="{{ .cls }} text-light">Illegal — Ill 1l</span>
-        <span class="text-xs text-light-darker">{{ .use }}</span>
-      </li>
-      {{- end }}
-    </ul>
-
-    <h3 class="mt-gutter mb-3 font-heading text-lg text-gold">Schriftschnitte</h3>
-    <p class="mb-2 font-heading text-2xl text-light-lighter">Montserrat Alternates — Überschrift</p>
-    <p class="max-w-prose text-base text-light">
-      Montserrat — Fließtext. Ein Satz, um Laufweite und Zeilenabstand zu beurteilen:
-      Franz jagt im komplett verwahrlosten Taxi quer durch Bayern.
-    </p>
+    {{- /* Ordered as a depth ladder, deepest first. The top box carries NO
+           background of its own so the page shows through, dots and all —
+           an earlier version filled it, which hid the very thing it was
+           meant to demonstrate and left only a border to look at. */ -}}
+    <div class="grid gap-gutter sm:grid-cols-3">
+      <div class="rounded-md border border-accent-muted/25 p-4">
+        <strong class="block text-ink">Seitengrund</strong>
+        <span class="text-sm text-ink-muted">
+          Keine eigene Fläche — das Punktraster der Seite scheint durch.
+          Alles andere liest sich gegen diesen Grund.
+        </span>
+      </div>
+      <div class="rounded-md border border-accent-muted/25 bg-surface p-4">
+        <strong class="block text-ink"><code class="text-accent">gd-panel-plain</code></strong>
+        <span class="text-sm text-ink-muted">
+          Gleiche Ebene, nur gerahmt. Gruppiert Zusammengehöriges, ohne eine
+          neue Tiefenstufe zu verbrauchen.
+        </span>
+      </div>
+      <div class="gd-panel">
+        <strong class="block text-ink"><code class="text-accent">gd-panel</code></strong>
+        <span class="text-sm text-ink-muted">
+          Eine Stufe höher: hellere Füllung, Rahmen, Schatten. Für Fließtext
+          und Bedienelemente.
+        </span>
+      </div>
+    </div>
   </section>
 
   {{- /* ------------------------------------------------------------------ */ -}}
   <section class="mb-section">
-    <h2 class="mb-2 font-heading text-2xl text-light-lighter">Abstände</h2>
-    <p class="mb-gutter max-w-prose text-light-darker">
-      Luftig: 4 px Basiseinheit, 24 px zwischen zusammengehörenden Blöcken,
-      80 px zwischen Abschnitten. Für den Seitenrhythmus die benannten Stufen
-      benutzen, die Zahlenskala nur zur Feinjustierung innerhalb einer Komponente.
+    <h2 class="gd-h2">Überschriften</h2>
+    <p class="gd-panel mb-gutter">
+      Nachfolgend als echter Artikel gesetzt, nicht als Aufzählung — so ist
+      beurteilbar, ob die Hierarchie beim Lesen trägt.
     </p>
-    <ul class="space-y-2">
-      {{- range $spaces }}
-      <li class="flex items-center gap-4">
-        <code class="w-24 shrink-0 text-sm text-gold">{{ .name }}</code>
-        <span class="w-14 shrink-0 text-xs text-light-darker">{{ .px }} px</span>
-        <span class="{{ .cls }} h-4 rounded-sm bg-gold"></span>
-        <span class="text-xs text-light-darker">{{ .use }}</span>
-      </li>
-      {{- end }}
-    </ul>
+
+    <article class="gd-panel flex flex-col gap-6">
+      <h1 class="gd-h1" data-heading="Wie ein Blog überlebt">Wie ein Blog überlebt</h1>
+      <p>
+        Ein Absatz Fließtext, damit die Überschrift etwas hat, wogegen sie sich
+        behaupten muss. Die Zeilenlänge ist auf lesbare Breite begrenzt, weil ein
+        Text über die volle Fensterbreite nach zwei Zeilen anstrengend wird.
+      </p>
+      <h2 class="gd-h2 pt-2">Der erste Abschnitt</h2>
+      <p>
+        Die goldene Linie führt das Auge nach rechts und trennt den Abschnitt vom
+        Vorhergehenden, ohne einen harten Strich zu ziehen.
+      </p>
+      <h3 class="gd-h3 pt-2">Ein Unterpunkt</h3>
+      <p>
+        Gold und kleiner: klar untergeordnet, aber noch als Überschrift lesbar.
+        Darunter folgt gewöhnlicher Text mit einem
+        <a href="#" class="text-accent underline underline-offset-4 hover:text-accent-hover">Link</a>
+        und etwas <strong class="text-ink-strong">hervorgehobenem</strong> Text.
+      </p>
+    </article>
   </section>
 
   {{- /* ------------------------------------------------------------------ */ -}}
   <section class="mb-section">
-    <h2 class="mb-2 font-heading text-2xl text-light-lighter">Radien und Tiefe</h2>
-    <p class="mb-gutter max-w-prose text-light-darker">
-      Leicht gerundet, dezente Schatten. Auf sehr dunklem Grund liest sich ein
-      Schatten eher als dunkler Hof denn als Abheben — Trennung trägt vor allem
-      der Flächenkontrast und eine goldene Haarlinie.
-    </p>
+    <h2 class="gd-h2">Schrift</h2>
+    <div class="gd-panel">
+      <p class="mb-gutter">
+        Montserrat Alternates für Überschriften, Montserrat für den Fließtext.
+        Selbst gehostet, damit nichts von extern nachgeladen wird. Die kleinste
+        Stufe ist 14 px — 12 px war zu klein und ist aus der Skala entfernt.
+      </p>
+      <ul class="flex flex-col gap-4">
+        {{- /* Header row: without it the third column reads as a mystery. Every
+               code cell on this page shows what you TYPE in a template — the
+               complete class name, never a bare token stem. Mixing the two is
+               how inconsistency in a styleguide becomes inconsistency in the
+               code that copies from it. */ -}}
+        <li class="grid gap-x-4 border-b border-accent-muted pb-2 text-sm text-ink-muted lg:grid-cols-[7rem_3.5rem_9rem_1fr_15rem]">
+          <span>Größe</span>
+          <span>px</span>
+          <span>Farbe</span>
+          <span>Beispiel</span>
+          <span class="lg:text-right">Wofür</span>
+        </li>
+        {{- range $sizes }}
+        {{- /* Grid, nicht flex-wrap: bei flex rutscht eine lange Beschreibung in
+               die nächste Zeile und die Spalten stehen nicht mehr untereinander.
+               Unter sm wird gestapelt, da ist nebeneinander ohnehin zu eng. */ -}}
+        <li class="grid items-baseline gap-x-4 gap-y-1 border-b border-accent-muted/30 pb-4 last:border-b-0 last:pb-0 lg:grid-cols-[7rem_3.5rem_9rem_1fr_15rem]">
+          <code class="text-sm text-accent">{{ .cls }}</code>
+          <span class="text-sm text-ink-muted">{{ .px }}</span>
+          <code class="text-sm {{ .ink }}">{{ .inkToken }}</code>
+          <span class="{{ .cls }} {{ .ink }}">{{ .sample }}</span>
+          <span class="text-sm text-ink-muted lg:text-right">{{ .use }}</span>
+        </li>
+        {{- end }}
+      </ul>
 
+      <div class="mt-gutter flex flex-col gap-4 border-t border-accent-muted/30 pt-gutter">
+        <div>
+          <h3 class="gd-h3">Laufweite und Zeilenabstand</h3>
+          <p>
+            Franz jagt im komplett verwahrlosten Taxi quer durch Bayern — ein Satz
+            mit allen Buchstaben des Alphabets.
+          </p>
+        </div>
+
+        {{- /* The one real cost of this typeface, kept visible on purpose.
+               It used to read as a bare "Illegal — Ill 1l" with no explanation,
+               which is just cryptic. */ -}}
+        <div>
+          <h3 class="gd-h3">Glyphen-Test</h3>
+          <p class="mb-2 text-2xl text-ink">Illegal · Ill 1l · lIl1</p>
+          <p>
+            Großes <strong class="text-ink">I</strong>, kleines
+            <strong class="text-ink">l</strong> und die
+            <strong class="text-ink">1</strong> sind in Montserrat kaum
+            auseinanderzuhalten. Bewusst in Kauf genommen, weil der Charakter der
+            Schrift überwiegt — steht so in <code class="text-accent">docs/design.md</code>.
+            Die Zeile steht hier, damit der Preis sichtbar bleibt statt vergessen
+            zu werden.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {{- /* ------------------------------------------------------------------ */ -}}
+  <section class="mb-section">
+    <h2 class="gd-h2">Abstände</h2>
+    <div class="gd-panel">
+      <p class="mb-gutter">
+        Luftig: 4 px Basiseinheit, 24 px zwischen zusammengehörenden Blöcken,
+        80 px zwischen Abschnitten. Die benannten Stufen tragen den Seitenrhythmus,
+        die Zahlenskala dient der Feinjustierung innerhalb einer Komponente.
+      </p>
+      {{- /* The step is shown as a finished class. A spacing step works with
+             several prefixes — p-, m-, gap-, w- — so one representative use is
+             given rather than a bare number that has to be assembled. */ -}}
+      <ul class="flex flex-col gap-4">
+        <li class="grid gap-x-4 border-b border-accent-muted pb-2 text-sm text-ink-muted sm:grid-cols-[7rem_3.5rem_6rem_1fr]">
+          <span>Stufe</span>
+          <span>px</span>
+          <span>Breite</span>
+          <span>Wofür</span>
+        </li>
+        {{- range $spaces }}
+        <li class="grid items-center gap-x-4 gap-y-1 sm:grid-cols-[7rem_3.5rem_6rem_1fr]">
+          <code class="text-sm text-accent">{{ .beispiel }}</code>
+          <span class="text-sm text-ink-muted">{{ .px }}</span>
+          <span class="{{ .cls }} h-4 rounded-sm bg-accent"></span>
+          <span class="text-sm text-ink-muted">{{ .use }}</span>
+        </li>
+        {{- end }}
+      </ul>
+    </div>
+  </section>
+
+  {{- /* ------------------------------------------------------------------ */ -}}
+  <section class="mb-section">
+    <h2 class="gd-h2">Radien und Schatten</h2>
     <div class="grid gap-gutter sm:grid-cols-2">
-      <div>
-        <h3 class="mb-3 font-heading text-lg text-gold">Radien</h3>
-        <ul class="space-y-3">
+      <div class="gd-panel">
+        <h3 class="gd-h3">Radien</h3>
+        <ul class="flex flex-col gap-4">
           {{- range $radii }}
           <li class="flex items-center gap-4">
-            <span class="size-12 shrink-0 {{ .cls }} border border-gold-dark bg-dark-lighter"></span>
-            <span><code class="text-sm text-gold">{{ .cls }}</code>
-              <span class="block text-xs text-light-darker">{{ .px }} px · {{ .use }}</span></span>
+            <span class="size-12 shrink-0 {{ .cls }} border border-accent-muted bg-surface"></span>
+            <span>
+              <code class="text-sm text-accent">{{ .cls }}</code>
+              <span class="block text-sm text-ink-muted">{{ .px }} px · {{ .use }}</span>
+            </span>
           </li>
           {{- end }}
         </ul>
       </div>
-      <div>
-        <h3 class="mb-3 font-heading text-lg text-gold">Schatten</h3>
-        <ul class="space-y-3">
+      <div class="gd-panel">
+        <h3 class="gd-h3">Schatten</h3>
+        {{- /* Extra vertical room: a shadow needs space around the box or the
+               next row clips it and the effect cannot be judged. */ -}}
+        <ul class="flex flex-col gap-6">
           {{- range $shadows }}
           <li class="flex items-center gap-4">
-            <span class="size-12 shrink-0 rounded-md bg-dark-lighter {{ .cls }}"></span>
-            <span><code class="text-sm text-gold">{{ .cls }}</code>
-              <span class="block text-xs text-light-darker">{{ .use }}</span></span>
+            <span class="size-12 shrink-0 rounded-md bg-surface {{ .cls }}"></span>
+            <span>
+              <code class="text-sm text-accent">{{ .cls }}</code>
+              <span class="block text-sm text-ink-muted">{{ .use }}</span>
+            </span>
           </li>
           {{- end }}
         </ul>
@@ -183,48 +375,120 @@
 
   {{- /* ------------------------------------------------------------------ */ -}}
   <section class="mb-section">
-    <h2 class="mb-2 font-heading text-2xl text-light-lighter">Bausteine</h2>
-    <p class="mb-gutter max-w-prose text-light-darker">
-      Aus den Tokens abgeleitet. Wächst mit jeder migrierten Komponente —
-      Reihenfolge und Stand siehe <code class="text-gold">docs/migration.md</code>.
-    </p>
+    <h2 class="gd-h2">Icons</h2>
+    <div class="gd-panel">
+      <p class="mb-gutter">
+        Remixicon, als SVG-Sprite selbst gehostet. Das sind alle, die die
+        Templates derzeit benutzen — <strong class="text-ink">Klick kopiert
+        den Namen</strong>. Wer ein neues Icon einbaut, trägt es hier ein, sonst
+        weiß niemand, dass es existiert.
+      </p>
+      <ul class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+        {{- range $icons }}
+        <li>
+          <button type="button" data-copy="{{ . }}"
+                  class="group flex w-full cursor-pointer items-center gap-3 rounded-sm border border-accent-muted/30 px-3 py-2 text-left hover:border-accent">
+            <svg class="size-5 shrink-0 fill-current text-ink" aria-hidden="true"><use href="{{ $sprite }}?t={{ $v }}#{{ . }}"></use></svg>
+            <code class="truncate text-sm text-accent">{{ . }}</code>
+          </button>
+        </li>
+        {{- end }}
+      </ul>
 
-    <h3 class="mb-3 font-heading text-lg text-gold">Flächen</h3>
-    <div class="mb-gutter grid gap-4 sm:grid-cols-3">
-      <div class="rounded-md border border-gold-dark/40 bg-dark-darker p-4">
-        <span class="text-sm text-light-darker">vertieft</span>
-      </div>
-      <div class="rounded-md border border-gold-dark/40 bg-dark p-4">
-        <span class="text-sm text-light-darker">Standard</span>
-      </div>
-      <div class="rounded-md border border-gold-dark/40 bg-dark-lighter p-4 shadow-md">
-        <span class="text-sm text-light-darker">erhöht</span>
-      </div>
+      <h3 class="gd-h3 mt-gutter">Wachstumsstufen</h3>
+      <p class="mb-4">
+        Die einzigen Farben, die ausschließlich an Icons hängen — nie als Fläche
+        oder Textfarbe. Deshalb stehen sie hier bei den Icons und nicht in der
+        Palette.
+      </p>
+      <ul class="flex flex-wrap gap-3">
+        {{- range $stages }}
+        <li class="inline-flex items-center gap-2 rounded-sm border border-accent-muted/30 bg-surface px-3 py-2">
+          <svg class="size-5 shrink-0 fill-current {{ .ink }}" aria-hidden="true"><use href="{{ $sprite }}?t={{ $v }}#{{ .icon }}"></use></svg>
+          <span class="text-sm text-ink">{{ .label }}</span>
+          <span class="text-sm text-ink-muted">· {{ .use }}</span>
+        </li>
+        {{- end }}
+      </ul>
     </div>
+  </section>
 
-    <h3 class="mb-3 font-heading text-lg text-gold">Interaktiv</h3>
-    <div class="flex flex-wrap items-center gap-4">
-      <button type="button" class="rounded-sm bg-gold px-4 py-2 text-sm text-dark-darker hover:bg-gold-light">
-        Primär
-      </button>
-      <button type="button" class="rounded-sm border border-gold px-4 py-2 text-sm text-gold hover:bg-gold hover:text-dark-darker">
-        Sekundär
-      </button>
-      <a href="#bausteine" class="text-gold underline underline-offset-4 hover:text-gold-light">Textlink</a>
-      <input type="text" aria-label="Beispielfeld" placeholder="Eingabefeld"
-             class="rounded-sm border border-gold-dark bg-dark px-3 py-1.5 text-sm text-light focus:border-gold focus:outline-none">
-    </div>
+  {{- /* ------------------------------------------------------------------ */ -}}
+  <section class="mb-section">
+    <h2 class="gd-h2">Bedienelemente</h2>
+    <div class="gd-panel flex flex-col gap-gutter">
+      <div>
+        <h3 class="gd-h3">Buttons und Felder</h3>
+        <div class="flex flex-wrap items-center gap-4">
+          <button type="button" class="gd-button">Primär</button>
+          <button type="button" class="gd-button gd-button-secondary">Sekundär</button>
+          <a href="#" class="text-accent underline underline-offset-4 hover:text-accent-hover">Textlink</a>
+          <input type="text" aria-label="Beispielfeld" placeholder="Eingabefeld"
+                 class="rounded-sm border border-accent-muted bg-surface px-3 py-1.5 text-sm text-ink focus:border-accent focus:outline-none">
+        </div>
+      </div>
 
-    <h3 class="mt-gutter mb-3 font-heading text-lg text-gold">Wachstumsstufen-Badges</h3>
-    <div class="flex flex-wrap gap-3">
-      {{- range $stages }}
-      <span class="inline-flex items-center gap-2 rounded-sm border border-gold-dark/40 bg-dark-lighter px-3 py-1 text-sm">
-        <span class="size-2 shrink-0 rounded-sm {{ .swatch }}"></span>
-        <span class="text-light">{{ .label }}</span>
-      </span>
-      {{- end }}
+      <div>
+        <h3 class="gd-h3">Runde Buttons</h3>
+        <p class="mb-gutter">
+          Aus dem alten Theme übernommen — der Nach-oben-Knopf, auf Tokens
+          umgebaut statt fest verdrahtet. Ruhezustand gewölbt, beim Überfahren
+          eingedrückt: dafür kippen beide Schatten von außen nach innen. Neu
+          gegenüber dem Original ist ein sichtbarer Fokusring für
+          Tastaturbedienung; bei <code class="text-accent">prefers-reduced-motion</code>
+          entfällt nur die Bewegung, die Schattenumkehr bleibt. Alle Varianten
+          setzen auf <code class="text-accent">gd-round-button</code> auf.
+        </p>
+        {{- /* Each variant is labelled. Unlabelled variants standing side by
+               side read as an inconsistency rather than a demonstration — the
+               48px and the 55px button next to each other simply looked like a
+               mistake, which is a failure of the page, not of the button. */ -}}
+        {{- /* Fixed four-column grid, not flex-wrap. With flex, a long class
+               name widened its item until the row broke and the buttons
+               scattered over two lines. Here the buttons stay on one row and
+               only the captions wrap. */ -}}
+        <ul class="grid grid-cols-2 gap-gutter sm:grid-cols-4">
+          {{- /* Items 3 and 4 are the SAME glyph with and without the modifier.
+                 Showing only the corrected one was pointless: the modifier's
+                 whole job is to remove a size difference, so a lone example
+                 demonstrates nothing — there is nothing to compare it to. */ -}}
+          {{- range slice
+            (dict "cls" "gd-round-button" "mod" "ohne Modifier" "icon" "arrow-up-s-fill" "px" "48"
+                  "label" "Nach oben" "note" "Standard")
+            (dict "cls" "gd-round-button gd-round-button-lg" "mod" "gd-round-button-lg" "icon" "arrow-up-s-fill" "px" "55"
+                  "label" "Nach oben, groß" "note" "Größenvariante")
+            (dict "cls" "gd-round-button" "mod" "ohne Modifier" "icon" "heart-line" "px" "48"
+                  "label" "Herz, unkorrigiert" "note" "Herz wirkt zu groß — es füllt seine 24×24-Zeichenfläche fast aus, die Pfeile nicht")
+            (dict "cls" "gd-round-button gd-round-button-full" "mod" "gd-round-button-full" "icon" "heart-line" "px" "48"
+                  "label" "Herz, korrigiert" "note" "Kleinere Icon-Box gleicht das aus — jetzt so groß wie die Pfeile") }}
+          <li class="flex flex-col items-center gap-3 text-center">
+            <button type="button" class="{{ .cls }}" aria-label="{{ .label }}">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><use href="{{ $sprite }}?t={{ $v }}#{{ .icon }}"></use></svg>
+            </button>
+            <span class="flex flex-col gap-1">
+              <code class="text-sm break-all text-accent">{{ .mod }}</code>
+              <span class="text-sm text-ink-muted">{{ .px }} px · {{ .note }}</span>
+            </span>
+          </li>
+          {{- end }}
+        </ul>
+      </div>
+
+      <div>
+        <h3 class="gd-h3">Statusmeldungen</h3>
+        <div class="flex flex-col gap-3">
+          {{- range $states }}
+          <p class="rounded-sm border-l-4 {{ .edge }} bg-surface px-4 py-3 text-base {{ .ink }}">
+            <code>{{ .token }}</code> — {{ .use }}
+          </p>
+          {{- end }}
+        </div>
+      </div>
     </div>
   </section>
 
 </div>
+
+{{- $sg := resources.Get "js/styleguide.js" | resources.Minify | resources.Fingerprint -}}
+<script defer src="{{ $sg.RelPermalink }}"></script>
 {{ end }}

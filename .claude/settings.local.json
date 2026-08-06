@@ -1,22 +1,26 @@
 {
-    "permissions": {
-        "allow": [
-            "Bash(gh issue *)",
-            "Bash(git add *)",
-            "Bash(git log *)",
-            "Bash(git commit -m *)",
-            "WebFetch(domain:gohugo.io)",
-            "mcp__mcp-server-github__search_code",
-            "mcp__mcp-server-github__get_file_contents",
-            "mcp__mcp-server-github__list_issues",
-            "mcp__mcp-server-github__list_pull_requests",
-            "Bash(hugo --logLevel error --environment production)",
-            "Bash(npm run *)",
-            "Bash(npm test *)",
-            "Bash(npx playwright *)",
-            "Bash(curl * https://angelcrawford.github.io/blog/)",
-            "Bash(hugo --logLevel error --environment production --destination public-test)",
-            "Bash(hugo --logLevel error --environment production --destination public-dev-test)"
-        ]
-    }
+  "permissions": {
+    "allow": [
+      "Bash(gh issue *)",
+      "Bash(git add *)",
+      "Bash(git log *)",
+      "Bash(git commit -m *)",
+      "WebFetch(domain:gohugo.io)",
+      "mcp__mcp-server-github__search_code",
+      "mcp__mcp-server-github__get_file_contents",
+      "mcp__mcp-server-github__list_issues",
+      "mcp__mcp-server-github__list_pull_requests",
+      "Bash(hugo --logLevel error --environment production)",
+      "Bash(npm run *)",
+      "Bash(npm test *)",
+      "Bash(npx playwright *)",
+      "Bash(curl * https://angelcrawford.github.io/blog/)",
+      "Bash(hugo --logLevel error --environment production --destination public-test)",
+      "Bash(hugo --logLevel error --environment production --destination public-dev-test)",
+      "Bash(python3 -)",
+      "Bash(sed -n '/\\\\$icons := slice/,/^-}}/p' themes/garden/layouts/page/styleguide.html)",
+      "Bash(node probe.mjs)",
+      "Bash(sed -n '/prefers-reduced-motion/,/^}/p' themes/garden/assets/css/main.css)"
+    ]
+  }
 }
