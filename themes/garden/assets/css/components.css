@@ -1654,6 +1654,17 @@ a.at-hashtag, a.at-tag { text-decoration: none; }
 .at-copyright { position: relative; z-index: 5; text-align: center; font-size: 90%; opacity: 0.7; }
 
 /* Links in the footer are gold on a surface that is darker than anywhere else,
- * so they need no other treatment. */
-.at-footer a { color: var(--color-accent); }
-.at-footer a:hover { color: var(--color-accent-hover); }
+ * so they need no other treatment.
+ *
+ * `:not(.gd-button)` IS LOad-BEARING. A blanket descendant rule like this sits at
+ * (0,2,1) with the `:hover`, and `.gd-button-secondary:hover` — two classes, no
+ * element — sits at (0,2,0). The container rule therefore won, and the button's
+ * hover filled with gold while keeping its light-gold label: gold text on a gold
+ * fill. The button was the design system's all along; this rule was reaching
+ * into it.
+ *
+ * The general shape is worth remembering: a container-scoped `element` selector
+ * outranks a component's own class selector, so any component dropped inside
+ * gets quietly overruled. Exclude, or do not write the blanket rule. */
+.at-footer a:not(.gd-button) { color: var(--color-accent); }
+.at-footer a:not(.gd-button):hover { color: var(--color-accent-hover); }

@@ -178,6 +178,16 @@ dotted-leader lists side by side, pointing opposite ways. Both are
 `at-leader-list` now — name left, count right — which is the "one row shape"
 decision from the design system doing its job on its first outing.
 
+**A container's `element` rule outranks a component's own class.** The footer
+had a blanket `.at-footer a:hover { color: … }` — one class, one element, one
+pseudo-class, so (0,2,1). `.gd-button-secondary:hover` is two classes and a
+pseudo-class, (0,2,0). The container won, and the button's hover filled with gold
+while keeping its light-gold label: gold on gold. It looked like the button had
+not been migrated at all, which is how it was reported. Excluded with
+`:not(.gd-button)`. Worth remembering as a shape rather than an incident — any
+component dropped inside a container that styles bare elements gets quietly
+overruled, and the symptom is "this component looks wrong here".
+
 **A colour in a `style` attribute came out as `ZgotmplZ`.** Go's template
 escaper refuses `rgb(88, 179, 189)` in a CSS context and writes its placeholder
 instead, so the statistics icons rendered colourless — silently, because

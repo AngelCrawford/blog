@@ -126,8 +126,13 @@
                        upstream and in the design system — a teal that appears in no
                        token and is not one of the two sanctioned exceptions to
                        "gold is the only accent" (growth stages and the social
-                       silos' own brands). Two steps of the accent tell the rows
-                       apart without spending a third hue on it.
+                       silos' own brands).
+
+                       ONE gold, not two. Two steps of the accent was tried and it
+                       reads as a mistake: upstream the two colours distinguished
+                       something, and once both were gold the distinction was left
+                       behind with nothing to say. The labels already name the
+                       rows.
 
                        The colour is a FINISHED CLASS NAME carried as data, not a
                        `style` attribute. Two reasons, and the first one bit:
@@ -137,7 +142,7 @@
                        keeps the value in the token system. Never assemble it
                        from a variable; Tailwind extracts complete strings only. */ -}}
                 {{- range slice
-                  (dict "type" "articles" "label" "Artikel" "icon" "article-line" "fill" "fill-accent")
+                  (dict "type" "articles" "label" "Artikel" "icon" "article-line" "fill" "fill-accent-hover")
                   (dict "type" "notes" "label" "Notizen" "icon" "lightbulb-line" "fill" "fill-accent-hover") }}
                 <li>
                     <span class="inline-flex items-center gap-2">
