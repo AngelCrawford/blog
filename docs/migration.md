@@ -122,11 +122,28 @@ has two sizes, and nobody was telling the bitmap what the box was doing:
 `size()` reads the element's own box now, on load and (debounced) on resize, and
 the CSS is `height: 100%`. Verified at 1280 and 420, and across a resize.
 
-**Two things left alone, both decisions rather than defects:** the loop stops
-twelve seconds after load, so arriving on 31 December gets twelve seconds and
-then nothing until you navigate; and the rockets launch from the bottom centre
-and climb behind the skyline, which sits at `z-index: 2` against the canvas's
-`auto` — only the burst at the top is ever visible.
+Two questions went back to Angel and both came back with an answer.
+
+**The stop is a count now, not a clock.** The intent was always "a handful of
+rockets, then let the header be still"; twelve seconds was a stand-in for that.
+Time is the wrong unit — one launch happens every 80 frames, so twelve seconds
+bought nine bursts at 60Hz, four or five on anything struggling, and eighteen on
+a 120Hz display. `TOTAL_LAUNCHES = 9` is what it bought at 60fps, so the effect
+is unchanged where it already looked right.
+
+Stopping also had to be fixed to stop *cleanly*: the old code called
+`cancelAnimationFrame` on the frame it had just requested, which halted the loop
+and left the final half-faded particles painted on the canvas until the next page
+load. It now waits for the last burst to fade, clears, and returns. Verified:
+nine bursts, quiet after ~13s, canvas empty, `hue` frozen — the loop is genuinely
+stopped, not idling.
+
+**The canvas belongs behind the city, and already was.** Confirmed by flooding it
+solid red: the skyline, the clock and the wordmark all paint over it. The rockets
+climb unseen behind the buildings and only the burst clears the roofline, so the
+city looks like it fired them. That is the intent — do not lift the canvas above
+the silhouette. Fixing the height from 80% to 100% moved the launch point 60px
+further down, which deepens it.
 
 ### What the footer migration turned up
 

@@ -208,20 +208,36 @@ function createParticles( x, y ) {
 	}
 }
 
-var currentTime = new Date();
-var stopTime = new Date(currentTime.getTime() + 12000);
+// HOW MANY, NOT HOW LONG.
+//
+// This used to stop twelve seconds after load, which was a stand-in for the
+// actual intent: fire a handful of rockets and then let the header be still.
+// Time is the wrong unit for that. One launch happens every 80 frames, so the
+// count you get depends on the frame rate — nine bursts on a 60Hz laptop, four
+// or five on anything struggling, and on a 120Hz display twice as many. Twelve
+// seconds also cut whatever was mid-flight in half.
+//
+// Nine is what twelve seconds bought at 60fps, so the effect is unchanged where
+// it already looked right and becomes the same everywhere else.
+var TOTAL_LAUNCHES = 9;
+var launched = 0;
 
 // main demo loop
 function loop() {
+	// STOP WHEN THE LAST BURST HAS FADED, then clear. The old version called
+	// cancelAnimationFrame on the frame it had just requested, which stopped the
+	// loop but left the final half-faded particles painted on the canvas — they
+	// hung in the sky until the next page load. Returning without requesting the
+	// next frame is how you stop; clearing first is what makes the sky go quiet.
+	if (launched >= TOTAL_LAUNCHES && !fireworks.length && !particles.length) {
+		ctx.globalCompositeOperation = 'source-over';
+		ctx.clearRect(0, 0, cw, ch);
+		return;
+	}
+
 	// this function will run endlessly with requestAnimationFrame
 	animateId = requestAnimationFrame(loop);
 
-	// this will stop the loop after x seconds
-	var currentTime = new Date();
-	if (currentTime >= stopTime) {
-		cancelAnimationFrame(animateId);
-	}
-		
 	// increase the hue to get different colored fireworks over time
 	hue += 0.9;
 	
@@ -250,10 +266,14 @@ function loop() {
 		particles[ i ].update( i );
 	}
 	
-	// launch fireworks automatically to random coordinates
-	if( timerTick >= timerTotal ) {
-		// start the firework at the bottom middle of the screen, then set the random target coordinates, the random y coordinates will be set within the range of the top half of the screen
+	// Launch automatically, from the bottom middle towards a random point in the
+	// top half. The rocket climbs BEHIND the skyline — the city sits at
+	// `z-index: 2` and this canvas at `auto` — so what you see is a burst over a
+	// city that appears to have fired it. That is the intent, not a side effect;
+	// do not lift the canvas above the silhouette.
+	if( launched < TOTAL_LAUNCHES && timerTick >= timerTotal ) {
 		fireworks.push( new Firework( cw / 2, ch, random( 0, cw ), random( 0, ch / 2 ) ) );
+		launched++;
 		timerTick = 0;
 	} else {
 		timerTick++;
