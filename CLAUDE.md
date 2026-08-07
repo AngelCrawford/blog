@@ -15,13 +15,14 @@ Diese Liste ist der **Filter**: Wenn ein Feature-Vorschlag oder ein GitHub-Issue
 ## Arbeitsregeln
 
 1. **Keine neuen Features, bis das Design-System steht.** Das ist die Regel, die sechs Jahre gefehlt hat.
-2. **Keine hartkodierten Design-Werte.** Farben, Abstände, Radien, Schatten, Schriftgrößen kommen aus den Tokens — nie direkt ins Komponenten-SCSS. Wer eine Komponente baut, wählt aus dem Styleguide aus, statt neu zu erfinden.
-3. **Design und Programmierung getrennt.** Erst funktioniert es, dann sieht es gut aus. Nicht gleichzeitig.
-4. **Lorem-Ipsum-Content ist Absicht.** Der Content unter `content/` ist bewusst Fixture-Material für die Entwicklung. Nicht als „fehlender Inhalt" behandeln und nicht ungefragt ersetzen.
-5. **Kein jQuery.** Neuer JavaScript-Code ist Vanilla, ausnahmslos. jQuery ist noch im Bundle, weil `gdpr.js`, `header.js`, `main.js` und `search.js` daran hängen — aber es kommt nichts mehr dazu. Wenn eine Komponente nach `garden` wandert, wandert ihr JS jQuery-frei mit. Das Ziel ist, `jquery.js` (285 KB Quelltext) mit dem letzten dieser vier Skripte zu löschen.
-6. **Fertige Test-Ordner werden gelöscht.** `npm test` räumt bei Erfolg selbst auf (`scripts/clean-test-artifacts.mjs`). Bei Fehlschlag bleiben sie liegen — dann braucht man sie zum Debuggen. Wer neue Build-Ziele einführt, trägt sie dort ein.
-7. **Backlog lebt in GitHub Issues**, nicht in Dateien. Keine Epics, keine Stories, keine Sprint-Artefakte im Repo.
-8. **Issues fasse ich nicht an.** Anlegen, schließen, labeln macht Angel selbst.
+2. **Alles Klickbare zeigt einen Zeiger.** `cursor: pointer` auf Buttons, Labels, Links, `role="button"` — ausnahmslos. Steht zentral in `main.css`, nicht im Markup. Deaktiviertes bekommt `not-allowed`. Angel musste das vorher an jeder Stelle von Hand nachziehen; ein vergessener Fall ist ein Bedienelement, das sich nicht bedienbar anfühlt.
+3. **Keine hartkodierten Design-Werte.** Farben, Abstände, Radien, Schatten, Schriftgrößen kommen aus den Tokens — nie direkt ins Komponenten-SCSS. Wer eine Komponente baut, wählt aus dem Styleguide aus, statt neu zu erfinden.
+4. **Design und Programmierung getrennt.** Erst funktioniert es, dann sieht es gut aus. Nicht gleichzeitig.
+5. **Lorem-Ipsum-Content ist Absicht.** Der Content unter `content/` ist bewusst Fixture-Material für die Entwicklung. Nicht als „fehlender Inhalt" behandeln und nicht ungefragt ersetzen.
+6. **Kein jQuery.** Neuer JavaScript-Code ist Vanilla, ausnahmslos. jQuery ist noch im Bundle, weil `gdpr.js`, `header.js`, `main.js` und `search.js` daran hängen — aber es kommt nichts mehr dazu. Wenn eine Komponente nach `garden` wandert, wandert ihr JS jQuery-frei mit. Das Ziel ist, `jquery.js` (285 KB Quelltext) mit dem letzten dieser vier Skripte zu löschen.
+7. **Fertige Test-Ordner werden gelöscht.** `npm test` räumt bei Erfolg selbst auf (`scripts/clean-test-artifacts.mjs`). Bei Fehlschlag bleiben sie liegen — dann braucht man sie zum Debuggen. Wer neue Build-Ziele einführt, trägt sie dort ein.
+8. **Backlog lebt in GitHub Issues**, nicht in Dateien. Keine Epics, keine Stories, keine Sprint-Artefakte im Repo.
+9. **Issues fasse ich nicht an.** Anlegen, schließen, labeln macht Angel selbst.
 
 ## Struktur
 

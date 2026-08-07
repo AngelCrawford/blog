@@ -73,20 +73,64 @@
   (dict "cls" "shadow-lg" "use" "Overlays, Suchergebnisse")
 -}}
 {{- $stages := slice
-  (dict "label" "seedling" "icon" "seedling-line" "ink" "text-seedling" "use" "Keimling — frisch, unfertig")
-  (dict "label" "budding" "icon" "flower-line" "ink" "text-budding" "use" "Knospend — in Entwicklung")
-  (dict "label" "evergreen" "icon" "tree-line" "ink" "text-evergreen" "use" "Immergrün — ausgereift")
-  (dict "label" "withered" "icon" "skull-2-line" "ink" "text-withered" "use" "Verwelkt — veraltet")
+  (dict "label" "seedling" "icon" "seedling-line" "fill" "seedling-fill" "ink" "text-seedling" "use" "Keimling — frisch, unfertig")
+  (dict "label" "budding" "icon" "flower-line" "fill" "flower-fill" "ink" "text-budding" "use" "Knospend — in Entwicklung")
+  (dict "label" "evergreen" "icon" "tree-line" "fill" "tree-fill" "ink" "text-evergreen" "use" "Immergrün — ausgereift")
+  (dict "label" "withered" "icon" "skull-2-line" "fill" "skull-2-fill" "ink" "text-withered" "use" "Verwelkt — veraltet")
 -}}
-{{- /* Every Remixicon the templates currently reference. Adding one to a
-       template means adding it here, or nobody will know it exists. */ -}}
-{{- $icons := slice
-  "article-line" "stack-line" "price-tag-3-line" "bookmark-line"
-  "calendar-line" "pencil-line" "timer-line" "heart-line"
-  "question-answer-line" "lightbulb-flash-line" "links-fill" "search-2-line"
-  "close-fill" "arrow-left-s-line" "arrow-right-s-line" "arrow-up-s-fill"
-  "skip-back-line" "skip-forward-line" "skull-2-line" "check-fill"
--}}
+{{- /* The icon list is READ FROM THE SPRITE, not maintained by hand.
+       A hand-kept list drifts — this one had already gained a duplicate and
+       was showing 20 of the 53 symbols actually available.
+
+       Reading the file also lets the page pair line and fill glyphs on its
+       own: wherever `x-fill` exists next to `x-line`, the duotone sample uses
+       the real filled body. Add fills to the sprite and they light up here
+       with no template change. */ -}}
+{{- $spriteFile := os.ReadFile "themes/garden/static/fonts/remixicon/remixicon.symbol.svg" -}}
+{{- $icons := slice -}}
+{{- range findRE `id="[a-z0-9-]+"` $spriteFile -}}
+  {{- $icons = $icons | append (replaceRE `id="([a-z0-9-]+)"` "$1" .) -}}
+{{- end -}}
+{{- $icons = sort (uniq $icons) -}}
+
+{{- /* Line glyphs WITHOUT a fill partner — these only get the fallback. */ -}}
+{{- $ohneFill := slice -}}
+
+{{- /* One record per icon the catalogue should actually list.
+       A `-fill` glyph whose `-line` partner exists is NOT listed: it only ever
+       serves as the shadow layer behind that line, and its name is never the
+       one you want to copy. Fills without a line partner — close-fill,
+       check-fill — stay, because there they are the icon. */ -}}
+{{- $iconDaten := slice -}}
+{{- range $icons -}}
+  {{- $istSchattenEbene := false -}}
+  {{- if hasSuffix . "-fill" -}}
+    {{- if in $icons (printf "%s-line" (strings.TrimSuffix "-fill" .)) -}}
+      {{- $istSchattenEbene = true -}}
+    {{- end -}}
+  {{- end -}}
+  {{- if not $istSchattenEbene -}}
+  {{- $fill := . -}}
+  {{- if hasSuffix . "-line" -}}
+    {{- $kandidat := printf "%s-fill" (strings.TrimSuffix "-line" .) -}}
+    {{- if in $icons $kandidat }}{{ $fill = $kandidat }}{{ end -}}
+  {{- end -}}
+  {{- $iconDaten = $iconDaten | append (dict "name" . "hinten" $fill "echt" (ne $fill .)) -}}
+  {{- end -}}
+{{- end -}}
+
+{{- /* Line glyphs that have a fill partner — these get true duotone. */ -}}
+{{- $duoPaare := slice -}}
+{{- range $icons -}}
+  {{- if hasSuffix . "-line" -}}
+    {{- $fill := printf "%s-fill" (strings.TrimSuffix "-line" .) -}}
+    {{- if in $icons $fill -}}
+      {{- $duoPaare = $duoPaare | append (dict "line" . "fill" $fill) -}}
+    {{- else -}}
+      {{- $ohneFill = $ohneFill | append . -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
 
 {{- /* pt-gutter, not pt-section: Bulma's `main.section` already contributes
        48px of top padding, and stacking 80px on top left a hole under the
@@ -137,17 +181,17 @@
                  Only a bottom rule separates the rows; a framed control inside
                  an already framed card reads as a box in a box. */ -}}
           <button type="button" data-copy="{{ .cls }}"
-                  class="group flex cursor-pointer items-baseline justify-between gap-3 border-b border-accent-muted/30 pb-3 text-left hover:border-accent">
+                  class="group flex items-baseline justify-between gap-3 border-b border-accent-muted/30 pb-3 text-left hover:border-accent">
             <span class="flex min-w-0 items-center gap-2">
-              <svg data-copy-icon class="size-4 shrink-0 fill-current text-ink-muted transition-colors group-hover:text-accent" aria-hidden="true"><use href="{{ $sprite }}?t={{ $v }}#stack-line"></use></svg>
+              <svg data-copy-icon class="size-4 shrink-0 fill-current text-ink-muted transition-colors group-hover:text-accent" aria-hidden="true"><use href="{{ $sprite }}?t={{ $v }}#clipboard-line"></use></svg>
               <code class="truncate text-sm text-accent">{{ .cls }}</code>
             </span>
             <span data-copy-label class="shrink-0 text-sm text-accent opacity-0 transition-opacity group-hover:opacity-100">kopieren</span>
           </button>
           <button type="button" data-copy="{{ .token }}"
-                  class="group flex cursor-pointer items-baseline justify-between gap-3 border-b border-accent-muted/30 pb-3 text-left hover:border-accent">
+                  class="group flex items-baseline justify-between gap-3 border-b border-accent-muted/30 pb-3 text-left hover:border-accent">
             <span class="flex min-w-0 items-center gap-2">
-              <svg data-copy-icon class="size-4 shrink-0 fill-current text-ink-muted transition-colors group-hover:text-accent" aria-hidden="true"><use href="{{ $sprite }}?t={{ $v }}#stack-line"></use></svg>
+              <svg data-copy-icon class="size-4 shrink-0 fill-current text-ink-muted transition-colors group-hover:text-accent" aria-hidden="true"><use href="{{ $sprite }}?t={{ $v }}#clipboard-line"></use></svg>
               <code class="truncate text-sm text-accent">{{ .token }}</code>
             </span>
             <span data-copy-label class="shrink-0 text-sm text-accent opacity-0 transition-opacity group-hover:opacity-100">kopieren</span>
@@ -157,9 +201,9 @@
                  the page cannot drift from main.css — hand-typed values had
                  already drifted by a digit or two. */ -}}
           <button type="button" data-hex-for="{{ .token }}"
-                  class="group flex cursor-pointer items-baseline justify-between gap-3 border-b border-accent-muted/30 pb-3 text-left hover:border-accent">
+                  class="group flex items-baseline justify-between gap-3 border-b border-accent-muted/30 pb-3 text-left hover:border-accent">
             <span class="flex min-w-0 items-center gap-2">
-              <svg data-copy-icon class="size-4 shrink-0 fill-current text-ink-muted transition-colors group-hover:text-accent" aria-hidden="true"><use href="{{ $sprite }}?t={{ $v }}#stack-line"></use></svg>
+              <svg data-copy-icon class="size-4 shrink-0 fill-current text-ink-muted transition-colors group-hover:text-accent" aria-hidden="true"><use href="{{ $sprite }}?t={{ $v }}#clipboard-line"></use></svg>
               <code class="truncate text-sm text-accent" data-hex-label>…</code>
             </span>
             <span data-copy-label class="shrink-0 text-sm text-accent opacity-0 transition-opacity group-hover:opacity-100">kopieren</span>
@@ -384,16 +428,41 @@
         weiß niemand, dass es existiert.
       </p>
       <ul class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
-        {{- range $icons }}
+        {{- range $iconDaten }}
         <li>
-          <button type="button" data-copy="{{ . }}"
-                  class="group flex w-full cursor-pointer items-center gap-3 rounded-sm border border-accent-muted/30 px-3 py-2 text-left hover:border-accent">
-            <svg class="size-5 shrink-0 fill-current text-ink" aria-hidden="true"><use href="{{ $sprite }}?t={{ $v }}#{{ . }}"></use></svg>
-            <code class="truncate text-sm text-accent">{{ . }}</code>
+          <button type="button" data-copy="{{ .name }}"
+                  class="group flex w-full items-center gap-3 rounded-sm border border-accent-muted/30 px-3 py-2 text-left hover:border-accent">
+            {{- /* Duotone only where a fill partner exists. Doubling a line
+                   glyph produces either nothing visible or something that
+                   reads as a rendering fault — there is no good middle
+                   value, so those render as a single clean line. */ -}}
+            {{- if .echt }}
+            <span class="gd-icon-duo text-xl">
+              <svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $v }}#{{ .hinten }}"></use></svg>
+              <svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $v }}#{{ .name }}"></use></svg>
+            </span>
+            {{- else }}
+            <svg class="gd-icon-shadow size-5 shrink-0 fill-current text-accent transition-colors group-hover:text-accent-hover" aria-hidden="true"><use href="{{ $sprite }}?t={{ $v }}#{{ .name }}"></use></svg>
+            {{- end }}
+            <code class="truncate text-sm text-accent">{{ .name }}</code>
           </button>
         </li>
         {{- end }}
       </ul>
+
+      <p class="mt-gutter text-sm text-ink-muted">
+        Alle Symbole erscheinen als <strong class="text-ink-strong">Duotone</strong>:
+        hinten der gefüllte Körper in gedämpftem Gold, um 0,03&nbsp;em nach unten
+        rechts versetzt, davor die Linie im Akzentgold, beim Überfahren aufgehellt. Das ist der Standard,
+        nicht die Ausnahme.
+      </p>
+      <p class="mt-3 text-sm text-ink-muted">
+        {{ len $duoPaare }} der {{ len $iconDaten }} gelisteten Symbole haben ein
+        <code class="text-accent">-fill</code>-Gegenstück und damit einen echten
+        Körper. Diese {{ len $ohneFill }} haben keins und bleiben einfarbig:
+        {{ range $i, $x := $ohneFill }}{{ if $i }}, {{ end }}<code class="text-accent">{{ $x }}</code>{{ end }}.
+        Kommen weitere Fills ins Sprite, wechseln sie hier von selbst.
+      </p>
 
       <h3 class="gd-h3 mt-gutter">Wachstumsstufen</h3>
       <p class="mb-4">
@@ -404,7 +473,13 @@
       <ul class="flex flex-wrap gap-3">
         {{- range $stages }}
         <li class="inline-flex items-center gap-2 rounded-sm border border-accent-muted/30 bg-surface px-3 py-2">
-          <svg class="size-5 shrink-0 fill-current {{ .ink }}" aria-hidden="true"><use href="{{ $sprite }}?t={{ $v }}#{{ .icon }}"></use></svg>
+          {{- /* Duotone in the stage colour: the body is the stage tint, the
+                 line sits on top in the same hue. Both layers inherit from the
+                 wrapper, so one class sets both. */ -}}
+          <span class="gd-icon-duo gd-icon-duo-tinted text-2xl {{ .ink }}">
+            <svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $v }}#{{ .fill }}"></use></svg>
+            <svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $v }}#{{ .icon }}"></use></svg>
+          </span>
           <span class="text-sm text-ink">{{ .label }}</span>
           <span class="text-sm text-ink-muted">· {{ .use }}</span>
         </li>
@@ -418,13 +493,65 @@
     <h2 class="gd-h2">Bedienelemente</h2>
     <div class="gd-panel flex flex-col gap-gutter">
       <div>
-        <h3 class="gd-h3">Buttons und Felder</h3>
+        <h3 class="gd-h3">Buttons</h3>
         <div class="flex flex-wrap items-center gap-4">
           <button type="button" class="gd-button">Primär</button>
           <button type="button" class="gd-button gd-button-secondary">Sekundär</button>
+          <button type="button" class="gd-button" disabled>Deaktiviert</button>
           <a href="#" class="text-accent underline underline-offset-4 hover:text-accent-hover">Textlink</a>
-          <input type="text" aria-label="Beispielfeld" placeholder="Eingabefeld"
-                 class="rounded-sm border border-accent-muted bg-surface px-3 py-1.5 text-sm text-ink focus:border-accent focus:outline-none">
+        </div>
+      </div>
+
+      <div>
+        <h3 class="gd-h3">Formularfelder</h3>
+        <p class="mb-gutter">
+          Auswahlfeld und Ankreuzfeld lassen sich vom Browser aus nicht gestalten,
+          deshalb sind beide neu gebaut: der Pfeil ist aus zwei Verläufen gezeichnet,
+          das Häkchen mit <code class="text-accent">clip-path</code> — ohne Schrift,
+          ohne Sprite. Der Fokus ist ein Ring statt eines Farbwechsels, damit er in
+          jedem Zustand sichtbar bleibt, und
+          <code class="text-accent">caret-color</code> färbt sogar den Textcursor.
+        </p>
+        <div class="grid gap-gutter sm:grid-cols-2">
+          <label class="flex flex-col gap-2">
+            <span class="text-sm text-ink-muted">Textfeld</span>
+            <input type="text" class="gd-field" placeholder="Klick hinein — der Cursor ist golden">
+          </label>
+          <label class="flex flex-col gap-2">
+            <span class="text-sm text-ink-muted">Pflichtfeld, prüft beim Verlassen</span>
+            <input type="email" required class="gd-field" placeholder="keine@gültige">
+          </label>
+          <label class="flex flex-col gap-2">
+            <span class="text-sm text-ink-muted">Auswahlfeld</span>
+            <select class="gd-field">
+              <option>Keimling</option>
+              <option>Knospend</option>
+              <option>Immergrün</option>
+              <option>Verwelkt</option>
+            </select>
+          </label>
+          <label class="flex flex-col gap-2">
+            <span class="text-sm text-ink-muted">Mehrzeilig</span>
+            <textarea rows="3" class="gd-field" placeholder="Mehrere Zeilen"></textarea>
+          </label>
+        </div>
+        <div class="mt-gutter flex flex-wrap gap-gutter">
+          <label class="flex items-center gap-3">
+            <input type="checkbox" class="gd-check" checked>
+            <span>Ankreuzfeld, gesetzt</span>
+          </label>
+          <label class="flex items-center gap-3">
+            <input type="checkbox" class="gd-check">
+            <span>Ankreuzfeld, leer</span>
+          </label>
+          <label class="flex items-center gap-3">
+            <input type="radio" name="demo" class="gd-check" checked>
+            <span>Auswahlknopf</span>
+          </label>
+          <label class="flex items-center gap-3">
+            <input type="radio" name="demo" class="gd-check">
+            <span>Alternative</span>
+          </label>
         </div>
       </div>
 

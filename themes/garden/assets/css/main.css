@@ -101,6 +101,18 @@
   --color-accent: hsl(35 45% 50%); /* links, focus, active */
   --color-accent-hover: hsl(29 100% 80%); /* hover */
   --color-accent-muted: hsl(35 45% 26%); /* borders, dividers */
+  /* The shadow beneath a duotone glyph: muted gold, the value from the 2020
+   * sketch. It is LIGHTER than the surface, which sounds wrong for a shadow
+   * and is not. A genuinely darker shade against a near-black background reads
+   * as a hole punched in the page — it was tried, and it hurt to look at. What
+   * carries the depth here is the step down from the bright line, not darkness
+   * against the page.
+   *
+   * Deepened from the sketch's 26% to 17%: still above the surface's 11%, so
+   * it never reads as a hole, but far enough below the bright line that the
+   * two layers separate. Darkened rather than made transparent — a translucent
+   * shadow washes out instead of receding. */
+  --color-accent-shadow: hsl(35 48% 17%);
 
   /* --- State ------------------------------------------------------------
    * For messages, form validation and build/deploy feedback. Lighter than the
@@ -415,6 +427,33 @@
 }
 
 /* ===========================================================================
+ * INTERACTION BASELINE — a standing rule, not a per-element decision.
+ *
+ * Anything you can click shows a pointer. Tailwind's Preflight sets
+ * `cursor: default` on buttons, which is the HTML default and, on this site,
+ * simply wrong: it was being corrected by hand with `cursor-pointer` at every
+ * call site, and one forgotten instance is a control that does not feel
+ * clickable.
+ *
+ * Stated once, here, so no template has to remember it.
+ * =========================================================================== */
+[data-garden]
+  :is(
+    button,
+    summary,
+    label[for],
+    label:has(input, select, textarea),
+    [role="button"],
+    a[href]
+  ):not(:disabled) {
+  cursor: pointer;
+}
+[data-garden] :is(button, [role="button"], input, select, textarea):disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+/* ===========================================================================
  * BUTTONS
  *
  * A component, not a pile of utilities repeated at every call site. The reason
@@ -464,6 +503,226 @@
 [data-garden] .gd-button-secondary:hover {
   background-color: var(--color-accent);
   color: var(--color-surface-sunken);
+}
+
+/* ===========================================================================
+ * DUOTONE ICONS — Angel's variant B from docs/ideas/IconDemo.html.
+ *
+ * Two copies of the glyph: one behind in the muted accent at 90% opacity,
+ * nudged down and right, one in front in the LIGHT accent. Bright-on-dark is
+ * what makes it read; an earlier attempt used the mid accent in front and the
+ * two tones simply merged.
+ *
+ * The offset is 0.06em, not a fixed pixel value, so it scales with the icon —
+ * at 24px it is 1.4px, at 48px it is 2.9px, and the effect stays proportional.
+ * That is also why the box is sized in em and the SIZE COMES FROM font-size:
+ * put `text-2xl` or `text-[28px]` on the wrapper, not `size-7`.
+ *
+ * The component takes TWO glyphs: a back one and a front one. Where the sprite
+ * carries a `-fill` partner, the back layer is the filled body and the effect
+ * is the real thing. Where it does not, the line glyph goes in twice — an
+ * offset edge, but no solid body behind it.
+ *
+ * CSS cannot fill an outline. A line icon is a stroke path with no interior,
+ * and Remixicon's `-fill` icons are separate paths, not a rendering mode of
+ * the same glyph. Getting true duotone across the set means regenerating the
+ * sprite with the fill partners included — the collection definition sits
+ * beside it as RemixIcon_Collection_*.remixicon.
+ * =========================================================================== */
+[data-garden] .gd-icon-duo {
+  /* One place to tune the depth. 0.06em read as too heavy on dense glyphs;
+   * 0.04 keeps the edge without the shape looking doubled.
+   *
+   * No single value suits every glyph, and that is worth stating plainly: a
+   * dense shape like heart wants less, a hairline like asterisk would want
+   * more. Chasing that per icon is unmaintainable.
+   *
+   * The vertical shift is nearly twice the horizontal one. An equal offset
+   * reads as a diagonal smear; weighting it downwards reads as the glyph
+   * sitting above its own shadow, which is what a shadow does.
+   *
+   * Because the offset is in em it grows with the icon, and at display sizes
+   * a proportional shift starts to look like a mistake rather than depth —
+   * hence the small values. Glyphs without a fill partner do not use this
+   * component at all; they render as a single clean line. */
+  --gd-duo-offset-x: 0.03em;
+  --gd-duo-offset-y: 0.055em;
+
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  width: 1em;
+  height: 1em;
+  line-height: 1;
+  flex: none;
+}
+[data-garden] .gd-icon-duo svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  fill: currentColor;
+}
+[data-garden] .gd-icon-duo svg:first-child {
+  color: var(--color-accent-shadow);
+  opacity: 1;
+  transform: translate(var(--gd-duo-offset-x), var(--gd-duo-offset-y));
+  transition: transform 0.2s ease-out;
+}
+[data-garden] .gd-icon-duo svg:last-child {
+  color: var(--color-accent);
+  transition: color 0.2s ease-out;
+}
+
+/* Tinted variant: both layers take the colour set on the wrapper, so a growth
+ * stage is duotone in its own hue without a rule per stage. The shadow layer
+ * is the same hue darkened, not a separate colour. */
+[data-garden] .gd-icon-duo-tinted svg:first-child {
+  color: currentColor;
+  opacity: 0.35;
+}
+[data-garden] .gd-icon-duo-tinted svg:last-child {
+  color: currentColor;
+}
+
+/* Hover lifts the line to accent-hover. The token is named for this state and
+ * was previously spent on the resting one, which left hover with nowhere to go
+ * — it had a brightness filter bolted on as a substitute. The shadow stays
+ * put; moving both would read as the icon jumping. */
+[data-garden] :is(a, button, .gd-panel):hover .gd-icon-duo svg:last-child {
+  color: var(--color-accent-hover);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-garden] .gd-icon-duo svg {
+    transition: none;
+  }
+}
+
+/* Icons WITHOUT a fill partner get the same offset shadow via drop-shadow,
+ * which follows the rendered alpha and therefore works on a hairline glyph
+ * where a second copy underneath would not. Same offset, same colour, so the
+ * catalogue reads as one language instead of two.
+ *
+ * Not used for the pairs: a filled body behind the line gives a solid shape
+ * that drop-shadow cannot, and applying both would double the shadow. */
+[data-garden] .gd-icon-shadow {
+  filter: drop-shadow(0.03em 0.055em 0 var(--color-accent-shadow));
+}
+
+/* ===========================================================================
+ * FORM CONTROLS
+ *
+ * The scoped baseline strips the browser's own styling from these; this puts a
+ * deliberate one back. Native select and checkbox rendering cannot be themed
+ * at all on most platforms, so both are rebuilt: `appearance: none` plus an
+ * arrow drawn as a background gradient, and a checkmark drawn with clip-path.
+ *
+ * Focus is a ring rather than a colour change, so it is visible regardless of
+ * the field's state, and `caret-color` picks up the accent so even the text
+ * cursor belongs to the palette.
+ * =========================================================================== */
+[data-garden] .gd-field {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--color-accent-muted);
+  border-radius: var(--radius-sm);
+  background-color: var(--color-surface-sunken);
+  color: var(--color-ink);
+  font-size: var(--text-sm);
+  caret-color: var(--color-accent);
+  transition:
+    border-color 0.2s ease-out,
+    box-shadow 0.2s ease-out;
+}
+[data-garden] .gd-field::placeholder {
+  color: var(--color-ink-muted);
+}
+[data-garden] .gd-field:hover {
+  border-color: --alpha(var(--color-accent) / 60%);
+}
+[data-garden] .gd-field:focus {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px --alpha(var(--color-accent) / 25%);
+}
+[data-garden] .gd-field:user-invalid {
+  border-color: var(--color-error);
+}
+[data-garden] .gd-field:user-invalid:focus {
+  box-shadow: 0 0 0 3px --alpha(var(--color-error) / 25%);
+}
+
+/* Select: the native arrow cannot be styled, so it is replaced by two
+ * gradients that meet in a chevron. Padding on the right keeps text clear of
+ * it. */
+[data-garden] select.gd-field {
+  appearance: none;
+  padding-right: 2.25rem;
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--color-accent) 50%),
+    linear-gradient(135deg, var(--color-accent) 50%, transparent 50%);
+  background-position:
+    right 1.15rem center,
+    right 0.75rem center;
+  background-size:
+    0.4rem 0.4rem,
+    0.4rem 0.4rem;
+  background-repeat: no-repeat;
+}
+[data-garden] select.gd-field:focus {
+  background-image:
+    linear-gradient(135deg, transparent 50%, var(--color-accent-hover) 50%),
+    linear-gradient(45deg, var(--color-accent-hover) 50%, transparent 50%);
+}
+/* The dropdown list itself is drawn by the OS. These two are the only
+ * properties every engine honours — worth setting so the open list is not a
+ * white rectangle on a dark site. */
+[data-garden] select.gd-field option {
+  background-color: var(--color-surface-raised);
+  color: var(--color-ink);
+}
+
+/* Checkbox and radio, rebuilt. The checkmark is a clip-path polygon rather
+ * than a glyph, so it needs no font and no sprite. */
+[data-garden] .gd-check {
+  flex: none;
+  width: 1.15rem;
+  height: 1.15rem;
+  border: 1px solid var(--color-accent-muted);
+  border-radius: var(--radius-sm);
+  background-color: var(--color-surface-sunken);
+  transition:
+    background-color 0.15s ease-out,
+    border-color 0.15s ease-out;
+}
+[data-garden] .gd-check[type="radio"] {
+  border-radius: 50%;
+}
+[data-garden] .gd-check:hover {
+  border-color: var(--color-accent);
+}
+[data-garden] .gd-check:checked {
+  border-color: var(--color-accent);
+  background-color: var(--color-accent);
+}
+[data-garden] .gd-check:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+[data-garden] .gd-check:checked::after {
+  content: "";
+  display: block;
+  height: 100%;
+  width: 100%;
+  background-color: var(--color-surface-sunken);
+  clip-path: polygon(
+    17% 47%, 9% 55%, 39% 84%,
+    91% 32%, 83% 24%, 39% 68%
+  );
+}
+[data-garden] .gd-check[type="radio"]:checked::after {
+  clip-path: circle(26% at 50% 50%);
 }
 
 /* ===========================================================================

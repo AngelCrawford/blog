@@ -82,9 +82,8 @@
           ok = false;
         }
 
-        // Swap the stacked-sheets glyph for a checkmark. The sprite has no
-        // dedicated copy icon, so `stack-line` stands in for duplicate and
-        // `check-fill` confirms — clearer than only swapping the text.
+        // Swap the clipboard glyph for a checkmark. Clearer than only changing
+        // the label, because it is legible from the corner of the eye.
         const icon = button.querySelector("[data-copy-icon] use");
         const spriteHref = icon && icon.getAttribute("href");
 
