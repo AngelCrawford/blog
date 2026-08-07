@@ -9,7 +9,7 @@
  * Cards here are smaller than on the feed — a 22rem floor instead of 30rem.
  * There is no excerpt to read at this width; the year and the title are what
  * you came for, and four across beats two. */ -}}
-<div data-garden class="mx-auto max-w-5xl px-gutter pt-gutter pb-section font-body text-base text-ink">
+<div data-garden class="mx-auto max-w-[96rem] px-gutter pt-gutter pb-section font-body text-base text-ink">
 
     <div class="grid grid-cols-1 gap-gutter lg:grid-cols-[minmax(0,1fr)_19rem] lg:items-start">
         <div class="gd-panel at-flow">
@@ -38,7 +38,7 @@
     {{- range ($combinedPages.GroupByDate "2006") }}
     <section class="mt-section">
         <h2 class="gd-h2" id="{{ .Key }}">{{ .Key }}</h2>
-        <div class="grid grid-cols-1 gap-x-gutter gap-y-gutter sm:grid-cols-[repeat(auto-fill,minmax(22rem,1fr))]">
+        <div class="grid grid-cols-[repeat(auto-fill,minmax(22rem,1fr))] gap-x-gutter gap-y-gutter">
             {{- range .Pages.ByPublishDate.Reverse }}{{ partial "card" . }}{{ end }}
         </div>
     </section>

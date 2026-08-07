@@ -258,12 +258,34 @@ garden markup for the card and article-time's, unchanged, for the article page.
 Delete those branches in the commit that moves `single.html` — the pattern is
 already there in the file.
 
-**Open, and deliberately not decided here:** the feed is a single column of at
-most 733px inside a 64rem page. That follows from the design system —
-`--page-max` is 64rem and `.at-card` caps at 733.5px — but upstream the feed ran
-the full window width at two columns on desktop and three above 1408px. It is a
-large change to how the front page reads and it belongs to Angel, not to a
-migration.
+**The feed is 96rem wide and the card reacts to its own width.** The first cut
+put it in a single 733px column, because `--page-max` is 64rem and `.at-card`
+capped at 733.5px. That cap turned out not to be a decision about feeds at all:
+`spacing.css` annotates the token `1024px content column, max-w-5xl upstream` —
+it was read off garden's *styleguide* page, the only garden page that existed
+when the design system was built, and a styleguide is a document.
+
+Widening alone does not work either. The card's floated cover needs roughly
+700px of card to leave a readable text column; at three across it is 480px and
+the text runs four words to a line, which is the exact failure the 4:3 landscape
+ratio was adopted to avoid. The float dropped at `max-width: 640px` — the right
+threshold measured against the wrong thing, since in a three-column grid on a
+1536px screen the viewport never gets small.
+
+So `.at-card` is a **size container** and the float drops at
+`@container (max-width: 40rem)`. One card, floated when it is wide and stacked
+when it is not, wherever it is put. Two things had to go with it: the 733.5px cap
+and the auto margins — `margin: auto` makes a grid item shrink to fit its
+contents, and `contain: inline-size` forbids the contents from deciding the
+inline size, so the pair collapsed every card to its 2px of border.
+
+The grid floor is 28rem rather than 30. At 30rem three tracks come to exactly
+1488px in a 1488px grid and the browser rounds down to two; a boundary is not a
+margin. `1fr` still shares the leftovers, so the tracks land at 480px anyway.
+
+Measured: 3 columns above 1536, 2 from about 1030, 1 below; the cover floats at
+900px viewport (one 732px card) and at 1400 (two 604px cards), and stacks
+otherwise.
 
 ### The header came from Bulma, not from the design system — done
 

@@ -106,6 +106,28 @@ failed twice; [`migration.md`](migration.md) records both rounds. The rule that
 came out of it: **demote, do not out-shout, and put your own rules in a layer
 too.**
 
+### Two page widths, not one
+
+**Decided August 2026.** Documents cap at **64rem** (`--page-max`) — the article
+page, the styleguide, anything that is mostly prose. Listings cap at **96rem**:
+the front page, section and term listings, the archive, 404.
+
+The design system has only the first number, and annotates it
+`1024px content column, max-w-5xl upstream`. It was read off the styleguide page
+— the only garden page that existed when the system was built — and then applied
+to the card overview as well. A styleguide is a document. A feed of cards is not:
+at 64rem it renders as one column with 120px of empty page either side.
+
+The card follows from this rather than the other way round. It is a **size
+container**, and its cover floats into the text only when the card itself is
+wider than 40rem; below that the picture goes on top. That is why one card works
+in a 732px single column and three across at 480px. Sizing it against the
+viewport cannot work — at 1536px wide the viewport is "desktop" whether the card
+is 1488px or 480px.
+
+`--page-max-wide` does not exist as a token yet; the four listing templates carry
+`max-w-[96rem]` literally. It belongs in the design system on the next sync.
+
 ### Depth — restrained shadows
 
 Soft, shallow shadows for cards and panels. Three steps, no more.

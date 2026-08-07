@@ -22,7 +22,7 @@
 {{- if eq .Kind "term" }}{{ with .Parent.Params.translation.singular }}{{ $pagename = printf "%s: %s" . $.Title }}{{ end }}
 {{- else if $isTaxonomy }}{{ with .Params.translation.plural }}{{ $pagename = . }}{{ end }}{{ end -}}
 
-<div data-garden class="mx-auto max-w-5xl px-gutter pt-gutter pb-section font-body text-base text-ink">
+<div data-garden class="mx-auto max-w-[96rem] px-gutter pt-gutter pb-section font-body text-base text-ink">
 
     <div class="gd-panel at-flow mb-section">
         {{- with .Resources }}
@@ -47,7 +47,7 @@
         {{- $hiddenCount = partial "withered-count.html" .Pages -}}
     {{- end -}}
 
-    <div class="{{ if not $isTaxonomy }}h-feed {{ end }}grid grid-cols-1 gap-x-gutter gap-y-gutter {{ if $isTaxonomy }}sm:grid-cols-[repeat(auto-fill,minmax(22rem,1fr))]{{ else }}min-[52rem]:grid-cols-[repeat(auto-fill,minmax(30rem,1fr))]{{ end }}">
+    <div class="{{ if not $isTaxonomy }}h-feed {{ end }}grid gap-x-gutter gap-y-gutter {{ if $isTaxonomy }}grid-cols-[repeat(auto-fill,minmax(22rem,1fr))]{{ else }}grid-cols-[repeat(auto-fill,minmax(28rem,1fr))]{{ end }}">
         {{- if $isTaxonomy -}}
             {{- /* Busiest Rubrik first: a taxonomy index is a way in, and the one
                    with two entries is not the way in. */ -}}

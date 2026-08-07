@@ -8,12 +8,17 @@
  * ~480px column and this keeps it there without anyone maintaining a set of
  * numbers.
  *
+ * 28rem, not 30. At 30rem three tracks come to exactly 1488px in a 1488px grid
+ * and the browser rounds down to two — a boundary is not a margin. 28rem leaves
+ * room for the arithmetic and the tracks still land at 480px on a wide screen,
+ * because `1fr` shares out whatever is left over.
+ *
  * `grid-cols-*` is not optional even so — `grid` is a Bulma class name too, and
  * Bulma's fills in a 0.75rem gap and its own auto-fill template wherever garden
  * declares none.
  *
  * `h-feed` is a microformat, not styling. It stays. */ -}}
-<div data-garden class="mx-auto max-w-5xl px-gutter pt-gutter pb-section font-body text-base text-ink">
+<div data-garden class="mx-auto max-w-[96rem] px-gutter pt-gutter pb-section font-body text-base text-ink">
 
     <div class="gd-panel mb-section">
         <h1 class="gd-h1" data-heading="{{ .Title }}">{{ .Title }}</h1>
@@ -28,7 +33,7 @@
     {{- $hiddenCount := partial "withered-count.html" $all -}}
     {{- $paginator := .Paginate $visible -}}
 
-    <div class="h-feed grid grid-cols-1 gap-x-gutter gap-y-gutter min-[52rem]:grid-cols-[repeat(auto-fill,minmax(30rem,1fr))]">
+    <div class="h-feed grid grid-cols-[repeat(auto-fill,minmax(28rem,1fr))] gap-x-gutter gap-y-gutter">
         {{- /* Weighted entries first and in weight order, then everything else
                newest first, then anything with no weight at all. Three ranges
                rather than one sort because `weight` is optional and Hugo sorts

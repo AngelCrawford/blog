@@ -717,6 +717,16 @@ select.gd-field option {
  * md is for cards and panels, lg for dialogs and overlays. The card had lg by
  * mistake, which is exactly the drift a three-step scale exists to prevent. */
 .at-card {
+  /* A SIZE CONTAINER, so the card can react to its own width instead of the
+   * window's. This is what makes one card work in a single 733px column and in
+   * a three-across grid at 480px: the floated cover is right in the first and
+   * unreadable in the second, and the viewport cannot tell those apart — at
+   * 1536px wide it is "desktop" either way.
+   *
+   * `inline-size` only, never `size`: the card's height comes from its content,
+   * and `container-type: size` would require it not to. */
+  container-type: inline-size;
+
   /* DIVERGES FROM THE DESIGN SYSTEM ON PURPOSE — two declarations it does not
    * have. Upstream the React component sets `display: grid` and
    * `grid-template-rows: 1fr auto` inline on every card, so the footer sits on
@@ -737,7 +747,16 @@ select.gd-field option {
   display: grid;
   grid-template-rows: 1fr auto;
 
-  position: relative; height: 100%; max-width: 733.5px; margin-left: auto; margin-right: auto;
+  /* NO `max-width` AND NO AUTO MARGINS ANY MORE, and they had to go together with
+   * the container above. `margin-left/right: auto` makes a grid item shrink to
+   * fit its contents — and `contain: inline-size` forbids the contents from
+   * determining the inline size, so the two combined collapsed the card to its
+   * 2px of border. Measured, not guessed: every card came out `width: 2`.
+   *
+   * The cap was for a single centred column, which is what the design system's
+   * page produces at 64rem. The grid decides the width now, so a cap here is a
+   * second opinion about a decision the call site already made. */
+  position: relative; height: 100%;
   background: var(--color-surface-raised);
   border: 1px solid color-mix(in srgb, var(--color-accent) 20%, transparent);
   border-radius: var(--radius-md);
@@ -862,6 +881,20 @@ select.gd-field option {
 }
 /* The container has to contain its float, or the card collapses behind the image. */
 .at-flow::after { content: ""; display: block; clear: both; }
+/* THE FLOAT DROPS BY CARD WIDTH, NOT BY VIEWPORT. It used to be
+ * `@media (max-width: 640px)`, which is the right threshold measured against
+ * the wrong thing: in a three-column grid on a 1536px screen each card is 480px
+ * and the media query never fires, so a 46% cover left about 200px of text —
+ * four words to a line, the exact failure the landscape ratio was adopted to
+ * avoid. 40rem is the card width below which the two-column reading falls
+ * apart; above it the picture floats and the text runs around it as designed.
+ *
+ * `.at-figure-float` also appears in article prose, where the container is the
+ * panel rather than a card. Panels are wider than 40rem, so it floats there. */
+@container (max-width: 40rem) {
+  .at-figure-float { float: none; width: auto; margin: 0 0 var(--spacing-4) -3em; }
+}
+/* Fallback for the prose case, which has no size container above it. */
 @media (max-width: 640px) {
   .at-figure-float { float: none; width: auto; margin: 0 0 var(--spacing-4) -3em; }
 }

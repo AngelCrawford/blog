@@ -1,7 +1,7 @@
 {{ define "main" }}
 {{- /* Garden — not found. The apology, then four recent articles: a dead end
  * that offers a way on is worth more than one that offers a search box. */ -}}
-<div data-garden class="mx-auto max-w-5xl px-gutter pt-gutter pb-section font-body text-base text-ink">
+<div data-garden class="mx-auto max-w-[96rem] px-gutter pt-gutter pb-section font-body text-base text-ink">
 
     <div class="gd-panel mb-section text-center">
         <h1 class="gd-h1" data-heading="404">404</h1>
@@ -14,7 +14,7 @@
            get someone unstuck should not hand them something the site itself
            says is out of date. */ -}}
     {{- $recent := partial "withered-filter.html" (where .Site.RegularPages "Section" "articles") -}}
-    <div class="grid grid-cols-1 gap-x-gutter gap-y-gutter min-[52rem]:grid-cols-[repeat(auto-fill,minmax(30rem,1fr))]">
+    <div class="grid grid-cols-[repeat(auto-fill,minmax(28rem,1fr))] gap-x-gutter gap-y-gutter">
         {{- range first 4 $recent.ByDate.Reverse }}{{ partial "card" . }}{{ end }}
     </div>
 </div>
