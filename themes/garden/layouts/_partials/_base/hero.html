@@ -30,13 +30,13 @@
 
 <div class="at-city" aria-hidden="true"></div>
 
-<div class="at-hero-fx" aria-hidden="true">
+<div class="absolute inset-0 overflow-hidden" aria-hidden="true">
   <div class="at-stars" data-hero-stars hidden></div>
   <div class="at-balloon" data-hero-balloon hidden></div>
 
   {{- /* Only drawn between 27 December and 6 January — firework.js checks the
          date itself and leaves the canvas untouched the rest of the year. */ -}}
-  <canvas id="firework"></canvas>
+  <canvas id="firework" class="absolute inset-0 size-full"></canvas>
 
   <div data-hero-santa hidden>
     <svg class="at-santa-back" preserveAspectRatio="xMinYMin meet" x="0px" y="0px" width="100px" height="90px" viewBox="0 0 100 90" enable-background="new 0 0 100 90" xml:space="preserve">
@@ -110,12 +110,14 @@
   </div>
 </div>
 
-<div class="at-hero-body">
+{{- /* 19px below centre at desktop, 7 at tablet, 0 on a phone — measured off
+       the old header, not derived. See components.css on the wordmark. */ -}}
+<div class="relative z-3 grid h-full place-items-center pt-[38px] max-[840px]:pt-[14px] max-[640px]:pt-0">
   {{- /* No logo file exists, by decision: the mark IS the site title set in
          Montserrat Alternates under the gold gradient. `data-heading` feeds the
          drop-line pseudo-element, which carries the shadow the gradient fill
          cannot. */ -}}
-  <a class="at-wordmark-link" href="{{ .Site.Home.RelPermalink }}" title="{{ .Site.Title }}">
+  <a class="inline-block" href="{{ .Site.Home.RelPermalink }}" title="{{ .Site.Title }}">
     <span class="at-wordmark" data-heading="{{ .Site.Title }}">
       <span class="at-wordmark-shimmer">{{ .Site.Title }}</span>
     </span>

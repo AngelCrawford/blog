@@ -1243,9 +1243,8 @@ a.at-hashtag, a.at-tag { text-decoration: none; }
   filter: sepia(0.4);
 }
 
-/* Everything that moves lives in one clipped box, so a bird leaving the frame
- * does not widen the document. */
-.at-hero-fx { position: absolute; inset: 0; overflow: hidden; }
+/* The effects box is `absolute inset-0 overflow-hidden` at its one call site, so
+ * a bird leaving the frame does not widen the document. */
 
 /* The clock face rises into place once on load and stays. `both` keeps the end
  * state; without it the face snaps back to 200px the moment the run finishes. */
@@ -1314,11 +1313,11 @@ a.at-hashtag, a.at-tag { text-decoration: none; }
 
 /* Fireworks — a canvas firework.js draws on, but only around New Year. The id
  * is the script's only hook and stays spelled exactly this way. */
-/* Full height, not the old 80%. A canvas scales its bitmap to its box rather
- * than cropping it, so `80%` never kept the effect clear of the skyline — it
- * only squashed everything by a fifth. firework.js sizes its bitmap from this
- * box, so the two cannot disagree again. */
-#firework { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+/* The canvas is positioned with utilities; only its `id` matters, and that is
+ * firework.js's single hook. Full height, not the old 80%: a canvas scales its
+ * bitmap to its box rather than cropping, so `80%` never kept the effect clear
+ * of the skyline — it only squashed everything by a fifth. firework.js sizes its
+ * bitmap from that box, so the two cannot disagree again. */
 
 /* ---- Seasonal overlays ---------------------------------------------------
  * December and October. Both are inline SVG in the markup, because both need
@@ -1367,13 +1366,10 @@ a.at-hashtag, a.at-tag { text-decoration: none; }
  * wordmark sits ON the skyline instead of in the middle of the clock face, and
  * the header is the one part of the old design that was asked to come over
  * unchanged. Centring it is deleting one line here, if it ever looks wrong. */
-.at-hero-body {
-  position: relative; z-index: 3;
-  display: grid; place-items: center; height: 100%;
-  padding-top: 38px; /* half of it becomes the downward shift */
-}
-.at-wordmark-link { display: inline-block; }
-
+/* `.at-hero-body` and `.at-wordmark-link` are utilities at the call site: a
+ * centred grid, and the 19/7/0px downward nudge per breakpoint. Only the
+ * wordmark itself is left here — its glow and its drop line are pseudo-elements
+ * sharing `--at-wordmark-pad` with the shimmer, which no utility can hand over. */
 .at-wordmark {
   /* The shimmer needs horizontal padding so its 50px-wide highlight can start
    * off the glyphs. The drop-line pseudo-element has to carry the SAME padding
@@ -1442,7 +1438,6 @@ a.at-hashtag, a.at-tag { text-decoration: none; }
   .at-balloon { top: 130px; left: calc(50% + 245px); width: 30px; height: 30px; }
   .at-birds .at-bird { transform: scale(0.7); }
   .at-santa-front, .at-santa-back { height: 3rem; top: calc(50% - 20px); left: calc(50% - 170px); }
-  .at-hero-body { padding-top: 14px; }
 }
 @media (max-width: 640px) {
   .at-header { height: 200px; }
@@ -1452,8 +1447,6 @@ a.at-hashtag, a.at-tag { text-decoration: none; }
   .at-balloon { top: 70px; left: calc(50% + 140px); width: 20px; height: 20px; }
   .at-birds .at-bird { transform: scale(0.7); }
   .at-santa-front, .at-santa-back { height: 2.4rem; top: calc(50% - 23px); left: calc(50% - 127px); }
-  /* On a phone the old header was centred to within a pixel. Leave it centred. */
-  .at-hero-body { padding-top: 0; }
 }
 
 /* The header is where every animation on this site lives, so this is where
