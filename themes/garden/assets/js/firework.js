@@ -1,11 +1,28 @@
 // THANKS: Firework.js - https://codepen.io/zystvan/details/LEbNRp
+//
+// Garden copy. The particle system below is the original, untouched. What
+// changed is the canvas geometry, which was wrong in three ways:
+//
+//   1. The bitmap was 300px tall and the element renders at 80% of a 300px
+//      header — 240px. Everything drawn was squashed by a fifth, and the
+//      rockets launched from `y = ch` into what was already off the bottom.
+//   2. `ch` was the literal 300 while the header is 200px below 640px wide,
+//      so on a phone the squash was a third.
+//   3. `cw` was read once at load. Resizing the window stretched whatever was
+//      already on the canvas and left new fireworks aiming off-screen.
+//
+// All three come from the same mistake: a canvas has two sizes, and the bitmap
+// has to be told what the box is doing. `size()` reads the box.
+//
+// The CSS is `height: 100%` now for the same reason. The old `80%` looked like
+// it kept the effect clear of the skyline, but the canvas scaled rather than
+// cropped, so it never did — it only made everything shorter.
 
-// now we will setup our basic variables for the demo
 var canvas = document.getElementById('firework'),
 		ctx = canvas.getContext('2d'),
-		// full screen dimensions
-		cw = window.innerWidth,
-		ch = 300,
+		// filled by size(), which reads the element's own box
+		cw = 0,
+		ch = 0,
 		// firework collection
 		fireworks = [],
 		// particle collection
@@ -15,10 +32,24 @@ var canvas = document.getElementById('firework'),
 		// this will time the auto launches of fireworks, one launch per 80 loop ticks
 		timerTotal = 80,
 		timerTick = 0;
-		
-// set canvas dimensions
-canvas.width = cw;
-canvas.height = ch;
+
+// Match the bitmap to the rendered box. Assigning width or height also CLEARS
+// the canvas, which is why this is not called from inside the loop.
+function size() {
+	var box = canvas.getBoundingClientRect();
+	cw = Math.round(box.width);
+	ch = Math.round(box.height);
+	canvas.width = cw;
+	canvas.height = ch;
+}
+size();
+// Debounced: a drag-resize fires this dozens of times a second, and each call
+// throws away the frame.
+var resizeTimer;
+window.addEventListener('resize', function () {
+	clearTimeout(resizeTimer);
+	resizeTimer = setTimeout(size, 150);
+}, { passive: true });
 
 var animateId;
 

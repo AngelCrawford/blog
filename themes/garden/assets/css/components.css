@@ -1369,7 +1369,11 @@ a.at-hashtag, a.at-tag { text-decoration: none; }
 
 /* Fireworks — a canvas firework.js draws on, but only around New Year. The id
  * is the script's only hook and stays spelled exactly this way. */
-#firework { position: absolute; top: 0; left: 0; width: 100%; height: 80%; }
+/* Full height, not the old 80%. A canvas scales its bitmap to its box rather
+ * than cropping it, so `80%` never kept the effect clear of the skyline — it
+ * only squashed everything by a fifth. firework.js sizes its bitmap from this
+ * box, so the two cannot disagree again. */
+#firework { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
 
 /* ---- Seasonal overlays ---------------------------------------------------
  * December and October. Both are inline SVG in the markup, because both need

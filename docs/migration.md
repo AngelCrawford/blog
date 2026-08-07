@@ -100,6 +100,34 @@ gets you well-designed cards in a broken grid.
 
 Card, wrapper and cell are therefore one unit of work, not three.
 
+### The New Year fireworks: geometry, not the migration
+
+Checked after the header moved, because a canvas is the kind of thing a
+migration breaks silently. **It did not break anything** — verified against a
+build of the previous commit with the date faked to 30 December: same 125
+particles at peak, same painted-pixel count within sampling noise.
+
+The effect had three geometry bugs of its own, all the same mistake — a canvas
+has two sizes, and nobody was telling the bitmap what the box was doing:
+
+- The bitmap was 300px tall and the element renders at `height: 80%` of a 300px
+  header, so everything drawn was squashed by a fifth. The `80%` looked like it
+  kept the effect clear of the skyline; a canvas scales rather than crops, so it
+  never did.
+- `ch` was the literal `300` while the header is 200px below 640px wide — a
+  third of a squash on a phone.
+- `cw` was read once at load, so resizing stretched whatever was on the canvas
+  and left new fireworks aiming off-screen.
+
+`size()` reads the element's own box now, on load and (debounced) on resize, and
+the CSS is `height: 100%`. Verified at 1280 and 420, and across a resize.
+
+**Two things left alone, both decisions rather than defects:** the loop stops
+twelve seconds after load, so arriving on 31 December gets twelve seconds and
+then nothing until you navigate; and the rockets launch from the bottom centre
+and climb behind the skyline, which sits at `z-index: 2` against the canvas's
+`auto` — only the burst at the top is ever visible.
+
 ### What the footer migration turned up
 
 Three things worth knowing, all fixed in the same commit.
@@ -194,7 +222,8 @@ were live, back-to-top and the footer reveal, and only those came across. Their
 port is 50 lines and the resize listener became a `ResizeObserver`, which
 catches the cases resize never did (a webfont finishing its swap, an image
 settling).
-| `firework.js`, `hearts.js`, `withered-banner.js`, `suncalc.js` | 0 | ✅ already vanilla |
+| `firework.js` | — | ✅ garden — moved with the header; canvas geometry fixed, see below |
+| `hearts.js`, `withered-banner.js`, `suncalc.js` | 0 | ✅ already vanilla, still article-time's |
 | `navbar.js` | — | ✅ deleted, was dead code |
 
 **All four are done.** The rule while they were not — porting one saves zero
