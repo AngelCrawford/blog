@@ -1,0 +1,56 @@
+{{- /* Growth-stage badge (Story 1.2) — the digital-garden signal.
+ *
+ * TWO RENDER CONTEXTS, because two templates share this partial and only one of
+ * them has migrated:
+ *
+ *   "card"    garden. `at-growth` with the duotone glyph tinted in the stage's
+ *             own colour, no label — the card footer has no room for one and the
+ *             tooltip carries the meaning.
+ *   "single"  article-time, UNCHANGED. layouts/single.html is still Bulma and
+ *             its `.info.widget` styling, plus three e2e assertions, read
+ *             `span.growth-stage` and its inner label. Delete this branch in the
+ *             commit that migrates single.html — not before.
+ *
+ * Caller forms, both supported:
+ *   {{ partial "growth-badge.html" . }}                        → single
+ *   {{ partial "growth-badge.html" (dict "page" . "context" "card") }}
+ *
+ * THE TINT GOES ON THE GLYPH, never on a surface and never on running text.
+ * Four stages, four colours, and that is the entire exception — see
+ * docs/design.md. Missing stage falls back to seedling; build-time validation
+ * in `_base/validate-growth-stage.html` guarantees nothing else arrives. */ -}}
+{{- $page := . -}}
+{{- $context := "single" -}}
+{{- if reflect.IsMap . -}}
+    {{- $page = .page -}}
+    {{- $context = .context | default "single" -}}
+{{- end -}}
+
+{{- $stage := default "seedling" $page.Params.growth_stage -}}
+{{- /* Line glyph, filled partner, label, tooltip. The fill is what the duotone
+       shadow layer draws; every one of these four has a partner in the sprite. */ -}}
+{{- $stages := dict
+  "seedling"  (dict "line" "seedling-line" "fill" "seedling-fill" "label" "Seedling"  "tip" "Seedling; früher Entwurf")
+  "budding"   (dict "line" "flower-line"   "fill" "flower-fill"   "label" "Budding"   "tip" "Budding; in Entwicklung")
+  "evergreen" (dict "line" "tree-line"     "fill" "tree-fill"     "label" "Evergreen" "tip" "Evergreen; gepflegt & aktuell")
+  "withered"  (dict "line" "skull-2-line"  "fill" "skull-2-fill"  "label" "Withered"  "tip" "Withered; veraltet")
+-}}
+{{- $s := index $stages $stage -}}
+{{- $sprite := "fonts/remixicon/remixicon.symbol.svg" | relURL -}}
+{{- $rv := $page.Site.Params.remixicon_version -}}
+
+{{- if eq $context "card" -}}
+<span class="at-growth" data-stage="{{ $stage }}" data-tooltip="{{ $s.tip }}" title="{{ $s.tip }}">
+    <span class="gd-icon-duo gd-icon-duo-tinted text-[1.2em]">
+        <svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#{{ $s.fill }}"></use></svg>
+        <svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#{{ $s.line }}"></use></svg>
+    </span>
+</span>
+{{- else -}}
+<span class="growth-stage" data-stage="{{ $stage }}" data-tooltip="{{ $s.tip }}" title="{{ $s.tip }}">
+    <svg class="ri-1x" aria-hidden="true">
+        <use href="{{ $sprite }}?t={{ $rv }}#{{ $s.line }}"></use>
+    </svg>
+    <span>{{ $s.label }}</span>
+</span>
+{{- end -}}

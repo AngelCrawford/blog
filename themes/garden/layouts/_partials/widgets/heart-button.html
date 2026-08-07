@@ -1,0 +1,98 @@
+{{- /* Heart button — Story 2.2 (FR-008, FR-009). The only engagement control on
+ * the site: no comments, no reactions bar. Replies arrive as webmentions.
+ *
+ * THREE RENDER SHAPES, and which one you get is not a style choice:
+ *
+ *   readonly  an article's card. The action lives on the article page; the card
+ *             shows the count as social proof and nothing else.
+ *   card      a note's card. Notes have no detail page (FR-027), so this is the
+ *             only place their heart can live — it stays interactive.
+ *   single    the article page's info tile. UNCHANGED, Bulma classes and all:
+ *             layouts/single.html has not migrated and its `.info-tile__*`
+ *             styling reads this markup. Delete that branch in the commit that
+ *             moves single.html.
+ *
+ * CONTRACT WITH assets/js/hearts.js — these survive any restyle:
+ *   .heart-button (not .heart-button-fallback)   the clickable control
+ *   .heart-count                                 the number it increments
+ *   .hearted                                     the class it adds when done
+ *   data-article                                 which entry was hearted
+ *   .heart-button-wrapper / .heart-button-hint   single-page cadence caption
+ *
+ * Counts come from data/umami_hearts.json, refreshed daily by Story 3.1;
+ * `| default 0` keeps the markup honest before a fetch has ever run.
+ *
+ * Caller forms, both supported:
+ *   {{ partial "widgets/heart-button" . }}
+ *   {{ partial "widgets/heart-button" (dict "page" . "context" "card") }} */ -}}
+{{- $page := . -}}
+{{- $context := "single" -}}
+{{- if reflect.IsMap . -}}
+    {{- $page = .page -}}
+    {{- $context = .context | default "single" -}}
+{{- end -}}
+{{- $isCard := eq $context "card" -}}
+{{- $isArticle := eq $page.Type "articles" -}}
+{{- $readonly := and $isCard $isArticle -}}
+{{- $showHint := and (not $isCard) $isArticle -}}
+{{- $hearts := index hugo.Data.umami_hearts $page.RelPermalink | default 0 -}}
+{{- $sprite := "fonts/remixicon/remixicon.symbol.svg" | relURL -}}
+{{- $rv := $page.Site.Params.remixicon_version -}}
+
+{{- if $readonly -}}
+    {{- /* `at-heart-flat` — no pill, no border. It sits in the card footer beside
+           the growth mark and the series icon, and a bordered capsule among bare
+           glyphs reads as the one thing you are supposed to press. This one is
+           not pressable. */ -}}
+    <span class="at-heart at-heart-flat" data-tooltip="Dieser Artikel hat {{ $hearts }} Herzen erhalten" aria-label="Herz-Anzahl: {{ $hearts }}">
+        <svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#heart-line"></use></svg>
+        <span class="heart-count at-heart-count">{{ $hearts }}</span>
+    </span>
+{{- else if $isCard -}}
+    <button type="button"
+            class="at-heart at-heart-flat heart-button"
+            data-tooltip="Diese Notiz mit einem Herz markieren"
+            data-article="{{ $page.RelPermalink }}"
+            aria-label="Diese Notiz mit einem Herz markieren"
+            aria-pressed="false">
+        <svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#heart-line"></use></svg>
+        <span class="heart-count at-heart-count" aria-live="polite">{{ $hearts }}</span>
+    </button>
+    <noscript>
+        <span class="at-heart at-heart-flat" aria-label="Herz-Anzahl: {{ $hearts }}">
+            <svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#heart-line"></use></svg>
+            <span class="heart-count at-heart-count">{{ $hearts }}</span>
+        </span>
+    </noscript>
+{{- else -}}
+    {{- /* UNCHANGED — article-time's markup for the not-yet-migrated single page.
+           Bare fragments that slot into `.info-tile[data-tile="hearts"]`, which
+           also carries `.heart-button-wrapper` so hearts.js can reach the hint. */ -}}
+    <button type="button"
+            class="button round-button inset heart-button"
+            data-article="{{ $page.RelPermalink }}"
+            data-tooltip="Diesen Artikel mit einem Herz markieren"
+            aria-label="Diesen Artikel mit einem Herz markieren"
+            aria-pressed="false">
+        <svg class="heart-icon ri-1x" aria-hidden="true">
+            <use href="{{ $sprite }}?t={{ $rv }}#heart-line"></use>
+        </svg>
+    </button>
+    <div class="info-tile__body">
+        <div class="info-tile__label"><span>Herzen</span></div>
+        <div class="info-tile__value">
+            <span class="heart-count" aria-live="polite">{{ $hearts }}</span>
+            {{- if $showHint -}}
+                <small class="heart-button-hint">(Zähler aktualisiert täglich)</small>
+            {{- end -}}
+        </div>
+    </div>
+    <noscript>
+        <a class="heart-button heart-button-fallback" href="#" aria-label="Diesen Artikel liken">
+            <svg class="heart-icon ri-1x" aria-hidden="true">
+                <use href="{{ $sprite }}?t={{ $rv }}#heart-line"></use>
+            </svg>
+        </a>
+        <span class="heart-count">{{ $hearts }}</span>
+    </noscript>
+{{- end -}}

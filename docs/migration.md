@@ -15,9 +15,11 @@ Both themes are composed: `theme: ["garden", "article-time"]`. A file created in
 absent from `garden` keeps working unchanged. **The site is never broken between
 steps** — that is the entire point of this arrangement.
 
-- **Migrated: 6 of 37 templates.** `head`, navigation, `baseof.html`, the header,
-  the footer and the archive widget — markup, styling and JavaScript all in
-  `garden`, all jQuery-free. **The whole page chrome is migrated.**
+- **Migrated: 13 of 37 templates.** The whole page chrome — `head`, navigation,
+  `baseof.html`, header, footer — plus the card and everything that lists it:
+  `home`, `list`, `page/archive`, `404`, the growth badge, the heart and
+  pagination. Markup, styling and JavaScript all in `garden`, all jQuery-free.
+  **`single.html` is the last page template left.**
 - **The design system's vocabulary is fully adopted** — see below. Templates are
   now the only thing left; no component still needs its CSS invented.
 - Tailwind runs without Preflight. Everything garden owns is in a cascade layer,
@@ -68,17 +70,23 @@ redesign, not top to bottom.
 |---|---|
 | `_partials/_base/head.html` | ✅ garden — loads both stylesheets |
 | `_partials/_base/navigation.html` | ✅ garden — plain scaffold, design still open |
-| `_partials/card.html` | ⬜ article-time — 552 lines of SCSS, the biggest win. **The grid wrapper moves with it**, see below |
+| `_partials/card.html` | ✅ garden — article, note and term in one partial. The cell wrapper is gone; the grid lives at each call site |
 | `_partials/_base/hero.html` | ✅ garden — sky, harbour, clock, wordmark, birds, seasonal overlays. Copied from Bulma, see below |
 | `_partials/_base/footer.html` | ✅ garden — sea reflection, h-card, three columns. Copied from Bulma |
 | `_partials/_base/cookie-banner.html` | ⬜ article-time |
 | `_partials/_base/maintenance.html` | ⬜ article-time — becomes the webcard |
 | `baseof.html` | ✅ garden — shell, back-to-top and page ground. Still calls article-time's hero, footer and banner |
-| `home.html`, `list.html`, `single.html` | ⬜ article-time |
-| `page/archive.html`, `page/profile.html`, `404.html` | ⬜ article-time |
-| `_partials/growth-badge.html`, `withered-*.html` | ⬜ article-time |
+| `home.html`, `list.html` | ✅ garden |
+| `single.html` | ⬜ article-time — the last page template |
+| `page/archive.html`, `404.html` | ✅ garden |
+| `page/profile.html` | ⬜ article-time |
+| `_partials/growth-badge.html` | ✅ garden — two contexts; the `single` branch stays Bulma until single.html moves |
+| `_partials/withered-hidden-notice.html` | ✅ garden |
+| `_partials/withered-*.html` (4, logic only) | ⬜ article-time — no styling |
 | `_partials/widgets/archive.html` | ✅ garden — moved with the footer; `page/archive.html` is its second consumer |
-| `_partials/widgets/*.html` (8 files) | ⬜ article-time |
+| `_partials/widgets/heart-button.html` | ✅ garden — three shapes; the `single` branch stays Bulma |
+| `_partials/widgets/pagination.html` | ✅ garden |
+| `_partials/widgets/*.html` (6 files) | ⬜ article-time — all sidebar widgets, they move with single.html |
 | `_markup/render-*.html` (3), `_shortcodes/*.html` (4) | ⬜ article-time — markup only, low priority |
 | `_partials/_base/seo.html`, `validate-growth-stage.html` | ⬜ article-time — no styling, may never need moving |
 
@@ -214,6 +222,48 @@ comments, for a comment system this blog decided against. An empty heading is an
 unfinished feature announcing itself, not a design element. The design system
 keeps `identity.mostLoved` as an idea; it needs the hearts data plumbed through,
 which is a feature.
+
+### What the card migration turned up
+
+**The `.cell` wrapper and sixty lines of empty cells are gone.** Upstream every
+card came wrapped in Bulma's `.cell`, and `list.html` then counted how many cards
+a row was short and emitted `<div class="cell empty-cell">` to stop the fixed
+grid stretching two cards across five columns. `auto-fill` creates those tracks
+without markup — that is what it is for.
+
+**The "Neu" and "Gesehen" flags had to become real elements.** They were
+`::after` pseudo-elements carrying the literal text `☀ Neu` and `✓ Gesehen`, the
+site's only two unicode symbols, which the design system replaced with
+`sparkling-line` and `check-fill` from the sprite. A pseudo-element cannot hold
+an `<svg><use>`, and the state is in localStorage rather than in the content, so
+gdpr.js builds the badge now instead of just adding a class. "Gesehen" wins over
+"Neu": a card you opened yesterday is not news to you.
+
+**`.at-growth svg` and `.gd-icon-duo svg` are both (0,1,1),** and the growth one
+comes later, so it was sizing the two stacked copies to 1.2em of their own font
+size and overflowing a 1em box. It only shows once a growth badge is actually
+rendered duotone, which is why the design system has the same collision latent
+in it. Fixed with `.at-growth .gd-icon-duo svg`.
+
+**Pagination's disabled ends were anchors.** `<a href="#" disabled>` — an anchor
+has no `disabled` attribute, so the first and last buttons looked dead and were
+fully clickable, scrolling you to the top of the page you were already on. They
+are `<button disabled>` now, and the current page is a held-pressed round button
+rather than a coloured one: the shadow inversion is already the site's word for
+"pressed", so "you are here" needs no colour of its own.
+
+**Two partials are shared with `single.html` and got a context parameter**
+rather than a copy: `growth-badge.html` and `widgets/heart-button.html` render
+garden markup for the card and article-time's, unchanged, for the article page.
+Delete those branches in the commit that moves `single.html` — the pattern is
+already there in the file.
+
+**Open, and deliberately not decided here:** the feed is a single column of at
+most 733px inside a 64rem page. That follows from the design system —
+`--page-max` is 64rem and `.at-card` caps at 733.5px — but upstream the feed ran
+the full window width at two columns on desktop and three above 1408px. It is a
+large change to how the front page reads and it belongs to Angel, not to a
+migration.
 
 ### The header came from Bulma, not from the design system — done
 

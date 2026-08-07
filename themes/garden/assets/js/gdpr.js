@@ -99,11 +99,11 @@ onReady(() => {
  * that is the point — the site can tell you what you have read without knowing
  * who you are. It is also why the privacy notice above mentions it by name.
  *
- * `article.card.is-horizontal` is Bulma markup from the card partial, which has
- * not migrated yet. Update this selector in the same commit that moves it.
+ * The card is garden's now, so the hook is `article.at-card` — one class instead
+ * of the two Bulma ones this used to reach for.
  */
 onReady(() => {
-  const CARD = "article.card.is-horizontal";
+  const CARD = "article.at-card";
   const NEW_DAYS = 7;
   const DAY_MS = 24 * 60 * 60 * 1000;
 
@@ -128,20 +128,47 @@ onReady(() => {
     }
   };
 
+  /* The corner flag itself. Upstream this was a `::after` carrying the literal
+   * text "✓ Gesehen" — one of the site's only two unicode symbols, and the
+   * design system replaced both with sprite glyphs. A pseudo-element cannot hold
+   * an `<svg><use>`, so the badge has to be a real element, and since the state
+   * is in localStorage it has to be built here rather than in the template.
+   *
+   * Root-relative sprite path for the same reason the webfonts use one: baseURL
+   * carries no sub-path in any of the four environments. */
+  const SPRITE = "/fonts/remixicon/remixicon.symbol.svg";
+  const flag = (card, icon, label) => {
+    if (card.querySelector(".at-card-badge")) return;
+    const el = document.createElement("span");
+    el.className = "at-card-badge";
+    el.innerHTML =
+      `<svg class="size-[0.9em] shrink-0 fill-current" aria-hidden="true">` +
+      `<use href="${SPRITE}#${icon}"></use></svg>`;
+    el.append(label);
+    card.prepend(el);
+  };
+
   for (const link of document.querySelectorAll(`a[href*="/articles/"]`)) {
     if (link.host !== window.location.host || !seen(link.pathname)) continue;
     link.setAttribute("data-visited", "true");
-    link.closest(CARD)?.classList.add("visited");
+    const card = link.closest(CARD);
+    if (!card) continue;
+    card.classList.add("visited");
+    flag(card, "check-fill", "Gesehen");
   }
 
   /* And mark the recent ones. The card's own `datetime` is the source — no
-   * second date has to be threaded through the template for this. */
+   * second date has to be threaded through the template for this.
+   *
+   * "Gesehen" wins: `flag()` refuses a second badge, and read beats new. A card
+   * you opened yesterday is not news to you. */
   const now = Date.now();
   for (const card of document.querySelectorAll(CARD)) {
     const when = card.querySelector("time[datetime]")?.getAttribute("datetime");
     if (!when) continue;
     if (Math.ceil((now - new Date(when)) / DAY_MS) <= NEW_DAYS) {
       card.classList.add("is-new");
+      flag(card, "sparkling-line", "Neu");
     }
   }
 });

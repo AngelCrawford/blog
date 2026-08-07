@@ -1,0 +1,68 @@
+{{ define "main" }}
+{{- /* Garden — section, term and taxonomy listings. One template, three jobs:
+ *
+ *   section   /articles/, /notes/          — entry cards
+ *   term      /categories/allgemein/       — entry cards for that Rubrik
+ *   taxonomy  /categories/, /tags/         — TERM cards, one per Rubrik or Tag
+ *
+ * The taxonomy index is the odd one: it lists categories, not posts, so it gets
+ * neither `h-feed` (a microformat for a stream of entries) nor the withered
+ * filter (a Rubrik cannot wither), and its cards are smaller, so the grid's
+ * floor drops from 30rem to 22rem.
+ *
+ * THE EMPTY CELLS ARE GONE. Upstream padded short rows with `.cell.empty-cell`
+ * so Bulma's fixed grid would not stretch two cards across five columns. With
+ * `auto-fill` the empty tracks exist without markup, which is what auto-fill is
+ * for — sixty lines of counting replaced by one keyword. */ -}}
+{{- $isTaxonomy := eq .Kind "taxonomy" -}}
+
+{{- /* The heading: a term says what kind of term it is, a taxonomy index uses
+       its own plural, everything else its title. */ -}}
+{{- $pagename := .Title -}}
+{{- if eq .Kind "term" }}{{ with .Parent.Params.translation.singular }}{{ $pagename = printf "%s: %s" . $.Title }}{{ end }}
+{{- else if $isTaxonomy }}{{ with .Params.translation.plural }}{{ $pagename = . }}{{ end }}{{ end -}}
+
+<div data-garden class="mx-auto max-w-5xl px-gutter pt-gutter pb-section font-body text-base text-ink">
+
+    <div class="gd-panel at-flow mb-section">
+        {{- with .Resources }}
+        {{- with (.ByType "image").GetMatch "cover*" }}
+        {{- $cover := .Process "fill 480x360 webp" }}
+        <figure class="at-figure at-figure-float">
+            <img class="at-card-cover" src="{{ $cover.RelPermalink }}" alt="{{ $pagename }}" width="480" height="360" loading="lazy">
+            {{- with .Meta.Exif }}{{ with .Tags.ImageDescription }}
+            <figcaption class="at-figcaption">{{ . | safeHTML }}</figcaption>
+            {{- end }}{{ end }}
+        </figure>
+        {{- end }}{{ end }}
+        <h1 class="gd-h1" data-heading="{{ $pagename }}">{{ $pagename }}</h1>
+        {{- with .Params.subtitle }}<p class="mt-4 text-lg text-ink-muted">{{ . }}</p>{{ end }}
+        {{- with .Summary }}<div class="mt-gutter">{{ . }}</div>{{ end }}
+    </div>
+
+    {{- $visible := .Pages -}}
+    {{- $hiddenCount := 0 -}}
+    {{- if not $isTaxonomy -}}
+        {{- $visible = partial "withered-filter.html" .Pages -}}
+        {{- $hiddenCount = partial "withered-count.html" .Pages -}}
+    {{- end -}}
+
+    <div class="{{ if not $isTaxonomy }}h-feed {{ end }}grid grid-cols-1 gap-x-gutter gap-y-gutter {{ if $isTaxonomy }}sm:grid-cols-[repeat(auto-fill,minmax(22rem,1fr))]{{ else }}min-[52rem]:grid-cols-[repeat(auto-fill,minmax(30rem,1fr))]{{ end }}">
+        {{- if $isTaxonomy -}}
+            {{- /* Busiest Rubrik first: a taxonomy index is a way in, and the one
+                   with two entries is not the way in. */ -}}
+            {{- $terms := slice -}}
+            {{- range $term, $pages := .Data.Terms -}}
+                {{- $terms = $terms | append (dict "Term" $term "Count" (len $pages)) -}}
+            {{- end -}}
+            {{- range sort $terms "Count" "desc" -}}
+                {{- with $.GetPage (printf "/%s/%s" $.Data.Plural .Term) }}{{ partial "card" . }}{{ end -}}
+            {{- end -}}
+        {{- else -}}
+            {{- range $visible.ByPublishDate.Reverse }}{{ partial "card" . }}{{ end -}}
+        {{- end }}
+    </div>
+
+    {{ partial "withered-hidden-notice.html" $hiddenCount }}
+</div>
+{{ end }}

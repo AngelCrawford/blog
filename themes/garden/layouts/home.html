@@ -1,0 +1,50 @@
+{{ define "main" }}
+{{- /* Garden — the front page: an intro panel and the feed.
+ *
+ * THE GRID IS AT THE CALL SITE, not in a class. It genuinely differs per page —
+ * three cards across here, four on the archive, a narrower minimum for term
+ * cards — and `gd-card-grid` would be a lie told three ways. `auto-fill` with a
+ * 30rem floor rather than named breakpoints: the card was designed against a
+ * ~480px column and this keeps it there without anyone maintaining a set of
+ * numbers.
+ *
+ * `grid-cols-*` is not optional even so — `grid` is a Bulma class name too, and
+ * Bulma's fills in a 0.75rem gap and its own auto-fill template wherever garden
+ * declares none.
+ *
+ * `h-feed` is a microformat, not styling. It stays. */ -}}
+<div data-garden class="mx-auto max-w-5xl px-gutter pt-gutter pb-section font-body text-base text-ink">
+
+    <div class="gd-panel mb-section">
+        <h1 class="gd-h1" data-heading="{{ .Title }}">{{ .Title }}</h1>
+        {{- with .Summary }}<div class="mt-gutter max-w-[70ch]">{{ . }}</div>{{ end }}
+    </div>
+
+    {{- /* Withered content is filtered out BEFORE pagination, so the three
+           weight buckets and the page count all reflect non-withered totals.
+           See Story 1.3 and withered-filter.html. */ -}}
+    {{- $all := where .Site.RegularPages "Type" "in" (slice "articles" "notes") -}}
+    {{- $visible := partial "withered-filter.html" $all -}}
+    {{- $hiddenCount := partial "withered-count.html" $all -}}
+    {{- $paginator := .Paginate $visible -}}
+
+    <div class="h-feed grid grid-cols-1 gap-x-gutter gap-y-gutter min-[52rem]:grid-cols-[repeat(auto-fill,minmax(30rem,1fr))]">
+        {{- /* Weighted entries first and in weight order, then everything else
+               newest first, then anything with no weight at all. Three ranges
+               rather than one sort because `weight` is optional and Hugo sorts
+               a missing value to the front. */ -}}
+        {{- range (where $paginator.Pages "Params.weight" "gt" 0).ByWeight }}
+            {{ partial "card" . }}
+        {{- end }}
+        {{- range (where $paginator.Pages "Params.weight" "le" 0).ByPublishDate.Reverse }}
+            {{ partial "card" . }}
+        {{- end }}
+        {{- range (where $paginator.Pages "Params.weight" "eq" nil).ByPublishDate.Reverse }}
+            {{ partial "card" . }}
+        {{- end }}
+    </div>
+
+    {{ partial "widgets/pagination" . }}
+    {{ partial "withered-hidden-notice.html" $hiddenCount }}
+</div>
+{{ end }}

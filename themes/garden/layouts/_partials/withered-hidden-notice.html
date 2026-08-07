@@ -1,0 +1,24 @@
+{{- /* Withered hidden-count notice (Story 1.3).
+ *
+ * Says how many entries the listing above is not showing. It exists because
+ * hiding withered content silently would make the site quietly dishonest about
+ * its own size — the same reason the archive lists them and the footer counts
+ * them separately.
+ *
+ * ONE ITALIC MUTED LINE, which is the design system's whole answer to an empty
+ * or partial state: no panel, no icon-and-illustration, no colour. It is a
+ * footnote about the list, not a thing in the list.
+ *
+ * `role="status"` with `aria-live` so a screen reader hears it after the cards
+ * rather than instead of them. Input is an int, so the partial reads `site`
+ * globally instead of depending on a caller context it never gets. */ -}}
+{{- $n := . -}}
+{{- if gt $n 0 -}}
+<p data-garden class="mt-gutter flex items-center justify-center gap-2 text-sm text-ink-muted italic"
+   role="status" aria-live="polite">
+    <svg class="size-4 shrink-0 fill-current text-withered" aria-hidden="true">
+        <use href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ site.Params.remixicon_version }}#skull-2-line"></use>
+    </svg>
+    {{ if eq $n 1 }}1 verwelkter Eintrag ist{{ else }}{{ $n }} verwelkte Einträge sind{{ end }} ausgeblendet
+</p>
+{{- end -}}

@@ -1,0 +1,47 @@
+{{ define "main" }}
+{{- /* Garden — the archive. Everything ever published, grouped by year.
+ *
+ * THIS IS THE ONE PLACE WITHERED ENTRIES ARE NOT FILTERED, and that is a content
+ * rule rather than an oversight: an archive that hides things is not an archive.
+ * The homepage and the term listings hide them; here they are listed and the
+ * counts include them. See docs/design.md.
+ *
+ * Cards here are smaller than on the feed — a 22rem floor instead of 30rem.
+ * There is no excerpt to read at this width; the year and the title are what
+ * you came for, and four across beats two. */ -}}
+<div data-garden class="mx-auto max-w-5xl px-gutter pt-gutter pb-section font-body text-base text-ink">
+
+    <div class="grid grid-cols-1 gap-gutter lg:grid-cols-[minmax(0,1fr)_19rem] lg:items-start">
+        <div class="gd-panel at-flow">
+            {{- with .Resources }}
+            {{- with (.ByType "image").GetMatch "cover*" }}
+            {{- $cover := .Process "fill 480x360 webp" }}
+            <figure class="at-figure at-figure-float">
+                <img class="at-card-cover" src="{{ $cover.RelPermalink }}" alt="{{ $.Title }}" width="480" height="360" loading="lazy">
+            </figure>
+            {{- end }}{{ end }}
+            {{- $heading := or .Params.translation.singular .Title }}
+            <h1 class="gd-h1" data-heading="{{ $heading }}">{{ $heading }}</h1>
+            {{- with .Params.subtitle }}<p class="mt-4 text-lg text-ink-muted">{{ . }}</p>{{ end }}
+            {{- with .Summary }}<div class="mt-gutter">{{ . }}</div>{{ end }}
+        </div>
+
+        <div class="at-tile">
+            {{ partial "widgets/archive" (dict "context" . "archiveTitle" "Übersicht") }}
+        </div>
+    </div>
+
+    {{- $combinedPages := slice -}}
+    {{- range (where .Site.Pages "Type" "articles") }}{{ $combinedPages = $combinedPages | append .Pages }}{{ end -}}
+    {{- range (where .Site.Pages "Type" "notes") }}{{ $combinedPages = $combinedPages | append .Pages }}{{ end -}}
+
+    {{- range ($combinedPages.GroupByDate "2006") }}
+    <section class="mt-section">
+        <h2 class="gd-h2" id="{{ .Key }}">{{ .Key }}</h2>
+        <div class="grid grid-cols-1 gap-x-gutter gap-y-gutter sm:grid-cols-[repeat(auto-fill,minmax(22rem,1fr))]">
+            {{- range .Pages.ByPublishDate.Reverse }}{{ partial "card" . }}{{ end }}
+        </div>
+    </section>
+    {{- end }}
+</div>
+{{ end }}
