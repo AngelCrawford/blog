@@ -133,12 +133,10 @@ Three defects were fixed rather than carried over, all noted at the code:
    been **invisible in Firefox since 2020**.
 3. The ghost set `animation-delay` and then included a shorthand that reset it.
 
-**Still open, deliberately:** the sunrise/sunset coordinates are
-`53.551086, -2.592`. The latitude is Hamburg's — so is the skyline in
-`city.svg` — but the longitude is open water west of Liverpool, 12.6° off. Every
-dusk therefore arrives about fifty minutes late. Not changed here, because it
-alters what the site looks like at a given hour, which is a decision rather than
-a port. Hamburg is `9.993682`, one edit in `themes/garden/assets/js/header.js`.
+A fourth was fixed a commit later, once Angel confirmed it: the sunrise/sunset
+longitude had been `-2.592` since 2020 — open water west of Liverpool, 12.6° from
+the Hamburg skyline the header actually draws. The latitude was right all along,
+which is why it never looked broken, only late. It is `9.993682` now.
 
 ## JavaScript
 

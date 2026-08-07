@@ -47,17 +47,14 @@
   const header = document.querySelector(".at-header");
   if (!header || typeof SunriseSunsetJS === "undefined") return;
 
-  /* CARRIED OVER UNCHANGED, AND THE LONGITUDE LOOKS WRONG. 53.55 is Hamburg's
-   * latitude; 9.99 is Hamburg's longitude, but this says -2.59, which is open
-   * water west of Liverpool. The two are 12.6° apart, so every sunrise and
-   * sunset here lands about fifty minutes late — visible as a dusk that starts
-   * too late in the evening.
+  /* Hamburg — the city in the header's own silhouette.
    *
-   * Not changed as part of this migration: it would alter what the site looks
-   * like at a given hour, which is a decision, not a port. Hamburg is
-   * { lat: 53.551086, lon: 9.993682 } — one edit when you want it. */
+   * The longitude was -2.592 from 2020 until August 2026: open water west of
+   * Liverpool, 12.6° off, which put every sunrise and sunset about fifty
+   * minutes late. The latitude was right the whole time, which is why it never
+   * looked broken enough to chase down — only dusk arriving too late. */
   const LAT = 53.551086;
-  const LON = -2.592;
+  const LON = 9.993682;
 
   const el = {
     stars: document.querySelector("[data-hero-stars]"),
