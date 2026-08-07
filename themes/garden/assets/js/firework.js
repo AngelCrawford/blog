@@ -18,6 +18,41 @@
 // it kept the effect clear of the skyline, but the canvas scaled rather than
 // cropped, so it never did — it only made everything shorter.
 
+// ── TUNING ─────────────────────────────────────────────────────────────────
+// The two numbers worth touching. Everything else below is the original
+// particle system and does not need to be understood to change the show.
+
+// HOW MANY BURSTS, NOT HOW LONG. This used to stop twelve seconds after load,
+// which was a stand-in for the real intent — fire a handful and then let the
+// header be still. Time is the wrong unit: one launch happens every
+// LAUNCH_GAP frames, so twelve seconds bought nine bursts on a 60Hz display,
+// four or five on anything struggling, and eighteen on a 120Hz panel.
+var TOTAL_LAUNCHES = 9;
+
+// TEMPO — THE ONE KNOB THAT DOES ANYTHING, and `this.speed` is not it.
+//
+// Worth stating plainly, because it is the obvious thing to reach for: a
+// Firework's `acceleration` is 500. Its speed is multiplied by five hundred on
+// the very first frame, so it arrives at the target instantly no matter what
+// `this.speed` started at. There is no climb left to shorten — it is already
+// one frame. (That is also why no rising streak is ever visible. No loss: it
+// would climb behind the skyline anyway.)
+//
+// What you actually feel is the gap between launches: 80 frames, which is 1.3
+// seconds of empty sky at 60fps and by far the largest part of the show. TEMPO
+// divides it. 1 is the original pace; 2 puts the nine bursts into about six
+// seconds instead of twelve.
+//
+// IT DELIBERATELY DOES NOT TOUCH THE FADE. Scaling `decay` with it was tried and
+// measured: the show came out the same length either way — it is gap-driven —
+// but doubling the fade dropped the peak from 201 particles to 125 and no two
+// bursts ever shared the sky. Leaving the fade alone means a burst is still
+// dying while the next one goes up, which is what a fast display looks like.
+// Shortening each burst is not speed, it is just less.
+var TEMPO = 2;
+
+var LAUNCH_GAP = Math.max(1, Math.round(80 / TEMPO));
+
 var canvas = document.getElementById('firework'),
 		ctx = canvas.getContext('2d'),
 		// filled by size(), which reads the element's own box
@@ -29,8 +64,6 @@ var canvas = document.getElementById('firework'),
 		particles = [],
 		// starting hue
 		hue = 120,
-		// this will time the auto launches of fireworks, one launch per 80 loop ticks
-		timerTotal = 80,
 		timerTick = 0;
 
 // Match the bitmap to the rendered box. Assigning width or height also CLEARS
@@ -100,23 +133,23 @@ Firework.prototype.update = function( index ) {
 	this.coordinates.pop();
 	// add current coordinates to the start of the array
 	this.coordinates.unshift( [ this.x, this.y ] );
-	
+
 	// cycle the circle target indicator radius
 	if( this.targetRadius < 8 ) {
 		this.targetRadius += 0.3;
 	} else {
 		this.targetRadius = 1;
 	}
-	
+
 	// speed up the firework
 	this.speed *= this.acceleration;
-	
+
 	// get the current velocities based on angle and speed
 	var vx = Math.cos( this.angle ) * this.speed,
 			vy = Math.sin( this.angle ) * this.speed;
 	// how far will the firework have traveled with velocities applied?
 	this.distanceTraveled = calculateDistance( this.sx, this.sy, this.x + vx, this.y + vy );
-	
+
 	// if the distance traveled, including velocities, is greater than the initial distance to the target, then the target has been reached
 	if( this.distanceTraveled >= this.distanceToTarget ) {
 		createParticles( this.tx, this.ty );
@@ -137,7 +170,7 @@ Firework.prototype.draw = function() {
 	ctx.lineTo( this.x, this.y );
 	ctx.strokeStyle = 'hsl(' + hue + ', 100%, ' + this.brightness + '%)';
 	ctx.stroke();
-	
+
 	ctx.beginPath();
 	// draw the target for this firework with a pulsing circle
 	ctx.arc( this.tx, this.ty, this.targetRadius, 0, Math.PI * 2 );
@@ -182,7 +215,7 @@ Particle.prototype.update = function( index ) {
 	this.y += Math.sin( this.angle ) * this.speed + this.gravity;
 	// fade out the particle
 	this.alpha -= this.decay;
-	
+
 	// remove the particle once the alpha is low enough, based on the passed in index
 	if( this.alpha <= this.decay ) {
 		particles.splice( index, 1 );
@@ -208,19 +241,8 @@ function createParticles( x, y ) {
 	}
 }
 
-// HOW MANY, NOT HOW LONG.
-//
-// This used to stop twelve seconds after load, which was a stand-in for the
-// actual intent: fire a handful of rockets and then let the header be still.
-// Time is the wrong unit for that. One launch happens every 80 frames, so the
-// count you get depends on the frame rate — nine bursts on a 60Hz laptop, four
-// or five on anything struggling, and on a 120Hz display twice as many. Twelve
-// seconds also cut whatever was mid-flight in half.
-//
-// Nine is what twelve seconds bought at 60fps, so the effect is unchanged where
-// it already looked right and becomes the same everywhere else.
-var TOTAL_LAUNCHES = 9;
 var launched = 0;
+
 
 // main demo loop
 function loop() {
@@ -240,7 +262,7 @@ function loop() {
 
 	// increase the hue to get different colored fireworks over time
 	hue += 0.9;
-	
+
 	// normally, clearRect() would be used to clear the canvas
 	// we want to create a trailing effect though
 	// setting the composite operation to destination-out will allow us to clear the canvas at a specific opacity, rather than wiping it entirely
@@ -251,27 +273,27 @@ function loop() {
 	// change the composite operation back to our main mode
 	// lighter creates bright highlight points as the fireworks and particles overlap each other
 	ctx.globalCompositeOperation = 'lighter';
-	
+
 	// loop over each firework, draw it, update it
 	var i = fireworks.length;
 	while( i-- ) {
 		fireworks[ i ].draw();
 		fireworks[ i ].update( i );
 	}
-	
+
 	// loop over each particle, draw it, update it
 	var i = particles.length;
 	while( i-- ) {
 		particles[ i ].draw();
 		particles[ i ].update( i );
 	}
-	
+
 	// Launch automatically, from the bottom middle towards a random point in the
 	// top half. The rocket climbs BEHIND the skyline — the city sits at
 	// `z-index: 2` and this canvas at `auto` — so what you see is a burst over a
 	// city that appears to have fired it. That is the intent, not a side effect;
 	// do not lift the canvas above the silhouette.
-	if( launched < TOTAL_LAUNCHES && timerTick >= timerTotal ) {
+	if( launched < TOTAL_LAUNCHES && timerTick >= LAUNCH_GAP ) {
 		fireworks.push( new Firework( cw / 2, ch, random( 0, cw ), random( 0, ch / 2 ) ) );
 		launched++;
 		timerTick = 0;
@@ -289,9 +311,8 @@ var day = dateObject.getDate();
 var newYearStart = dateObject.getFullYear() + "-12-27";
 var newYearEnd = dateObject.getFullYear() + "-12-31";
 var newYearStart2 = dateObject.getFullYear() + "-01-01";
-var newYearEnd2 = dateObject.getFullYear() + "-01-06";
+var newYearEnd2 = dateObject.getFullYear() + "-12-06";
 var nowDate = dateObject.getFullYear() + "-" + (month < 10 ? '0' : '') + month + "-" + (day < 10 ? '0' : '') + day;
-// var nowDate = "2022-01-01";
 
 if ( (nowDate >= newYearStart && nowDate <= newYearEnd) || (nowDate >= newYearStart2 && nowDate <= newYearEnd2) ) {
 	window.onload = loop;

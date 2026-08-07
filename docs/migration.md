@@ -124,6 +124,21 @@ the CSS is `height: 100%`. Verified at 1280 and 420, and across a resize.
 
 Two questions went back to Angel and both came back with an answer.
 
+**Two tuning knobs at the top of the file, and a note on the one that looks
+like a knob and is not.** `this.speed` on a rocket does nothing: `acceleration`
+is 500, so the speed is multiplied by five hundred on the first frame and the
+rocket arrives instantly whatever it started at. There is no climb left to
+shorten — which is also why no rising streak is ever visible, and no loss, since
+it would climb behind the skyline anyway. The show's pace lives in the gap
+between launches, so `TEMPO` divides that: at 2, the nine bursts land in about
+six seconds instead of twelve.
+
+`TEMPO` deliberately leaves the fade alone. Scaling `decay` with it was tried and
+measured: the length came out the same either way — the show is gap-driven — but
+doubling the fade dropped the peak from 201 particles to 125 and no two bursts
+ever shared the sky. Leaving it means a burst is still falling while the next
+goes up. Shortening each burst is not speed, it is just less.
+
 **The stop is a count now, not a clock.** The intent was always "a handful of
 rockets, then let the header be still"; twelve seconds was a stand-in for that.
 Time is the wrong unit — one launch happens every 80 frames, so twelve seconds
