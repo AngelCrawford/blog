@@ -27,7 +27,7 @@
 // header be still. Time is the wrong unit: one launch happens every
 // LAUNCH_GAP frames, so twelve seconds bought nine bursts on a 60Hz display,
 // four or five on anything struggling, and eighteen on a 120Hz panel.
-var TOTAL_LAUNCHES = 9;
+var TOTAL_LAUNCHES = 7;
 
 // TEMPO — THE ONE KNOB THAT DOES ANYTHING, and `this.speed` is not it.
 //
@@ -311,7 +311,7 @@ var day = dateObject.getDate();
 var newYearStart = dateObject.getFullYear() + "-12-27";
 var newYearEnd = dateObject.getFullYear() + "-12-31";
 var newYearStart2 = dateObject.getFullYear() + "-01-01";
-var newYearEnd2 = dateObject.getFullYear() + "-12-06";
+var newYearEnd2 = dateObject.getFullYear() + "-01-06";
 var nowDate = dateObject.getFullYear() + "-" + (month < 10 ? '0' : '') + month + "-" + (day < 10 ? '0' : '') + day;
 
 if ( (nowDate >= newYearStart && nowDate <= newYearEnd) || (nowDate >= newYearStart2 && nowDate <= newYearEnd2) ) {
