@@ -34,14 +34,24 @@ const purgecss = purgeCSSPlugin({
       // still used by other templates remain — and those PurgeCSS finds on its
       // own. Kept as a belt-and-braces measure for the Bulma components.
       'title', 'subtitle', 'column',
-      // Classes used in header.js
-      'shimmer-animation', 'is-night', 'is-dawn', 'is-day', 'is-dusk',
-      // Classes used in gdpr.js
-      'opened', 'closed', 'is-rounded',
-      // Classes used in main.js
-      'is-loading', 'is-disabled', 'is-danger', 'visible',
-      // Classes for dynamic article states
+      // Toggled by search.js and withered-banner.js.
+      'closed', 'visible', 'is-loading',
+      // Set by gdpr.js on cards: read markers and the seven-day "Neu" flag.
       'visited', 'is-new'
+      //
+      // GONE WITH THE SCRIPTS THAT SET THEM, August 2026:
+      //   shimmer-animation, is-night, is-dawn, is-day, is-dusk
+      //     header.js is garden's now and carries the time of day as
+      //     `data-sky`, one attribute instead of four classes. The Bulma rules
+      //     for them died with hero.scss's `header.hero` selector.
+      //   opened, closed(gdpr), is-rounded, is-disabled, is-danger
+      //     the comment form and the Gravatar loader, both commented out in
+      //     the source for years and deleted with the jQuery port. There was
+      //     never any live code setting them.
+      //
+      // A safelist entry for a class nobody sets does not protect anything —
+      // it just pins dead CSS into the production bundle and tells the next
+      // reader that a feature exists.
     ]
   }
 });

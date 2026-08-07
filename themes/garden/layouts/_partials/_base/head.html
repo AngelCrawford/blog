@@ -73,10 +73,12 @@
 {{- end }}
     <link href="{{ $tw.RelPermalink }}" rel="stylesheet">
 
-    {{- $jQuery := resources.Get "js/jquery.js" }}
-    {{- $gdpr := resources.Get "js/gdpr.js" }}
-    {{- $script := slice $jQuery $gdpr | resources.Concat "js/bundle.js" | resources.Minify | resources.Fingerprint -}}
-    <script src="{{ $script.RelPermalink }}"></script>
+{{- /* NO SCRIPT IN THE HEAD ANY MORE.
+       There used to be one, and it was render-blocking: jQuery plus gdpr.js,
+       loaded here rather than deferred because everything else in the bundle
+       assumed `$` already existed. gdpr.js was the last script that needed it,
+       it is vanilla now, and it rides the deferred footer bundle in baseof.html
+       with the rest. jQuery is deleted. */ -}}
 
     <link rel="icon" type="image/png" href="{{ "images/favicon/favicon-96x96.png" | relURL }}" sizes="96x96" /> <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="{{ "images/favicon/favicon.svg" | relURL }}" />

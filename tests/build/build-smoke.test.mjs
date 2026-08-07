@@ -1046,28 +1046,54 @@ test("Story 2.7 AC #7: cookie-banner is suppressed on suppress_banner pages (dat
   }
 });
 
-test("Story 2.7 AC #2+#4: cookie-banner-dismissed flag survives gdpr.js minification + concat into bundle.js", () => {
+test("Story 2.7 AC #2+#4: cookie-banner-dismissed flag survives gdpr.js minification + concat into the bundle", () => {
   const result = runBuild(hugoArgs);
   assert.equal(result.status, 0, `Production build failed.\n${result.stderr}`);
 
-  // Resolve the active head-bundle filename from the homepage's <script src=...>
-  // (avoids matching stale fingerprints from earlier test builds).
+  // Resolve the active bundle from the homepage's <script src=…> rather than
+  // globbing js/ — that would match stale fingerprints from earlier builds.
+  //
+  // THE BUNDLE THIS LOOKED FOR USED TO BE A DIFFERENT ONE. gdpr.js rode a
+  // render-blocking `bundle.min.<hash>.js` in <head>, which existed only
+  // because it needed jQuery loaded first. It is vanilla now and sits in the
+  // deferred footerBundle with everything else; jQuery is deleted. Hence also
+  // the second assertion: there must be exactly one script, and it must defer.
   const homeHtml = readFileSync(resolve(testPublic, "index.html"), "utf8");
-  const scriptMatch = homeHtml.match(
-    /<script[^>]*src="([^"]*bundle\.min\.[^"]+\.js)"/
+  // Local scripts only. The production build also emits Umami's, which is
+  // third-party, `async defer`, and not this test's business.
+  const scripts = [...homeHtml.matchAll(/<script[^>]*\ssrc="(\/[^"]+)"[^>]*>/g)];
+  assert.equal(
+    scripts.length,
+    1,
+    `Expected exactly one first-party script on the homepage, found ${scripts.length}: ` +
+      scripts.map((m) => m[1]).join(", ")
   );
-  assert.ok(scriptMatch, "Homepage must reference the fingerprinted bundle.min.<hash>.js (head bundle)");
+  assert.match(
+    scripts[0][0],
+    /\sdefer\b/,
+    "The one script on the page must be deferred — nothing renders-blocks any more"
+  );
 
-  const srcPath = scriptMatch[1];
-  const bundleFilename = srcPath.split("/").pop();
-  const bundlePath = resolve(testPublic, "js", bundleFilename);
-  assert.ok(existsSync(bundlePath), `Active head bundle must exist at ${bundlePath}`);
+  const srcPath = scripts[0][1];
+  assert.match(
+    srcPath,
+    /footerBundle\.min\.[^/]+\.js$/,
+    `Expected the fingerprinted footerBundle, got ${srcPath}`
+  );
+
+  const bundlePath = resolve(testPublic, "js", srcPath.split("/").pop());
+  assert.ok(existsSync(bundlePath), `Active bundle must exist at ${bundlePath}`);
 
   const bundle = readFileSync(bundlePath, "utf8");
   assert.match(
     bundle,
     /cookie-banner-dismissed/,
-    "Head bundle must contain the 'cookie-banner-dismissed' sessionStorage key from gdpr.js (Story 2.7)"
+    "Bundle must contain the 'cookie-banner-dismissed' sessionStorage key from gdpr.js (Story 2.7)"
+  );
+  assert.doesNotMatch(
+    bundle,
+    /jQuery|\bjquery\b/i,
+    "jQuery is deleted — nothing may drag it back into the bundle"
   );
 });
 

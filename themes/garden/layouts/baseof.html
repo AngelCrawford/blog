@@ -85,11 +85,16 @@
             {{ partial "_base/cookie-banner" . }}
         {{- end }}
 
-        {{- /* Footer scripts. `js/main.js` and `js/search.js` resolve to the
-               GARDEN copies — garden comes first in the theme list, so its
-               assets win. Both are vanilla; the article-time originals are dead
-               and go with the theme. The remaining jQuery dependants are
-               header.js and gdpr.js. */ -}}
+        {{- /* THE ONLY SCRIPT ON THE PAGE, and it is deferred. jQuery is gone;
+               every file below is vanilla.
+
+               `js/main.js`, `js/search.js`, `js/header.js` and `js/gdpr.js`
+               resolve to the GARDEN copies — garden comes first in the theme
+               list, so its assets win. The article-time originals are dead and
+               go with the theme.
+
+               Order is not arbitrary: suncalc.js defines SunriseSunsetJS, which
+               header.js calls on the way past. */ -}}
         {{- $sunCalc := resources.Get "js/suncalc.js" -}}
         {{- $main := resources.Get "js/main.js" -}}
         {{- /* search.js needs baseURL injection — process as Hugo template */ -}}
@@ -98,7 +103,8 @@
         {{- $header := resources.Get "js/header.js" -}}
         {{- $witheredBanner := resources.Get "js/withered-banner.js" -}}
         {{- $hearts := resources.Get "js/hearts.js" -}}
-        {{- $script := slice $sunCalc $main $search $firework $header $witheredBanner $hearts | resources.Concat "js/footerBundle.js" | resources.Minify | resources.Fingerprint -}}
+        {{- $gdpr := resources.Get "js/gdpr.js" -}}
+        {{- $script := slice $sunCalc $main $search $firework $header $witheredBanner $hearts $gdpr | resources.Concat "js/footerBundle.js" | resources.Minify | resources.Fingerprint -}}
         <script defer src="{{ $script.RelPermalink }}"></script>
 
     </body>

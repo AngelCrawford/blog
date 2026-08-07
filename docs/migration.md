@@ -22,9 +22,10 @@ steps** — that is the entire point of this arrangement.
 - Tailwind runs without Preflight. Everything garden owns is in a cascade layer,
   the utilities deliberately are not — see the rules in
   [`../CLAUDE.md`](../CLAUDE.md). Do not change either without reading them.
-- **jQuery is down to one dependant.** `gdpr.js`, three calls. The footer bundle
-  no longer contains a single `$(`; jQuery now sits in the head bundle purely to
-  serve the cookie banner. Porting it deletes 285 KB.
+- **jQuery is gone.** Deleted, with `article-time/assets/js/{main,header,gdpr}.js`.
+  There is now exactly one script on the page and it is deferred: 105 KB of
+  minified JavaScript became 17 KB, and the render-blocking `<script>` in the
+  head went with it.
 
 ## Vocabulary
 
@@ -147,7 +148,7 @@ Rule: new code is vanilla, no exceptions. Port a script when its component moves
 | `search.js` | — | ✅ garden, vanilla — fixed a duplicate-listener bug and an outside-click bug on the way |
 | `main.js` | — | ✅ garden, vanilla — see below |
 | `header.js` | — | ✅ garden, vanilla — three defects fixed on the way, see the header note |
-| `gdpr.js` | 3 | ⬜ smallest, easiest next port |
+| `gdpr.js` | — | ✅ garden, vanilla — moved out of the head into the deferred bundle |
 
 `main.js` was listed at 32 jQuery calls and that number was misleading: about 110
 of its 138 lines were commented out — a comment form, a spoiler toggle, a
@@ -159,8 +160,16 @@ settling).
 | `firework.js`, `hearts.js`, `withered-banner.js`, `suncalc.js` | 0 | ✅ already vanilla |
 | `navbar.js` | — | ✅ deleted, was dead code |
 
-**Porting one script saves zero bytes.** jQuery only leaves the bundle when all
-four are done, so treat it as a by-product of component work, not a project.
+**All four are done.** The rule while they were not — porting one saves zero
+bytes, so treat it as a by-product of component work rather than a project — held
+right up to the last one, and then paid all at once: 105 KB of minified
+JavaScript down to 17 KB, and the only remaining script is deferred.
+
+Two of the four were also much smaller than the tally suggested. `main.js` was
+listed at 32 jQuery calls and `gdpr.js` at 3; between them, most of that lived in
+commented-out code for a comment form, a spoiler toggle, a Gravatar loader and a
+"most loved" widget — features this blog decided against years ago. Counting
+calls in a file counts its history, not its work.
 
 ## Milestones
 
@@ -176,8 +185,8 @@ off is the real progress signal.
       Also drop `sudo snap install dart-sass` from both workflows, delete
       `postcss.config.js`, and remove `postcss`, `postcss-cli` and
       `@fullhuman/postcss-purgecss` from `package.json`.
-- [ ] **Delete `jquery.js`.** When the JS table has no ⬜ left. Remove it from
-      the bundle in `head.html` too.
+- [x] **Delete `jquery.js`.** Done August 2026. The head bundle went with it —
+      it existed only because everything assumed `$` was already there.
 
 ## How the two stylesheets coexist
 
