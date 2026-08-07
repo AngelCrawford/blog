@@ -15,8 +15,9 @@ Both themes are composed: `theme: ["garden", "article-time"]`. A file created in
 absent from `garden` keeps working unchanged. **The site is never broken between
 steps** — that is the entire point of this arrangement.
 
-- **Migrated: 4 of 37 templates.** `head`, navigation, `baseof.html` and the
-  header — markup, styling and JavaScript all in `garden`, all jQuery-free.
+- **Migrated: 6 of 37 templates.** `head`, navigation, `baseof.html`, the header,
+  the footer and the archive widget — markup, styling and JavaScript all in
+  `garden`, all jQuery-free. **The whole page chrome is migrated.**
 - **The design system's vocabulary is fully adopted** — see below. Templates are
   now the only thing left; no component still needs its CSS invented.
 - Tailwind runs without Preflight. Everything garden owns is in a cascade layer,
@@ -41,7 +42,7 @@ they ship. That gap is closed apart from the two rows marked below.
 | `css/components.css` | ✅ `gd-*` plus the `at-*` vocabulary, `layer(components)` |
 | Webfonts | ✅ Montserrat, Montserrat Alternates and remixicon registered in garden |
 | Header chrome | ✅ `at-header`, `at-city`, `at-clock`, `at-stars`, `at-birds`, `at-balloon`, `at-wordmark` — derived from `hero.scss`, not from the skill |
-| Footer chrome | ⬜ `at-footer-sea` — moves with the footer, same rule: copy from `footer.scss` |
+| Footer chrome | ✅ `at-footer`, `at-footer-sea`, `at-hcard*`, `at-socials`, `at-slogan` — from `footer.scss`. The skill's `at-footer-sea` was right and was checked rather than trusted |
 | `body`, `a`, `:focus-visible` | ⬜ element-level base rules. They did **not** come with `baseof.html`: in the `base` layer they outrank Bulma, so they would restyle every unmigrated template at once. They land when Preflight does |
 
 Two deliberate divergences from the skill, both commented at the rule:
@@ -69,14 +70,15 @@ redesign, not top to bottom.
 | `_partials/_base/navigation.html` | ✅ garden — plain scaffold, design still open |
 | `_partials/card.html` | ⬜ article-time — 552 lines of SCSS, the biggest win. **The grid wrapper moves with it**, see below |
 | `_partials/_base/hero.html` | ✅ garden — sky, harbour, clock, wordmark, birds, seasonal overlays. Copied from Bulma, see below |
-| `_partials/_base/footer.html` | ⬜ article-time |
+| `_partials/_base/footer.html` | ✅ garden — sea reflection, h-card, three columns. Copied from Bulma |
 | `_partials/_base/cookie-banner.html` | ⬜ article-time |
 | `_partials/_base/maintenance.html` | ⬜ article-time — becomes the webcard |
 | `baseof.html` | ✅ garden — shell, back-to-top and page ground. Still calls article-time's hero, footer and banner |
 | `home.html`, `list.html`, `single.html` | ⬜ article-time |
 | `page/archive.html`, `page/profile.html`, `404.html` | ⬜ article-time |
 | `_partials/growth-badge.html`, `withered-*.html` | ⬜ article-time |
-| `_partials/widgets/*.html` (9 files) | ⬜ article-time |
+| `_partials/widgets/archive.html` | ✅ garden — moved with the footer; `page/archive.html` is its second consumer |
+| `_partials/widgets/*.html` (8 files) | ⬜ article-time |
 | `_markup/render-*.html` (3), `_shortcodes/*.html` (4) | ⬜ article-time — markup only, low priority |
 | `_partials/_base/seo.html`, `validate-growth-stage.html` | ⬜ article-time — no styling, may never need moving |
 
@@ -97,6 +99,41 @@ gets you well-designed cards in a broken grid.
   sites), `list.html` (two), `page/archive.html`, `404.html`.
 
 Card, wrapper and cell are therefore one unit of work, not three.
+
+### What the footer migration turned up
+
+Three things worth knowing, all fixed in the same commit.
+
+**`partialCached` had no key.** The footer menu marks the page you are on with
+`aria-current` — and with no cache key, Hugo baked whichever page it rendered
+first into every other footer. On `/pages/datenschutz/` the footer still offered
+"Datenschutz" as a link to itself, and no page ever marked its own entry. Keyed
+on `.RelPermalink` now. The same shape exists in any `partialCached` that reads
+`.RelPermalink`: check before you copy one.
+
+**The statistics rows ran backwards.** `.variable-number` held the icon and
+label at `order: 3`, `.variable` held the count at `order: 1`, so the footer read
+`9 ⋯ Artikel` directly beside an archive widget reading `2025 ⋯ 4 Einträge`. Two
+dotted-leader lists side by side, pointing opposite ways. Both are
+`at-leader-list` now — name left, count right — which is the "one row shape"
+decision from the design system doing its job on its first outing.
+
+**`archiveTitle` was passed and ignored.** Both call sites hand the widget a
+title; the widget hardcoded `Übersicht` and dropped it. The footer therefore said
+"Übersicht" where it meant "Archiv". The parameter is read now.
+
+**Left alone on purpose:** the slogan. It invites strangers to publish here —
+*"Du willst schreiben – ohne einen eigenen Blog zu veröffentlichen? Be a part of
+Article Time!"* — which is the multi-author platform the scope sentence in
+CLAUDE.md exists to end, and half of it is English. Copy is Angel's call, not a
+migration's, so it moved across verbatim with a FIXME on it.
+
+**Dropped:** a fourth column headed "Most Loved Widgets", English, over nothing.
+What would have filled it was a commented-out `$.getJSON` in main.js counting
+comments, for a comment system this blog decided against. An empty heading is an
+unfinished feature announcing itself, not a design element. The design system
+keeps `identity.mostLoved` as an idea; it needs the hearts data plumbed through,
+which is a feature.
 
 ### The header came from Bulma, not from the design system — done
 

@@ -1,0 +1,175 @@
+{{ partialCached "_base/footer-content" . .RelPermalink }}
+
+{{ define "partials/_base/footer-content" }}
+{{- /* Garden — the footer.
+ *
+ * PORTED FROM BULMA, like the header: scss/base/footer.scss and
+ * layout/widgets.scss are the source. The design system's `at-footer-sea`
+ * happened to be correct — two background images and a filter, nothing that
+ * needed the SVG work the tool could not do — and was checked against the SCSS
+ * rather than trusted.
+ *
+ * IT SITS BEHIND THE PAGE at `z-index: -1`, fixed to the bottom, and is
+ * uncovered as you scroll into it. main.js measures its height and ends the
+ * main column exactly that far above the bottom of the document. If this
+ * partial's height changes, that keeps working; if its ROOT ELEMENT changes,
+ * update `[data-page-footer]` in main.js with it.
+ *
+ * KEYED ON .RelPermalink, which upstream was not, and that was a bug. The
+ * footer is *almost* identical on every page — but the footer menu marks the
+ * page you are on with `aria-current`, and with no cache key Hugo baked the
+ * first page it rendered into every other one. Result: on /pages/datenschutz/
+ * the footer still offered "Datenschutz" as a link to itself, and no page ever
+ * marked its own entry. Verified before and after.
+ *
+ * The key costs one render per page rather than one per site. The expensive
+ * part is the archive's GroupByDate, and on a blog this size that is noise. */ -}}
+
+{{- /* The turbulence that ripples the reflection. Inline because a filter has
+       to be in the document to be referenced by `url(#…)`, and namespaced
+       `at-` so it cannot collide with the ghost's `#disfilter` in the header. */ -}}
+<svg width="0" height="0" aria-hidden="true" focusable="false">
+    <filter id="at-turbulence" x="0" y="0" width="100%" height="100%">
+        <feTurbulence id="at-sea-filter" numOctaves="2" seed="2" baseFrequency="0.02 0.05"></feTurbulence>
+        <feDisplacementMap in2="" scale="20" in="SourceGraphic"></feDisplacementMap>
+        <animate href="#at-sea-filter" attributeName="baseFrequency" dur="200s"
+                 keyTimes="0;0.8;1" values="0.02 0.06;0.04 0.08;0.02 0.06" repeatCount="indefinite"/>
+    </filter>
+</svg>
+
+<div class="at-footer-sea" aria-hidden="true"></div>
+
+<div class="at-footer-inner">
+    {{- /* FIXME — CONTENT, NOT DESIGN. This slogan invites strangers to publish
+           here: "Du willst schreiben – ohne einen eigenen Blog zu veröffentlichen?
+           Be a part of Article Time!". That is the multi-author platform the scope
+           sentence in CLAUDE.md exists to end, and half of it is English on a site
+           whose rule is German for every visitor-facing string.
+
+           Carried over verbatim because replacing copy is Angel's call, not a
+           migration's. The slot is real — the design system keeps a slogan
+           between the gold quote marks — only the sentence is wrong. */ -}}
+    <p class="at-slogan at-quoted">
+        Du willst schreiben - ohne einen eignen Blog zu veröffentlichen?<br />
+        Be a part of Article Time!
+    </p>
+
+    {{- /* Layout lives at the call site, not in a class: one column on a phone,
+           two from tablet, three from widescreen. Upstream this was four Bulma
+           columns, and the statistics one carried `is-hidden-touch
+           is-hidden-desktop-only` so it only ever appeared above 1216px —
+           because four columns did not fit. Three do. */ -}}
+    <div class="mt-gutter grid grid-cols-1 gap-gutter md:grid-cols-2 xl:grid-cols-3">
+
+        {{- /* Site-wide representative h-card (Story 9.13). Identifies the person
+               for IndieWeb tooling — webmention.io, Bridgy, Mastodon rel=me,
+               indiewebify.me. The full profile lives at identity.about_url; the
+               footer shows the rel=me silos only (socials flagged `footer: true`).
+
+               The microformat class names are a contract with parsers. Do not
+               rename one to suit a stylesheet. */ -}}
+        {{- $identity := .Site.Params.identity -}}
+        <article class="at-hcard h-card">
+            <p class="gd-lined-title p-name">{{ $identity.name }}</p>
+            {{- $avatarLink := or $identity.about_url $identity.url -}}
+            {{- with $identity.photo }}
+            <div class="at-hcard-avatar">
+                {{- if $avatarLink -}}
+                <a href="{{ $avatarLink | relURL }}" aria-label="Mehr über {{ $identity.name }}">
+                    <img class="u-photo" src="{{ . | relURL }}" width="120" height="120" alt="{{ $identity.name }}" title="{{ $identity.name }}" />
+                </a>
+                {{- else -}}
+                <img class="u-photo" src="{{ . | relURL }}" width="120" height="120" alt="{{ $identity.name }}" title="{{ $identity.name }}" />
+                {{- end -}}
+            </div>
+            {{- end }}
+            {{- with $identity.note }}<p class="at-hcard-note p-note">{{ . }}</p>{{ end }}
+            <div class="at-socials">
+                {{- range where $identity.socials "footer" true }}
+                <a href="{{ .src }}" data-tooltip="{{ .name }}" aria-label="{{ .name }}" target="_blank" rel="noopener me">
+                    <svg style="fill: {{ .color }};{{ with .opacity }} opacity: {{ . }};{{ end }}" aria-hidden="true"><use href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ $.Site.Params.remixicon_version }}#{{ .icon }}"></use></svg>
+                </a>
+                {{- end }}
+            </div>
+            {{- with $identity.about_url }}
+            <a href="{{ . | relURL }}" class="gd-button gd-button-secondary mt-4" title="Über mich">
+                <svg class="size-4 shrink-0 fill-current" aria-hidden="true"><use href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ $.Site.Params.remixicon_version }}#arrow-right-s-line"></use></svg>
+                Über mich
+            </a>
+            {{- end }}
+            {{- /* Canonical self-link for IndieWeb (u-url + rel=me). The avatar and
+                   the button point at the about page for a reader; the identity URL
+                   is here, unseen, for mf2 parsers and RelMeAuth. */ -}}
+            <a class="u-url u-uid" rel="me" href="{{ .Site.BaseURL }}" hidden>{{ $identity.name }}</a>
+        </article>
+
+        {{- /* Statistics. The grand total counts withered entries and calls them
+               out; the per-format counts include them too, so the two add up.
+               Hiding them would make the numbers disagree, which is worse than
+               an uncomfortable count. */ -}}
+        <div>
+            <p class="gd-lined-title">Statistik</p>
+            {{- $allEntries := where .Site.RegularPages "Type" "in" (slice "articles" "notes") -}}
+            {{- $witheredCount := partial "withered-count.html" $allEntries -}}
+            <p class="mt-3">Momentan befinden sich {{ len $allEntries }} <a href="{{ .Site.Home.RelPermalink }}" title="Artikel">Einträge</a> auf dieser Seite{{ if gt $witheredCount 0 }} — davon {{ $witheredCount }} verwelkt{{ end }}.</p>
+            <ul class="at-widget-list at-leader-list mt-3">
+                {{- range slice
+                  (dict "type" "articles" "label" "Artikel" "icon" "article-line" "color" "rgb(88, 179, 189)")
+                  (dict "type" "notes" "label" "Notizen" "icon" "lightbulb-line" "color" "hsl(29, 100%, 80%)") }}
+                <li>
+                    <span class="inline-flex items-center gap-2">
+                        <svg class="size-4 shrink-0" style="fill: {{ .color }}" aria-hidden="true"><use href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ $.Site.Params.remixicon_version }}#{{ .icon }}"></use></svg>
+                        {{ .label }}
+                    </span>
+                    <span>{{ len (where $.Site.RegularPages "Type" .type) }}</span>
+                </li>
+                {{- end }}
+            </ul>
+        </div>
+
+        {{ partial "widgets/archive" (dict "context" . "archiveTitle" "Archiv") }}
+
+        {{- /* DROPPED: a fourth column headed "Most Loved Widgets" — English, over
+               nothing. The list that would have filled it lived in main.js as a
+               commented-out $.getJSON call against a comment count, for a comment
+               system this blog decided against. An empty heading is not a design
+               element, it is an unfinished feature announcing itself. The design
+               system keeps `identity.mostLoved` as an idea; it needs the hearts
+               data plumbed through, which is a feature and not this commit. */ -}}
+    </div>
+</div>
+
+{{- if .Site.Menus.footer }}
+<nav class="at-footer-nav" aria-label="Footer">
+    <ul>
+        {{- $currentPage := . -}}
+        {{- range .Site.Menus.footer -}}
+        <li>
+            {{- if not (eq $currentPage.RelPermalink .URL) -}}
+                <a href="{{ .URL }}" title="{{ .Name }}">{{ .Name }}</a>
+            {{- else -}}
+                <span aria-current="page">{{ .Name }}</span>
+            {{- end -}}
+        </li>
+        {{- end -}}
+    </ul>
+</nav>
+{{- end }}
+
+<div class="at-copyright">
+    {{- /* Build version: the daily-rebuild workflow passes git-describe via
+           HUGO_PARAMS_VERSION → exact tag at a tag commit, "<tag>+<n>" otherwise.
+           Local `hugo server` shows "dev" unless you set HUGO_PARAMS_VERSION.
+           (hugo.CommitHash is the Hugo binary's build commit, not the project's,
+           so it is a misleading fallback — intentionally not used.) */ -}}
+    {{- $version := site.Params.version | default "dev" -}}
+    &copy; 2020 - {{ dateFormat "2006" now }} {{ .Site.Params.identity.name }} | <abbr title='Build Date: {{ now.Format "2006-01-02 15:04 UTC" }}'>{{ $version }}</abbr>
+    | <span>{{ .Site.Copyright | safeHTML }}</span>
+
+    <p>
+        Header SVGs von: <a href="https://www.shutterstock.com/g/pixelliebe" title="shutterstock.com">pixelliebe</a> |
+        <a href="https://www.shutterstock.com/image-vector/hamburg-skyline-471775031" title="shutterstock.com">shutterstock.com</a>
+        | <a href="https://www.shutterstock.com/image-vector/kiel-skyline-german-city-581455954" title="shutterstock.com">shutterstock.com</a>
+    </p>
+</div>
+{{ end }}

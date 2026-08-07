@@ -73,7 +73,10 @@
             <svg aria-hidden="true"><use href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ .Site.Params.remixicon_version }}#arrow-up-s-fill"></use></svg>
         </button>
 
-        <footer class="footer">
+        {{- /* `data-page-footer` is main.js's hook. It measures this element and
+               ends the main column exactly one footer-height above the bottom of
+               the document, which is what makes the reveal work. */ -}}
+        <footer class="at-footer" data-garden data-page-footer>
             {{ block "footer" . }}{{ partial "_base/footer" . }}{{ end }}
         </footer>
 

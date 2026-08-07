@@ -1,0 +1,39 @@
+{{- /* Garden — the archive widget: years, entry counts, dotted leaders.
+ *
+ * TWO CALL SITES, and they are not the same page: the footer on every page, and
+ * page/archive.html, which is still article-time's. The button is suppressed on
+ * the archive page itself — a link to where you already are is furniture.
+ *
+ * `at-leader-list` is the shared row shape from the design system: name left,
+ * count right, and a dotted leader between them drawn as a repeating radial
+ * gradient rather than a row of typed periods.
+ *
+ * COUNTS INCLUDE WITHERED ENTRIES, deliberately, and the archive page does the
+ * same. An archive that hides things is not an archive — see docs/design.md. */ -}}
+{{- $ctx := .context -}}
+<div data-garden class="at-widget-archive">
+    <p class="gd-lined-title">{{ .archiveTitle | default "Übersicht" }}</p>
+
+    {{- $combinedPages := slice -}}
+    {{- range (where $ctx.Site.Pages "Type" "articles") }}{{ $combinedPages = $combinedPages | append .Pages }}{{ end -}}
+    {{- range (where $ctx.Site.Pages "Type" "notes") }}{{ $combinedPages = $combinedPages | append .Pages }}{{ end -}}
+
+    <ul class="at-widget-list at-leader-list mt-3">
+        {{- range ($combinedPages.GroupByDate "2006") }}
+        {{- $len := len .Pages }}
+        <li>
+            <a href="{{ printf "pages/archiv/#%s" .Key | relURL }}" title="{{ .Key }}">{{ .Key }}</a>
+            <span>{{ $len }} {{ if eq $len 1 }}Eintrag{{ else }}Einträge{{ end }}</span>
+        </li>
+        {{- end }}
+    </ul>
+
+    {{- if ne $ctx.RelPermalink (relURL "pages/archiv/") }}
+    <div class="mt-4 flex justify-end">
+        <a href="{{ "pages/archiv/" | relURL }}" class="gd-button gd-button-secondary" title="Archiv">
+            <svg class="size-4 shrink-0 fill-current" aria-hidden="true"><use href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ $ctx.Site.Params.remixicon_version }}#bookmark-line"></use></svg>
+            Archiv
+        </a>
+    </div>
+    {{- end }}
+</div>

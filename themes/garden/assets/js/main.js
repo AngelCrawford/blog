@@ -63,10 +63,7 @@
  * real question. */
 (() => {
   const main = document.querySelector("[data-page-main]");
-  /* `footer.footer` is article-time's markup and its Bulma class name. Garden
-   * cannot put a hook on it yet — the partial still belongs to the other theme.
-   * Update this selector in the same commit that migrates the footer. */
-  const footer = document.querySelector("footer.footer");
+  const footer = document.querySelector("[data-page-footer]");
   if (!main || !footer) return;
 
   const fit = () => {

@@ -1522,3 +1522,122 @@ a.at-hashtag, a.at-tag { text-decoration: none; }
 
 /* The hat's own fill. It is a red hat; there is no token for red hats. */
 .santa-hat-piece { fill: firebrick; }
+
+/* ===========================================================================
+ * ═══════════════════════════════════════════════════════════════════════════
+ * FOOTER — the reflection, the h-card, the columns.
+ *
+ * Same rule as the header: derived from article-time's scss/base/footer.scss,
+ * not from the design system's guess at it. The skill's `at-footer-sea` happened
+ * to be right — it is two background images and a filter, no SVG sprite work to
+ * get wrong — and it is checked against the source rather than trusted.
+ *
+ * THE FOOTER IS FIXED AT z-index -1 AND SITS BEHIND THE PAGE. It is uncovered
+ * as you reach the bottom, which is why main.js measures its height and ends
+ * the main column exactly that far above the bottom of the document. Change one
+ * and the other stops working.
+ * ═══════════════════════════════════════════════════════════════════════════
+ * =========================================================================== */
+.at-footer {
+  position: fixed; bottom: 0; left: 0; z-index: -1;
+  width: 100%; margin: 0; padding: 0 0 2em;
+  overflow: hidden;
+  background-color: var(--color-surface-sunken);
+  color: var(--color-ink-muted);
+  /* The one inset pair outside the round button. Written out rather than
+   * reusing --shadow-pressed: that one is tuned for a 48px disc, and shadow
+   * offsets do not scale to a full-width band. */
+  box-shadow:
+    inset 10px 10px 15px rgb(0 0 0 / 0.3),
+    inset -10px -10px 15px --alpha(var(--color-ink) / 10%);
+}
+.at-footer > svg { position: absolute; }
+
+/* THE SEA. The same harbour silhouette as the header, twice: once upright and
+ * cropped to its waterline, once flipped underneath it and rippling. The ripple
+ * is an SVG turbulence filter that shifts over 200 seconds — slow enough that
+ * nobody catches it moving, which is the point. */
+.at-footer-sea {
+  position: absolute; top: 0; left: 0; z-index: 1;
+  width: 100%; height: 300px; pointer-events: none;
+}
+.at-footer-sea::before, .at-footer-sea::after {
+  content: ""; position: absolute; width: 100%; height: 300px;
+  background-image: url("/images/header/city.svg");
+  background-repeat: repeat-x; background-size: auto 300px;
+  opacity: 0.4; filter: sepia(0.6);
+}
+.at-footer-sea::before { top: -260px; }
+.at-footer-sea::after {
+  top: 37px; transform: rotate(180deg) scaleX(-1);
+  filter: sepia(0.7) blur(0.1em) url("#at-turbulence");
+}
+
+/* The content sits above the reflection. */
+.at-footer-inner { position: relative; z-index: 5; padding: 3em; }
+
+/* The slogan, between the remixicon quote pair — the third and last place the
+ * icon font is used by codepoint. The dark gradient behind it is what lifts the
+ * text off the skyline; without it the letters land in a lit window. */
+.at-slogan {
+  width: fit-content; margin: 0 auto; padding: 0.3em;
+  font-family: var(--font-heading); font-size: var(--text-2xl); line-height: 1.5;
+  color: var(--color-ink-muted); text-align: center;
+  text-shadow: 3px 3px 4px rgb(0 0 0 / 0.5);
+  background: linear-gradient(270deg, transparent 0%, rgb(0 0 0 / 0.3) 50%, transparent 100%);
+}
+.at-slogan::before, .at-slogan::after { position: relative; top: -10px; font-size: 1.7rem; }
+@media (max-width: 768px) {
+  .at-slogan { font-size: 1.5rem; }
+  .at-slogan::before, .at-slogan::after { font-size: 1rem; }
+}
+
+/* ---- The h-card ----------------------------------------------------------
+ * The site-wide representative h-card: who this is, for webmention.io, Bridgy,
+ * Mastodon's rel=me and indiewebify.me. Microformat class names (`h-card`,
+ * `p-name`, `u-photo`, `p-note`, `u-url`) are a CONTRACT WITH PARSERS, not
+ * styling — never rename one to fit a stylesheet. */
+.at-hcard { display: flex; flex-direction: column; align-items: center; text-align: center; }
+/* align-items:center shrinks block children to their content width, which
+ * collapses the lined title's ::before/::after — they need the full column. */
+.at-hcard .gd-lined-title { align-self: stretch; }
+.at-hcard-avatar { width: 120px; height: 120px; margin: 0.25rem auto 1rem; }
+.at-hcard-avatar img {
+  width: 100%; height: 100%; object-fit: cover; border-radius: 50%;
+  border: 2px solid var(--color-accent-muted);
+  transition: border-color var(--duration-slow) var(--ease-out);
+}
+.at-hcard-avatar a:hover img { border-color: var(--color-accent); }
+.at-hcard-note { max-width: 18rem; margin-bottom: 1rem; color: var(--color-ink-muted); }
+
+/* Social icons. THE SECOND AND LAST EXCEPTION to gold being the only accent:
+ * each silo keeps its own brand colour, set inline from identity.socials[].color,
+ * because a row of gold circles tells you nothing about where the links go.
+ *
+ * Hovering DIMS THE SIBLINGS rather than highlighting the target — the same
+ * move as the profile page. Highlighting one of eight bright marks is hard to
+ * see; dimming seven is not. `filter: opacity()` composes with any per-icon
+ * inline opacity, which a plain `opacity` would overwrite. */
+.at-socials { display: flex; justify-content: center; gap: 1.5em; }
+.at-socials:hover a { filter: opacity(0.35); }
+.at-socials a:hover { filter: none; transform: scale(1.18); }
+.at-socials a {
+  display: flex; align-items: center; justify-content: center;
+  width: 1.4em; height: 1.4em; font-size: 1.4em;
+  transition: transform var(--duration-base) var(--ease-out), filter var(--duration-base) var(--ease-out);
+}
+.at-socials svg { width: 1.4em; height: 1.4em; fill: var(--color-accent-hover); }
+
+/* ---- Footer navigation and copyright ------------------------------------
+ * The separators are pseudo-elements, so the markup stays a plain list and no
+ * template has to decide where the last pipe goes. */
+.at-footer-nav { text-align: center; }
+.at-footer-nav li { display: inline-block; line-height: 1.5em; }
+.at-footer-nav li::before { content: "|"; padding: 0 0.2em; color: var(--color-accent-muted); }
+.at-footer-nav li:first-of-type::before { content: ""; }
+.at-copyright { text-align: center; font-size: 90%; opacity: 0.7; }
+
+/* Links in the footer are gold on a surface that is darker than anywhere else,
+ * so they need no other treatment. */
+.at-footer a { color: var(--color-accent); }
+.at-footer a:hover { color: var(--color-accent-hover); }
