@@ -917,7 +917,13 @@ a.at-hashtag, a.at-tag { text-decoration: none; }
   display: inline-flex; align-items: center; gap: 0.45em;
   padding: 0.25em 0.7em 0.25em 0.55em;
   border: 1px solid var(--border-hairline); border-radius: var(--radius-pill);
-  background: var(--color-surface); color: var(--color-ink);
+  /* GOLD, LIKE EVERY OTHER LINK. The design system had this at `--color-ink`,
+   * which on a card meant a control that looks exactly like the sentence next to
+   * it — the pill's outline was doing all the work of saying "this goes
+   * somewhere". Links are gold on this site; a link shaped like a pill is still
+   * a link. The neutral SURFACE is what the badge decision was about: the fill
+   * stays out of the palette so a row of Rubriken reads as one family. */
+  background: var(--color-surface); color: var(--color-accent);
   font-size: 0.78rem; line-height: 1.4; text-decoration: none; white-space: nowrap;
   transition: border-color var(--duration-fast) var(--ease-out), color var(--duration-fast) var(--ease-out);
 }
@@ -925,7 +931,7 @@ a.at-hashtag, a.at-tag { text-decoration: none; }
   content: ""; flex: none; width: 0.5em; height: 0.5em; border-radius: 50%;
   background: var(--at-badge-dot, var(--color-accent));
 }
-.at-badge:hover { border-color: var(--color-accent); color: var(--color-ink-strong); }
+.at-badge:hover { border-color: var(--color-accent); color: var(--color-accent-hover); }
 
 /* ===========================================================================
  * PROSE ELEMENTS — what an article body is actually made of.

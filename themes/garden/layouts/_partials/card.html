@@ -37,13 +37,14 @@
 <article class="at-card h-entry{{ if $featured }} at-card-fixed{{ end }}{{ if $isNote }} min-h-[400px]{{ end }}">
 
     {{- if $isNote -}}
-        {{- /* The note keeps the ribbon. Everywhere else the Rubrik became a dot
-               badge in the metadata row, but a note has no metadata row — the
-               picture is the whole card and the label has to sit on it. */ -}}
-        {{- with $rubrik }}
-        <a class="at-ribbon top-0 {{ if $img }}left-0 rounded-tl-md{{ else }}right-0 rounded-tr-md{{ end }}" href="{{ .RelPermalink }}" title="{{ .LinkTitle }}">{{ .LinkTitle }}</a>
-        {{- end }}
-        <div class="relative grid place-items-center px-gutter pb-gutter {{ if $rubrik }}pt-22{{ else }}pt-gutter{{ end }}">
+        {{- /* NO RIBBON. The design system keeps one here — a note has no metadata
+               row, so the argument was that the label has to sit on the picture.
+               It does not: the footer is a metadata row, the note has one like
+               every other card, and a saturated flag across the corner of a
+               photograph was the thing the dot badge replaced everywhere else.
+               One card type carrying the old device is worse than either choice
+               applied consistently. The badge is in the footer with the dates. */ -}}
+        <div class="relative grid place-items-center p-gutter">
             {{- with $img }}
             {{- $bleed := .Process "fill 600x480 webp" }}
             <img class="at-card-bleed" src="{{ $bleed.RelPermalink }}" alt="" width="600" height="480" loading="lazy">
@@ -89,8 +90,8 @@
                 {{- with $rubrik }}
                 <a class="at-badge" href="{{ .RelPermalink }}" title="{{ .LinkTitle }}"{{ with .Params.categoryColor }} style="--at-badge-dot: {{ . }}"{{ end }}>{{ .LinkTitle }}</a>
                 {{- end }}
-                <time class="dt-published" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}" title="Veröffentlichungsdatum">
-                    <svg class="mr-0.5 inline-block size-[15px] -translate-y-px fill-current text-ink-muted" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#calendar-line"></use></svg>
+                <time class="dt-published inline-flex items-center gap-1.5" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}" title="Veröffentlichungsdatum">
+                    <svg class="size-4 shrink-0 fill-current text-ink-muted" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#calendar-line"></use></svg>
                     {{ .Date.Format "02.01.06" }}
                 </time>
                 {{- /* The edited date is deliberately NOT here. Badge plus two
@@ -111,26 +112,41 @@
     {{- end -}}
 
     <footer class="at-card-footer">
+        {{- /* ICONS SIT IN A FLEX ROW WITH THEIR TEXT, not inline with a nudge.
+               Every one of these was `inline-block` plus a hand-picked
+               `-translate-y`, which is a guess that only holds at one font size —
+               the 20px timer needed -4px and came out visibly high, while the
+               15px calendar beside it needed -1px. `items-center` is not a
+               guess. */ -}}
         <div class="at-card-footer-item">
             {{- if $isNote -}}
-                <time class="dt-published" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}" data-tooltip="Veröffentlichungsdatum">
-                    <svg class="mr-0.5 inline-block size-[15px] -translate-y-px fill-current text-ink-muted" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#calendar-line"></use></svg>
+                <time class="dt-published inline-flex items-center gap-1.5" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}" data-tooltip="Veröffentlichungsdatum">
+                    <svg class="size-4 shrink-0 fill-current text-ink-muted" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#calendar-line"></use></svg>
                     {{ .Date.Format "02.01.06" }}
                 </time>
                 {{- if ne (.Date.Format "02.01.06") (.Lastmod.Format "02.01.06") }}
-                <time class="dt-updated" datetime="{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}" data-tooltip="Letztes Bearbeitungsdatum">
-                    <svg class="mr-0.5 inline-block size-[15px] -translate-y-px fill-current text-ink-muted" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#pencil-line"></use></svg>
+                <time class="dt-updated inline-flex items-center gap-1.5" datetime="{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}" data-tooltip="Letztes Bearbeitungsdatum">
+                    <svg class="size-4 shrink-0 fill-current text-ink-muted" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#pencil-line"></use></svg>
                     {{ .Lastmod.Format "02.01.06" }}
                 </time>
                 {{- end }}
             {{- else -}}
                 {{- $readingTime := math.Ceil (div (float .WordCount) .Site.Params.reading_speed) }}
-                <span data-tooltip="{{ $readingTime }} Minuten Lesedauer">
-                    <svg class="mr-0.5 inline-block size-5 -translate-y-1 fill-current text-ink-muted" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#timer-line"></use></svg>
+                <span class="inline-flex items-center gap-1.5" data-tooltip="{{ $readingTime }} Minuten Lesedauer">
+                    <svg class="size-5 shrink-0 fill-current text-ink-muted" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#timer-line"></use></svg>
                     {{ $readingTime }} Min.
                 </span>
             {{- end -}}
         </div>
+
+        {{- /* The Rubrik. On an article it sits in the metadata row beside the
+               date; a note has no metadata row, so it takes the cell the tags
+               would occupy. Same badge either way. */ -}}
+        {{- if $isNote }}{{ with $rubrik }}
+        <div class="at-card-footer-item">
+            <a class="at-badge" href="{{ .RelPermalink }}" title="{{ .LinkTitle }}"{{ with .Params.categoryColor }} style="--at-badge-dot: {{ . }}"{{ end }}>{{ .LinkTitle }}</a>
+        </div>
+        {{- end }}{{ end }}
 
         {{- /* Tags moved out of the running text into the footer, where the rest
                of the metadata already is. In the body they interrupted the
