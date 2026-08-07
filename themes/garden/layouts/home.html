@@ -2,16 +2,22 @@
 {{- /* Garden — the front page: an intro panel and the feed.
  *
  * THE GRID IS AT THE CALL SITE, not in a class. It genuinely differs per page —
- * three cards across here, four on the archive, a narrower minimum for term
- * cards — and `gd-card-grid` would be a lie told three ways. `auto-fill` with a
- * 30rem floor rather than named breakpoints: the card was designed against a
- * ~480px column and this keeps it there without anyone maintaining a set of
- * numbers.
+ * this feed, four across on the archive, a narrower minimum for term cards — and
+ * `gd-card-grid` would be a lie told three ways.
  *
- * 28rem, not 30. At 30rem three tracks come to exactly 1488px in a 1488px grid
- * and the browser rounds down to two — a boundary is not a margin. 28rem leaves
- * room for the arithmetic and the tracks still land at 480px on a wide screen,
- * because `1fr` shares out whatever is left over.
+ * ONE WIDE COLUMN, CAPPED AT 46rem, AND THAT IS THE CARD'S DESIGN TALKING.
+ * The cover floats into the text; below roughly 640px of card there is no text
+ * column left to float into and the picture goes on top, which is a different
+ * and much plainer card. Three across in a 96rem page makes each one 451px, so
+ * three columns cannot carry this design at all — it is not a tuning problem.
+ *
+ * The design system already knew and nobody read it that way: `.at-card` shipped
+ * with `max-width: 733.5px`, and (1488 − 24) / 2 is 732. That cap was a
+ * two-column 96rem grid, measured once and written down as a property of the
+ * card. It is a fact about the layout, so it lives here as a track ceiling.
+ *
+ * `min(34rem, 100%)` as the floor rather than a bare `34rem`: a fixed minimum
+ * wider than the viewport overflows the page on a phone.
  *
  * `grid-cols-*` is not optional even so — `grid` is a Bulma class name too, and
  * Bulma's fills in a 0.75rem gap and its own auto-fill template wherever garden
@@ -33,7 +39,7 @@
     {{- $hiddenCount := partial "withered-count.html" $all -}}
     {{- $paginator := .Paginate $visible -}}
 
-    <div class="h-feed grid grid-cols-[repeat(auto-fill,minmax(28rem,1fr))] gap-x-gutter gap-y-gutter">
+    <div class="h-feed grid grid-cols-[repeat(auto-fill,minmax(min(34rem,100%),46rem))] justify-center gap-x-gutter gap-y-gutter">
         {{- /* Weighted entries first and in weight order, then everything else
                newest first, then anything with no weight at all. Three ranges
                rather than one sort because `weight` is optional and Hugo sorts
