@@ -71,16 +71,25 @@ changing it is one edit in the token block instead of a hunt through components.
 
 ### The Rubrik is a dot badge, not a ribbon
 
-**Decided August 2026.** On an article card the category sits in the metadata
-row as a neutral pill with a coloured dot — `at-badge`, with the dot set from
-the category's `categoryColor` front-matter field. The ribbon survives on **note
-cards only**, where the label has to sit on the picture because the picture is
-the whole card.
+**Decided August 2026.** The category is a neutral pill with a coloured dot —
+`at-badge`, the dot set from the category's `categoryColor` front-matter field.
+On an article card it sits in the metadata row; on a note card, which has no
+metadata row, it sits in the footer beside the dates.
+
+**The ribbon is gone entirely.** The design system keeps one on notes, arguing
+the label has to sit on the picture because the picture is the whole card. The
+footer is a metadata row and a note has one, so that argument does not hold — and
+one card type carrying the device the other three dropped is worse than either
+choice applied consistently.
 
 **Why:** the ribbon put a saturated fill across the top of a photograph. It
 competed with the photograph and with the gold, on the most repeated element on
 the site — three hues (`#1d7a7a`, `#285fa5`, `#a52828`), none of them in the
 palette.
+
+The pill's **text is gold**, like every other link; only its surface is neutral.
+Set in `--color-ink` it looked like the sentence beside it, leaving the outline
+to do all the work of saying that it goes somewhere.
 
 **Why this does not break "gold is the only accent":** the surface stays
 neutral. What carries the colour is a 0.5em dot — enough to tell Rubriken apart
