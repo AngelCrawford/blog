@@ -178,6 +178,16 @@ dotted-leader lists side by side, pointing opposite ways. Both are
 `at-leader-list` now — name left, count right — which is the "one row shape"
 decision from the design system doing its job on its first outing.
 
+**A colour in a `style` attribute came out as `ZgotmplZ`.** Go's template
+escaper refuses `rgb(88, 179, 189)` in a CSS context and writes its placeholder
+instead, so the statistics icons rendered colourless — silently, because
+`ZgotmplZ` is a valid-looking string, not an error. `hsl(29, 100%, 80%)` in the
+same attribute passes, and the h-card's hex values pass, which is why only one
+of five icons was affected and nobody spotted it for a week. **Do not put a
+colour through a Go template into a `style` attribute.** Carry the finished
+utility class as data instead — that keeps the value in the token system as
+well. `fill-accent`, never `fill-` plus a variable.
+
 **`archiveTitle` was passed and ignored.** Both call sites hand the widget a
 title; the widget hardcoded `Übersicht` and dropped it. The footer therefore said
 "Übersicht" where it meant "Archiv". The parameter is read now.

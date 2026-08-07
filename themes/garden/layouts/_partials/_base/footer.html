@@ -54,12 +54,21 @@
         Be a part of Article Time!
     </p>
 
-    {{- /* Layout lives at the call site, not in a class: one column on a phone,
-           two from tablet, three from widescreen. Upstream this was four Bulma
-           columns, and the statistics one carried `is-hidden-touch
-           is-hidden-desktop-only` so it only ever appeared above 1216px —
-           because four columns did not fit. Three do. */ -}}
-    <div class="mt-gutter grid grid-cols-1 gap-gutter md:grid-cols-2 xl:grid-cols-3">
+    {{- /* Layout lives at the call site, not in a class. `auto-fit` with a 15rem
+           floor rather than named breakpoints: the column count then follows the
+           space available instead of three numbers somebody has to keep in step
+           with the content, and adding a fourth column later needs no media
+           query. The explicit `grid-cols-*` is not optional — `grid` is a Bulma
+           class name too, and Bulma's fills in a gap and an auto-fill template
+           wherever garden declares none.
+
+           Row gap is `section`, column gap is `gutter`: stacked on a phone these
+           are separate blocks, side by side they are one row.
+
+           Upstream this was four Bulma columns, and the statistics one carried
+           `is-hidden-touch is-hidden-desktop-only` so it only ever appeared
+           above 1216px — because four columns did not fit. Three do. */ -}}
+    <div class="grid grid-cols-[repeat(auto-fit,minmax(15rem,1fr))] gap-x-gutter gap-y-section">
 
         {{- /* Site-wide representative h-card (Story 9.13). Identifies the person
                for IndieWeb tooling — webmention.io, Bridgy, Mastodon rel=me,
@@ -113,12 +122,26 @@
             {{- $witheredCount := partial "withered-count.html" $allEntries -}}
             <p class="mt-3">Momentan befinden sich {{ len $allEntries }} <a href="{{ .Site.Home.RelPermalink }}" title="Artikel">Einträge</a> auf dieser Seite{{ if gt $witheredCount 0 }} — davon {{ $witheredCount }} verwelkt{{ end }}.</p>
             <ul class="at-widget-list at-leader-list mt-3">
+                {{- /* GOLD, BOTH OF THEM. The article icon was `rgb(88, 179, 189)`
+                       upstream and in the design system — a teal that appears in no
+                       token and is not one of the two sanctioned exceptions to
+                       "gold is the only accent" (growth stages and the social
+                       silos' own brands). Two steps of the accent tell the rows
+                       apart without spending a third hue on it.
+
+                       The colour is a FINISHED CLASS NAME carried as data, not a
+                       `style` attribute. Two reasons, and the first one bit:
+                       Go's template escaper refuses `rgb(88, 179, 189)` in a
+                       `style` context and writes `ZgotmplZ` instead — which is
+                       exactly why these icons rendered colourless. And a class
+                       keeps the value in the token system. Never assemble it
+                       from a variable; Tailwind extracts complete strings only. */ -}}
                 {{- range slice
-                  (dict "type" "articles" "label" "Artikel" "icon" "article-line" "color" "rgb(88, 179, 189)")
-                  (dict "type" "notes" "label" "Notizen" "icon" "lightbulb-line" "color" "hsl(29, 100%, 80%)") }}
+                  (dict "type" "articles" "label" "Artikel" "icon" "article-line" "fill" "fill-accent")
+                  (dict "type" "notes" "label" "Notizen" "icon" "lightbulb-line" "fill" "fill-accent-hover") }}
                 <li>
                     <span class="inline-flex items-center gap-2">
-                        <svg class="size-4 shrink-0" style="fill: {{ .color }}" aria-hidden="true"><use href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ $.Site.Params.remixicon_version }}#{{ .icon }}"></use></svg>
+                        <svg class="size-5 shrink-0 {{ .fill }}" aria-hidden="true"><use href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ $.Site.Params.remixicon_version }}#{{ .icon }}"></use></svg>
                         {{ .label }}
                     </span>
                     <span>{{ len (where $.Site.RegularPages "Type" .type) }}</span>

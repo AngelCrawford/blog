@@ -1546,7 +1546,13 @@ a.at-hashtag, a.at-tag { text-decoration: none; }
   position: fixed; bottom: 0; left: 0; z-index: -1;
   width: 100%; margin: 0; padding: 0 0 2em;
   overflow: hidden;
-  background-color: var(--color-surface-sunken);
+  /* One step BELOW `surface-sunken`, and the only place the three-surface scale
+   * gets a fourth value. It is not a fourth surface: the footer sits BEHIND the
+   * page rather than on it, and it has to read as further away than the ground
+   * the page stands on. Tokenising it to `surface-sunken` was tried and the
+   * revealed footer looked like the page continuing. The design system carries
+   * the same literal. */
+  background-color: hsl(190 11% 6%);
   color: var(--color-ink-muted);
   /* The one inset pair outside the round button. Written out rather than
    * reusing --shadow-pressed: that one is tuned for a 48px disc, and shadow
@@ -1584,7 +1590,10 @@ a.at-hashtag, a.at-tag { text-decoration: none; }
  * icon font is used by codepoint. The dark gradient behind it is what lifts the
  * text off the skyline; without it the letters land in a lit window. */
 .at-slogan {
-  width: fit-content; margin: 0 auto; padding: 0.3em;
+  /* `section` below it, not `gutter`. The slogan is a section of its own and the
+   * columns beneath it are the next one; at 24px the two read as one block that
+   * had accidentally been split. */
+  width: fit-content; margin: 0 auto var(--spacing-section); padding: 0.3em;
   font-family: var(--font-heading); font-size: var(--text-2xl); line-height: 1.5;
   color: var(--color-ink-muted); text-align: center;
   text-shadow: 3px 3px 4px rgb(0 0 0 / 0.5);
@@ -1635,11 +1644,14 @@ a.at-hashtag, a.at-tag { text-decoration: none; }
 /* ---- Footer navigation and copyright ------------------------------------
  * The separators are pseudo-elements, so the markup stays a plain list and no
  * template has to decide where the last pipe goes. */
-.at-footer-nav { text-align: center; }
+/* Above the reflection. The sea is `z-index: 1` and 300px tall while these two
+ * are static, so on a wide screen where the columns are short enough to bring
+ * the footer in under 300px the water would paint over the menu. */
+.at-footer-nav { position: relative; z-index: 5; text-align: center; }
 .at-footer-nav li { display: inline-block; line-height: 1.5em; }
 .at-footer-nav li::before { content: "|"; padding: 0 0.2em; color: var(--color-accent-muted); }
 .at-footer-nav li:first-of-type::before { content: ""; }
-.at-copyright { text-align: center; font-size: 90%; opacity: 0.7; }
+.at-copyright { position: relative; z-index: 5; text-align: center; font-size: 90%; opacity: 0.7; }
 
 /* Links in the footer are gold on a surface that is darker than anywhere else,
  * so they need no other treatment. */
