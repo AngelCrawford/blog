@@ -1,0 +1,46 @@
+<!-- @dsCard group="Components" viewport="1180x1220" name="Content — Kartenstreifen" subtitle="Startseiten-Raster: Notizkarte, Artikelkarte mit Cover, Rubrik-Banderole, Ecken-Badge" -->
+<!DOCTYPE html>
+<html lang="de"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../../styles.css">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="../../assets/icons/inline-sprite.js"></script>
+<script src="../../_ds_bundle.js"></script>
+<style>body{margin:0;padding:24px 24px 24px 40px;background:var(--color-surface-sunken);font-family:var(--font-body)}
+#root{display:grid;gap:24px}
+.cap{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--color-ink-muted)}
+.strip{display:flex;flex-wrap:wrap;align-items:center;gap:14px}</style>
+</head><body><div id="root"></div>
+<script type="text/babel">
+const { ArticleCard, GrowthBadge, HeartButton, Tag, Hashtag } = window.ArticleTimeDesignSystem_de8a72;
+function Card(){return (<>
+  <div style={{display:'grid',gridTemplateColumns:'repeat(2,minmax(0,1fr))',gap:'16px 34px',alignItems:'start'}}>
+    <ArticleCard format="note" rubrik="Kategorie 1" rubrikHref="#" rubrikColor="#4e974e"
+      cover="../../assets/images/covers/tags-cover.jpg"
+      summary="There are two hard things in computer science: cache invalidation, naming things, and off-by-one errors."
+      date="12.03.25" updated="24.05.26" hearts={0}/>
+    <ArticleCard
+      title="Chapter VI: Esmeralda" href="#" date="14.04.17" updated="22.06.25"
+      rubrik="Allgemein" rubrikHref="#" rubrikColor="#4e97b3" badge={{icon:'check-fill',label:'Gesehen'}}
+      cover="../../assets/images/covers/rubriken-cover.jpg"
+      summary="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est."
+      tags={['css','html','js','flex','position','tree']} readingTime={1} growthStage="seedling" hearts={0} series/>
+    <ArticleCard
+      title="Chapter IV: Master Jacques Coppenole" href="#" date="12.04.17" updated="06.05.26"
+      rubrik="Quote" rubrikHref="#" rubrikColor="#c463cc" badge={{icon:'sparkling-line',label:'Neu'}}
+      cover="../../assets/images/covers/tags-cover.jpg"
+      summary="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren."
+      tags={['scene','quote']} readingTime={4} growthStage="seedling" hearts={0} series/>
+  </div>
+  <div className="strip">
+    <span className="cap">Wachstumsstufen</span>
+    <GrowthBadge stage="seedling" showLabel/><GrowthBadge stage="budding" showLabel/>
+    <GrowthBadge stage="evergreen" showLabel/><GrowthBadge stage="withered" showLabel/>
+    <span className="cap">Herz</span><HeartButton count={12}/><HeartButton count={41} hearted/>
+    <span className="cap">Rubrik</span><Tag href="#">Allgemein</Tag>
+    <span className="cap">Tags</span><Hashtag href="#">hugo</Hashtag><Hashtag href="#">indieweb</Hashtag>
+  </div>
+</>);}
+ReactDOM.createRoot(document.getElementById('root')).render(<Card/>);
+</script></body></html>

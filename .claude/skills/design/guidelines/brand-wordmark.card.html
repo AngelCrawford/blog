@@ -1,0 +1,28 @@
+<!-- @dsCard group="Brand" viewport="700x420" name="Wortmarke" subtitle="Goldverlauf über erhabener Grundlinie — heute Article Time, nach dem Domain-Umzug Angel Crawford" -->
+<!DOCTYPE html>
+<html lang="de"><head><meta charset="utf-8"><title>Wortmarke</title>
+<link rel="stylesheet" href="../styles.css">
+<style>
+body{margin:0;padding:18px;background:var(--color-surface-sunken);font-family:var(--font-body);color:var(--color-ink)}
+.sky{position:relative;height:170px;display:grid;place-items:center;overflow:hidden;border-radius:var(--radius-md)}
+.sky .at-city{z-index:2}
+.hold{position:relative;z-index:5}
+.lbl{display:block;margin:6px 0 var(--spacing-gutter);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--color-ink-muted)}
+.note{margin:0;max-width:74ch;font-size:12px;line-height:1.6;color:var(--color-ink-muted)}
+</style></head><body>
+
+<div class="sky at-sky" data-sky="dusk">
+  <div class="at-city"></div>
+  <div class="hold"><span class="at-wordmark" data-heading="Angel Crawford" style="font-size:52px;--at-wordmark-pad:60px"><span class="at-wordmark-shimmer" style="background-size:50px 100%">Angel Crawford</span></span></div>
+</div>
+<span class="lbl">Nach dem Domain-Umzug · 52 px, damit der längere Name in einen 700er Header passt</span>
+
+<div class="sky at-sky" data-sky="dusk">
+  <div class="at-city"></div>
+  <div class="hold"><span class="at-wordmark" data-heading="Article Time" style="font-size:64px;--at-wordmark-pad:60px"><span class="at-wordmark-shimmer" style="background-size:50px 100%">Article Time</span></span></div>
+</div>
+<span class="lbl">Heute · 70 px im echten Header, hier 64 px</span>
+
+<p class="note">Drei Ebenen auf derselben Schrift: hinten ein 500 px breiter Schein in aufgehelltem Gold mit 30 px Weichzeichnung, darüber eine erhabene Grundlinie aus vier Textschatten, davor der Verlauf <strong style="color:var(--color-ink)">Akzentgold 32 % → aufgehelltes Gold 50 % → gedämpftes Gold 80 %</strong>, per <code style="color:var(--color-accent)">background-clip: text</code> in die Buchstaben geschnitten. Beim Überfahren läuft ein 50 px breiter Schimmer einmal quer durch. Die Ebenen lesen ihren Text aus <code style="color:var(--color-accent)">data-heading</code> — der Name steht also zweimal im Markup, und beide Stellen müssen beim Umzug mit. <strong style="color:var(--color-ink)">Es gibt keine Logodatei</strong>; die Wortmarke ist gesetzter Text in Montserrat Alternates, und das bleibt auch nach dem Umzug so.</p>
+
+</body></html>

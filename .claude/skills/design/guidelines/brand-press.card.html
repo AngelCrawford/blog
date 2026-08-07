@@ -1,0 +1,22 @@
+<!-- @dsCard group="Brand" viewport="700x190" name="Druckeffekt" subtitle="Die einzige verbliebene Neumorphie: Schattenumkehr am runden Button" -->
+<!DOCTYPE html>
+<html lang="de"><head><meta charset="utf-8"><title>Druckeffekt</title>
+<link rel="stylesheet" href="../styles.css">
+<style>body{margin:0;padding:18px;background:var(--color-surface-sunken);font-family:var(--font-body);color:var(--color-ink)}
+.g{display:grid;gap:12px}.r{display:flex;gap:12px;flex-wrap:wrap}
+.sw{flex:1;min-width:0;border-radius:var(--radius-md);border:1px solid var(--border-hairline);overflow:hidden;background:var(--color-surface-raised)}
+.sw i{display:block;height:56px;border-bottom:1px solid var(--border-hairline)}
+.sw b{display:block;padding:8px 10px 2px;font-family:var(--font-body);font-size:12px;font-weight:400;color:var(--color-accent)}
+.sw s{display:block;padding:0 10px 8px;text-decoration:none;font-size:11px;color:var(--color-ink-muted)}
+code{font-size:12px;color:var(--color-accent)}
+.lbl{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--color-ink-muted)}
+</style></head><body>
+<div class="r" style="gap:32px;align-items:center;padding:10px 0 18px">
+<div style="display:flex;flex-direction:column;align-items:center;gap:10px">
+<span style="width:48px;height:48px;border-radius:50%;background:var(--color-surface-sunken);border:1px solid color-mix(in srgb,var(--color-accent-muted) 50%,transparent);box-shadow:var(--shadow-domed)"></span>
+<span class="lbl">gewölbt</span></div>
+<div style="display:flex;flex-direction:column;align-items:center;gap:10px">
+<span style="width:48px;height:48px;border-radius:50%;background:rgb(0 0 0/.25);border:1px solid var(--color-accent);box-shadow:var(--shadow-pressed);transform:translateY(2px)"></span>
+<span class="lbl">eingedrückt</span></div>
+<p style="flex:1;min-width:16rem;margin:0;font-size:12px;line-height:1.6;color:var(--color-ink-muted)">Zwei Schatten, nicht einer: dunkel unten rechts, ein schwaches Licht oben links. Beim Überfahren kippen beide von außen nach innen, plus 2 px Weg nach unten. Das Umkehren des Paares ist der ganze Trick. Bei <code>prefers-reduced-motion</code> entfällt nur die Bewegung.</p>
+</div></body></html>

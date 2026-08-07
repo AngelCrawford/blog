@@ -1,0 +1,38 @@
+<!-- @dsCard group="Spacing" viewport="700x230" name="Abstände" subtitle="Luftig: 4 px Basis, 24 px zwischen Blöcken, 80 px zwischen Abschnitten" -->
+<!DOCTYPE html>
+<html lang="de"><head><meta charset="utf-8"><title>Abstände</title>
+<link rel="stylesheet" href="../styles.css">
+<style>body{margin:0;padding:18px;background:var(--color-surface-sunken);font-family:var(--font-body);color:var(--color-ink)}
+.g{display:grid;gap:12px}.r{display:flex;gap:12px;flex-wrap:wrap}
+.sw{flex:1;min-width:0;border-radius:var(--radius-md);border:1px solid var(--border-hairline);overflow:hidden;background:var(--color-surface-raised)}
+.sw i{display:block;height:56px;border-bottom:1px solid var(--border-hairline)}
+.sw b{display:block;padding:8px 10px 2px;font-family:var(--font-body);font-size:12px;font-weight:400;color:var(--color-accent)}
+.sw s{display:block;padding:0 10px 8px;text-decoration:none;font-size:11px;color:var(--color-ink-muted)}
+code{font-size:12px;color:var(--color-accent)}
+.lbl{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--color-ink-muted)}
+</style></head><body><ul style="display:grid;gap:10px;margin:0;padding:0;list-style:none">
+<li style="display:grid;grid-template-columns:7rem 3rem 6rem 1fr;gap:16px;align-items:center">
+<code>--spacing-1</code><span style="font-size:12px;color:var(--color-ink-muted)">4</span>
+<span style="display:block;width:4px;height:14px;border-radius:var(--radius-sm);background:var(--color-accent)"></span>
+<span style="font-size:12px;color:var(--color-ink-muted)">Basiseinheit</span></li>
+<li style="display:grid;grid-template-columns:7rem 3rem 6rem 1fr;gap:16px;align-items:center">
+<code>--spacing-2</code><span style="font-size:12px;color:var(--color-ink-muted)">8</span>
+<span style="display:block;width:8px;height:14px;border-radius:var(--radius-sm);background:var(--color-accent)"></span>
+<span style="font-size:12px;color:var(--color-ink-muted)">Innerhalb einer Zeile</span></li>
+<li style="display:grid;grid-template-columns:7rem 3rem 6rem 1fr;gap:16px;align-items:center">
+<code>--spacing-3</code><span style="font-size:12px;color:var(--color-ink-muted)">12</span>
+<span style="display:block;width:12px;height:14px;border-radius:var(--radius-sm);background:var(--color-accent)"></span>
+<span style="font-size:12px;color:var(--color-ink-muted)">Icon zu Text</span></li>
+<li style="display:grid;grid-template-columns:7rem 3rem 6rem 1fr;gap:16px;align-items:center">
+<code>--spacing-4</code><span style="font-size:12px;color:var(--color-ink-muted)">16</span>
+<span style="display:block;width:16px;height:14px;border-radius:var(--radius-sm);background:var(--color-accent)"></span>
+<span style="font-size:12px;color:var(--color-ink-muted)">Innerhalb einer Komponente</span></li>
+<li style="display:grid;grid-template-columns:7rem 3rem 6rem 1fr;gap:16px;align-items:center">
+<code>--spacing-gutter</code><span style="font-size:12px;color:var(--color-ink-muted)">24</span>
+<span style="display:block;width:24px;height:14px;border-radius:var(--radius-sm);background:var(--color-accent)"></span>
+<span style="font-size:12px;color:var(--color-ink-muted)">Zwischen zusammengehörenden Blöcken</span></li>
+<li style="display:grid;grid-template-columns:7rem 3rem 6rem 1fr;gap:16px;align-items:center">
+<code>--spacing-section</code><span style="font-size:12px;color:var(--color-ink-muted)">80</span>
+<span style="display:block;width:80px;height:14px;border-radius:var(--radius-sm);background:var(--color-accent)"></span>
+<span style="font-size:12px;color:var(--color-ink-muted)">Zwischen Seitenabschnitten</span></li>
+</ul></body></html>

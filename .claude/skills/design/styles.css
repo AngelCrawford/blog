@@ -1,0 +1,13 @@
+/* Article Time — design-system entry point. Consumers link this one file.
+ * Token sources are mirrored from themes/garden/assets/css/main.css (Tailwind
+ * `@theme static`) as plain custom properties, so the values are identical but
+ * usable without a build step. */
+@import "tokens/fonts.css";
+@import "tokens/colors.css";
+@import "tokens/typography.css";
+@import "tokens/spacing.css";
+@import "tokens/radius.css";
+@import "tokens/depth.css";
+@import "tokens/motion.css";
+@import "css/base.css";
+@import "css/components.css";

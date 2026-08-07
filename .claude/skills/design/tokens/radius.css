@@ -1,0 +1,10 @@
+/* Lightly rounded. Three steps, no more — a fourth invites a debate every time
+ * something new is built. Close to the old `$tile-radius: 0.45rem`, so nothing
+ * looks foreign, but stepped deliberately instead of chosen per component. */
+:root {
+  --radius-sm: 0.25rem;  /* 4px   buttons, inputs, badges */
+  --radius-md: 0.5rem;   /* 8px   cards, panels */
+  --radius-lg: 0.75rem;  /* 12px  dialogs, overlays, article images */
+  --radius-tile: 0.45rem;/* legacy tile chrome — sidebars, info tiles */
+  --radius-pill: 999px;  /* hashtags, heart button */
+}

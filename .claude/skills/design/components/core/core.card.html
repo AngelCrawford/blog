@@ -1,0 +1,54 @@
+<!-- @dsCard group="Components" viewport="700x430" name="Core" subtitle="Überschriften, Buttons, runde Buttons, Panels, Statusmeldungen, Duotone-Icons" -->
+<!DOCTYPE html>
+<html lang="de"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../../styles.css">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="../../assets/icons/inline-sprite.js"></script>
+<script src="../../_ds_bundle.js"></script>
+<style>body{margin:0;padding:20px;background:var(--color-surface-sunken)}#root{display:grid;gap:20px}.row{display:flex;flex-wrap:wrap;align-items:center;gap:16px}.cap{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--color-ink-muted)}</style>
+</head><body><div id="root"></div>
+<script type="text/babel">
+const { Heading, LinedTitle, Button, RoundButton, Panel, Message, Icon } = window.ArticleTimeDesignSystem_de8a72;
+function Card(){return (<>
+  <div>
+    <Heading level={1}>Article Time</Heading>
+    <div style={{marginTop:12}}><Heading level={2}>Abschnittsüberschrift</Heading></div>
+    <Heading level={3}>Unterüberschrift in Gold</Heading>
+    <LinedTitle>Statistik</LinedTitle>
+  </div>
+  <div className="row">
+    <Button>Primär</Button>
+    <Button variant="secondary">Sekundär</Button>
+    <Button disabled>Deaktiviert</Button>
+    <Button variant="secondary"><Icon name="arrow-right-s-line" variant="plain" size="1em" color="currentColor"/> Mit Icon</Button>
+    <a href="#" style={{textDecoration:'underline',textUnderlineOffset:4}}>Textlink</a>
+  </div>
+  <div className="row">
+    <span className="cap">Rund · 48 / 55 px · Druckeffekt beim Überfahren</span>
+    <RoundButton icon="arrow-up-s-fill" label="Nach oben"/>
+    <RoundButton icon="arrow-up-s-fill" size="lg" label="Nach oben, groß"/>
+    <RoundButton icon="heart-line" label="Herz, unkorrigiert"/>
+    <RoundButton icon="heart-line" fullGlyph label="Herz, korrigiert"/>
+  </div>
+  <div className="row">
+    <span className="cap">Duotone</span>
+    <Icon name="seedling-line" size="1.75rem"/><Icon name="pushpin-line" size="1.75rem"/>
+    <Icon name="price-tag-3-line" size="1.75rem"/><Icon name="timer-line" size="1.75rem"/>
+    <Icon name="stack-line" size="1.75rem"/><Icon name="rss-line" size="1.75rem"/>
+    <span className="cap">ohne Fill-Partner</span>
+    <Icon name="asterisk" variant="line" size="1.75rem"/>
+  </div>
+  <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16}}>
+    <Panel><strong style={{color:'var(--color-ink-strong)'}}>gd-panel</strong><br/><span className="cap">Erhöht: Füllung, Rahmen, Schatten</span></Panel>
+    <Panel plain><strong style={{color:'var(--color-ink-strong)'}}>gd-panel-plain</strong><br/><span className="cap">Gleiche Ebene, nur gerahmt</span></Panel>
+  </div>
+  <div style={{display:'grid',gap:8}}>
+    <Message tone="success">Erfolg, gültig, fertig</Message>
+    <Message tone="warning">Warnung, veraltet</Message>
+    <Message tone="error">Fehler, ungültig</Message>
+  </div>
+</>);}
+ReactDOM.createRoot(document.getElementById('root')).render(<Card/>);
+</script></body></html>

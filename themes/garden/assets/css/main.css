@@ -48,6 +48,33 @@
 @source "themes/garden/assets/js";
 
 /* ===========================================================================
+ * WEBFONTS — registered here, not inherited from article-time.
+ *
+ * The font files moved to themes/garden/static/fonts/, so their @font-face
+ * follows: deleting article-time must not take the registration with it.
+ *
+ * WHY A FAMILY CALLED "Montserrat" HAS TO EXIST AT ALL:
+ * article-time registers this one variable file under three family names —
+ * Montserrat-Light / -Regular / -Bold — because Bulma wanted family names where
+ * it should have used weights. `--font-body` inherited `Montserrat-Regular`, a
+ * name that claims one weight for a face registered across 100–900. Registering
+ * it once under its real name fixes that; the legacy aliases stay in
+ * article-time's SCSS and die with it.
+ *
+ * URL IS ROOT-RELATIVE ON PURPOSE. Bulma's compiled sheet is published at the
+ * site root and uses `url("fonts/…")`; this one is published at /css/main.css,
+ * where the same relative path would resolve to /css/fonts/ and 404. baseURL
+ * carries no sub-path in any of the four environments, so a leading slash is
+ * safe. head.html already preloads this exact file.
+ * =========================================================================== */
+@font-face {
+  font-family: "Montserrat";
+  src: url("/fonts/Montserrat/Montserrat-VariableFont_wght.ttf") format("truetype");
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+/* ===========================================================================
  * DESIGN TOKENS — the single source of every design value.
  *
  * Component styles compose from these. Nothing outside this block may hardcode
@@ -138,7 +165,10 @@
    * The scale is explicit rather than inherited so that changing it is one
    * edit here, never a hunt through components. */
   --font-heading: "Montserrat Alternates", ui-sans-serif, system-ui, sans-serif;
-  --font-body: "Montserrat-Regular", ui-sans-serif, system-ui, sans-serif;
+  /* "Montserrat" first, the Bulma-era alias behind it: markup still rendered by
+   * article-time keeps resolving while both themes are composed. The alias
+   * drops out of this line when article-time does. */
+  --font-body: "Montserrat", "Montserrat-Regular", ui-sans-serif, system-ui, sans-serif;
 
   /* 12px was too small to read comfortably and is deliberately removed —
    * `initial` deletes Tailwind's default, so `text-xs` no longer exists and any

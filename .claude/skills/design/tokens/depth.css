@@ -1,0 +1,25 @@
+/* Restrained. On a surface as dark as hsl(190 11% 11%) a shadow reads as a
+ * slightly darker halo rather than as lift, so separation is carried mainly by
+ * surface contrast plus a thin gold rule. The shadows are support, not
+ * structure. Three steps, no more.
+ *
+ * Neumorphism was the 2020 aspiration and was dropped as a page-wide idea in
+ * 2026 — it needs a light-to-mid grey ground to make paired light and dark
+ * shadows readable. It survives in exactly two places, because there it works:
+ * the paired card shadow (--shadow-domed) and the round button's shadow
+ * inversion on press (--shadow-pressed). */
+:root {
+  --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.3);
+  --shadow-md: 0 4px 12px rgb(0 0 0 / 0.35);
+  --shadow-lg: 0 8px 28px rgb(0 0 0 / 0.45);
+
+  /* Paired shadows — dark below-right, a faint light above-left. The pair is
+   * what makes a surface read as formed out of the page rather than stuck on
+   * top of it. */
+  --shadow-domed: 4px 4px 8px rgb(0 0 0 / 0.55), -3px -3px 6px hsl(40 12% 85% / 0.09);
+  --shadow-card: 5px 5px 5px rgb(0 0 0 / 0.5), -5px -5px 5px hsl(190 20% 90% / 0.05);
+  /* Pressed. The same two shadows, inverted to inset, and deliberately stronger:
+   * an inset shadow has to darken a surface that is already near-black. The
+   * light edge moves to the bottom-right, where a pressed dish catches it. */
+  --shadow-pressed: inset 5px 5px 9px rgb(0 0 0 / 0.75), inset -4px -4px 8px hsl(40 12% 85% / 0.12);
+}

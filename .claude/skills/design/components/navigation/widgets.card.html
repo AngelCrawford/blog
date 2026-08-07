@@ -1,0 +1,35 @@
+<!-- @dsCard group="Components" viewport="900x420" name="Sidebar-Widgets" subtitle="Serie, Inhalt, Ähnliche Artikel und Archiv — eine Zeilenform, drei Marker" -->
+<!DOCTYPE html>
+<html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="../../styles.css">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="../../assets/icons/inline-sprite.js"></script>
+<script src="../../_ds_bundle.js"></script>
+<style>body{margin:0;padding:24px;background:var(--color-surface-sunken);font-family:var(--font-body)}
+.cap{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--color-ink-muted);margin:0}</style>
+</head><body><div id="root"></div>
+<script type="text/babel">
+const MENU=[{label:'Artikel',href:'#',icon:'article-line'},{label:'Notizen',href:'#',icon:'lightbulb-line'},{label:'Rubriken',href:'#',icon:'pushpin-line'},{label:'Tags',href:'#',icon:'price-tag-3-line'},{label:'Archiv',href:'#',icon:'bookmark-line'}];
+const FOLLOW=[{name:'RSS Feed',href:'#',icon:'rss-line'}];
+
+const { SeriesSidebar, TocSidebar, RelatedSidebar, ArchiveWidget, Pagination } = window.ArticleTimeDesignSystem_de8a72;
+function Card(){
+  const [page,setPage]=React.useState(2);
+  return (<div style={{display:'grid',gap:24}}>
+    <div style={{display:'grid',gridTemplateColumns:'repeat(3,minmax(0,1fr))',gap:24,alignItems:'start'}}>
+      <SeriesSidebar title="Der Neustart" href="#" current="#t2"
+        items={[{label:'Die Diagnose',href:'#t1'},{label:'Warum Hugo',href:'#t2'},{label:'Bulma raus, Tailwind rein',href:'#t3'},{label:'Der alte Farbentwurf',href:'#t4',withered:true}]}/>
+      <TocSidebar current="#a2"
+        items={[{label:'Die Anforderungen',href:'#a1'},{label:'Die Kandidaten',href:'#a2',children:[{label:'WordPress',href:'#a3'},{label:'Jekyll',href:'#a4'}]},{label:'Fazit',href:'#a5'}]}/>
+      <RelatedSidebar items={[{label:'Bulma raus, Tailwind rein',href:'#bulma',date:'02.08.26'},{label:'Die Diagnose',href:'#diagnose',date:'28.07.26'},{label:'Warum Hugo',href:'#hugo',date:'06.08.26'}]}/>
+    </div>
+    <div style={{display:'grid',gridTemplateColumns:'minmax(0,1fr) minmax(0,1fr)',gap:24,alignItems:'center'}}>
+      <ArchiveWidget years={[{year:'2026',count:14},{year:'2024',count:2},{year:'2020',count:1}]}/>
+      <Pagination page={page} pages={4} onPage={setPage}/>
+    </div>
+  </div>);
+}
+ReactDOM.createRoot(document.getElementById('root')).render(<Card/>);
+</script></body></html>

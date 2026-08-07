@@ -20,7 +20,8 @@
       "Bash(python3 -)",
       "Bash(sed -n '/\\\\$icons := slice/,/^-}}/p' themes/garden/layouts/page/styleguide.html)",
       "Bash(node probe.mjs)",
-      "Bash(sed -n '/prefers-reduced-motion/,/^}/p' themes/garden/assets/css/main.css)"
+      "Bash(sed -n '/prefers-reduced-motion/,/^}/p' themes/garden/assets/css/main.css)",
+      "Bash(ls -la /home/angel/Projects/blog/.claude/skills/ 2>/dev/null; echo \"---global---\"; ls -la /home/angel/.claude/skills/ 2>/dev/null)"
     ]
   }
 }
