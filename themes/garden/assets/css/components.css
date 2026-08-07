@@ -799,7 +799,7 @@ select.gd-field option {
  * point and a half do not read as hierarchy, they read as sloppiness. */
 .at-card-footer .at-hashtag,
 .at-card-footer .at-heart,
-.at-card-footer .at-heart-count,
+.at-card-footer .heart-count,
 .at-card-footer .at-growth,
 .at-card-meta .at-badge { font-size: inherit; }
 .at-card-footer-item { display: flex; align-items: center; gap: 0.5rem; padding: 0.6em 1.2em; }
@@ -1050,7 +1050,6 @@ a.at-hashtag, a.at-tag { text-decoration: none; }
 }
 .at-heart:hover:not(:disabled) { border-color: var(--color-accent-hover); color: var(--color-accent); transform: translateY(-1px); }
 .at-heart svg { width: 1.1em; height: 1.1em; flex-shrink: 0; fill: currentColor; }
-.at-heart-count { font-variant-numeric: tabular-nums; font-weight: var(--weight-strong); }
 .at-heart.is-hearted { cursor: default; color: hsl(0 70% 65%); border-color: color-mix(in srgb, hsl(0 70% 65%) 50%, transparent); }
 /* Card variant — flat, to sit level with the format icons beside it. */
 .at-heart-flat {
@@ -1109,7 +1108,6 @@ a.at-hashtag, a.at-tag { text-decoration: none; }
  * The marker column is the same width in all three, so the text edges line up
  * down the whole sidebar.
  * ======================================================================== */
-.at-widget { padding: 0.9rem 1rem; }
 /* The widget header rule fades to the right like gd-h2 — a border-bottom cannot
  * fade, so it is drawn as a background gradient on the bottom edge instead. */
 .at-widget-head {
@@ -1530,8 +1528,8 @@ a.at-hashtag, a.at-tag { text-decoration: none; }
   filter: sepia(0.7) blur(0.1em) url("#at-turbulence");
 }
 
-/* The content sits above the reflection. */
-.at-footer-inner { position: relative; z-index: 5; padding: 3em; }
+/* `.at-footer-inner` was `relative z-5 p-12` and is written that way at its one
+ * call site now. */
 
 /* The slogan, between the remixicon quote pair — the third and last place the
  * icon font is used by codepoint. The dark gradient behind it is what lifts the
@@ -1557,18 +1555,17 @@ a.at-hashtag, a.at-tag { text-decoration: none; }
  * Mastodon's rel=me and indiewebify.me. Microformat class names (`h-card`,
  * `p-name`, `u-photo`, `p-note`, `u-url`) are a CONTRACT WITH PARSERS, not
  * styling — never rename one to fit a stylesheet. */
-.at-hcard { display: flex; flex-direction: column; align-items: center; text-align: center; }
-/* align-items:center shrinks block children to their content width, which
- * collapses the lined title's ::before/::after — they need the full column. */
-.at-hcard .gd-lined-title { align-self: stretch; }
-.at-hcard-avatar { width: 120px; height: 120px; margin: 0.25rem auto 1rem; }
-.at-hcard-avatar img {
-  width: 100%; height: 100%; object-fit: cover; border-radius: 50%;
-  border: 2px solid var(--color-accent-muted);
-  transition: border-color var(--duration-slow) var(--ease-out);
-}
-.at-hcard-avatar a:hover img { border-color: var(--color-accent); }
-.at-hcard-note { max-width: 18rem; margin-bottom: 1rem; color: var(--color-ink-muted); }
+/* THE WHOLE h-CARD IS UTILITIES NOW — the column, the avatar, the note. It was
+ * five classes and eleven declarations that a template can say for itself, and
+ * it is rendered exactly once.
+ *
+ * Two things that looked like they needed CSS and did not:
+ *   the lined title must stretch to the full column, because `items-center`
+ *     shrinks block children to their content and the rule's pseudo-elements
+ *     then have nothing to span — `self-stretch` on the title says that.
+ *   the avatar's border lights up when you point at the LINK, not the image —
+ *     `group` on the anchor and `group-hover:` on the img, which is exactly the
+ *     case that variant exists for. */
 
 /* Social icons. THE SECOND AND LAST EXCEPTION to gold being the only accent:
  * each silo keeps its own brand colour, set inline from identity.socials[].color,
@@ -1578,15 +1575,15 @@ a.at-hashtag, a.at-tag { text-decoration: none; }
  * move as the profile page. Highlighting one of eight bright marks is hard to
  * see; dimming seven is not. `filter: opacity()` composes with any per-icon
  * inline opacity, which a plain `opacity` would overwrite. */
-.at-socials { display: flex; justify-content: center; gap: 1.5em; }
+/* Only the hover pair is left; the row and the icon boxes are utilities at the
+ * call site. This part stays CSS because pointing at ONE icon has to dim the
+ * OTHERS, which is a rule about siblings and not about the element you are on.
+ *
+ * `filter: opacity()` rather than the `opacity` property: each icon may carry an
+ * inline opacity from identity.socials[].opacity, and a filter composes with it
+ * where the property would overwrite it. */
 .at-socials:hover a { filter: opacity(0.35); }
 .at-socials a:hover { filter: none; transform: scale(1.18); }
-.at-socials a {
-  display: flex; align-items: center; justify-content: center;
-  width: 1.4em; height: 1.4em; font-size: 1.4em;
-  transition: transform var(--duration-base) var(--ease-out), filter var(--duration-base) var(--ease-out);
-}
-.at-socials svg { width: 1.4em; height: 1.4em; fill: var(--color-accent-hover); }
 
 /* ---- Footer navigation and copyright ------------------------------------
  * The separators are pseudo-elements, so the markup stays a plain list and no

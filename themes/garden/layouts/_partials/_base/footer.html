@@ -39,7 +39,7 @@
 
 <div class="at-footer-sea" aria-hidden="true"></div>
 
-<div class="at-footer-inner">
+<div class="relative z-5 p-12">
     {{- /* FIXME — CONTENT, NOT DESIGN. This slogan invites strangers to publish
            here: "Du willst schreiben – ohne einen eigenen Blog zu veröffentlichen?
            Be a part of Article Time!". That is the multi-author platform the scope
@@ -78,25 +78,25 @@
                The microformat class names are a contract with parsers. Do not
                rename one to suit a stylesheet. */ -}}
         {{- $identity := .Site.Params.identity -}}
-        <article class="at-hcard h-card">
-            <p class="gd-lined-title p-name">{{ $identity.name }}</p>
+        <article class="h-card flex flex-col items-center text-center">
+            <p class="gd-lined-title p-name self-stretch">{{ $identity.name }}</p>
             {{- $avatarLink := or $identity.about_url $identity.url -}}
             {{- with $identity.photo }}
-            <div class="at-hcard-avatar">
+            <div class="mx-auto mt-1 mb-4 size-30">
                 {{- if $avatarLink -}}
-                <a href="{{ $avatarLink | relURL }}" aria-label="Mehr über {{ $identity.name }}">
-                    <img class="u-photo" src="{{ . | relURL }}" width="120" height="120" alt="{{ $identity.name }}" title="{{ $identity.name }}" />
+                <a class="group block size-full" href="{{ $avatarLink | relURL }}" aria-label="Mehr über {{ $identity.name }}">
+                    <img class="u-photo size-full rounded-full border-2 border-accent-muted object-cover transition-colors duration-300 ease-out group-hover:border-accent" src="{{ . | relURL }}" width="120" height="120" alt="{{ $identity.name }}" title="{{ $identity.name }}" />
                 </a>
                 {{- else -}}
-                <img class="u-photo" src="{{ . | relURL }}" width="120" height="120" alt="{{ $identity.name }}" title="{{ $identity.name }}" />
+                <img class="u-photo size-full rounded-full border-2 border-accent-muted object-cover transition-colors duration-300 ease-out group-hover:border-accent" src="{{ . | relURL }}" width="120" height="120" alt="{{ $identity.name }}" title="{{ $identity.name }}" />
                 {{- end -}}
             </div>
             {{- end }}
-            {{- with $identity.note }}<p class="at-hcard-note p-note">{{ . }}</p>{{ end }}
-            <div class="at-socials">
+            {{- with $identity.note }}<p class="p-note mb-4 max-w-72 text-ink-muted">{{ . }}</p>{{ end }}
+            <div class="at-socials flex justify-center gap-[1.5em]">
                 {{- range where $identity.socials "footer" true }}
-                <a href="{{ .src }}" data-tooltip="{{ .name }}" aria-label="{{ .name }}" target="_blank" rel="noopener me">
-                    <svg style="fill: {{ .color }};{{ with .opacity }} opacity: {{ . }};{{ end }}" aria-hidden="true"><use href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ $.Site.Params.remixicon_version }}#{{ .icon }}"></use></svg>
+                <a class="flex size-[1.4em] items-center justify-center text-[1.4em] transition duration-200 ease-out" href="{{ .src }}" data-tooltip="{{ .name }}" aria-label="{{ .name }}" target="_blank" rel="noopener me">
+                    <svg class="size-[1.4em] fill-accent-hover" style="fill: {{ .color }};{{ with .opacity }} opacity: {{ . }};{{ end }}" aria-hidden="true"><use href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ $.Site.Params.remixicon_version }}#{{ .icon }}"></use></svg>
                 </a>
                 {{- end }}
             </div>
@@ -168,11 +168,11 @@
 </div>
 
 {{- if .Site.Menus.footer }}
-<nav class="at-footer-nav" aria-label="Footer">
+<nav class="at-footer-nav relative z-5 text-center" aria-label="Footer">
     <ul>
         {{- $currentPage := . -}}
         {{- range .Site.Menus.footer -}}
-        <li>
+        <li class="inline-block leading-[1.5em]">
             {{- if not (eq $currentPage.RelPermalink .URL) -}}
                 <a href="{{ .URL }}" title="{{ .Name }}">{{ .Name }}</a>
             {{- else -}}
@@ -184,7 +184,7 @@
 </nav>
 {{- end }}
 
-<div class="at-copyright">
+<div class="relative z-5 text-center text-[90%] opacity-70">
     {{- /* Build version: the daily-rebuild workflow passes git-describe via
            HUGO_PARAMS_VERSION → exact tag at a tag commit, "<tag>+<n>" otherwise.
            Local `hugo server` shows "dev" unless you set HUGO_PARAMS_VERSION.

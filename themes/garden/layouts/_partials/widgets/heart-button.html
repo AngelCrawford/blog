@@ -46,7 +46,7 @@
            not pressable. */ -}}
     <span class="at-heart at-heart-flat" data-tooltip="Dieser Artikel hat {{ $hearts }} Herzen erhalten" aria-label="Herz-Anzahl: {{ $hearts }}">
         <svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#heart-line"></use></svg>
-        <span class="heart-count at-heart-count">{{ $hearts }}</span>
+        <span class="heart-count font-semibold tabular-nums">{{ $hearts }}</span>
     </span>
 {{- else if $isCard -}}
     <button type="button"
@@ -56,12 +56,12 @@
             aria-label="Diese Notiz mit einem Herz markieren"
             aria-pressed="false">
         <svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#heart-line"></use></svg>
-        <span class="heart-count at-heart-count" aria-live="polite">{{ $hearts }}</span>
+        <span class="heart-count font-semibold tabular-nums" aria-live="polite">{{ $hearts }}</span>
     </button>
     <noscript>
         <span class="at-heart at-heart-flat" aria-label="Herz-Anzahl: {{ $hearts }}">
             <svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#heart-line"></use></svg>
-            <span class="heart-count at-heart-count">{{ $hearts }}</span>
+            <span class="heart-count font-semibold tabular-nums">{{ $hearts }}</span>
         </span>
     </noscript>
 {{- else -}}
