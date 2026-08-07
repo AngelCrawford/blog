@@ -892,12 +892,21 @@ select.gd-field option {
  * `.at-figure-float` also appears in article prose, where the container is the
  * panel rather than a card. Panels are wider than 40rem, so it floats there. */
 @container (max-width: 40rem) {
-  .at-figure-float { float: none; width: auto; margin: 0 0 var(--spacing-4) -3em; }
+  .at-figure-float { float: none; width: auto; margin: 0 0 var(--spacing-4); }
 }
 /* Fallback for the prose case, which has no size container above it. */
 @media (max-width: 640px) {
-  .at-figure-float { float: none; width: auto; margin: 0 0 var(--spacing-4) -3em; }
+  .at-figure-float { float: none; width: auto; margin: 0 0 var(--spacing-4); }
 }
+/* AND THE OVERHANG GOES WITH THE FLOAT. Upstream kept `margin-left: -3em` in the
+ * stacked case too, so the picture stayed shifted a full 1.5em past the card's
+ * left edge while its right edge lined up with the text — which reads as a
+ * misalignment rather than as depth.
+ *
+ * The overhang earns its keep only while the text runs around the picture: there
+ * it is the picture lying ON the card. A banner across the top is not lying on
+ * anything, and the radius and the paired shadow already say "photograph placed
+ * here" without it. */
 .at-figcaption {
   position: absolute; inset: auto 0 0 0; padding: 0.5em;
   font-size: var(--text-sm); color: hsl(190 20% 90%);

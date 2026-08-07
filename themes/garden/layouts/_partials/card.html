@@ -94,10 +94,24 @@
                     <svg class="size-4 shrink-0 fill-current text-ink-muted" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#calendar-line"></use></svg>
                     {{ .Date.Format "02.01.06" }}
                 </time>
-                {{- /* The edited date is deliberately NOT here. Badge plus two
-                       dates needs about 230px and the text column beside a 46%
-                       float is about 250px, so it broke onto a second line. The
-                       article page states it under Publiziert. */ -}}
+                {{- /* When it was last touched, and only when that differs from
+                       when it appeared — a "edited" date equal to the publication
+                       date is noise dressed as information.
+
+                       The design system leaves this off the card, on the grounds
+                       that a badge and two dates need about 230px while the text
+                       column beside a 46% float is about 250px. That was true
+                       when the card was locked to one width. It is a size
+                       container now: the row is full width whenever the picture
+                       stacks, and `.at-card-meta` wraps when it does not. On a
+                       digital garden, when something was last tended is close to
+                       the point. */ -}}
+                {{- if ne (.Date.Format "02.01.06") (.Lastmod.Format "02.01.06") }}
+                <time class="dt-updated inline-flex items-center gap-1.5" datetime="{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}" title="Letztes Bearbeitungsdatum">
+                    <svg class="size-4 shrink-0 fill-current text-ink-muted" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#pencil-line"></use></svg>
+                    {{ .Lastmod.Format "02.01.06" }}
+                </time>
+                {{- end }}
             </p>
 
             <div class="at-card-excerpt mt-3">
