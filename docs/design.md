@@ -115,6 +115,44 @@ failed twice; [`migration.md`](migration.md) records both rounds. The rule that
 came out of it: **demote, do not out-shout, and put your own rules in a layer
 too.**
 
+### The component test is the point, and it was skipped once
+
+**Recorded August 2026, after getting it wrong.** The rule above — write a
+component when the decision repeats and could drift, or when utilities cannot
+express it — was not applied when the design system was brought into `garden`.
+933 lines of CSS were ported in one commit, before any template used a line of
+it, and the reasoning at the time was that every later migration would then be
+"markup work rather than another design round". That inverts the rule: instead
+of writing a component when a template needs one, it writes 271 and goes looking
+for templates.
+
+**Why the design system looks the way it does, and why that does not carry.**
+Its own README says it: *"No build step, and no Tailwind […] it has to open in a
+browser with nothing installed."* The skill is a reference that must render
+without `npm install`, so everything in it has to be a class. `garden` has a
+build step — that is the whole reason it exists. Carrying the constraint across
+was the mistake, not the design.
+
+**What it cost, measured.** 17 classes were defined and used by nothing, the
+navigation vocabulary among them — about 90 lines for a component that was
+migrated with utilities and never touched them. Another dozen were a pile of
+utilities with a name: `.at-card-title` was `m-0 font-heading text-xl
+font-semibold tracking-heading`, `.at-hcard` was `flex flex-col items-center
+text-center`. The clean-up took the file from 305 rules to 231 and moved the
+markup from 246 distinct utilities to 272.
+
+**What legitimately stayed**, and it is more than a third of the file: everything
+styling generated Markdown, where no class can be put on anything; pseudo-elements
+(the gradient title, the dotted leader, the quote marks, the corner ribbon of a
+rule that grows on hover); rules about siblings and descendants; the header's
+animations and its four skies; and the duotone icon stack.
+
+**`tests/build/no-utility-bundles.test.mjs` checks the second half of the rule**
+on every build. A single bare class whose declarations are all
+utility-expressible fails the suite unless it is on an allowlist with a written
+reason. The first half — "repeats and could drift" — is a judgement, and the
+allowlist is where that judgement is recorded rather than assumed.
+
 ### Two page widths, not one
 
 **Decided August 2026.** Documents cap at **64rem** (`--page-max`) — the article

@@ -780,7 +780,7 @@ select.gd-field option {
  * `.at-card-meta` stays, but only for the rule below it: a class is needed as a
  * hook for the descendant normalisation, and that is what utilities cannot do.
  * Its own layout moved to the markup. */
-.at-card-meta { margin: 0; }
+
 /* The excerpt is NOT clipped in CSS, and that is deliberate. It used to be
  * `overflow: hidden` with a fade over it — which is precisely what broke the float
  * and the offset: overflow:hidden establishes a new block formatting context, so
@@ -1584,11 +1584,8 @@ a.at-hashtag, a.at-tag { text-decoration: none; }
 /* Above the reflection. The sea is `z-index: 1` and 300px tall while these two
  * are static, so on a wide screen where the columns are short enough to bring
  * the footer in under 300px the water would paint over the menu. */
-.at-footer-nav { position: relative; z-index: 5; text-align: center; }
-.at-footer-nav li { display: inline-block; line-height: 1.5em; }
 .at-footer-nav li::before { content: "|"; padding: 0 0.2em; color: var(--color-accent-muted); }
 .at-footer-nav li:first-of-type::before { content: ""; }
-.at-copyright { position: relative; z-index: 5; text-align: center; font-size: 90%; opacity: 0.7; }
 
 /* Links in the footer are gold on a surface that is darker than anywhere else,
  * so they need no other treatment.

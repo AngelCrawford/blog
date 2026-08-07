@@ -86,7 +86,7 @@
                    matters, and it is metadata. The dot takes the category's own
                    colour; the pill stays neutral, so a row of them reads as one
                    family instead of three competing fills. */ -}}
-            <p class="at-card-meta flex flex-wrap items-center gap-x-[0.75em] gap-y-[0.5em] text-sm text-ink-muted">
+            <p class="at-card-meta m-0 flex flex-wrap items-center gap-x-[0.75em] gap-y-[0.5em] text-sm text-ink-muted">
                 {{- with $rubrik }}
                 <a class="at-badge" href="{{ .RelPermalink }}" title="{{ .LinkTitle }}"{{ with .Params.categoryColor }} style="--at-badge-dot: {{ . }}"{{ end }}>{{ .LinkTitle }}</a>
                 {{- end }}
@@ -231,7 +231,7 @@
                    made, one element further in. */ -}}
             <a class="text-accent-hover hover:text-accent" href="{{ .RelPermalink }}" title="{{ .Title }}">{{ .Title }}</a>
         </h2>
-        <p class="at-card-meta flex flex-wrap items-center gap-x-[0.75em] gap-y-[0.5em] text-sm text-ink-muted">
+        <p class="at-card-meta m-0 flex flex-wrap items-center gap-x-[0.75em] gap-y-[0.5em] text-sm text-ink-muted">
             {{- with .Params.categoryColor }}<span class="at-badge" style="--at-badge-dot: {{ . }}">{{ $.Title }}</span>{{ end }}
             {{- /* Story 1.3: the count on a term card excludes withered entries,
                    matching what the listing behind it will actually show. */ -}}
