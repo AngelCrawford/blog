@@ -68,7 +68,8 @@ redesign, not top to bottom.
 | `_partials/_base/footer.html` | ⬜ article-time |
 | `_partials/_base/cookie-banner.html` | ⬜ article-time |
 | `_partials/_base/maintenance.html` | ⬜ article-time — becomes the webcard |
-| `baseof.html`, `home.html`, `list.html`, `single.html` | ⬜ article-time |
+| `baseof.html` | ✅ garden — shell, back-to-top and page ground. Still calls article-time's hero, footer and banner |
+| `home.html`, `list.html`, `single.html` | ⬜ article-time |
 | `page/archive.html`, `page/profile.html`, `404.html` | ⬜ article-time |
 | `_partials/growth-badge.html`, `withered-*.html` | ⬜ article-time |
 | `_partials/widgets/*.html` (9 files) | ⬜ article-time |
@@ -126,9 +127,17 @@ Rule: new code is vanilla, no exceptions. Port a script when its component moves
 | Script | jQuery calls | Status |
 |---|---|---|
 | `search.js` | — | ✅ garden, vanilla — fixed a duplicate-listener bug and an outside-click bug on the way |
-| `main.js` | 32 | ⬜ |
+| `main.js` | — | ✅ garden, vanilla — see below |
 | `header.js` | 16 | ⬜ tied to the hero |
 | `gdpr.js` | 3 | ⬜ smallest, easiest next port |
+
+`main.js` was listed at 32 jQuery calls and that number was misleading: about 110
+of its 138 lines were commented out — a comment form, a spoiler toggle, a
+"most loved" widget, all for features this blog decided against. Two behaviours
+were live, back-to-top and the footer reveal, and only those came across. Their
+port is 50 lines and the resize listener became a `ResizeObserver`, which
+catches the cases resize never did (a webfont finishing its swap, an image
+settling).
 | `firework.js`, `hearts.js`, `withered-banner.js`, `suncalc.js` | 0 | ✅ already vanilla |
 | `navbar.js` | — | ✅ deleted, was dead code |
 
