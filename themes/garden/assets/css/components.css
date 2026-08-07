@@ -770,14 +770,17 @@ select.gd-field option {
 }
 .at-card:hover::after { width: calc(100% - 12px); }
 .at-card-fixed { border-color: color-mix(in srgb, var(--color-accent) 50%, transparent); }
-.at-card-title {
-  margin: 0; font-family: var(--font-heading); font-size: var(--text-xl);
-  line-height: var(--text-xl--line-height); font-weight: var(--weight-strong);
-  letter-spacing: var(--tracking-heading);
-}
-.at-card-title a { color: var(--color-accent-hover); }
-.at-card-title a:hover { color: var(--color-accent); }
-.at-card-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5em 0.75em; margin: 0; font-size: var(--text-sm); color: var(--color-ink-muted); }
+/* `.at-card-title` and `.at-card-excerpt` USED TO BE HERE and were nothing but
+ * a pile of utilities with a name — `m-0 font-heading text-xl font-semibold
+ * tracking-heading` and `min-w-0`. They are written at the two call sites now.
+ * docs/design.md says a component is for a decision that repeats and could
+ * drift, or for something utilities cannot express; a title used twice in one
+ * file is neither.
+ *
+ * `.at-card-meta` stays, but only for the rule below it: a class is needed as a
+ * hook for the descendant normalisation, and that is what utilities cannot do.
+ * Its own layout moved to the markup. */
+.at-card-meta { margin: 0; }
 /* The excerpt is NOT clipped in CSS, and that is deliberate. It used to be
  * `overflow: hidden` with a fade over it — which is precisely what broke the float
  * and the offset: overflow:hidden establishes a new block formatting context, so
@@ -785,12 +788,10 @@ select.gd-field option {
  * so the image stopped hanging off the card. The excerpt is already truncated where
  * it is written (500 characters with a cover, 1000 without), so a second clip here
  * bought nothing and cost both. */
-.at-card-excerpt { min-width: 0; }
-.at-card-footer {
-  display: flex; flex-wrap: wrap; justify-content: space-between; align-items: stretch;
-  background: var(--color-surface); border-top: 1px solid color-mix(in srgb, var(--color-accent-muted) 50%, transparent);
-  font-size: var(--text-sm); color: var(--color-ink-muted);
-}
+/* Same for `.at-card-footer`: the row's own layout is six utilities and lives in
+ * the markup. The class remains because two things below need it as a hook —
+ * the size normalisation and the divider between cells — and neither is
+ * something a utility on a single element can say. */
 /* ONE SIZE IN THE ROW. The footer collected four: 14px on the row, 12.5px on the
  * hashtags, 14.4px on the heart, 14px on the growth badge — every component
  * arriving with the size it uses on its own. Inside this row the row decides, and
