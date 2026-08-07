@@ -69,6 +69,43 @@ preference, not a technical argument.
 The size scale is explicit rather than inherited from Tailwind's defaults, so
 changing it is one edit in the token block instead of a hunt through components.
 
+### The Rubrik is a dot badge, not a ribbon
+
+**Decided August 2026.** On an article card the category sits in the metadata
+row as a neutral pill with a coloured dot — `at-badge`, with the dot set from
+the category's `categoryColor` front-matter field. The ribbon survives on **note
+cards only**, where the label has to sit on the picture because the picture is
+the whole card.
+
+**Why:** the ribbon put a saturated fill across the top of a photograph. It
+competed with the photograph and with the gold, on the most repeated element on
+the site — three hues (`#1d7a7a`, `#285fa5`, `#a52828`), none of them in the
+palette.
+
+**Why this does not break "gold is the only accent":** the surface stays
+neutral. What carries the colour is a 0.5em dot — enough to tell Rubriken apart
+at a glance, too small to fight anything. A row of badges still reads as one
+family. Per-category colour was never rejected as an idea, only as a *fill*.
+
+The Rubrik also moved from above the title into the metadata line beside the
+date: above it, it stood between the reader and the one thing on the card that
+matters, and it is metadata, so it belongs with the metadata.
+
+### The cascade has four layers
+
+**Decided August 2026**, and it is a design decision rather than a migration
+detail, because it is what allows a component to be a plain class selector.
+
+`bulma, theme, base, components`, with the utilities deliberately *unlayered*
+above all of them. A later layer beats an earlier one regardless of specificity,
+and unlayered beats every layer. So `components.css` never has to out-specify
+Bulma, and a utility at the call site still overrides a component.
+
+The alternative — winning each collision by specificity — was tried twice and
+failed twice; [`migration.md`](migration.md) records both rounds. The rule that
+came out of it: **demote, do not out-shout, and put your own rules in a layer
+too.**
+
 ### Depth — restrained shadows
 
 Soft, shallow shadows for cards and panels. Three steps, no more.

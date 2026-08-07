@@ -9,6 +9,15 @@
  * Tailwind extracts complete literal strings. A template writing bg- followed
  * by a variable produces nothing at all — no rule, no warning, and the element
  * renders unstyled. Each entry therefore carries its finished class as data.
+ *
+ * WHY EVERY `grid` HERE ALSO CARRIES AN UNCONDITIONAL `grid-cols-*`:
+ * `grid` is a Bulma class name as well as a Tailwind utility, and Bulma's sets
+ * `gap: 0.75rem` and `grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr))`.
+ * Demoting Bulma into a layer decides CONFLICTS — it does nothing where garden
+ * declares nothing, so both of those applied unopposed. With only a responsive
+ * `sm:grid-cols-2`, every one of these grids silently fell back to Bulma's
+ * auto-fill below the breakpoint. `grid-cols-1` as the base closes it.
+ * The real lesson is the one in CLAUDE.md: do not reach for a Bulma class name.
  */ -}}
 
 {{- $sprite := "fonts/remixicon/remixicon.symbol.svg" | relURL -}}
@@ -62,15 +71,43 @@
   (dict "cls" "w-gutter" "name" "gutter" "beispiel" "gap-gutter" "px" "24" "use" "Zwischen Blöcken")
   (dict "cls" "w-section" "name" "section" "beispiel" "mb-section" "px" "80" "use" "Zwischen Abschnitten")
 -}}
+{{- /* Drei Stufen, dann zwei Formen. `tile` und `pill` sind keine vierte und
+       fünfte Größe, sondern Formen mit eigenem Zweck — deshalb heißen sie nach
+       dem, was sie sind. Die Dreierskala bleibt eine Dreierskala. */ -}}
 {{- $radii := slice
   (dict "cls" "rounded-sm" "px" "4" "use" "Buttons, Felder, Badges")
   (dict "cls" "rounded-md" "px" "8" "use" "Karten, Panels")
   (dict "cls" "rounded-lg" "px" "12" "use" "Dialoge, Overlays")
+  (dict "cls" "rounded-tile" "px" "7,2" "use" "Tile-Chrome — Sidebars, Info-Tiles")
+  (dict "cls" "rounded-pill" "px" "999" "use" "Hashtags, Herz-Button — vollrund")
 -}}
+{{- /* Die drei weichen Stufen tragen die Fläche, die drei gepaarten den Effekt.
+       Neumorphismus war 2020 die Absicht und ist 2026 als seitenweite Idee
+       gefallen — er braucht einen hellen bis mittleren Grund. Übrig sind genau
+       diese drei Stellen, weil er dort funktioniert. */ -}}
 {{- $shadows := slice
   (dict "cls" "shadow-sm" "use" "Kaum abheben — Badges, Chips")
   (dict "cls" "shadow-md" "use" "Karten, Panels")
   (dict "cls" "shadow-lg" "use" "Overlays, Suchergebnisse")
+  (dict "cls" "shadow-domed" "use" "Gewölbt — der runde Button in Ruhe")
+  (dict "cls" "shadow-card" "use" "Karte: dunkel unten rechts, hell oben links")
+  (dict "cls" "shadow-pressed" "use" "Eingedrückt — dieselben zwei, invertiert")
+-}}
+{{- /* Bewegung. Alles `ease-out`, das Schlüsselwort — nicht Tailwinds
+       eingebaute Kurve gleichen Namens, die der Token-Block überschreibt. */ -}}
+{{- $motion := slice
+  (dict "token" "--duration-fast" "ms" "150" "use" "Checkbox-Füllung, Tag-Hover")
+  (dict "token" "--duration-base" "ms" "200" "use" "Standard: Farbe, Rand, Schatten, Transform")
+  (dict "token" "--duration-slow" "ms" "300" "use" "Icon-Farbe, Tooltip, Sepia-Freigabe")
+-}}
+{{- /* Gewichte tragen bewusst KEIN Tailwind-Präfix: `--font-weight-*` wäre der
+       Namensraum und würde Utilities erzeugen. Diese drei sind für
+       Komponenten-CSS gedacht, nicht fürs Template. Die Laufweiten dagegen sind
+       der echte Namensraum und existieren als Utility. */ -}}
+{{- $weights := slice
+  (dict "token" "--weight-body" "wert" "400" "cls" "font-normal" "use" "Fließtext")
+  (dict "token" "--weight-strong" "wert" "600" "cls" "font-semibold" "use" "Überschriften, Button-Beschriftungen")
+  (dict "token" "--weight-bold" "wert" "700" "cls" "font-bold" "use" "Selten — nur wo 600 nicht reicht")
 -}}
 {{- $stages := slice
   (dict "label" "seedling" "icon" "seedling-line" "fill" "seedling-fill" "ink" "text-seedling" "use" "Keimling — frisch, unfertig")
@@ -160,7 +197,7 @@
       (dict "title" "Akzent" "items" $accents)
       (dict "title" "Status" "items" $states) }}
     <h3 class="gd-h3 mt-gutter">{{ .title }}</h3>
-    <ul class="grid gap-gutter sm:grid-cols-2 lg:grid-cols-3">
+    <ul class="grid grid-cols-1 gap-gutter sm:grid-cols-2 lg:grid-cols-3">
       {{- range .items }}
       {{- /* One flat block per colour. An earlier version nested bordered
              buttons inside a bordered card — two frames around one thing,
@@ -229,7 +266,7 @@
            background of its own so the page shows through, dots and all —
            an earlier version filled it, which hid the very thing it was
            meant to demonstrate and left only a border to look at. */ -}}
-    <div class="grid gap-gutter sm:grid-cols-3">
+    <div class="grid grid-cols-1 gap-gutter sm:grid-cols-3">
       <div class="rounded-md border border-accent-muted/25 p-4">
         <strong class="block text-ink">Seitengrund</strong>
         <span class="text-sm text-ink-muted">
@@ -299,7 +336,7 @@
                complete class name, never a bare token stem. Mixing the two is
                how inconsistency in a styleguide becomes inconsistency in the
                code that copies from it. */ -}}
-        <li class="grid gap-x-4 border-b border-accent-muted pb-2 text-sm text-ink-muted lg:grid-cols-[7rem_3.5rem_9rem_1fr_15rem]">
+        <li class="grid grid-cols-1 gap-x-4 border-b border-accent-muted pb-2 text-sm text-ink-muted lg:grid-cols-[7rem_3.5rem_9rem_1fr_15rem]">
           <span>Größe</span>
           <span>px</span>
           <span>Farbe</span>
@@ -310,7 +347,7 @@
         {{- /* Grid, nicht flex-wrap: bei flex rutscht eine lange Beschreibung in
                die nächste Zeile und die Spalten stehen nicht mehr untereinander.
                Unter sm wird gestapelt, da ist nebeneinander ohnehin zu eng. */ -}}
-        <li class="grid items-baseline gap-x-4 gap-y-1 border-b border-accent-muted/30 pb-4 last:border-b-0 last:pb-0 lg:grid-cols-[7rem_3.5rem_9rem_1fr_15rem]">
+        <li class="grid grid-cols-1 items-baseline gap-x-4 gap-y-1 border-b border-accent-muted/30 pb-4 last:border-b-0 last:pb-0 lg:grid-cols-[7rem_3.5rem_9rem_1fr_15rem]">
           <code class="text-sm text-accent">{{ .cls }}</code>
           <span class="text-sm text-ink-muted">{{ .px }}</span>
           <code class="text-sm {{ .ink }}">{{ .inkToken }}</code>
@@ -362,14 +399,14 @@
              several prefixes — p-, m-, gap-, w- — so one representative use is
              given rather than a bare number that has to be assembled. */ -}}
       <ul class="flex flex-col gap-4">
-        <li class="grid gap-x-4 border-b border-accent-muted pb-2 text-sm text-ink-muted sm:grid-cols-[7rem_3.5rem_6rem_1fr]">
+        <li class="grid grid-cols-1 gap-x-4 border-b border-accent-muted pb-2 text-sm text-ink-muted sm:grid-cols-[7rem_3.5rem_6rem_1fr]">
           <span>Stufe</span>
           <span>px</span>
           <span>Breite</span>
           <span>Wofür</span>
         </li>
         {{- range $spaces }}
-        <li class="grid items-center gap-x-4 gap-y-1 sm:grid-cols-[7rem_3.5rem_6rem_1fr]">
+        <li class="grid grid-cols-1 items-center gap-x-4 gap-y-1 sm:grid-cols-[7rem_3.5rem_6rem_1fr]">
           <code class="text-sm text-accent">{{ .beispiel }}</code>
           <span class="text-sm text-ink-muted">{{ .px }}</span>
           <span class="{{ .cls }} h-4 rounded-sm bg-accent"></span>
@@ -383,7 +420,7 @@
   {{- /* ------------------------------------------------------------------ */ -}}
   <section class="mb-section">
     <h2 class="gd-h2">Radien und Schatten</h2>
-    <div class="grid gap-gutter sm:grid-cols-2">
+    <div class="grid grid-cols-1 gap-gutter sm:grid-cols-2">
       <div class="gd-panel">
         <h3 class="gd-h3">Radien</h3>
         <ul class="flex flex-col gap-4">
@@ -412,6 +449,46 @@
             </span>
           </li>
           {{- end }}
+        </ul>
+      </div>
+    </div>
+
+    {{- /* Bewegung und Gewicht stehen hier statt in einem eigenen Abschnitt:
+           es sind sechs Zeilen, und ein Abschnitt für sechs Zeilen ist eine
+           Gliederung, die sich selbst wichtiger nimmt als ihr Inhalt. */ -}}
+    <div class="mt-gutter grid grid-cols-1 gap-gutter sm:grid-cols-2">
+      <div class="gd-panel">
+        <h3 class="gd-h3">Bewegung</h3>
+        <ul class="flex flex-col gap-3">
+          {{- range $motion }}
+          <li class="flex items-baseline justify-between gap-3 border-b border-accent-muted/30 pb-3">
+            <code class="text-sm whitespace-nowrap text-accent">{{ .token }}</code>
+            <span class="text-right text-sm text-ink-muted">{{ .ms }} ms · {{ .use }}</span>
+          </li>
+          {{- end }}
+          <li class="flex items-baseline justify-between gap-3">
+            <code class="text-sm text-accent">ease-out</code>
+            <span class="text-right text-sm text-ink-muted">Die einzige Kurve. Nichts federt, nichts skaliert.</span>
+          </li>
+        </ul>
+      </div>
+      <div class="gd-panel">
+        <h3 class="gd-h3">Gewicht und Laufweite</h3>
+        <ul class="flex flex-col gap-3">
+          {{- range $weights }}
+          <li class="flex items-baseline justify-between gap-3 border-b border-accent-muted/30 pb-3">
+            <code class="text-sm whitespace-nowrap text-accent">{{ .token }}</code>
+            <span class="text-right text-sm text-ink-muted">{{ .wert }} · {{ .use }}</span>
+          </li>
+          {{- end }}
+          <li class="flex items-baseline justify-between gap-3 border-b border-accent-muted/30 pb-3">
+            <code class="text-sm text-accent">tracking-heading</code>
+            <span class="text-right font-heading tracking-heading text-ink-strong">0,03em auf Überschriften</span>
+          </li>
+          <li class="flex items-baseline justify-between gap-3">
+            <code class="text-sm text-accent">tracking-label</code>
+            <span class="text-right text-sm tracking-label text-ink-muted uppercase">0,08em auf Tile-Labels</span>
+          </li>
         </ul>
       </div>
     </div>
@@ -512,7 +589,7 @@
           jedem Zustand sichtbar bleibt, und
           <code class="text-accent">caret-color</code> färbt sogar den Textcursor.
         </p>
-        <div class="grid gap-gutter sm:grid-cols-2">
+        <div class="grid grid-cols-1 gap-gutter sm:grid-cols-2">
           <label class="flex flex-col gap-2">
             <span class="text-sm text-ink-muted">Textfeld</span>
             <input type="text" class="gd-field" placeholder="Klick hinein — der Cursor ist golden">
@@ -605,12 +682,333 @@
         <h3 class="gd-h3">Statusmeldungen</h3>
         <div class="flex flex-col gap-3">
           {{- range $states }}
-          <p class="rounded-sm border-l-4 {{ .edge }} bg-surface px-4 py-3 text-base {{ .ink }}">
+          <p class="gd-message {{ if eq .token "--color-success" }}gd-message-success{{ else if eq .token "--color-warning" }}gd-message-warning{{ else }}gd-message-error{{ end }}">
             <code>{{ .token }}</code> — {{ .use }}
           </p>
           {{- end }}
         </div>
       </div>
+    </div>
+  </section>
+
+  {{- /* ------------------------------------------------------------------ */ -}}
+  {{- /* DAS at-* VOKABULAR.
+         Dieser Abschnitt ist die Abnahme für css/components.css: ungenutztes
+         CSS ist ungeprüftes CSS, und noch benutzt kein Template davon etwas.
+         Jede Klasse dort taucht hier einmal auf, damit ein Fehler sichtbar wird,
+         bevor eine Seite darauf gebaut wird.
+
+         Fehlen: at-sky, at-city, at-clock, at-bird, at-balloon, at-wordmark,
+         at-footer-sea. Das Header-Chrome kommt aus scss/base/hero.scss, wenn der
+         Header umzieht — das Design-Tool hat die SVG-Arbeit nicht übertragen
+         bekommen, und die Vereinfachung soll nicht wie eine Entscheidung
+         aussehen. Siehe docs/migration.md. */ -}}
+  {{- $demo := site.GetPage "/articles/chapter-1" -}}
+  {{- $cover := "" -}}
+  {{- with $demo }}{{ with (.Resources.ByType "image").GetMatch "cover*" }}
+    {{- $cover = (.Process "fill 480x360 webp").RelPermalink -}}
+  {{ end }}{{ end -}}
+  <section class="mb-section">
+    <h2 class="gd-h2">Vokabular</h2>
+    <p class="gd-panel mb-gutter">
+      Die Bausteine, aus denen die Seiten zusammengesetzt werden — Karte, Auszeichnungen,
+      Tiles, Fließtext, Sidebar-Zeilen. Sie liegen in
+      <code class="text-accent">themes/garden/assets/css/components.css</code> und sind
+      wörtlich aus dem Design-System übernommen.
+      <strong class="text-ink-strong">Wer eine Komponente baut, wählt hier aus, statt neu
+      zu erfinden.</strong> Das ist die Regel, an der das alte Theme gescheitert ist:
+      4.355 Zeilen SCSS über 29 Dateien, weil jede Komponente ihre Werte neu entschieden hat.
+    </p>
+
+    <h3 class="gd-h3 mt-gutter">Karte</h3>
+    <p class="mb-gutter max-w-[70ch] text-sm text-ink-muted">
+      Hover macht genau drei Dinge: die goldene Linie wächst an der Unterkante entlang,
+      das Bild gibt sein Sepia frei, der runde Button drückt sich ein. Nichts skaliert,
+      nichts hebt ab. Das Bild ist <strong class="text-ink-strong">4:3 im Querformat,
+      immer</strong> — und es steht links im Fließtext, nicht in einer eigenen Spalte:
+      ein Querformat neben einer Textspalte lässt sechs Wörter pro Zeile übrig.
+    </p>
+    <div class="grid grid-cols-1 gap-gutter xl:grid-cols-2">
+
+      {{- /* Artikel mit Bild — der Normalfall. */ -}}
+      <article class="at-card">
+        <span class="at-card-badge">
+          <svg class="size-[0.9em] shrink-0 fill-current" aria-hidden="true"><use href="{{ $sprite }}?t={{ $v }}#sparkling-line"></use></svg>
+          Neu
+        </span>
+        <div class="at-flow relative p-gutter">
+          {{- with $cover }}
+          <figure class="at-figure at-figure-float">
+            <img class="at-card-cover" src="{{ . }}" alt="" width="480" height="360" loading="lazy">
+            <figcaption class="at-figcaption">Aufgenommen an der Kieler Förde</figcaption>
+          </figure>
+          {{- end }}
+          <h4 class="at-card-title"><a href="#vokabular">Warum Hugo</a></h4>
+          <p class="at-card-meta">
+            {{- /* Die Rubrik ist ein Punkt-Badge in der Metazeile, keine Fahne über
+                   dem Foto: eine gesättigte Fläche quer über dem Bild konkurriert
+                   mit dem Bild und mit dem Gold. Gefärbt ist nur der 0,5-em-Punkt,
+                   aus `categoryColor` der Rubrik. */ -}}
+            <a class="at-badge" href="#vokabular" style="--at-badge-dot: #1d7a7a">Allgemein</a>
+            <time datetime="2026-08-06" title="Veröffentlichungsdatum">
+              <svg class="mr-0.5 inline-block size-[15px] -translate-y-px fill-current text-ink-muted" aria-hidden="true"><use href="{{ $sprite }}?t={{ $v }}#calendar-line"></use></svg>
+              06.08.26
+            </time>
+          </p>
+          <div class="at-card-excerpt mt-3">
+            Fünfzehn Kriterien, vier Kandidaten. WordPress ein permanentes Update-Laufband,
+            Grav dünn dokumentiert und ohne zwei getrennte Menüs, Jekyll auf GitHub Pages
+            ohne Fremd-Plugins. Geblieben ist Hugo: SEO, Sitemap und RSS eingebaut,
+            Bearbeiten nur lokal.
+          </div>
+        </div>
+        <footer class="at-card-footer">
+          <div class="at-card-footer-item">
+            <span data-tooltip="7 Minuten Lesedauer">
+              <svg class="mr-0.5 inline-block size-5 -translate-y-1 fill-current text-ink-muted" aria-hidden="true"><use href="{{ $sprite }}?t={{ $v }}#timer-line"></use></svg>
+              7 Min.
+            </span>
+          </div>
+          <div class="at-card-footer-item">
+            <svg class="size-[18px] shrink-0 fill-current text-ink-muted" aria-hidden="true"><use href="{{ $sprite }}?t={{ $v }}#price-tag-3-line"></use></svg>
+            <a class="at-hashtag" href="#vokabular">hugo</a>
+            <a class="at-hashtag" href="#vokabular">static-site</a>
+          </div>
+          <div class="at-card-footer-item">
+            <span class="at-growth" data-stage="evergreen" data-tooltip="Evergreen; gepflegt &amp; aktuell">
+              <svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $v }}#tree-line"></use></svg>
+            </span>
+            <span data-tooltip="Teil einer Serie" class="gd-icon-duo text-xl">
+              <svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $v }}#stack-fill"></use></svg>
+              <svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $v }}#stack-line"></use></svg>
+            </span>
+            <span class="at-heart at-heart-flat">
+              <svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $v }}#heart-fill"></use></svg>
+              <span class="at-heart-count">41</span>
+            </span>
+            <a href="#vokabular" title="Weiterlesen" aria-label="Weiterlesen" class="flex text-accent">
+              <svg class="size-5 shrink-0 fill-current" aria-hidden="true"><use href="{{ $sprite }}?t={{ $v }}#arrow-right-s-line"></use></svg>
+            </a>
+          </div>
+        </footer>
+      </article>
+
+      {{- /* Notizkarte — hier bleibt das Ribbon, weil das Label auf dem Bild
+             sitzt und das Bild die ganze Karte ist. Und die hervorgehobene
+             Variante (`weight: 1`) mit dem kräftigeren Rand. */ -}}
+      <article class="at-card at-card-fixed min-h-[400px]">
+        <a class="at-ribbon top-0 left-0 rounded-tl-md" href="#vokabular">Allgemein</a>
+        <div class="relative grid grid-cols-1 place-items-center px-gutter pt-22 pb-gutter">
+          {{- with $cover }}<img class="at-card-bleed" src="{{ . }}" alt="">{{ end }}
+          <p class="at-quoted relative z-2 m-0 bg-[linear-gradient(270deg,transparent_0%,rgb(0_0_0/0.5)_50%,transparent_100%)] py-4 text-center font-heading text-[30px]/[1.3] font-semibold text-ink-strong [text-shadow:3px_3px_4px_rgb(0_0_0/0.5)]">
+            Erst die Programmierung, dann das komplette Design.
+          </p>
+        </div>
+        <footer class="at-card-footer">
+          <div class="at-card-footer-item">
+            <time datetime="2026-07-31" title="Veröffentlichungsdatum">
+              <svg class="mr-0.5 inline-block size-[15px] -translate-y-px fill-current text-ink-muted" aria-hidden="true"><use href="{{ $sprite }}?t={{ $v }}#calendar-line"></use></svg>
+              31.07.26
+            </time>
+          </div>
+          <div class="at-card-footer-item">
+            <span data-tooltip="Notiz" class="gd-icon-duo text-xl">
+              <svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $v }}#lightbulb-fill"></use></svg>
+              <svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $v }}#lightbulb-line"></use></svg>
+            </span>
+            <button type="button" class="at-heart at-heart-flat">
+              <svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $v }}#heart-line"></use></svg>
+              <span class="at-heart-count">23</span>
+            </button>
+          </div>
+        </footer>
+      </article>
+    </div>
+
+    <h3 class="gd-h3 mt-gutter">Auszeichnungen</h3>
+    <div class="grid grid-cols-1 gap-gutter sm:grid-cols-2">
+      <div class="gd-panel flex flex-col gap-4">
+        <div class="flex flex-wrap items-center gap-3">
+          <a class="at-badge" href="#vokabular" style="--at-badge-dot: #1d7a7a">Kategorie 1</a>
+          <a class="at-badge" href="#vokabular" style="--at-badge-dot: #285fa5">Movie</a>
+          <a class="at-badge" href="#vokabular" style="--at-badge-dot: #a52828">Allgemein</a>
+        </div>
+        <p class="text-sm text-ink-muted">
+          <code class="text-accent">at-badge</code> — die Rubrik. So kommt Farbe pro Rubrik
+          zurück, ohne die Palette dafür auszugeben: die Fläche bleibt neutral, gefärbt ist
+          der Punkt. <code class="text-accent">--at-badge-dot</code> setzt ihn, ohne Wert
+          fällt er auf Gold zurück.
+        </p>
+        <div class="flex flex-wrap items-center gap-3 border-t border-accent-muted/30 pt-4">
+          <a class="at-hashtag" href="#vokabular">hugo</a>
+          <a class="at-hashtag" href="#vokabular">indieweb</a>
+          <a class="at-tag" href="#vokabular">Serie: Der Neustart</a>
+        </div>
+        <p class="text-sm text-ink-muted">
+          <code class="text-accent">at-hashtag</code> für Tags im Kartenfuß,
+          <code class="text-accent">at-tag</code> für das gefüllte Label in einem Tile-Wert.
+        </p>
+      </div>
+      <div class="gd-panel flex flex-col gap-4">
+        <ul class="flex flex-col gap-3">
+          {{- range $stages }}
+          <li class="at-growth" data-stage="{{ .label }}" data-tooltip="{{ .use }}">
+            <svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $v }}#{{ .icon }}"></use></svg>
+            {{ .label }}
+          </li>
+          {{- end }}
+        </ul>
+        <p class="text-sm text-ink-muted">
+          <code class="text-accent">at-growth</code> mit <code class="text-accent">data-stage</code>.
+          Die Farbe sitzt auf dem <strong class="text-ink-strong">Glyph</strong>, nie als
+          Fläche — vier Stufen, vier Tönungen, sonst nichts. Das ist die einzige Ausnahme
+          von „Gold ist die einzige Akzentfarbe".
+        </p>
+        <div class="flex flex-wrap items-center gap-4 border-t border-accent-muted/30 pt-4">
+          <button type="button" class="at-heart">
+            <svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $v }}#heart-line"></use></svg>
+            <span class="at-heart-count">41</span>
+          </button>
+          <button type="button" class="at-heart is-hearted" disabled>
+            <svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $v }}#heart-fill"></use></svg>
+            <span class="at-heart-count">42</span>
+          </button>
+          <span data-tooltip="Aktuelle Seite" class="gd-round-button gd-round-button-pressed">
+            <svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $v }}#arrow-right-s-fill"></use></svg>
+          </span>
+        </div>
+        <p class="text-sm text-ink-muted">
+          Das Herz einmal pro Besuch, danach gesperrt. Der dauerhaft gedrückte runde Button
+          (<code class="text-accent">gd-round-button-pressed</code>) markiert die aktuelle
+          Seite in der Blätterleiste — als <code class="text-accent">span</code>, nicht als
+          deaktivierter Button: hier gibt es keine Aktion zum Deaktivieren.
+        </p>
+      </div>
+    </div>
+
+    <h3 class="gd-h3 mt-gutter">Tiles und Sidebar-Zeilen</h3>
+    <p class="mb-gutter max-w-[70ch] text-sm text-ink-muted">
+      Eine Zeilenform für alle drei Widgets. Vorher unterschieden sie sich in jeder
+      Nebensache — Zeilenhöhe 2 gegen 1,35 gegen 1,4, drei verschiedene linke Abstände —
+      und drei Widgets untereinander lasen sich als drei Designs. Jede Liste behält genau
+      <em>ein</em> Unterscheidungsmerkmal, weil dieses Merkmal die Information ist.
+    </p>
+    <div class="grid grid-cols-1 gap-gutter lg:grid-cols-3">
+      <div class="at-tile at-widget">
+        <div class="at-widget-head">
+          <span class="at-tile-label">Serie</span>
+          <span class="at-widget-count">4 Teile</span>
+        </div>
+        <ol class="at-widget-list at-series-list">
+          <li><a href="#vokabular">Die Diagnose</a></li>
+          <li class="is-current"><span>Warum Hugo</span></li>
+          <li><a href="#vokabular">Bulma raus, Tailwind rein</a></li>
+          <li class="is-withered"><a href="#vokabular">Der alte Farbentwurf</a></li>
+        </ol>
+      </div>
+      <div class="at-tile at-widget">
+        <div class="at-widget-head"><span class="at-tile-label">Inhalt</span></div>
+        <ul class="at-widget-list at-toc-list">
+          <li><a href="#vokabular">Die Anforderungen</a></li>
+          <li>
+            <a href="#vokabular">Die Kandidaten</a>
+            <ul><li><a href="#vokabular">WordPress</a></li><li><a href="#vokabular">Jekyll</a></li></ul>
+          </li>
+          <li><a href="#vokabular">Fazit</a></li>
+        </ul>
+      </div>
+      <div class="flex flex-col gap-gutter">
+        <div class="at-tile at-widget">
+          <div class="at-widget-head"><span class="at-tile-label">Ähnliche</span></div>
+          <ul class="at-widget-list at-rows">
+            <li><a href="#vokabular">Bulma raus, Tailwind rein</a><span class="at-rows-aside">02.08.26</span></li>
+            <li><a href="#vokabular">Die Diagnose</a><span class="at-rows-aside">28.07.26</span></li>
+          </ul>
+        </div>
+        <div class="at-tile at-widget">
+          <div class="at-widget-head"><span class="at-tile-label">Archiv</span></div>
+          <ul class="at-widget-list at-leader-list">
+            <li><a href="#vokabular">2026</a><span>14</span></li>
+            <li><a href="#vokabular">2024</a><span>2</span></li>
+            <li><a href="#vokabular">2020</a><span>1</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-gutter grid grid-cols-1 gap-gutter sm:grid-cols-2 lg:grid-cols-4">
+      {{- /* `tint` carries the FINISHED class name, never `text-` plus a
+             variable: Tailwind extracts complete literal strings, so an
+             assembled name produces no rule at all — silently, and the element
+             renders unstyled. Same reason every other list on this page spells
+             its classes out. */ -}}
+      {{- range slice
+        (dict "icon" "pushpin-line" "label" "Rubrik" "value" "Allgemein" "stage" "" "tint" "")
+        (dict "icon" "tree-line" "label" "Stadium" "value" "Evergreen" "stage" "evergreen" "tint" "gd-icon-duo-tinted text-evergreen")
+        (dict "icon" "timer-line" "label" "Lesedauer" "value" "7 Min." "stage" "" "tint" "")
+        (dict "icon" "heart-line" "label" "Herzen" "value" "41" "stage" "" "tint" "") }}
+      <div class="at-tile flex items-center gap-3 p-3"{{ with .stage }} data-stage="{{ . }}"{{ end }}>
+        <span class="gd-icon-duo shrink-0 text-[1.6rem] {{ .tint }}">
+          <svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $v }}#{{ replace .icon "-line" "-fill" }}"></use></svg>
+          <svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $v }}#{{ .icon }}"></use></svg>
+        </span>
+        <span class="flex min-w-0 flex-col gap-1">
+          <span class="at-tile-label">{{ .label }}</span>
+          <span class="at-tile-value">{{ .value }}</span>
+        </span>
+      </div>
+      {{- end }}
+    </div>
+
+    <h3 class="gd-h3 mt-gutter">Fließtext</h3>
+    <div class="gd-panel at-prose max-w-none">
+      <p>
+        Der Artikelkörper. Zeilenlänge auf <code>--measure</code> gedeckelt, goldene
+        Listenmarker, und <a href="#vokabular">Links im Fließtext sind unterstrichen</a> —
+        anders als überall sonst, weil sie hier mitten im Satz stehen und die Farbe allein
+        zu leise ist.
+      </p>
+      <ul>
+        <li>Nicht zu groß, keine tief verschachtelte Auszeichnung.</li>
+        <li>Flexbox statt Floats, JavaScript optional.
+          <ul><li>Verschachtelt, mit eigenem Einzug.</li></ul>
+        </li>
+      </ul>
+      <table>
+        <caption>Tabellen lesen sich als Liste mit Spalten, nicht als Kästchenraster.</caption>
+        <thead><tr><th>System</th><th>Ergebnis</th><th>Kriterien</th></tr></thead>
+        <tbody>
+          <tr><td>Hugo</td><td>gewählt</td><td>15</td></tr>
+          <tr><td>Jekyll</td><td>verworfen</td><td>15</td></tr>
+          <tr><td>WordPress</td><td>verworfen</td><td>15</td></tr>
+        </tbody>
+      </table>
+      <p class="at-quoted">Fazit: Erst einmal ein privater Blog.</p>
+      <hr>
+      <pre><code>@import "./themes/garden/assets/css/components.css" layer(components);</code></pre>
+      <p>
+        Externe Verweise bekommen einen kleinen goldenen Pfeil:
+        <a class="at-external" href="https://gohugo.io" target="_blank" rel="noreferrer">gohugo.io</a>
+      </p>
+    </div>
+
+    <h3 class="gd-h3 mt-gutter">Kleinteile</h3>
+    <div class="gd-panel flex flex-col gap-6">
+      <div>
+        <p class="gd-lined-title">Article Time</p>
+        <p class="mt-3 text-center text-sm text-ink-muted">
+          <code class="text-accent">gd-lined-title</code> — die Spaltenüberschrift im Footer.
+          Beide Linien laufen nach außen aus, wie die Regel auf <code class="text-accent">gd-h2</code>.
+        </p>
+      </div>
+      <div class="flex flex-wrap items-center justify-center gap-8 border-t border-accent-muted/30 pt-8">
+        <span data-tooltip="Erscheint über dem Element" class="gd-button">Zeig mir den Tooltip</span>
+        <span data-tooltip="Auch auf Tastaturfokus" tabindex="0" class="gd-button gd-button-secondary">Mit Fokus</span>
+      </div>
+      <p class="text-center text-sm text-ink-muted">
+        <code class="text-accent">data-tooltip</code> hängt an einem Attribut, damit jedes
+        Element einen tragen kann.
+      </p>
     </div>
   </section>
 

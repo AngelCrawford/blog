@@ -717,6 +717,26 @@ select.gd-field option {
  * md is for cards and panels, lg for dialogs and overlays. The card had lg by
  * mistake, which is exactly the drift a three-step scale exists to prevent. */
 .at-card {
+  /* DIVERGES FROM THE DESIGN SYSTEM ON PURPOSE — two declarations it does not
+   * have. Upstream the React component sets `display: grid` and
+   * `grid-template-rows: 1fr auto` inline on every card, so the footer sits on
+   * the bottom edge whatever the excerpt does. Hugo has no component: left at
+   * the call site, that would be retyped at all five of them, which is exactly
+   * the "repeats and could drift" test docs/design.md uses to decide what
+   * belongs in CSS.
+   *
+   * And it has a second job here. `grid` is a BULMA class name. A template
+   * reaching for the utility also gets Bulma's `.grid`, which sets a 0.75rem
+   * gap and `repeat(auto-fill, minmax(9rem, 1fr))` — garden opposes neither, so
+   * both apply unopposed and the card lays its content out in two columns with
+   * a 12px gutter. That is not hypothetical: it is what this looked like in the
+   * styleguide before the rule moved here. Demoting Bulma decides conflicts; it
+   * does nothing where garden declares nothing.
+   *
+   * Do not "restore" this to match the skill on the next sync. */
+  display: grid;
+  grid-template-rows: 1fr auto;
+
   position: relative; height: 100%; max-width: 733.5px; margin-left: auto; margin-right: auto;
   background: var(--color-surface-raised);
   border: 1px solid color-mix(in srgb, var(--color-accent) 20%, transparent);

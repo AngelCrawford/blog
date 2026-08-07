@@ -17,9 +17,41 @@ steps** — that is the entire point of this arrangement.
 
 - **Migrated: 2 of 37 templates.** The navigation area is *complete* — markup,
   styling and JavaScript all live in `garden`, and it is jQuery-free.
-- Tailwind runs without Preflight and unlayered — see the rules in
+- **The design system's vocabulary is fully adopted** — see below. Templates are
+  now the only thing left; no component still needs its CSS invented.
+- Tailwind runs without Preflight. Everything garden owns is in a cascade layer,
+  the utilities deliberately are not — see the rules in
   [`../CLAUDE.md`](../CLAUDE.md). Do not change either without reading them.
 - jQuery still ships (285 KB of source) because four scripts depend on it.
+
+## Vocabulary
+
+Counting templates alone stopped being the useful metric in August 2026: a whole
+pass landed without a single row in the table below moving. The design system
+under `.claude/skills/design/` is where decisions are made; `garden` is where
+they ship. That gap is now closed for everything except the header.
+
+| What | Status |
+|---|---|
+| Tokens | ✅ all 33 adopted. `design-tokens.test.mjs` holds an **empty** backlog and fails if it refills |
+| `css/base.css` | ✅ the Preflight stand-in, `layer(base)` |
+| `css/components.css` | ✅ `gd-*` plus the `at-*` vocabulary, `layer(components)` |
+| Webfonts | ✅ Montserrat, Montserrat Alternates and remixicon registered in garden |
+| Header/footer chrome | ⬜ `at-sky`, `at-city`, `at-clock`, `at-bird`, `at-balloon`, `at-wordmark`, `at-footer-sea` — **not ported, see below** |
+| `body`, `a`, `:focus-visible` | ⬜ element-level base rules; they land with `baseof.html`, because they would restyle article-time the moment they ship |
+
+Two deliberate divergences from the skill, both commented at the rule:
+
+- `.at-card` gains `display: grid; grid-template-rows: 1fr auto`. Upstream the
+  React component sets it inline; Hugo has no component, so leaving it at the
+  call site means retyping it at all five of them.
+- `.at-sr-only` is skipped — Tailwind already emits `sr-only`.
+
+**The vocabulary ships before the markup that uses it.** That is roughly 22 KB
+(9 KB gzipped) of currently unused CSS. The trade is that every remaining
+migration is markup work rather than another design round, and
+[`/pages/styleguide/`](../themes/garden/layouts/page/styleguide.html) renders
+every class so none of it is shipping unseen.
 
 ## Templates
 
@@ -32,7 +64,7 @@ redesign, not top to bottom.
 | `_partials/_base/head.html` | ✅ garden — loads both stylesheets |
 | `_partials/_base/navigation.html` | ✅ garden — plain scaffold, design still open |
 | `_partials/card.html` | ⬜ article-time — 552 lines of SCSS, the biggest win. **The grid wrapper moves with it**, see below |
-| `_partials/_base/hero.html` | ⬜ article-time — **keep for now** (Angel wants it as is) |
+| `_partials/_base/hero.html` | ⬜ article-time — **next up. Copy from Bulma, not from the skill**, see below |
 | `_partials/_base/footer.html` | ⬜ article-time |
 | `_partials/_base/cookie-banner.html` | ⬜ article-time |
 | `_partials/_base/maintenance.html` | ⬜ article-time — becomes the webcard |
@@ -60,6 +92,32 @@ gets you well-designed cards in a broken grid.
   sites), `list.html` (two), `page/archive.html`, `404.html`.
 
 Card, wrapper and cell are therefore one unit of work, not three.
+
+### The header: copy from Bulma, not from the design system
+
+The skill has a header — `at-sky`, `at-city`, `at-clock`, `at-bird`,
+`at-balloon`, `at-wordmark`, `at-footer-sea`. **Do not port it.** The design tool
+could not carry the SVG work across, and what came back is a simplification that
+looks finished. Held against `themes/article-time/assets/scss/base/hero.scss`
+(424 lines) it is missing:
+
+- **the stars entirely** — `#sky-stars-1/2/3`, three sizes, each a Sass
+  `multiple-box-shadow()` call generating 100 / 80 / 30 randomly placed shadows.
+  There is no build step in the skill, so they simply are not there;
+- **the second bird**, which has its own duration and its own negative delay so
+  the two never fly in lockstep;
+- **the 641–840px breakpoint**, where the wordmark, the city and the balloon all
+  resize;
+- **the seasonal overlays** — fireworks, the santa hat, the ghost with its
+  `filter: url(#disfilter)`.
+
+Derive the header from `hero.html` + `hero.scss` + `header.js` and put it on
+tokens on the way. The skill is a value table for that job, nothing more.
+
+Known costs before starting: `header.js` has 16 jQuery calls and gets rewritten
+vanilla (`suncalc.js` is already vanilla); the stars need an answer that is not
+a Sass loop; and the overlays depend on inline SVG filters, so their markup
+moves with them.
 
 ## JavaScript
 
@@ -99,22 +157,49 @@ off is the real progress signal.
 One arrangement makes everything else work, and it is worth understanding before
 touching either stylesheet:
 
+Order is declared once, at the top of `main.css`:
+
+```css
+@layer bulma, theme, base, components;
+```
+
 | Layer | What | Wins against |
 |---|---|---|
 | `@layer bulma` | article-time's whole compiled stylesheet | nothing |
-| unlayered, specificity 0 | garden's scoped baseline (`:where([data-garden] …)`) | Bulma |
-| unlayered, 0-1-0 | Tailwind utilities | both |
+| `@layer theme` | `tailwindcss/theme.css` — custom properties only | Bulma |
+| `@layer base` | `css/base.css`, the scoped Preflight stand-in | Bulma |
+| `@layer components` | `css/components.css` — `gd-*` and `at-*` | both above |
+| unlayered | Tailwind utilities | everything |
 
-**Any unlayered declaration beats every layered one, regardless of specificity
-or source order.** Wrapping Bulma in a cascade layer therefore demotes all of it
-at once, and garden never has to out-specify anything.
+**Any unlayered declaration beats every layered one, and any later layer beats
+an earlier one — both regardless of specificity or source order.** That is what
+lets every rule in `components.css` be a plain class selector: it beats Bulma by
+layer, so it never has to beat anything by specificity, and a utility at the
+call site still overrides it.
 
-The first attempt did the opposite: it raised the baseline to `[data-garden] p`
-(0-1-1) to out-shout Bulma, which then beat the utilities it was meant to let
-through. `text-2xl` on a paragraph rendered at 16px, `mb-3` on a heading did
-nothing, `space-y-*` collapsed, and a Bulma rule at 0-2-2 pushed the round
-button's icon 5px off centre. Each fix broke something else. Demote, do not
-out-shout.
+Two attempts got this wrong before it settled:
+
+1. The baseline was raised to `[data-garden] p` (0-1-1) to out-shout Bulma,
+   which then beat the utilities it was meant to let through. `text-2xl` on a
+   paragraph rendered at 16px, `mb-3` did nothing, `space-y-*` collapsed, and a
+   Bulma rule at 0-2-2 pushed the round button's icon 5px off centre.
+2. Bulma was demoted, which fixed that — but the components stayed unlayered and
+   scoped, so `[data-garden] .gd-panel` sat at 0-2-0 and beat the utilities all
+   over again. Same bug, one round later.
+
+**Demote, do not out-shout — and put your own rules in a layer too.**
+
+### A layer decides conflicts. It does not delete anything.
+
+The failure that keeps coming back: where garden declares *nothing*, Bulma still
+applies unopposed, layer or no layer. Bare `button` gets a background and a
+box-shadow. `[data-tooltip]` gets a whole tooltip. And `.grid` — a Bulma class
+name as well as a Tailwind utility — contributes `gap: 0.75rem` and
+`grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr))`, which is how a
+card carrying `grid` laid its own contents out in two columns.
+
+Hence rule 1 below, and hence: when you do use a utility whose name Bulma also
+owns, state every property Bulma would otherwise fill in.
 
 The wrapping happens in `themes/garden/layouts/_partials/_base/head.html` and is
 safe only because the compiled sheet contains no `@charset` and no `@import` —
