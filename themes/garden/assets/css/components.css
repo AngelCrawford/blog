@@ -1,0 +1,597 @@
+/* Garden — component layer.
+ *
+ * Imported by main.css as `layer(components)`. Sits above css/base.css and
+ * below the utilities, which is what lets every rule here be a plain class
+ * selector: it beats Bulma by layer, so it never has to beat anything by
+ * specificity, and a utility at the call site still overrides it.
+ *
+ * THAT IS WHY THERE IS NO `[data-garden]` PREFIX HERE ANY MORE. It used to be
+ * on every rule, pushing them to 0-2-0 — above the 0-1-0 of the utilities they
+ * were supposed to let through. The prefix bought nothing: `gd-*` class names
+ * exist only in garden markup, so there was nothing to scope away from.
+ * `data-garden` still matters for css/base.css, which resets bare elements.
+ *
+ * Only what genuinely cannot live on an element belongs in this file:
+ * positioning against a distant ancestor, pseudo-elements, vendor resets, and
+ * decisions that would otherwise be retyped at every call site. Everything else
+ * is utilities in the template. See docs/design.md.
+ */
+
+/* ===========================================================================
+ * SURFACES — the depth system.
+ *
+ * Three levels, and the rule is that a level only ever sits on a DIFFERENT
+ * level. Panel on page, card on panel or page, never panel on panel. That
+ * single constraint is what makes depth readable on a palette this dark, where
+ * shadows barely register.
+ *
+ * The dotted page texture comes from article-time's `main` rule and stays; it
+ * is the bottom of the stack, and every surface below reads against it.
+ * =========================================================================== */
+
+/* Page-level block that carries a background — use for prose and controls.
+ * Content that is already made of cards does NOT get one, or you stack two
+ * panels and the depth collapses. */
+.gd-panel {
+  padding: var(--spacing-gutter);
+  border: 1px solid --alpha(var(--color-accent-muted) / 40%);
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface-raised);
+  box-shadow: var(--shadow-md);
+}
+
+/* Same footprint, no fill — for grouping without adding a depth level. */
+.gd-panel-plain {
+  padding: var(--spacing-gutter);
+  border: 1px solid --alpha(var(--color-accent-muted) / 25%);
+  border-radius: var(--radius-md);
+}
+
+/* ===========================================================================
+ * HEADINGS
+ *
+ * The gold gradient on the page title is the site's signature and predates
+ * everything else here — it is carried over from article-time's
+ * `main.content h1.title` rather than reinvented. Two stacked pseudo-elements:
+ * one for the raised shadow, one for the gradient fill, both reading their text
+ * from the `data-heading` attribute.
+ *
+ * Levels are deliberately distinct so a page reads as a hierarchy rather than a
+ * uniform wall:
+ *   h1  gold gradient, largest, once per page
+ *   h2  light, with a gold rule that runs to the edge
+ *   h3  gold, smaller, no decoration
+ * =========================================================================== */
+.gd-h1 {
+  position: relative;
+  display: inline-block;
+  font-family: var(--font-heading);
+  font-size: var(--text-4xl);
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  line-height: 1.15;
+  color: var(--color-surface);
+}
+
+/* Raised shadow layer. */
+.gd-h1::before {
+  content: attr(data-heading);
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  color: var(--color-surface);
+  text-shadow:
+    -1px 0 1px --alpha(var(--color-accent-hover) / 70%),
+    0 1px 1px --alpha(var(--color-accent-hover) / 70%),
+    5px 5px 10px rgb(0 0 0 / 0.5),
+    -2px -2px 5px rgb(255 255 255 / 0.3);
+}
+
+/* Gradient fill layer, painted over the shadow. */
+.gd-h1::after {
+  content: attr(data-heading);
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  background: linear-gradient(
+    to bottom,
+    var(--color-accent) 32%,
+    var(--color-accent-hover) 50%,
+    var(--color-accent-muted) 80%
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: var(--color-surface);
+}
+
+@media (max-width: 640px) {
+  .gd-h1 {
+    font-size: var(--text-3xl);
+  }
+}
+
+/* Section heading: light, with a gold rule filling the remaining width. */
+.gd-h2 {
+  /* The component owns its spacing. `gd-h2 mb-3` appeared eight times and
+   * `gd-h3 mb-4` five — that is not a per-call decision, that is the heading
+   * rhythm, and leaving it at the call site is thirteen chances to drift. */
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-family: var(--font-heading);
+  font-size: var(--text-2xl);
+  font-weight: 600;
+  color: var(--color-ink-strong);
+}
+.gd-h2::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    --alpha(var(--color-accent) / 60%),
+    transparent
+  );
+}
+
+/* Sub-heading: gold, quiet, no decoration. */
+.gd-h3 {
+  margin-bottom: 1rem;
+  font-family: var(--font-heading);
+  font-size: var(--text-lg);
+  font-weight: 600;
+  color: var(--color-accent);
+}
+
+/* ===========================================================================
+ * BUTTONS
+ *
+ * A component, not a pile of utilities repeated at every call site. The reason
+ * is concrete: the scoped baseline sets `font: inherit` on form controls, which
+ * removed `button, a.button { font-weight: 600 }` from the old theme along with
+ * the background and border it was meant to strip. That weight was a real
+ * decision — button labels read as actionable partly because they are a little
+ * heavier than the prose around them — and a reset takes the good with the bad.
+ * Anything worth keeping has to be restated deliberately.
+ *
+ * Restating it here rather than in each template means the next button cannot
+ * forget it.
+ * =========================================================================== */
+.gd-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  background-color: var(--color-accent);
+  color: var(--color-surface-sunken);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  line-height: 1.4;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease-out,
+    border-color 0.2s ease-out,
+    color 0.2s ease-out;
+}
+.gd-button:hover {
+  background-color: var(--color-accent-hover);
+}
+.gd-button:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* Outline variant — same box, no fill, until you point at it. */
+.gd-button-secondary {
+  border-color: var(--color-accent);
+  background-color: transparent;
+  color: var(--color-accent);
+}
+.gd-button-secondary:hover {
+  background-color: var(--color-accent);
+  color: var(--color-surface-sunken);
+}
+
+/* ===========================================================================
+ * DUOTONE ICONS — Angel's variant B from docs/ideas/IconDemo.html.
+ *
+ * Two copies of the glyph: one behind in the muted accent at 90% opacity,
+ * nudged down and right, one in front in the LIGHT accent. Bright-on-dark is
+ * what makes it read; an earlier attempt used the mid accent in front and the
+ * two tones simply merged.
+ *
+ * The offset is 0.06em, not a fixed pixel value, so it scales with the icon —
+ * at 24px it is 1.4px, at 48px it is 2.9px, and the effect stays proportional.
+ * That is also why the box is sized in em and the SIZE COMES FROM font-size:
+ * put `text-2xl` or `text-[28px]` on the wrapper, not `size-7`.
+ *
+ * The component takes TWO glyphs: a back one and a front one. Where the sprite
+ * carries a `-fill` partner, the back layer is the filled body and the effect
+ * is the real thing. Where it does not, the line glyph goes in twice — an
+ * offset edge, but no solid body behind it.
+ *
+ * CSS cannot fill an outline. A line icon is a stroke path with no interior,
+ * and Remixicon's `-fill` icons are separate paths, not a rendering mode of
+ * the same glyph. Getting true duotone across the set means regenerating the
+ * sprite with the fill partners included — the collection definition sits
+ * beside it as RemixIcon_Collection_*.remixicon.
+ * =========================================================================== */
+.gd-icon-duo {
+  /* One place to tune the depth. DOUBLED from 0.03/0.055em, and only because
+   * the back layer changed underneath them: those values were tuned against a
+   * shadow that differed from the front glyph in brightness alone, where any
+   * larger offset read as a doubled shape. Now that the back layer is bronze
+   * (hue 25, see --color-accent-shadow) the two layers are told apart by hue,
+   * and the offset is free to be large enough to actually see at 20px.
+   *
+   * No single value suits every glyph, and that is worth stating plainly: a
+   * dense shape like heart wants less, a hairline like asterisk would want
+   * more. Chasing that per icon is unmaintainable.
+   *
+   * The vertical shift is nearly twice the horizontal one. An equal offset
+   * reads as a diagonal smear; weighting it downwards reads as the glyph
+   * sitting above its own shadow, which is what a shadow does. */
+  --gd-duo-offset-x: 0.06em;
+  --gd-duo-offset-y: 0.1em;
+
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  width: 1em;
+  height: 1em;
+  line-height: 1;
+  flex: none;
+}
+.gd-icon-duo svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  fill: currentColor;
+}
+.gd-icon-duo svg:first-child {
+  color: var(--color-accent-shadow);
+  opacity: 1;
+  transform: translate(var(--gd-duo-offset-x), var(--gd-duo-offset-y));
+  transition: transform 0.2s ease-out;
+}
+.gd-icon-duo svg:last-child {
+  color: var(--color-accent);
+  transition: color 0.2s ease-out;
+}
+
+/* Tinted variant: both layers take the colour set on the wrapper, so a growth
+ * stage is duotone in its own hue without a rule per stage. The shadow layer
+ * is the same hue darkened, not a separate colour. */
+.gd-icon-duo-tinted svg:first-child {
+  color: currentColor;
+  opacity: 0.35;
+}
+.gd-icon-duo-tinted svg:last-child {
+  color: currentColor;
+}
+
+/* Hover lifts the line to accent-hover. The token is named for this state and
+ * was previously spent on the resting one, which left hover with nowhere to go
+ * — it had a brightness filter bolted on as a substitute. The shadow stays
+ * put; moving both would read as the icon jumping. */
+:is(a, button, .gd-panel):hover .gd-icon-duo svg:last-child {
+  color: var(--color-accent-hover);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gd-icon-duo svg {
+    transition: none;
+  }
+}
+
+/* Icons WITHOUT a fill partner get the same offset shadow via drop-shadow,
+ * which follows the rendered alpha and therefore works on a hairline glyph
+ * where a second copy underneath would not. CSS cannot fill an outline.
+ *
+ * Not used for the pairs: a filled body behind the line gives a solid shape
+ * that drop-shadow cannot, and applying both would double the shadow.
+ *
+ * The offset MATCHES the duotone pair's. It was tried larger — a drop-shadow on
+ * a hairline is only ever as wide as the stroke, so there is a real argument for
+ * giving it more room to clear it — but at 0.09em and again at 0.075em the
+ * shadow detached and read as a second, offset glyph rather than as depth.
+ * Equal to the pairs is also the more honest answer: one language, not two. */
+.gd-icon-shadow {
+  filter: drop-shadow(0.06em 0.1em 0 var(--color-accent-shadow));
+}
+
+/* ===========================================================================
+ * FORM CONTROLS
+ *
+ * The scoped baseline strips the browser's own styling from these; this puts a
+ * deliberate one back. Native select and checkbox rendering cannot be themed
+ * at all on most platforms, so both are rebuilt: `appearance: none` plus an
+ * arrow drawn as a background gradient, and a checkmark drawn with clip-path.
+ *
+ * Focus is a ring rather than a colour change, so it is visible regardless of
+ * the field's state, and `caret-color` picks up the accent so even the text
+ * cursor belongs to the palette.
+ * =========================================================================== */
+.gd-field {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--color-accent-muted);
+  border-radius: var(--radius-sm);
+  background-color: var(--color-surface-sunken);
+  color: var(--color-ink);
+  font-size: var(--text-sm);
+  caret-color: var(--color-accent);
+  transition:
+    border-color 0.2s ease-out,
+    box-shadow 0.2s ease-out;
+}
+.gd-field::placeholder {
+  color: var(--color-ink-muted);
+}
+.gd-field:hover {
+  border-color: --alpha(var(--color-accent) / 60%);
+}
+.gd-field:focus {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px --alpha(var(--color-accent) / 25%);
+}
+.gd-field:user-invalid {
+  border-color: var(--color-error);
+}
+.gd-field:user-invalid:focus {
+  box-shadow: 0 0 0 3px --alpha(var(--color-error) / 25%);
+}
+
+/* Select: the native arrow cannot be styled, so it is replaced by two
+ * gradients that meet in a chevron. Padding on the right keeps text clear of
+ * it. */
+select.gd-field {
+  appearance: none;
+  padding-right: 2.25rem;
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--color-accent) 50%),
+    linear-gradient(135deg, var(--color-accent) 50%, transparent 50%);
+  background-position:
+    right 1.15rem center,
+    right 0.75rem center;
+  background-size:
+    0.4rem 0.4rem,
+    0.4rem 0.4rem;
+  background-repeat: no-repeat;
+}
+select.gd-field:focus {
+  background-image:
+    linear-gradient(135deg, transparent 50%, var(--color-accent-hover) 50%),
+    linear-gradient(45deg, var(--color-accent-hover) 50%, transparent 50%);
+}
+/* The dropdown list itself is drawn by the OS. These two are the only
+ * properties every engine honours — worth setting so the open list is not a
+ * white rectangle on a dark site. */
+select.gd-field option {
+  background-color: var(--color-surface-raised);
+  color: var(--color-ink);
+}
+
+/* Checkbox and radio, rebuilt. The checkmark is a clip-path polygon rather
+ * than a glyph, so it needs no font and no sprite. */
+.gd-check {
+  flex: none;
+  width: 1.15rem;
+  height: 1.15rem;
+  border: 1px solid var(--color-accent-muted);
+  border-radius: var(--radius-sm);
+  background-color: var(--color-surface-sunken);
+  transition:
+    background-color 0.15s ease-out,
+    border-color 0.15s ease-out;
+}
+.gd-check[type="radio"] {
+  border-radius: 50%;
+}
+.gd-check:hover {
+  border-color: var(--color-accent);
+}
+.gd-check:checked {
+  border-color: var(--color-accent);
+  background-color: var(--color-accent);
+}
+.gd-check:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+.gd-check:checked::after {
+  content: "";
+  display: block;
+  height: 100%;
+  width: 100%;
+  background-color: var(--color-surface-sunken);
+  clip-path: polygon(
+    17% 47%, 9% 55%, 39% 84%,
+    91% 32%, 83% 24%, 39% 68%
+  );
+}
+.gd-check[type="radio"]:checked::after {
+  clip-path: circle(26% at 50% 50%);
+}
+
+/* ===========================================================================
+ * ROUND BUTTON
+ *
+ * Carried over from article-time's `round-button` mixin — the back-to-top
+ * control. Kept because it is one of the pieces of the old design worth
+ * keeping, rebuilt on tokens rather than hardcoded values.
+ *
+ * Changes from the original: the inner glow is softer, the focus ring is
+ * visible for keyboard users (the old one had none), and the hover lift is
+ * suppressed for anyone who asked for reduced motion.
+ * =========================================================================== */
+.gd-round-button {
+  --gd-round-size: 3rem; /* 48px */
+
+  /* Icon box, overridable per glyph. The default follows the original mixin
+   * (`$size - 13px`), which was tuned for Remixicon's `-s-` arrows: those draw
+   * a compact shape inside a 24x24 viewBox — `arrow-up-s-fill` covers only
+   * 12x6 of it. A glyph that fills its box, like `heart-line` at 20x18, needs
+   * a smaller container or it dwarfs the arrows in an identical button.
+   * Use .gd-round-button-full for those. */
+  --gd-round-icon: calc(var(--gd-round-size) - 13px);
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--gd-round-size);
+  height: var(--gd-round-size);
+  border: 1px solid --alpha(var(--color-accent-muted) / 50%);
+  border-radius: 50%;
+  background-color: var(--color-surface-sunken);
+  color: var(--color-accent);
+  cursor: pointer;
+
+  /* RAISED. Two shadows, not one: dark below-right, a faint light above-left.
+   * The pair is what makes the surface read as domed rather than as a flat
+   * disc with a drop shadow. An earlier version used only the dark one, and
+   * the button looked stuck on top of the page instead of formed out of it. */
+  box-shadow:
+    4px 4px 8px rgb(0 0 0 / 0.55),
+    -3px -3px 6px --alpha(var(--color-ink) / 9%);
+
+  transition:
+    color 0.3s ease-out,
+    border-color 0.2s ease-out,
+    box-shadow 0.2s ease-out,
+    transform 0.2s ease-out;
+}
+
+/* PRESSED. The same two shadows, inverted to inset, plus 2px of downward
+ * travel. Inverting the pair is the whole trick — it reads as the surface
+ * being pushed in. Lifting the button instead (which is what this did before)
+ * looks like it hops away from the pointer rather than responding to it. */
+.gd-round-button:hover,
+.gd-round-button:focus-visible {
+  border-color: var(--color-accent);
+  color: var(--color-accent-hover);
+  /* Pressed. The values are deliberately stronger than the raised state: an
+   * inset shadow has to darken a surface that is already near-black, so the
+   * same 30% black that reads fine on the outside is invisible on the inside.
+   * The light edge moves to the bottom-right, where a pressed dish catches it. */
+  background-color: rgb(0 0 0 / 0.25);
+  box-shadow:
+    inset 5px 5px 9px rgb(0 0 0 / 0.75),
+    inset -4px -4px 8px --alpha(var(--color-ink) / 12%);
+  transform: translateY(2px);
+}
+.gd-round-button:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+/* This used to name the element twice (`button.gd-round-button svg`) to reach
+ * specificity 0-2-2 and out-shout Bulma's `button:not(.round-button)
+ * :not(.is-round) svg`. Since Bulma moved into a cascade layer that is no
+ * longer necessary — any unlayered rule wins regardless of specificity.
+ *
+ * `transform: none` still is necessary: Bulma also nudges that svg by
+ * translate(-5px, 0), and where garden sets nothing, a layered rule still
+ * applies unopposed. Demoting is not the same as removing. */
+/* Icon size is derived from the button, not fixed: the original mixin used
+ * `$size - 13px`, so a 48px button carries a 35px glyph box. That reads large
+ * as a number, but the drawn shape inside a 24x24 viewBox is far smaller than
+ * its box — at a fixed 20px the arrow came out visibly undersized. */
+.gd-round-button svg {
+  width: var(--gd-round-icon);
+  height: var(--gd-round-icon);
+  /* Bulma also applies `translate(-5px, 0)` here — an optical nudge for buttons
+   * that pair an icon WITH a label. On an icon-only button it just pushes the
+   * glyph off centre, which is exactly how it looked. */
+  transform: none;
+  fill: currentColor;
+}
+
+/* One size variant. Only the custom property changes; width, height and the
+ * icon all follow from it. */
+.gd-round-button-lg {
+  --gd-round-size: 3.4375rem; /* 55px — what the back-to-top button uses */
+}
+
+/* For glyphs that fill their viewBox rather than sitting compactly inside it. */
+.gd-round-button-full {
+  --gd-round-icon: calc(var(--gd-round-size) * 0.45);
+}
+
+/* The shadow inversion stays — it is the feedback, not decoration. Only the
+ * 2px of travel is dropped, since that is the part that moves. */
+@media (prefers-reduced-motion: reduce) {
+  .gd-round-button {
+    transition:
+      color 0.3s ease-out,
+      border-color 0.2s ease-out,
+      box-shadow 0.2s ease-out;
+  }
+  .gd-round-button:hover,
+  .gd-round-button:focus-visible {
+    transform: none;
+  }
+}
+
+/* ===========================================================================
+ * COMPONENT CSS
+ *
+ * Only for what genuinely cannot live on an element: positioning against a
+ * distant ancestor, pseudo-elements, vendor resets. Everything else is
+ * utilities in the template.
+ * =========================================================================== */
+
+/* --- Search results panel --------------------------------------------------
+ * Positioned against the <nav>, not against its own parent, and the pointer is
+ * a pseudo-element. The result rows themselves are utility-styled — that markup
+ * is generated in assets/js/search.js.
+ *
+ * Visibility is driven by the `hidden` utility, toggled from JS. Nothing here
+ * sets a display value, or it would fight that. */
+#resultsWrapper {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  z-index: 9999;
+  width: min(50rem, calc(100vw - 2rem));
+  margin-top: 0.75rem;
+}
+
+#results {
+  max-height: 60vh;
+  overflow: auto;
+  padding: var(--spacing-gutter);
+  border: 1px solid --alpha(var(--color-accent) / 20%);
+  border-radius: var(--radius-lg);
+  background-color: var(--color-surface-raised);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Pointer towards the search field. */
+#results::before {
+  content: "";
+  position: absolute;
+  top: -0.6rem;
+  right: 2.5rem;
+  border-right: 0.6rem solid transparent;
+  border-bottom: 0.6rem solid var(--color-surface-raised);
+  border-left: 0.6rem solid transparent;
+}
+
+/* Browsers add their own clear affordance to type=search; we render our own. */
+#searchBox::-webkit-search-decoration,
+#searchBox::-webkit-search-cancel-button,
+#searchBox::-webkit-search-results-button,
+#searchBox::-webkit-search-results-decoration {
+  display: none;
+  -webkit-appearance: none;
+}
+

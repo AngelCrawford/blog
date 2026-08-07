@@ -33,6 +33,12 @@ build:
   cachebusters:
     - source: 'assets/watching/hugo_stats\.json'
       target: 'css'
+    # Same blind spot, second cause: main.css `@import`s css/base.css and
+    # css/components.css, and that dependency also lives inside the Tailwind
+    # CLI. Hugo sees the file change but has no edge from it to main.css, so
+    # without this the server keeps serving the stylesheet it built before.
+    - source: 'assets/css/.*\.css'
+      target: 'css'
 module:
   mounts:
     - source: "hugo_stats.json"

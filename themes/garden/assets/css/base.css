@@ -1,0 +1,142 @@
+/* Garden — base layer.
+ *
+ * Imported by main.css as `layer(base)`. Everything here loses to
+ * css/components.css and to the utilities, and beats Bulma. That ordering is
+ * the point: a reset has to be the floor, not a competitor.
+ *
+ * WHY THIS FILE EXISTS AT ALL: Tailwind's Preflight is switched off while both
+ * themes are composed, because it and Bulma's normalize would fight. This is
+ * the stand-in, scoped to garden-owned markup. It is also exactly where
+ * Preflight lands when it is switched on — `layer(base)` — so that milestone is
+ * a swap, not a rewrite. See docs/migration.md.
+ */
+
+/* ===========================================================================
+ * SCOPED BASELINE — a stand-in for Preflight, for garden-owned markup only.
+ *
+ * Garden templates render inside article-time's `main.content`, and Bulma's
+ * `.content` is a typographic container: it styles every descendant element —
+ * discs and a 2em indent on lists, a background and radius on code, sizes and
+ * margins on headings and paragraphs.
+ *
+ * EVERY SELECTOR HERE IS WRAPPED IN `:where()`, which makes its specificity
+ * zero. That is deliberate and only works because Bulma now sits in a cascade
+ * layer (see themes/garden/layouts/_partials/_base/head.html):
+ *
+ *   Bulma          layered      loses to everything below
+ *   this baseline  unlayered, specificity 0
+ *   utilities      unlayered, specificity 0-1-0   ← always wins
+ *
+ * The earlier version used `[data-garden] element` at 0-1-1 to out-specify
+ * Bulma, and that quietly broke the utilities it was meant to let through:
+ * `text-2xl` on a paragraph rendered at 16px, `mb-3` on a heading did nothing,
+ * and `space-y-*` collapsed because Tailwind emits it inside `:where()` too.
+ * Demoting Bulma instead of out-shouting it removes the whole class of bug.
+ *
+ * Put `data-garden` on the outermost element of every garden template. It is
+ * inert markup — no styling of its own, purely a scope marker.
+ *
+ * DELETE THIS BLOCK when Preflight is switched on; it exists only because two
+ * stylesheets currently share the page. See docs/migration.md.
+ * =========================================================================== */
+:where([data-garden] ul, [data-garden] ol) {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+:where([data-garden] li) {
+  margin: 0;
+}
+:where(
+  [data-garden] h1, [data-garden] h2, [data-garden] h3,
+  [data-garden] h4, [data-garden] h5, [data-garden] h6,
+  [data-garden] p, [data-garden] figure, [data-garden] blockquote
+) {
+  margin: 0;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  color: inherit;
+}
+:where([data-garden] code, [data-garden] pre) {
+  padding: 0;
+  border-radius: 0;
+  background-color: transparent;
+  color: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  /* Inline code is usually a class name or a path — no spaces, so it cannot
+   * wrap and it pushes the viewport open. `anywhere` breaks it only when there
+   * is no other option, which is exactly when a 333px path meets a 390px
+   * screen. */
+  overflow-wrap: anywhere;
+}
+
+/* Form controls.
+ *
+ * A reminder about what the cascade layer does and does not do: it decides
+ * CONFLICTS. Where garden sets nothing at all, Bulma still applies unopposed —
+ * and Bulma styles bare `button` elements with a background, a border, padding
+ * and a box-shadow. Every plain button in a garden template inherited that,
+ * which is why the copy buttons in the styleguide looked like sunken boxes
+ * nobody designed.
+ *
+ * Preflight would strip this; until it is switched on, this does the same job
+ * for garden-owned markup. Anything that wants a border or a fill sets it with
+ * utilities, which beat this at 0-1-0. */
+:where(
+  [data-garden] button, [data-garden] input,
+  [data-garden] select, [data-garden] textarea
+) {
+  appearance: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background-color: transparent;
+  box-shadow: none;
+  color: inherit;
+  font: inherit;
+  line-height: inherit;
+}
+:where([data-garden] a) {
+  color: inherit;
+  text-decoration: none;
+}
+:where([data-garden] img, [data-garden] svg) {
+  display: block;
+}
+
+/* ===========================================================================
+ * INTERACTION BASELINE — a standing rule, not a per-element decision.
+ *
+ * Anything you can click shows a pointer. Tailwind's Preflight sets
+ * `cursor: default` on buttons, which is the HTML default and, on this site,
+ * simply wrong: it was being corrected by hand with `cursor-pointer` at every
+ * call site, and one forgotten instance is a control that does not feel
+ * clickable.
+ *
+ * Stated once, here, so no template has to remember it.
+ *
+ * AND DELIBERATELY NOT SCOPED TO `data-garden`. Every other rule in this file
+ * is a reset and must keep its hands off article-time's markup; this one is not
+ * a reset, it is the rule from CLAUDE.md — everything clickable shows a pointer,
+ * without exception. Scoping it meant the exception was "every Bulma control on
+ * the site", which is the situation the rule was written to end. It sits in the
+ * base layer, so a component or a utility can still overrule it where a control
+ * genuinely is not one.
+ * =========================================================================== */
+:is(
+  button,
+  summary,
+  label[for],
+  label:has(input, select, textarea),
+  [role="button"],
+  a[href]
+):not(:disabled) {
+  cursor: pointer;
+}
+:is(button, [role="button"], input, select, textarea):disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
