@@ -15,21 +15,23 @@ Both themes are composed: `theme: ["garden", "article-time"]`. A file created in
 absent from `garden` keeps working unchanged. **The site is never broken between
 steps** — that is the entire point of this arrangement.
 
-- **Migrated: 2 of 37 templates.** The navigation area is *complete* — markup,
-  styling and JavaScript all live in `garden`, and it is jQuery-free.
+- **Migrated: 4 of 37 templates.** `head`, navigation, `baseof.html` and the
+  header — markup, styling and JavaScript all in `garden`, all jQuery-free.
 - **The design system's vocabulary is fully adopted** — see below. Templates are
   now the only thing left; no component still needs its CSS invented.
 - Tailwind runs without Preflight. Everything garden owns is in a cascade layer,
   the utilities deliberately are not — see the rules in
   [`../CLAUDE.md`](../CLAUDE.md). Do not change either without reading them.
-- jQuery still ships (285 KB of source) because four scripts depend on it.
+- **jQuery is down to one dependant.** `gdpr.js`, three calls. The footer bundle
+  no longer contains a single `$(`; jQuery now sits in the head bundle purely to
+  serve the cookie banner. Porting it deletes 285 KB.
 
 ## Vocabulary
 
 Counting templates alone stopped being the useful metric in August 2026: a whole
 pass landed without a single row in the table below moving. The design system
 under `.claude/skills/design/` is where decisions are made; `garden` is where
-they ship. That gap is now closed for everything except the header.
+they ship. That gap is closed apart from the two rows marked below.
 
 | What | Status |
 |---|---|
@@ -37,8 +39,9 @@ they ship. That gap is now closed for everything except the header.
 | `css/base.css` | ✅ the Preflight stand-in, `layer(base)` |
 | `css/components.css` | ✅ `gd-*` plus the `at-*` vocabulary, `layer(components)` |
 | Webfonts | ✅ Montserrat, Montserrat Alternates and remixicon registered in garden |
-| Header/footer chrome | ⬜ `at-sky`, `at-city`, `at-clock`, `at-bird`, `at-balloon`, `at-wordmark`, `at-footer-sea` — **not ported, see below** |
-| `body`, `a`, `:focus-visible` | ⬜ element-level base rules; they land with `baseof.html`, because they would restyle article-time the moment they ship |
+| Header chrome | ✅ `at-header`, `at-city`, `at-clock`, `at-stars`, `at-birds`, `at-balloon`, `at-wordmark` — derived from `hero.scss`, not from the skill |
+| Footer chrome | ⬜ `at-footer-sea` — moves with the footer, same rule: copy from `footer.scss` |
+| `body`, `a`, `:focus-visible` | ⬜ element-level base rules. They did **not** come with `baseof.html`: in the `base` layer they outrank Bulma, so they would restyle every unmigrated template at once. They land when Preflight does |
 
 Two deliberate divergences from the skill, both commented at the rule:
 
@@ -64,7 +67,7 @@ redesign, not top to bottom.
 | `_partials/_base/head.html` | ✅ garden — loads both stylesheets |
 | `_partials/_base/navigation.html` | ✅ garden — plain scaffold, design still open |
 | `_partials/card.html` | ⬜ article-time — 552 lines of SCSS, the biggest win. **The grid wrapper moves with it**, see below |
-| `_partials/_base/hero.html` | ⬜ article-time — **next up. Copy from Bulma, not from the skill**, see below |
+| `_partials/_base/hero.html` | ✅ garden — sky, harbour, clock, wordmark, birds, seasonal overlays. Copied from Bulma, see below |
 | `_partials/_base/footer.html` | ⬜ article-time |
 | `_partials/_base/cookie-banner.html` | ⬜ article-time |
 | `_partials/_base/maintenance.html` | ⬜ article-time — becomes the webcard |
@@ -94,31 +97,48 @@ gets you well-designed cards in a broken grid.
 
 Card, wrapper and cell are therefore one unit of work, not three.
 
-### The header: copy from Bulma, not from the design system
+### The header came from Bulma, not from the design system — done
 
-The skill has a header — `at-sky`, `at-city`, `at-clock`, `at-bird`,
-`at-balloon`, `at-wordmark`, `at-footer-sea`. **Do not port it.** The design tool
-could not carry the SVG work across, and what came back is a simplification that
-looks finished. Held against `themes/article-time/assets/scss/base/hero.scss`
-(424 lines) it is missing:
+**Migrated August 2026.** The rule it was migrated under still applies to
+anything left over: the skill's header (`at-sky`, `at-city`, `at-clock`,
+`at-bird`, `at-balloon`, `at-wordmark`, `at-footer-sea`) is a simplification
+that looks finished. The design tool could not carry the SVG work. Held against
+`scss/base/hero.scss` it was missing the stars entirely, the second bird, the
+641–840px breakpoint and every seasonal overlay. **The source was `hero.html` +
+`hero.scss` + `header.js`, put on tokens on the way.** The skill served as a
+value table.
 
-- **the stars entirely** — `#sky-stars-1/2/3`, three sizes, each a Sass
-  `multiple-box-shadow()` call generating 100 / 80 / 30 randomly placed shadows.
-  There is no build step in the skill, so they simply are not there;
-- **the second bird**, which has its own duration and its own negative delay so
-  the two never fly in lockstep;
-- **the 641–840px breakpoint**, where the wordmark, the city and the balloon all
-  resize;
-- **the seasonal overlays** — fireworks, the santa hat, the ghost with its
-  `filter: url(#disfilter)`.
+The pieces that needed an answer rather than a translation:
 
-Derive the header from `hero.html` + `hero.scss` + `header.js` and put it on
-tokens on the way. The skill is a value table for that job, nothing more.
+- **The stars.** Three Sass `multiple-box-shadow()` calls scattered 100 / 80 /
+  30 random shadows across 2000×270px. There is no Sass here and no random in a
+  Hugo template — by design, since a star field that moves on every build is a
+  diff nobody asked for. The field is generated once into
+  `static/images/header/stars.svg`, 1.6 KB gzipped, and now *repeats*: past
+  2000px the old sky was empty.
+- **The sky state.** `data-sky` on the header, one attribute with four values,
+  replacing four classes that were added and never removed.
+- **The wordmark's vertical offset.** Reproduced from measurements — 19px at
+  desktop, 7px at tablet, 0 on a phone. Upstream those fell out of
+  `top: calc(50% - 20px)` meeting three different Bulma paddings; there is no
+  rule behind them. Kept anyway, because at 19px the mark sits on the skyline
+  instead of in the middle of the clock face.
 
-Known costs before starting: `header.js` has 16 jQuery calls and gets rewritten
-vanilla (`suncalc.js` is already vanilla); the stars need an answer that is not
-a Sass loop; and the overlays depend on inline SVG filters, so their markup
-moves with them.
+Three defects were fixed rather than carried over, all noted at the code:
+
+1. `setInterval(dayNightSky(), …)` **called** the function and passed its
+   `undefined` return value, so the sky was decided once per page load and a tab
+   left open through sunset kept its afternoon.
+2. The shimmer used `-webkit-gradient()` with two invalid fallbacks, so it has
+   been **invisible in Firefox since 2020**.
+3. The ghost set `animation-delay` and then included a shorthand that reset it.
+
+**Still open, deliberately:** the sunrise/sunset coordinates are
+`53.551086, -2.592`. The latitude is Hamburg's — so is the skyline in
+`city.svg` — but the longitude is open water west of Liverpool, 12.6° off. Every
+dusk therefore arrives about fifty minutes late. Not changed here, because it
+alters what the site looks like at a given hour, which is a decision rather than
+a port. Hamburg is `9.993682`, one edit in `themes/garden/assets/js/header.js`.
 
 ## JavaScript
 
@@ -128,7 +148,7 @@ Rule: new code is vanilla, no exceptions. Port a script when its component moves
 |---|---|---|
 | `search.js` | — | ✅ garden, vanilla — fixed a duplicate-listener bug and an outside-click bug on the way |
 | `main.js` | — | ✅ garden, vanilla — see below |
-| `header.js` | 16 | ⬜ tied to the hero |
+| `header.js` | — | ✅ garden, vanilla — three defects fixed on the way, see the header note |
 | `gdpr.js` | 3 | ⬜ smallest, easiest next port |
 
 `main.js` was listed at 32 jQuery calls and that number was misleading: about 110

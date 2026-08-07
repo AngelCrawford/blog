@@ -1254,3 +1254,271 @@ a.at-hashtag, a.at-tag { text-decoration: none; }
 
 /* External links get a small gold arrow after them. */
 .at-external::after { content: "\ecaf"; font-family: var(--font-icon); font-size: 80%; color: color-mix(in srgb, var(--color-accent) 50%, transparent); }
+
+/* ===========================================================================
+ * ═══════════════════════════════════════════════════════════════════════════
+ * HEADER — the sky, the harbour, the clock, the wordmark.
+ *
+ * DERIVED FROM BULMA, NOT FROM THE DESIGN SYSTEM. The design tool could not
+ * carry the SVG work across; what it produced is missing the stars entirely,
+ * the second bird, the middle breakpoint and every seasonal overlay. The source
+ * here is themes/article-time/assets/scss/base/hero.scss, put on tokens on the
+ * way over. See docs/migration.md.
+ *
+ * The sky colours are NOT tokens and should not become any. They are a sky —
+ * four times of day, sampled from a photograph's worth of blue. Nothing else on
+ * the site may use them, which is exactly why they do not belong in the palette.
+ * The gold in the wordmark IS tokenised: `$gold`, `$gold-light` and `$gold-dark`
+ * upstream are `--color-accent`, `--color-accent-hover` and
+ * `--color-accent-muted` to the digit.
+ * ═══════════════════════════════════════════════════════════════════════════
+ * =========================================================================== */
+
+/* The band. 300px, dropping to 200 on a phone.
+ *
+ * The time of day is an ATTRIBUTE, not a class. Upstream header.js added
+ * `is-night`/`is-dawn`/`is-day`/`is-dusk` and never removed them, which is
+ * invisible only because the refresh it scheduled never fired (see header.js).
+ * One attribute cannot hold two values, so the bug cannot come back. */
+.at-header {
+  position: relative;
+  height: 300px;
+  background: radial-gradient(ellipse at bottom, #0c1a37 0%, #2c449d 50%, #ef8d5c 100%);
+}
+.at-header[data-sky="night"] { background: radial-gradient(circle, #000 0%, #010010 35%, #0c1a37 100%); }
+.at-header[data-sky="dawn"]  { background: radial-gradient(ellipse at bottom, #0c1a37 0%, #2c449d 50%, #ce98af 100%); }
+.at-header[data-sky="day"]   { background: radial-gradient(circle, #32bafa 0%, #b8e7fd 35%, #d1e8e2 100%); }
+.at-header[data-sky="dusk"]  { background: radial-gradient(ellipse at bottom, #0c1a37 0%, #2c449d 50%, #ef8d5c 100%); }
+
+/* The harbour silhouette. Repeats horizontally so it never runs out, pinned to
+ * the bottom, and sepia so it belongs to the gold rather than fighting the sky. */
+.at-city {
+  position: absolute; inset: 0; z-index: 2;
+  background: url("/images/header/city.svg") repeat-x center bottom / auto 100%;
+  filter: sepia(0.4);
+}
+
+/* Everything that moves lives in one clipped box, so a bird leaving the frame
+ * does not widen the document. */
+.at-hero-fx { position: absolute; inset: 0; overflow: hidden; }
+
+/* The clock face rises into place once on load and stays. `both` keeps the end
+ * state; without it the face snaps back to 200px the moment the run finishes. */
+.at-clock {
+  position: absolute; inset: 0; z-index: 1; opacity: 0.8;
+  background: url("/images/header/clock.webp") no-repeat top center;
+  background-size: contain;
+  animation: at-clock-rise 2s ease both;
+  will-change: background-position;
+}
+@keyframes at-clock-rise {
+  from { background-position: 50% 200px; }
+  to { background-position: 50% 20px; }
+}
+
+/* Stars, at night and at dusk. Upstream these were three stacked elements whose
+ * dots came from a Sass function scattering 100, 80 and 30 random box-shadows
+ * across 2000×270 px. There is no Sass here and no random in a Hugo template —
+ * deliberately, since a star field that moves on every build is a diff nobody
+ * asked for. The field is generated once into images/header/stars.svg, which is
+ * also why it can now REPEAT: past 2000px the old sky was simply empty. */
+.at-stars {
+  position: absolute; inset: 0; opacity: 0.2;
+  background: url("/images/header/stars.svg") repeat top left;
+}
+
+/* Two birds, and the second one matters: it has its own cycle duration and its
+ * own negative delay, so the pair never flaps or crosses in lockstep. A single
+ * bird reads as a loop; two read as birds. */
+.at-birds .at-bird {
+  width: 88px; height: 125px;
+  background-image: url("/images/header/birds.svg");
+  background-size: auto 100%;
+  animation: at-fly-cycle 1s steps(10) infinite;
+  will-change: background-position;
+}
+.at-bird-1 { margin-top: 150px; animation-duration: 1s; animation-delay: -0.5s; }
+.at-bird-2 { animation-duration: 0.8s; animation-delay: -0.75s; }
+.at-bird-path {
+  position: absolute; top: 15px; left: -10%;
+  transform: scale(0) translateX(-10vw);
+  animation: at-fly-across linear infinite;
+  will-change: transform;
+}
+.at-bird-path-1 { animation-duration: 15s; }
+.at-bird-path-2 { animation-duration: 17s; animation-delay: 4s; }
+@keyframes at-fly-cycle { to { background-position: -900px 0; } }
+@keyframes at-fly-across {
+  0%   { transform: scale(0.25) translateX(-10vw); }
+  10%  { transform: translateY(2vh) translateX(10vw) scale(0.3); }
+  20%  { transform: translateY(0) translateX(30vw) scale(0.35); }
+  30%  { transform: translateY(4vh) translateX(50vw) scale(0.4); }
+  40%  { transform: translateY(2vh) translateX(70vw) scale(0.4); }
+  50%  { transform: translateY(0) translateX(90vw) scale(0.4); }
+  60%  { transform: translateY(0) translateX(110vw) scale(0.35); }
+  100% { transform: translateY(0) translateX(110vw) scale(0.35); }
+}
+
+/* The balloon, by day and at dusk. */
+.at-balloon {
+  position: absolute; top: 130px; left: calc(50% + 360px);
+  width: 40px; height: 40px;
+  background: url("/images/header/hotairballoon.svg") no-repeat;
+  transform: rotate(10deg);
+}
+
+/* Fireworks — a canvas firework.js draws on, but only around New Year. The id
+ * is the script's only hook and stays spelled exactly this way. */
+#firework { position: absolute; top: 0; left: 0; width: 100%; height: 80%; }
+
+/* ---- Seasonal overlays ---------------------------------------------------
+ * December and October. Both are inline SVG in the markup, because both need
+ * something a background image cannot give: the hat is two pieces that move
+ * against each other, and the ghost is displaced by an SVG turbulence filter. */
+.at-santa-front, .at-santa-back {
+  position: absolute; z-index: 5;
+  width: 4.5rem; height: 3.9rem;
+  top: calc(50% - 15px); left: calc(50% - 233px);
+  transform: rotate(-15deg);
+}
+.at-santa-back {
+  transform-origin: 1.5rem 2rem;
+  animation: at-santa-wiggle 4s ease-in-out;
+}
+@keyframes at-santa-wiggle {
+  33% { transform: rotate(-20deg); }
+  66% { transform: rotate(10deg); }
+}
+.at-ghost { position: absolute; top: calc(50% - 60px); left: calc(50% - 430px); width: 400px; z-index: 4; }
+/* Upstream this rule set `animation-iteration-count` and `animation-delay` and
+ * then included a shorthand that reset both — so the ghost appeared instantly
+ * instead of after 2.5 seconds. The intent is restored here. */
+.at-ghost svg {
+  opacity: 0;
+  filter: url("#disfilter") blur(3px);
+  animation: at-ghost-fade 2.5s ease 2.5s 1 forwards;
+}
+@keyframes at-ghost-fade {
+  0% { opacity: 0; }
+  50% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* ---- The wordmark --------------------------------------------------------
+ * THERE IS NO LOGO FILE, by decision. The brand mark is the site title set in
+ * Montserrat Alternates with the gold gradient over it, and this is the one
+ * place a fixed pixel size is correct: it is a mark, not text in a scale.
+ *
+ * IT DOES NOT SIT DEAD CENTRE, and the offsets below are measured off the old
+ * header rather than derived. Upstream said `top: calc(50% - 20px)` on a box
+ * whose padding differed per breakpoint, which produced 19px at desktop, 7px at
+ * tablet and 1px on a phone — no rule, three accidents.
+ *
+ * They are reproduced anyway, because the position is right: at 19px the
+ * wordmark sits ON the skyline instead of in the middle of the clock face, and
+ * the header is the one part of the old design that was asked to come over
+ * unchanged. Centring it is deleting one line here, if it ever looks wrong. */
+.at-hero-body {
+  position: relative; z-index: 3;
+  display: grid; place-items: center; height: 100%;
+  padding-top: 38px; /* half of it becomes the downward shift */
+}
+.at-wordmark-link { display: inline-block; }
+
+.at-wordmark {
+  /* The shimmer needs horizontal padding so its 50px-wide highlight can start
+   * off the glyphs. The drop-line pseudo-element has to carry the SAME padding
+   * or the two texts stop lining up. One variable, both users — upstream they
+   * were typed separately and disagreed at the base size. */
+  --at-wordmark-pad: 130px;
+
+  position: relative; display: inline-block;
+  font-family: var(--font-heading); font-weight: var(--weight-strong);
+  font-size: 70px; line-height: 1.1;
+  background: linear-gradient(
+    to bottom,
+    var(--color-accent) 32%,
+    var(--color-accent-hover) 50%,
+    var(--color-accent-muted) 80%
+  );
+  background-clip: text; -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+/* The glow behind it — a blurred slab of near-white gold, not a text-shadow.
+ * hsl(29 100% 84%) is `color.scale($gold-light, $lightness: 20%)` resolved. */
+.at-wordmark::before {
+  content: ""; position: absolute; top: 0; bottom: 0; left: calc(50% - 250px);
+  width: 500px; z-index: -1; opacity: 0.3;
+  background-color: hsl(29 100% 84%);
+  filter: blur(30px);
+}
+/* The drop line: the same text again, behind, carrying the shadow the gradient
+ * fill cannot (a background-clipped text has no shadow of its own). */
+.at-wordmark::after {
+  content: attr(data-heading);
+  position: absolute; top: 0; left: 0; z-index: -1;
+  width: 100%; padding: 0 var(--at-wordmark-pad); box-sizing: border-box;
+  text-shadow:
+    -1px 0 1px hsl(29 100% 82%),
+    0 1px 1px hsl(29 100% 82%),
+    5px 5px 10px rgb(0 0 0 / 0.7),
+    -2px -2px 5px rgb(255 255 255 / 0.3);
+}
+/* MODERN GRADIENT SYNTAX, and that is a fix rather than a translation. Upstream
+ * wrote `-webkit-gradient(linear, …)`, then `-moz-gradient(…)`, then a bare
+ * `gradient(…)` — the last two are not syntax any engine has ever had, so they
+ * were dropped and Firefox fell through to no shimmer at all. It has been
+ * invisible in Firefox since 2020. */
+.at-wordmark-shimmer {
+  padding: 0 var(--at-wordmark-pad);
+  background: linear-gradient(to right, var(--color-accent-hover), #fff 50%, var(--color-accent-hover));
+  background-size: 50px 100%;
+  background-repeat: no-repeat;
+  background-clip: text; -webkit-background-clip: text;
+}
+.at-wordmark-shimmer.is-shimmering { animation: at-shimmer 0.8s ease both; }
+@keyframes at-shimmer {
+  from { background-position: top left; }
+  to { background-position: top right; }
+}
+
+/* ---- Breakpoints ---------------------------------------------------------
+ * Three sizes, as upstream. The middle one exists because at 800px the balloon
+ * would otherwise sit outside the viewport and the wordmark would touch both
+ * edges. */
+@media (min-width: 641px) and (max-width: 840px) {
+  .at-city { background-size: auto 80%; }
+  .at-wordmark { font-size: 50px; --at-wordmark-pad: 90px; }
+  .at-wordmark-shimmer { background-size: 80px 100%; }
+  .at-balloon { top: 130px; left: calc(50% + 245px); width: 30px; height: 30px; }
+  .at-birds .at-bird { transform: scale(0.7); }
+  .at-santa-front, .at-santa-back { height: 3rem; top: calc(50% - 20px); left: calc(50% - 170px); }
+  .at-hero-body { padding-top: 14px; }
+}
+@media (max-width: 640px) {
+  .at-header { height: 200px; }
+  .at-city { background-size: auto 80%; }
+  .at-wordmark { font-size: 37px; --at-wordmark-pad: 50px; }
+  .at-wordmark-shimmer { background-size: 40px 100%; }
+  .at-balloon { top: 70px; left: calc(50% + 140px); width: 20px; height: 20px; }
+  .at-birds .at-bird { transform: scale(0.7); }
+  .at-santa-front, .at-santa-back { height: 2.4rem; top: calc(50% - 23px); left: calc(50% - 127px); }
+  /* On a phone the old header was centred to within a pixel. Leave it centred. */
+  .at-hero-body { padding-top: 0; }
+}
+
+/* The header is where every animation on this site lives, so this is where
+ * `prefers-reduced-motion` earns its keep. The clock lands in place, the birds
+ * stop, the shimmer does not run. Nothing is hidden — motion is removed, not
+ * content. */
+@media (prefers-reduced-motion: reduce) {
+  .at-clock { animation: none; background-position: 50% 20px; }
+  .at-birds .at-bird, .at-bird-path { animation: none; }
+  .at-bird-path { transform: translateX(40vw) scale(0.4); }
+  .at-santa-back { animation: none; }
+  .at-ghost svg { animation: none; opacity: 0.6; }
+  .at-wordmark-shimmer.is-shimmering { animation: none; }
+}
+
+/* The hat's own fill. It is a red hat; there is no token for red hats. */
+.santa-hat-piece { fill: firebrick; }

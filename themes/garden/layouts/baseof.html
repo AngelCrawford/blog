@@ -33,7 +33,10 @@
     {{- /* Validate growth_stage frontmatter (Layer 3 / authoritative build gate). */ -}}
     {{- partial "_base/validate-growth-stage" . -}}
     <body class="type-is-{{ .Type }} {{if .Layout}}layout-is-{{ .Layout }}{{end}} kind-is-{{ .Kind }}">
-        <header class="hero is-medium has-sky">
+        {{- /* No Bulma class names left here: `hero is-medium has-sky` are gone
+               with the partial they styled. `data-sky` is written by header.js
+               and carries one of night / dawn / day / dusk. */ -}}
+        <header class="at-header" data-garden>
             {{- partial "_base/hero" . -}}
         </header>
 
