@@ -41,18 +41,11 @@ const SKILL_TOKENS = resolve(repoRoot, ".claude/skills/design/tokens");
 
 /* Values the design system decided and main.css has not taken over yet.
  * Both sides are recorded so that a change to EITHER one breaks the test —
- * an exception that no longer describes reality is not an exception. */
-const PENDING_ADOPTION = {
-  "--color-accent-shadow": {
-    skill: "hsl(25 50% 24%)",
-    live: "hsl(35 48% 17%)",
-    note:
-      "Duotone-icon shadow, warmer and lighter after the August 2026 session. " +
-      "Adopt together with the offsets: the skill also moves .gd-icon-shadow " +
-      "from drop-shadow(0.03em 0.055em) to (0.06em 0.1em) and introduces " +
-      "--gd-duo-offset-x/-y on .gd-icon-duo. Colour alone would land half the change.",
-  },
-};
+ * an exception that no longer describes reality is not an exception.
+ *
+ * EMPTY, and that is the goal state. --color-accent-shadow was the last entry;
+ * it was adopted together with the duotone offsets it depends on. */
+const PENDING_ADOPTION = {};
 
 /* Tokens main.css legitimately has alone. `initial` is not a value — it deletes
  * a step from Tailwind's default scale, which the skill has no equivalent for. */
@@ -61,42 +54,13 @@ const LIVE_ONLY = {
 };
 
 /* New vocabulary the design system introduced that production does not have
- * yet. This list IS the adoption backlog; it should only ever get shorter. */
-const NOT_YET_ADOPTED = [
-  "--border-hairline",
-  "--border-hairline-quiet",
-  "--duration-base",
-  "--duration-fast",
-  "--duration-slow",
-  "--ease-out",
-  "--focus-ring",
-  "--font-icon",
-  "--measure",
-  "--page-bg",
-  "--page-max",
-  "--radius-pill",
-  "--radius-tile",
-  "--rule-gold",
-  "--shadow-card",
-  "--shadow-domed",
-  "--shadow-pressed",
-  "--spacing-1",
-  "--spacing-2",
-  "--spacing-3",
-  "--spacing-4",
-  "--surface-card",
-  "--surface-tile",
-  "--text-body",
-  "--text-heading",
-  "--text-link",
-  "--text-link-hover",
-  "--text-meta",
-  "--tracking-heading",
-  "--tracking-label",
-  "--weight-body",
-  "--weight-bold",
-  "--weight-strong",
-];
+ * yet. This list IS the adoption backlog; it should only ever get shorter.
+ *
+ * EMPTY. All 32 landed in one pass — the twelve semantic aliases in the :root
+ * block described below, the rest in `@theme static`. The list stays, because
+ * an empty backlog is a statement and the test that pins it is what stops the
+ * next /design-sync from quietly refilling it. */
+const NOT_YET_ADOPTED = [];
 
 // ── Parsing ─────────────────────────────────────────────────────────────────
 
@@ -115,18 +79,39 @@ function declarations(css) {
   return out;
 }
 
-/* main.css keeps its tokens in `@theme static { … }`. Slice by brace counting
- * rather than regex: the block contains nested rules and long comments. */
-function themeBlock(css) {
-  const start = css.indexOf("@theme static");
-  assert.notEqual(start, -1, "main.css no longer contains an `@theme static` block");
+/* Slice a block by brace counting rather than regex: main.css contains nested
+ * rules and long comments, and a comment holding a brace would defeat a regex. */
+function block(css, opener, what) {
+  const start = css.indexOf(opener);
+  assert.notEqual(start, -1, `main.css no longer contains ${what}`);
   const open = css.indexOf("{", start);
   let depth = 0;
   for (let i = open; i < css.length; i++) {
     if (css[i] === "{") depth++;
     else if (css[i] === "}" && --depth === 0) return css.slice(open + 1, i);
   }
-  throw new Error("Unbalanced braces in main.css `@theme static` block");
+  throw new Error(`Unbalanced braces in main.css ${what}`);
+}
+
+/* THE LIVE SIDE IS TWO BLOCKS, NOT ONE, AND THE SPLIT IS DELIBERATE.
+ *
+ *   @theme static { … }   the scale values — Tailwind reads these and mints
+ *                         utilities from the ones whose prefix is a namespace
+ *   :root { … }           the twelve semantic aliases
+ *
+ * The aliases cannot live in `@theme`: `--text-*` is Tailwind's FONT-SIZE
+ * namespace, so `--text-body: var(--color-ink)` would mint a `text-body`
+ * utility whose value is a colour. See the comment above the block in main.css.
+ *
+ * PARSE THESE TWO AND NOTHING ELSE. Reading the whole file would pull in
+ * `--gd-duo-offset-x/-y`, which are component-local knobs declared inside
+ * `.gd-icon-duo` — the design system has no equivalent, so check 2 below would
+ * report main.css as "ahead" of it on every run. */
+function liveTokens(css) {
+  return {
+    ...declarations(block(css, "@theme static", "an `@theme static` block")),
+    ...declarations(block(css, ":root", "the `:root` semantic-alias block")),
+  };
 }
 
 assert.ok(
@@ -137,7 +122,7 @@ assert.ok(
     ".claude/skills/design/, or delete this test if that is not the plan."
 );
 
-const live = declarations(themeBlock(readFileSync(LIVE_CSS, "utf8")));
+const live = liveTokens(readFileSync(LIVE_CSS, "utf8"));
 const skill = {};
 for (const file of readdirSync(SKILL_TOKENS).sort()) {
   if (file.endsWith(".css")) {

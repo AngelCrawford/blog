@@ -128,18 +128,22 @@
   --color-accent: hsl(35 45% 50%); /* links, focus, active */
   --color-accent-hover: hsl(29 100% 80%); /* hover */
   --color-accent-muted: hsl(35 45% 26%); /* borders, dividers */
-  /* The shadow beneath a duotone glyph: muted gold, the value from the 2020
-   * sketch. It is LIGHTER than the surface, which sounds wrong for a shadow
-   * and is not. A genuinely darker shade against a near-black background reads
-   * as a hole punched in the page — it was tried, and it hurt to look at. What
-   * carries the depth here is the step down from the bright line, not darkness
-   * against the page.
+  /* The shadow beneath a duotone glyph. It is LIGHTER than the surface, which
+   * sounds wrong for a shadow and is not: a genuinely darker shade against a
+   * near-black page reads as a hole punched in it. What carries the depth is
+   * the step down from the bright line, not darkness against the page.
    *
-   * Deepened from the sketch's 26% to 17%: still above the surface's 11%, so
-   * it never reads as a hole, but far enough below the bright line that the
-   * two layers separate. Darkened rather than made transparent — a translucent
-   * shadow washes out instead of receding. */
-  --color-accent-shadow: hsl(35 48% 17%);
+   * BRONZE, not dark gold. It sat at hsl(35 48% 17%) — the accent's own hue,
+   * merely darker — and at that value the two layers separated by brightness
+   * alone, which on a dense glyph at 20px is no separation at all. Rotating it
+   * to hue 25 makes the back layer a different METAL rather than a dimmer
+   * version of the front one, and hue survives at small sizes where a few points
+   * of lightness do not. That in turn allows the value back up to 24%: clearly
+   * above the surface's 11%, so it still never reads as a hole.
+   *
+   * The offsets on .gd-icon-duo moved with it — see the note there. Colour
+   * alone would have landed half the change. */
+  --color-accent-shadow: hsl(25 50% 24%);
 
   /* --- State ------------------------------------------------------------
    * For messages, form validation and build/deploy feedback. Lighter than the
@@ -169,6 +173,11 @@
    * article-time keeps resolving while both themes are composed. The alias
    * drops out of this line when article-time does. */
   --font-body: "Montserrat", "Montserrat-Regular", ui-sans-serif, system-ui, sans-serif;
+  /* Remixicon as a WEBFONT, for the four glyphs the design calls by codepoint:
+   * the double-quote pair on pull quotes, notes and the footer slogan, the
+   * external-link arrow, and the image marker in figcaptions. Everything else
+   * is the SVG sprite. */
+  --font-icon: "remixicon";
 
   /* 12px was too small to read comfortably and is deliberately removed —
    * `initial` deletes Tailwind's default, so `text-xs` no longer exists and any
@@ -207,19 +216,51 @@
   --text-4xl: 3rem; /* 48px  hero */
   --text-4xl--line-height: 1.1;
 
+  /* Weight and tracking are decisions too, and they were being retyped: 600
+   * appeared on every heading rule and every button, 0.03em on every heading.
+   * `--weight-*` is deliberately NOT Tailwind's `--font-weight-*` namespace —
+   * these are for component CSS, not for minting a `font-strong` utility.
+   * `--tracking-*` IS the namespace, so `tracking-heading` and `tracking-label`
+   * exist as utilities, which is what the call sites want. */
+  --weight-body: 400;
+  --weight-strong: 600; /* headings, button labels */
+  --weight-bold: 700;
+  --tracking-heading: 0.03em;
+  --tracking-label: 0.08em; /* the 11px uppercase tile labels */
+
   /* --- Space ------------------------------------------------------------
    * Airy: 4px base unit, 24px between related blocks, 80px between sections.
    * Use the named steps for layout rhythm; the numeric scale (p-2, gap-6, …)
    * stays available for fine adjustment inside a component. */
   --spacing: 0.25rem; /* 4px  base unit for the numeric scale */
+  /* Named steps of the numeric scale. Redundant with `--spacing` above, which
+   * already generates p-1 … p-4 at exactly these values — they are spelled out
+   * because component CSS refers to them by name (`var(--spacing-4)`) and a
+   * variable that only exists implicitly cannot be referred to. */
+  --spacing-1: 0.25rem; /* 4px */
+  --spacing-2: 0.5rem; /* 8px  inside a row */
+  --spacing-3: 0.75rem; /* 12px icon to text */
+  --spacing-4: 1rem; /* 16px inside a component */
   --spacing-gutter: 1.5rem; /* 24px between related blocks */
   --spacing-section: 5rem; /* 80px between page sections */
+
+  /* --- Measure ----------------------------------------------------------
+   * Two widths the page rhythm depends on. Text over the full window is tiring
+   * after two lines; the content column caps well before that. */
+  --measure: 70ch; /* comfortable prose width */
+  --page-max: 64rem; /* 1024px content column */
 
   /* --- Radius -----------------------------------------------------------
    * Lightly rounded. Three steps, no more — a fourth only invites debate. */
   --radius-sm: 0.25rem; /* 4px   buttons, inputs, badges */
   --radius-md: 0.5rem; /* 8px   cards, panels */
   --radius-lg: 0.75rem; /* 12px  dialogs, overlays */
+  /* Two shapes rather than steps on the scale, which is why they are named for
+   * what they are instead of getting a fourth and fifth size. `tile` is the old
+   * theme's $tile-radius, kept so the sidebar and info-tile chrome does not
+   * shift by half a pixel during the migration; `pill` is fully round. */
+  --radius-tile: 0.45rem; /* legacy tile chrome — sidebars, info tiles */
+  --radius-pill: 999px; /* hashtags, heart button */
 
   /* --- Depth ------------------------------------------------------------
    * Restrained. On a very dark surface a shadow reads as a slightly darker
@@ -228,6 +269,70 @@
   --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.3);
   --shadow-md: 0 4px 12px rgb(0 0 0 / 0.35);
   --shadow-lg: 0 8px 28px rgb(0 0 0 / 0.45);
+
+  /* PAIRED shadows — dark below-right plus a faint light above-left. The pair
+   * is what makes a surface read as formed out of the page rather than stuck
+   * on top of it. This is the last of neumorphism: it was the 2020 aspiration,
+   * dropped as a page-wide idea in 2026 because it needs a light-to-mid grey
+   * ground, and kept in exactly these two places because here it works. */
+  --shadow-domed: 4px 4px 8px rgb(0 0 0 / 0.55), -3px -3px 6px hsl(40 12% 85% / 0.09);
+  --shadow-card: 5px 5px 5px rgb(0 0 0 / 0.5), -5px -5px 5px hsl(190 20% 90% / 0.05);
+  /* The same two shadows inverted to inset, and deliberately stronger: an inset
+   * shadow has to darken a surface that is already near-black, so the 55% that
+   * reads fine on the outside is invisible on the inside. The light edge moves
+   * to the bottom-right, where a pressed dish catches it. */
+  --shadow-pressed: inset 5px 5px 9px rgb(0 0 0 / 0.75), inset -4px -4px 8px hsl(40 12% 85% / 0.12);
+
+  /* --- Motion -----------------------------------------------------------
+   * Short and unshowy. Colour and shadow crossfade; nothing bounces, nothing
+   * scales on the page itself.
+   *
+   * fast — checkbox fill, tag hover
+   * base — the default: colour, border, shadow, transform
+   * slow — icon colour, tooltip fade, sepia release on cover images
+   *
+   * `--ease-out` DELIBERATELY OVERRIDES Tailwind's built-in cubic-bezier for
+   * the `ease-out` utility. The design system says the keyword, everywhere; two
+   * different curves both called ease-out is the kind of split nobody notices
+   * and nobody can explain later. */
+  --ease-out: ease-out;
+  --duration-fast: 0.15s;
+  --duration-base: 0.2s;
+  --duration-slow: 0.3s;
+}
+
+/* ===========================================================================
+ * SEMANTIC ALIASES — the same values, named for the place they are used.
+ *
+ * NOT IN `@theme static`, AND THAT IS THE POINT. `--text-*` is Tailwind's
+ * FONT-SIZE namespace: declaring `--text-body: var(--color-ink)` in the theme
+ * block mints a `text-body` utility whose value is a colour, and `text-heading`
+ * and `text-meta` with it. An element carrying one would silently get a
+ * nonsense font-size and no warning — exactly the failure mode CLAUDE.md warns
+ * about for class names assembled from variables.
+ *
+ * The rest of the aliases follow them here rather than being split by whether
+ * they happen to collide, because one rule ("aliases live in :root, scale
+ * values live in @theme") is easier to keep than a per-token judgement.
+ *
+ * These are for component CSS. Utilities use the role tokens above.
+ * =========================================================================== */
+:root {
+  --page-bg: var(--color-surface-sunken);
+  --text-body: var(--color-ink);
+  --text-heading: var(--color-ink-strong);
+  --text-meta: var(--color-ink-muted);
+  --text-link: var(--color-accent);
+  --text-link-hover: var(--color-accent-hover);
+  --surface-card: var(--color-surface-raised);
+  --surface-tile: hsl(190 11% 10%); /* card and sidebar chrome — the old $tile-bg */
+  /* `color-mix()` rather than Tailwind's `--alpha()`, verbatim from the design
+   * system. Identical result, and it keeps the two files diffable — the whole
+   * reason design-tokens.test.mjs can compare them character for character. */
+  --border-hairline: color-mix(in srgb, var(--color-accent-muted) 40%, transparent);
+  --border-hairline-quiet: color-mix(in srgb, var(--color-accent-muted) 25%, transparent);
+  --rule-gold: color-mix(in srgb, var(--color-accent) 60%, transparent);
+  --focus-ring: var(--color-accent);
 }
 
 /* ===========================================================================
@@ -560,8 +665,12 @@
  * beside it as RemixIcon_Collection_*.remixicon.
  * =========================================================================== */
 [data-garden] .gd-icon-duo {
-  /* One place to tune the depth. 0.06em read as too heavy on dense glyphs;
-   * 0.04 keeps the edge without the shape looking doubled.
+  /* One place to tune the depth. DOUBLED from 0.03/0.055em, and only because
+   * the back layer changed underneath them: those values were tuned against a
+   * shadow that differed from the front glyph in brightness alone, where any
+   * larger offset read as a doubled shape. Now that the back layer is bronze
+   * (hue 25, see --color-accent-shadow) the two layers are told apart by hue,
+   * and the offset is free to be large enough to actually see at 20px.
    *
    * No single value suits every glyph, and that is worth stating plainly: a
    * dense shape like heart wants less, a hairline like asterisk would want
@@ -569,14 +678,9 @@
    *
    * The vertical shift is nearly twice the horizontal one. An equal offset
    * reads as a diagonal smear; weighting it downwards reads as the glyph
-   * sitting above its own shadow, which is what a shadow does.
-   *
-   * Because the offset is in em it grows with the icon, and at display sizes
-   * a proportional shift starts to look like a mistake rather than depth —
-   * hence the small values. Glyphs without a fill partner do not use this
-   * component at all; they render as a single clean line. */
-  --gd-duo-offset-x: 0.03em;
-  --gd-duo-offset-y: 0.055em;
+   * sitting above its own shadow, which is what a shadow does. */
+  --gd-duo-offset-x: 0.06em;
+  --gd-duo-offset-y: 0.1em;
 
   position: relative;
   display: inline-grid;
@@ -631,13 +735,18 @@
 
 /* Icons WITHOUT a fill partner get the same offset shadow via drop-shadow,
  * which follows the rendered alpha and therefore works on a hairline glyph
- * where a second copy underneath would not. Same offset, same colour, so the
- * catalogue reads as one language instead of two.
+ * where a second copy underneath would not. CSS cannot fill an outline.
  *
  * Not used for the pairs: a filled body behind the line gives a solid shape
- * that drop-shadow cannot, and applying both would double the shadow. */
+ * that drop-shadow cannot, and applying both would double the shadow.
+ *
+ * The offset MATCHES the duotone pair's. It was tried larger — a drop-shadow on
+ * a hairline is only ever as wide as the stroke, so there is a real argument for
+ * giving it more room to clear it — but at 0.09em and again at 0.075em the
+ * shadow detached and read as a second, offset glyph rather than as depth.
+ * Equal to the pairs is also the more honest answer: one language, not two. */
 [data-garden] .gd-icon-shadow {
-  filter: drop-shadow(0.03em 0.055em 0 var(--color-accent-shadow));
+  filter: drop-shadow(0.06em 0.1em 0 var(--color-accent-shadow));
 }
 
 /* ===========================================================================
