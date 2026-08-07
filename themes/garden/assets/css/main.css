@@ -98,6 +98,45 @@
   font-display: swap;
 }
 
+/* MONTSERRAT ALTERNATES — the heading face, and until now a silent debt.
+ * `--font-heading` has always named it, but the only @font-face for it lived in
+ * article-time's vars/_fonts.scss. Garden rendered its headings correctly by
+ * borrowing a registration from the theme it is replacing; deleting that theme
+ * would have taken the face with it and nobody would have connected the two.
+ *
+ * Two files, not one: unlike Montserrat this is not a variable font, so the
+ * Medium cut carries the 600 the headings actually use. Registering only
+ * Regular leaves the browser to synthesise bold, which on Alternates thickens
+ * the very glyphs that make it Alternates. */
+@font-face {
+  font-family: "Montserrat Alternates";
+  src: url("/fonts/Montserrat/MontserratAlternates-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Montserrat Alternates";
+  src: url("/fonts/Montserrat/MontserratAlternates-Medium.ttf") format("truetype");
+  font-weight: 500 700;
+  font-display: swap;
+}
+
+/* REMIXICON AS A WEBFONT — the same debt, and deliberately the smaller build.
+ * Icons are the SVG sprite; this exists only for the four glyphs the design
+ * calls by codepoint, where a pseudo-element needs a character rather than a
+ * `<use>`: the double-quote pair on pull quotes, notes and the footer slogan,
+ * the external-link arrow, and the image marker in figcaptions.
+ *
+ * woff2 alone. article-time also ships eot, ttf, svg and woff for browsers that
+ * have not existed for a decade; nothing garden targets needs them, and
+ * `font-display: block` is right here because a missing icon glyph renders as a
+ * blank box rather than as unstyled text. */
+@font-face {
+  font-family: "remixicon";
+  src: url("/fonts/remixicon/remixicon.woff2") format("woff2");
+  font-display: block;
+}
+
 /* ===========================================================================
  * DESIGN TOKENS — the single source of every design value.
  *
