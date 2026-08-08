@@ -179,6 +179,11 @@
             {{- end }}
 
             {{ partial "widgets/related-sidebar" . }}
+
+            {{- /* Likes and reposts: avatars only, no dates — see the facepile
+                   partial for the why. */ -}}
+            {{ partial "widgets/webmention-facepile" (dict "items" (where $mentions "type" "like") "heading" "Likes" "type" "like") }}
+            {{ partial "widgets/webmention-facepile" (dict "items" (where $mentions "type" "repost") "heading" "Reposts" "type" "repost") }}
         </div>
     </div>
 
