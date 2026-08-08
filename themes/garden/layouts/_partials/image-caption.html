@@ -3,13 +3,12 @@
        (Windows: Eigenschaften → Details → Titel), so the caption travels
        WITH the photograph instead of living in front matter.
 
-       Every consumer used to read `$img.Meta.Exif` — an API that does not
-       exist; Hugo's is `.Exif`. The `with` swallowed the nil silently and no
-       cover caption ever rendered, an inheritance from article-time nobody
-       could see failing. The format guard matters too: `.Exif` ERRORS the
-       whole build on anything but JPEG/TIFF, it does not return nil. */ -}}
+       THE API HISTORY, because it bit twice: article-time read
+       `.Meta.Exif.Tags.ImageDescription` — and `.Meta.Exif` is a plain tags
+       MAP with no `.Tags` beneath it, so no caption ever rendered. The first
+       fix used `.Exif.Tags…`, which worked but is deprecated since v0.155
+       (the build warned on every run). This is the current form: `.Meta`,
+       nil-safe across formats, tags addressed directly on the map. */ -}}
 {{- $out := "" -}}
-{{- if in (slice "jpeg" "tiff") .MediaType.SubType -}}
-  {{- with .Exif }}{{ with .Tags.ImageDescription }}{{ $out = . }}{{ end }}{{ end -}}
-{{- end -}}
+{{- with .Meta }}{{ with .Exif }}{{ with .ImageDescription }}{{ $out = . }}{{ end }}{{ end }}{{ end -}}
 {{- return $out -}}

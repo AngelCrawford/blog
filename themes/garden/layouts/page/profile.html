@@ -23,53 +23,42 @@
 {{- end -}}
 
 <div class="mx-auto max-w-[96rem] px-gutter pt-gutter pb-section font-body text-base text-ink">
-    <article class="h-card mx-auto flex max-w-[48rem] flex-col items-center gap-4 rounded-md border border-accent-muted/40 bg-surface-raised p-gutter py-section text-center shadow-md">
-        {{- with $identity.photo }}
-        <img class="u-photo size-[160px] rounded-full border-2 border-accent-muted object-cover" src="{{ . | relURL }}" alt="{{ $identity.name }}" width="160" height="160">
-        {{- end }}
-
-        <h1 class="gd-h1 p-name" data-heading="{{ $identity.name }}">{{ $identity.name }}</h1>
-
-        {{- /* Brand colours inline, as in the footer — social brand colours are
-               one of the two sanctioned exceptions to gold-only. */ -}}
-        {{- /* THE ICONS MUST NOT DROWN between the gold name and the bold
-               taglines — Angel's old card gives them real presence. 1.9em with
-               generous air, and a breath of margin either side. */ -}}
-        <nav class="my-2 flex flex-wrap justify-center gap-6" aria-label="Soziale Profile">
+    {{- /* THE RAIL IS BACK — Angel measured variant A against the old card and
+           the row lost: icons top-to-bottom on the LEFT, content on the right,
+           which is what gives them presence without shouting. `at-socials`
+           brings the footer's fade: hovering one dims the siblings. On a
+           phone the rail folds into a centred row above the content. */ -}}
+    <article class="h-card mx-auto grid max-w-[52rem] grid-cols-1 gap-6 rounded-md border border-accent-muted/40 bg-surface-raised p-gutter py-section text-center shadow-md min-[640px]:grid-cols-[auto_1fr] min-[640px]:gap-10">
+        <nav class="at-socials flex flex-wrap justify-center gap-6 min-[640px]:flex-col min-[640px]:flex-nowrap min-[640px]:justify-between min-[640px]:self-stretch min-[640px]:py-2" aria-label="Soziale Profile">
             {{- range $identity.socials }}
-            <a class="flex size-[1.9em] items-center justify-center text-[1.9em] transition duration-200 ease-out hover:brightness-125" href="{{ .src }}" target="_blank" rel="noopener me" data-tooltip="{{ .name }}" aria-label="{{ .name }}"
+            <a class="flex size-[1.7em] items-center justify-center text-[1.7em] transition duration-200 ease-out" href="{{ .src }}" target="_blank" rel="noopener me" data-tooltip="{{ .name }}" aria-label="{{ .name }}"
                style="color: {{ .color }};{{ with .opacity }} opacity: {{ . }};{{ end }}">
-                <svg class="size-[1.9em] fill-current" aria-hidden="true"><use href="{{ $sprite }}?t={{ $v }}#{{ .icon }}"></use></svg>
+                <svg class="size-[1.7em] fill-current" aria-hidden="true"><use href="{{ $sprite }}?t={{ $v }}#{{ .icon }}"></use></svg>
             </a>
             {{- end }}
         </nav>
 
-        {{- /* Bullet list like the old card: a small gold square leads each
-               line, the block centres as a group but reads left-aligned. */ -}}
-        {{- with .Params.taglines }}
-        <ul class="mx-auto my-0 flex w-fit list-none flex-col gap-2 p-0 text-left">
-            {{- range . }}
-            <li class="flex items-baseline gap-2.5">
-                <span class="size-[0.4em] shrink-0 bg-accent" aria-hidden="true"></span>
-                <span><strong class="text-ink-strong">{{ .main }}</strong>
-                {{- with .sub }} <span class="text-ink-muted">{{ replace . "{age}" $age }}</span>{{ end }}</span>
-            </li>
+        <div class="flex min-w-0 flex-col items-center gap-4">
+            {{- with $identity.photo }}
+            <img class="u-photo size-[160px] rounded-full border-2 border-accent-muted object-cover" src="{{ . | relURL }}" alt="{{ $identity.name }}" width="160" height="160">
             {{- end }}
-        </ul>
-        {{- end }}
 
-        {{- /* ANGEL'S CONTENT MODEL: the taglines live in the Markdown body as a
-               list — bold main, <small> sub, {age} placeholder. The template
-               substitutes the age (markdown cannot) and dresses the bare list
-               as the card rows: gold square bullet, strong ink, muted sub.
-               Arbitrary descendant variants because Markdown carries no
-               classes. */ -}}
-        {{- with .Content }}
-        <div class="e-content mt-2 text-left [&_ul]:m-0 [&_ul]:flex [&_ul]:w-fit [&_ul]:list-none [&_ul]:flex-col [&_ul]:gap-2 [&_ul]:p-0 [&_li]:flex [&_li]:items-baseline [&_li]:gap-2.5 [&_li]:before:size-[0.4em] [&_li]:before:shrink-0 [&_li]:before:bg-accent [&_li]:before:content-[''] [&_strong]:text-ink-strong [&_small]:text-[0.9em] [&_small]:text-ink-muted [&_p]:mb-4">{{ replace . "{age}" $age | safeHTML }}</div>
-        {{- end }}
+            <h1 class="gd-h1 p-name" data-heading="{{ $identity.name }}">{{ $identity.name }}</h1>
 
-        <a class="u-url" rel="me" href="{{ "/" | absURL }}" hidden>{{ $identity.name }}</a>
-        {{- with $identity.note }}<p class="p-note" hidden>{{ . }}</p>{{ end }}
+            {{- /* ANGEL'S CONTENT MODEL: the taglines live in the Markdown body as
+                   a list — bold main, <small> sub, {age} placeholder. The template
+                   substitutes the age (markdown cannot) and dresses the bare list
+                   as the card rows: gold square bullet, strong ink at the DESIGN
+                   weight (600 — the browser's 700 read too loud, Angel's call),
+                   muted sub. The old front-matter taglines path is deleted, no
+                   longer used. */ -}}
+            {{- with .Content }}
+            <div class="e-content mt-2 text-left [&_ul]:m-0 [&_ul]:flex [&_ul]:w-fit [&_ul]:list-none [&_ul]:flex-col [&_ul]:gap-2 [&_ul]:p-0 [&_li]:flex [&_li]:items-baseline [&_li]:gap-2.5 [&_li]:before:size-[0.4em] [&_li]:before:shrink-0 [&_li]:before:bg-accent [&_li]:before:content-[''] [&_strong]:font-semibold [&_strong]:text-ink-strong [&_small]:text-[0.9em] [&_small]:text-ink-muted [&_p]:mb-4">{{ replace . "{age}" $age | safeHTML }}</div>
+            {{- end }}
+
+            <a class="u-url" rel="me" href="{{ "/" | absURL }}" hidden>{{ $identity.name }}</a>
+            {{- with $identity.note }}<p class="p-note" hidden>{{ . }}</p>{{ end }}
+        </div>
     </article>
 </div>
 {{ end }}

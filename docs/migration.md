@@ -28,6 +28,19 @@ steps** — that is the entire point of this arrangement.
   **`themes/article-time/` stays on disk as an unmounted archive** for looking
   things up (the firework.js lesson), by Angel's call; deleting it is the last
   milestone below.
+- **The design round is done** (August 2026, after the teardown): the article
+  page runs the Steckbrief ("Auf einen Blick", leader-dot rows, heart capsule
+  in the tile head), likes and reposts are sidebar facepiles per IndieWeb
+  convention, reactions sit on the page ground with per-entry tiles, the
+  profile is the card with the left icon rail, and the feed grid carries the
+  28rem floor that matches the card's own stack threshold. Blockquote and
+  codeblock render through garden hooks; the figure shortcode routes through
+  ui/figure; the table hook was judged and declined (structural CSS stays).
+- **Cover captions work for the first time**: every consumer read
+  `.Meta.Exif.Tags.ImageDescription`, and `.Meta.Exif` is a plain tags map
+  with no `.Tags` beneath it — broken since article-time, invisible because
+  `with` swallows nils. `image-caption.html` is the one place that reads it
+  now (`.Meta.Exif.ImageDescription`, nil-safe, no deprecation warning).
 - **The design system's vocabulary is fully adopted** — see below. Templates are
   now the only thing left; no component still needs its CSS invented.
 - **Preflight is on** since the teardown; the scoped stand-in reset in
@@ -87,7 +100,7 @@ redesign, not top to bottom.
 | Template | Status |
 |---|---|
 | `_partials/_base/head.html` | ✅ garden — loads both stylesheets |
-| `_partials/_base/navigation.html` | ✅ garden — plain scaffold, design still open |
+| `_partials/_base/navigation.html` | ✅ garden — designed August 2026: sticky bar with the fading gold rule, full-viewport drawer below 768px. See below |
 | `_partials/card.html` | ✅ garden — article, note and term in one partial. The cell wrapper is gone; the grid lives at each call site |
 | `_partials/_base/hero.html` | ✅ garden — sky, harbour, clock, wordmark, birds, seasonal overlays. Copied from Bulma, see below |
 | `_partials/_base/footer.html` | ✅ garden — sea reflection, h-card, three columns. Copied from Bulma |
@@ -345,6 +358,55 @@ A fourth was fixed a commit later, once Angel confirmed it: the sunrise/sunset
 longitude had been `-2.592` since 2020 — open water west of Liverpool, 12.6° from
 the Hamburg skyline the header actually draws. The latitude was right all along,
 which is why it never looked broken, only late. It is `9.993682` now.
+
+### What the navigation redesign turned up
+
+**August 2026.** The nav was the first template off Bulma and it stayed the
+"plain scaffold to prove the path" for the whole migration. It carries the
+skill's `SiteNav` design now: sunken surface, the fading gold rule along the
+bottom, stuck to the top so that rule survives scrolling, and the current item
+marked with a 2px gold underline that fades out to the right.
+
+**The skill's 90 lines of `at-nav-*` were not ported, on purpose.** They are the
+exact rules the August audit deleted for being a private framework — this is the
+component they were written for, and it still did not need them. What ended up
+in `components.css` is four pseudo-element rules, a keyframe and a scroll lock;
+everything else is utilities in the template.
+
+Three things the design did not anticipate, all of them consequences of Hugo
+rather than of the design:
+
+- **The drawer is the same DOM as the bar, not a second copy.** The skill's
+  React component renders the search field twice, once per shape. `#searchBox`
+  may exist exactly once — `search.js` binds it by id and a second copy takes
+  over silently — so one set of elements re-flows instead: `md:` for the bar,
+  the base classes for the drawer, `order-*` for the two different sequences
+  (search first in the drawer, last in the bar).
+- **The result panel needed two anchors, not one.** The recorded rule was
+  "anchor it to `<nav>`, never to the field", because an 800px panel under a
+  224px input lands in the wrong place. That is still true in the bar — but in
+  the drawer the field *is* where the panel belongs. `md:static` on the field
+  wrapper does both with one element: below 768px the wrapper is the containing
+  block, above it `<nav>` is.
+- **`z-50` on `<nav>` capped the drawer at 50.** The bar's own z-index makes
+  `<nav>` a stacking context, so the drawer's `z-[100]` was measured against the
+  page as 50 — under the cookie banner (99999) and back-to-top (999999). The
+  banner covered the drawer's follow icons outright. The fix lifts the *context*
+  while the toggle is checked, and it has to be a utility: `components.css` is
+  layered and would lose to `z-50` no matter how specific the selector.
+
+**The toggle stays a checkbox.** It works with no JavaScript, and `:checked` is
+a state assistive technology reports — unlike the `aria-expanded="false"` the
+old markup hardcoded on the label and never updated, because nothing was ever
+bound to it. The accessible name and the tab stop sit on the input, so Space
+still closes the drawer from wherever focus is. The scroll lock is
+`body:has(#menu-switch:checked)`; nothing else reaches `<body>` from inside
+`<nav>`. **Still missing: Escape to close** — that needs a script, and the
+skill's own component does not have it either.
+
+`baseof.html` changed in the same step: the scroll offset went from 35px to
+`scroll-pt-18`. A sticky bar means every in-page anchor, footnote jump and
+heading link lands underneath it otherwise.
 
 ## JavaScript
 

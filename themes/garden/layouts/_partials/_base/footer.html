@@ -39,7 +39,10 @@
 
 <div class="at-footer-sea" aria-hidden="true"></div>
 
-<div class="relative z-5 p-12">
+{{- /* Capped like the pages: on a 2880 display the columns stretched to the
+       corners and the widgets tore apart (Angel). The sea behind stays
+       full-bleed; only the content is bounded. */ -}}
+<div class="relative z-5 mx-auto max-w-[96rem] p-12">
     {{- /* FIXME — CONTENT, NOT DESIGN. This slogan invites strangers to publish
            here: "Du willst schreiben – ohne einen eigenen Blog zu veröffentlichen?
            Be a part of Article Time!". That is the multi-author platform the scope
