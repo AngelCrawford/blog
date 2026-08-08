@@ -47,7 +47,6 @@ const ALLOWED = {
   "gd-round-button-lg": "sets a custom property the base rule computes from.",
   "gd-round-button-full": "the same, for the icon box.",
   "at-prose": "the container for two dozen descendant rules over generated Markdown, where no class can be put on anything.",
-  "at-figure": "base for at-figure-float and for the hover that releases the cover's sepia.",
   "at-growth": "four `[data-stage]` tints and two descendant rules hang off it.",
   "at-widget-list": "sets `--at-marker`, which three different list markers read.",
   "at-tile-label": "the 11px uppercase label, six call sites and counting.",
