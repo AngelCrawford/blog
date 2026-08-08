@@ -15,24 +15,20 @@
  * template does. Until then, adding it here is a one-line way to flatten the
  * whole site.
  *
- * The Bulma class names below are load-bearing and stay until their component
- * migrates:
- *   body.type-is-* / .layout-is-* / .kind-is-*   read by main.scss, lists.scss,
- *                                                single.scss
- *   main.content.section                         Bulma's typographic container
- *   header.hero.is-medium.has-sky                hero.scss, and header.js
- *                                                switches .is-night/-dawn/-day/-dusk
- *   footer.footer                                footer.scss
- */ -}}
+ * NO BULMA CLASS NAMES LEFT. `type-is-*`/`kind-is-*` on <body> stay as
+ * semantic hooks (the maintenance build test greps for kind-is-maintenance);
+ * they style nothing. */ -}}
 {{- if .Site.Params.maintenance_mode -}}
 {{ partial "_base/maintenance" . }}
 {{- else -}}
 <!DOCTYPE html>
-<html lang="de" data-theme="dark">
+{{- /* scroll-smooth + the 35px scroll offset were Bulma-era globals
+       (`*, html` in main.scss); they live on <html> as utilities now. */ -}}
+<html lang="de" data-theme="dark" class="scroll-smooth [scroll-padding-top:35px]">
     {{ partial "_base/head" . }}
     {{- /* Validate growth_stage frontmatter (Layer 3 / authoritative build gate). */ -}}
     {{- partial "_base/validate-growth-stage" . -}}
-    <body class="type-is-{{ .Type }} {{if .Layout}}layout-is-{{ .Layout }}{{end}} kind-is-{{ .Kind }}">
+    <body class="type-is-{{ .Type }} {{if .Layout}}layout-is-{{ .Layout }}{{end}} kind-is-{{ .Kind }} bg-surface-sunken">
         {{- /* No Bulma class names left here: `hero is-medium has-sky` are gone
                with the partial they styled. `data-sky` is written by header.js
                and carries one of night / dawn / day / dusk. */ -}}
@@ -48,7 +44,11 @@
                max-width, centring and min-height, because garden declares none
                of those. `data-page-main` is main.js's hook for the footer
                reveal. */ -}}
-        <main class="content section bg-surface-sunken bg-[radial-gradient(hsl(190_11%_7%)_0.05vw,transparent_0.2vw)] bg-[length:1vw_1vw]" data-page-main>
+        {{- /* `max-w-[2560px]` + centring + the dvh floor were Bulma's `main`
+               rule; they ride along as utilities since the teardown. The
+               min-height keeps short pages tall enough that the fixed footer
+               never peeks above the fold. */ -}}
+        <main class="mx-auto w-full max-w-[2560px] min-h-[calc(100dvh-300px)] bg-surface-sunken bg-[radial-gradient(hsl(190_11%_7%)_0.05vw,transparent_0.2vw)] bg-[length:1vw_1vw]" data-page-main>
             {{- block "main" . }}{{- end }}
         </main>
 

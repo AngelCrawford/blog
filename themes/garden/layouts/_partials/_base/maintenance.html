@@ -1,0 +1,163 @@
+{{- /* Maintenance page — Site.Params.maintenance_mode toggle.
+       Renders a self-contained doc: full main.scss bundle for typography/colors,
+       no Umami, no SEO, no nav/hero/footer/scripts, noindex meta.
+       Brand cues (Story 2.6 backlog item, 2026-05-10): static clock motif
+       (matches the hero's .clock-logo asset) above a gold-gradient title that
+       mirrors the .textlogo wordmark treatment. No animations, no JS — gradient
+       and clock are static. */ -}}
+{{- /* Garden: the stylesheet is the Tailwind bundle now — it carries the
+       @font-face rules and the token variables the inline styles below read.
+       The page's own classes stay inline: this is a self-contained document
+       that must survive with no other asset working. */ -}}
+{{- $style := resources.Get "css/main.css" | css.TailwindCSS (dict "minify" hugo.IsProduction) -}}
+{{- if hugo.IsProduction -}}
+    {{- $style = $style | fingerprint | resources.PostProcess -}}
+{{- end -}}
+{{- $title := .Site.Params.maintenance.title | default "Wartung läuft" -}}
+{{- $message := .Site.Params.maintenance.message | default "Bin gleich wieder da." -}}
+<!DOCTYPE html>
+<html lang="de" data-theme="dark">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, minimum-scale=1">
+        {{ hugo.Generator }}
+        <meta name="robots" content="noindex, nofollow, noarchive">
+        <meta name="referrer" content="strict-origin-when-cross-origin">
+        <title>{{ $title }} — {{ .Site.Title }}</title>
+        <link href="{{ $style.RelPermalink }}" rel="stylesheet">
+        <link rel="preload" as="font" type="font/ttf" href="{{ "fonts/Montserrat/MontserratAlternates-Regular.ttf" | relURL }}" crossorigin="anonymous">
+        <link rel="preload" as="font" type="font/ttf" href="{{ "fonts/Montserrat/Montserrat-VariableFont_wght.ttf" | relURL }}" crossorigin="anonymous">
+        <link rel="icon" type="image/png" href="{{ "images/favicon/favicon-96x96.png" | relURL }}" sizes="96x96">
+        <link rel="icon" type="image/svg+xml" href="{{ "images/favicon/favicon.svg" | relURL }}">
+        <link rel="shortcut icon" href="{{ "images/favicon/favicon.ico" | relURL }}">
+        <link rel="apple-touch-icon" sizes="180x180" href="{{ "images/favicon/apple-touch-icon.png" | relURL }}">
+        <meta name="apple-mobile-web-app-title" content="{{ .Site.Title }}">
+        <style>
+            /* Self-contained styles, reading garden's token variables where
+               they exist. The body rules replace what Bulma's base used to
+               supply — the Tailwind bundle deliberately has no Preflight yet. */
+            body {
+                margin: 0;
+                background-color: var(--color-surface-sunken, hsl(190 11% 9%));
+                color: var(--color-ink, hsl(190 15% 78%));
+                font-family: var(--font-body, "Montserrat", sans-serif);
+            }
+            .maintenance-page {
+                min-height: 100vh;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                padding: 2rem;
+                text-align: center;
+                gap: 1rem;
+            }
+            .maintenance-hero {
+                position: relative;
+                width: 100%;
+                max-width: 720px;
+                aspect-ratio: 12 / 5;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-bottom: 0;
+            }
+            .maintenance-hero-clock {
+                position: absolute;
+                inset: 0;
+                background: url("{{ "images/header/clock.webp" | relURL }}") no-repeat center;
+                background-size: contain;
+                opacity: 0.35;
+                z-index: 0;
+                pointer-events: none;
+            }
+            .maintenance-textlogo {
+                /* JS-free wordmark — faithful port of `main.content h1.title` from
+                   assets/scss/main.scss:105-158 (the homepage "Home" heading style).
+                   The actual h1 text is invisible (color: $dark on dark bg, occupies
+                   layout space only). Two pseudo-elements layered absolutely on top
+                   stack the relief shadow (::before) and the gradient text (::after). */
+                position: relative;
+                z-index: 1;
+                margin: 0;
+                padding: 0 1rem;
+                font-family: "Montserrat Alternates", "Montserrat", sans-serif;
+                font-weight: 600;
+                font-size: clamp(2rem, 9vw, 4.5rem);
+                line-height: 1;
+                letter-spacing: 0.03em;
+                display: inline-block;
+                color: hsl(190, 11%, 11%);
+            }
+            .maintenance-textlogo::before {
+                /* Shadow / relief layer — mirror main.scss:124-136. */
+                content: attr(data-heading);
+                position: absolute;
+                top: 0;
+                left: 0;
+                padding: 0 1rem;
+                text-shadow:
+                    -1px 0 1px hsla(29, 100%, 96%, 0.7),
+                    0 1px 1px hsla(29, 100%, 96%, 0.7),
+                    5px 5px 10px rgba(0, 0, 0, 0.5),
+                    -2px -2px 5px rgba(255, 255, 255, 0.3);
+                color: hsl(190, 11%, 11%);
+                z-index: 1;
+                pointer-events: none;
+            }
+            .maintenance-textlogo::after {
+                /* Gradient text layer — mirror main.scss:139-157. */
+                content: attr(data-heading);
+                position: absolute;
+                top: 0;
+                left: 0;
+                padding: 0 1rem;
+                background: linear-gradient(
+                    to bottom,
+                    hsl(35, 45%, 50%) 32%,
+                    hsl(29, 100%, 80%) 50%,
+                    hsl(35, 45%, 26%) 80%
+                );
+                background-clip: text;
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                color: transparent;
+                z-index: 2;
+                pointer-events: none;
+            }
+            .maintenance-h2 {
+                color: hsl(29, 100%, 80%);
+                font-family: "Montserrat Alternates", "Montserrat", sans-serif;
+                font-weight: 600;
+                font-size: clamp(1.25rem, 3.5vw, 2rem);
+                margin: 0;
+                line-height: 1.2;
+            }
+            .maintenance-message {
+                font-size: clamp(1rem, 2.5vw, 1.25rem);
+                margin: 0.5rem 0 0;
+                max-width: 38rem;
+            }
+            .maintenance-eta {
+                font-size: clamp(0.875rem, 2vw, 1rem);
+                opacity: 0.7;
+                margin-top: 1rem;
+                max-width: 38rem;
+            }
+        </style>
+    </head>
+    <body class="kind-is-maintenance">
+        <main class="maintenance-page">
+            <div class="maintenance-hero">
+                <div class="maintenance-hero-clock" aria-hidden="true"></div>
+                <h1 class="maintenance-textlogo" data-heading="Article Time">Article Time</h1>
+            </div>
+            <h2 class="maintenance-h2">{{ $title }}</h2>
+            <p class="maintenance-message">{{ $message }}</p>
+            {{- with .Site.Params.maintenance.expected_back }}
+            <p class="maintenance-eta">{{ . }}</p>
+            {{- end }}
+        </main>
+    </body>
+</html>

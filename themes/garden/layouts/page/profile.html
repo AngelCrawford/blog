@@ -1,0 +1,63 @@
+{{ define "main" }}
+{{- /* Garden — the profile page (layout: profile in front matter). FUNCTION
+       FIRST like the single: panel, h-card, brand-coloured socials; the design
+       round follows the teardown. The h-card microformat classes are parser
+       contracts. Age is computed from birthdate for the {age} placeholder and
+       degrades to an empty string. */ -}}
+{{- $identity := .Site.Params.identity -}}
+{{- $sprite := "fonts/remixicon/remixicon.symbol.svg" | relURL -}}
+{{- $v := .Site.Params.remixicon_version -}}
+{{- $age := "" -}}
+{{- with .Params.birthdate -}}
+  {{- $birth := time . -}}
+  {{- $today := now -}}
+  {{- $a := sub $today.Year $birth.Year -}}
+  {{- if or (lt $today.Month $birth.Month) (and (eq $today.Month $birth.Month) (lt $today.Day $birth.Day)) -}}
+    {{- $a = sub $a 1 -}}
+  {{- end -}}
+  {{- $age = printf "%d" $a -}}
+{{- end -}}
+
+<div data-garden class="mx-auto max-w-[96rem] px-gutter pt-gutter pb-section font-body text-base text-ink">
+    <article class="relative rounded-md border border-accent-muted/40 bg-surface-raised p-gutter shadow-md">
+        {{- /* Socials: a wrapping centred row above the profile on small
+               screens, a vertical rail on the left from lg up. Brand colours
+               inline, as in the footer — the two sanctioned exceptions to
+               gold-only are growth tints and social brand colours. */ -}}
+        <nav class="mb-gutter flex flex-wrap justify-center gap-4 lg:absolute lg:top-gutter lg:left-gutter lg:mb-0 lg:flex-col" aria-label="Soziale Profile">
+            {{- range $identity.socials }}
+            <a class="flex size-[1.6em] items-center justify-center text-[1.6em] transition duration-200 ease-out hover:brightness-125" href="{{ .src }}" target="_blank" rel="noopener me" data-tooltip="{{ .name }}" aria-label="{{ .name }}"
+               style="color: {{ .color }};{{ with .opacity }} opacity: {{ . }};{{ end }}">
+                <svg class="size-[1.6em] fill-current" aria-hidden="true"><use href="{{ $sprite }}?t={{ $v }}#{{ .icon }}"></use></svg>
+            </a>
+            {{- end }}
+        </nav>
+
+        <div class="h-card mx-auto flex max-w-[70ch] flex-col items-center text-center">
+            {{- with $identity.photo }}
+            <img class="u-photo mb-gutter size-[200px] rounded-full border-2 border-accent-muted object-cover" src="{{ . | relURL }}" alt="{{ $identity.name }}" width="200" height="200">
+            {{- end }}
+
+            <h1 class="gd-h1 p-name" data-heading="{{ $identity.name }}">{{ $identity.name }}</h1>
+
+            {{- with .Params.taglines }}
+            <ul class="m-0 mt-4 flex list-none flex-col gap-1 p-0">
+                {{- range . }}
+                <li>
+                    <strong class="text-ink-strong">{{ .main }}</strong>
+                    {{- with .sub }} <span class="text-ink-muted">{{ replace . "{age}" $age }}</span>{{ end }}
+                </li>
+                {{- end }}
+            </ul>
+            {{- end }}
+
+            {{- with .Content }}
+            <div class="at-prose e-content mt-gutter text-left">{{ . }}</div>
+            {{- end }}
+
+            <a class="u-url" rel="me" href="{{ "/" | absURL }}" hidden>{{ $identity.name }}</a>
+            {{- with $identity.note }}<p class="p-note" hidden>{{ . }}</p>{{ end }}
+        </div>
+    </article>
+</div>
+{{ end }}

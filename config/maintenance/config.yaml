@@ -5,7 +5,7 @@
 # files do NOT inherit from production (only from _default). The workflow
 # overrides baseURL at the CLI for the actual deploy; the value here is only
 # used by local `hugo --environment maintenance` smoke checks.
-title: Article Time
+title: Angel Crawford
 baseURL: https://article-time.de/
 
 # buildStats, the hugo_stats.json mount and the cachebuster live in

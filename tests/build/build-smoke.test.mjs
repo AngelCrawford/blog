@@ -1098,41 +1098,9 @@ test("Story 2.7 AC #2+#4: cookie-banner-dismissed flag survives gdpr.js minifica
 });
 
 // =============================================================================
-// PurgeCSS regression guard — BEHAVIOUR, not byte budget.
-//
-// The production build runs PurgeCSS (postcss.config.js, gated on
-// HUGO_ENVIRONMENT=production, which `hugo --environment production` sets for
-// the postcss subprocess). Rather than asserting an absolute size (fragile —
-// would trip on legitimate CSS growth), we assert that PurgeCSS DID ITS JOB:
-// Bulma component classes the site never uses (.breadcrumb/.tabs/.panel-block)
-// must be stripped. They exist in the full ~870 KB dev bundle but must be
-// absent here. If PurgeCSS silently stops running, full Bulma ships and they
-// reappear — independent of how much custom CSS is added.
+// The PurgeCSS regression guard STOOD HERE and died with the Bulma pipeline:
+// there is no style.min.*.css to inspect any more. Tailwind's equivalent
+// failure mode — a missing @source path silently generating zero utilities —
+// is covered by the measured checks in design-tokens.test.mjs and by
+// no-utility-bundles.test.mjs.
 // =============================================================================
-
-test("PurgeCSS strips unused Bulma component classes from production CSS", () => {
-  const result = runBuild(hugoArgs);
-  assert.equal(result.status, 0, `Production build failed.\n${result.stderr}`);
-
-  // Newest fingerprinted bundle (Hugo never GCs old ones in public-test, so a
-  // few accumulate — all are purged; pick the most recent deterministically).
-  const cssFiles = readdirSync(testPublic)
-    .filter((f) => /^style\.min\..*\.css$/.test(f))
-    .map((f) => resolve(testPublic, f));
-  assert.ok(
-    cssFiles.length >= 1,
-    "Expected a fingerprinted style.min.*.css in public-test"
-  );
-  const newest = cssFiles.sort(
-    (a, b) => statSync(b).mtimeMs - statSync(a).mtimeMs
-  )[0];
-  const css = readFileSync(newest, "utf8");
-
-  for (const unused of ["breadcrumb", "tabs", "panel-block"]) {
-    assert.doesNotMatch(
-      css,
-      new RegExp(`\\.${unused}\\b`),
-      `Unused Bulma class ".${unused}" is present in production CSS — PurgeCSS appears not to be running (the full ~870 KB Bulma bundle is shipping).`
-    );
-  }
-});

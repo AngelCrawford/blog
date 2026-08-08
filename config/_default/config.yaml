@@ -2,7 +2,7 @@
 # a file wins, later ones fill the gaps, and the project root overrides both.
 # `garden` holds the Tailwind design system and takes over component by
 # component; `article-time` keeps serving everything not migrated yet.
-theme: ["garden", "article-time"]
+theme: ["garden"]
 
 # Tailwind live reload — Hugo's own mechanism, per the css.TailwindCSS docs.
 #

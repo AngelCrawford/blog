@@ -98,15 +98,14 @@
  * It gets its own entry point, css/styleguide.css, which layouts/page/
  * styleguide.html loads for itself. Utilities the two share are emitted twice;
  * that is the cheaper mistake, and gzip barely notices repetition. */
-@source "themes/garden/layouts/*.html";
-@source "themes/garden/layouts/_partials";
-@source "themes/garden/layouts/_markup";
-@source "themes/garden/layouts/page/archive.html";
+@source "themes/garden/layouts";
+@source not "themes/garden/layouts/page/styleguide.html";
 
 /* JavaScript that builds DOM nodes carries class names too — search.js styles
  * every result row it generates. Forgetting this source produced a correctly
  * working search with completely unstyled results. */
 @source "themes/garden/assets/js";
+@source not "themes/garden/assets/js/styleguide.js";
 
 /* ===========================================================================
  * WEBFONTS — registered here, not inherited from article-time.
