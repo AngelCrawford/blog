@@ -444,12 +444,11 @@ Three things unlock only when a whole class of work is finished. Ticking them
 off is the real progress signal.
 
 - [x] **Preflight on.** Done August 2026, in the same stroke as the teardown.
-- [ ] **Delete `themes/article-time/`.** The folder is unmounted and serves as
-      an archive until Angel is done consulting it. When it goes: drop
-      `sudo snap install dart-sass` from both workflows, delete
-      `postcss.config.js`, remove `postcss`, `postcss-cli` and
-      `@fullhuman/postcss-purgecss` from `package.json`, and drop the
-      `hugo_stats.json` build-stats mount if nothing else has claimed it.
+- [x] **Delete `themes/article-time/`.** Done August 2026, on Angel's go.
+      dart-sass left both workflows, `postcss.config.js` and the three
+      postcss/purgecss packages left `package.json`. The `hugo_stats.json`
+      build-stats machinery STAYS — it is the dev server's change signal for
+      the Tailwind rebuild, not PurgeCSS furniture.
 - [x] **Delete `jquery.js`.** Done August 2026. The head bundle went with it —
       it existed only because everything assumed `$` was already there.
 

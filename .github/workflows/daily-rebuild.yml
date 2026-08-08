@@ -104,9 +104,6 @@ jobs:
       # Hugo's `transpiler: "dartsass"` (used in layouts/_partials/_base/head.html)
       # requires the Dart Sass binary in PATH. peaceiris/actions-hugo doesn't
       # install it automatically.
-      - name: Install Dart Sass
-        run: sudo snap install dart-sass
-
       # `npm ci` (not `npm install`) so the resolved tree matches package-lock
       # exactly — matters now that Tailwind pulls platform-specific native
       # binaries (@tailwindcss/oxide-*) as optional dependencies. Also fails

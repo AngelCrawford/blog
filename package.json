@@ -23,11 +23,6 @@
     "url": "https://github.com/AngelCrawford/blog/issues"
   },
   "homepage": "https://github.com/AngelCrawford/blog#readme",
-  "dependencies": {
-    "@fullhuman/postcss-purgecss": "^8.0.0",
-    "postcss": "^8.5.23",
-    "postcss-cli": "^11.0.1"
-  },
   "devDependencies": {
     "@playwright/test": "^1.62.0",
     "@tailwindcss/cli": "^4.3.3",
