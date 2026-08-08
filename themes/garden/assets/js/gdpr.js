@@ -188,7 +188,7 @@ onReady(() => {
     const updated = card.querySelector("time.dt-updated")?.getAttribute("datetime");
     if (updated && Date.parse(updated) > visitedAt) {
       card.classList.add("updated-since-visit");
-      flag(card, "pencil-fill", "Aktualisiert", "border-accent-hover/60 text-accent-hover");
+      flag(card, "pencil-fill", "Gepflegt", "border-accent-hover/60 text-accent-hover");
     } else {
       flag(card, "check-fill", "Gesehen", "border-accent-muted/70 text-accent");
     }
