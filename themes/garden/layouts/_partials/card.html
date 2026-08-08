@@ -241,6 +241,13 @@
                        made, one element further in. */ -}}
                 <a class="text-accent-hover hover:text-accent" href="{{ .RelPermalink }}" title="{{ .Title }}">{{ .Title }}</a>
             </h2>
+            {{- /* The term's own description, when it has one — the same job the
+                   excerpt does on an article card: say what lives behind the
+                   door before the click. Clamped to three lines and stripped
+                   to plain text; the full prose belongs to the term's page. */ -}}
+            {{- with .Summary }}
+            <p class="m-0 line-clamp-3 text-sm text-ink-muted">{{ . | plainify | truncate 180 }}</p>
+            {{- end }}
             <p class="m-0 flex flex-wrap items-center gap-x-[0.75em] gap-y-[0.5em] text-sm text-ink-muted">
                 {{- /* NOT the badge: the badge would repeat the title one line
                        under itself. What the card owes the reader is only the
