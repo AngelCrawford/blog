@@ -742,12 +742,12 @@
 .at-prose tbody tr:hover td { background: color-mix(in srgb, var(--color-accent-muted) 12%, transparent); }
 .at-prose td:last-child, .at-prose th:last-child { text-align: right; font-variant-numeric: tabular-nums; }
 
-.at-prose pre {
-  margin: 0 0 1.25rem; padding: var(--spacing-4); overflow-x: auto;
-  border-radius: var(--radius-md); border: 1px solid var(--border-hairline-quiet);
-  background: hsl(190 11% 8%); font-size: var(--text-sm); line-height: 1.6;
-}
-.at-prose pre code { color: var(--color-ink); }
+/* FENCED CODE lives in _markup/render-codeblock.html — the hook is the call
+ * site for generated Markdown, so the frame is utilities there. What stays
+ * CSS in the prose block is only what has NO hook (tables' structural rules
+ * above: row hover, last-row border, numeric right-alignment — a table hook
+ * would rebuild the entire table markup to say the same thing, and that
+ * trade was judged and declined in the E-items round). */
 .at-prose hr { margin: var(--spacing-gutter) 0; border: 0; height: 1px; background: linear-gradient(to right, var(--rule-gold), transparent); }
 
 /* GROWTH STAGES render from layouts/_partials/growth-badge.html: the tint is a

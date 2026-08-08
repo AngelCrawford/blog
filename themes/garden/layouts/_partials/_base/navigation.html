@@ -39,7 +39,17 @@
  * included. A bare word in prose that matches a utility name becomes a real
  * rule. This bit us with the c-o-n-t-a-i-n-e-r utility. Hyphenate or
  * capitalise. */ -}}
-<nav class="at-nav sticky top-0 z-50 flex min-h-14 items-center gap-1 bg-surface-sunken px-4 font-body text-ink"
+{{- /* THE DRAWER'S PLACE IN THE PAGE'S z-LADDER IS DECIDED HERE, ON <nav>.
+       `z-50` makes this element a stacking context, so whatever the drawer
+       declares inside it is still weighed against the rest of the page as 50 —
+       and the ladder runs well above that: the cookie banner sits at 99999,
+       back-to-top at 999999. Both floated over an opaque full-viewport menu,
+       and the banner hid the follow icons outright. Lifting the context while
+       the toggle is checked fixes both at once; lifting the drawer fixes
+       neither. It is a utility and not a rule in components.css because the
+       utilities are unlayered — a layered rule loses to `z-50` no matter how
+       specific it is. */ -}}
+<nav class="at-nav sticky top-0 z-50 flex min-h-14 items-center gap-1 bg-surface-sunken px-4 font-body text-ink max-md:has-[:checked]:z-[1000000]"
      aria-label="Hauptnavigation">
 
     {{- /* The control itself. Off-screen but focusable, and it is what a screen

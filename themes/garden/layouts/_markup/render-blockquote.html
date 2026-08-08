@@ -1,0 +1,9 @@
+{{- /* Garden — blockquote render hook. Markdown quotes were NAKED since
+       Preflight landed: no rule ever styled them, the browser default died
+       with the reset, and nobody noticed until the E-items audit. The quiet
+       form: gold rail, muted italic — deliberately smaller than at-quoted,
+       which is the NOTE's pull-quote voice; a quote inside running text is a
+       guest, not the host. */ -}}
+<blockquote class="mb-5 border-l-2 border-accent/50 pl-4 text-ink-muted italic [&>p:last-child]:mb-0">
+  {{ .Text }}
+</blockquote>
