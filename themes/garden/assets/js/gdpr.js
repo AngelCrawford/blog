@@ -104,7 +104,7 @@ onReady(() => {
  */
 onReady(() => {
   const CARD = "article.at-card";
-  const NEW_DAYS = 7;
+  const NEW_DAYS = 28;
   const DAY_MS = 24 * 60 * 60 * 1000;
 
   /* Remember this page, if it is an article. */
