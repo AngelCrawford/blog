@@ -97,93 +97,59 @@
             {{- $mentions := index hugo.Data.webmentions_by_article .RelPermalink | default (slice) -}}
             {{- $stage := default "seedling" .Params.growth_stage -}}
 
-            {{- /* The info tiles. `data-tile` names each one for tests and for
-                   humans reading the DOM. `info widget` carries NO styles — it is
-                   the e2e suite's hook (`.info.widget span.growth-stage`), kept so
-                   the growth tests keep pinning the badge to this box. */ -}}
-            <div class="info widget grid grid-cols-2 gap-2">
-                {{- with .GetTerms "categories" }}{{ range first 1 . }}
-                <div class="{{ $tile }}" data-tile="rubrik">
-                    <svg class="{{ $tileIcon }}" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#article-line"></use></svg>
-                    <div class="min-w-0">
-                        <span class="{{ $tileLabel }}">Rubrik</span>
-                        <span class="{{ $tileValue }} block truncate"><a class="text-accent hover:text-accent-hover" href="{{ .RelPermalink }}" title="{{ .LinkTitle }}">{{ .LinkTitle }}</a></span>
-                    </div>
-                </div>
-                {{- end }}{{ end }}
-
-                <div class="{{ $tile }}" data-tile="status" data-stage="{{ $stage }}">
-                    <div class="min-w-0">
-                        <span class="{{ $tileLabel }}">Stadium</span>
-                        <span class="{{ $tileValue }} block">{{ partial "growth-badge.html" . }}</span>
-                    </div>
-                </div>
-
-                <div class="{{ $tile }}" data-tile="published">
-                    <svg class="{{ $tileIcon }}" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#calendar-line"></use></svg>
-                    <div class="min-w-0">
-                        <span class="{{ $tileLabel }}">Publiziert</span>
-                        <span class="{{ $tileValue }} block"><time datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Date | time.Format "02.01.2006" }}</time></span>
-                    </div>
-                </div>
-
-                {{- /* Renders unconditionally so the two-column grid keeps parity;
-                       the empty state is a muted dash, as upstream. */ -}}
-                <div class="{{ $tile }}" data-tile="updated">
-                    <svg class="{{ $tileIcon }}" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#pencil-line"></use></svg>
-                    <div class="min-w-0">
-                        <span class="{{ $tileLabel }}">Editiert</span>
-                        <span class="{{ $tileValue }} block">
-                            {{- if $hasUpdated -}}
-                                <time datetime="{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Lastmod | time.Format "02.01.2006" }}</time>
-                            {{- else -}}
-                                <span class="text-ink-muted">—</span>
-                            {{- end -}}
-                        </span>
-                    </div>
-                </div>
-
-                <div class="{{ $tile }}" data-tile="reading-time">
-                    <svg class="{{ $tileIcon }}" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#timer-line"></use></svg>
-                    <div class="min-w-0">
-                        <span class="{{ $tileLabel }}">Lesedauer</span>
-                        <span class="{{ $tileValue }} block">{{ $readingTime }} Min.</span>
-                    </div>
-                </div>
-
-                <div class="{{ $tile }}" data-tile="reactions">
-                    <svg class="{{ $tileIcon }}" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#question-answer-line"></use></svg>
-                    <div class="min-w-0">
-                        <span class="{{ $tileLabel }}">Reaktionen</span>
-                        <span class="{{ $tileValue }} block truncate">
-                            {{- if gt (len $mentions) 0 -}}
-                                <a class="text-accent hover:text-accent-hover" href="#webmentions" title="Zu den Antworten und Erwähnungen springen">{{ len $mentions }} {{ if eq (len $mentions) 1 }}Antwort{{ else }}Antworten{{ end }}</a>
-                            {{- else -}}
-                                <a class="text-ink-muted hover:text-accent" href="#webmentions" title="Zu den Webmentions springen">Noch keine</a>
-                            {{- end -}}
-                        </span>
-                    </div>
-                </div>
-
+            {{- /* THE STECKBRIEF — variant 2 of three mocked for Angel: ONE tile,
+                   leader-dot rows, the archive widget's own language instead of
+                   eight framed mini-tiles. `info widget` carries no styles — it
+                   is the e2e suite's hook (`.info.widget span.growth-stage`).
+                   The heart capsule lives in the tile head via tile-head's
+                   aside slot. Value colours ride as utilities because
+                   at-leader-list's own :last-child rule expects the archive's
+                   inverse arrangement. */ -}}
+            <div class="info widget rounded-tile border border-accent-muted/40 bg-[var(--surface-tile)] px-4 py-[0.9rem]">
+                {{ partial "ui/tile-head" (dict "label" "Auf einen Blick" "aside" (partial "widgets/heart-button" .)) }}
+                <ul class="at-widget-list at-leader-list">
+                    {{- with .GetTerms "categories" }}{{ range first 1 . }}
+                    <li data-tile="rubrik">
+                        <span class="text-ink-muted">Rubrik</span>
+                        <a class="inline p-0 text-accent hover:text-accent-hover" href="{{ .RelPermalink }}" title="{{ .LinkTitle }}">{{ .LinkTitle }}</a>
+                    </li>
+                    {{- end }}{{ end }}
+                    <li data-tile="status" data-stage="{{ $stage }}">
+                        <span class="text-ink-muted">Stadium</span>
+                        {{ partial "growth-badge.html" . }}
+                    </li>
+                    <li data-tile="published">
+                        <span class="text-ink-muted">Publiziert</span>
+                        <time class="text-accent tabular-nums" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Date | time.Format "02.01.2006" }}</time>
+                    </li>
+                    <li data-tile="updated">
+                        <span class="text-ink-muted">Editiert</span>
+                        {{- if $hasUpdated }}
+                        <time class="text-accent tabular-nums" datetime="{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Lastmod | time.Format "02.01.2006" }}</time>
+                        {{- else }}
+                        <span class="text-ink-muted">—</span>
+                        {{- end }}
+                    </li>
+                    <li data-tile="reading-time">
+                        <span class="text-ink-muted">Lesedauer</span>
+                        <span class="text-accent tabular-nums">{{ $readingTime }} Min.</span>
+                    </li>
+                    <li data-tile="reactions">
+                        <span class="text-ink-muted">Reaktionen</span>
+                        {{- if gt (len $mentions) 0 }}
+                        <a class="inline p-0 text-accent hover:text-accent-hover" href="#webmentions" title="Zu den Antworten und Erwähnungen springen">{{ len $mentions }} {{ if eq (len $mentions) 1 }}Antwort{{ else }}Antworten{{ end }}</a>
+                        {{- else }}
+                        <a class="inline p-0 text-ink-muted hover:text-accent" href="#webmentions" title="Zu den Webmentions springen">Noch keine</a>
+                        {{- end }}
+                    </li>
+                </ul>
                 {{- with .Params.tags }}
-                <div class="{{ $tile }} col-span-2" data-tile="tags">
-                    <svg class="{{ $tileIcon }}" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#price-tag-3-line"></use></svg>
-                    <div class="min-w-0">
-                        <span class="{{ $tileLabel }}">Tags</span>
-                        <span class="flex flex-wrap gap-x-2 gap-y-1 text-sm">
-                            {{- range ($.GetTerms "tags") -}}
-                                <a class="inline-block rounded-pill bg-[hsl(190_11%_13%)] px-[0.55em] py-[0.18em] text-accent no-underline transition-colors duration-150 ease-out hover:text-accent-hover" href="{{ .RelPermalink }}" title="{{ .LinkTitle }}">{{ .LinkTitle }}</a>
-                            {{- end -}}
-                        </span>
-                    </div>
-                </div>
+                <p class="mt-3 mb-0 flex flex-wrap gap-x-2 gap-y-1 text-[0.8rem]" data-tile="tags">
+                    {{- range ($.GetTerms "tags") -}}
+                    <a class="inline-block rounded-pill bg-[hsl(190_11%_13%)] px-[0.55em] py-[0.18em] text-accent no-underline transition-colors duration-150 ease-out hover:text-accent-hover" href="{{ .RelPermalink }}" title="{{ .LinkTitle }}">{{ .LinkTitle }}</a>
+                    {{- end -}}
+                </p>
                 {{- end }}
-
-                {{- /* `.heart-button-wrapper` stays on the tile: hearts.js finds
-                       `.heart-button-hint` via closest(). */ -}}
-                <div class="{{ $tile }} heart-button-wrapper col-span-2" data-tile="hearts">
-                    {{ partial "widgets/heart-button" . }}
-                </div>
             </div>
 
             {{- if ge (len .TableOfContents) 100 }}

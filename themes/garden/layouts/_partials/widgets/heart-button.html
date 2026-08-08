@@ -77,39 +77,33 @@
         </span>
     </noscript>
 {{- else -}}
-    {{- /* The single page's info tile: a round pressable heart beside the count.
-           `.heart-button-wrapper` sits on the tile at the call site so hearts.js
-           reaches `.heart-button-hint` via closest(); the red pressed state is
-           the aria-pressed: variant, same as the note card. The round button is
-           the design system's — the shadow inversion IS the press feedback. */ -}}
-    <button type="button"
-            class="gd-round-button gd-round-button-full heart-button aria-pressed:text-[hsl(0_70%_65%)]"
-            data-article="{{ $page.RelPermalink }}"
-            data-tooltip="Diesen Artikel mit einem Herz markieren"
-            aria-label="Diesen Artikel mit einem Herz markieren"
-            aria-pressed="false">
-        <svg aria-hidden="true">
-            <use href="{{ $sprite }}?t={{ $rv }}#heart-line"></use>
-        </svg>
-    </button>
-    <div class="min-w-0">
-        <span class="block text-[0.7rem]/[1] font-semibold tracking-label text-ink-muted uppercase">Herzen</span>
-        <span class="text-sm/[1.2] text-accent tabular-nums">
-            <span class="heart-count" aria-live="polite">{{ $hearts }}</span>
-            {{- if $showHint }}
-            <small class="heart-button-hint ml-1 text-[0.75em] text-ink-muted">(Zähler aktualisiert täglich)</small>
-            {{- end }}
-        </span>
-    </div>
-    <noscript>
-        {{- /* `heart-button-fallback` is doubly load-bearing: hearts.js's selector
-               excludes it, and the build test requires the <a> for JS-less
-               clients (Story 2.2 AC #6). */ -}}
-        {{- /* The class value is matched VERBATIM by the build test's regex —
-               nothing may be appended to it. Styling sits on the glyph. */ -}}
-        <a class="heart-button heart-button-fallback" href="#" aria-label="Diesen Artikel liken">
-            <svg class="inline size-[1.1em] fill-current text-[color-mix(in_srgb,var(--color-accent-hover)_80%,transparent)]" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#heart-line"></use></svg>
-        </a>
-        <span class="heart-count font-semibold tabular-nums">{{ $hearts }}</span>
-    </noscript>
+    {{- /* Single page: the SAME capsule as the cards, pressable, living in the
+           Steckbrief tile's head. `.heart-button-wrapper` wraps here so
+           hearts.js finds `.heart-button-hint` via closest(); the hint is
+           sr-only — the visual feedback is the fill itself, the announcement
+           is for screen readers. The noscript <a> classes are matched
+           VERBATIM by the build test. */ -}}
+    <span class="heart-button-wrapper inline-flex items-center">
+        <button type="button"
+                class="heart-button group/heart inline-flex shrink-0 cursor-pointer items-center gap-[0.35em] rounded-pill border border-[hsl(0_70%_65%/0.55)] py-[0.18em] pr-[0.6em] pl-[0.5em] text-[hsl(0_70%_65%)] transition-colors duration-150 ease-out hover:border-[hsl(0_70%_74%)] hover:text-[hsl(0_70%_74%)] aria-pressed:border-[hsl(0_70%_65%)]"
+                data-article="{{ $page.RelPermalink }}"
+                data-tooltip="Diesen Artikel mit einem Herz markieren"
+                aria-label="Diesen Artikel mit einem Herz markieren"
+                aria-pressed="false">
+            <span class="relative inline-flex shrink-0">
+                <svg class="size-[1.1em] fill-current opacity-100 transition-opacity duration-150 group-aria-pressed/heart:opacity-0" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#heart-line"></use></svg>
+                <svg class="absolute inset-0 size-[1.1em] fill-current opacity-0 transition-opacity duration-150 group-aria-pressed/heart:opacity-100" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#heart-fill"></use></svg>
+            </span>
+            <span class="heart-count text-[0.85em] font-semibold text-ink-muted tabular-nums" aria-live="polite">{{ $hearts }}</span>
+        </button>
+        {{- if $showHint }}
+        <small class="heart-button-hint sr-only" aria-live="polite">(Zähler aktualisiert täglich)</small>
+        {{- end }}
+        <noscript>
+            <a class="heart-button heart-button-fallback" href="#" aria-label="Diesen Artikel liken">
+                <svg class="inline size-[1.1em] fill-current text-[color-mix(in_srgb,var(--color-accent-hover)_80%,transparent)]" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#heart-line"></use></svg>
+            </a>
+            <span class="heart-count font-semibold tabular-nums">{{ $hearts }}</span>
+        </noscript>
+    </span>
 {{- end -}}

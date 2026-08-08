@@ -765,9 +765,12 @@ test("Story 2.2 AC #1+#2+#6: production article page renders heart-button with d
 
   // Count span must render with the data-file fallback (`| default 0`) — until
   // Story 3.1 lands, every article shows count "0".
+  // `heart-count` as a word in any position — the capsule styles the span
+  // with utilities, and this guard cares about the hook and the fallback,
+  // not the styling (same philosophy as the button match above).
   assert.match(
     articleHtml,
-    /<span class="heart-count"[^>]*aria-live="polite"[^>]*>0<\/span>/,
+    /<span class="[^"]*\bheart-count\b[^"]*"[^>]*aria-live="polite"[^>]*>0<\/span>/,
     "heart-count must render with 0 fallback (Story 3.1 not yet shipped) and aria-live=\"polite\""
   );
 
