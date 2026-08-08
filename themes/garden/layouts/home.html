@@ -41,9 +41,22 @@
     {{- /* #260: the feed orders by LASTMOD, not date — a 2016 article
            reworked today belongs in front of an untouched 2025 one, because
            tending is the relevance signal on a garden. Fresh posts sort
-           naturally (lastmod == date). The paginator gets the sorted
-           collection so page 2 slices correctly. */ -}}
-    {{- $paginator := .Paginate $visible.ByLastmod.Reverse -}}
+           naturally (lastmod == date). */ -}}
+
+    {{- /* PINNED IS SEPARATED BEFORE PAGINATION (#231), and that is not a
+           detail: filtering the paginator's page for weight — what stood here
+           — only pinned articles that page 1 happened to contain already. A
+           pinned 2017 article sat on page 2 and was never seen at the top,
+           which is the one thing pinning exists to prevent. Capped at three:
+           without a cap, pinning quietly disables the feed. The overflow is
+           not lost, it re-joins the stream at its lastmod position.
+
+           Not sorted by date inside the pinned block, against the story's own
+           AC 4 and on purpose: manual curation means YOU decide the order
+           (weight 1 before 2 before 3). The calendar runs everything else. */ -}}
+    {{- $pinned := first 3 (where $visible "Params.weight" "gt" 0).ByWeight -}}
+    {{- $rest := complement $pinned $visible -}}
+    {{- $paginator := .Paginate $rest.ByLastmod.Reverse -}}
 
         {{- /* WHY `1fr` AND NOT A REM CEILING AS THE TRACK MAX: auto-fill computes
            HOW MANY tracks fit from the track's max when it is definite. With
@@ -62,17 +75,14 @@
            border. Twice the gutter leaves one gutter of ground visible; the
            pl-6 buys the first column the same air against the page edge. */ -}}
     <div class="h-feed grid grid-cols-[repeat(auto-fill,minmax(min(28rem,100%),1fr))] gap-x-12 gap-y-12 pl-6">
-        {{- /* Weighted entries first and in weight order, then everything else
-               freshest-tended first (#260), then anything with no weight at
-               all. Three ranges rather than one sort because `weight` is
-               optional and Hugo sorts a missing value to the front. */ -}}
-        {{- range (where $paginator.Pages "Params.weight" "gt" 0).ByWeight }}
+        {{- /* Page 1 leads with the pinned cards; page 2 onwards is stream
+               only — a pin repeated on every page would be an advert. */ -}}
+        {{- if eq $paginator.PageNumber 1 }}
+        {{- range $pinned }}
             {{ partial "card" . }}
         {{- end }}
-        {{- range (where $paginator.Pages "Params.weight" "le" 0).ByLastmod.Reverse }}
-            {{ partial "card" . }}
         {{- end }}
-        {{- range (where $paginator.Pages "Params.weight" "eq" nil).ByLastmod.Reverse }}
+        {{- range $paginator.Pages }}
             {{ partial "card" . }}
         {{- end }}
     </div>

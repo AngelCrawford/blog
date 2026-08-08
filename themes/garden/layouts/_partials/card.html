@@ -30,7 +30,12 @@
 
 {{- if or (eq .Type "articles") (eq .Type "notes") -}}
 {{- $isNote := eq .Params.format "note" -}}
-{{- $featured := eq .Params.weight 1 -}}
+{{- /* Pinned = any positive weight, not just 1 (#231): the gold border is the
+       card's own quiet way of saying "curated". No ribbon, no "Angepinnt"
+       label, no tier separator — Angel's call, and the same reasoning that
+       retired the tier system in #260: a heading over two cards turns a feed
+       into a magazine. */ -}}
+{{- $featured := gt (.Params.weight | default 0) 0 -}}
 {{- $cell := "at-card-footer-item flex items-center justify-center gap-2 px-[1.2em] py-[0.6em]" -}}
 {{- $rubrik := "" -}}
 {{- with .GetTerms "categories" }}{{ range first 1 . }}{{ $rubrik = . }}{{ end }}{{ end -}}
