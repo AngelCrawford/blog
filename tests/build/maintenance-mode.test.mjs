@@ -48,10 +48,14 @@ test("--environment maintenance renders maintenance partial on homepage", () => 
 
     const html = readFileSync(homepagePath, "utf8");
 
-    assert.match(html, /<body class="kind-is-maintenance">/, "Expected maintenance body class");
-    assert.match(html, /<main class="maintenance-page">/, "Expected .maintenance-page main element");
-    assert.match(html, /Wartung läuft/, "Expected default maintenance title");
-    assert.match(html, /Bin gleich wieder da\./, "Expected default maintenance message");
+    // The maintenance page IS the webcard since August 2026: no "Wartung
+    // läuft" copy, no .maintenance-page wrapper — the card stands in for
+    // angel-crawford.de. What must hold: the body hook, the h-card owner,
+    // and the DSGVO links into the exempted legal pages.
+    assert.match(html, /<body class="kind-is-maintenance[^"]*">/, "Expected maintenance body class");
+    assert.match(html, /Impressum<\/a>/, "Webcard must link the Impressum (DSGVO)");
+    assert.match(html, /Datenschutz<\/a>/, "Webcard must link the Datenschutz page (DSGVO)");
+    assert.match(html, /class="[^"]*\bat-socials\b[^"]*"/, "Webcard must render the socials rail");
     assert.match(html, /<meta name="robots" content="noindex/, "Expected noindex meta during maintenance");
 });
 

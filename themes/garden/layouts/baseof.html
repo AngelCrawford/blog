@@ -12,7 +12,10 @@
  * NO BULMA CLASS NAMES LEFT. `type-is-*`/`kind-is-*` on <body> stay as
  * semantic hooks (the maintenance build test greps for kind-is-maintenance);
  * they style nothing. */ -}}
-{{- if .Site.Params.maintenance_mode -}}
+{{- /* maintenance_exempt: the legal pages keep rendering while everything
+       else is the webcard — the card links Impressum and Datenschutz, and a
+       DSGVO link that leads back to the card would be no link at all. */ -}}
+{{- if and .Site.Params.maintenance_mode (not .Params.maintenance_exempt) -}}
 {{ partial "_base/maintenance" . }}
 {{- else -}}
 <!DOCTYPE html>
