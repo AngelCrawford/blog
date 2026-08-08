@@ -48,7 +48,14 @@
            exists carries the float layout and stacking is left to phones.
            Three columns on a full 96rem page, two from about 1050px, one
            below; the cards restyle themselves per track width. */ -}}
-    <div class="h-feed grid grid-cols-[repeat(auto-fill,minmax(min(28rem,100%),1fr))] gap-x-gutter gap-y-gutter">
+    {{- /* THE GAPS ARE 2x GUTTER AND THE GRID IS INDENTED 1 GUTTER on the left,
+           both for the same reason: the floated cover hangs 1.5em past its
+           card's edge BY DESIGN — laid on the ground, not cropped in. In a
+           multi-column grid a gutter-sized gap was consumed to the last pixel
+           by that overhang, and the picture sat exactly on the neighbour's
+           border. Twice the gutter leaves one gutter of ground visible; the
+           pl-6 buys the first column the same air against the page edge. */ -}}
+    <div class="h-feed grid grid-cols-[repeat(auto-fill,minmax(min(28rem,100%),1fr))] gap-x-12 gap-y-12 pl-6">
         {{- /* Weighted entries first and in weight order, then everything else
                newest first, then anything with no weight at all. Three ranges
                rather than one sort because `weight` is optional and Hugo sorts

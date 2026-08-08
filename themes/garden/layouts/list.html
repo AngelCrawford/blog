@@ -43,7 +43,7 @@
         {{- $hiddenCount = partial "withered-count.html" .Pages -}}
     {{- end -}}
 
-    <div class="{{ if not $isTaxonomy }}h-feed {{ end }}grid gap-x-gutter gap-y-gutter {{ if $isTaxonomy }}grid-cols-[repeat(auto-fill,minmax(22rem,1fr))]{{ else }}grid-cols-[repeat(auto-fill,minmax(min(28rem,100%),1fr))]{{ end }}">
+    <div class="{{ if $isTaxonomy }}grid gap-x-gutter gap-y-gutter grid-cols-[repeat(auto-fill,minmax(22rem,1fr))]{{ else }}h-feed grid grid-cols-[repeat(auto-fill,minmax(min(28rem,100%),1fr))] gap-x-12 gap-y-12 pl-6{{ end }}">
         {{- if $isTaxonomy -}}
             {{- /* Busiest Rubrik first: a taxonomy index is a way in, and the one
                    with two entries is not the way in. */ -}}
