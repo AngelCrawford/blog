@@ -57,8 +57,9 @@
     {{ $img }}
     {{- end -}}
     {{- with .caption }}
-    <figcaption class="absolute inset-x-0 bottom-0 rounded-b-md border-t border-[hsl(190_11%_5%/0.5)] bg-[hsl(190_11%_8%/0.7)] p-[0.5em] text-sm text-[hsl(190_20%_90%)]">
-        <svg class="mr-0.5 inline-block size-4 fill-current" aria-hidden="true"><use href="{{ $sprite }}?t={{ site.Params.remixicon_version }}#pencil-line"></use></svg>
+    <figcaption class="absolute inset-x-0 bottom-0 rounded-b-md border-t border-[hsl(190_11%_5%/0.5)] bg-[hsl(190_11%_8%/0.7)] p-[0.5em] text-sm text-accent [&_a]:underline [&_a:hover]:text-accent-hover
+">
+        <svg class="mr-0.5 inline-block size-4 fill-current" aria-hidden="true"><use href="{{ $sprite }}?t={{ site.Params.remixicon_version }}#camera-line"></use></svg>
         {{ . | safeHTML }}
     </figcaption>
     {{- end }}

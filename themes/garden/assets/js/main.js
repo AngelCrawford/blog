@@ -73,3 +73,28 @@
   fit();
   new ResizeObserver(fit).observe(footer);
 })();
+
+/* ---- Two-click consent embeds --------------------------------------------
+ * DSGVO: a third-party iframe (Spotify on the profile page) must not load
+ * until the visitor asks for it. The facade is server-rendered with the
+ * request spelled out; this replaces it with the real iframe on click. The
+ * CSP frame-src carries open.spotify.com, so nothing else can sneak in this
+ * way. Generic on purpose: any element with data-embed-src works. */
+(() => {
+  document.querySelectorAll("[data-embed-src]").forEach((box) => {
+    const button = box.querySelector("button");
+    if (!button) return;
+    button.addEventListener("click", () => {
+      const frame = document.createElement("iframe");
+      frame.src = box.dataset.embedSrc;
+      frame.title = box.dataset.embedTitle || "";
+      frame.width = "100%";
+      frame.height = box.dataset.embedHeight || "152";
+      frame.setAttribute("frameborder", "0");
+      frame.setAttribute("loading", "lazy");
+      frame.setAttribute("allow", "encrypted-media; fullscreen");
+      frame.className = "block w-full rounded-xl";
+      box.replaceChildren(frame);
+    });
+  });
+})();

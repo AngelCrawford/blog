@@ -52,7 +52,7 @@ identity:
           color: "#1DB954"
         - name: "Reddit"
           src: "https://www.reddit.com/user/Angel_Crawford"
-          icon: "reddit-line"
+          icon: "reddit-2-line"
           color: "#FF5700"
           # opacity: "0.85"
         - name: "The Sims 4 Gallery"
@@ -77,7 +77,7 @@ identity:
 csp:
     default: ["'self'"]
     formaction: ["'self'"]
-    framesrc: ["'self'", "https://www.youtube-nocookie.com"]
+    framesrc: ["'self'", "https://www.youtube-nocookie.com", "https://open.spotify.com"] # Spotify erst nach Zwei-Klick-Consent (Profilseite)
     frameancestors: ["'none'"] # Modern X-Frame-Options replacement — Clickjacking-Schutz, niemand darf die Site embedden
     imgsrc: ["'self'", "data:", "https:"]
     objectsrc: ["'none'"]

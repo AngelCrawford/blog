@@ -38,7 +38,10 @@
             {{- end }}
         </nav>
 
-        <div class="flex min-w-0 flex-col items-center gap-4">
+        {{- /* justify-center: the rail sets the card's height, and the content
+               centres in it — the air splits top and bottom instead of
+               pooling underneath (Angel, against the old card). */ -}}
+        <div class="flex min-w-0 flex-col items-center justify-center gap-4">
             {{- with $identity.photo }}
             <img class="u-photo size-[160px] rounded-full border-2 border-accent-muted object-cover" src="{{ . | relURL }}" alt="{{ $identity.name }}" width="160" height="160">
             {{- end }}
@@ -54,6 +57,26 @@
                    longer used. */ -}}
             {{- with .Content }}
             <div class="e-content mt-2 text-left [&_ul]:m-0 [&_ul]:flex [&_ul]:w-fit [&_ul]:list-none [&_ul]:flex-col [&_ul]:gap-2 [&_ul]:p-0 [&_li]:flex [&_li]:items-baseline [&_li]:gap-2.5 [&_li]:before:size-[0.4em] [&_li]:before:shrink-0 [&_li]:before:bg-accent [&_li]:before:content-[''] [&_strong]:font-semibold [&_strong]:text-ink-strong [&_small]:text-[0.9em] [&_small]:text-ink-muted [&_p]:mb-4">{{ replace . "{age}" $age | safeHTML }}</div>
+            {{- end }}
+
+            {{- /* Spotify, the two-click way: nothing leaves the browser until
+                   the visitor presses the button — then main.js swaps this
+                   facade for the iframe (CSP allows exactly this frame host).
+                   The embed URL comes from front matter, so the playlist is
+                   content, not template. */ -}}
+            {{- with .Params.spotify }}
+            <div class="mt-2 w-full max-w-[22rem] rounded-xl border border-accent-muted/40 bg-[var(--surface-tile)] p-4 text-left" data-embed-src="{{ . }}" data-embed-height="80" data-embed-title="Spotify-Playlist">
+                <p class="m-0 mb-3 text-sm text-ink-muted">
+                    <strong class="font-semibold text-ink-strong">Musikgeschmack.</strong>
+                    Der Klick lädt den Player von Spotify — dabei stellt Dein Browser
+                    eine Verbindung zu Spotify her (Cookies möglich). Details in der
+                    <a class="text-accent-hover underline underline-offset-2 hover:text-accent" href="{{ "pages/datenschutz/" | relURL }}">Datenschutzerklärung</a>.
+                </p>
+                <button type="button" class="inline-flex cursor-pointer items-center gap-2 rounded-sm border border-accent bg-transparent px-4 py-2 text-sm/[1.4] font-semibold text-accent transition-colors duration-200 ease-out hover:bg-accent hover:text-surface-sunken focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">
+                    <svg class="size-4 shrink-0 fill-current" aria-hidden="true"><use href="{{ $sprite }}?t={{ $v }}#play-circle-line"></use></svg>
+                    Player laden
+                </button>
+            </div>
             {{- end }}
 
             <a class="u-url" rel="me" href="{{ "/" | absURL }}" hidden>{{ $identity.name }}</a>
