@@ -1,0 +1,85 @@
+{{- /* Garden — the Steckbrief ("Auf einen Blick"), the article sidebar's
+       first tile. Extracted from single.html per #259: ~70 lines with their
+       own data needs are a widget, not an inline block. Receives the page.
+       Everything else about it is unchanged — variant 2 of three mocked for
+       Angel, leader-dot rows, the heart capsule in the tile head, `info
+       widget` as the e2e suite's styleless hook. */ -}}
+{{- $sprite := "fonts/remixicon/remixicon.symbol.svg" | relURL -}}
+{{- $rv := .Site.Params.remixicon_version -}}
+{{- $hasUpdated := not (eq (.Date.Format "02.01.06") (.Lastmod.Format "02.01.06")) -}}
+{{- $readingTime := math.Ceil (div (float .WordCount) .Site.Params.reading_speed) -}}
+{{- $mentions := index hugo.Data.webmentions_by_article .RelPermalink | default (slice) -}}
+{{- $stage := default "seedling" .Params.growth_stage -}}
+{{- /* THE STECKBRIEF — variant 2 of three mocked for Angel: ONE tile,
+       leader-dot rows, the archive widget's own language instead of
+       eight framed mini-tiles. `info widget` carries no styles — it
+       is the e2e suite's hook (`.info.widget span.growth-stage`).
+       The heart capsule lives in the tile head via tile-head's
+       aside slot. Value colours ride as utilities because
+       at-leader-list's own :last-child rule expects the archive's
+       inverse arrangement. */ -}}
+<div class="info widget rounded-tile border border-accent-muted/40 bg-[var(--surface-tile)] px-4 py-[0.9rem]">
+    {{ partial "ui/tile-head" (dict "label" "Auf einen Blick" "aside" (partial "widgets/heart-button" .)) }}
+    <ul class="at-widget-list at-leader-list">
+        {{- /* Every label leads with its recognition glyph — the icons
+               the old mini-tiles carried. Stadium is the exception:
+               its VALUE is a glyph-plus-word already, and a second
+               plant in the same row read as a stutter. */ -}}
+        {{- with .GetTerms "categories" }}{{ range first 1 . }}
+        <li data-tile="rubrik">
+            <span class="inline-flex items-center gap-1.5 p-0 text-ink-muted"><span class="gd-icon-duo shrink-0 text-base"><svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#article-fill"></use></svg><svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#article-line"></use></svg></span>Rubrik</span>
+            {{- /* min-w-0 twice: the flex item AND the link must be allowed
+                   to shrink, or a long Rubrik refuses to wrap and rams its
+                   label. text-right keeps the wrapped lines on the value
+                   edge. LINKS WEAR LIGHT GOLD (accent-hover) — plain values
+                   are gold, and the difference is what says "clickable". */ -}}
+            <span class="inline-flex min-w-0 items-baseline justify-end gap-[0.45em] p-0 text-right">
+                {{- with .Params.categoryColor }}<span class="size-[0.5em] shrink-0 self-center rounded-full" style="background-color: {{ . }}" aria-hidden="true"></span>{{ end -}}
+                <a class="inline min-w-0 p-0 text-accent-hover hover:text-accent" href="{{ .RelPermalink }}" title="{{ .LinkTitle }}">{{ .LinkTitle }}</a>
+            </span>
+        </li>
+        {{- end }}{{ end }}
+        <li data-tile="status" data-stage="{{ $stage }}">
+            {{- /* The empty size-4 keeps the label column aligned: Stadium
+                   has no label glyph (its value IS one), but its text must
+                   start where the other labels' text starts. */ -}}
+            <span class="inline-flex items-center gap-1.5 p-0 text-ink-muted"><span class="inline-block size-4 shrink-0" aria-hidden="true"></span>Stadium</span>
+            {{ partial "growth-badge.html" . }}
+        </li>
+        <li data-tile="published">
+            <span class="inline-flex items-center gap-1.5 p-0 text-ink-muted"><span class="gd-icon-duo shrink-0 text-base"><svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#calendar-fill"></use></svg><svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#calendar-line"></use></svg></span>Publiziert</span>
+            <time class="text-accent tabular-nums" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Date | time.Format "02.01.2006" }}</time>
+        </li>
+        <li data-tile="updated">
+            <span class="inline-flex items-center gap-1.5 p-0 text-ink-muted"><span class="gd-icon-duo shrink-0 text-base"><svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#pencil-fill"></use></svg><svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#pencil-line"></use></svg></span>Editiert</span>
+            {{- if $hasUpdated }}
+            <time class="text-accent tabular-nums" datetime="{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Lastmod | time.Format "02.01.2006" }}</time>
+            {{- else }}
+            <span class="text-ink-muted">—</span>
+            {{- end }}
+        </li>
+        <li data-tile="reading-time">
+            <span class="inline-flex items-center gap-1.5 p-0 text-ink-muted"><span class="gd-icon-duo shrink-0 text-base"><svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#timer-fill"></use></svg><svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#timer-line"></use></svg></span>Lesedauer</span>
+            <span class="text-accent tabular-nums">{{ $readingTime }} Min.</span>
+        </li>
+        <li data-tile="reactions">
+            <span class="inline-flex items-center gap-1.5 p-0 text-ink-muted"><span class="gd-icon-duo shrink-0 text-base"><svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#question-answer-fill"></use></svg><svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#question-answer-line"></use></svg></span>Reaktionen</span>
+            {{- /* A link is a link: "Noch keine" wears the link colour like
+                   its sibling — muted-as-text hid that it goes somewhere. */ -}}
+            {{- if gt (len $mentions) 0 }}
+            <a class="inline p-0 text-accent-hover hover:text-accent" href="#webmentions" title="Zu den Antworten und Erwähnungen springen">{{ len $mentions }} {{ if eq (len $mentions) 1 }}Antwort{{ else }}Antworten{{ end }}</a>
+            {{- else }}
+            <a class="inline p-0 text-accent-hover hover:text-accent" href="#webmentions" title="Zu den Webmentions springen">Noch keine</a>
+            {{- end }}
+        </li>
+    </ul>
+    {{- with .Params.tags }}
+    <p class="mt-3 mb-0 flex flex-wrap items-center gap-x-2 gap-y-1 text-[0.8rem]" data-tile="tags">
+        <span class="gd-icon-duo shrink-0 text-base text-ink-muted"><svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#price-tag-3-fill"></use></svg><svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#price-tag-3-line"></use></svg></span>
+        {{- range ($.GetTerms "tags") -}}
+        <a class="inline-block rounded-pill bg-[hsl(190_11%_13%)] px-[0.55em] py-[0.18em] text-accent no-underline transition-colors duration-150 ease-out hover:text-accent-hover" href="{{ .RelPermalink }}" title="{{ .LinkTitle }}">{{ .LinkTitle }}</a>
+        {{- end -}}
+    </p>
+    {{- end }}
+</div>
+
