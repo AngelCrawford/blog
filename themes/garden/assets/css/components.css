@@ -17,35 +17,13 @@
  * is utilities in the template. See docs/design.md.
  */
 
-/* ===========================================================================
- * SURFACES — the depth system.
+/* SURFACES — three levels, and a level only ever sits on a DIFFERENT level.
+ * Panel on page, card on panel or page, never panel on panel. That constraint is
+ * what makes depth readable on a palette this dark, where shadows barely
+ * register — but it is a rule for whoever writes the page, not a class.
  *
- * Three levels, and the rule is that a level only ever sits on a DIFFERENT
- * level. Panel on page, card on panel or page, never panel on panel. That
- * single constraint is what makes depth readable on a palette this dark, where
- * shadows barely register.
- *
- * The dotted page texture comes from article-time's `main` rule and stays; it
- * is the bottom of the stack, and every surface below reads against it.
- * =========================================================================== */
-
-/* Page-level block that carries a background — use for prose and controls.
- * Content that is already made of cards does NOT get one, or you stack two
- * panels and the depth collapses. */
-.gd-panel {
-  padding: var(--spacing-gutter);
-  border: 1px solid --alpha(var(--color-accent-muted) / 40%);
-  border-radius: var(--radius-md);
-  background-color: var(--color-surface-raised);
-  box-shadow: var(--shadow-md);
-}
-
-/* Same footprint, no fill — for grouping without adding a depth level. */
-.gd-panel-plain {
-  padding: var(--spacing-gutter);
-  border: 1px solid --alpha(var(--color-accent-muted) / 25%);
-  border-radius: var(--radius-md);
-}
+ * `.gd-panel` and `.gd-panel-plain` were five and three utilities with a name.
+ * The four pages that use a panel write them out. */
 
 /* ===========================================================================
  * HEADINGS
@@ -138,66 +116,17 @@
   );
 }
 
-/* Sub-heading: gold, quiet, no decoration. */
-.gd-h3 {
-  margin-bottom: 1rem;
-  font-family: var(--font-heading);
-  font-size: var(--text-lg);
-  font-weight: 600;
-  color: var(--color-accent);
-}
+/* `.gd-h3` was five utilities and every one of its twelve uses was in the
+ * styleguide — a catalogue demonstrating a class no page had asked for. */
 
-/* ===========================================================================
- * BUTTONS
+/* BUTTONS live in layouts/_partials/ui/button.html.
  *
- * A component, not a pile of utilities repeated at every call site. The reason
- * is concrete: the scoped baseline sets `font: inherit` on form controls, which
- * removed `button, a.button { font-weight: 600 }` from the old theme along with
- * the background and border it was meant to strip. That weight was a real
- * decision — button labels read as actionable partly because they are a little
- * heavier than the prose around them — and a reset takes the good with the bad.
- * Anything worth keeping has to be restated deliberately.
- *
- * Restating it here rather than in each template means the next button cannot
- * forget it.
- * =========================================================================== */
-.gd-button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  padding: 0.5rem 1rem;
-  border: 1px solid transparent;
-  border-radius: var(--radius-sm);
-  background-color: var(--color-accent);
-  color: var(--color-surface-sunken);
-  font-size: var(--text-sm);
-  font-weight: 600;
-  line-height: 1.4;
-  cursor: pointer;
-  transition:
-    background-color 0.2s ease-out,
-    border-color 0.2s ease-out,
-    color 0.2s ease-out;
-}
-.gd-button:hover {
-  background-color: var(--color-accent-hover);
-}
-.gd-button:focus-visible {
-  outline: 2px solid var(--color-accent);
-  outline-offset: 2px;
-}
-
-/* Outline variant — same box, no fill, until you point at it. */
-.gd-button-secondary {
-  border-color: var(--color-accent);
-  background-color: transparent;
-  color: var(--color-accent);
-}
-.gd-button-secondary:hover {
-  background-color: var(--color-accent);
-  color: var(--color-surface-sunken);
-}
+ * The label weight is a real decision — buttons read as actionable partly
+ * because they are a little heavier than the prose around them, and that weight
+ * was lost once already when a reset stripped it along with the background it
+ * was meant to remove. docs/design.md's first test therefore applies: the
+ * decision repeats and could drift, so it needs one home. A partial is one home.
+ * It does not have to be CSS to be one. */
 
 /* ===========================================================================
  * DUOTONE ICONS — Angel's variant B from docs/ideas/IconDemo.html.
@@ -682,17 +611,10 @@ select.gd-field option {
   cursor: default;
 }
 
-/* ===========================================================================
- * STATUS MESSAGES
- * ======================================================================== */
-.gd-message {
-  margin: 0; padding: 0.75rem 1rem; border-radius: var(--radius-sm);
-  border-left: 4px solid var(--color-accent); background-color: var(--color-surface);
-  font-size: var(--text-base); color: var(--color-ink);
-}
-.gd-message-success { border-left-color: var(--color-success); color: var(--color-success); }
-.gd-message-warning { border-left-color: var(--color-warning); color: var(--color-warning); }
-.gd-message-error { border-left-color: var(--color-error); color: var(--color-error); }
+/* STATUS MESSAGES are gone. All three uses were styleguide specimens; the one
+ * shortcode that renders a message is still article-time's and still Bulma's.
+ * The vocabulary comes back with the shortcode, written against whatever the
+ * shortcode actually needs. */
 
 /* ===========================================================================
  * TILE CHROME — the recurring surface behind info tiles and every sidebar

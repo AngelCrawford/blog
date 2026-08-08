@@ -24,7 +24,7 @@
 
 <div data-garden class="mx-auto max-w-[96rem] px-gutter pt-gutter pb-section font-body text-base text-ink">
 
-    <div class="gd-panel at-flow mb-section">
+    <div class="rounded-md border border-accent-muted/40 bg-surface-raised p-gutter shadow-md at-flow mb-section">
         {{- with .Resources }}
         {{- with (.ByType "image").GetMatch "cover*" }}
         {{- $cover := .Process "fill 480x360 webp" }}

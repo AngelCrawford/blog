@@ -101,10 +101,7 @@
                 {{- end }}
             </div>
             {{- with $identity.about_url }}
-            <a href="{{ . | relURL }}" class="gd-button gd-button-secondary mt-4" title="Über mich">
-                <svg class="size-4 shrink-0 fill-current" aria-hidden="true"><use href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ $.Site.Params.remixicon_version }}#arrow-right-s-line"></use></svg>
-                Über mich
-            </a>
+            {{ partial "ui/button" (dict "href" (. | relURL) "variant" "secondary" "icon" "arrow-right-s-line" "label" "Über mich" "class" "mt-4") }}
             {{- end }}
             {{- /* Canonical self-link for IndieWeb (u-url + rel=me). The avatar and
                    the button point at the about page for a reader; the identity URL

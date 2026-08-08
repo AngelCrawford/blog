@@ -174,7 +174,7 @@
        navigation. */ -}}
 <div data-garden class="mx-auto max-w-5xl px-gutter pt-gutter pb-section font-body text-base text-ink">
 
-  <header class="gd-panel mb-section">
+  <header class="rounded-md border border-accent-muted/40 bg-surface-raised p-gutter shadow-md mb-section">
     <h1 class="gd-h1 mb-4" data-heading="{{ .Title }}">{{ .Title }}</h1>
     <div class="flex flex-col gap-4 text-lg text-ink">{{ .Content }}</div>
   </header>
@@ -182,7 +182,7 @@
   {{- /* ------------------------------------------------------------------ */ -}}
   <section class="mb-section">
     <h2 class="gd-h2">Farben</h2>
-    <p class="gd-panel mb-gutter">
+    <p class="rounded-md border border-accent-muted/40 bg-surface-raised p-gutter shadow-md mb-gutter">
       Dunkel plus Gold, minimalistisch — 2020 entschieden und seitdem unverändert.
       Drei Flächenstufen reichen; eine vierte lädt nur zur Diskussion ein.
       Jede Karte zeigt dieselbe Farbe in drei Formen, meistbenutzte zuerst: die
@@ -196,7 +196,7 @@
       (dict "title" "Text" "items" $inks)
       (dict "title" "Akzent" "items" $accents)
       (dict "title" "Status" "items" $states) }}
-    <h3 class="gd-h3 mt-gutter">{{ .title }}</h3>
+    <h3 class="mb-4 font-heading text-lg font-semibold text-accent mt-gutter">{{ .title }}</h3>
     <ul class="grid grid-cols-1 gap-gutter sm:grid-cols-2 lg:grid-cols-3">
       {{- range .items }}
       {{- /* One flat block per colour. An earlier version nested bordered
@@ -256,7 +256,7 @@
   {{- /* ------------------------------------------------------------------ */ -}}
   <section class="mb-section">
     <h2 class="gd-h2">Flächen und Tiefe</h2>
-    <p class="gd-panel mb-gutter">
+    <p class="rounded-md border border-accent-muted/40 bg-surface-raised p-gutter shadow-md mb-gutter">
       Drei Ebenen, und die Regel dazu: eine Ebene sitzt nur auf einer
       <em>anderen</em> Ebene. Panel auf Seite, Karte auf Panel oder Seite — nie
       Panel auf Panel. Genau diese Einschränkung macht Tiefe auf so dunklem
@@ -275,18 +275,20 @@
         </span>
       </div>
       <div class="rounded-md border border-accent-muted/25 bg-surface p-4">
-        <strong class="block text-ink"><code class="text-accent">gd-panel-plain</code></strong>
+        <strong class="block text-ink">Gerahmt, ungefüllt</strong>
         <span class="text-sm text-ink-muted">
           Gleiche Ebene, nur gerahmt. Gruppiert Zusammengehöriges, ohne eine
           neue Tiefenstufe zu verbrauchen.
         </span>
+        <code class="mt-2 block text-sm break-all text-accent">rounded-md border border-accent-muted/25 p-4</code>
       </div>
-      <div class="gd-panel">
-        <strong class="block text-ink"><code class="text-accent">gd-panel</code></strong>
+      <div class="rounded-md border border-accent-muted/40 bg-surface-raised p-gutter shadow-md">
+        <strong class="block text-ink">Panel</strong>
         <span class="text-sm text-ink-muted">
           Eine Stufe höher: hellere Füllung, Rahmen, Schatten. Für Fließtext
           und Bedienelemente.
         </span>
+        <code class="mt-2 block text-sm break-all text-accent">rounded-md border border-accent-muted/40 bg-surface-raised p-gutter shadow-md</code>
       </div>
     </div>
   </section>
@@ -294,12 +296,12 @@
   {{- /* ------------------------------------------------------------------ */ -}}
   <section class="mb-section">
     <h2 class="gd-h2">Überschriften</h2>
-    <p class="gd-panel mb-gutter">
+    <p class="rounded-md border border-accent-muted/40 bg-surface-raised p-gutter shadow-md mb-gutter">
       Nachfolgend als echter Artikel gesetzt, nicht als Aufzählung — so ist
       beurteilbar, ob die Hierarchie beim Lesen trägt.
     </p>
 
-    <article class="gd-panel flex flex-col gap-6">
+    <article class="rounded-md border border-accent-muted/40 bg-surface-raised p-gutter shadow-md flex flex-col gap-6">
       <h1 class="gd-h1" data-heading="Wie ein Blog überlebt">Wie ein Blog überlebt</h1>
       <p>
         Ein Absatz Fließtext, damit die Überschrift etwas hat, wogegen sie sich
@@ -311,7 +313,7 @@
         Die goldene Linie führt das Auge nach rechts und trennt den Abschnitt vom
         Vorhergehenden, ohne einen harten Strich zu ziehen.
       </p>
-      <h3 class="gd-h3 pt-2">Ein Unterpunkt</h3>
+      <h3 class="mb-4 font-heading text-lg font-semibold text-accent pt-2">Ein Unterpunkt</h3>
       <p>
         Gold und kleiner: klar untergeordnet, aber noch als Überschrift lesbar.
         Darunter folgt gewöhnlicher Text mit einem
@@ -324,7 +326,7 @@
   {{- /* ------------------------------------------------------------------ */ -}}
   <section class="mb-section">
     <h2 class="gd-h2">Schrift</h2>
-    <div class="gd-panel">
+    <div class="rounded-md border border-accent-muted/40 bg-surface-raised p-gutter shadow-md">
       <p class="mb-gutter">
         Montserrat Alternates für Überschriften, Montserrat für den Fließtext.
         Selbst gehostet, damit nichts von extern nachgeladen wird. Die kleinste
@@ -359,7 +361,7 @@
 
       <div class="mt-gutter flex flex-col gap-4 border-t border-accent-muted/30 pt-gutter">
         <div>
-          <h3 class="gd-h3">Laufweite und Zeilenabstand</h3>
+          <h3 class="mb-4 font-heading text-lg font-semibold text-accent">Laufweite und Zeilenabstand</h3>
           <p>
             Franz jagt im komplett verwahrlosten Taxi quer durch Bayern — ein Satz
             mit allen Buchstaben des Alphabets.
@@ -370,7 +372,7 @@
                It used to read as a bare "Illegal — Ill 1l" with no explanation,
                which is just cryptic. */ -}}
         <div>
-          <h3 class="gd-h3">Glyphen-Test</h3>
+          <h3 class="mb-4 font-heading text-lg font-semibold text-accent">Glyphen-Test</h3>
           <p class="mb-2 text-2xl text-ink">Illegal · Ill 1l · lIl1</p>
           <p>
             Großes <strong class="text-ink">I</strong>, kleines
@@ -389,7 +391,7 @@
   {{- /* ------------------------------------------------------------------ */ -}}
   <section class="mb-section">
     <h2 class="gd-h2">Abstände</h2>
-    <div class="gd-panel">
+    <div class="rounded-md border border-accent-muted/40 bg-surface-raised p-gutter shadow-md">
       <p class="mb-gutter">
         Luftig: 4 px Basiseinheit, 24 px zwischen zusammengehörenden Blöcken,
         80 px zwischen Abschnitten. Die benannten Stufen tragen den Seitenrhythmus,
@@ -421,8 +423,8 @@
   <section class="mb-section">
     <h2 class="gd-h2">Radien und Schatten</h2>
     <div class="grid grid-cols-1 gap-gutter sm:grid-cols-2">
-      <div class="gd-panel">
-        <h3 class="gd-h3">Radien</h3>
+      <div class="rounded-md border border-accent-muted/40 bg-surface-raised p-gutter shadow-md">
+        <h3 class="mb-4 font-heading text-lg font-semibold text-accent">Radien</h3>
         <ul class="flex flex-col gap-4">
           {{- range $radii }}
           <li class="flex items-center gap-4">
@@ -435,8 +437,8 @@
           {{- end }}
         </ul>
       </div>
-      <div class="gd-panel">
-        <h3 class="gd-h3">Schatten</h3>
+      <div class="rounded-md border border-accent-muted/40 bg-surface-raised p-gutter shadow-md">
+        <h3 class="mb-4 font-heading text-lg font-semibold text-accent">Schatten</h3>
         {{- /* Extra vertical room: a shadow needs space around the box or the
                next row clips it and the effect cannot be judged. */ -}}
         <ul class="flex flex-col gap-6">
@@ -457,8 +459,8 @@
            es sind sechs Zeilen, und ein Abschnitt für sechs Zeilen ist eine
            Gliederung, die sich selbst wichtiger nimmt als ihr Inhalt. */ -}}
     <div class="mt-gutter grid grid-cols-1 gap-gutter sm:grid-cols-2">
-      <div class="gd-panel">
-        <h3 class="gd-h3">Bewegung</h3>
+      <div class="rounded-md border border-accent-muted/40 bg-surface-raised p-gutter shadow-md">
+        <h3 class="mb-4 font-heading text-lg font-semibold text-accent">Bewegung</h3>
         <ul class="flex flex-col gap-3">
           {{- range $motion }}
           <li class="flex items-baseline justify-between gap-3 border-b border-accent-muted/30 pb-3">
@@ -472,8 +474,8 @@
           </li>
         </ul>
       </div>
-      <div class="gd-panel">
-        <h3 class="gd-h3">Gewicht und Laufweite</h3>
+      <div class="rounded-md border border-accent-muted/40 bg-surface-raised p-gutter shadow-md">
+        <h3 class="mb-4 font-heading text-lg font-semibold text-accent">Gewicht und Laufweite</h3>
         <ul class="flex flex-col gap-3">
           {{- range $weights }}
           <li class="flex items-baseline justify-between gap-3 border-b border-accent-muted/30 pb-3">
@@ -497,7 +499,7 @@
   {{- /* ------------------------------------------------------------------ */ -}}
   <section class="mb-section">
     <h2 class="gd-h2">Icons</h2>
-    <div class="gd-panel">
+    <div class="rounded-md border border-accent-muted/40 bg-surface-raised p-gutter shadow-md">
       <p class="mb-gutter">
         Remixicon, als SVG-Sprite selbst gehostet. Das sind alle, die die
         Templates derzeit benutzen — <strong class="text-ink">Klick kopiert
@@ -541,7 +543,7 @@
         Kommen weitere Fills ins Sprite, wechseln sie hier von selbst.
       </p>
 
-      <h3 class="gd-h3 mt-gutter">Wachstumsstufen</h3>
+      <h3 class="mb-4 font-heading text-lg font-semibold text-accent mt-gutter">Wachstumsstufen</h3>
       <p class="mb-4">
         Die einzigen Farben, die ausschließlich an Icons hängen — nie als Fläche
         oder Textfarbe. Deshalb stehen sie hier bei den Icons und nicht in der
@@ -568,72 +570,41 @@
   {{- /* ------------------------------------------------------------------ */ -}}
   <section class="mb-section">
     <h2 class="gd-h2">Bedienelemente</h2>
-    <div class="gd-panel flex flex-col gap-gutter">
+    <div class="rounded-md border border-accent-muted/40 bg-surface-raised p-gutter shadow-md flex flex-col gap-gutter">
       <div>
-        <h3 class="gd-h3">Buttons</h3>
+        <h3 class="mb-4 font-heading text-lg font-semibold text-accent">Buttons</h3>
+        <p class="mb-gutter">
+          Kein CSS, sondern ein Partial:
+          <code class="text-accent">{{ printf "{{ partial \"ui/button\" (dict \"label\" \"Archiv\" \"variant\" \"secondary\" \"icon\" \"bookmark-line\") }}" }}</code>.
+          Mit <code class="text-accent">href</code> wird ein Link daraus, ohne einen ein
+          <code class="text-accent">button</code> — das ist kein Stilunterschied, und
+          deshalb entscheidet es die Aufrufstelle.
+        </p>
         <div class="flex flex-wrap items-center gap-4">
-          <button type="button" class="gd-button">Primär</button>
-          <button type="button" class="gd-button gd-button-secondary">Sekundär</button>
-          <button type="button" class="gd-button" disabled>Deaktiviert</button>
+          {{ partial "ui/button" (dict "label" "Primär") }}
+          {{ partial "ui/button" (dict "label" "Sekundär" "variant" "secondary") }}
+          {{ partial "ui/button" (dict "label" "Mit Icon" "variant" "secondary" "icon" "bookmark-line") }}
+          {{ partial "ui/button" (dict "label" "Als Link" "href" "#bedienelemente") }}
+          <button type="button" class="inline-flex cursor-not-allowed items-center justify-center gap-2 rounded-sm border border-transparent bg-accent px-4 py-2 text-sm/[1.4] font-semibold text-surface-sunken opacity-55" disabled>Deaktiviert</button>
           <a href="#" class="text-accent underline underline-offset-4 hover:text-accent-hover">Textlink</a>
         </div>
       </div>
 
-      <div>
-        <h3 class="gd-h3">Formularfelder</h3>
-        <p class="mb-gutter">
-          Auswahlfeld und Ankreuzfeld lassen sich vom Browser aus nicht gestalten,
-          deshalb sind beide neu gebaut: der Pfeil ist aus zwei Verläufen gezeichnet,
-          das Häkchen mit <code class="text-accent">clip-path</code> — ohne Schrift,
-          ohne Sprite. Der Fokus ist ein Ring statt eines Farbwechsels, damit er in
-          jedem Zustand sichtbar bleibt, und
-          <code class="text-accent">caret-color</code> färbt sogar den Textcursor.
-        </p>
-        <div class="grid grid-cols-1 gap-gutter sm:grid-cols-2">
-          <label class="flex flex-col gap-2">
-            <span class="text-sm text-ink-muted">Textfeld</span>
-            <input type="text" class="gd-field" placeholder="Klick hinein — der Cursor ist golden">
-          </label>
-          <label class="flex flex-col gap-2">
-            <span class="text-sm text-ink-muted">Pflichtfeld, prüft beim Verlassen</span>
-            <input type="email" required class="gd-field" placeholder="keine@gültige">
-          </label>
-          <label class="flex flex-col gap-2">
-            <span class="text-sm text-ink-muted">Auswahlfeld</span>
-            <select class="gd-field">
-              <option>Keimling</option>
-              <option>Knospend</option>
-              <option>Immergrün</option>
-              <option>Verwelkt</option>
-            </select>
-          </label>
-          <label class="flex flex-col gap-2">
-            <span class="text-sm text-ink-muted">Mehrzeilig</span>
-            <textarea rows="3" class="gd-field" placeholder="Mehrere Zeilen"></textarea>
-          </label>
-        </div>
-        <div class="mt-gutter flex flex-wrap gap-gutter">
-          <label class="flex items-center gap-3">
-            <input type="checkbox" class="gd-check" checked>
-            <span>Ankreuzfeld, gesetzt</span>
-          </label>
-          <label class="flex items-center gap-3">
-            <input type="checkbox" class="gd-check">
-            <span>Ankreuzfeld, leer</span>
-          </label>
-          <label class="flex items-center gap-3">
-            <input type="radio" name="demo" class="gd-check" checked>
-            <span>Auswahlknopf</span>
-          </label>
-          <label class="flex items-center gap-3">
-            <input type="radio" name="demo" class="gd-check">
-            <span>Alternative</span>
-          </label>
-        </div>
-      </div>
+      {{- /* FORMULARFELDER STANDEN HIER und sind weg. Vier Feldtypen, ein
+             Auswahlfeld und vier Ankreuzfelder — alle nur hier, kein Formular
+             auf dieser Seite benutzt eines davon. Ein Katalog, der Vokabular
+             vorführt, das kein Template anfasst, hält es am Leben: `gd-field`
+             und `gd-check` existierten ausschließlich, weil dieser Abschnitt
+             sie zeigte.
+
+             Sie kommen zurück, wenn es ein Formular gibt — und dann gegen das
+             geschrieben, was das Formular braucht. Zwei Dinge sind dabei
+             wirklich kein Utility und müssen neu entstehen: der Pfeil im
+             Auswahlfeld (zwei ineinandergreifende Verläufe, weil das native
+             Dreieck nicht gestaltbar ist) und das Häkchen (`clip-path`). */ -}}
 
       <div>
-        <h3 class="gd-h3">Runde Buttons</h3>
+        <h3 class="mb-4 font-heading text-lg font-semibold text-accent">Runde Buttons</h3>
         <p class="mb-gutter">
           Aus dem alten Theme übernommen — der Nach-oben-Knopf, auf Tokens
           umgebaut statt fest verdrahtet. Ruhezustand gewölbt, beim Überfahren
@@ -678,17 +649,10 @@
         </ul>
       </div>
 
-      <div>
-        <h3 class="gd-h3">Statusmeldungen</h3>
-        <div class="flex flex-col gap-3">
-          {{- range $states }}
-          <p class="gd-message {{ if eq .token "--color-success" }}gd-message-success{{ else if eq .token "--color-warning" }}gd-message-warning{{ else }}gd-message-error{{ end }}">
-            <code>{{ .token }}</code> — {{ .use }}
-          </p>
-          {{- end }}
-        </div>
-      </div>
-    </div>
+      {{- /* STATUSMELDUNGEN standen hier, ebenfalls nur hier. Der einzige
+             Shortcode, der eine Meldung rendert, gehört noch article-time und
+             noch Bulma. Das Vokabular kommt mit ihm zurück. */ -}}
+</div>
   </section>
 
   {{- /* ------------------------------------------------------------------ */ -}}
@@ -710,7 +674,7 @@
   {{ end }}{{ end -}}
   <section class="mb-section">
     <h2 class="gd-h2">Vokabular</h2>
-    <p class="gd-panel mb-gutter">
+    <p class="rounded-md border border-accent-muted/40 bg-surface-raised p-gutter shadow-md mb-gutter">
       Die Bausteine, aus denen die Seiten zusammengesetzt werden — Karte, Auszeichnungen,
       Tiles, Fließtext, Sidebar-Zeilen. Sie liegen in
       <code class="text-accent">themes/garden/assets/css/components.css</code> und sind
@@ -720,7 +684,7 @@
       4.355 Zeilen SCSS über 29 Dateien, weil jede Komponente ihre Werte neu entschieden hat.
     </p>
 
-    <h3 class="gd-h3 mt-gutter">Karte</h3>
+    <h3 class="mb-4 font-heading text-lg font-semibold text-accent mt-gutter">Karte</h3>
     <p class="mb-gutter max-w-[70ch] text-sm text-ink-muted">
       Hover macht genau drei Dinge: die goldene Linie wächst an der Unterkante entlang,
       das Bild gibt sein Sepia frei, der runde Button drückt sich ein. Nichts skaliert,
@@ -824,9 +788,9 @@
       </article>
     </div>
 
-    <h3 class="gd-h3 mt-gutter">Auszeichnungen</h3>
+    <h3 class="mb-4 font-heading text-lg font-semibold text-accent mt-gutter">Auszeichnungen</h3>
     <div class="grid grid-cols-1 gap-gutter sm:grid-cols-2">
-      <div class="gd-panel flex flex-col gap-4">
+      <div class="rounded-md border border-accent-muted/40 bg-surface-raised p-gutter shadow-md flex flex-col gap-4">
         <div class="flex flex-wrap items-center gap-3">
           <a class="at-badge" href="#vokabular" style="--at-badge-dot: #1d7a7a">Kategorie 1</a>
           <a class="at-badge" href="#vokabular" style="--at-badge-dot: #285fa5">Movie</a>
@@ -848,7 +812,7 @@
           <code class="text-accent">at-tag</code> für das gefüllte Label in einem Tile-Wert.
         </p>
       </div>
-      <div class="gd-panel flex flex-col gap-4">
+      <div class="rounded-md border border-accent-muted/40 bg-surface-raised p-gutter shadow-md flex flex-col gap-4">
         <ul class="flex flex-col gap-3">
           {{- range $stages }}
           <li class="at-growth" data-stage="{{ .label }}" data-tooltip="{{ .use }}">
@@ -885,7 +849,7 @@
       </div>
     </div>
 
-    <h3 class="gd-h3 mt-gutter">Tiles und Sidebar-Zeilen</h3>
+    <h3 class="mb-4 font-heading text-lg font-semibold text-accent mt-gutter">Tiles und Sidebar-Zeilen</h3>
     <p class="mb-gutter max-w-[70ch] text-sm text-ink-muted">
       Eine Zeilenform für alle drei Widgets. Vorher unterschieden sie sich in jeder
       Nebensache — Zeilenhöhe 2 gegen 1,35 gegen 1,4, drei verschiedene linke Abstände —
@@ -959,8 +923,8 @@
       {{- end }}
     </div>
 
-    <h3 class="gd-h3 mt-gutter">Fließtext</h3>
-    <div class="gd-panel at-prose max-w-none">
+    <h3 class="mb-4 font-heading text-lg font-semibold text-accent mt-gutter">Fließtext</h3>
+    <div class="rounded-md border border-accent-muted/40 bg-surface-raised p-gutter shadow-md at-prose max-w-none">
       <p>
         Der Artikelkörper. Zeilenlänge auf <code>--measure</code> gedeckelt, goldene
         Listenmarker, und <a href="#vokabular">Links im Fließtext sind unterstrichen</a> —
@@ -991,8 +955,8 @@
       </p>
     </div>
 
-    <h3 class="gd-h3 mt-gutter">Kleinteile</h3>
-    <div class="gd-panel flex flex-col gap-6">
+    <h3 class="mb-4 font-heading text-lg font-semibold text-accent mt-gutter">Kleinteile</h3>
+    <div class="rounded-md border border-accent-muted/40 bg-surface-raised p-gutter shadow-md flex flex-col gap-6">
       <div>
         <p class="gd-lined-title">Article Time</p>
         <p class="mt-3 text-center text-sm text-ink-muted">
@@ -1001,8 +965,8 @@
         </p>
       </div>
       <div class="flex flex-wrap items-center justify-center gap-8 border-t border-accent-muted/30 pt-8">
-        <span data-tooltip="Erscheint über dem Element" class="gd-button">Zeig mir den Tooltip</span>
-        <span data-tooltip="Auch auf Tastaturfokus" tabindex="0" class="gd-button gd-button-secondary">Mit Fokus</span>
+        {{ partial "ui/button" (dict "label" "Zeig mir den Tooltip" "attrs" "data-tooltip=\"Erscheint über dem Element\"") }}
+        {{ partial "ui/button" (dict "label" "Mit Fokus" "variant" "secondary" "attrs" "data-tooltip=\"Auch auf Tastaturfokus\"") }}
       </div>
       <p class="text-center text-sm text-ink-muted">
         <code class="text-accent">data-tooltip</code> hängt an einem Attribut, damit jedes

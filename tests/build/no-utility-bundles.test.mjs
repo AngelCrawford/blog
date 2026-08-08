@@ -36,7 +36,13 @@ const CSS = resolve(__dirname, "..", "..", "themes/garden/assets/css/components.
 const ALLOWED = {
   "gd-h1": "the gradient title. Its two pseudo-elements read `data-heading`; the base rule is what they hang on.",
   "gd-h2": "carries the fading section rule as ::after.",
-  "gd-h3": "used at ten call sites; the heading rhythm is not a per-call decision.",
+  /* `gd-h3` WAS HERE, with the reason "used at ten call sites; the heading
+   * rhythm is not a per-call decision". Twelve, actually — and every one of
+   * them in the styleguide. I counted matches without looking at which file
+   * they were in, which is the same shortcut that put the whole vocabulary in
+   * this file to begin with. The class is gone; the styleguide writes the five
+   * utilities out. An entry on this list has to name where the repetition is,
+   * not just that there is some. */
   "gd-lined-title": "two pseudo-element rules to either side of the text.",
   "gd-round-button-lg": "sets a custom property the base rule computes from.",
   "gd-round-button-full": "the same, for the icon box.",

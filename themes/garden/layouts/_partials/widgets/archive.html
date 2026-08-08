@@ -30,10 +30,7 @@
 
     {{- if ne $ctx.RelPermalink (relURL "pages/archiv/") }}
     <div class="mt-4 flex justify-end">
-        <a href="{{ "pages/archiv/" | relURL }}" class="gd-button gd-button-secondary" title="Archiv">
-            <svg class="size-4 shrink-0 fill-current" aria-hidden="true"><use href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ $ctx.Site.Params.remixicon_version }}#bookmark-line"></use></svg>
-            Archiv
-        </a>
+        {{ partial "ui/button" (dict "href" ("pages/archiv/" | relURL) "variant" "secondary" "icon" "bookmark-line" "label" "Archiv") }}
     </div>
     {{- end }}
 </div>
