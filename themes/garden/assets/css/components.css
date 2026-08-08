@@ -622,6 +622,15 @@
  * ======================================================================== */
 .at-prose ul, .at-prose ol { margin: 0 0 1rem; padding-left: 1.5em; }
 .at-prose ul { list-style: disc; }
+
+/* FOOTNOTES read as the text's own footer. Goldmark emits them as
+ * div.footnotes with an <hr> — no render hook exists for footnotes, so this
+ * is Markdown-without-a-hook territory, the category that stays CSS. The hr
+ * dies; the hairline top border is the divider, smaller and muted because
+ * footnotes are an aside, not a continuation. */
+.at-prose .footnotes { margin-top: 2.5rem; padding-top: 1rem; border-top: 1px solid color-mix(in srgb, var(--color-accent-muted) 40%, transparent); font-size: 0.85em; color: var(--color-ink-muted); }
+.at-prose .footnotes hr { display: none; }
+.at-prose .footnotes p { margin-bottom: 0.35rem; }
 .at-prose ol { list-style: decimal; }
 .at-prose li { margin: 0 0 0.35rem; }
 .at-prose li > ul, .at-prose li > ol { margin: 0.35rem 0 0; }
@@ -816,8 +825,12 @@
 }
 .at-leader-list > li > :last-child { order: 3; padding: 0 0 0 0.3em; color: var(--color-ink-muted); }
 
-/* External links get a small gold arrow after them. */
-.at-external::after { content: "\ecaf"; font-family: var(--font-icon); font-size: 80%; color: color-mix(in srgb, var(--color-accent) 50%, transparent); }
+/* External links get a small gold arrow after them. A REAL CHARACTER, not an
+ * icon-font codepoint: the \ecaf escape came out of the CSS pipeline as an
+ * empty string, and the remixicon FONT it addressed is not even shipped — the
+ * site carries the SVG sprite only. This rule was silently dead since the
+ * port; the unicode arrow depends on nothing. */
+.at-external::after { content: " \2197"; font-size: 80%; color: color-mix(in srgb, var(--color-accent) 50%, transparent); }
 
 /* ===========================================================================
  * ═══════════════════════════════════════════════════════════════════════════

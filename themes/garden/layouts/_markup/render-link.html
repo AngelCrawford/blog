@@ -12,7 +12,7 @@
 {{- if $isExternal -}}{{- $hostname = (urls.Parse $link).Host -}}{{- end -}}
 <a href="{{ $link }}"
   {{- with .Title }} title="{{ . }}"{{ end }}
-  {{- if $isExternal }} target="_blank" rel="noopener noreferrer" style='background: url("https://icons.duckduckgo.com/ip2/{{ $hostname }}.ico") left center / 16px 16px no-repeat; padding-left: 21px;'
+  {{- if $isExternal }} class="at-external" target="_blank" rel="noopener noreferrer" style='background: url("https://icons.duckduckgo.com/ip2/{{ $hostname }}.ico") left center / 16px 16px no-repeat; padding-left: 21px;'
   {{- end }}>
   {{- .Text | safeHTML -}}
   {{- if $isExternal }}<span class="sr-only"> (öffnet in neuem Tab)</span>{{ end -}}
