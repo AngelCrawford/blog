@@ -111,7 +111,13 @@
                    second element: at 768px and up the nearest positioned
                    ancestor is <nav>, below it the field's own box, which is where
                    the panel belongs when the field is in the drawer. */ -}}
-            <div id="resultsWrapper" class="absolute top-full right-0 z-[9999] mt-3 hidden w-[min(50rem,calc(100vw-2rem))]"><div id="results" class="max-h-[60vh] overflow-auto rounded-lg border border-accent/20 bg-surface-raised p-gutter shadow-lg"></div></div>
+            {{- /* `right-4` and not `right-0`: an absolute offset counts from the
+                   containing block's PADDING box, so `right-0` against <nav>
+                   ignores its own px-4 and the panel ends up flush with the
+                   window edge while the field it belongs to sits 16px in. In the
+                   drawer the containing block is the field's own box, and there
+                   0 is the correct edge — hence the two values. */ -}}
+            <div id="resultsWrapper" class="absolute top-full right-0 z-[9999] mt-3 hidden w-[min(50rem,calc(100vw-2rem))] md:right-4"><div id="results" class="max-h-[60vh] overflow-auto rounded-lg border border-accent/20 bg-surface-raised p-gutter shadow-lg"></div></div>
         </div>
 
         <div class="order-2 flex flex-col md:order-1 md:mr-auto md:flex-row md:items-center">

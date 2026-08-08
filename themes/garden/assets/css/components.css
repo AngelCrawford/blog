@@ -440,12 +440,16 @@
  * stays is what utilities cannot say — the pointer pseudo-element below and the
  * webkit search-decoration resets. */
 
-/* Pointer towards the search field. */
+/* Pointer towards the search field — at the magnifier, not merely somewhere
+ * along the top edge. 0.875rem plus the arrow's own 0.6rem half-width puts its
+ * tip 20px in from the panel's right edge, which is where the glyph sits in
+ * both shapes: the panel lines up with the field's right edge in the bar and
+ * with the field's own box in the drawer. */
 #results::before {
   content: "";
   position: absolute;
   top: -0.6rem;
-  right: 2.5rem;
+  right: 0.875rem;
   border-right: 0.6rem solid transparent;
   border-bottom: 0.6rem solid var(--color-surface-raised);
   border-left: 0.6rem solid transparent;
