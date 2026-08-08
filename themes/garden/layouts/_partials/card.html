@@ -66,7 +66,7 @@
             {{- with $img }}
             {{- /* 4:3 LANDSCAPE, ALWAYS, floated into the text — see ui/figure. */ -}}
             {{- $cover := .Process "fill 480x360 webp" }}
-            {{- $caption := "" }}{{ with .Meta.Exif }}{{ with .Tags.ImageDescription }}{{ $caption = . }}{{ end }}{{ end }}
+            {{- $caption := partial "image-caption.html" . }}
             {{ partial "ui/figure" (dict "src" $cover.RelPermalink "alt" $.Title "href" $.RelPermalink "title" $.Title "caption" $caption "bleed" true) }}
             {{- end }}
 

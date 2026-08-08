@@ -1,0 +1,15 @@
+{{- /* Pure function: the EXIF ImageDescription of an image resource, or "".
+       Angel's workflow writes the caption into the image file itself
+       (Windows: Eigenschaften → Details → Titel), so the caption travels
+       WITH the photograph instead of living in front matter.
+
+       Every consumer used to read `$img.Meta.Exif` — an API that does not
+       exist; Hugo's is `.Exif`. The `with` swallowed the nil silently and no
+       cover caption ever rendered, an inheritance from article-time nobody
+       could see failing. The format guard matters too: `.Exif` ERRORS the
+       whole build on anything but JPEG/TIFF, it does not return nil. */ -}}
+{{- $out := "" -}}
+{{- if in (slice "jpeg" "tiff") .MediaType.SubType -}}
+  {{- with .Exif }}{{ with .Tags.ImageDescription }}{{ $out = . }}{{ end }}{{ end -}}
+{{- end -}}
+{{- return $out -}}

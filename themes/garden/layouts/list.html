@@ -28,7 +28,7 @@
         {{- with .Resources }}
         {{- with (.ByType "image").GetMatch "cover*" }}
         {{- $cover := .Process "fill 480x360 webp" }}
-        {{- $caption := "" }}{{ with .Meta.Exif }}{{ with .Tags.ImageDescription }}{{ $caption = . }}{{ end }}{{ end }}
+        {{- $caption := partial "image-caption.html" . }}
         {{ partial "ui/figure" (dict "src" $cover.RelPermalink "alt" $pagename "caption" $caption "bleed" true) }}
         {{- end }}{{ end }}
         <h1 class="gd-h1" data-heading="{{ $pagename }}">{{ $pagename }}</h1>

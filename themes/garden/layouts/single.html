@@ -29,7 +29,7 @@
     <article class="{{ $panel }}">
         {{- with $img }}
         {{- $cover := .Process "fill 480x360 webp" }}
-        {{- $caption := "" }}{{ with .Meta.Exif }}{{ with .Tags.ImageDescription }}{{ $caption = . }}{{ end }}{{ end }}
+        {{- $caption := partial "image-caption.html" . }}
         {{ partial "ui/figure" (dict "src" $cover.RelPermalink "alt" $.Title "caption" $caption "bleed" true) }}
         {{- end }}
         <h1 class="gd-h1" data-heading="{{ .Title }}">{{ .Title }}</h1>
@@ -49,7 +49,7 @@
             <article class="h-entry {{ $panel }}">
                 {{- with $img }}
                 {{- $cover := .Process "fill 480x360 webp" }}
-                {{- $caption := "" }}{{ with .Meta.Exif }}{{ with .Tags.ImageDescription }}{{ $caption = . }}{{ end }}{{ end }}
+                {{- $caption := partial "image-caption.html" . }}
                 {{ partial "ui/figure" (dict "src" $cover.RelPermalink "alt" $.Title "caption" $caption "class" "u-photo" "bleed" true) }}
                 {{- end }}
 

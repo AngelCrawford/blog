@@ -228,6 +228,37 @@ Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie co
 
 At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, At accusam aliquyam diam diam dolore dolores duo eirmod eos erat, et nonumy sed tempor et et invidunt justo labore Stet clita ea et gubergren, kasd magna no rebum. sanctus sea sed takimata ut vero voluptua. est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat. 
 
+## Schaukasten
+
+Dieser Abschnitt zeigt alles, was der Fließtext kann — als lebendes Muster für die Render Hooks.
+
+Ein externer Link trägt sein Icon: die [Hugo-Dokumentation](https://gohugo.io/render-hooks/) erklärt die Hooks im Detail.
+
+> Ein Zitat im Fließtext ist Gast, nicht Gastgeber — es bekommt die Goldschiene und spricht gedämpft.
+>
+> Auch ein zweiter Absatz gehört noch dem Gast.
+
+| Stufe     | Bedeutung       | Bestand |
+|-----------|-----------------|--------:|
+| Seedling  | früher Entwurf  |      12 |
+| Budding   | in Entwicklung  |       7 |
+| Evergreen | gepflegt        |       3 |
+| Withered  | verwelkt        |       1 |
+
+```go {linenos=true}
+func Grow(stage string) string {
+	switch stage {
+	case "seedling":
+		return "noch zart"
+	case "evergreen":
+		return "traegt"
+	}
+	return stage
+}
+```
+
+{{< figure src="cover.jpg" caption="Dasselbe Bild, mitten im Text — über den figure-Shortcode, mit der Haus-Behandlung." >}}
+
 ### Überschrift weit unten
 
 Consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus. 
