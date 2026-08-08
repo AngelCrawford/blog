@@ -12,7 +12,10 @@
     <ul class="at-widget-list">
         {{- range $articles }}
         <li class="flex items-start justify-between gap-[0.8rem] border-b border-dashed border-accent-muted/30 last:border-b-0">
-            <a class="min-w-0 flex-1" href="{{ .RelPermalink }}" title="{{ .Title }}">{{ .Title }}</a>
+            {{- /* px-0: at-widget-list reserves the 1.9rem marker column on every link,
+       and this list has no markers — the reserved column read as a stray
+       indent. */ -}}
+            <a class="min-w-0 flex-1 px-0" href="{{ .RelPermalink }}" title="{{ .Title }}">{{ .Title }}</a>
             <time class="shrink-0 py-[0.4rem] text-[0.75rem] text-ink-muted tabular-nums" datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date | time.Format "02.01.06" }}</time>
         </li>
         {{- end }}

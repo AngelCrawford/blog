@@ -774,7 +774,11 @@
   content: "—"; position: absolute; left: 0; top: 0.4rem; width: var(--at-marker);
   text-align: center; color: var(--color-accent-muted); font-weight: var(--weight-strong);
 }
-.at-toc-list ul {
+/* NESTING STARTS AT THE SECOND ul. Hugo emits <nav><ul>…, so the top level is
+ * already ".at-toc-list ul" — indenting THAT put a rail and an 1.2rem offset on
+ * level one, and the dashes sat beside the marker column instead of in it
+ * (Angel spotted the text edge no longer lining up with the series numbers). */
+.at-toc-list ul ul {
   list-style: none; margin: 0 0 0 0.8rem; padding-left: 0.4rem;
   border-left: 1px solid color-mix(in srgb, var(--color-accent-muted) 30%, transparent);
 }
