@@ -38,48 +38,50 @@
  *   h3  gold, smaller, no decoration
  * =========================================================================== */
 .gd-h1 {
-  position: relative;
-  display: inline-block;
+  /* THE GRADIENT TITLE, in one element since August 2026. It used to be an
+   * inline-block with two absolutely positioned pseudo-elements that repeated
+   * the text via `data-heading` — one for the relief, one for the gradient —
+   * because gradient-clipped text is transparent and cannot carry a
+   * `text-shadow`.
+   *
+   * That construction had a cost nobody had priced: an inline-block is an
+   * ATOMIC box. Beside a floated cover it cannot wrap, so a long title
+   * dropped below the picture while a short one sat next to it — the layout
+   * looked arbitrary, and Angel asked why.
+   *
+   * `filter: drop-shadow()` works where `text-shadow` cannot: it operates on
+   * the rendered alpha channel, which for background-clipped text IS the
+   * glyph silhouette. So the element paints its own relief, needs no copies,
+   * and — being a plain block — its lines wrap around a float like any other
+   * text. `data-heading` goes with the pseudos; the templates still pass it
+   * and it is now inert, kept as a hook for nothing in particular. */
+  display: block;
   font-family: var(--font-heading);
   font-size: var(--text-4xl);
   font-weight: 600;
   letter-spacing: 0.03em;
   line-height: 1.15;
-  color: var(--color-surface);
-}
-
-/* Raised shadow layer. */
-.gd-h1::before {
-  content: attr(data-heading);
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 1;
-  color: var(--color-surface);
-  text-shadow:
-    -1px 0 1px --alpha(var(--color-accent-hover) / 70%),
-    0 1px 1px --alpha(var(--color-accent-hover) / 70%),
-    5px 5px 10px rgb(0 0 0 / 0.5),
-    -2px -2px 5px rgb(255 255 255 / 0.3);
-}
-
-/* Gradient fill layer, painted over the shadow. */
-.gd-h1::after {
-  content: attr(data-heading);
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 2;
   background: linear-gradient(
     to bottom,
     var(--color-accent) 32%,
     var(--color-accent-hover) 50%,
     var(--color-accent-muted) 80%
   );
+  /* ONE GRADIENT CYCLE PER LINE. Painted across the whole block, a two-line
+   * title got the top of the gradient on line one and the dark bottom on line
+   * two — the second line lost its gold (Angel spotted it immediately). Sized
+   * to exactly one line box and repeated down, every line carries the full
+   * gold-to-light-to-dark run, which is what the single-line inline-block did
+   * by accident. 1.15em IS the line-height above; the two must stay in step. */
+  background-size: 100% 1.15em;
+  background-repeat: repeat-y;
   background-clip: text;
   -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  color: var(--color-surface);
+  color: transparent;
+  filter:
+    drop-shadow(0 1px 1px --alpha(var(--color-accent-hover) / 70%))
+    drop-shadow(-1px 0 1px --alpha(var(--color-accent-hover) / 70%))
+    drop-shadow(5px 5px 10px rgb(0 0 0 / 0.5));
 }
 
 @media (max-width: 640px) {
