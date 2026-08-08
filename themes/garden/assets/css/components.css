@@ -653,7 +653,6 @@
 /* The tags cell is the flexible one: it takes whatever the fixed cells leave and
  * wraps inside itself. Without min-width:0 a long tag list refused to shrink and
  * pushed the whole footer into three stacked full-width rows. */
-.at-card-footer-item:has(.at-hashtag) { flex: 1 1 6rem; min-width: 0; flex-wrap: wrap; }
 /* Footer cells are divided by a gold hairline, as they are upstream — the row
  * carries two unrelated kinds of information (how long it takes to read, what
  * state it is in) and reads as two cells, not one. */
