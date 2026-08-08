@@ -7,7 +7,11 @@
     "prepare": "git config core.hooksPath .githooks || exit 0",
     "test:build": "node --test --test-concurrency 1 tests/build/*.test.mjs",
     "test:e2e": "playwright test",
-    "test": "npm run test:build && npm run test:e2e"
+    "test": "npm run test:build && npm run test:e2e",
+    "clean": "node scripts/clean-test-artifacts.mjs",
+    "posttest": "npm run clean",
+    "posttest:build": "npm run clean",
+    "posttest:e2e": "npm run clean"
   },
   "repository": {
     "type": "git",
@@ -19,13 +23,9 @@
     "url": "https://github.com/AngelCrawford/blog/issues"
   },
   "homepage": "https://github.com/AngelCrawford/blog#readme",
-  "dependencies": {
-    "@fullhuman/postcss-purgecss": "^8.0.0",
-    "postcss": "^8.5.23",
-    "postcss-cli": "^11.0.1"
-  },
   "devDependencies": {
     "@playwright/test": "^1.62.0",
+    "@tailwindcss/cli": "^4.3.3",
     "ajv": "^8.17.1",
     "ajv-formats": "^3.0.1",
     "gray-matter": "^4.0.3"

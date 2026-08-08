@@ -1,0 +1,45 @@
+{{- /* Garden — a facepile tile for content-free webmention types (likes and
+       reposts), the IndieWeb's own answer to "what do you show when there is
+       nothing to show but WHO": a row of avatars, no dates — the chronology
+       lives at the source, which is where the avatar links. Name in the
+       tooltip and title; a missing photo becomes an initial in a circle so
+       the count never lies.
+
+       NO printf FOR THE AVATAR MARKUP: the class names carry hsl percent
+       signs, and printf reads % as a verb — the first version rendered
+       !s(MISSING) into the page. Plain template markup, duplicated inside
+       the two wrappers, is the boring correct form.
+
+       The h-cite / p-author / h-card / u-url / u-photo classes are parser
+       contracts, as everywhere. Receives dict: items, heading, type. */ -}}
+{{- if .items -}}
+<section class="rounded-tile border border-accent-muted/40 bg-[var(--surface-tile)] px-4 py-[0.9rem]" data-wm-group="{{ .type }}">
+    {{ partial "ui/tile-head" (dict "label" .heading "count" (printf "%d" (len .items))) }}
+    <p class="m-0 flex flex-wrap gap-1.5">
+        {{- range .items }}
+        {{- $name := .author | default (i18n "webmention_author_unknown") }}
+        <span class="h-cite inline-flex" data-wm-type="{{ .type }}">
+            {{- if .url }}
+            <a class="p-author h-card u-url inline-flex" href="{{ .url }}" rel="noopener noreferrer external" target="_blank" title="{{ $name }}" data-tooltip="{{ $name }}">
+                {{- if .author_photo }}
+                <img class="u-photo size-8 rounded-full border border-accent-muted/40 object-cover transition duration-150 hover:border-accent" src="{{ .author_photo }}" alt="{{ $name }}" loading="lazy" width="32" height="32">
+                {{- else }}
+                <span class="flex size-8 items-center justify-center rounded-full border border-accent-muted/40 bg-[hsl(190_11%_16%)] text-xs font-semibold text-accent transition duration-150 hover:border-accent" aria-hidden="true">{{ substr $name 0 1 | upper }}</span>
+                {{- end }}
+                <span class="p-name sr-only">{{ $name }}</span>
+            </a>
+            {{- else }}
+            <span class="p-author h-card inline-flex" title="{{ $name }}" data-tooltip="{{ $name }}">
+                {{- if .author_photo }}
+                <img class="u-photo size-8 rounded-full border border-accent-muted/40 object-cover" src="{{ .author_photo }}" alt="{{ $name }}" loading="lazy" width="32" height="32">
+                {{- else }}
+                <span class="flex size-8 items-center justify-center rounded-full border border-accent-muted/40 bg-[hsl(190_11%_16%)] text-xs font-semibold text-accent" aria-hidden="true">{{ substr $name 0 1 | upper }}</span>
+                {{- end }}
+                <span class="p-name sr-only">{{ $name }}</span>
+            </span>
+            {{- end }}
+        </span>
+        {{- end }}
+    </p>
+</section>
+{{- end -}}

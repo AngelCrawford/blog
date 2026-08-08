@@ -1,0 +1,201 @@
+{{ define "main" }}
+{{- /* Garden — the single page. FUNCTION FIRST: this migration exists so the
+ * last Bulma template can go; the design round for this page comes after the
+ * teardown. Three shapes, as upstream:
+ *
+ *   page      plain panel — title, optional cover, prose
+ *   articles  panel + byline + prose, series strip, webmentions, and the
+ *             sidebar (info tiles, TOC, series, related)
+ *   else      notes and anything future: plain panel
+ *
+ * The mf2 classes (h-entry, p-name, p-author h-card, dt-published, e-content,
+ * u-url) are parser contracts, not styling hooks. */ -}}
+{{- $sprite := "fonts/remixicon/remixicon.symbol.svg" | relURL -}}
+{{- $rv := .Site.Params.remixicon_version -}}
+{{- $img := "" -}}
+{{- with .Resources }}{{ $img = (.ByType "image").GetMatch "cover*" }}{{ end -}}
+{{- $panel := "at-flow rounded-md border border-accent-muted/40 bg-surface-raised p-gutter shadow-md" -}}
+{{- $tile := "flex items-center gap-3 rounded-tile border border-accent-muted/40 bg-[var(--surface-tile)] p-3" -}}
+{{- $tileLabel := "block text-[0.7rem]/[1] font-semibold tracking-label text-ink-muted uppercase" -}}
+{{- $tileValue := "text-sm/[1.2] text-accent tabular-nums" -}}
+{{- $tileIcon := "size-6 shrink-0 fill-current text-accent-muted" -}}
+
+<div class="mx-auto max-w-[96rem] px-gutter pt-gutter pb-section font-body text-base text-ink">
+
+{{- if eq .Page.Type "page" }}
+
+    <div class="min-[768px]:pl-6">
+    {{ partial "withered-banner.html" . }}
+    <article class="{{ $panel }}">
+        {{- with $img }}
+        {{- $cover := .Process "fill 480x360 webp" }}
+        {{- $caption := partial "image-caption.html" . }}
+        {{ partial "ui/figure" (dict "src" $cover.RelPermalink "alt" $.Title "caption" $caption "bleed" true) }}
+        {{- end }}
+        <h1 class="gd-h1" data-heading="{{ .Title }}">{{ .Title }}</h1>
+        {{- with .Params.subtitle }}<p class="mt-4 text-lg text-ink-muted">{{ . }}</p>{{ end }}
+        <div class="at-prose mt-gutter max-w-none">{{ .Content }}</div>
+    </article>
+    </div>
+
+{{- else if eq .Page.Type "articles" }}
+
+    {{- /* min-[768px]:pl-6 — the same gutter of ground the feed grid buys its
+           cards: the floated cover hangs 1.5em past the panel's left edge from
+           768px up, and without the indent it slaps the content edge. */ -}}
+    <div class="grid grid-cols-1 gap-gutter min-[768px]:pl-6 lg:grid-cols-[minmax(0,1fr)_22rem] lg:items-start">
+        <div class="min-w-0">
+            {{ partial "withered-banner.html" . }}
+            <article class="h-entry {{ $panel }}">
+                {{- with $img }}
+                {{- $cover := .Process "fill 480x360 webp" }}
+                {{- $caption := partial "image-caption.html" . }}
+                {{ partial "ui/figure" (dict "src" $cover.RelPermalink "alt" $.Title "caption" $caption "class" "u-photo" "bleed" true) }}
+                {{- end }}
+
+                <h1 class="gd-h1 p-name" data-heading="{{ .Title }}">{{ .Title }}</h1>
+                {{- with .Params.subtitle }}<p class="mt-4 text-lg text-ink-muted">{{ . }}</p>{{ end }}
+
+                {{- /* Byline (Story 9.16 + #218): p-author h-card inside the h-entry,
+                       main author from params.identity plus optional coauthors.
+                       Visible dates live in the info tiles; the hidden dt-published /
+                       dt-updated / u-url here are for parsers. */ -}}
+                {{- $identity := .Site.Params.identity -}}
+                {{- $authorLink := or $identity.about_url $identity.url -}}
+                {{- $hasUpdated := not (eq (.Date.Format "02.01.06") (.Lastmod.Format "02.01.06")) -}}
+                <p class="mt-2 mb-0 text-sm text-ink-muted">
+                    von
+                    <span class="p-author h-card">
+                        {{- if $authorLink -}}
+                            <a class="p-name u-url text-accent-hover no-underline hover:text-accent" href="{{ $authorLink | relURL }}">{{ or .Params.author $identity.name }}</a>
+                        {{- else -}}
+                            <span class="p-name">{{ or .Params.author $identity.name }}</span>
+                        {{- end -}}
+                    </span>
+                    {{- with .Params.coauthors }}
+                        {{- range . }} <span aria-hidden="true">·</span> <span class="p-author h-card">
+                            {{- if .url -}}
+                                <a class="p-name u-url text-accent-hover no-underline hover:text-accent" href="{{ .url }}" rel="noopener">{{ .name }}</a>
+                            {{- else -}}
+                                <span class="p-name">{{ .name }}</span>
+                            {{- end -}}
+                        </span>{{- end }}
+                    {{- end }}
+                    <time class="dt-published" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}" hidden></time>
+                    {{- if $hasUpdated }}<time class="dt-updated" datetime="{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}" hidden></time>{{ end }}
+                    <a class="u-url u-uid" href="{{ .Permalink }}" hidden></a>
+                </p>
+
+                <div class="at-prose e-content mt-gutter max-w-none">{{ .Content }}</div>
+
+            </article>
+
+            {{ partial "widgets/webmentions" . }}
+        </div>
+
+        <div class="flex flex-col gap-gutter">
+            {{- $hasUpdated := not (eq (.Date.Format "02.01.06") (.Lastmod.Format "02.01.06")) -}}
+            {{- $readingTime := math.Ceil (div (float .WordCount) .Site.Params.reading_speed) -}}
+            {{- $mentions := index hugo.Data.webmentions_by_article .RelPermalink | default (slice) -}}
+            {{- $stage := default "seedling" .Params.growth_stage -}}
+
+            {{- /* THE STECKBRIEF — variant 2 of three mocked for Angel: ONE tile,
+                   leader-dot rows, the archive widget's own language instead of
+                   eight framed mini-tiles. `info widget` carries no styles — it
+                   is the e2e suite's hook (`.info.widget span.growth-stage`).
+                   The heart capsule lives in the tile head via tile-head's
+                   aside slot. Value colours ride as utilities because
+                   at-leader-list's own :last-child rule expects the archive's
+                   inverse arrangement. */ -}}
+            <div class="info widget rounded-tile border border-accent-muted/40 bg-[var(--surface-tile)] px-4 py-[0.9rem]">
+                {{ partial "ui/tile-head" (dict "label" "Auf einen Blick" "aside" (partial "widgets/heart-button" .)) }}
+                <ul class="at-widget-list at-leader-list">
+                    {{- /* Every label leads with its recognition glyph — the icons
+                           the old mini-tiles carried. Stadium is the exception:
+                           its VALUE is a glyph-plus-word already, and a second
+                           plant in the same row read as a stutter. */ -}}
+                    {{- with .GetTerms "categories" }}{{ range first 1 . }}
+                    <li data-tile="rubrik">
+                        <span class="inline-flex items-center gap-1.5 p-0 text-ink-muted"><span class="gd-icon-duo shrink-0 text-base"><svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#article-fill"></use></svg><svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#article-line"></use></svg></span>Rubrik</span>
+                        {{- /* min-w-0 twice: the flex item AND the link must be allowed
+                               to shrink, or a long Rubrik refuses to wrap and rams its
+                               label. text-right keeps the wrapped lines on the value
+                               edge. LINKS WEAR LIGHT GOLD (accent-hover) — plain values
+                               are gold, and the difference is what says "clickable". */ -}}
+                        <span class="inline-flex min-w-0 items-baseline justify-end gap-[0.45em] p-0 text-right">
+                            {{- with .Params.categoryColor }}<span class="size-[0.5em] shrink-0 self-center rounded-full" style="background-color: {{ . }}" aria-hidden="true"></span>{{ end -}}
+                            <a class="inline min-w-0 p-0 text-accent-hover hover:text-accent" href="{{ .RelPermalink }}" title="{{ .LinkTitle }}">{{ .LinkTitle }}</a>
+                        </span>
+                    </li>
+                    {{- end }}{{ end }}
+                    <li data-tile="status" data-stage="{{ $stage }}">
+                        {{- /* The empty size-4 keeps the label column aligned: Stadium
+                               has no label glyph (its value IS one), but its text must
+                               start where the other labels' text starts. */ -}}
+                        <span class="inline-flex items-center gap-1.5 p-0 text-ink-muted"><span class="inline-block size-4 shrink-0" aria-hidden="true"></span>Stadium</span>
+                        {{ partial "growth-badge.html" . }}
+                    </li>
+                    <li data-tile="published">
+                        <span class="inline-flex items-center gap-1.5 p-0 text-ink-muted"><span class="gd-icon-duo shrink-0 text-base"><svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#calendar-fill"></use></svg><svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#calendar-line"></use></svg></span>Publiziert</span>
+                        <time class="text-accent tabular-nums" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Date | time.Format "02.01.2006" }}</time>
+                    </li>
+                    <li data-tile="updated">
+                        <span class="inline-flex items-center gap-1.5 p-0 text-ink-muted"><span class="gd-icon-duo shrink-0 text-base"><svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#pencil-fill"></use></svg><svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#pencil-line"></use></svg></span>Editiert</span>
+                        {{- if $hasUpdated }}
+                        <time class="text-accent tabular-nums" datetime="{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Lastmod | time.Format "02.01.2006" }}</time>
+                        {{- else }}
+                        <span class="text-ink-muted">—</span>
+                        {{- end }}
+                    </li>
+                    <li data-tile="reading-time">
+                        <span class="inline-flex items-center gap-1.5 p-0 text-ink-muted"><span class="gd-icon-duo shrink-0 text-base"><svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#timer-fill"></use></svg><svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#timer-line"></use></svg></span>Lesedauer</span>
+                        <span class="text-accent tabular-nums">{{ $readingTime }} Min.</span>
+                    </li>
+                    <li data-tile="reactions">
+                        <span class="inline-flex items-center gap-1.5 p-0 text-ink-muted"><span class="gd-icon-duo shrink-0 text-base"><svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#question-answer-fill"></use></svg><svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#question-answer-line"></use></svg></span>Reaktionen</span>
+                        {{- /* A link is a link: "Noch keine" wears the link colour like
+                               its sibling — muted-as-text hid that it goes somewhere. */ -}}
+                        {{- if gt (len $mentions) 0 }}
+                        <a class="inline p-0 text-accent-hover hover:text-accent" href="#webmentions" title="Zu den Antworten und Erwähnungen springen">{{ len $mentions }} {{ if eq (len $mentions) 1 }}Antwort{{ else }}Antworten{{ end }}</a>
+                        {{- else }}
+                        <a class="inline p-0 text-accent-hover hover:text-accent" href="#webmentions" title="Zu den Webmentions springen">Noch keine</a>
+                        {{- end }}
+                    </li>
+                </ul>
+                {{- with .Params.tags }}
+                <p class="mt-3 mb-0 flex flex-wrap items-center gap-x-2 gap-y-1 text-[0.8rem]" data-tile="tags">
+                    <span class="gd-icon-duo shrink-0 text-base text-ink-muted"><svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#price-tag-3-fill"></use></svg><svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#price-tag-3-line"></use></svg></span>
+                    {{- range ($.GetTerms "tags") -}}
+                    <a class="inline-block rounded-pill bg-[hsl(190_11%_13%)] px-[0.55em] py-[0.18em] text-accent no-underline transition-colors duration-150 ease-out hover:text-accent-hover" href="{{ .RelPermalink }}" title="{{ .LinkTitle }}">{{ .LinkTitle }}</a>
+                    {{- end -}}
+                </p>
+                {{- end }}
+            </div>
+
+            {{- if ge (len .TableOfContents) 100 }}
+            {{ partial "widgets/toc-sidebar" . }}
+            {{- end }}
+
+            {{- if .Params.series }}
+            {{ partial "widgets/series-sidebar" . }}
+            {{- end }}
+
+            {{ partial "widgets/related-sidebar" . }}
+
+            {{- /* Likes and reposts: avatars only, no dates — see the facepile
+                   partial for the why. */ -}}
+            {{ partial "widgets/webmention-facepile" (dict "items" (where $mentions "type" "like") "heading" "Likes" "type" "like") }}
+            {{ partial "widgets/webmention-facepile" (dict "items" (where $mentions "type" "repost") "heading" "Reposts" "type" "repost") }}
+        </div>
+    </div>
+
+{{- else }}
+
+    <article class="{{ $panel }}">
+        <h1 class="gd-h1" data-heading="{{ .Title }}">{{ .Title }}</h1>
+        <div class="at-prose mt-gutter max-w-none">{{ .Content }}</div>
+    </article>
+
+{{- end }}
+</div>
+{{ end }}

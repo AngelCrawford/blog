@@ -40,11 +40,6 @@ jobs:
           hugo-version: "0.161.1"
           extended: true
 
-      # Hugo's `transpiler: "dartsass"` (used in layouts/_partials/_base/head.html)
-      # requires the Dart Sass binary in PATH. Mirrors the daily-rebuild workflow.
-      - name: Install Dart Sass
-        run: sudo snap install dart-sass
-
       - name: Install npm dependencies
         run: npm ci
 
@@ -70,9 +65,6 @@ jobs:
         with:
           hugo-version: "0.161.1"
           extended: true
-
-      - name: Install Dart Sass
-        run: sudo snap install dart-sass
 
       - name: Install npm dependencies
         run: npm ci

@@ -1,0 +1,117 @@
+{{- /* Garden — the page shell.
+ *
+ * Structurally identical to the article-time version it replaces. What changed
+ * is the back-to-top button, the page ground, and that main.js is now vanilla.
+ * Everything else still calls article-time's partials, and Hugo resolves them
+ * from there: the hero, the footer and the cookie banner are unaffected.
+ *
+ * THE `data-garden` MARKERS ARE GONE. They scoped css/base.css's stand-in
+ * reset while two stylesheets shared the page; Preflight is global now and
+ * the attribute selected nothing any more.
+ *
+ * NO BULMA CLASS NAMES LEFT. `type-is-*`/`kind-is-*` on <body> stay as
+ * semantic hooks (the maintenance build test greps for kind-is-maintenance);
+ * they style nothing. */ -}}
+{{- /* maintenance_exempt: the legal pages keep rendering while everything
+       else is the webcard — the card links Impressum and Datenschutz, and a
+       DSGVO link that leads back to the card would be no link at all. */ -}}
+{{- if and .Site.Params.maintenance_mode (not .Params.maintenance_exempt) -}}
+{{ partial "_base/maintenance" . }}
+{{- else -}}
+<!DOCTYPE html>
+{{- /* scroll-smooth was a Bulma-era global (`*, html` in main.scss) and lives on
+       <html> as a utility now. The scroll offset came along at 35px, which was
+       right while nothing covered the top of the page. The navigation is stuck
+       there since the nav redesign, so the offset is its 3.5rem plus a rem of
+       air — otherwise every in-page anchor, every footnote jump and every
+       heading link lands underneath the bar. */ -}}
+<html lang="de" data-theme="dark" class="scroll-smooth scroll-pt-18">
+    {{ partial "_base/head" . }}
+    {{- /* Validate growth_stage frontmatter (Layer 3 / authoritative build gate). */ -}}
+    {{- partial "_base/validate-growth-stage" . -}}
+    <body class="type-is-{{ .Type }} {{if .Layout}}layout-is-{{ .Layout }}{{end}} kind-is-{{ .Kind }} bg-surface-sunken">
+        {{- /* No Bulma class names left here: `hero is-medium has-sky` are gone
+               with the partial they styled. `data-sky` is written by header.js
+               and carries one of night / dawn / day / dusk. */ -}}
+        <header class="at-header">
+            {{- partial "_base/hero" . -}}
+        </header>
+
+        {{ partial "_base/navigation" . }}
+
+        {{- /* The page ground: surface-sunken with the dotted texture, dot size in
+               vw so the grain scales with the viewport instead of turning into
+               polka dots on a large display. Bulma's `main` rule still supplies
+               max-width, centring and min-height, because garden declares none
+               of those. `data-page-main` is main.js's hook for the footer
+               reveal. */ -}}
+        {{- /* NO WIDTH CAP: Bulma capped main at 2560px, and past that the
+               fixed footer showed through in two side stripes on wide
+               displays (Angel, 2880px). The page is as wide as the screen;
+               the dvh floor keeps short pages tall enough that the footer
+               never peeks above the fold. */ -}}
+        <main class="w-full min-h-[calc(100dvh-300px)] bg-surface-sunken bg-[radial-gradient(hsl(190_11%_7%)_0.05vw,transparent_0.2vw)] bg-[length:1vw_1vw]" data-page-main>
+            {{- block "main" . }}{{- end }}
+        </main>
+
+        {{- /* Back-to-top. First article-time component rebuilt on the token
+               vocabulary: `gd-round-button-lg` IS the 55px size the old mixin
+               was called with, and the shadow inversion on press is the one
+               piece of neumorphism that survived 2026.
+
+               Hidden by opacity rather than by `display`, which is what the
+               jQuery version used — `fadeIn` writes an inline `display` and
+               would have overwritten the flex centring that keeps the glyph in
+               the middle. `pointer-events-none` travels with the opacity so an
+               invisible button cannot eat a click. main.js toggles both. */ -}}
+        <button id="back-to-top" type="button"
+                class="gd-round-button gd-round-button-lg pointer-events-none fixed right-12 bottom-12 z-[999999] opacity-0 transition-opacity duration-300 ease-out"
+                title="Zurück zum Seitenanfang" aria-label="Zurück zum Seitenanfang">
+            <svg aria-hidden="true"><use href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ .Site.Params.remixicon_version }}#arrow-up-s-fill"></use></svg>
+        </button>
+
+        {{- /* Fixed behind the page at z -1, revealed on scroll — main.js measures
+               this element via `data-page-footer` and keeps the main column
+               exactly one footer-height short. One step BELOW surface-sunken:
+               the footer must read as further away than the ground the page
+               stands on. The inset shadow pair is the only one outside the
+               round button. `at-footer` stays as the hook for the link-colour
+               descendant rule. */ -}}
+        <footer class="at-footer fixed bottom-0 left-0 -z-[1] m-0 w-full overflow-hidden bg-[hsl(190_11%_6%)] pb-8 text-ink-muted shadow-[inset_10px_10px_15px_rgb(0_0_0/0.3),inset_-10px_-10px_15px_color-mix(in_srgb,var(--color-ink)_10%,transparent)]" data-page-footer>
+            {{ block "footer" . }}{{ partial "_base/footer" . }}{{ end }}
+        </footer>
+
+        {{- /* Cookie-Banner UI — Story 2.7. Server-side suppressed on transparency
+               pages (suppress_banner: true) so the privacy policy itself isn't
+               decorated with a meta-notice about privacy. JS in assets/js/gdpr.js
+               decides whether to show or stay hidden based on sessionStorage. */ -}}
+        {{- if not .Params.suppress_banner -}}
+            {{ partial "_base/cookie-banner" . }}
+        {{- end }}
+
+        {{- /* THE ONLY SCRIPT ON THE PAGE, and it is deferred. jQuery is gone;
+               every file below is vanilla.
+
+               `js/main.js`, `js/search.js`, `js/header.js` and `js/gdpr.js`
+               resolve to the GARDEN copies — garden comes first in the theme
+               list, so its assets win. The article-time originals are dead and
+               go with the theme.
+
+               Order is not arbitrary: suncalc.js defines SunriseSunsetJS, which
+               header.js calls on the way past. */ -}}
+        {{- $sunCalc := resources.Get "js/suncalc.js" -}}
+        {{- $main := resources.Get "js/main.js" -}}
+        {{- /* search.js needs baseURL injection — process as Hugo template */ -}}
+        {{- $search := resources.Get "js/search.js" | resources.ExecuteAsTemplate "js/search.js" . -}}
+        {{- $firework := resources.Get "js/firework.js" -}}
+        {{- $header := resources.Get "js/header.js" -}}
+        {{- $witheredBanner := resources.Get "js/withered-banner.js" -}}
+        {{- $hearts := resources.Get "js/hearts.js" -}}
+        {{- $gdpr := resources.Get "js/gdpr.js" -}}
+        {{- $script := slice $sunCalc $main $search $firework $header $witheredBanner $hearts $gdpr | resources.Concat "js/footerBundle.js" | resources.Minify | resources.Fingerprint -}}
+        <script defer src="{{ $script.RelPermalink }}"></script>
+
+    </body>
+
+</html>
+{{- end -}}

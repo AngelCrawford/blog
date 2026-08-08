@@ -1,0 +1,48 @@
+/* Self-hosted, always — nothing is fetched from Google at runtime. That was a
+ * GDPR requirement from the start (docs/design.md, decided 2020).
+ *
+ * The upstream theme registers the same variable Montserrat file under four
+ * family names (Montserrat-Light / -Regular / -Bold and the Alternates pair)
+ * because Bulma wanted family names, not weights. Here the variable font is
+ * registered once across its real weight range; the legacy aliases follow so
+ * markup copied out of the Hugo templates still resolves. */
+
+@font-face {
+  font-family: "Montserrat Alternates";
+  src: url("../assets/fonts/Montserrat/MontserratAlternates-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Montserrat Alternates";
+  src: url("../assets/fonts/Montserrat/MontserratAlternates-Medium.ttf") format("truetype");
+  font-weight: 500 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Montserrat";
+  src: url("../assets/fonts/Montserrat/Montserrat-VariableFont_wght.ttf") format("truetype");
+  font-weight: 100 900;
+  font-display: swap;
+}
+/* Legacy family aliases used by the Hugo/Bulma templates. */
+@font-face {
+  font-family: "Montserrat-Regular";
+  src: url("../assets/fonts/Montserrat/Montserrat-VariableFont_wght.ttf") format("truetype");
+  font-weight: 100 900;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Montserrat Alternates Bold";
+  src: url("../assets/fonts/Montserrat/MontserratAlternates-Medium.ttf") format("truetype");
+  font-weight: 500 700;
+  font-display: swap;
+}
+/* Remixicon as a webfont. Only needed for the four glyphs the old theme calls
+ * by codepoint (the quote marks in blockquotes, notes and the footer slogan);
+ * everything else uses the SVG sprite at assets/icons/remixicon.symbol.svg. */
+@font-face {
+  font-family: "remixicon";
+  src: url("../assets/icons/remixicon.woff2") format("woff2");
+  font-display: block;
+}

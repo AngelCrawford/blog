@@ -1,15 +1,10 @@
-title: Article Time
+title: Angel Crawford
 baseURL: https://article-time.de/
 
-build:
-  buildStats:
-    enable: true
+# buildStats, the hugo_stats.json mount and the cachebuster all live in
+# config/_default — see the note there. (PurgeCSS used to read the stats file
+# too; it died with the Bulma pipeline.)
 module:
   hugoVersion:
     extended: true
     min: "0.115.0"
-  mounts:
-    - source: "assets"
-      target: "assets"
-    - source: "hugo_stats.json"
-      target: "assets/watching/hugo_stats.json"

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<!-- @template name="Artikelseite" description="Artikel im Article-Time-Layout: Header mit Hafen-Silhouette, Fließtext-Panel, Info-Tiles, Sidebar-Widgets, Footer mit h-card." -->
+<helmet><script src="./ds-base.js"></script><script src="../../assets/icons/inline-sprite.js"></script></helmet>
+<div style="background:var(--color-surface-sunken);font-family:var(--font-body);color:var(--color-ink);min-height:100vh">
+
+<x-import component-from-global-scope="ArticleTimeDesignSystem_de8a72.SiteHeader" title="Article Time" hint-size="100%,300px"></x-import>
+
+<x-import component-from-global-scope="ArticleTimeDesignSystem_de8a72.SiteNav" active="Artikel" brand="Artikel" logo="../../assets/images/favicon/favicon-96x96.png" items="{{ menu }}" follow="{{ follow }}" hint-size="100%,56px"></x-import>
+
+<main class="at-page">
+<div style="max-width:var(--page-max);margin:0 auto;padding:var(--spacing-section) var(--spacing-gutter)">
+
+<div style="display:grid;gap:var(--spacing-gutter);grid-template-columns:minmax(0,1fr) 19rem;align-items:start">
+
+<article class="gd-panel at-prose at-flow" style="max-width:none">
+<figure class="at-figure at-figure-float" style="margin-top:0">
+<img class="at-card-cover" src="../../assets/images/covers/rubriken-cover.jpg" alt="">
+<figcaption class="at-figcaption">Aufgenommen an der Kieler Förde</figcaption>
+</figure>
+<h1 class="gd-h1" data-heading="Warum Hugo">Warum Hugo</h1>
+<p style="margin:1rem 0 var(--spacing-gutter);color:var(--color-ink-muted);font-size:0.95rem">von <a href="#">Angel Crawford</a></p>
+<p style="font-size:var(--text-lg);line-height:var(--text-lg--line-height)">Fünfzehn Kriterien, vier Kandidaten. Geblieben ist Hugo: von der Profilkarte bereits bekannt, SEO, Sitemap und RSS eingebaut, und Bearbeiten nur lokal — genau die erklärte Vorliebe.</p>
+<h2 class="gd-h2" style="margin-top:var(--spacing-gutter)">Die Anforderungen</h2>
+<p>Erste Priorität, alles ausgeliefert: Tags <em>und</em> Kategorien, Serien, ein Inhaltsverzeichnis pro Artikel, zwei Menüs, Markdown als Autorenformat, Suche. Kommentare standen auf der Liste und wurden später anders beantwortet — durch IndieWeb-Webmentions statt durch ein Kommentarsystem.</p>
+<h3 class="gd-h3">Die Kandidaten</h3>
+<p>Vier Systeme, fünfzehn Kriterien. Entscheidend war am Ende nicht das Feature-Blatt, sondern die Frage, was auf Dauer nicht gepflegt werden muss.</p>
+<blockquote class="at-quoted" style="width:80%;margin:1.5em auto;padding:1.5em 2.5em;background:hsl(190 11% 10%);border-left:4px solid var(--color-accent);font-family:var(--font-heading);font-size:1.3rem;line-height:1.5;color:var(--color-ink-muted)">Fazit: Erst einmal ein privater Blog.</blockquote>
+<ul style="padding-left:1.4em"><li>Nicht zu groß, keine tief verschachtelte Auszeichnung.</li><li>Flexbox statt Floats, JavaScript optional.</li><li>Statisch generiert, Bearbeiten nur lokal.</li></ul>
+<div style="display:flex;flex-wrap:wrap;align-items:center;gap:0.4em;margin-top:var(--spacing-gutter)">
+<x-import component-from-global-scope="ArticleTimeDesignSystem_de8a72.Icon" name="price-tag-3-line" size="1.1rem" hint-size="18px,18px"></x-import>
+<x-import component-from-global-scope="ArticleTimeDesignSystem_de8a72.Hashtag" href="#" hint-size="60px,22px">hugo</x-import>
+<x-import component-from-global-scope="ArticleTimeDesignSystem_de8a72.Hashtag" href="#" hint-size="80px,22px">static-site</x-import>
+<x-import component-from-global-scope="ArticleTimeDesignSystem_de8a72.Hashtag" href="#" hint-size="70px,22px">indieweb</x-import>
+</div>
+<footer style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));margin:2em -1.5rem -1.5rem;border-top:1px solid var(--border-hairline);background:var(--color-surface);border-radius:0 0 var(--radius-md) var(--radius-md)">
+<span style="display:flex;align-items:center;justify-content:center;gap:0.4em;padding:1.25rem;font-size:var(--text-sm);color:var(--color-ink-muted);white-space:nowrap">7 Min.</span>
+<span style="display:flex;align-items:center;justify-content:center;padding:1.25rem;border-left:1px solid var(--border-hairline);border-right:1px solid var(--border-hairline)">
+<x-import component-from-global-scope="ArticleTimeDesignSystem_de8a72.HeartButton" count="{{ hearts }}" hint="einmal pro Besuch" hint-size="150px,32px"></x-import>
+</span>
+<a href="#reaktionen" style="display:flex;align-items:center;justify-content:center;gap:0.4em;padding:1.25rem;font-size:var(--text-sm);text-decoration:none;white-space:nowrap">3 Reaktionen</a>
+</footer>
+</article>
+
+<div style="display:grid;gap:var(--spacing-gutter)">
+<x-import component-from-global-scope="ArticleTimeDesignSystem_de8a72.InfoTiles" hint-size="100%,220px">
+<x-import component-from-global-scope="ArticleTimeDesignSystem_de8a72.InfoTile" icon="pushpin-line" label="Rubrik" hint-size="100%,56px">Allgemein</x-import>
+<x-import component-from-global-scope="ArticleTimeDesignSystem_de8a72.InfoTile" icon="tree-line" icon-color="var(--color-evergreen)" label="Stadium" hint-size="100%,56px">Evergreen</x-import>
+<x-import component-from-global-scope="ArticleTimeDesignSystem_de8a72.InfoTile" icon="calendar-line" label="Publiziert" hint-size="100%,56px"><span style="display:flex;flex-direction:column;gap:0.15em"><time datetime="2026-08-06">06.08.26</time><span style="font-size:0.75rem;color:var(--color-ink-muted)">editiert 07.08.26</span></span></x-import>
+<x-import component-from-global-scope="ArticleTimeDesignSystem_de8a72.InfoTile" icon="timer-line" label="Lesedauer" hint-size="100%,56px">7 Min.</x-import>
+<x-import component-from-global-scope="ArticleTimeDesignSystem_de8a72.InfoTile" icon="heart-line" icon-color="hsl(0 70% 65%)" label="Herzen" hint-size="100%,56px">41</x-import>
+<x-import component-from-global-scope="ArticleTimeDesignSystem_de8a72.InfoTile" icon="message-3-line" label="Reaktionen" hint-size="100%,56px"><a href="#reaktionen">3</a></x-import>
+<x-import component-from-global-scope="ArticleTimeDesignSystem_de8a72.InfoTile" icon="price-tag-3-line" label="Tags" wide="{{ true }}" hint-size="100%,56px">hugo · static-site · indieweb</x-import>
+</x-import>
+<x-import component-from-global-scope="ArticleTimeDesignSystem_de8a72.TocSidebar" items="{{ toc }}" hint-size="100%,160px"></x-import>
+<x-import component-from-global-scope="ArticleTimeDesignSystem_de8a72.SeriesSidebar" title="Der Neustart" items="{{ serie }}" hint-size="100%,200px"></x-import>
+</div>
+
+<section id="reaktionen" style="grid-column:1;margin-top:var(--spacing-section)">
+<h2 class="gd-h2">Reaktionen</h2>
+<p style="max-width:70ch;margin:0 0 var(--spacing-gutter);color:var(--color-ink-muted);font-size:var(--text-sm)">Kein Kommentarfeld — Antworten kommen als Webmention von der Seite, auf der sie geschrieben wurden.</p>
+<h3 class="gd-h3">Antworten</h3>
+<ul style="margin:0 0 var(--spacing-gutter);padding:0;display:grid;gap:var(--spacing-3);grid-template-columns:repeat(auto-fill,minmax(22rem,1fr))">
+<x-import component-from-global-scope="ArticleTimeDesignSystem_de8a72.Webmention" type="reply" author="@leser@norden.social" author-url="#" content="Genau diese Reihenfolge — erst Code, dann Design — hat bei mir auch als Einziges funktioniert." source="#" source-label="norden.social" hint-size="100%,120px"></x-import>
+<x-import component-from-global-scope="ArticleTimeDesignSystem_de8a72.Webmention" type="reply" author="@theo@chaos.social" author-url="#" content="Der Absatz über die Kaskadenschicht hat mir eine Woche gespart." source="#" source-label="chaos.social" hint-size="100%,120px"></x-import>
+</ul>
+<h3 class="gd-h3">Likes und Reposts</h3>
+<ul style="margin:0;padding:0;display:flex;flex-wrap:wrap;gap:0.5rem">
+<x-import component-from-global-scope="ArticleTimeDesignSystem_de8a72.Webmention" type="like" author="@jemand@chaos.social" source="#" source-label="chaos.social" hint-size="180px,36px"></x-import>
+<x-import component-from-global-scope="ArticleTimeDesignSystem_de8a72.Webmention" type="like" author="@nina@norden.social" source="#" source-label="norden.social" hint-size="180px,36px"></x-import>
+<x-import component-from-global-scope="ArticleTimeDesignSystem_de8a72.Webmention" type="repost" author="hugo-weekly.dev" source="#" source-label="hugo-weekly.dev" hint-size="160px,36px"></x-import>
+</ul>
+</section>
+
+</div>
+</div>
+</main>
+
+<x-import component-from-global-scope="ArticleTimeDesignSystem_de8a72.SiteFooter" identity="{{ identity }}" stats="{{ stats }}" archive-years="{{ archive }}" menu="{{ footerMenu }}" version="v2.1.0" hint-size="100%,600px"></x-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;hearts&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:41,&quot;tsType&quot;:&quot;number&quot;,&quot;min&quot;:0,&quot;max&quot;:999,&quot;section&quot;:&quot;Inhalt&quot;}}">
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      hearts: this.props.hearts ?? 41,
+      menu: [
+        { label: 'Artikel', href: '#', icon: 'article-line' },
+        { label: 'Notizen', href: '#', icon: 'lightbulb-line' },
+        { label: 'Rubriken', href: '#', icon: 'pushpin-line' },
+        { label: 'Tags', href: '#', icon: 'price-tag-3-line' },
+      ],
+      follow: [{ name: 'RSS Feed', href: '#', icon: 'rss-line' }],
+      toc: [
+        { label: 'Die Anforderungen', href: '#anforderungen' },
+        { label: 'Die Kandidaten', href: '#kandidaten', children: [{ label: 'WordPress', href: '#wp' }, { label: 'Jekyll', href: '#jk' }] },
+        { label: 'Fazit', href: '#fazit' },
+      ],
+      serie: [
+        { label: 'Die Diagnose', href: '#' },
+        { label: 'Warum Hugo', href: '#' },
+        { label: 'Bulma raus, Tailwind rein', href: '#' },
+        { label: 'Der alte Farbentwurf', href: '#', withered: true },
+      ],
+      identity: {
+        name: 'Angel Crawford',
+        photo: '../../assets/images/identity/angel.webp',
+        note: 'Web Entwickler. Sonnenliebhaber. Goth.',
+        aboutUrl: '#', siteUrl: '#',
+        socials: [
+          { name: 'Mastodon', href: '#', icon: 'mastodon-fill', color: '#6364FF' },
+          { name: 'Instagram', href: '#', icon: 'instagram-line', color: '#c13584' },
+          { name: 'GitHub', href: '#', icon: 'github-line', color: '#bbbbbb' },
+        ],
+        mostLoved: [{ label: 'Warum Hugo', href: '#warum-hugo', hearts: 41 }, { label: 'Die Diagnose', href: '#', hearts: 23 }],
+      },
+      stats: [
+        { label: 'Artikel', count: 14, icon: 'article-line', color: 'rgb(88,179,189)' },
+        { label: 'Notizen', count: 3, icon: 'lightbulb-line', color: 'hsl(29,100%,80%)' },
+      ],
+      archive: [{ year: '2026', count: 14 }, { year: '2024', count: 2 }, { year: '2020', count: 1 }],
+      footerMenu: [{ label: 'Impressum', href: '#' }, { label: 'Datenschutz', href: '#' }, { label: 'Styleguide', href: '#' }],
+    };
+  }
+}
+</script>
+</body>
+</html>

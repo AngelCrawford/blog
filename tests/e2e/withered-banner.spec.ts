@@ -2,12 +2,12 @@ import { test, expect, FIXTURE_DIRS, WITHERED_BANNER_FIXTURES } from "./fixtures
 
 // Story 1.4 — Withered Content Warning Banner E2E coverage.
 // Per-fixture page bundles are written by tests/e2e/build-and-serve.mjs BEFORE
-// hugo runs (Windows fsnotify is unreliable post-startup); cleanup happens in
+// hugo runs, so a single static export covers them all; cleanup happens in
 // tests/e2e/global-teardown.ts. The existing `_test_growth_stage_withered`
 // fixture (one date, no reason, no replacement) doubles as the "minimal" case.
 //
 // Accessibility coverage uses structural HTML attribute assertions following
-// the precedent set in Story 1.3 (docs/technical/testing.md §axe-core deferred
+// the precedent set in Story 1.3 (docs/testing.md §axe-core deferred
 // to Epic 9). When @axe-core/playwright is introduced in Epic 9, replace the
 // structural checks with a programmatic rules audit on this page.
 
@@ -40,8 +40,9 @@ test.describe("Withered banner (Story 1.4)", () => {
         const banner = page.locator(".withered-banner");
         await expect(banner).toBeVisible();
 
-        // Banner appears above the article box (AC #1).
-        const article = page.locator("article.box").first();
+        // Banner appears above the article panel (AC #1). `article.box` was
+        // Bulma's class name; the garden single carries h-entry on the panel.
+        const article = page.locator("article.h-entry").first();
         const bannerBox = await banner.boundingBox();
         const articleBox = await article.boundingBox();
         expect(bannerBox, "banner must have a bounding box").not.toBeNull();

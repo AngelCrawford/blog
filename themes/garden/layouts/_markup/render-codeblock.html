@@ -1,0 +1,9 @@
+{{- /* Garden — codeblock render hook. The box the fenced block sits in was
+       `.at-prose pre` CSS; the hook IS the call site for generated Markdown,
+       so the box is utilities now. transform.HighlightCodeBlock keeps every
+       Chroma behaviour — inline styles, line-number tables, language
+       attributes — which is why the utilities sit on a WRAPPER and reach the
+       inner pre with arbitrary variants: Chroma owns the pre, we own the
+       frame. */ -}}
+{{- $result := transform.HighlightCodeBlock . -}}
+<div class="mb-5 overflow-hidden rounded-md border border-[var(--border-hairline-quiet)] bg-[hsl(190_11%_8%)] text-sm/[1.6] [&_pre]:m-0 [&_pre]:overflow-x-auto [&_pre]:p-4">{{ $result.Wrapped }}</div>

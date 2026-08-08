@@ -1,0 +1,81 @@
+/* NAMED BY ROLE, NOT BY APPEARANCE.
+ *
+ * The first version named these after what they look like — dark, light, gold —
+ * which produced `--color-dark-lighter` and `--color-light-darker`: names that
+ * contradict themselves and say nothing about when to reach for them. Role names
+ * answer the only question that matters at the call site: what is this for.
+ * They also survive a palette change — if the site ever stops being dark-on-gold,
+ * `surface-raised` is still the raised surface.
+ *
+ * Values unchanged since 2020: dark plus gold, minimal. New colours need a
+ * reason that survives the styleguide. */
+:root {
+  /* --- Surfaces: what things sit on -------------------------------------- */
+  --color-surface: hsl(190 11% 11%);          /* default */
+  --color-surface-raised: hsl(190 11% 15%);   /* cards, panels */
+  --color-surface-sunken: hsl(190 11% 8%);    /* page background, wells */
+
+  /* --- Ink: what you read ------------------------------------------------
+   * Warm greys at hue 40 — the same family as the gold accent at 35, not the
+   * cool 190 the surfaces use. Cool text next to a warm accent sits almost
+   * opposite on the wheel and quietly competes with it.
+   * The ladder is 96 / 85 / 63 percent lightness: the old 95 / 90 / 72 put five
+   * points between heading and body, which does not survive antialiasing —
+   * everything read as one weight. Saturation falls as the text gets quieter
+   * (25 → 12 → 8) so the muted step recedes instead of becoming a second accent.
+   * Contrast on --color-surface: 15.5 / 12.1 / 6.7 : 1 — all past WCAG AA. */
+  --color-ink-strong: hsl(40 25% 96%);        /* headings */
+  --color-ink: hsl(40 12% 85%);               /* body text */
+  --color-ink-muted: hsl(40 8% 63%);          /* secondary text, captions, metadata */
+
+  /* --- Accent: what you act on ------------------------------------------ */
+  --color-accent: hsl(35 45% 50%);            /* links, focus, active */
+  --color-accent-hover: hsl(29 100% 80%);     /* hover */
+  --color-accent-muted: hsl(35 45% 26%);      /* borders, dividers */
+  /* The shadow beneath a duotone glyph. It is LIGHTER than the surface, which
+   * sounds wrong for a shadow and is not: a genuinely darker shade against a
+   * near-black page reads as a hole punched in it. What carries the depth is the
+   * step down from the bright line, not darkness against the page.
+   *
+   * BRONZE, not dark gold. It sat at hsl(35 48% 17%) — the accent's own hue,
+   * merely darker — and at that value the two layers separated by brightness
+   * alone, which on a dense glyph at 20px is no separation at all. Rotating it
+   * to hue 25 makes the back layer a different METAL rather than a dimmer
+   * version of the front one, and hue survives at small sizes where a few points
+   * of lightness do not. That in turn allows the value back up to 24%: clearly
+   * above the surface's 11%, so it still never reads as a hole. */
+  --color-accent-shadow: hsl(25 50% 24%);
+
+  /* --- State ------------------------------------------------------------
+   * Messages, form validation, build/deploy feedback. Lighter than the Bulma
+   * equivalents, because those were picked for text ON the colour; here the
+   * colour IS the text, on a dark surface. */
+  --color-success: hsl(152 50% 48%);
+  --color-warning: hsl(41 80% 55%);
+  --color-error: hsl(0 65% 60%);
+
+  /* --- Growth stages ----------------------------------------------------
+   * The digital-garden signal. Icon tints ONLY — one colour per stage, never a
+   * surface and never a text colour. That is why the styleguide shows them with
+   * their icons rather than as swatches in the palette. */
+  --color-seedling: hsl(75 60% 60%);          /* frischer Entwurf */
+  --color-budding: hsl(295 60% 60%);          /* in Entwicklung */
+  --color-evergreen: rgb(78 151 78);          /* gepflegt & aktuell */
+  --color-withered: hsl(0 0% 50%);            /* veraltet */
+
+  /* --- Semantic aliases -------------------------------------------------
+   * Same values, named for the place they are used. Prefer these in new work;
+   * the role tokens above stay the vocabulary the styleguide teaches. */
+  --page-bg: var(--color-surface-sunken);
+  --text-body: var(--color-ink);
+  --text-heading: var(--color-ink-strong);
+  --text-meta: var(--color-ink-muted);
+  --text-link: var(--color-accent);
+  --text-link-hover: var(--color-accent-hover);
+  --surface-card: var(--color-surface-raised);
+  --surface-tile: hsl(190 11% 10%);           /* card/sidebar chrome, $tile-bg */
+  --border-hairline: color-mix(in srgb, var(--color-accent-muted) 40%, transparent);
+  --border-hairline-quiet: color-mix(in srgb, var(--color-accent-muted) 25%, transparent);
+  --rule-gold: color-mix(in srgb, var(--color-accent) 60%, transparent);
+  --focus-ring: var(--color-accent);
+}

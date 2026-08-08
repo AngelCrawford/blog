@@ -1,0 +1,54 @@
+<!-- @dsCard group="Brand" viewport="900x420" name="Bilder" subtitle="4:3 im Querformat, in Sepia, um 1,5 em nach links unten versetzt" -->
+<!DOCTYPE html>
+<html lang="de"><head><meta charset="utf-8"><title>Bilder</title>
+<link rel="stylesheet" href="../styles.css">
+<script src="../assets/icons/inline-sprite.js"></script>
+<style>body{margin:0;padding:18px 18px 18px 40px;background:var(--color-surface-sunken);font-family:var(--font-body);color:var(--color-ink)}
+.lbl{display:block;margin:8px 0 0;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--color-ink-muted)}
+.row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:28px;align-items:start}
+.box{background:var(--color-surface-raised);border:1px solid var(--border-hairline);border-radius:var(--radius-lg);padding-right:var(--spacing-4);padding-bottom:var(--spacing-4)}
+.note{margin:var(--spacing-gutter) 0 0;max-width:76ch;font-size:12px;line-height:1.6;color:var(--color-ink-muted)}
+code{font-size:12px;color:var(--color-accent)}</style></head><body>
+
+<div class="row">
+
+<div>
+<div class="box at-flow">
+<figure class="at-figure at-figure-float">
+<img class="at-card-cover" src="../assets/images/covers/rubriken-cover.jpg" alt="">
+</figure>
+<p style="margin:1.5em 0 0;font-size:14px;line-height:1.6">Der Text läuft um das Bild herum, nicht daneben in einer eigenen Spalte. Ein 4:3-Bild in einer Rasterspalte lässt neben sich eine Textspalte übrig, in der sechs Wörter pro Zeile stehen.</p>
+</div>
+<span class="lbl">Ruhe · sepia(1) · umflossen</span>
+</div>
+
+<div>
+<div class="box">
+<figure class="at-figure">
+<img class="at-card-cover" src="../assets/images/covers/rubriken-cover.jpg" alt="" style="filter:sepia(0)">
+</figure>
+</div>
+<span class="lbl">Überfahren · sepia(0), 0,3 s</span>
+</div>
+
+<div>
+<div class="box">
+<figure class="at-figure">
+<img class="at-card-cover" src="../assets/images/covers/tags-cover.jpg" alt="">
+<figcaption class="at-figcaption">Bildunterschrift aus den EXIF-Daten</figcaption>
+</figure>
+</div>
+<span class="lbl">Mit Unterschrift</span>
+</div>
+
+</div>
+
+<p class="note"><strong style="color:var(--color-ink-strong)">Ein Seitenverhältnis für alles: 4:3 im Querformat.</strong> Karten, Rubrik-Kacheln, Artikelköpfe. Vorher war es 2:3 im Hochformat, aus denselben Dateien beschnitten — ein hochkantes Bild neben einer Textspalte macht die Karte so hoch wie das Bild statt so hoch wie der Text, und die Bilder dieses Blogs sind Straßen, Skylines und Bildschirme: Querformat-Motive, aufrecht gezwungen.</p>
+
+<p class="note"><strong style="color:var(--color-ink-strong)">Sepia ist die Hausbehandlung, keine Entscheidung pro Bild.</strong> Sie holt jedes Foto, egal mit welcher eigenen Palette, ins Gold. Volle Farbe ist die Belohnung fürs Überfahren, in 0,3 s. Der Rahmen wird nie eingefärbt — nur das Bild.</p>
+
+<p class="note"><strong style="color:var(--color-ink-strong)">Der Text fliegt um das Bild.</strong> Die Figur ist <code>float: left</code> mit <code>min(46%, 22rem)</code>, keine Rasterspalte — ein Querformat-Bild in eigener Spalte lässt daneben eine Textspalte übrig, in der sechs Wörter pro Zeile stehen. Unter 640 px fällt der Float weg und das Bild steht über dem Text. Der Behälter braucht <code>.at-flow</code>, sonst fällt er hinter das Bild zurück. Ausnahme sind Notizkarten: dort ist das Bild <em>Hintergrund</em> über die ganze Fläche, das Zitat liegt darüber.</p>
+
+<p class="note"><strong style="color:var(--color-ink-strong)">Die Position gehört zum Bild.</strong> Es sitzt 1,5 em links von und 1,5 em unter der oberen Ecke seines Behälters und ragt links heraus. Dadurch liest es sich als <em>aufgelegt</em>, nicht als hineingeschnitten — das ist derselbe Versatz wie bei den Kartencovern und der Notizkarte, und er ist der Grund, warum <code>.at-card</code> nicht beschneidet. 12 px Radius, gepaarter Schatten, Bildunterschrift als deckende Leiste über der Unterkante.</p>
+
+</body></html>

@@ -1,0 +1,28 @@
+{{- /* Garden — webmention display (Story 2.4, FR-012). Grouped from
+       data/webmentions_by_article.json, server-side, no JS on the display
+       path, auto-escaped (sanitization is the pipeline's job, not the
+       template's).
+
+       ONLY THE TYPES WITH CONTENT LIVE HERE: replies and mentions. Likes and
+       reposts carry nothing but WHO — they render as facepile tiles in the
+       sidebar (webmention-facepile.html), per the IndieWeb convention and
+       Angel's call. The heading is "Reaktionen", matching the Steckbrief row
+       that links to this anchor. The section renders even when empty: an
+       anchor that exists only sometimes is a broken promise. */ -}}
+{{- $mentions := index hugo.Data.webmentions_by_article .RelPermalink | default (slice) -}}
+{{- $replies := where $mentions "type" "reply" -}}
+{{- $generic := where $mentions "type" "mention" -}}
+
+{{- /* NO PANEL AROUND THE SECTION — the reactions sit on the page ground
+       like the footer widgets do, each entry carrying its own tile. A panel
+       here made tiles-in-a-panel, and the extra surface said nothing. */ -}}
+<section id="webmentions" class="at-flow mt-section">
+    <h2 class="gd-h2">Reaktionen</h2>
+
+    {{- if not (or $replies $generic) -}}
+        <p class="text-ink-muted">Noch keine Antworten. Sende einen Webmention!</p>
+    {{- else -}}
+        {{- with $replies }}{{ partial "widgets/webmention-group" (dict "items" . "heading" "Antworten" "type" "reply") }}{{ end }}
+        {{- with $generic }}{{ partial "widgets/webmention-group" (dict "items" . "heading" "Erwähnungen" "type" "mention") }}{{ end }}
+    {{- end -}}
+</section>

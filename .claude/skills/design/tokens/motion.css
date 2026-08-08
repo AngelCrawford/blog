@@ -1,0 +1,14 @@
+/* Short and unshowy. Colour and shadow crossfade; nothing bounces, nothing
+ * scales on the page itself. The only real animations are in the header
+ * (the clock rising, the birds, the shimmer across the wordmark), and those run
+ * once or loop slowly in the background.
+ *
+ * fast  — checkbox fill, tag hover
+ * base  — the default: colour, border, shadow, transform
+ * slow  — icon colour, tooltip fade, sepia release on cover images */
+:root {
+  --ease-out: ease-out; /* @kind other */
+  --duration-fast: 0.15s; /* @kind other */
+  --duration-base: 0.2s; /* @kind other */
+  --duration-slow: 0.3s; /* @kind other */
+}

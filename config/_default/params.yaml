@@ -1,4 +1,4 @@
-remixicon_version: 2605222304
+remixicon_version: 2608062259
 reading_speed: 179
 
 # Maintenance mode — `maintenance_mode: false` here is the production fallback.
@@ -9,7 +9,7 @@ reading_speed: 179
 # layouts/baseof.html reads the flag and renders _base/maintenance partial.
 # Static-site limitation: response stays HTTP 200 OK (GitHub Pages cannot 503).
 # Edit copy below — it inherits into the maintenance environment.
-# See docs/technical/runbook.md for full operating instructions.
+# See README.md for full operating instructions.
 maintenance_mode: false
 maintenance:
     title: "Wartung läuft"
@@ -19,7 +19,7 @@ maintenance:
 # Site-owner identity — canonical single source consumed by SEO (Schema.org
 # Person, OG article:author), footer copyright, h-card on the home page,
 # Author-Box, and any partial that needs author metadata. See ADR
-# `docs/decisions/adr-multi-author-to-coauthor.md` (Accepted 2026-05-12).
+# `docs/decisions.md` (Accepted 2026-05-12).
 identity:
     name: "Angel Crawford"
     photo: "/images/identity/angel.webp" # final asset; swap path here when Story 9.14 lands the brand-cutover avatar
@@ -52,7 +52,7 @@ identity:
           color: "#1DB954"
         - name: "Reddit"
           src: "https://www.reddit.com/user/Angel_Crawford"
-          icon: "reddit-line"
+          icon: "reddit-2-line"
           color: "#FF5700"
           # opacity: "0.85"
         - name: "The Sims 4 Gallery"
@@ -77,7 +77,7 @@ identity:
 csp:
     default: ["'self'"]
     formaction: ["'self'"]
-    framesrc: ["'self'", "https://www.youtube-nocookie.com"]
+    framesrc: ["'self'", "https://www.youtube-nocookie.com", "https://open.spotify.com"] # Spotify erst nach Zwei-Klick-Consent (Profilseite)
     frameancestors: ["'none'"] # Modern X-Frame-Options replacement — Clickjacking-Schutz, niemand darf die Site embedden
     imgsrc: ["'self'", "data:", "https:"]
     objectsrc: ["'none'"]

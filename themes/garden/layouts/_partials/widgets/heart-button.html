@@ -1,0 +1,109 @@
+{{- /* Heart button — Story 2.2 (FR-008, FR-009). The only engagement control on
+ * the site: no comments, no reactions bar. Replies arrive as webmentions.
+ *
+ * THREE RENDER SHAPES, and which one you get is not a style choice:
+ *
+ *   readonly  an article's card. The action lives on the article page; the card
+ *             shows the count as social proof and nothing else.
+ *   card      a note's card. Notes have no detail page (FR-027), so this is the
+ *             only place their heart can live — it stays interactive.
+ *   single    the article page's info tile: round pressable heart + count +
+ *             daily-update hint. Garden markup since the single migrated.
+ *
+ * CONTRACT WITH assets/js/hearts.js — these survive any restyle:
+ *   .heart-button (not .heart-button-fallback)   the clickable control
+ *   .heart-count                                 the number it increments
+ *   .hearted                                     the class it adds when done
+ *   data-article                                 which entry was hearted
+ *   .heart-button-wrapper / .heart-button-hint   single-page cadence caption
+ *
+ * Counts come from data/umami_hearts.json, refreshed daily by Story 3.1;
+ * `| default 0` keeps the markup honest before a fetch has ever run.
+ *
+ * Caller forms, both supported:
+ *   {{ partial "widgets/heart-button" . }}
+ *   {{ partial "widgets/heart-button" (dict "page" . "context" "card") }} */ -}}
+{{- $page := . -}}
+{{- $context := "single" -}}
+{{- if reflect.IsMap . -}}
+    {{- $page = .page -}}
+    {{- $context = .context | default "single" -}}
+{{- end -}}
+{{- $isCard := eq $context "card" -}}
+{{- $isArticle := eq $page.Type "articles" -}}
+{{- $readonly := and $isCard $isArticle -}}
+{{- $showHint := and (not $isCard) $isArticle -}}
+{{- $hearts := index hugo.Data.umami_hearts $page.RelPermalink | default 0 -}}
+{{- $sprite := "fonts/remixicon/remixicon.symbol.svg" | relURL -}}
+{{- $rv := $page.Site.Params.remixicon_version -}}
+
+{{- if $readonly -}}
+    {{- /* THE CAPSULE — variant A of five mocked side by side, Angel's pick.
+           Heart and count bind into ONE element in a red hairline pill: the
+           loose glyph-plus-number was the clutter, and the pill shape is one
+           the card already speaks (Rubrik, tags). Count muted so the red
+           outline stays the loudest part. Not pressable: just a reading. */ -}}
+    <span class="inline-flex shrink-0 items-center gap-[0.35em] rounded-pill border border-[hsl(0_70%_65%/0.55)] py-[0.18em] pr-[0.6em] pl-[0.5em] text-[hsl(0_70%_65%)]" data-tooltip="Dieser Artikel hat {{ $hearts }} Herzen erhalten" aria-label="Herz-Anzahl: {{ $hearts }}">
+        <svg class="size-[1.1em] shrink-0 fill-current" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#heart-line"></use></svg>
+        <span class="heart-count text-[0.85em] font-semibold text-ink-muted tabular-nums">{{ $hearts }}</span>
+    </span>
+{{- else if $isCard -}}
+    {{- /* THE HEARTED STATE STYLES FROM aria-pressed, and that closes a real bug:
+           the ported CSS styled `.is-hearted` while hearts.js has always set
+           `.hearted` — the red state never fired since the port. hearts.js also
+           sets aria-pressed="true" (and did all along), so the state lives in
+           the attribute that already means it. The disabled dimming comes from
+           the global base rule, unchanged. */ -}}
+    {{- /* The same capsule, pressable: hover brightens border and heart, and
+           the HEARTED state cross-fades the outline to heart-fill (stacked
+           glyphs, group-aria-pressed) while the border firms up. hearts.js
+           sets aria-pressed; the CSS just listens. */ -}}
+    <button type="button"
+            class="heart-button group/heart inline-flex shrink-0 cursor-pointer items-center gap-[0.35em] rounded-pill border border-[hsl(0_70%_65%/0.55)] py-[0.18em] pr-[0.6em] pl-[0.5em] text-[hsl(0_70%_65%)] transition-colors duration-150 ease-out hover:border-[hsl(0_70%_74%)] hover:text-[hsl(0_70%_74%)] aria-pressed:border-[hsl(0_70%_65%)]"
+            data-tooltip="Diese Notiz mit einem Herz markieren"
+            data-article="{{ $page.RelPermalink }}"
+            aria-label="Diese Notiz mit einem Herz markieren"
+            aria-pressed="false">
+        <span class="relative inline-flex shrink-0">
+            <svg class="size-[1.1em] fill-current opacity-100 transition-opacity duration-150 group-aria-pressed/heart:opacity-0" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#heart-line"></use></svg>
+            <svg class="absolute inset-0 size-[1.1em] fill-current opacity-0 transition-opacity duration-150 group-aria-pressed/heart:opacity-100" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#heart-fill"></use></svg>
+        </span>
+        <span class="heart-count text-[0.85em] font-semibold text-ink-muted tabular-nums" aria-live="polite">{{ $hearts }}</span>
+    </button>
+    <noscript>
+        <span class="inline-flex items-center gap-[0.2em] text-[color-mix(in_srgb,var(--color-accent-hover)_80%,transparent)]" aria-label="Herz-Anzahl: {{ $hearts }}">
+            <svg class="size-[1.1em] shrink-0 fill-current" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#heart-line"></use></svg>
+            <span class="heart-count font-semibold tabular-nums">{{ $hearts }}</span>
+        </span>
+    </noscript>
+{{- else -}}
+    {{- /* Single page: the SAME capsule as the cards, pressable, living in the
+           Steckbrief tile's head. `.heart-button-wrapper` wraps here so
+           hearts.js finds `.heart-button-hint` via closest(); the hint is
+           sr-only — the visual feedback is the fill itself, the announcement
+           is for screen readers. The noscript <a> classes are matched
+           VERBATIM by the build test. */ -}}
+    <span class="heart-button-wrapper inline-flex items-center">
+        <button type="button"
+                class="heart-button group/heart inline-flex shrink-0 cursor-pointer items-center gap-[0.35em] rounded-pill border border-[hsl(0_70%_65%/0.55)] py-[0.18em] pr-[0.6em] pl-[0.5em] text-[hsl(0_70%_65%)] transition-colors duration-150 ease-out hover:border-[hsl(0_70%_74%)] hover:text-[hsl(0_70%_74%)] aria-pressed:border-[hsl(0_70%_65%)]"
+                data-article="{{ $page.RelPermalink }}"
+                data-tooltip="Diesen Artikel mit einem Herz markieren"
+                aria-label="Diesen Artikel mit einem Herz markieren"
+                aria-pressed="false">
+            <span class="relative inline-flex shrink-0">
+                <svg class="size-[1.1em] fill-current opacity-100 transition-opacity duration-150 group-aria-pressed/heart:opacity-0" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#heart-line"></use></svg>
+                <svg class="absolute inset-0 size-[1.1em] fill-current opacity-0 transition-opacity duration-150 group-aria-pressed/heart:opacity-100" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#heart-fill"></use></svg>
+            </span>
+            <span class="heart-count text-[0.85em] font-semibold text-ink-muted tabular-nums" aria-live="polite">{{ $hearts }}</span>
+        </button>
+        {{- if $showHint }}
+        <small class="heart-button-hint sr-only" aria-live="polite">(Zähler aktualisiert täglich)</small>
+        {{- end }}
+        <noscript>
+            <a class="heart-button heart-button-fallback" href="#" aria-label="Diesen Artikel liken">
+                <svg class="inline size-[1.1em] fill-current text-[color-mix(in_srgb,var(--color-accent-hover)_80%,transparent)]" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#heart-line"></use></svg>
+            </a>
+            <span class="heart-count font-semibold tabular-nums">{{ $hearts }}</span>
+        </noscript>
+    </span>
+{{- end -}}

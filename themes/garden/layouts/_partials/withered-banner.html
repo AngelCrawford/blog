@@ -1,0 +1,48 @@
+{{- /* Garden — withered warning banner (Story 1.4). Renders above the article
+       body when growth_stage == "withered", nothing otherwise.
+
+       CONTRACT, unchanged from article-time — the e2e suite and
+       assets/js/withered-banner.js both depend on it:
+         .withered-banner[data-banner-key]   the JS finds the banner here
+         .withered-banner-dismiss            the dismiss button
+         role="alert" + aria-labelledby      a11y structure (AC #9)
+       The tint is the withered stage's own neutral grey, not warning-gold:
+       the banner says "this content has left the garden", and it should say
+       it in the stage's colour. */ -}}
+{{- if eq .Params.growth_stage "withered" -}}
+  {{- $date := .Params.withered_date -}}
+  <aside class="withered-banner mb-gutter rounded-md border border-withered/50 bg-[hsl(0_0%_12%)] p-gutter text-ink shadow-md"
+         role="alert"
+         aria-labelledby="withered-banner-title"
+         data-banner-key="withered-banner-dismissed:{{ .RelPermalink }}">
+    <div class="mb-3 flex items-start justify-between gap-3">
+      <h2 id="withered-banner-title" class="withered-banner-heading m-0 inline-flex items-center gap-2 font-heading text-lg font-semibold text-withered">
+        <svg class="size-5 shrink-0 fill-current" aria-hidden="true">
+          <use href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ site.Params.remixicon_version }}#skull-2-line"></use>
+        </svg>
+        <span>Verwelkter Inhalt</span>
+      </h2>
+      <button class="withered-banner-dismiss inline-flex size-8 max-[640px]:size-11 shrink-0 cursor-pointer items-center justify-center rounded-full border border-accent-muted/40 bg-transparent text-ink-muted transition-colors duration-150 hover:border-accent hover:text-accent"
+              type="button"
+              aria-label="Hinweis ausblenden"
+              title="Hinweis ausblenden">
+        <svg class="size-4 fill-current" aria-hidden="true">
+          <use href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ site.Params.remixicon_version }}#close-fill"></use>
+        </svg>
+      </button>
+    </div>
+    <p class="m-0">
+      Als veraltet markiert am
+      <time datetime="{{ $date }}">{{ time.Format ":date_long" $date }}</time>.
+    </p>
+    {{- with .Params.withered_reason }}
+    <p class="withered-banner-reason mt-2 mb-0 text-ink-muted">{{ . }}</p>
+    {{- end }}
+    {{- with .Params.replacement_url }}
+    <p class="withered-banner-replacement mt-3 mb-0">
+      {{- $isAbsolute := or (hasPrefix . "http://") (hasPrefix . "https://") (hasPrefix . "//") -}}
+      <a class="font-semibold text-accent underline underline-offset-4 hover:text-accent-hover" href="{{ cond $isAbsolute . (. | relURL) }}" title="Aktuelle Version dieses Inhalts">Aktuelle Version ansehen →</a>
+    </p>
+    {{- end }}
+  </aside>
+{{- end -}}

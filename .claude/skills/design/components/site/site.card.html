@@ -1,0 +1,39 @@
+<!-- @dsCard group="Components" viewport="1000x760" name="Site" subtitle="Header mit Hafen-Silhouette und Sonnenstand, h-card, Footer mit goldenen Trennlinien" -->
+<!DOCTYPE html>
+<html lang="de"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../../styles.css">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="../../assets/icons/inline-sprite.js"></script>
+<script src="../../_ds_bundle.js"></script>
+<style>body{margin:0;background:var(--color-surface-sunken)}.cap{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--color-ink-muted);padding:0 20px}</style>
+</head><body><div id="root"></div>
+<script type="text/babel">
+const { SiteHeader, SiteFooter } = window.ArticleTimeDesignSystem_de8a72;
+const identity={
+  name:'Angel Crawford', photo:'../../assets/images/identity/angel.webp',
+  note:'Web Entwickler. Sonnenliebhaber. Goth.', aboutUrl:'#', siteUrl:'#',
+  socials:[
+    {name:'Mastodon',href:'#',icon:'mastodon-fill',color:'#6364FF'},
+    {name:'Instagram',href:'#',icon:'instagram-line',color:'#c13584'},
+    {name:'GitHub',href:'#',icon:'github-line',color:'#bbbbbb'}
+  ],
+  mostLoved:[{label:'Warum Hugo',href:'#hugo',hearts:41},{label:'Die Diagnose',href:'#diagnose',hearts:23}]
+};
+function Card(){return (<>
+  <SiteHeader title="Article Time" sky="dusk" height={240}/>
+  <p className="cap" style={{padding:'12px 20px 0'}}>Sonnenstand: dusk — nachts und in der Dämmerung Sterne, tagsüber der Ballon</p>
+  <SiteFooter
+    slogan={<>Ein Blog. Ein Autor.<br/>Und viel Zeit.</>}
+    identity={identity}
+    statsIntro="Momentan befinden sich 17 Einträge auf dieser Seite — davon 2 verwelkt."
+    stats={[{label:'Artikel',count:14,icon:'article-line',color:'rgb(88,179,189)'},{label:'Notizen',count:3,icon:'lightbulb-line',color:'hsl(29,100%,80%)'}]}
+    archiveYears={[{year:'2026',count:14},{year:'2020',count:3}]}
+    menu={[{label:'Impressum',href:'#'},{label:'Datenschutz',href:'#'},{label:'Styleguide',href:'#'}]}
+    version="v2.1.0"
+    credits={<>Header SVGs von pixelliebe | shutterstock.com</>}
+  />
+</>);}
+ReactDOM.createRoot(document.getElementById('root')).render(<Card/>);
+</script></body></html>

@@ -1,0 +1,89 @@
+{{ define "main" }}
+{{- /* Garden — the profile page (layout: profile). Variant A of three mocked:
+       the business card. One compact centred panel — avatar, name, THE
+       SOCIALS IN REACH OF THE NAME (they are this page's call to action,
+       not sidebar furniture), taglines, and any body text runs on centred
+       with a reading measure. The floating icon rail died: it hovered beside
+       the panel belonging to nothing.
+
+       The h-card microformat classes are parser contracts. Age is computed
+       from birthdate for the {age} placeholder and degrades to "". */ -}}
+{{- $identity := .Site.Params.identity -}}
+{{- $sprite := "fonts/remixicon/remixicon.symbol.svg" | relURL -}}
+{{- $v := .Site.Params.remixicon_version -}}
+{{- $age := "" -}}
+{{- with .Params.birthdate -}}
+  {{- $birth := time . -}}
+  {{- $today := now -}}
+  {{- $a := sub $today.Year $birth.Year -}}
+  {{- if or (lt $today.Month $birth.Month) (and (eq $today.Month $birth.Month) (lt $today.Day $birth.Day)) -}}
+    {{- $a = sub $a 1 -}}
+  {{- end -}}
+  {{- $age = printf "%d" $a -}}
+{{- end -}}
+
+<div class="mx-auto max-w-[96rem] px-gutter pt-gutter pb-section font-body text-base text-ink">
+    {{- /* THE RAIL IS BACK — Angel measured variant A against the old card and
+           the row lost: icons top-to-bottom on the LEFT, content on the right,
+           which is what gives them presence without shouting. `at-socials`
+           brings the footer's fade: hovering one dims the siblings. On a
+           phone the rail folds into a centred row above the content. */ -}}
+    <article class="h-card mx-auto grid max-w-[52rem] grid-cols-1 gap-6 rounded-md border border-accent-muted/40 bg-surface-raised p-gutter py-section text-center shadow-md min-[640px]:grid-cols-[auto_1fr] min-[640px]:gap-10">
+        <nav class="at-socials flex flex-wrap justify-center gap-6 min-[640px]:flex-col min-[640px]:flex-nowrap min-[640px]:justify-between min-[640px]:self-stretch min-[640px]:py-2" aria-label="Soziale Profile">
+            {{- range $identity.socials }}
+            <a class="flex size-[1.3em] items-center justify-center text-[1.7em] transition duration-200 ease-out" href="{{ .src }}" target="_blank" rel="noopener me" data-tooltip="{{ .name }}" aria-label="{{ .name }}"
+               style="color: {{ .color }};{{ with .opacity }} opacity: {{ . }};{{ end }}">
+                <svg class="size-[1.7em] fill-current" aria-hidden="true"><use href="{{ $sprite }}?t={{ $v }}#{{ .icon }}"></use></svg>
+            </a>
+            {{- end }}
+        </nav>
+
+        {{- /* justify-center: the rail sets the card's height, and the content
+               centres in it — the air splits top and bottom instead of
+               pooling underneath (Angel, against the old card). */ -}}
+        <div class="flex min-w-0 flex-col items-center justify-center gap-4">
+            {{- with $identity.photo }}
+            <img class="u-photo size-[160px] rounded-full border-2 border-accent-muted object-cover" src="{{ . | relURL }}" alt="{{ $identity.name }}" width="160" height="160">
+            {{- end }}
+
+            <h1 class="gd-h1 p-name" data-heading="{{ $identity.name }}">{{ $identity.name }}</h1>
+
+            {{- /* ANGEL'S CONTENT MODEL: the taglines live in the Markdown body as
+                   a list — bold main, <small> sub, {age} placeholder. The template
+                   substitutes the age (markdown cannot) and dresses the bare list
+                   as the card rows: gold square bullet, strong ink at the DESIGN
+                   weight (600 — the browser's 700 read too loud, Angel's call),
+                   muted sub. The old front-matter taglines path is deleted, no
+                   longer used. */ -}}
+            {{- with .Content }}
+            <div class="e-content mt-2 text-left [&_ul]:m-0 [&_ul]:flex [&_ul]:w-fit [&_ul]:list-none [&_ul]:flex-col [&_ul]:gap-2 [&_ul]:p-0 [&_li]:relative [&_li]:pl-4 [&_li]:before:absolute [&_li]:before:left-0 [&_li]:before:top-[0.45em] [&_li]:before:size-[0.4em] [&_li]:before:bg-accent [&_li]:before:content-[''] [&_strong]:font-semibold [&_strong]:text-ink-strong [&_small]:text-[0.9em] [&_small]:text-ink-muted [&_p]:mb-4">{{ replace . "{age}" $age | safeHTML }}</div>
+            {{- end }}
+
+            {{- /* Spotify, the two-click way: nothing leaves the browser until
+                   the visitor presses the button — then main.js swaps this
+                   facade for the iframe (CSP allows exactly this frame host).
+                   The embed URL comes from front matter, so the playlist is
+                   content, not template. */ -}}
+            {{- with .Params.spotify }}
+            <div class="mt-2 w-full max-w-[22rem] rounded-xl border border-accent-muted/40 bg-[var(--surface-tile)] p-4 text-left" data-embed-src="{{ . }}" data-embed-height="80" data-embed-title="Spotify-Playlist">
+                <p class="m-0 mb-3 text-sm text-ink-muted">
+                    Der Klick lädt den Player von Spotify, dabei stellt Dein Browser
+                    eine Verbindung zu Spotify her (Cookies möglich).<br /> Details in der
+                    <a class="text-accent-hover underline underline-offset-2 hover:text-accent" href="{{ "pages/datenschutz/" | relURL }}">Datenschutzerklärung</a>.
+                </p>
+                {{- /* ui/button, not a hand-rolled twin — Angel caught the copy;
+                       the spotify-line glyph is their pick too (the curated
+                       sprite has no play icon, and naming the service on a
+                       consent button is the honest label anyway). */ -}}
+                <div class="flex justify-end">
+                    {{ partial "ui/button" (dict "label" "Player laden" "variant" "secondary" "icon" "spotify-line" "type" "button") }}
+                </div>
+            </div>
+            {{- end }}
+
+            <a class="u-url" rel="me" href="{{ "/" | absURL }}" hidden>{{ $identity.name }}</a>
+            {{- with $identity.note }}<p class="p-note" hidden>{{ . }}</p>{{ end }}
+        </div>
+    </article>
+</div>
+{{ end }}

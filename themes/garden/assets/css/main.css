@@ -1,0 +1,209 @@
+/* Garden — design-system stylesheet. THE ENTRY POINT, nothing else.
+ *
+ * This file declares the cascade order, pulls in Tailwind, registers the
+ * webfonts and holds the token block. The rules live next door:
+ *
+ *   css/base.css        the reset, scoped to garden markup      layer(base)
+ *   css/components.css  the gd-* and at-* vocabulary            layer(components)
+ *
+ * THE ONLY STYLESHEET ON THE PAGE since the Bulma teardown (August 2026).
+ * Preflight is ON — the scoped stand-in reset it replaced is recorded in
+ * docs/migration.md. css/base.css survives smaller: it holds the interaction
+ * baseline (everything clickable shows a pointer), which is a site rule from
+ * CLAUDE.md, not a reset. */
+
+/* ===========================================================================
+ * THE CASCADE, IN ONE LINE.
+ *
+ * Declaring the order up front is what makes every rule below able to be a
+ * plain class selector. Layers beat specificity outright: `bulma` loses to
+ * `components` no matter how many selectors Bulma stacks, so garden never has
+ * to out-shout anything — and `components` loses to the unlayered utilities, so
+ * a utility at the call site still wins.
+ *
+ *   theme       tailwindcss/theme.css — custom properties only
+ *   base        Preflight, then css/base.css's interaction baseline
+ *   components  css/components.css — gd-* and at-*
+ *   (unlayered) the utilities. Above everything, on purpose.
+ *
+ *   `bulma` stood at the bottom of this list until the teardown — the whole
+ *   compiled sheet, demoted in one move. The trick carried the migration and
+ *   is written up in docs/migration.md.
+ *
+ * THE PREVIOUS ARRANGEMENT LEFT THE COMPONENTS UNLAYERED TOO, and paid for it
+ * in specificity: `[data-garden] .gd-panel` is 0-2-0 and therefore beat the
+ * 0-1-0 utilities it was meant to let through. That is the same trap
+ * docs/migration.md records for the first attempt, one round later. Layers
+ * remove the whole class of bug rather than another instance of it.
+ * =========================================================================== */
+@layer theme, base, components;
+
+/* THE PACKAGE'S DEFAULT THEME, resolved from node_modules — not a file of ours,
+ * which is worth saying because it looks like a broken path. It supplies what
+ * tokens.css does not redefine: the breakpoints behind every `sm:`/`md:`/`lg:`/
+ * `xl:` variant (36 uses across the templates), default weights, easings.
+ * Where names collide, tokens.css wins by coming later.
+ *
+ * Known consequence, accepted with eyes open: the default theme also carries
+ * Tailwind's full colour palette, so `text-red-500` in a template would work
+ * and be off-palette. Nothing uses one today; if that ever needs enforcing, it
+ * is a guard test, not a reason to fork the theme file. */
+@import "tailwindcss/theme.css" layer(theme);
+
+/* `source(none)` disables Tailwind's automatic source detection. Without it,
+ * Tailwind scans outward from the project directory and picks up the BUILT
+ * HTML under the public output directories, which is full of Bulma class
+ * names — generating a utility for every collision. Sources are declared
+ * explicitly below instead. */
+@import "tailwindcss/utilities.css" source(none);
+
+/* PATHS ARE PROJECT-RELATIVE AND NEED THE LEADING `./`, both for the same
+ * reason: Hugo pipes this stylesheet to the Tailwind CLI on stdin, so the
+ * resolver has no containing directory and falls back to the project root.
+ * `./css/base.css` looks for it beside hugo.toml and fails the build;
+ * `themes/…` without the `./` is read as a package name and fails too. Only
+ * this form resolves — the same rule the `@source` lines below follow.
+ *
+ * The `layer()` on the import is what puts the whole file in a layer, so
+ * neither file needs a wrapper block of its own. */
+@import "tailwindcss/preflight.css" layer(base);
+@import "./themes/garden/assets/css/base.css" layer(base);
+@import "./themes/garden/assets/css/components.css" layer(components);
+
+/* The token block lives in tokens.css so the styleguide's own entry point can
+ * share it by reference — see the header there. The `static` marker emits every
+ * variable, which makes THIS file's output the one place tokens exist at
+ * runtime.
+ *
+ * `layer(theme)` does two jobs. The variables land in the same layer Tailwind
+ * puts its own theme in — and the suffix is what keeps Hugo's import inliner
+ * off this line. Hugo resolves plain `@import`s itself, against the published
+ * path `/css/`, where this file does not exist; an import carrying a modifier
+ * is left for the Tailwind CLI, which resolves it against the project root.
+ * That is why the base/components imports above never hit this and a plain
+ * import here failed the build. */
+@import "./themes/garden/assets/css/tokens.css" layer(theme);
+
+/* Path is relative to the PROJECT ROOT, not to this file: Hugo pipes the
+ * stylesheet to the Tailwind CLI on stdin, so there is no containing directory
+ * to resolve against. A file-relative path silently produces zero utilities.
+ *
+ * THE STYLEGUIDE IS DELIBERATELY NOT IN HERE. It is a catalogue: it renders
+ * every specimen of everything, and about ninety of its class names appear
+ * nowhere else on the site. Scanning it put 5.9 KB — a tenth of this
+ * stylesheet — on every page that will never use a line of it. Measured by
+ * building both ways.
+ *
+ * It gets its own entry point, css/styleguide.css, which layouts/page/
+ * styleguide.html loads for itself. Utilities the two share are emitted twice;
+ * that is the cheaper mistake, and gzip barely notices repetition. */
+@source "themes/garden/layouts";
+@source not "themes/garden/layouts/page/styleguide.html";
+
+/* JavaScript that builds DOM nodes carries class names too — search.js styles
+ * every result row it generates. Forgetting this source produced a correctly
+ * working search with completely unstyled results. */
+@source "themes/garden/assets/js";
+@source not "themes/garden/assets/js/styleguide.js";
+
+/* ===========================================================================
+ * WEBFONTS — registered here, not inherited from article-time.
+ *
+ * The font files moved to themes/garden/static/fonts/, so their @font-face
+ * follows: deleting article-time must not take the registration with it.
+ *
+ * WHY A FAMILY CALLED "Montserrat" HAS TO EXIST AT ALL:
+ * article-time registers this one variable file under three family names —
+ * Montserrat-Light / -Regular / -Bold — because Bulma wanted family names where
+ * it should have used weights. `--font-body` inherited `Montserrat-Regular`, a
+ * name that claims one weight for a face registered across 100–900. Registering
+ * it once under its real name fixes that; the legacy aliases stay in
+ * article-time's SCSS and die with it.
+ *
+ * URL IS ROOT-RELATIVE ON PURPOSE. Bulma's compiled sheet is published at the
+ * site root and uses `url("fonts/…")`; this one is published at /css/main.css,
+ * where the same relative path would resolve to /css/fonts/ and 404. baseURL
+ * carries no sub-path in any of the four environments, so a leading slash is
+ * safe. head.html already preloads this exact file.
+ * =========================================================================== */
+@font-face {
+  font-family: "Montserrat";
+  src: url("/fonts/Montserrat/Montserrat-VariableFont_wght.ttf") format("truetype");
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+/* MONTSERRAT ALTERNATES — the heading face, and until now a silent debt.
+ * `--font-heading` has always named it, but the only @font-face for it lived in
+ * article-time's vars/_fonts.scss. Garden rendered its headings correctly by
+ * borrowing a registration from the theme it is replacing; deleting that theme
+ * would have taken the face with it and nobody would have connected the two.
+ *
+ * Two files, not one: unlike Montserrat this is not a variable font, so the
+ * Medium cut carries the 600 the headings actually use. Registering only
+ * Regular leaves the browser to synthesise bold, which on Alternates thickens
+ * the very glyphs that make it Alternates. */
+@font-face {
+  font-family: "Montserrat Alternates";
+  src: url("/fonts/Montserrat/MontserratAlternates-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Montserrat Alternates";
+  src: url("/fonts/Montserrat/MontserratAlternates-Medium.ttf") format("truetype");
+  font-weight: 500 700;
+  font-display: swap;
+}
+
+/* REMIXICON AS A WEBFONT — the same debt, and deliberately the smaller build.
+ * Icons are the SVG sprite; this exists only for the four glyphs the design
+ * calls by codepoint, where a pseudo-element needs a character rather than a
+ * `<use>`: the double-quote pair on pull quotes, notes and the footer slogan,
+ * the external-link arrow, and the image marker in figcaptions.
+ *
+ * woff2 alone. article-time also ships eot, ttf, svg and woff for browsers that
+ * have not existed for a decade; nothing garden targets needs them, and
+ * `font-display: block` is right here because a missing icon glyph renders as a
+ * blank box rather than as unstyled text. */
+@font-face {
+  font-family: "remixicon";
+  src: url("/fonts/remixicon/remixicon.woff2") format("woff2");
+  font-display: block;
+}
+
+
+
+/* ===========================================================================
+ * SEMANTIC ALIASES — the same values, named for the place they are used.
+ *
+ * NOT IN `@theme static`, AND THAT IS THE POINT. `--text-*` is Tailwind's
+ * FONT-SIZE namespace: declaring `--text-body: var(--color-ink)` in the theme
+ * block mints a `text-body` utility whose value is a colour, and `text-heading`
+ * and `text-meta` with it. An element carrying one would silently get a
+ * nonsense font-size and no warning — exactly the failure mode CLAUDE.md warns
+ * about for class names assembled from variables.
+ *
+ * The rest of the aliases follow them here rather than being split by whether
+ * they happen to collide, because one rule ("aliases live in :root, scale
+ * values live in @theme") is easier to keep than a per-token judgement.
+ *
+ * These are for component CSS. Utilities use the role tokens above.
+ * =========================================================================== */
+:root {
+  --page-bg: var(--color-surface-sunken);
+  --text-body: var(--color-ink);
+  --text-heading: var(--color-ink-strong);
+  --text-meta: var(--color-ink-muted);
+  --text-link: var(--color-accent);
+  --text-link-hover: var(--color-accent-hover);
+  --surface-card: var(--color-surface-raised);
+  --surface-tile: hsl(190 11% 10%); /* card and sidebar chrome — the old $tile-bg */
+  /* `color-mix()` rather than Tailwind's `--alpha()`, verbatim from the design
+   * system. Identical result, and it keeps the two files diffable — the whole
+   * reason design-tokens.test.mjs can compare them character for character. */
+  --border-hairline: color-mix(in srgb, var(--color-accent-muted) 40%, transparent);
+  --border-hairline-quiet: color-mix(in srgb, var(--color-accent-muted) 25%, transparent);
+  --rule-gold: color-mix(in srgb, var(--color-accent) 60%, transparent);
+  --focus-ring: var(--color-accent);
+}

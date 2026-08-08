@@ -1,0 +1,55 @@
+{{- /* The button. A PARTIAL rather than a CSS class, and that is the point.
+ *
+ * `.gd-button` existed because the label weight is a real decision — buttons
+ * read as actionable partly because they are a little heavier than the prose
+ * around them, and that weight was lost once already when a reset stripped it.
+ * The rule docs/design.md gives is "the same decision would repeat and could
+ * drift", and it is satisfied here: this file is the one place the decision
+ * lives. It just does not have to be CSS to be one place.
+ *
+ * What that buys over a class: the utilities are visible where they apply,
+ * Tailwind emits nothing that no page uses, and the call site names what it
+ * wants — `variant "secondary"` — instead of remembering two class names in the
+ * right order.
+ *
+ * Renders an <a> when given `href`, otherwise a <button>. Never both: a link
+ * that looks like a button and a button that navigates are different things,
+ * and the difference belongs in the markup.
+ *
+ * Parameters
+ *   label     required, the visible text
+ *   href      makes it a link; omit for a <button>
+ *   variant   "secondary" for the outline, anything else for the gold fill
+ *   icon      sprite id, drawn before the label
+ *   title     tooltip; falls back to the label
+ *   class     extra utilities for the call site (margins, self-alignment)
+ *   type      button type, defaults to "button"
+ *   attrs     raw attribute string for anything else (aria-*, data-*)
+ */ -}}
+{{- $secondary := eq (.variant | default "") "secondary" -}}
+{{- $title := .title | default .label -}}
+
+{{- /* `inline-flex` is blockified to `flex` wherever this lands in a flex or
+       grid container, which is fine — it still shrinks to its content. */ -}}
+{{- /* THE BORDER COLOUR IS NOT IN THE BASE, and that is not tidiness. Tailwind
+       resolves two utilities for the same property by their order in the
+       generated stylesheet, not by their order in the class attribute — so a
+       base carrying `border-transparent` and a variant carrying `border-accent`
+       is a coin toss, and the coin came up transparent. Measured, not guessed:
+       the outline button rendered with `rgba(0, 0, 0, 0)` on its edge.
+       Each variant owns every property it cares about; the base owns the rest. */ -}}
+{{- $base := "inline-flex cursor-pointer items-center justify-center gap-2 rounded-sm border px-4 py-2 text-sm/[1.4] font-semibold transition-colors duration-200 ease-out focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent" -}}
+{{- $fill := "border-transparent bg-accent text-surface-sunken hover:bg-accent-hover" -}}
+{{- $outline := "border-accent bg-transparent text-accent hover:bg-accent hover:text-surface-sunken" -}}
+{{- $classes := printf "%s %s %s" $base (cond $secondary $outline $fill) (.class | default "") -}}
+
+{{- if .href -}}
+<a class="{{ $classes }}" href="{{ .href }}" title="{{ $title }}"{{ with .attrs }} {{ . | safeHTMLAttr }}{{ end }}>
+{{- else -}}
+<button class="{{ $classes }}" type="{{ .type | default "button" }}" title="{{ $title }}"{{ with .attrs }} {{ . | safeHTMLAttr }}{{ end }}>
+{{- end }}
+    {{- with .icon }}
+    <svg class="size-4 shrink-0 fill-current" aria-hidden="true"><use href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ site.Params.remixicon_version }}#{{ . }}"></use></svg>
+    {{- end }}
+    {{ .label }}
+{{- if .href }}</a>{{ else }}</button>{{ end -}}

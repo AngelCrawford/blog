@@ -1,0 +1,33 @@
+{{- /* Garden — Cookie-Banner (Story 2.7). Transient privacy notice, NOT a
+       consent gate: Umami is cookieless, there is nothing to consent to.
+
+       CONTRACT with assets/js/gdpr.js, unchanged: #cookie-banner (hidden by
+       default against FOUC; the script removes the attribute), .is-visible as
+       the slide-up state, .cookie-banner-close. The state class is Bulma-free
+       — its styling here is the [&.is-visible] variant on the element.
+
+       Floating chrome, not a tile: translucent dark + blur is what separates
+       an overlay from page content. z-index below #back-to-top. */ -}}
+<div id="cookie-banner" hidden
+     class="fixed bottom-0 left-1/2 z-[99999] flex w-[calc(100%-2rem)] max-w-[960px] -translate-x-1/2 translate-y-full items-start gap-4 rounded-t-tile border border-b-0 border-accent-muted/50 bg-[hsl(190_11%_9%/0.95)] p-4 text-ink shadow-[0_-4px_20px_rgb(0_0_0/0.4)] backdrop-blur-[6px] transition-transform duration-300 ease-out [&.is-visible]:translate-y-0 max-[640px]:left-0 max-[640px]:w-full max-[640px]:max-w-none max-[640px]:translate-x-0 max-[640px]:flex-col max-[640px]:rounded-none max-[640px]:border-x-0 max-[640px]:p-3 print:hidden!"
+     role="dialog"
+     aria-modal="false"
+     aria-labelledby="cookie-banner-title"
+     aria-describedby="cookie-banner-text"
+     aria-live="polite">
+    <div class="min-w-0 flex-1 text-sm/[1.4]">
+        <strong id="cookie-banner-title" class="mb-1 block text-base text-accent-hover">Hinweis zur Datenverarbeitung</strong>
+        <p id="cookie-banner-text" class="m-0">
+            Diese Seite nutzt <a class="text-accent-hover underline underline-offset-2 hover:text-accent" href="https://umami.is" rel="external noreferrer">Umami</a> für anonyme,
+            <strong>cookielose</strong> Reichweitenmessung. Es werden <strong>keine Tracking-Cookies</strong>
+            gesetzt und keine personenbezogenen Daten erhoben. Lokal merkt sich Dein Browser nur Herz-Klicks
+            und gelesene Artikel; <strong>Webmentions</strong> zeigen Erwähnungen anderer Seiten. Details und
+            Deine Rechte findest Du in der <a class="text-accent-hover underline underline-offset-2 hover:text-accent" href="{{ "pages/datenschutz/" | relURL }}">Datenschutzerklärung</a>.
+        </p>
+    </div>
+    <button type="button" class="cookie-banner-close gd-round-button gd-round-button-full [--gd-round-size:1.875rem] shrink-0" aria-label="Hinweis schließen">
+        <svg aria-hidden="true">
+            <use href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ .Site.Params.remixicon_version }}#close-fill"></use>
+        </svg>
+    </button>
+</div>

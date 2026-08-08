@@ -1,0 +1,39 @@
+/* Garden — base layer, after Preflight.
+ *
+ * Imported by main.css as `layer(base)`, directly after
+ * tailwindcss/preflight.css in the same layer — later wins on ties, so these
+ * rules refine the reset without ever needing specificity.
+ *
+ * THE SCOPED PREFLIGHT STAND-IN STOOD HERE from the first garden commit to the
+ * Bulma teardown: every reset rule wrapped in `:where([data-garden] …)` at
+ * specificity zero, because two stylesheets shared the page and a global reset
+ * would have flattened the Bulma half. Preflight replaced all of it in one
+ * import. What remains is the one block that never was a reset.
+ */
+
+/* ===========================================================================
+ * INTERACTION BASELINE — a standing rule, not a per-element decision.
+ *
+ * Anything you can click shows a pointer. Preflight sets `cursor: default` on
+ * buttons, which is the HTML default and, on this site, simply wrong: it was
+ * being corrected by hand with `cursor-pointer` at every call site, and one
+ * forgotten instance is a control that does not feel clickable.
+ *
+ * Stated once, here, so no template has to remember it. It sits in the base
+ * layer, so a component or a utility can still overrule it where a control
+ * genuinely is not one. Disabled controls get `not-allowed` and the dimming.
+ * =========================================================================== */
+:is(
+  button,
+  summary,
+  label[for],
+  label:has(input, select, textarea),
+  [role="button"],
+  a[href]
+):not(:disabled) {
+  cursor: pointer;
+}
+:is(button, [role="button"], input, select, textarea):disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}

@@ -1,0 +1,15 @@
+{{- /* The tile header: uppercase label left, optional count pill right, gold
+       fade-out rule underneath. Four widgets share this exact row — that is
+       docs/design.md's "repeats and could drift" test, answered with a partial
+       so the utilities stay visible and the decision stays in one file.
+       Params: label (required), count (optional, pre-formatted string),
+       aside (optional, PRE-RENDERED template.HTML — e.g. the heart capsule in
+       the article's Steckbrief; passed straight through, so the caller owns
+       its safety). */ -}}
+<div class="mb-[0.7rem] flex items-center justify-between gap-2 bg-[linear-gradient(to_right,var(--rule-gold),transparent)] bg-[length:100%_1px] bg-bottom bg-no-repeat pb-[0.7rem]">
+    <span class="m-0 text-[0.7rem]/[1] font-semibold tracking-label text-ink-muted uppercase">{{ .label }}</span>
+    {{- with .count }}
+    <span class="rounded-[0.35rem] bg-[hsl(35_45%_14%)] px-[0.6em] py-[0.25em] text-[0.7rem] whitespace-nowrap text-[color-mix(in_srgb,var(--color-accent-hover)_70%,transparent)]">{{ . }}</span>
+    {{- end }}
+    {{- with .aside }}{{ . }}{{ end }}
+</div>

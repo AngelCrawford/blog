@@ -2,9 +2,8 @@ import { test, expect, FIXTURE_DIRS } from "./fixtures";
 
 // Visual + structural tests for the growth-stage badge (Story 1.2).
 // Per-stage page-bundle fixtures at `content/articles/_test_growth_stage_<stage>/`
-// are created by `tests/e2e/global-setup.ts` BEFORE Playwright spawns hugo
-// server, so hugo's initial content scan picks them up — no Windows fsnotify
-// watcher race. Cleanup happens in `tests/e2e/global-teardown.ts`.
+// are written by `tests/e2e/build-and-serve.mjs` BEFORE hugo runs, so the static
+// export picks them up. Cleanup happens in `tests/e2e/global-teardown.ts`.
 // `.gitignore` excludes the `_test_growth_stage_` prefix as a backstop.
 
 const STAGES = ["seedling", "budding", "evergreen", "withered"] as const;
@@ -32,20 +31,25 @@ test.describe("Growth-stage badge (Story 1.2)", () => {
     }) => {
         await page.goto("/");
 
-        // All horizontal article cards that have a card-footer.
-        const allCards = page.locator("article.card.is-horizontal").filter({
-            has: page.locator(".card-footer"),
+        // SELECTORS FOLLOW THE CARD, THE ASSERTION DOES NOT. The card moved to the
+        // garden theme, so `article.card.is-horizontal` with a `.card-footer` is
+        // now `article.at-card` with an `.at-card-footer`, and the badge is
+        // `span.at-growth` instead of `span.growth-stage`. What is being checked
+        // is unchanged: every non-note card on the front page carries a
+        // growth-stage marker, and its stage is one of the four.
+        const allCards = page.locator("article.at-card").filter({
+            has: page.locator(".at-card-footer"),
         });
         const count = await allCards.count();
         expect(count, "homepage should render at least one article card").toBeGreaterThan(0);
 
         for (let i = 0; i < count; i++) {
             const card = allCards.nth(i);
-            // Log-format cards show the lightbulb icon instead of a growth badge — skip them.
-            const isLog = (await card.locator(".card-footer span[data-tooltip='Log']").count()) > 0;
-            if (isLog) continue;
+            // Note cards show the lightbulb instead of a growth badge — skip them.
+            const isNote = (await card.locator(".at-card-footer [data-tooltip='Notiz']").count()) > 0;
+            if (isNote) continue;
 
-            const badge = card.locator(".card-footer span.growth-stage").first();
+            const badge = card.locator(".at-card-footer span.at-growth").first();
             await expect(badge, `card ${i} should have a growth-stage badge`).toBeVisible();
             const dataStage = await badge.getAttribute("data-stage");
             expect(STAGES).toContain(dataStage as Stage);

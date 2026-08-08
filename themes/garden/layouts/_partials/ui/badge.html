@@ -1,0 +1,32 @@
+{{- /* The Rubrik badge — a neutral pill with a coloured dot.
+ *
+ * THE DOT IS AN ELEMENT NOW, NOT A PSEUDO. As CSS this needed a class for the
+ * `::before` and a custom property to pass the colour through; as markup it is
+ * a span with a background, and the whole component is utilities in one place.
+ *
+ * The colour arrives as a hex literal from the category's `categoryColor`
+ * front matter (#1d7a7a …). Hex survives Go's style-attribute escaper — `rgb()`
+ * does not, it becomes ZgotmplZ; that trap is documented in migration.md. No
+ * dot colour means the gold fallback, as before.
+ *
+ * NO FONT SIZE, deliberately. The badge sits in metadata rows that decide the
+ * size for everyone (`ONE SIZE IN THE ROW`, see the card footer). Setting one
+ * here is how the old footer collected four competing sizes.
+ *
+ * Parameters
+ *   label   required
+ *   href    optional — an <a> with it, a <span> without
+ *   dot     optional hex colour for the dot; defaults to gold
+ *   title   optional, falls back to label
+ */ -}}
+{{- /* NO whitespace-nowrap: a long Rubrik name wraps inside the pill instead
+       of punching through the card edge. min-w-0 lets the pill shrink in its
+       flex row at all — without it, flex refuses to go below content width
+       and the wrap never happens. */ -}}
+{{- $classes := "inline-flex min-w-0 items-center gap-[0.45em] rounded-pill border border-accent-muted/40 bg-surface py-[0.25em] pr-[0.7em] pl-[0.55em] text-accent no-underline transition-colors duration-150 ease-out hover:border-accent hover:text-accent-hover" -}}
+{{- $dot := printf `<span class="size-[0.5em] shrink-0 rounded-full%s"%s aria-hidden="true"></span>` (cond (not .dot) " bg-accent" "") (cond (ne (.dot | default "") "") (printf ` style="background-color: %s"` .dot) "" | safeHTMLAttr) | safeHTML -}}
+{{- if .href -}}
+<a class="{{ $classes }}" href="{{ .href }}" title="{{ .title | default .label }}">{{ $dot }}{{ .label }}</a>
+{{- else -}}
+<span class="{{ $classes }}">{{ $dot }}{{ .label }}</span>
+{{- end -}}

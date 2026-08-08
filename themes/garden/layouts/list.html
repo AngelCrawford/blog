@@ -1,0 +1,72 @@
+{{ define "main" }}
+{{- /* Garden — section, term and taxonomy listings. One template, three jobs:
+ *
+ *   section   /articles/, /notes/          — entry cards
+ *   term      /categories/allgemein/       — entry cards for that Rubrik
+ *   taxonomy  /categories/, /tags/         — TERM cards, one per Rubrik or Tag
+ *
+ * The taxonomy index is the odd one: it lists categories, not posts, so it gets
+ * neither `h-feed` (a microformat for a stream of entries) nor the withered
+ * filter (a Rubrik cannot wither), and its cards are smaller, so the grid's
+ * floor drops from 30rem to 22rem.
+ *
+ * THE EMPTY CELLS ARE GONE. Upstream padded short rows with `.cell.empty-cell`
+ * so Bulma's fixed grid would not stretch two cards across five columns. With
+ * `auto-fill` the empty tracks exist without markup, which is what auto-fill is
+ * for — sixty lines of counting replaced by one keyword. */ -}}
+{{- $isTaxonomy := eq .Kind "taxonomy" -}}
+
+{{- /* The heading: a term says what kind of term it is, a taxonomy index uses
+       its own plural, everything else its title. */ -}}
+{{- $pagename := .Title -}}
+{{- if eq .Kind "term" }}{{ with .Parent.Params.translation.singular }}{{ $pagename = printf "%s: %s" . $.Title }}{{ end }}
+{{- else if $isTaxonomy }}{{ with .Params.translation.plural }}{{ $pagename = . }}{{ end }}{{ end -}}
+
+<div class="mx-auto max-w-[96rem] px-gutter pt-gutter pb-section font-body text-base text-ink">
+
+    <div class="rounded-md border border-accent-muted/40 bg-surface-raised p-gutter shadow-md at-flow mb-section min-[768px]:ml-6">
+        {{- with .Resources }}
+        {{- with (.ByType "image").GetMatch "cover*" }}
+        {{- $cover := .Process "fill 480x360 webp" }}
+        {{- $caption := partial "image-caption.html" . }}
+        {{ partial "ui/figure" (dict "src" $cover.RelPermalink "alt" $pagename "caption" $caption "bleed" true) }}
+        {{- end }}{{ end }}
+        <h1 class="gd-h1" data-heading="{{ $pagename }}">{{ $pagename }}</h1>
+        {{- with .Params.subtitle }}<p class="mt-4 text-lg text-ink-muted">{{ . }}</p>{{ end }}
+        {{- with .Summary }}<div class="mt-gutter">{{ . }}</div>{{ end }}
+    </div>
+
+    {{- $visible := .Pages -}}
+    {{- $hiddenCount := 0 -}}
+    {{- if not $isTaxonomy -}}
+        {{- $visible = partial "withered-filter.html" .Pages -}}
+        {{- $hiddenCount = partial "withered-count.html" .Pages -}}
+    {{- end -}}
+
+    <div class="{{ if $isTaxonomy }}grid gap-x-gutter gap-y-gutter min-[768px]:pl-6 grid-cols-[repeat(auto-fill,minmax(22rem,1fr))]{{ else }}h-feed grid grid-cols-[repeat(auto-fill,minmax(min(28rem,100%),1fr))] gap-x-12 gap-y-12 pl-6{{ end }}">
+        {{- if $isTaxonomy -}}
+            {{- /* Busiest Rubrik first: a taxonomy index is a way in, and the one
+                   with two entries is not the way in. */ -}}
+            {{- $terms := slice -}}
+            {{- range $term, $pages := .Data.Terms -}}
+                {{- $terms = $terms | append (dict "Term" $term "Count" (len $pages)) -}}
+            {{- end -}}
+            {{- range sort $terms "Count" "desc" -}}
+                {{- with $.GetPage (printf "/%s/%s" $.Data.Plural .Term) }}{{ partial "card" . }}{{ end -}}
+            {{- end -}}
+        {{- else -}}
+            {{- /* A SERIES reads front to back: part 1 first, ascending — the
+                   sidebar widget and this page must tell the same story. Every
+                   other listing follows #260: lastmod descending, tending is
+                   the relevance signal. */ -}}
+            {{- if and (eq .Kind "term") (eq .Data.Plural "series") -}}
+                {{- range $visible.ByDate }}{{ partial "card" . }}{{ end -}}
+            {{- else -}}
+                {{- range $visible.ByLastmod.Reverse }}{{ partial "card" . }}{{ end -}}
+            {{- end -}}
+        {{- end }}
+    </div>
+
+    {{ partial "withered-hidden-notice.html" $hiddenCount }}
+</div>
+{{ end }}

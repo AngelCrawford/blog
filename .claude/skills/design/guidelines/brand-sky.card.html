@@ -1,0 +1,84 @@
+<!-- @dsCard group="Brand" viewport="700x700" name="Sonnenstand" subtitle="Der vollständige Header in seinen vier Zuständen — Himmel, Silhouette, Uhr, Wortmarke" -->
+<!DOCTYPE html>
+<html lang="de"><head><meta charset="utf-8"><title>Sonnenstand</title>
+<link rel="stylesheet" href="../styles.css">
+<style>
+body{margin:0;padding:18px;background:var(--color-surface-sunken);font-family:var(--font-body);color:var(--color-ink)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+/* Jede Zelle ist 300 px hoch — die echte Header-Höhe. Der Verlauf ist
+   `ellipse at bottom` und skaliert mit der Box, in einem flachen Streifen
+   stauchen die Farbstufen zusammen und der Himmel sieht falsch aus. */
+.cell{position:relative;height:300px;overflow:hidden;border-radius:var(--radius-sm)}
+.body{position:relative;height:100%}
+.mark{position:relative;z-index:5;top:calc(50% - 20px);text-align:center}
+.lbl{display:block;margin:6px 0 0;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--color-ink-muted)}
+.note{margin:var(--spacing-gutter) 0 0;max-width:74ch;font-size:12px;line-height:1.6;color:var(--color-ink-muted)}
+</style></head><body>
+
+<div class="grid">
+
+<div>
+<div class="cell at-sky" data-sky="dawn">
+  <div class="stars"></div>
+  <div class="at-city"></div>
+  <div class="body"><div class="at-clock"></div>
+    <div class="mark"><span class="at-wordmark" data-heading="Article Time" style="font-size:37px;--at-wordmark-pad:40px"><span class="at-wordmark-shimmer" style="background-size:40px 100%">Article Time</span></span></div>
+  </div>
+</div>
+<span class="lbl">dawn · eine Stunde um den Sonnenaufgang</span>
+</div>
+
+<div>
+<div class="cell at-sky" data-sky="day">
+  <div class="at-balloon" style="left:calc(50% + 110px);top:70px;width:24px;height:24px"></div>
+  <div class="at-city"></div>
+  <div class="body"><div class="at-clock"></div>
+    <div class="mark"><span class="at-wordmark" data-heading="Article Time" style="font-size:37px;--at-wordmark-pad:40px"><span class="at-wordmark-shimmer" style="background-size:40px 100%">Article Time</span></span></div>
+  </div>
+</div>
+<span class="lbl">day · Ballon sichtbar</span>
+</div>
+
+<div>
+<div class="cell at-sky" data-sky="dusk">
+  <div class="stars"></div>
+  <div class="at-balloon" style="left:calc(50% + 110px);top:70px;width:24px;height:24px"></div>
+  <div class="at-city"></div>
+  <div class="body"><div class="at-clock"></div>
+    <div class="mark"><span class="at-wordmark" data-heading="Article Time" style="font-size:37px;--at-wordmark-pad:40px"><span class="at-wordmark-shimmer" style="background-size:40px 100%">Article Time</span></span></div>
+  </div>
+</div>
+<span class="lbl">dusk · Sterne und Ballon zugleich</span>
+</div>
+
+<div>
+<div class="cell at-sky" data-sky="night">
+  <div class="stars"></div>
+  <div class="at-city"></div>
+  <div class="body"><div class="at-clock"></div>
+    <div class="mark"><span class="at-wordmark" data-heading="Article Time" style="font-size:37px;--at-wordmark-pad:40px"><span class="at-wordmark-shimmer" style="background-size:40px 100%">Article Time</span></span></div>
+  </div>
+</div>
+<span class="lbl">night · nur Sterne</span>
+</div>
+
+</div>
+
+<p class="note">Vier Zustände, umgeschaltet aus Sonnenauf- und -untergang am Standort der Seite: <strong style="color:var(--color-ink)">night</strong> ab einer Stunde nach Sonnenuntergang, <strong style="color:var(--color-ink)">dawn</strong> und <strong style="color:var(--color-ink)">dusk</strong> je eine Stunde um die Wende, <strong style="color:var(--color-ink)">day</strong> dazwischen. Sterne bei night und dusk, der Ballon bei day und dusk — dusk zeigt beides. Die Zellen sind 300 px hoch, die echte Header-Höhe; der Verlauf ist <code style="color:var(--color-accent)">ellipse at bottom</code> und skaliert mit der Box, in einem flachen Streifen stauchen die Farbstufen und der Himmel liest sich falsch. Die Wortmarke steht hier auf 37 px, der Größe für schmale Bildschirme, weil die Zellen schmaler sind als ein echter Header. Die animierten Vögel und die saisonalen Auflagen (Feuerwerk, Weihnachtsmütze, Gespenst) laufen im echten Header mit und sind hier weggelassen — die Vögel in der Silhouette gehören zu <code style="color:var(--color-accent)">city.svg</code>.</p>
+
+<script>
+/* Die Sterne sind im echten Theme 210 zur Bauzeit ausgewürfelte box-shadows.
+   Hier derselbe Effekt mit festem Startwert, damit die Karte bei jedem Rendern
+   gleich aussieht. */
+document.querySelectorAll('.stars').forEach(function (box) {
+  box.style.cssText = 'position:absolute;inset:0;overflow:hidden;opacity:.2;z-index:1';
+  [[100, 137, 1], [80, 271, 2], [30, 419, 3]].forEach(function (cfg) {
+    var n = cfg[0], seed = cfg[1], size = cfg[2], parts = [];
+    for (var i = 0; i < n; i++) parts.push(((i * seed) % 700) + 'px ' + ((i * (seed + 7)) % 270) + 'px #FFF');
+    var d = document.createElement('div');
+    d.style.cssText = 'width:' + size + 'px;height:' + size + 'px;box-shadow:' + parts.join(',');
+    box.appendChild(d);
+  });
+});
+</script>
+</body></html>

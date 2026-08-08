@@ -7,6 +7,7 @@ menu:
 params:
   robotsdisallow: true
   suppress_banner: true
+  maintenance_exempt: true # DSGVO: aus der Wartungs-Visitenkarte verlinkt, muss immer erreichbar sein
 ---
 
 Es handelt sich hier um eine rein private Website.

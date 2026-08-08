@@ -1,0 +1,136 @@
+{{- /* Maintenance page — Site.Params.maintenance_mode toggle.
+       THE WEBCARD — and nothing that says "maintenance". Angel's framing:
+       this page replaces angel-crawford.de; when the blog is off, for
+       whatever reason and however long, the business card simply STANDS.
+       A "be right back" pill would make a standing card look broken. The
+       DSGVO line lives inside the card (Impressum, Datenschutz), and those
+       two pages carry maintenance_exempt so they keep rendering while
+       everything else is the card.
+
+       Self-contained on purpose: the Tailwind bundle for tokens, fonts and
+       the utilities this file's own class names mint (the layouts tree is in
+       @source, so scanning covers this template like any other). The ONLY
+       script is the ten-line two-click loader at the bottom — inline,
+       because this page ships no footer bundle to ride, and it does nothing
+       until the visitor presses the consent button. Spotify itself loads
+       only after that press, same rule as the profile page.
+
+       The card borrows the profile page's data: identity params for name,
+       photo and socials; the ueber-mich page for taglines and birthdate via
+       site.GetPage, each behind `with` so a missing page degrades to the
+       plain card. `kind-is-maintenance` on <body> is the build test's hook. */ -}}
+{{- $style := resources.Get "css/main.css" | css.TailwindCSS (dict "minify" hugo.IsProduction) -}}
+{{- if hugo.IsProduction -}}
+    {{- $style = $style | fingerprint | resources.PostProcess -}}
+{{- end -}}
+{{- $identity := .Site.Params.identity -}}
+{{- $sprite := "fonts/remixicon/remixicon.symbol.svg" | relURL -}}
+{{- $v := .Site.Params.remixicon_version -}}
+{{- $profile := site.GetPage "/pages/ueber-mich" -}}
+{{- $age := "" -}}
+{{- with $profile }}{{ with .Params.birthdate -}}
+  {{- $birth := time . -}}
+  {{- $today := now -}}
+  {{- $a := sub $today.Year $birth.Year -}}
+  {{- if or (lt $today.Month $birth.Month) (and (eq $today.Month $birth.Month) (lt $today.Day $birth.Day)) -}}
+    {{- $a = sub $a 1 -}}
+  {{- end -}}
+  {{- $age = printf "%d" $a -}}
+{{- end }}{{ end -}}
+<!DOCTYPE html>
+<html lang="de" data-theme="dark">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, minimum-scale=1">
+        {{ hugo.Generator }}
+        <meta name="robots" content="noindex, nofollow, noarchive">
+        <meta name="referrer" content="strict-origin-when-cross-origin">
+        <title>{{ .Site.Title }}</title>
+        <link href="{{ $style.RelPermalink }}" rel="stylesheet">
+        <link rel="preload" as="font" type="font/ttf" href="{{ "fonts/Montserrat/MontserratAlternates-Regular.ttf" | relURL }}" crossorigin="anonymous">
+        <link rel="preload" as="font" type="font/ttf" href="{{ "fonts/Montserrat/Montserrat-VariableFont_wght.ttf" | relURL }}" crossorigin="anonymous">
+        <link rel="icon" type="image/png" href="{{ "images/favicon/favicon-96x96.png" | relURL }}" sizes="96x96">
+        <link rel="icon" type="image/svg+xml" href="{{ "images/favicon/favicon.svg" | relURL }}">
+        <link rel="shortcut icon" href="{{ "images/favicon/favicon.ico" | relURL }}">
+        <link rel="apple-touch-icon" sizes="180x180" href="{{ "images/favicon/apple-touch-icon.png" | relURL }}">
+        <meta name="apple-mobile-web-app-title" content="{{ .Site.Title }}">
+    </head>
+    <body class="kind-is-maintenance flex min-h-dvh items-center justify-center bg-surface-sunken bg-[radial-gradient(hsl(190_11%_7%)_0.05vw,transparent_0.2vw)] bg-[length:1vw_1vw] p-6 font-body text-base text-ink">
+        <main class="grid w-full max-w-[48rem] grid-cols-1 gap-6 rounded-md border border-accent-muted/40 bg-surface-raised p-gutter py-10 text-center shadow-md min-[640px]:grid-cols-[auto_1fr] min-[640px]:gap-10 min-[640px]:px-10">
+            <nav class="at-socials flex flex-wrap justify-center gap-6 min-[640px]:flex-col min-[640px]:flex-nowrap min-[640px]:justify-between min-[640px]:self-stretch min-[640px]:py-2" aria-label="Soziale Profile">
+                {{- range $identity.socials }}
+                <a class="flex size-[1.6em] items-center justify-center text-[1.6em] transition duration-200 ease-out" href="{{ .src }}" target="_blank" rel="noopener me" title="{{ .name }}" aria-label="{{ .name }}"
+                   style="color: {{ .color }};{{ with .opacity }} opacity: {{ . }};{{ end }}">
+                    <svg class="size-[1.6em] fill-current" aria-hidden="true"><use href="{{ $sprite }}?t={{ $v }}#{{ .icon }}"></use></svg>
+                </a>
+                {{- end }}
+            </nav>
+
+            <div class="flex min-w-0 flex-col items-center justify-center gap-4">
+                {{- with $identity.photo }}
+                <img class="size-[120px] rounded-full border-2 border-accent-muted object-cover" src="{{ . | relURL }}" alt="{{ $identity.name }}" width="120" height="120">
+                {{- end }}
+
+                <p class="gd-h1 m-0" data-heading="{{ $identity.name }}">{{ $identity.name }}</p>
+
+                {{- with $profile }}{{ with .Content }}
+                <div class="text-left [&_ul]:m-0 [&_ul]:flex [&_ul]:w-fit [&_ul]:list-none [&_ul]:flex-col [&_ul]:gap-2 [&_ul]:p-0 [&_li]:relative [&_li]:pl-4 [&_li]:before:absolute [&_li]:before:left-0 [&_li]:before:top-[0.45em] [&_li]:before:size-[0.4em] [&_li]:before:bg-accent [&_li]:before:content-[''] [&_strong]:font-semibold [&_strong]:text-ink-strong [&_small]:text-[0.9em] [&_small]:text-ink-muted [&_p]:mb-4">{{ replace . "{age}" $age | safeHTML }}</div>
+                {{- end }}{{ end }}
+
+                {{- /* The Spotify facade, same two-click contract as the profile:
+                       the embed URL rides the ueber-mich front matter, nothing
+                       loads before the press. */ -}}
+                {{- with $profile }}{{ with .Params.spotify }}
+                <div class="mt-2 w-full max-w-[22rem] rounded-xl border border-accent-muted/40 bg-[var(--surface-tile)] p-4 text-left" data-embed-src="{{ . }}" data-embed-height="80" data-embed-title="Spotify-Playlist">
+                    <p class="m-0 mb-3 text-sm text-ink-muted">
+                        Der Klick lädt den Player von Spotify, dabei stellt Dein Browser
+                        eine Verbindung zu Spotify her (Cookies möglich).
+                        Details in der <a class="text-accent-hover underline underline-offset-2 hover:text-accent" href="{{ "pages/datenschutz/" | relURL }}">Datenschutzerklärung</a>.
+                    </p>
+                    <div class="flex justify-end">
+                        {{ partial "ui/button" (dict "label" "Player laden" "variant" "secondary" "icon" "spotify-line" "type" "button") }}
+                    </div>
+                </div>
+                {{- end }}{{ end }}
+            </div>
+
+            {{- /* The DSGVO line, inside the card like the original: legal pages
+                   are exempt from maintenance mode, so these links WORK while
+                   the rest of the site is this card. */ -}}
+            <footer class="col-span-full border-t border-accent-muted/30 pt-4 text-[0.7rem] text-ink-muted">
+                &copy; 2020 &ndash; {{ dateFormat "2006" now }} {{ $identity.name }}
+                <span class="text-accent-muted" aria-hidden="true">|</span>
+                <a class="text-accent-hover hover:text-accent" href="{{ "pages/impressum/" | relURL }}">Impressum</a>
+                <span class="text-accent-muted" aria-hidden="true">|</span>
+                <a class="text-accent-hover hover:text-accent" href="{{ "pages/datenschutz/" | relURL }}">Datenschutz</a>
+            </footer>
+        </main>
+
+        {{- /* The harbour silhouette grounds the card like on the original —
+               fixed to the bottom, decorative, behind everything. */ -}}
+        <div class="pointer-events-none fixed inset-x-0 bottom-0 -z-[1] h-[240px] bg-[url(/images/header/city.svg)] bg-bottom bg-repeat-x opacity-30" aria-hidden="true"></div>
+
+        {{- /* The two-click loader, inlined: this page ships no bundle. Mirrors
+               the loader in assets/js/main.js — if that one changes, change
+               this one. Does nothing until the consent button is pressed. */ -}}
+        <script>
+        document.querySelectorAll("[data-embed-src]").forEach((box) => {
+          const button = box.querySelector("button");
+          if (!button) return;
+          button.addEventListener("click", () => {
+            const frame = document.createElement("iframe");
+            frame.src = box.dataset.embedSrc;
+            frame.title = box.dataset.embedTitle || "";
+            frame.width = "100%";
+            frame.height = box.dataset.embedHeight || "152";
+            frame.setAttribute("frameborder", "0");
+            frame.setAttribute("loading", "lazy");
+            frame.setAttribute("allow", "encrypted-media; fullscreen");
+            frame.className = "block w-full rounded-xl";
+            box.replaceChildren(frame);
+          });
+        });
+        </script>
+    </body>
+</html>

@@ -1,9 +1,7 @@
 import { defineConfig, devices } from "@playwright/test";
 
-// Minimal Playwright bootstrap (Story 1.1).
-// Foundation for downstream visual regression / journey / a11y tests
-// per docs/2-solutioning/test-design-system.md. Keep MINIMAL here:
-// chromium-only, ONE smoke test. Story 1.2+ will expand.
+// Minimal Playwright bootstrap. Chromium-only, kept deliberately small —
+// see docs/testing.md for what runs where.
 //
 // Port choice (1314, NOT 1313): the dev's own `hugo server` typically runs on
 // 1313 — we don't want `npm test` to either steal that port or collide with it.
@@ -16,9 +14,9 @@ import { defineConfig, devices } from "@playwright/test";
 //   3. Serves `public/` via a tiny Node static server (no deps)
 // `globalTeardown` removes the fixtures.
 //
-// Why not `hugo server`: on Windows, Hugo's fsnotify watcher missed newly-created
-// article subdirs even when fixtures existed before server start, leaving most
-// fixture URLs as 404. Static export sidesteps the watch path entirely.
+// Why static export and not `hugo server`: the export runs with
+// `--environment production`, so PurgeCSS is exercised and over-purge regressions
+// surface before deploy. `hugo server` runs in dev mode and skips it.
 export default defineConfig({
   testDir: "./tests/e2e",
   globalTeardown: require.resolve("./tests/e2e/global-teardown.ts"),

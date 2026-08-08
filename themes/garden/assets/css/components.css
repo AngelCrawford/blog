@@ -1,0 +1,1288 @@
+/* Garden — component layer.
+ *
+ * Imported by main.css as `layer(components)`. Sits above css/base.css and
+ * below the utilities, which is what lets every rule here be a plain class
+ * selector: nothing outranks it but the utilities, and a utility at the call
+ * site is supposed to win.
+ *
+ * THAT IS WHY THERE IS NO `[data-garden]` PREFIX HERE ANY MORE. It used to be
+ * the scope marker for the pre-Preflight stand-in reset; both are history.
+ *
+ * Only what genuinely cannot live on an element belongs in this file:
+ * positioning against a distant ancestor, pseudo-elements, vendor resets, and
+ * decisions that would otherwise be retyped at every call site. Everything else
+ * is utilities in the template. See docs/design.md.
+ */
+
+/* SURFACES — three levels, and a level only ever sits on a DIFFERENT level.
+ * Panel on page, card on panel or page, never panel on panel. That constraint is
+ * what makes depth readable on a palette this dark, where shadows barely
+ * register — but it is a rule for whoever writes the page, not a class.
+ *
+ * `.gd-panel` and `.gd-panel-plain` were five and three utilities with a name.
+ * The four pages that use a panel write them out. */
+
+/* ===========================================================================
+ * HEADINGS
+ *
+ * The gold gradient on the page title is the site's signature and predates
+ * everything else here — it is carried over from article-time's
+ * `main.content h1.title` rather than reinvented. Two stacked pseudo-elements:
+ * one for the raised shadow, one for the gradient fill, both reading their text
+ * from the `data-heading` attribute.
+ *
+ * Levels are deliberately distinct so a page reads as a hierarchy rather than a
+ * uniform wall:
+ *   h1  gold gradient, largest, once per page
+ *   h2  light, with a gold rule that runs to the edge
+ *   h3  gold, smaller, no decoration
+ * =========================================================================== */
+.gd-h1 {
+  position: relative;
+  display: inline-block;
+  font-family: var(--font-heading);
+  font-size: var(--text-4xl);
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  line-height: 1.15;
+  color: var(--color-surface);
+}
+
+/* Raised shadow layer. */
+.gd-h1::before {
+  content: attr(data-heading);
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  color: var(--color-surface);
+  text-shadow:
+    -1px 0 1px --alpha(var(--color-accent-hover) / 70%),
+    0 1px 1px --alpha(var(--color-accent-hover) / 70%),
+    5px 5px 10px rgb(0 0 0 / 0.5),
+    -2px -2px 5px rgb(255 255 255 / 0.3);
+}
+
+/* Gradient fill layer, painted over the shadow. */
+.gd-h1::after {
+  content: attr(data-heading);
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  background: linear-gradient(
+    to bottom,
+    var(--color-accent) 32%,
+    var(--color-accent-hover) 50%,
+    var(--color-accent-muted) 80%
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: var(--color-surface);
+}
+
+@media (max-width: 640px) {
+  .gd-h1 {
+    font-size: var(--text-3xl);
+  }
+}
+
+/* Section heading: light, with a gold rule filling the remaining width. */
+.gd-h2 {
+  /* The component owns its spacing. `gd-h2 mb-3` appeared eight times and
+   * `gd-h3 mb-4` five — that is not a per-call decision, that is the heading
+   * rhythm, and leaving it at the call site is thirteen chances to drift. */
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-family: var(--font-heading);
+  font-size: var(--text-2xl);
+  font-weight: 600;
+  color: var(--color-ink-strong);
+}
+.gd-h2::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    --alpha(var(--color-accent) / 60%),
+    transparent
+  );
+}
+
+/* `.gd-h3` was five utilities and every one of its twelve uses was in the
+ * styleguide — a catalogue demonstrating a class no page had asked for. */
+
+/* BUTTONS live in layouts/_partials/ui/button.html.
+ *
+ * The label weight is a real decision — buttons read as actionable partly
+ * because they are a little heavier than the prose around them, and that weight
+ * was lost once already when a reset stripped it along with the background it
+ * was meant to remove. docs/design.md's first test therefore applies: the
+ * decision repeats and could drift, so it needs one home. A partial is one home.
+ * It does not have to be CSS to be one. */
+
+/* ===========================================================================
+ * DUOTONE ICONS — Angel's variant B from docs/ideas/IconDemo.html.
+ *
+ * Two copies of the glyph: one behind in the muted accent at 90% opacity,
+ * nudged down and right, one in front in the LIGHT accent. Bright-on-dark is
+ * what makes it read; an earlier attempt used the mid accent in front and the
+ * two tones simply merged.
+ *
+ * The offset is 0.06em, not a fixed pixel value, so it scales with the icon —
+ * at 24px it is 1.4px, at 48px it is 2.9px, and the effect stays proportional.
+ * That is also why the box is sized in em and the SIZE COMES FROM font-size:
+ * put `text-2xl` or `text-[28px]` on the wrapper, not `size-7`.
+ *
+ * The component takes TWO glyphs: a back one and a front one. Where the sprite
+ * carries a `-fill` partner, the back layer is the filled body and the effect
+ * is the real thing. Where it does not, the line glyph goes in twice — an
+ * offset edge, but no solid body behind it.
+ *
+ * CSS cannot fill an outline. A line icon is a stroke path with no interior,
+ * and Remixicon's `-fill` icons are separate paths, not a rendering mode of
+ * the same glyph. Getting true duotone across the set means regenerating the
+ * sprite with the fill partners included — the collection definition sits
+ * beside it as RemixIcon_Collection_*.remixicon.
+ * =========================================================================== */
+.gd-icon-duo {
+  /* One place to tune the depth. DOUBLED from 0.03/0.055em, and only because
+   * the back layer changed underneath them: those values were tuned against a
+   * shadow that differed from the front glyph in brightness alone, where any
+   * larger offset read as a doubled shape. Now that the back layer is bronze
+   * (hue 25, see --color-accent-shadow) the two layers are told apart by hue,
+   * and the offset is free to be large enough to actually see at 20px.
+   *
+   * No single value suits every glyph, and that is worth stating plainly: a
+   * dense shape like heart wants less, a hairline like asterisk would want
+   * more. Chasing that per icon is unmaintainable.
+   *
+   * The vertical shift is nearly twice the horizontal one. An equal offset
+   * reads as a diagonal smear; weighting it downwards reads as the glyph
+   * sitting above its own shadow, which is what a shadow does. */
+  --gd-duo-offset-x: 0.06em;
+  --gd-duo-offset-y: 0.1em;
+
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  width: 1em;
+  height: 1em;
+  line-height: 1;
+  flex: none;
+}
+.gd-icon-duo svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  fill: currentColor;
+}
+.gd-icon-duo svg:first-child {
+  color: var(--color-accent-shadow);
+  opacity: 1;
+  transform: translate(var(--gd-duo-offset-x), var(--gd-duo-offset-y));
+  transition: transform 0.2s ease-out;
+}
+.gd-icon-duo svg:last-child {
+  color: var(--color-accent);
+  transition: color 0.2s ease-out;
+}
+
+/* Tinted variant: both layers take the colour set on the wrapper, so a growth
+ * stage is duotone in its own hue without a rule per stage. The shadow layer
+ * is the same hue darkened, not a separate colour. */
+.gd-icon-duo-tinted svg:first-child {
+  color: currentColor;
+  opacity: 0.35;
+}
+.gd-icon-duo-tinted svg:last-child {
+  color: currentColor;
+}
+
+/* Hover lifts the line to accent-hover. The token is named for this state and
+ * was previously spent on the resting one, which left hover with nowhere to go
+ * — it had a brightness filter bolted on as a substitute. The shadow stays
+ * put; moving both would read as the icon jumping. */
+:is(a, button, .gd-panel):hover .gd-icon-duo svg:last-child {
+  color: var(--color-accent-hover);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gd-icon-duo svg {
+    transition: none;
+  }
+}
+
+/* Icons WITHOUT a fill partner take the same offset shadow as a one-line
+ * arbitrary utility — drop-shadow-[0.06em_0.1em_0_var(--color-accent-shadow)] —
+ * matching the duotone pair's offset so the catalogue reads as one language.
+ * The class this used to be had exactly one consumer, the styleguide. */
+
+/* ===========================================================================
+ * ROUND BUTTON
+ *
+ * Carried over from article-time's `round-button` mixin — the back-to-top
+ * control. Kept because it is one of the pieces of the old design worth
+ * keeping, rebuilt on tokens rather than hardcoded values.
+ *
+ * Changes from the original: the inner glow is softer, the focus ring is
+ * visible for keyboard users (the old one had none), and the hover lift is
+ * suppressed for anyone who asked for reduced motion.
+ * =========================================================================== */
+.gd-round-button {
+  --gd-round-size: 3rem; /* 48px */
+
+  /* Icon box, overridable per glyph. The default follows the original mixin
+   * (`$size - 13px`), which was tuned for Remixicon's `-s-` arrows: those draw
+   * a compact shape inside a 24x24 viewBox — `arrow-up-s-fill` covers only
+   * 12x6 of it. A glyph that fills its box, like `heart-line` at 20x18, needs
+   * a smaller container or it dwarfs the arrows in an identical button.
+   * Use .gd-round-button-full for those. */
+  --gd-round-icon: calc(var(--gd-round-size) - 13px);
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--gd-round-size);
+  height: var(--gd-round-size);
+  border: 1px solid --alpha(var(--color-accent-muted) / 50%);
+  border-radius: 50%;
+  background-color: var(--color-surface-sunken);
+  color: var(--color-accent);
+  cursor: pointer;
+
+  /* RAISED. Two shadows, not one: dark below-right, a faint light above-left.
+   * The pair is what makes the surface read as domed rather than as a flat
+   * disc with a drop shadow. An earlier version used only the dark one, and
+   * the button looked stuck on top of the page instead of formed out of it. */
+  box-shadow:
+    4px 4px 8px rgb(0 0 0 / 0.55),
+    -3px -3px 6px --alpha(var(--color-ink) / 9%);
+
+  transition:
+    color 0.3s ease-out,
+    border-color 0.2s ease-out,
+    box-shadow 0.2s ease-out,
+    transform 0.2s ease-out;
+}
+
+/* PRESSED. The same two shadows, inverted to inset, plus 2px of downward
+ * travel. Inverting the pair is the whole trick — it reads as the surface
+ * being pushed in. Lifting the button instead (which is what this did before)
+ * looks like it hops away from the pointer rather than responding to it. */
+.gd-round-button:hover,
+.gd-round-button:focus-visible {
+  border-color: var(--color-accent);
+  color: var(--color-accent-hover);
+  /* Pressed. The values are deliberately stronger than the raised state: an
+   * inset shadow has to darken a surface that is already near-black, so the
+   * same 30% black that reads fine on the outside is invisible on the inside.
+   * The light edge moves to the bottom-right, where a pressed dish catches it. */
+  background-color: rgb(0 0 0 / 0.25);
+  box-shadow:
+    inset 5px 5px 9px rgb(0 0 0 / 0.75),
+    inset -4px -4px 8px --alpha(var(--color-ink) / 12%);
+  transform: translateY(2px);
+}
+.gd-round-button:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+/* This used to name the element twice (`button.gd-round-button svg`) to reach
+ * specificity 0-2-2 and out-shout Bulma's `button:not(.round-button)
+ * :not(.is-round) svg`. Since Bulma moved into a cascade layer that is no
+ * longer necessary — any unlayered rule wins regardless of specificity.
+ *
+ * `transform: none` still is necessary: Bulma also nudges that svg by
+ * translate(-5px, 0), and where garden sets nothing, a layered rule still
+ * applies unopposed. Demoting is not the same as removing. */
+/* Icon size is derived from the button, not fixed: the original mixin used
+ * `$size - 13px`, so a 48px button carries a 35px glyph box. That reads large
+ * as a number, but the drawn shape inside a 24x24 viewBox is far smaller than
+ * its box — at a fixed 20px the arrow came out visibly undersized. */
+.gd-round-button svg {
+  width: var(--gd-round-icon);
+  height: var(--gd-round-icon);
+  /* Bulma also applies `translate(-5px, 0)` here — an optical nudge for buttons
+   * that pair an icon WITH a label. On an icon-only button it just pushes the
+   * glyph off centre, which is exactly how it looked. */
+  transform: none;
+  fill: currentColor;
+}
+
+/* One size variant. Only the custom property changes; width, height and the
+ * icon all follow from it. */
+.gd-round-button-lg {
+  --gd-round-size: 3.4375rem; /* 55px — what the back-to-top button uses */
+}
+
+/* For glyphs that fill their viewBox rather than sitting compactly inside it. */
+.gd-round-button-full {
+  --gd-round-icon: calc(var(--gd-round-size) * 0.45);
+}
+
+/* The shadow inversion stays — it is the feedback, not decoration. Only the
+ * 2px of travel is dropped, since that is the part that moves. */
+@media (prefers-reduced-motion: reduce) {
+  .gd-round-button {
+    transition:
+      color 0.3s ease-out,
+      border-color 0.2s ease-out,
+      box-shadow 0.2s ease-out;
+  }
+  .gd-round-button:hover,
+  .gd-round-button:focus-visible {
+    transform: none;
+  }
+}
+
+/* ===========================================================================
+ * COMPONENT CSS
+ *
+ * Only for what genuinely cannot live on an element: positioning against a
+ * distant ancestor, pseudo-elements, vendor resets. Everything else is
+ * utilities in the template.
+ * =========================================================================== */
+
+/* --- Navigation ------------------------------------------------------------
+ * One set of links in two shapes: a bar under the header at 768px and up, a
+ * full-viewport drawer below it. What is here is what a utility cannot say —
+ * three pseudo-elements, one keyframe, and a scroll lock that reads a checkbox
+ * inside <nav> and applies to <body>. Everything else is utilities in
+ * layouts/_partials/_base/navigation.html.
+ * -------------------------------------------------------------------------- */
+
+/* The bar closes with the same fading gold rule gd-h2 uses. This is the line
+ * where the header's decoration stops and the page begins — which is the whole
+ * reason the bar is stuck to the top: the line has to survive scrolling. */
+.at-nav::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 1px;
+  background: linear-gradient(to right, var(--rule-gold), transparent);
+}
+
+@media (min-width: 768px) {
+  /* The current item: gold, plus a 2px gold rule fading out to the right — the
+   * same device as every other rule in the system, at 2px so it reads as a
+   * marker rather than as another divider. The inset matches the link's own
+   * `md:px-3`, so the rule sits under the label and not under the padding. */
+  .at-nav-item[aria-current]::after {
+    content: "";
+    position: absolute;
+    inset: auto calc(var(--spacing) * 3) -1px;
+    height: 2px;
+    background: linear-gradient(
+      to right,
+      var(--color-accent),
+      --alpha(var(--color-accent) / 20%)
+    );
+  }
+}
+
+@media (max-width: 767px) {
+  /* In the drawer the rows are told apart by one fading rule between them, not
+   * boxed in by a border on each. */
+  .at-nav-item + .at-nav-item::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 1px;
+    background: linear-gradient(to right, var(--rule-gold), transparent);
+  }
+
+  /* The page behind the drawer must not scroll under the fingers. The toggle is
+   * a checkbox inside <nav>, and nothing but :has() reaches <body> from there. */
+  body:has(#menu-switch:checked) {
+    overflow: hidden;
+  }
+
+  /* The drawer arrives from the right. Opaque, never see-through: this system
+   * has no backdrop filters over content, and a translucent menu over the
+   * dotted page ground is unreadable. */
+  #menu-switch:checked ~ .at-nav-drawer {
+    animation: at-drawer-in var(--duration-base) var(--ease-out) both;
+  }
+}
+
+@keyframes at-drawer-in {
+  from {
+    opacity: 0;
+    transform: translateX(4%);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* The movement goes; the drawer still opens. */
+@media (prefers-reduced-motion: reduce) {
+  #menu-switch:checked ~ .at-nav-drawer {
+    animation: none;
+  }
+}
+
+/* --- Search results panel --------------------------------------------------
+ * Positioned against the <nav>, not against its own parent, and the pointer is
+ * a pseudo-element. The result rows themselves are utility-styled — that markup
+ * is generated in assets/js/search.js.
+ *
+ * Visibility is driven by the `hidden` utility, toggled from JS. Nothing here
+ * sets a display value, or it would fight that. */
+/* The result panel's box is utilities on the two ids in navigation.html; what
+ * stays is what utilities cannot say — the pointer pseudo-element below and the
+ * webkit search-decoration resets. */
+
+/* Pointer towards the search field — at the magnifier, not merely somewhere
+ * along the top edge. 0.875rem plus the arrow's own 0.6rem half-width puts its
+ * tip 20px in from the panel's right edge, which is where the glyph sits in
+ * both shapes: the panel lines up with the field's right edge in the bar and
+ * with the field's own box in the drawer. */
+#results::before {
+  content: "";
+  position: absolute;
+  top: -0.6rem;
+  right: 0.875rem;
+  border-right: 0.6rem solid transparent;
+  border-bottom: 0.6rem solid var(--color-surface-raised);
+  border-left: 0.6rem solid transparent;
+}
+
+/* Browsers add their own clear affordance to type=search; we render our own. */
+#searchBox::-webkit-search-decoration,
+#searchBox::-webkit-search-cancel-button,
+#searchBox::-webkit-search-results-button,
+#searchBox::-webkit-search-results-decoration {
+  display: none;
+  -webkit-appearance: none;
+}
+
+
+/* ===========================================================================
+ * ═══════════════════════════════════════════════════════════════════════════
+ * THE at-* VOCABULARY
+ *
+ * Ported from .claude/skills/design/css/components.css, deliberately verbatim:
+ * same rules, same order, same comments, `color-mix()` left as written rather
+ * than rewritten to Tailwind's `--alpha()`. The two files are meant to stay
+ * diffable, because that is what makes the next design sync a comparison
+ * instead of a translation. (The gd-* rules above predate the skill and keep
+ * their `--alpha()`. Identical result; not worth a churn commit to unify.)
+ *
+ * NOTHING USES THIS YET. Every template that would is still Bulma's. It ships
+ * ahead of the markup on purpose: with the vocabulary in place each remaining
+ * migration is markup work — pick a class from the styleguide — rather than
+ * another round of inventing values, which is precisely how the old theme
+ * reached 4,355 lines of SCSS across 29 files. /pages/styleguide/ renders every
+ * class below, so none of it is shipping unseen.
+ *
+ * WHAT IS DELIBERATELY MISSING: the header and footer chrome — at-sky, at-city,
+ * at-clock, at-bird, at-balloon, at-wordmark, at-footer-sea. The design tool
+ * could not carry the SVG work across, and the result is a simplification, not
+ * an implementation: no stars at all, one bird instead of two, one breakpoint
+ * instead of three, and none of the seasonal overlays. Those come from
+ * article-time's scss/base/hero.scss when the header moves. Porting them here
+ * would have made the simplification look decided.
+ *
+ * Also absent: `.at-sr-only`. Tailwind already emits `sr-only`, and a second
+ * spelling of the same thing is a fork waiting to happen.
+ * ═══════════════════════════════════════════════════════════════════════════
+ * =========================================================================== */
+
+/* Prose. Line length capped: text over the full window width is tiring after
+ * two lines. Gold list markers are a single global decision, not a per-page one.
+ *
+ * The design system states these on bare elements too — `body`, `a`,
+ * `:focus-visible`. Those are NOT ported yet: they would take effect across
+ * article-time's markup the moment they land, and this pass is supposed to
+ * change nothing on screen. They come with baseof.html. */
+.at-prose { max-width: var(--measure); color: var(--color-ink); }
+.at-prose p { margin: 0 0 1rem; }
+.at-prose strong { color: var(--color-ink-strong); font-weight: var(--weight-strong); }
+.at-prose li::marker { color: var(--color-accent); }
+.at-prose a { text-decoration: underline; text-underline-offset: 4px; }
+.at-prose code { color: var(--color-accent); font-size: 0.9em; overflow-wrap: anywhere; }
+/* Centred heading with a gold rule to both sides — the footer column titles.
+ * One of the few pieces of the old design that was really successful. Both rules
+ * fade outwards from the text, the same way the section rule on gd-h2 does: a
+ * divider that stops abruptly draws attention to its own end. */
+.gd-lined-title {
+  margin: 0; text-align: center; overflow: hidden;
+  font-family: var(--font-heading); font-size: var(--text-lg);
+  font-weight: var(--weight-strong); color: var(--color-ink-muted);
+}
+.gd-lined-title::before, .gd-lined-title::after {
+  content: ""; display: inline-block; position: relative; vertical-align: middle;
+  width: 50%; height: 1px;
+}
+.gd-lined-title::before { right: 0.5em; margin-left: -50%; background: linear-gradient(to right, transparent, var(--rule-gold)); }
+.gd-lined-title::after { left: 0.5em; margin-right: -50%; background: linear-gradient(to right, var(--rule-gold), transparent); }
+
+/* HELD PRESSED — the current page in pagination. The pressed state is itself the
+ * "you are here" marker, so it needs no colour of its own; and it must not answer
+ * to hover or focus, because a control that reacts and then does nothing is worse
+ * than one that plainly cannot be used. Render it as a span, not a disabled
+ * button: there is no action here to disable. */
+.gd-round-button-pressed,
+.gd-round-button-pressed:hover,
+.gd-round-button-pressed:focus-visible {
+  border-color: color-mix(in srgb, var(--color-accent-muted) 50%, transparent);
+  background-color: rgb(0 0 0 / 0.25);
+  box-shadow: var(--shadow-pressed);
+  color: var(--color-accent-hover);
+  transform: none;
+  cursor: default;
+}
+
+/* STATUS MESSAGES are gone. All three uses were styleguide specimens; the one
+ * shortcode that renders a message is still article-time's and still Bulma's.
+ * The vocabulary comes back with the shortcode, written against whatever the
+ * shortcode actually needs. */
+
+/* TILE CHROME is utilities where it is used (page/archive.html and the
+ * styleguide demos): surface, hairline, the legacy 7.2px radius, the 11px
+ * uppercase label. The `[data-stage]` hide rule went with the growth cluster —
+ * a partial that should not render a duplicate glyph simply does not. */
+
+/* ===========================================================================
+ * CARD — the magazine tile on overviews. Paired shadow, gold hairline, and a
+ * gold rule that grows along the bottom edge on hover. Cover images sit in
+ * sepia until you point at one.
+ * ======================================================================== */
+/* No overflow clipping: the Rubrik ribbon and the cover image deliberately hang
+ * outside the card's box, as they do upstream. 8px radius, not 12 — the scale says
+ * md is for cards and panels, lg for dialogs and overlays. The card had lg by
+ * mistake, which is exactly the drift a three-step scale exists to prevent. */
+.at-card {
+  /* A SIZE CONTAINER, so the card can react to its own width instead of the
+   * window's. This is what makes one card work in a single 733px column and in
+   * a three-across grid at 480px: the floated cover is right in the first and
+   * unreadable in the second, and the viewport cannot tell those apart — at
+   * 1536px wide it is "desktop" either way.
+   *
+   * `inline-size` only, never `size`: the card's height comes from its content,
+   * and `container-type: size` would require it not to. */
+  container-type: inline-size;
+
+  /* DIVERGES FROM THE DESIGN SYSTEM ON PURPOSE — two declarations it does not
+   * have. Upstream the React component sets `display: grid` and
+   * `grid-template-rows: 1fr auto` inline on every card, so the footer sits on
+   * the bottom edge whatever the excerpt does. Hugo has no component: left at
+   * the call site, that would be retyped at all five of them, which is exactly
+   * the "repeats and could drift" test docs/design.md uses to decide what
+   * belongs in CSS.
+   *
+   * And it has a second job here. `grid` is a BULMA class name. A template
+   * reaching for the utility also gets Bulma's `.grid`, which sets a 0.75rem
+   * gap and `repeat(auto-fill, minmax(9rem, 1fr))` — garden opposes neither, so
+   * both apply unopposed and the card lays its content out in two columns with
+   * a 12px gutter. That is not hypothetical: it is what this looked like in the
+   * styleguide before the rule moved here. Demoting Bulma decides conflicts; it
+   * does nothing where garden declares nothing.
+   *
+   * Do not "restore" this to match the skill on the next sync. */
+  display: grid;
+  grid-template-rows: 1fr auto;
+
+  /* NO `max-width` AND NO AUTO MARGINS ANY MORE, and they had to go together with
+   * the container above. `margin-left/right: auto` makes a grid item shrink to
+   * fit its contents — and `contain: inline-size` forbids the contents from
+   * determining the inline size, so the two combined collapsed the card to its
+   * 2px of border. Measured, not guessed: every card came out `width: 2`.
+   *
+   * The cap was for a single centred column, which is what the design system's
+   * page produces at 64rem. The grid decides the width now, so a cap here is a
+   * second opinion about a decision the call site already made. */
+  position: relative; height: 100%;
+  background: var(--color-surface-raised);
+  border: 1px solid color-mix(in srgb, var(--color-accent) 20%, transparent);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  color: var(--color-ink);
+}
+/* Variant 3 of three mocked for Angel: the growing line, repaired. Thinner
+ * than the original 3px, a faint glow so it reads at 2px, sitting ON the
+ * border line (-1px), and ending 10px short of each corner so it never
+ * touches the radius — the old one ran into the curves and looked snapped. */
+.at-card::after {
+  content: ""; position: absolute; bottom: -1px; left: 10px; width: 0; height: 2px;
+  border-radius: 2px; background: var(--color-accent);
+  box-shadow: 0 0 6px color-mix(in srgb, var(--color-accent) 60%, transparent);
+  transition: width var(--duration-base) var(--ease-out);
+}
+.at-card:hover::after { width: calc(100% - 20px); }
+/* `.at-card-title` and `.at-card-excerpt` USED TO BE HERE and were nothing but
+ * a pile of utilities with a name — `m-0 font-heading text-xl font-semibold
+ * tracking-heading` and `min-w-0`. They are written at the two call sites now.
+ * docs/design.md says a component is for a decision that repeats and could
+ * drift, or for something utilities cannot express; a title used twice in one
+ * file is neither.
+ *
+ * `.at-card-meta` stood here after that as a hook for a font-size
+ * normalisation — until the audit removed every size the rule corrected, at
+ * which point both the rule and the hook were furniture. Gone too. */
+
+/* The excerpt is NOT clipped in CSS, and that is deliberate. It used to be
+ * `overflow: hidden` with a fade over it — which is precisely what broke the float
+ * and the offset: overflow:hidden establishes a new block formatting context, so
+ * text refuses to run around the cover, and it clipped the figure's negative margin
+ * so the image stopped hanging off the card. The excerpt is already truncated where
+ * it is written (500 characters with a cover, 1000 without), so a second clip here
+ * bought nothing and cost both. */
+/* Same for `.at-card-footer`: the row's own layout is six utilities and lives in
+ * the markup. The class remains because two things below need it as a hook —
+ * the size normalisation and the divider between cells — and neither is
+ * something a utility on a single element can say. */
+/* ONE SIZE IN THE ROW is structural now, not corrective. The footer once
+ * collected four font sizes — 14px on the row, 12.5px on the hashtags, 14.4px
+ * on the heart — and a normalisation rule forced them back to `inherit`. After
+ * the audit none of the row's occupants sets a size at all, so there is nothing
+ * left to correct and the rule is gone. The discipline moved into the partials:
+ * badge, hashtag, growth and heart all inherit by construction. */
+
+/* `.at-card-footer-item` layout lives in the markup; the class remains solely
+ * for the two structural rules below — the divider between siblings and the
+ * flexible tags cell — which no utility on a single element can say. */
+/* The tags cell is the flexible one: it takes whatever the fixed cells leave and
+ * wraps inside itself. Without min-width:0 a long tag list refused to shrink and
+ * pushed the whole footer into three stacked full-width rows. */
+.at-card-footer-item:has(.at-hashtag) { flex: 1 1 6rem; min-width: 0; flex-wrap: wrap; }
+/* Footer cells are divided by a gold hairline, as they are upstream — the row
+ * carries two unrelated kinds of information (how long it takes to read, what
+ * state it is in) and reads as two cells, not one. */
+.at-card-footer-item + .at-card-footer-item { border-left: 1px solid color-mix(in srgb, var(--color-accent-muted) 50%, transparent); }
+
+/* The corner badge ("Neu"/"Gesehen") is built by gdpr.js with utility classes —
+ * Tailwind scans assets/js too. `at-card-badge` survives there only as the
+ * dedup hook. */
+
+/* IMAGERY LIVES IN layouts/_partials/ui/figure.html — the 4:3 ratio, the sepia
+ * release, the float and its two-tier drop (container query in cards, viewport
+ * fallback in panels), the caption bar, the overhang. All utilities, written
+ * once in the partial; the note card's full-bleed variant is utilities at its
+ * call site in card.html. What used to be five classes here is a partial call.
+ * The sepia hover runs through `group/card` on the card and `group/figure` on
+ * the figure, replacing the descendant hover rules that stood here. */
+
+/* The container has to contain its float, or the card collapses behind the image. */
+.at-flow::after { content: ""; display: block; clear: both; }
+
+/* The hashtag pill and the series tag are utilities at their call sites (card
+ * footer, styleguide). Neither sets a font size: the row decides. The old
+ * `a.at-hashtag { text-decoration: none }` guard came from prose underlining
+ * every link — the utility `no-underline` says it where it matters. */
+
+/* THE RUBRIK BADGE lives in layouts/_partials/ui/badge.html. The dot that
+ * needed a ::before and a pass-through custom property here is a real element
+ * there, and the pill is utilities. The reasoning behind the badge — neutral
+ * surface, colour only on the dot — is recorded in docs/design.md. */
+
+/* ===========================================================================
+ * PROSE ELEMENTS — what an article body is actually made of.
+ * Lists, tables, inline figures, code. All of it composes from the same tokens
+ * as everything else; none of it introduces a colour.
+ *
+ * ROUGHLY HALF OF THIS BLOCK IS ON NOTICE. "Generated Markdown, so no class can
+ * be put on anything" was claimed here and it is only half true: Hugo has
+ * render hooks for exactly seven elements — blockquote, codeblock, heading,
+ * image, link, passthrough, table — and this project already uses three of
+ * them. The table, caption, pre and code rules below can therefore become
+ * utility-classed hook templates. The rest cannot: there is no hook for
+ * paragraphs, lists, list markers, strong, dl or hr, and those genuinely need
+ * descendant CSS.
+ *
+ * THE HOOKS ARE DELIBERATELY NOT WRITTEN YET. A render hook in garden applies
+ * to every Markdown body on the site the moment it exists, and article bodies
+ * are still rendered by article-time's single.html — a garden table hook would
+ * restyle the unmigrated article page today. They land in the commit that
+ * migrates single.html, where the restyle is the point.
+ * ======================================================================== */
+.at-prose ul, .at-prose ol { margin: 0 0 1rem; padding-left: 1.5em; }
+.at-prose ul { list-style: disc; }
+
+/* FOOTNOTES read as the text's own footer. Goldmark emits them as
+ * div.footnotes with an <hr> — no render hook exists for footnotes, so this
+ * is Markdown-without-a-hook territory, the category that stays CSS. The hr
+ * dies; the hairline top border is the divider, smaller and muted because
+ * footnotes are an aside, not a continuation. */
+.at-prose .footnotes { margin-top: 2.5rem; padding-top: 1rem; border-top: 1px solid color-mix(in srgb, var(--color-accent-muted) 40%, transparent); font-size: 0.85em; color: var(--color-ink-muted); }
+.at-prose .footnotes hr { display: none; }
+.at-prose .footnotes p { margin-bottom: 0.35rem; }
+.at-prose ol { list-style: decimal; }
+.at-prose li { margin: 0 0 0.35rem; }
+.at-prose li > ul, .at-prose li > ol { margin: 0.35rem 0 0; }
+/* Gold markers are a single global decision, not a per-list one. */
+.at-prose li::marker { color: var(--color-accent); }
+.at-prose dl { margin: 0 0 1rem; }
+.at-prose dt { color: var(--color-ink-strong); font-weight: var(--weight-strong); }
+.at-prose dd { margin: 0 0 0.6rem; color: var(--color-ink-muted); }
+
+/* Tables get the header treatment the tile labels use — uppercase, tracked, muted —
+ * plus the fading gold rule under the head row. Body rows are separated by the same
+ * dashed hairline the sidebar lists use, so a table reads as a list with columns
+ * rather than as a grid of boxes. No zebra striping: on this surface an alternating
+ * fill is louder than the data. */
+.at-prose table { width: 100%; border-collapse: collapse; margin: 0 0 1.25rem; font-size: var(--text-sm); }
+.at-prose caption { padding-bottom: 0.6em; color: var(--color-ink-muted); font-size: var(--text-sm); text-align: left; }
+.at-prose th {
+  padding: 0.55em 0.8em; text-align: left; vertical-align: bottom;
+  font-size: 0.7rem; font-weight: var(--weight-strong); letter-spacing: var(--tracking-label);
+  text-transform: uppercase; color: var(--color-ink-muted);
+  background-image: linear-gradient(to right, var(--rule-gold), transparent);
+  background-size: 100% 1px; background-position: left bottom; background-repeat: no-repeat;
+}
+.at-prose td {
+  padding: 0.6em 0.8em; vertical-align: top;
+  border-bottom: 1px dashed color-mix(in srgb, var(--color-accent-muted) 30%, transparent);
+}
+.at-prose tbody tr:last-child td { border-bottom: none; }
+.at-prose tbody tr:hover td { background: color-mix(in srgb, var(--color-accent-muted) 12%, transparent); }
+.at-prose td:last-child, .at-prose th:last-child { text-align: right; font-variant-numeric: tabular-nums; }
+
+/* FENCED CODE lives in _markup/render-codeblock.html — the hook is the call
+ * site for generated Markdown, so the frame is utilities there. What stays
+ * CSS in the prose block is only what has NO hook (tables' structural rules
+ * above: row hover, last-row border, numeric right-alignment — a table hook
+ * would rebuild the entire table markup to say the same thing, and that
+ * trade was judged and declined in the E-items round). */
+.at-prose hr { margin: var(--spacing-gutter) 0; border: 0; height: 1px; background: linear-gradient(to right, var(--rule-gold), transparent); }
+
+/* GROWTH STAGES render from layouts/_partials/growth-badge.html: the tint is a
+ * finished utility class per stage (text-seedling …), the glyph is the duotone
+ * stack, the size inherits from the row. `at-growth` and `data-stage` survive
+ * in the markup as e2e hooks with no styles attached. The old `.at-growth svg`
+ * sizing rule — and the collision fix it forced onto the duotone stack — died
+ * with the cause. The tile-context hide rule went too: when single.html builds
+ * info tiles, the partial simply does not render the duplicate glyph, which is
+ * a template condition and not a CSS job. */
+
+/* THE HEART is utilities in layouts/_partials/widgets/heart-button.html, and
+ * its hearted state styles from `aria-pressed:` — which closed a real bug: the
+ * CSS here styled `.is-hearted` while hearts.js has always set `.hearted`, so
+ * the red state never fired since the port. hearts.js sets aria-pressed="true"
+ * too and always did; the state now lives in the attribute that means it. The
+ * pill variant that stood here had no consumer and returns with single.html's
+ * info tile if it is still wanted then. */
+
+/* ===========================================================================
+ * TOOLTIP — attribute driven, so any element can carry one.
+ * ======================================================================== */
+[data-tooltip] { position: relative; }
+[data-tooltip]::before, [data-tooltip]::after {
+  position: absolute; opacity: 0; visibility: hidden; pointer-events: none; z-index: 9999;
+  transition: opacity var(--duration-slow), visibility var(--duration-slow);
+}
+[data-tooltip]::before {
+  content: attr(data-tooltip); bottom: 100%; left: 50%;
+  transform: translateX(-50%) translateY(-10px);
+  padding: 0.5rem 1rem; border-radius: 4px;
+  background-color: hsl(190 11% 6%); color: hsl(190 20% 90%);
+  font-family: var(--font-body); font-size: 0.8rem; text-align: center; white-space: nowrap;
+  box-shadow: 2px 2px 5px color-mix(in srgb, var(--color-accent-hover) 20%, transparent);
+}
+[data-tooltip]::after {
+  content: ""; bottom: 100%; left: 50%; transform: translateX(-50%) translateY(-10px);
+  border: 10px solid transparent; border-top-color: hsl(190 11% 6%); margin-bottom: -20px;
+}
+[data-tooltip]:hover::before, [data-tooltip]:hover::after,
+[data-tooltip]:focus-visible::before, [data-tooltip]:focus-visible::after { opacity: 1; visibility: visible; }
+
+
+/* ===========================================================================
+ * QUOTED — the remixicon double-quote pair, used on pull quotes, note cards and
+ * the footer slogan. A unicode-by-codepoint use of the icon font, not the sprite.
+ * ======================================================================== */
+.at-quoted::before, .at-quoted::after {
+  font-family: var(--font-icon); color: var(--color-accent); display: inline-block;
+}
+.at-quoted::before { content: "\ec51"; }
+.at-quoted::after { content: "\ec52"; }
+
+/* ===========================================================================
+ * SIDEBAR WIDGETS — series, table of contents, related, archive.
+ *
+ * ONE ROW SHAPE FOR ALL OF THEM. They used to differ in every incidental way —
+ * line-height 2 against 1.35 against 1.4, the series title in the heading font
+ * while nothing else was, the counter in Montserrat Alternates against an em dash
+ * in Montserrat, three different left paddings — so three widgets stacked in one
+ * sidebar read as three separate designs. Everything shared now lives on
+ * .at-widget-list; each list keeps exactly ONE distinguishing mark, because that
+ * mark is the information:
+ *   Serie     leading-zero counter over a continuous rail
+ *   Inhalt    em dash, and nesting
+ *   Ähnliche  the date, right-aligned
+ * The marker column is the same width in all three, so the text edges line up
+ * down the whole sidebar.
+ * ======================================================================== */
+/* The widget header rule fades to the right like gd-h2 — a border-bottom cannot
+ * fade, so it is drawn as a background gradient on the bottom edge instead. */
+.at-widget-list {
+  --at-marker: 1.9rem;
+  list-style: none; margin: 0; padding: 0;
+  font-size: 0.85rem; line-height: 1.4;
+}
+/* Rows are the same box everywhere: same padding, same radius, same hover. */
+.at-widget-list > li { margin: 0; position: relative; }
+.at-widget-list > li > a, .at-widget-list > li > span {
+  display: block; position: relative;
+  padding: 0.4rem 0.7rem 0.4rem var(--at-marker); border-radius: 0.3rem;
+  color: color-mix(in srgb, var(--color-accent-hover) 85%, transparent);
+}
+.at-widget-list > li > a:hover { color: var(--color-accent); background: color-mix(in srgb, var(--color-accent-muted) 15%, transparent); }
+/* "You are here" reads the same in every widget. */
+.at-widget-list > li.is-current > a, .at-widget-list > li.is-current > span {
+  background: color-mix(in srgb, var(--color-accent) 8%, transparent);
+  color: var(--color-accent-hover); font-weight: var(--weight-strong);
+}
+.at-widget-list > li.is-current > * ::before, .at-widget-list > li.is-current > *::before { color: var(--color-accent-hover); }
+
+/* Series: leading-zero counter in the marker column, with a continuous rail
+ * behind it. The rail is anchored on the list, not on each item, so it stays one
+ * unbroken segment regardless of hover backgrounds. */
+.at-series-list { position: relative; counter-reset: series-item; }
+.at-series-list::before {
+  content: ""; position: absolute; left: 0.95rem; top: 0.9rem; bottom: 0.9rem; width: 1px;
+  background: var(--color-accent-muted); opacity: 0.4; pointer-events: none;
+}
+.at-series-list > li { counter-increment: series-item; }
+.at-series-list > li > *::before {
+  content: counter(series-item, decimal-leading-zero);
+  position: absolute; left: 0; top: 0.4rem; width: var(--at-marker);
+  text-align: center; font-size: 0.7rem; font-weight: var(--weight-strong);
+  letter-spacing: 0.05em; font-variant-numeric: tabular-nums; color: var(--color-accent-muted);
+}
+/* Withered members keep their place in the sequence but read as faded. */
+.at-series-list > li.is-withered > * { color: color-mix(in srgb, var(--color-accent-hover) 50%, transparent); }
+
+/* Table of contents: em-dash marker in the same column, so its text edge lines up
+ * with the series numbers above it. Nested levels indent and gain a rail. */
+.at-toc-list > li > a::before, .at-toc-list ul > li > a::before {
+  content: "—"; position: absolute; left: 0; top: 0.4rem; width: var(--at-marker);
+  text-align: center; color: var(--color-accent-muted); font-weight: var(--weight-strong);
+}
+/* NESTING STARTS AT THE SECOND ul. Hugo emits <nav><ul>…, so the top level is
+ * already ".at-toc-list ul" — indenting THAT put a rail and an 1.2rem offset on
+ * level one, and the dashes sat beside the marker column instead of in it
+ * (Angel spotted the text edge no longer lining up with the series numbers). */
+.at-toc-list ul ul {
+  /* A FULL MARKER COLUMN of indent (1.9rem), not 0.8: with the smaller value
+   * the nested text landed exactly on level one's text edge and the nesting
+   * disappeared. At 1.9rem the rail runs precisely under the parent's text
+   * edge, the nested dash sits ON the rail, and the nested text steps in by
+   * a readable 1.1rem. */
+  list-style: none; margin: 0 0 0 1.9rem; padding-left: 0.4rem;
+  border-left: 1px solid color-mix(in srgb, var(--color-accent-muted) 30%, transparent);
+}
+.at-toc-list ul > li { position: relative; margin: 0; }
+.at-toc-list ul > li > a {
+  display: block; position: relative;
+  padding: 0.4rem 0.7rem 0.4rem var(--at-marker); border-radius: 0.3rem;
+  color: color-mix(in srgb, var(--color-accent-hover) 85%, transparent);
+}
+.at-toc-list ul > li > a:hover { color: var(--color-accent); background: color-mix(in srgb, var(--color-accent-muted) 15%, transparent); }
+/* NESTED LEVELS: the dash sits ON the rail, the way the series numbers sit on
+ * theirs — a marker floating beside its line reads as two unrelated decorations.
+ * -1.35rem centres the 1.9rem marker box on the ul's border-left (0.4rem padding
+ * plus half the box), and the text tucks in behind a smaller indent. */
+.at-toc-list ul ul > li > a { padding-left: 0.7rem; }
+.at-toc-list ul ul > li > a::before { left: -1.35rem; }
+
+/* Archive in the footer: name left, count right, and a dotted leader between
+ * them drawn as a repeating radial gradient. */
+.at-leader-list > li { display: flex; width: 100%; padding: 0.1em 0; margin: 0; }
+.at-leader-list > li > :first-child { order: 1; padding: 0; }
+.at-leader-list > li::after {
+  content: ""; flex-grow: 1; order: 2; height: auto;
+  /* NEVER collapses to zero: without the min-width, a long value shrank the
+   * dots away and sat flush against its label. Two characters of dotted air
+   * survive any wrap. */
+  min-width: 2ch;
+  background-image: radial-gradient(circle, color-mix(in srgb, var(--color-accent-muted) 50%, transparent) 1px, transparent 1px);
+  background-position-y: calc(100% - 6px); background-size: 1ex 3px; background-repeat: repeat-x;
+}
+.at-leader-list > li > :last-child { order: 3; padding: 0 0 0 0.3em; color: var(--color-ink-muted); }
+
+/* THE EXTERNAL-LINK MARK LIVES IN THE RENDER HOOK now (_markup/render-link):
+ * it is remixicon's external-link-line from the sprite, a real element. The
+ * ::after that stood here addressed an icon FONT the site never ships and was
+ * dead since the port; its unicode replacement lasted one review round before
+ * Angel asked for the proper glyph. */
+
+/* ===========================================================================
+ * ═══════════════════════════════════════════════════════════════════════════
+ * HEADER — the sky, the harbour, the clock, the wordmark.
+ *
+ * DERIVED FROM BULMA, NOT FROM THE DESIGN SYSTEM. The design tool could not
+ * carry the SVG work across; what it produced is missing the stars entirely,
+ * the second bird, the middle breakpoint and every seasonal overlay. The source
+ * here is themes/article-time/assets/scss/base/hero.scss, put on tokens on the
+ * way over. See docs/migration.md.
+ *
+ * The sky colours are NOT tokens and should not become any. They are a sky —
+ * four times of day, sampled from a photograph's worth of blue. Nothing else on
+ * the site may use them, which is exactly why they do not belong in the palette.
+ * The gold in the wordmark IS tokenised: `$gold`, `$gold-light` and `$gold-dark`
+ * upstream are `--color-accent`, `--color-accent-hover` and
+ * `--color-accent-muted` to the digit.
+ * ═══════════════════════════════════════════════════════════════════════════
+ * =========================================================================== */
+
+/* The band. 300px, dropping to 200 on a phone.
+ *
+ * The time of day is an ATTRIBUTE, not a class. Upstream header.js added
+ * `is-night`/`is-dawn`/`is-day`/`is-dusk` and never removed them, which is
+ * invisible only because the refresh it scheduled never fired (see header.js).
+ * One attribute cannot hold two values, so the bug cannot come back. */
+.at-header {
+  position: relative;
+  height: 300px;
+  background: radial-gradient(ellipse at bottom, #0c1a37 0%, #2c449d 50%, #ef8d5c 100%);
+}
+.at-header[data-sky="night"] { background: radial-gradient(circle, #000 0%, #010010 35%, #0c1a37 100%); }
+.at-header[data-sky="dawn"]  { background: radial-gradient(ellipse at bottom, #0c1a37 0%, #2c449d 50%, #ce98af 100%); }
+.at-header[data-sky="day"]   { background: radial-gradient(circle, #32bafa 0%, #b8e7fd 35%, #d1e8e2 100%); }
+.at-header[data-sky="dusk"]  { background: radial-gradient(ellipse at bottom, #0c1a37 0%, #2c449d 50%, #ef8d5c 100%); }
+
+/* The harbour silhouette. Repeats horizontally so it never runs out, pinned to
+ * the bottom, and sepia so it belongs to the gold rather than fighting the sky. */
+.at-city {
+  position: absolute; inset: 0; z-index: 2;
+  background: url("/images/header/city.svg") repeat-x center bottom / auto 100%;
+  filter: sepia(0.4);
+}
+
+/* The effects box is `absolute inset-0 overflow-hidden` at its one call site, so
+ * a bird leaving the frame does not widen the document. */
+
+/* The clock face rises into place once on load and stays. `both` keeps the end
+ * state; without it the face snaps back to 200px the moment the run finishes. */
+.at-clock {
+  position: absolute; inset: 0; z-index: 1; opacity: 0.8;
+  background: url("/images/header/clock.webp") no-repeat top center;
+  background-size: contain;
+  animation: at-clock-rise 2s ease both;
+  will-change: background-position;
+}
+@keyframes at-clock-rise {
+  from { background-position: 50% 200px; }
+  to { background-position: 50% 20px; }
+}
+
+/* Stars, at night and at dusk. Upstream these were three stacked elements whose
+ * dots came from a Sass function scattering 100, 80 and 30 random box-shadows
+ * across 2000×270 px. There is no Sass here and no random in a Hugo template —
+ * deliberately, since a star field that moves on every build is a diff nobody
+ * asked for. The field is generated once into images/header/stars.svg, which is
+ * also why it can now REPEAT: past 2000px the old sky was simply empty. */
+.at-stars {
+  position: absolute; inset: 0; opacity: 0.2;
+  background: url("/images/header/stars.svg") repeat top left;
+}
+
+/* Two birds, and the second one matters: it has its own cycle duration and its
+ * own negative delay, so the pair never flaps or crosses in lockstep. A single
+ * bird reads as a loop; two read as birds. */
+.at-birds .at-bird {
+  width: 88px; height: 125px;
+  background-image: url("/images/header/birds.svg");
+  background-size: auto 100%;
+  animation: at-fly-cycle 1s steps(10) infinite;
+  will-change: background-position;
+}
+.at-bird-1 { margin-top: 150px; animation-duration: 1s; animation-delay: -0.5s; }
+.at-bird-2 { animation-duration: 0.8s; animation-delay: -0.75s; }
+.at-bird-path {
+  position: absolute; top: 15px; left: -10%;
+  transform: scale(0) translateX(-10vw);
+  animation: at-fly-across linear infinite;
+  will-change: transform;
+}
+.at-bird-path-1 { animation-duration: 15s; }
+.at-bird-path-2 { animation-duration: 17s; animation-delay: 4s; }
+@keyframes at-fly-cycle { to { background-position: -900px 0; } }
+@keyframes at-fly-across {
+  0%   { transform: scale(0.25) translateX(-10vw); }
+  10%  { transform: translateY(2vh) translateX(10vw) scale(0.3); }
+  20%  { transform: translateY(0) translateX(30vw) scale(0.35); }
+  30%  { transform: translateY(4vh) translateX(50vw) scale(0.4); }
+  40%  { transform: translateY(2vh) translateX(70vw) scale(0.4); }
+  50%  { transform: translateY(0) translateX(90vw) scale(0.4); }
+  60%  { transform: translateY(0) translateX(110vw) scale(0.35); }
+  100% { transform: translateY(0) translateX(110vw) scale(0.35); }
+}
+
+/* The balloon, by day and at dusk. */
+.at-balloon {
+  position: absolute; top: 130px; left: calc(50% + 360px);
+  width: 40px; height: 40px;
+  background: url("/images/header/hotairballoon.svg") no-repeat;
+  transform: rotate(10deg);
+}
+
+/* Fireworks — a canvas firework.js draws on, but only around New Year. The id
+ * is the script's only hook and stays spelled exactly this way. */
+/* The canvas is positioned with utilities; only its `id` matters, and that is
+ * firework.js's single hook. Full height, not the old 80%: a canvas scales its
+ * bitmap to its box rather than cropping, so `80%` never kept the effect clear
+ * of the skyline — it only squashed everything by a fifth. firework.js sizes its
+ * bitmap from that box, so the two cannot disagree again. */
+
+/* ---- Seasonal overlays ---------------------------------------------------
+ * December and October. Both are inline SVG in the markup, because both need
+ * something a background image cannot give: the hat is two pieces that move
+ * against each other, and the ghost is displaced by an SVG turbulence filter. */
+.at-santa-front, .at-santa-back {
+  position: absolute; z-index: 5;
+  width: 4.5rem; height: 3.9rem;
+  top: calc(50% - 15px); left: calc(50% - 233px);
+  transform: rotate(-15deg);
+}
+.at-santa-back {
+  transform-origin: 1.5rem 2rem;
+  animation: at-santa-wiggle 4s ease-in-out;
+}
+@keyframes at-santa-wiggle {
+  33% { transform: rotate(-20deg); }
+  66% { transform: rotate(10deg); }
+}
+.at-ghost { position: absolute; top: calc(50% - 60px); left: calc(50% - 430px); width: 400px; z-index: 4; }
+/* Upstream this rule set `animation-iteration-count` and `animation-delay` and
+ * then included a shorthand that reset both — so the ghost appeared instantly
+ * instead of after 2.5 seconds. The intent is restored here. */
+.at-ghost svg {
+  opacity: 0;
+  filter: url("#disfilter") blur(3px);
+  animation: at-ghost-fade 2.5s ease 2.5s 1 forwards;
+}
+@keyframes at-ghost-fade {
+  0% { opacity: 0; }
+  50% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* ---- The wordmark --------------------------------------------------------
+ * THERE IS NO LOGO FILE, by decision. The brand mark is the site title set in
+ * Montserrat Alternates with the gold gradient over it, and this is the one
+ * place a fixed pixel size is correct: it is a mark, not text in a scale.
+ *
+ * IT DOES NOT SIT DEAD CENTRE, and the offsets below are measured off the old
+ * header rather than derived. Upstream said `top: calc(50% - 20px)` on a box
+ * whose padding differed per breakpoint, which produced 19px at desktop, 7px at
+ * tablet and 1px on a phone — no rule, three accidents.
+ *
+ * They are reproduced anyway, because the position is right: at 19px the
+ * wordmark sits ON the skyline instead of in the middle of the clock face, and
+ * the header is the one part of the old design that was asked to come over
+ * unchanged. Centring it is deleting one line here, if it ever looks wrong. */
+/* `.at-hero-body` and `.at-wordmark-link` are utilities at the call site: a
+ * centred grid, and the 19/7/0px downward nudge per breakpoint. Only the
+ * wordmark itself is left here — its glow and its drop line are pseudo-elements
+ * sharing `--at-wordmark-pad` with the shimmer, which no utility can hand over. */
+.at-wordmark {
+  /* The shimmer needs horizontal padding so its 50px-wide highlight can start
+   * off the glyphs. The drop-line pseudo-element has to carry the SAME padding
+   * or the two texts stop lining up. One variable, both users — upstream they
+   * were typed separately and disagreed at the base size. */
+  --at-wordmark-pad: 130px;
+
+  position: relative; display: inline-block;
+  font-family: var(--font-heading); font-weight: var(--weight-strong);
+  font-size: 70px; line-height: 1.1;
+  background: linear-gradient(
+    to bottom,
+    var(--color-accent) 32%,
+    var(--color-accent-hover) 50%,
+    var(--color-accent-muted) 80%
+  );
+  background-clip: text; -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+/* The glow behind it — a blurred slab of near-white gold, not a text-shadow.
+ * hsl(29 100% 84%) is `color.scale($gold-light, $lightness: 20%)` resolved. */
+.at-wordmark::before {
+  content: ""; position: absolute; top: 0; bottom: 0; left: calc(50% - 250px);
+  width: 500px; z-index: -1; opacity: 0.3;
+  background-color: hsl(29 100% 84%);
+  filter: blur(30px);
+}
+/* The drop line: the same text again, behind, carrying the shadow the gradient
+ * fill cannot (a background-clipped text has no shadow of its own). */
+.at-wordmark::after {
+  content: attr(data-heading);
+  position: absolute; top: 0; left: 0; z-index: -1;
+  width: 100%; padding: 0 var(--at-wordmark-pad); box-sizing: border-box;
+  text-shadow:
+    -1px 0 1px hsl(29 100% 82%),
+    0 1px 1px hsl(29 100% 82%),
+    5px 5px 10px rgb(0 0 0 / 0.7),
+    -2px -2px 5px rgb(255 255 255 / 0.3);
+}
+/* MODERN GRADIENT SYNTAX, and that is a fix rather than a translation. Upstream
+ * wrote `-webkit-gradient(linear, …)`, then `-moz-gradient(…)`, then a bare
+ * `gradient(…)` — the last two are not syntax any engine has ever had, so they
+ * were dropped and Firefox fell through to no shimmer at all. It has been
+ * invisible in Firefox since 2020. */
+.at-wordmark-shimmer {
+  padding: 0 var(--at-wordmark-pad);
+  background: linear-gradient(to right, var(--color-accent-hover), #fff 50%, var(--color-accent-hover));
+  background-size: 50px 100%;
+  background-repeat: no-repeat;
+  background-clip: text; -webkit-background-clip: text;
+}
+.at-wordmark-shimmer.is-shimmering { animation: at-shimmer 0.8s ease both; }
+@keyframes at-shimmer {
+  from { background-position: top left; }
+  to { background-position: top right; }
+}
+
+/* ---- Breakpoints ---------------------------------------------------------
+ * Three sizes, as upstream. The middle one exists because at 800px the balloon
+ * would otherwise sit outside the viewport and the wordmark would touch both
+ * edges. */
+@media (min-width: 641px) and (max-width: 840px) {
+  .at-city { background-size: auto 80%; }
+  .at-wordmark { font-size: 50px; --at-wordmark-pad: 90px; }
+  .at-wordmark-shimmer { background-size: 80px 100%; }
+  .at-balloon { top: 130px; left: calc(50% + 245px); width: 30px; height: 30px; }
+  .at-birds .at-bird { transform: scale(0.7); }
+  .at-santa-front, .at-santa-back { height: 3rem; top: calc(50% - 20px); left: calc(50% - 170px); }
+}
+@media (max-width: 640px) {
+  .at-header { height: 200px; }
+  .at-city { background-size: auto 80%; }
+  .at-wordmark { font-size: 37px; --at-wordmark-pad: 50px; }
+  .at-wordmark-shimmer { background-size: 40px 100%; }
+  .at-balloon { top: 70px; left: calc(50% + 140px); width: 20px; height: 20px; }
+  .at-birds .at-bird { transform: scale(0.7); }
+  .at-santa-front, .at-santa-back { height: 2.4rem; top: calc(50% - 23px); left: calc(50% - 127px); }
+}
+
+/* The header is where every animation on this site lives, so this is where
+ * `prefers-reduced-motion` earns its keep. The clock lands in place, the birds
+ * stop, the shimmer does not run. Nothing is hidden — motion is removed, not
+ * content. */
+@media (prefers-reduced-motion: reduce) {
+  .at-clock { animation: none; background-position: 50% 20px; }
+  .at-birds .at-bird, .at-bird-path { animation: none; }
+  .at-bird-path { transform: translateX(40vw) scale(0.4); }
+  .at-santa-back { animation: none; }
+  .at-ghost svg { animation: none; opacity: 0.6; }
+  .at-wordmark-shimmer.is-shimmering { animation: none; }
+}
+
+/* ===========================================================================
+ * ═══════════════════════════════════════════════════════════════════════════
+ * FOOTER — the reflection, the h-card, the columns.
+ *
+ * Same rule as the header: derived from article-time's scss/base/footer.scss,
+ * not from the design system's guess at it. The skill's `at-footer-sea` happened
+ * to be right — it is two background images and a filter, no SVG sprite work to
+ * get wrong — and it is checked against the source rather than trusted.
+ *
+ * THE FOOTER IS FIXED AT z-index -1 AND SITS BEHIND THE PAGE. It is uncovered
+ * as you reach the bottom, which is why main.js measures its height and ends
+ * the main column exactly that far above the bottom of the document. Change one
+ * and the other stops working.
+ * ═══════════════════════════════════════════════════════════════════════════
+ * =========================================================================== */
+/* THE SEA. The same harbour silhouette as the header, twice: once upright and
+ * cropped to its waterline, once flipped underneath it and rippling. The ripple
+ * is an SVG turbulence filter that shifts over 200 seconds — slow enough that
+ * nobody catches it moving, which is the point. */
+.at-footer-sea {
+  position: absolute; top: 0; left: 0; z-index: 1;
+  width: 100%; height: 300px; pointer-events: none;
+}
+.at-footer-sea::before, .at-footer-sea::after {
+  content: ""; position: absolute; width: 100%; height: 300px;
+  background-image: url("/images/header/city.svg");
+  background-repeat: repeat-x; background-size: auto 300px;
+  opacity: 0.4; filter: sepia(0.6);
+}
+.at-footer-sea::before { top: -260px; }
+.at-footer-sea::after {
+  top: 37px; transform: rotate(180deg) scaleX(-1);
+  filter: sepia(0.7) blur(0.1em) url("#at-turbulence");
+}
+
+/* `.at-footer-inner` was `relative z-5 p-12` and is written that way at its one
+ * call site now. */
+
+/* The slogan, between the remixicon quote pair — the third and last place the
+ * icon font is used by codepoint. The dark gradient behind it is what lifts the
+ * text off the skyline; without it the letters land in a lit window. */
+/* The slogan's box is utilities in footer.html (`mb-section`, not gutter: it is
+ * a section of its own). What stays is the sizing of its quote-mark pseudos,
+ * which belong to `.at-quoted` and cannot be reached from the element. */
+.at-slogan::before, .at-slogan::after { position: relative; top: -10px; font-size: 1.7rem; }
+@media (max-width: 768px) {
+  .at-slogan { font-size: 1.5rem; }
+  .at-slogan::before, .at-slogan::after { font-size: 1rem; }
+}
+
+/* ---- The h-card ----------------------------------------------------------
+ * The site-wide representative h-card: who this is, for webmention.io, Bridgy,
+ * Mastodon's rel=me and indiewebify.me. Microformat class names (`h-card`,
+ * `p-name`, `u-photo`, `p-note`, `u-url`) are a CONTRACT WITH PARSERS, not
+ * styling — never rename one to fit a stylesheet. */
+/* THE WHOLE h-CARD IS UTILITIES NOW — the column, the avatar, the note. It was
+ * five classes and eleven declarations that a template can say for itself, and
+ * it is rendered exactly once.
+ *
+ * Two things that looked like they needed CSS and did not:
+ *   the lined title must stretch to the full column, because `items-center`
+ *     shrinks block children to their content and the rule's pseudo-elements
+ *     then have nothing to span — `self-stretch` on the title says that.
+ *   the avatar's border lights up when you point at the LINK, not the image —
+ *     `group` on the anchor and `group-hover:` on the img, which is exactly the
+ *     case that variant exists for. */
+
+/* Social icons. THE SECOND AND LAST EXCEPTION to gold being the only accent:
+ * each silo keeps its own brand colour, set inline from identity.socials[].color,
+ * because a row of gold circles tells you nothing about where the links go.
+ *
+ * Hovering DIMS THE SIBLINGS rather than highlighting the target — the same
+ * move as the profile page. Highlighting one of eight bright marks is hard to
+ * see; dimming seven is not. `filter: opacity()` composes with any per-icon
+ * inline opacity, which a plain `opacity` would overwrite. */
+/* Only the hover pair is left; the row and the icon boxes are utilities at the
+ * call site. This part stays CSS because pointing at ONE icon has to dim the
+ * OTHERS, which is a rule about siblings and not about the element you are on.
+ *
+ * `filter: opacity()` rather than the `opacity` property: each icon may carry an
+ * inline opacity from identity.socials[].opacity, and a filter composes with it
+ * where the property would overwrite it. */
+.at-socials:hover a { filter: opacity(0.35); }
+.at-socials a:hover { filter: none; transform: scale(1.18); }
+
+/* ---- Footer navigation and copyright ------------------------------------
+ * The separators are pseudo-elements, so the markup stays a plain list and no
+ * template has to decide where the last pipe goes. */
+/* Above the reflection. The sea is `z-index: 1` and 300px tall while these two
+ * are static, so on a wide screen where the columns are short enough to bring
+ * the footer in under 300px the water would paint over the menu. */
+.at-footer-nav li::before { content: "|"; padding: 0 0.2em; color: var(--color-accent-muted); }
+.at-footer-nav li:first-of-type::before { content: ""; }
+
+/* Links in the footer are gold on a surface that is darker than anywhere else,
+ * so they need no other treatment.
+ *
+ * `:not(.gd-button)` IS LOad-BEARING. A blanket descendant rule like this sits at
+ * (0,2,1) with the `:hover`, and `.gd-button-secondary:hover` — two classes, no
+ * element — sits at (0,2,0). The container rule therefore won, and the button's
+ * hover filled with gold while keeping its light-gold label: gold text on a gold
+ * fill. The button was the design system's all along; this rule was reaching
+ * into it.
+ *
+ * The general shape is worth remembering: a container-scoped `element` selector
+ * outranks a component's own class selector, so any component dropped inside
+ * gets quietly overruled. Exclude, or do not write the blanket rule. */
+.at-footer a:not(.gd-button) { color: var(--color-accent); }
+.at-footer a:not(.gd-button):hover { color: var(--color-accent-hover); }

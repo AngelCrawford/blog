@@ -1,7 +1,7 @@
 ---
 title: "RSS Test"
 subtitle: "Subheader for single posts"
-date: 2025-06-12T19:58:30+01:00
+date: 2026-08-08T10:58:30+01:00
 draft: false
 tags: ["eins", "zwei"]
 categories: ["Allgemein"]

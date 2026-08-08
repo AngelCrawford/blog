@@ -1,0 +1,14 @@
+{{- /* Pure function: the EXIF ImageDescription of an image resource, or "".
+       Angel's workflow writes the caption into the image file itself
+       (Windows: Eigenschaften → Details → Titel), so the caption travels
+       WITH the photograph instead of living in front matter.
+
+       THE API HISTORY, because it bit twice: article-time read
+       `.Meta.Exif.Tags.ImageDescription` — and `.Meta.Exif` is a plain tags
+       MAP with no `.Tags` beneath it, so no caption ever rendered. The first
+       fix used `.Exif.Tags…`, which worked but is deprecated since v0.155
+       (the build warned on every run). This is the current form: `.Meta`,
+       nil-safe across formats, tags addressed directly on the map. */ -}}
+{{- $out := "" -}}
+{{- with .Meta }}{{ with .Exif }}{{ with .ImageDescription }}{{ $out = . }}{{ end }}{{ end }}{{ end -}}
+{{- return $out -}}

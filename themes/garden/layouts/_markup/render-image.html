@@ -1,0 +1,48 @@
+{{- /*
+  Render Hook for Markdown Images
+  Automatically converts all images to WebP format
+*/ -}}
+{{- $respSizes := slice "320" "640" "960" "1280" "1600" "1920" -}}
+{{- $alt := .Text -}}
+{{- $caption := .Title -}}
+{{- $src := .Destination -}}
+{{- $dataSzes := "(min-width: 1024px) 100vw, 50vw" -}}
+{{- $hint := "photo" -}}
+{{- $filter := "box" -}}
+{{- $imgClass := "" -}}
+
+{{- if .Page.Resources.GetMatch $src -}}
+	{{ with .Page.Resources.GetMatch $src }}
+		{{- $imgRsc := . -}}
+		{{- $actualImg := $imgRsc.Process (print "resize 640x jpg " $filter) -}}
+		{{- /* Garden: the photograph treatment, same as everywhere else — rounded,
+		       shadowed, sepia at rest. No float inside prose; content images are
+		       figures in the flow. */ -}}
+		<figure class="my-gutter">
+			<picture>
+				<source type="image/webp" srcset="
+				{{- with $respSizes -}}
+					{{- range $i, $e := . -}}
+						{{- if ge $imgRsc.Width . -}}
+							{{- if $i }}, {{ end -}}{{- ($imgRsc.Process (print "resize " . "x webp " $hint " " $filter) ).RelPermalink }} {{ . }}w
+						{{- end -}}
+					{{- end -}}
+				{{- end -}}" sizes="{{ $dataSzes }}" />
+				<source type="image/jpeg" srcset="
+				{{- with $respSizes -}}
+					{{- range $i, $e := . -}}
+						{{- if ge $imgRsc.Width . -}}
+							{{- if $i }}, {{ end -}}{{- ($imgRsc.Process (print "resize " . "x jpg " $filter) ).RelPermalink }} {{ . }}w
+						{{- end -}}
+					{{- end -}}
+				{{- end -}}" sizes="{{ $dataSzes }}" />
+				<img class="h-auto w-full rounded-md shadow-card" src="{{ $actualImg.RelPermalink }}" width="{{ $imgRsc.Width }}" height="{{ $imgRsc.Height }}" alt="{{ $alt }}" loading="lazy" />
+			</picture>
+			{{- with $caption -}}<figcaption class="mt-2 text-center text-sm text-ink-muted italic">{{ $caption | $.Page.RenderString }}</figcaption>{{- end }}
+		</figure>
+	{{- end -}}
+{{- else -}}
+	<figure>
+		<p><em>Image unavailable.</em></p>
+	</figure>
+{{- end -}}

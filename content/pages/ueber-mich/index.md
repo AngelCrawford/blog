@@ -3,13 +3,7 @@ title: Über mich
 type: page
 layout: profile
 birthdate: "1987-02-05"
-taglines:
-  - main: "Web Entwickler. Sonnenliebhaber. Goth."
-    sub: "{age} Jahre jung"
-  - main: "Kuchen, 🐐 oder goldfarbene Dinge"
-    sub: "Damit bin ich durchaus bestechbar"
-  - main: "Musik-, Serien- und Filmsüchtig"
-    sub: "♡ Trash-Filme!"
+spotify: "https://open.spotify.com/embed/playlist/520act29dQq3SDNilMbpfd?utm_source=generator&theme=0"
 menu:
   footer:
     weight: 10
@@ -19,3 +13,7 @@ sitemap:
     changefreq: monthly
     priority: 0.3
 ---
+
+- **Web Entwickler. Sonnenliebhaber. Goth.** | <small>{age} Jahre jung</small>
+- **Verliebt in 🐄, Kuhmuster und Gold** | <small>bestechlich mit Kuchen</small>
+- **Musik-, Serien- und Filmsüchtig** | <small>♡ Trash-Filme!</small>

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<!-- @template name="Kartenübersicht" description="Startseite oder Rubrikseite: Header, Kartenraster mit Artikel- und Notizkarten, Seitenblättern, Footer." -->
+<helmet><script src="./ds-base.js"></script><script src="../../assets/icons/inline-sprite.js"></script></helmet>
+<div style="background:var(--color-surface-sunken);font-family:var(--font-body);color:var(--color-ink);min-height:100vh">
+
+<x-import component-from-global-scope="ArticleTimeDesignSystem_de8a72.SiteHeader" title="Article Time" hint-size="100%,300px"></x-import>
+<x-import component-from-global-scope="ArticleTimeDesignSystem_de8a72.SiteNav" active="Artikel" brand="Artikel" logo="../../assets/images/favicon/favicon-96x96.png" items="{{ menu }}" follow="{{ follow }}" hint-size="100%,56px"></x-import>
+
+<main class="at-page">
+<div style="max-width:var(--page-max);margin:0 auto;padding:var(--spacing-section) var(--spacing-gutter)">
+
+<div class="gd-panel" style="margin-bottom:var(--spacing-gutter)">
+<h1 class="gd-h1" data-heading="Artikel">Artikel</h1>
+<p style="max-width:70ch;margin:1.5rem 0 0">Ein Blog im IndieWeb, geschrieben von einer Person. Rubriken, Tags, Serien und ein Archiv — wie ein Magazin aufgebaut, nur eben ohne Redaktion.</p>
+</div>
+
+<div style="display:grid;gap:1rem 1.75rem;grid-template-columns:repeat(auto-fill,minmax(30rem,1fr))">
+<sc-for list="{{ entries }}" as="e" hint-placeholder-count="4">
+<x-import component-from-global-scope="ArticleTimeDesignSystem_de8a72.ArticleCard" dc-props="{{ e }}" hint-size="100%,400px"></x-import>
+</sc-for>
+</div>
+
+<x-import component-from-global-scope="ArticleTimeDesignSystem_de8a72.Pagination" page="{{ page }}" pages="{{ pages }}" hint-size="100%,96px"></x-import>
+
+</div>
+</main>
+
+<x-import component-from-global-scope="ArticleTimeDesignSystem_de8a72.SiteFooter" identity="{{ identity }}" stats="{{ stats }}" archive-years="{{ archive }}" menu="{{ footerMenu }}" version="v2.1.0" hint-size="100%,600px"></x-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;showWithered&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Feed&quot;},&quot;page&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:1,&quot;tsType&quot;:&quot;number&quot;,&quot;min&quot;:1,&quot;max&quot;:3,&quot;section&quot;:&quot;Feed&quot;}}">
+class Component extends DCLogic {
+  renderVals() {
+    const showWithered = this.props.showWithered ?? false;
+    const all = [
+      {
+        format: 'article', title: 'Warum Hugo', href: '#', date: '06.08.26', updated: '07.08.26',
+        rubrik: 'Allgemein', rubrikHref: '#', cover: '../../assets/images/covers/rubriken-cover.jpg',
+        summary: 'Fünfzehn Kriterien, vier Kandidaten. WordPress ein permanentes Update-Laufband, Grav dünn dokumentiert und ohne zwei getrennte Menüs, Jekyll auf GitHub Pages ohne Fremd-Plugins. Geblieben ist Hugo: SEO, Sitemap und RSS eingebaut, Bearbeiten nur lokal.',
+        tags: ['hugo', 'static-site'], readingTime: 7, growthStage: 'evergreen', hearts: 41, series: true, featured: true,
+      },
+      {
+        format: 'article', title: 'Bulma raus, Tailwind rein', href: '#', date: '02.08.26',
+        rubrik: 'Kategorie 1', rubrikHref: '#',
+        summary: '4.355 Zeilen SCSS über 29 Dateien, allein card.scss mit 552 — nicht weil es Komponenten gab, sondern weil jede Komponente ihre Werte neu erfand. Der Umbau verschiebt die Entscheidung über Farbe, Abstand und Radius in einen einzigen Token-Block.',
+        tags: ['tailwind', 'css'], readingTime: 11, growthStage: 'budding', hearts: 18,
+      },
+      { format: 'note', summary: 'Erst die Programmierung, dann das komplette Design.', date: '31.07.26', hearts: 23 },
+      {
+        format: 'article', title: 'Die Diagnose', href: '#', date: '28.07.26',
+        rubrik: 'Allgemein', rubrikHref: '#', cover: '../../assets/images/covers/tags-cover.jpg',
+        summary: 'Vom Mehrautoren-Portal über den Co-Autoren-Blog und den Digital Garden zum privaten IndieWeb-Blog. Der Weg wurde vollständig gegangen, obwohl die Notiz von 2020 die Antwort schon enthielt.',
+        tags: ['scope', 'indieweb'], readingTime: 5, growthStage: 'evergreen', hearts: 23, series: true,
+      },
+      {
+        format: 'article', title: 'Der alte Farbentwurf', href: '#', date: '12.03.24',
+        rubrik: 'Movie', rubrikHref: '#',
+        summary: 'Die erste Fassung benannte Farben nach ihrem Aussehen — dark, light, gold — und produzierte damit Widersprüche wie color-dark-lighter.',
+        tags: ['farben'], readingTime: 4, growthStage: 'withered', hearts: 2,
+      },
+    ];
+    return {
+      entries: showWithered ? all : all.filter((e) => e.growthStage !== 'withered'),
+      page: this.props.page ?? 1,
+      pages: 3,
+      menu: [
+        { label: 'Artikel', href: '#', icon: 'article-line' },
+        { label: 'Notizen', href: '#', icon: 'lightbulb-line' },
+        { label: 'Rubriken', href: '#', icon: 'pushpin-line' },
+        { label: 'Tags', href: '#', icon: 'price-tag-3-line' },
+      ],
+      follow: [{ name: 'RSS Feed', href: '#', icon: 'rss-line' }],
+      identity: {
+        name: 'Angel Crawford',
+        photo: '../../assets/images/identity/angel.webp',
+        note: 'Web Entwickler. Sonnenliebhaber. Goth.',
+        aboutUrl: '#', siteUrl: '#',
+        socials: [
+          { name: 'Mastodon', href: '#', icon: 'mastodon-fill', color: '#6364FF' },
+          { name: 'Instagram', href: '#', icon: 'instagram-line', color: '#c13584' },
+          { name: 'GitHub', href: '#', icon: 'github-line', color: '#bbbbbb' },
+        ],
+        mostLoved: [{ label: 'Warum Hugo', href: '#warum-hugo', hearts: 41 }, { label: 'Die Diagnose', href: '#', hearts: 23 }],
+      },
+      stats: [
+        { label: 'Artikel', count: 14, icon: 'article-line', color: 'rgb(88,179,189)' },
+        { label: 'Notizen', count: 3, icon: 'lightbulb-line', color: 'hsl(29,100%,80%)' },
+      ],
+      archive: [{ year: '2026', count: 14 }, { year: '2024', count: 2 }, { year: '2020', count: 1 }],
+      footerMenu: [{ label: 'Impressum', href: '#' }, { label: 'Datenschutz', href: '#' }, { label: 'Styleguide', href: '#' }],
+    };
+  }
+}
+</script>
+</body>
+</html>

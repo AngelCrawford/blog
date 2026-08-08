@@ -1,0 +1,12 @@
+{{- /* Garden — table of contents for the article sidebar. Receives the page.
+       Hugo's .TableOfContents emits `<nav id="TableOfContents"><ul>…` and no
+       class can be put on that markup, so the vocabulary classes sit on a
+       wrapper and components.css reaches the levels as descendants — the same
+       arrangement as at-prose, for the same reason. The ≥100-chars heuristic
+       stays at the call site. */ -}}
+<section class="rounded-tile border border-accent-muted/40 bg-[var(--surface-tile)] px-4 py-[0.9rem]">
+    {{ partial "ui/tile-head" (dict "label" "Inhalt") }}
+    <div class="at-widget-list at-toc-list">
+        {{ .TableOfContents }}
+    </div>
+</section>

@@ -1,0 +1,66 @@
+{{- /* The cover figure — the house treatment for every photograph on the site.
+ *
+ * ONE PLACE, LIKE THE BUTTON. 4:3 landscape, sepia until pointed at, 8px radius
+ * with the paired shadow, floated left hanging past its panel's edge so the
+ * text runs around it. That treatment used to be five CSS classes; it is
+ * utilities now, written once here instead of at four call sites.
+ *
+ * WHO RELEASES THE SEPIA. Two ancestors may own the hover:
+ *   group/card    on `article.at-card` — hovering anywhere on a card frees the
+ *                 cover, because the card is the unit you point at.
+ *   group/figure  on this figure — in a panel (list/archive intro) the figure
+ *                 itself is the unit.
+ * Both variants sit on the img; whichever group exists above it wins. This
+ * replaces `.at-card:hover .at-card-cover` and `.at-figure:hover img`.
+ *
+ * WHEN THE FLOAT DROPS. Measured against the figure's CONTAINER, not the
+ * viewport: below 28rem of container the picture stacks on top. The threshold
+ * was 40rem — the design system's value — until Angel judged the stacked look
+ * against real grid tracks and called it too eager: a ~460px column still
+ * carries the float. Stacking is for phones now. `.at-card` is a size
+ * container, so cards answer the `@max-[28rem]:` variants; panels are no
+ * container, that query can never match there, and the `max-[480px]:`
+ * viewport fallback takes over.
+ *
+ * THE OVERHANG. `-ml-[3em]` while floated: the picture crosses its container's
+ * 1.5em padding and hangs 1.5em past the edge — laid ON the surface, not
+ * cropped into it. Stacked, the overhang goes with the float (`ml-0`): a
+ * banner is not lying on anything, and shifted left it just reads as crooked.
+ *
+ * Parameters
+ *   src / width / height   the processed image (caller runs .Process — crop
+ *                          sizes differ per call site and stay there)
+ *   alt                    required for real images; pass "" for decorative
+ *   href / title           wrap the image in a link (card covers link the post)
+ *   caption                optional figcaption, already safe HTML
+ *   bleed                  card covers only: STACKED, the picture goes
+ *                          edge-to-edge — negative gutters swallow the card's
+ *                          padding, the radius drops except where it nests
+ *                          inside the card's own top corners. That is the
+ *                          original mobile card look. Panels stay inset.
+ */ -}}
+{{- $sprite := "fonts/remixicon/remixicon.symbol.svg" | relURL -}}
+{{- /* Both class sets are COMPLETE literals — Tailwind extracts whole strings
+       only, so the two stacked treatments cannot share a base via variables. */ -}}
+{{- /* THE OVERHANG NEEDS GROUND TO LIE ON: from 768px viewport up there is
+       page padding and grid gap beside the panel or card; below that the
+       -3em just poked past the surface into the void, frameless. ml-0 under
+       768, the overhang above. */ -}}
+{{- $figFloat := "group/figure relative float-left mt-0 mr-gutter mb-4 ml-0 min-[768px]:-ml-[3em] w-[min(46%,22rem)] self-start" -}}
+{{- $figStack := cond (eq true .bleed) "@max-[28rem]:float-none @max-[28rem]:-mx-gutter @max-[28rem]:-mt-gutter @max-[28rem]:mb-4 @max-[28rem]:w-auto max-[480px]:float-none max-[480px]:-mx-gutter max-[480px]:-mt-gutter max-[480px]:mb-4 max-[480px]:w-auto" "@max-[28rem]:float-none @max-[28rem]:mx-0 @max-[28rem]:mb-4 @max-[28rem]:w-auto max-[480px]:float-none max-[480px]:mx-0 max-[480px]:mb-4 max-[480px]:w-auto" -}}
+{{- $imgBleed := cond (eq true .bleed) " @max-[28rem]:rounded-none @max-[28rem]:rounded-t-[calc(var(--radius-md)-1px)] max-[480px]:rounded-none max-[480px]:rounded-t-[calc(var(--radius-md)-1px)]" "" -}}
+<figure class="{{ $figFloat }} {{ $figStack }}">
+    {{- $img := printf `<img class="block aspect-[4/3] h-auto w-full rounded-md object-cover shadow-card sepia transition-[filter] duration-300 ease-out group-hover/card:sepia-0 group-hover/figure:sepia-0%s" src="%s" alt="%s" width="%v" height="%v" loading="lazy">` $imgBleed .src (.alt | default "") (.width | default 480) (.height | default 360) | safeHTML -}}
+    {{- if .href -}}
+    <a href="{{ .href }}"{{ with .title }} title="{{ . }}"{{ end }}>{{ $img }}</a>
+    {{- else -}}
+    {{ $img }}
+    {{- end -}}
+    {{- with .caption }}
+    <figcaption class="absolute inset-x-0 bottom-0 rounded-b-md border-t border-[hsl(190_11%_5%/0.5)] bg-[hsl(190_11%_8%/0.7)] p-[0.5em] text-sm text-accent [&_a]:underline [&_a:hover]:text-accent-hover
+">
+        <svg class="mr-0.5 inline-block size-4 fill-current" aria-hidden="true"><use href="{{ $sprite }}?t={{ site.Params.remixicon_version }}#camera-line"></use></svg>
+        {{ . | safeHTML }}
+    </figcaption>
+    {{- end }}
+</figure>

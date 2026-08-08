@@ -1,0 +1,80 @@
+{{- /* Garden — pagination. A row of round buttons: first, previous, the page
+ * numbers, next, last.
+ *
+ * THE CURRENT PAGE IS A HELD-PRESSED BUTTON, not a highlighted one. The shadow
+ * inversion is already the site's language for "pressed", so "you are here"
+ * needs no colour of its own. It renders as a `span` rather than a disabled
+ * button, because there is no action here to disable — and it must not answer
+ * to hover, since a control that reacts and then does nothing is worse than one
+ * that plainly cannot be used.
+ *
+ * Unavailable steps at the ends are `disabled` buttons, not links to `#`.
+ * Upstream they were anchors with `href="#"` and a `disabled` attribute, which
+ * an anchor does not have: they looked dead and were fully clickable, and they
+ * scrolled you to the top of the page you were already on. */ -}}
+{{- $paginator := .Paginator -}}
+{{- if gt $paginator.TotalPages 1 -}}
+{{- $sprite := "fonts/remixicon/remixicon.symbol.svg" | relURL -}}
+{{- $rv := .Site.Params.remixicon_version -}}
+
+{{- /* Resolve the URLs BEFORE they go into a dict. `.Prev` is nil on the first
+       page and `.Next` on the last, and a `dict` argument is evaluated whether
+       or not the branch that uses it is taken — `cond` does not help, it
+       evaluates both arms too. This is the whole reason for the four lines. */ -}}
+{{- $firstURL := "" }}{{ with $paginator.First }}{{ $firstURL = .URL }}{{ end }}
+{{- $prevURL := "" }}{{ with $paginator.Prev }}{{ $prevURL = .URL }}{{ end }}
+{{- $nextURL := "" }}{{ with $paginator.Next }}{{ $nextURL = .URL }}{{ end }}
+{{- $lastURL := "" }}{{ with $paginator.Last }}{{ $lastURL = .URL }}{{ end }}
+
+<nav class="mt-section flex flex-wrap items-center justify-center gap-2" aria-label="Seitennummerierung">
+
+    {{- range slice
+      (dict "on" $paginator.HasPrev "url" $firstURL "icon" "skip-back-line" "label" "Erste Seite")
+      (dict "on" $paginator.HasPrev "url" $prevURL "icon" "arrow-left-s-line" "label" "Vorherige Seite") }}
+    {{- if .on }}
+    <a class="gd-round-button" href="{{ .url }}" title="{{ .label }}" aria-label="{{ .label }}">
+        <svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#{{ .icon }}"></use></svg>
+    </a>
+    {{- else }}
+    <button type="button" class="gd-round-button" disabled title="{{ .label }}" aria-label="{{ .label }}">
+        <svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#{{ .icon }}"></use></svg>
+    </button>
+    {{- end }}
+    {{- end }}
+
+    {{- /* Numbers: always the first two and the last, plus a window of two
+           either side of where you are. Everything skipped collapses into a
+           single ellipsis rather than one per omitted page. */ -}}
+    {{- $ellipsed := false -}}
+    {{- range $paginator.Pagers -}}
+        {{- $right := sub .TotalPages .PageNumber -}}
+        {{- $show := or (le .PageNumber 2) (eq $right 0) -}}
+        {{- $show = or $show (and (gt .PageNumber (sub $paginator.PageNumber 2)) (lt .PageNumber (add $paginator.PageNumber 2))) -}}
+        {{- if $show -}}
+            {{- $ellipsed = false }}
+            {{- if eq . $paginator }}
+    <span class="gd-round-button gd-round-button-pressed" aria-current="page" title="Seite {{ .PageNumber }}">{{ .PageNumber }}</span>
+            {{- else }}
+    <a class="gd-round-button" href="{{ .URL }}" title="Zu Seite {{ .PageNumber }}" aria-label="Zu Seite {{ .PageNumber }}">{{ .PageNumber }}</a>
+            {{- end }}
+        {{- else if not $ellipsed -}}
+            {{- $ellipsed = true }}
+    <span class="px-1 text-ink-muted" aria-hidden="true">&hellip;</span>
+        {{- end -}}
+    {{- end }}
+
+    {{- range slice
+      (dict "on" $paginator.HasNext "url" $nextURL "icon" "arrow-right-s-line" "label" "Nächste Seite")
+      (dict "on" $paginator.HasNext "url" $lastURL "icon" "skip-forward-line" "label" "Letzte Seite") }}
+    {{- if .on }}
+    <a class="gd-round-button" href="{{ .url }}" title="{{ .label }}" aria-label="{{ .label }}">
+        <svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#{{ .icon }}"></use></svg>
+    </a>
+    {{- else }}
+    <button type="button" class="gd-round-button" disabled title="{{ .label }}" aria-label="{{ .label }}">
+        <svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#{{ .icon }}"></use></svg>
+    </button>
+    {{- end }}
+    {{- end }}
+</nav>
+{{- end -}}

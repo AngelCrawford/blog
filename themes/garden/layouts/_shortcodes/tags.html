@@ -1,0 +1,66 @@
+{{- /* Garden — label/value tag pairs. The parser is upstream's, unchanged:
+       "tag: [value] name: [name] color: [color]", split on "tag:".
+
+       COLOUR COMES BACK AS A DOT — the Rubrik badge's mechanism, and the one
+       sanctioned way to have per-item colour without spending the palette:
+       the surfaces stay neutral, the dot carries the hue. The color parameter
+       arrives as a Bulma state name from the content, so the map below is
+       Bulma's own defaults; an unknown name falls back to gold. */ -}}
+{{- $dotColors := dict
+      "dark"    "hsl(0 0% 45%)"
+      "info"    "#3e8ed0"
+      "danger"  "#f14668"
+      "warning" "#ffe08a"
+      "primary" "#00d1b2"
+      "link"    "#485fc7"
+      "success" "#48c78e"
+-}}
+{{- $tagsParam := .Get "tags" | default "" -}}
+
+{{- if $tagsParam -}}
+<div class="my-4 flex flex-wrap gap-2">
+  {{- $tagsList := split $tagsParam "tag:" -}}
+  {{- range $index, $element := $tagsList -}}
+    {{- if ne $index 0 -}}
+      {{- $tagInfo := $element | strings.TrimSpace -}}
+      {{- if $tagInfo -}}
+        {{- $tagParts := split $tagInfo " " -}}
+        {{- $tagValue := "" -}}
+        {{- $tagName := "" -}}
+        {{- $tagColor := "" -}}
+        {{- $currentKey := "tag" -}}
+        {{- range $part := $tagParts -}}
+          {{- if eq $part "name:" -}}
+            {{- $currentKey = "name" -}}
+          {{- else if eq $part "color:" -}}
+            {{- $currentKey = "color" -}}
+          {{- else -}}
+            {{- if eq $currentKey "tag" -}}
+              {{- $tagValue = strings.TrimSpace (printf "%s %s" $tagValue $part) -}}
+            {{- else if eq $currentKey "name" -}}
+              {{- $tagName = strings.TrimSpace (printf "%s %s" $tagName $part) -}}
+            {{- else if eq $currentKey "color" -}}
+              {{- $tagColor = $part -}}
+              {{- $currentKey = "done" -}}
+            {{- end -}}
+          {{- end -}}
+        {{- end -}}
+        {{- if $tagValue -}}
+        {{- $dot := index $dotColors $tagColor -}}
+        {{- /* ONE pill per pair, shaped like the Rubrik badge: hairline border,
+               neutral surface, the dot carries the colour. The split-pill
+               attempt looked like a loose word next to a chip — measured by
+               Angel's eyes, which outrank mine. */ -}}
+        <span class="inline-flex items-center gap-[0.45em] rounded-pill border border-accent-muted/40 bg-surface py-[0.25em] pr-[0.7em] pl-[0.55em] text-[0.8rem]/[1.4] whitespace-nowrap">
+          <span class="size-[0.5em] shrink-0 rounded-full{{ if not $dot }} bg-accent{{ end }}"{{ with $dot }} style="background-color: {{ . | safeCSS }}"{{ end }} aria-hidden="true"></span>
+          {{- with $tagName -}}
+          <span class="text-ink-muted">{{ . }}</span><span class="text-accent-muted" aria-hidden="true">·</span>
+          {{- end -}}
+          <span class="text-ink">{{ $tagValue }}</span>
+        </span>
+        {{- end -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+</div>
+{{- end -}}

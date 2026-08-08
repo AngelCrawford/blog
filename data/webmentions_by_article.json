@@ -27,6 +27,14 @@
       "published": "2026-04-17T08:15:00Z"
     },
     {
+      "type": "like",
+      "author": "Claudia Temp",
+      "author_url": "https://alicechen.example/",
+      "author_photo": "https://picsum.photos/200/300",
+      "url": "https://alicechen.example/likes/12345",
+      "published": "2026-04-17T08:15:00Z"
+    },
+    {
       "type": "repost",
       "author": "Carlos García",
       "author_url": "https://micro.blog/carlos",

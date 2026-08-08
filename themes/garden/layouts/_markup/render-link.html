@@ -1,0 +1,19 @@
+{{- /* Garden — link render hook, ported from article-time. External links get
+       the security attributes, the site's favicon via DuckDuckGo's proxy, and
+       a screen-reader note.
+
+       THE FAVICON STAYS AN INLINE STYLE. It contains the target's hostname,
+       and a class name with a variable in it is a class Tailwind never
+       generates (rule 6 in CLAUDE.md) — this is per-link data, not design.
+       `sr-only` is the utility article-time's own helper class imitated. */ -}}
+{{- $link := .Destination -}}
+{{- $isExternal := or (strings.HasPrefix $link "http") (strings.HasPrefix $link "//") -}}
+{{- $hostname := "" -}}
+{{- if $isExternal -}}{{- $hostname = (urls.Parse $link).Host -}}{{- end -}}
+<a href="{{ $link }}"
+  {{- with .Title }} title="{{ . }}"{{ end }}
+  {{- if $isExternal }} target="_blank" rel="noopener noreferrer" style='background: url("https://icons.duckduckgo.com/ip2/{{ $hostname }}.ico") left center / 16px 16px no-repeat; padding-left: 21px;'
+  {{- end }}>
+  {{- .Text | safeHTML -}}
+  {{- if $isExternal }}<svg class="mb-0.5 ml-1 inline size-[0.9em] fill-accent" aria-hidden="true"><use href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ .Page.Site.Params.remixicon_version }}#external-link-line"></use></svg><span class="sr-only"> (öffnet in neuem Tab)</span>{{ end -}}
+</a>

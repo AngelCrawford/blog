@@ -1,0 +1,933 @@
+/* Article Time components — the `gd-*` vocabulary from
+ * themes/garden/assets/css/main.css, plus the article-time patterns worth
+ * keeping (card, ribbon, tile, hashtag, growth badge, heart, tooltip, footer).
+ *
+ * Every rule composes from tokens. Nothing here hardcodes a colour, size, radius
+ * or shadow — that constraint is the whole point: the old theme's card.scss ran
+ * to 552 lines because it decided its values afresh inside itself.
+ *
+ * Tailwind-only syntax from the source (`--alpha()`) is written out as
+ * color-mix() so the file works with no build step. */
+
+/* ===========================================================================
+ * SURFACES — three levels, and a level only ever sits on a DIFFERENT level.
+ * Panel on page, card on panel or page, never panel on panel. That single
+ * constraint is what makes depth readable on a palette this dark.
+ * ======================================================================== */
+.gd-panel {
+  padding: var(--spacing-gutter);
+  border: 1px solid var(--border-hairline);
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface-raised);
+  box-shadow: var(--shadow-md);
+}
+/* Same footprint, no fill — groups without adding a depth level. */
+.gd-panel-plain {
+  padding: var(--spacing-gutter);
+  border: 1px solid var(--border-hairline-quiet);
+  border-radius: var(--radius-md);
+}
+
+/* ===========================================================================
+ * HEADINGS
+ * h1 gold gradient, largest, once per page · h2 light with a gold rule running
+ * to the edge · h3 gold, smaller, no decoration.
+ *
+ * The gradient on the page title is the site's signature and predates
+ * everything else here. Two stacked pseudo-elements read their text from
+ * data-heading: one paints the raised shadow, one the gradient fill.
+ * ======================================================================== */
+.gd-h1 {
+  position: relative; display: inline-block; margin: 0;
+  font-family: var(--font-heading);
+  font-size: var(--text-4xl); line-height: 1.15;
+  font-weight: var(--weight-strong); letter-spacing: var(--tracking-heading);
+  color: var(--color-surface);
+}
+.gd-h1::before {
+  content: attr(data-heading);
+  position: absolute; top: 0; left: 0; z-index: 1;
+  color: var(--color-surface);
+  text-shadow:
+    -1px 0 1px color-mix(in srgb, var(--color-accent-hover) 70%, transparent),
+    0 1px 1px color-mix(in srgb, var(--color-accent-hover) 70%, transparent),
+    5px 5px 10px rgb(0 0 0 / 0.5),
+    -2px -2px 5px rgb(255 255 255 / 0.3);
+}
+.gd-h1::after {
+  content: attr(data-heading);
+  position: absolute; top: 0; left: 0; z-index: 2;
+  background: linear-gradient(to bottom, var(--color-accent) 32%, var(--color-accent-hover) 50%, var(--color-accent-muted) 80%);
+  background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  color: var(--color-surface);
+}
+@media (max-width: 640px) { .gd-h1 { font-size: var(--text-3xl); } }
+
+/* The component owns its spacing: `gd-h2 mb-3` appeared eight times upstream,
+ * which is not a per-call decision, it is the heading rhythm. */
+.gd-h2 {
+  margin: 0 0 0.75rem; display: flex; align-items: center; gap: 0.75rem;
+  font-family: var(--font-heading); font-size: var(--text-2xl);
+  line-height: var(--text-2xl--line-height);
+  font-weight: var(--weight-strong); color: var(--color-ink-strong);
+}
+.gd-h2::after { content: ""; flex: 1; height: 1px; background: linear-gradient(to right, var(--rule-gold), transparent); }
+
+.gd-h3 {
+  margin: 0 0 1rem; font-family: var(--font-heading); font-size: var(--text-lg);
+  font-weight: var(--weight-strong); color: var(--color-accent);
+}
+
+/* Centred heading with a gold rule to both sides — the footer column titles.
+ * One of the few pieces of the old design that was really successful. Both rules
+ * fade outwards from the text, the same way the section rule on gd-h2 does: a
+ * divider that stops abruptly draws attention to its own end. */
+.gd-lined-title {
+  margin: 0; text-align: center; overflow: hidden;
+  font-family: var(--font-heading); font-size: var(--text-lg);
+  font-weight: var(--weight-strong); color: var(--color-ink-muted);
+}
+.gd-lined-title::before, .gd-lined-title::after {
+  content: ""; display: inline-block; position: relative; vertical-align: middle;
+  width: 50%; height: 1px;
+}
+.gd-lined-title::before { right: 0.5em; margin-left: -50%; background: linear-gradient(to right, transparent, var(--rule-gold)); }
+.gd-lined-title::after { left: 0.5em; margin-right: -50%; background: linear-gradient(to right, var(--rule-gold), transparent); }
+
+/* ===========================================================================
+ * BUTTONS — a component, not a pile of utilities repeated at every call site.
+ * The label weight is a real decision: buttons read as actionable partly
+ * because they are a little heavier than the prose around them.
+ * ======================================================================== */
+.gd-button {
+  display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid transparent; border-radius: var(--radius-sm);
+  background-color: var(--color-accent); color: var(--color-surface-sunken);
+  font-family: inherit; font-size: var(--text-sm); font-weight: var(--weight-strong); line-height: 1.4;
+  transition: background-color var(--duration-base) var(--ease-out), border-color var(--duration-base) var(--ease-out), color var(--duration-base) var(--ease-out);
+}
+.gd-button:hover:not(:disabled) { background-color: var(--color-accent-hover); }
+.gd-button-secondary { border-color: var(--color-accent); background-color: transparent; color: var(--color-accent); }
+.gd-button-secondary:hover:not(:disabled) { background-color: var(--color-accent); color: var(--color-surface-sunken); }
+
+/* ===========================================================================
+ * ROUND BUTTON — the press effect, and the only surviving neumorphism.
+ * Raised: two shadows, dark below-right plus a faint light above-left; the pair
+ * makes the surface read as domed rather than as a flat disc with a drop shadow.
+ * Pressed: the same two shadows inverted to inset, plus 2px of downward travel.
+ * Inverting the pair is the whole trick.
+ * ======================================================================== */
+.gd-round-button {
+  --gd-round-size: 3rem;                                   /* 48px */
+  --gd-round-icon: calc(var(--gd-round-size) - 13px);       /* from the original mixin */
+  display: inline-flex; align-items: center; justify-content: center;
+  width: var(--gd-round-size); height: var(--gd-round-size);
+  border: 1px solid color-mix(in srgb, var(--color-accent-muted) 50%, transparent);
+  border-radius: 50%;
+  background-color: var(--color-surface-sunken); color: var(--color-accent);
+  box-shadow: var(--shadow-domed);
+  transition: color var(--duration-slow) var(--ease-out), border-color var(--duration-base) var(--ease-out),
+    box-shadow var(--duration-base) var(--ease-out), transform var(--duration-base) var(--ease-out);
+}
+.gd-round-button:hover, .gd-round-button:focus-visible {
+  border-color: var(--color-accent); color: var(--color-accent-hover);
+  background-color: rgb(0 0 0 / 0.25); box-shadow: var(--shadow-pressed);
+  transform: translateY(2px);
+}
+/* Icon size derives from the button: the drawn shape inside Remixicon's 24×24
+ * viewBox is far smaller than its box — `arrow-up-s-fill` covers only 12×6 of
+ * it — so a fixed 20px glyph came out visibly undersized. */
+.gd-round-button svg { width: var(--gd-round-icon); height: var(--gd-round-icon); fill: currentColor; transform: none; }
+.gd-round-button-lg { --gd-round-size: 3.4375rem; }        /* 55px — back-to-top */
+/* For glyphs that fill their viewBox instead of sitting compactly inside it. */
+.gd-round-button-full { --gd-round-icon: calc(var(--gd-round-size) * 0.45); }
+/* HELD PRESSED — the current page in pagination. The pressed state is itself the
+ * "you are here" marker, so it needs no colour of its own; and it must not answer
+ * to hover or focus, because a control that reacts and then does nothing is worse
+ * than one that plainly cannot be used. Render it as a span, not a disabled
+ * button: there is no action here to disable. */
+.gd-round-button-pressed,
+.gd-round-button-pressed:hover,
+.gd-round-button-pressed:focus-visible {
+  border-color: color-mix(in srgb, var(--color-accent-muted) 50%, transparent);
+  background-color: rgb(0 0 0 / 0.25);
+  box-shadow: var(--shadow-pressed);
+  color: var(--color-accent-hover);
+  transform: none;
+  cursor: default;
+}
+/* The shadow inversion stays — it is the feedback, not decoration. Only the
+ * travel is dropped. */
+@media (prefers-reduced-motion: reduce) {
+  .gd-round-button { transition: color var(--duration-slow) var(--ease-out), border-color var(--duration-base) var(--ease-out), box-shadow var(--duration-base) var(--ease-out); }
+  .gd-round-button:hover, .gd-round-button:focus-visible { transform: none; }
+}
+
+/* ===========================================================================
+ * FORM CONTROLS — select and checkbox cannot be themed natively, so both are
+ * rebuilt: the arrow is two background gradients meeting in a chevron, the
+ * checkmark is a clip-path polygon. Focus is a ring rather than a colour
+ * change, so it is visible regardless of the field's state, and caret-color
+ * picks up the accent so even the text cursor belongs to the palette.
+ * ======================================================================== */
+.gd-field {
+  width: 100%; padding: 0.5rem 0.75rem; margin: 0;
+  border: 1px solid var(--color-accent-muted); border-radius: var(--radius-sm);
+  background-color: var(--color-surface-sunken); color: var(--color-ink);
+  font: inherit; font-size: var(--text-sm); caret-color: var(--color-accent);
+  transition: border-color var(--duration-base) var(--ease-out), box-shadow var(--duration-base) var(--ease-out);
+}
+.gd-field::placeholder { color: var(--color-ink-muted); }
+.gd-field:hover { border-color: color-mix(in srgb, var(--color-accent) 60%, transparent); }
+.gd-field:focus { outline: none; border-color: var(--color-accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-accent) 25%, transparent); }
+.gd-field:user-invalid { border-color: var(--color-error); }
+.gd-field:user-invalid:focus { box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-error) 25%, transparent); }
+select.gd-field {
+  appearance: none; padding-right: 2.25rem;
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--color-accent) 50%),
+    linear-gradient(135deg, var(--color-accent) 50%, transparent 50%);
+  background-position: right 1.15rem center, right 0.75rem center;
+  background-size: 0.4rem 0.4rem, 0.4rem 0.4rem; background-repeat: no-repeat;
+}
+select.gd-field:focus {
+  background-image:
+    linear-gradient(135deg, transparent 50%, var(--color-accent-hover) 50%),
+    linear-gradient(45deg, var(--color-accent-hover) 50%, transparent 50%);
+}
+select.gd-field option { background-color: var(--color-surface-raised); color: var(--color-ink); }
+
+.gd-check {
+  appearance: none; flex: none; width: 1.15rem; height: 1.15rem; margin: 0;
+  border: 1px solid var(--color-accent-muted); border-radius: var(--radius-sm);
+  background-color: var(--color-surface-sunken);
+  transition: background-color var(--duration-fast) var(--ease-out), border-color var(--duration-fast) var(--ease-out);
+}
+.gd-check[type="radio"] { border-radius: 50%; }
+.gd-check:hover { border-color: var(--color-accent); }
+.gd-check:checked { border-color: var(--color-accent); background-color: var(--color-accent); }
+.gd-check:checked::after {
+  content: ""; display: block; height: 100%; width: 100%;
+  background-color: var(--color-surface-sunken);
+  clip-path: polygon(17% 47%, 9% 55%, 39% 84%, 91% 32%, 83% 24%, 39% 68%);
+}
+.gd-check[type="radio"]:checked::after { clip-path: circle(26% at 50% 50%); }
+
+/* ===========================================================================
+ * DUOTONE ICONS — the house icon treatment, Angel's variant B.
+ * Two copies of the glyph: behind, the filled body in muted gold, nudged down
+ * and right; in front, the line in the accent. Bright-on-dark is what makes it
+ * read — an earlier attempt used the mid accent in front and the tones merged.
+ *
+ * The offset is in em, not px, so it scales with the icon. THE SIZE COMES FROM
+ * font-size: set it on the wrapper, not with width/height.
+ * ======================================================================== */
+.gd-icon-duo {
+  /* Doubled from 0.03/0.055em. Those values were tuned against a back layer that
+   * differed from the front only in brightness, where any larger offset read as a
+   * doubled shape. Now that the back layer is bronze rather than dark gold, the
+   * two layers are told apart by hue, and the offset is free to be large enough
+   * to actually see at 20px. */
+  --gd-duo-offset-x: 0.06em;
+  /* The vertical shift is nearly twice the horizontal one. An equal offset
+   * reads as a diagonal smear; weighting it downwards reads as the glyph
+   * sitting above its own shadow, which is what a shadow does. */
+  --gd-duo-offset-y: 0.1em;
+  position: relative; display: inline-grid; place-items: center;
+  width: 1em; height: 1em; line-height: 1; flex: none;
+}
+.gd-icon-duo svg { position: absolute; inset: 0; width: 100%; height: 100%; fill: currentColor; }
+.gd-icon-duo svg:first-child {
+  color: var(--color-accent-shadow);
+  transform: translate(var(--gd-duo-offset-x), var(--gd-duo-offset-y));
+  transition: transform var(--duration-base) var(--ease-out);
+}
+.gd-icon-duo svg:last-child { color: var(--color-accent); transition: color var(--duration-base) var(--ease-out); }
+/* Tinted: both layers take the colour set on the wrapper, so a growth stage is
+ * duotone in its own hue without a rule per stage. */
+.gd-icon-duo-tinted svg:first-child { color: currentColor; opacity: 0.35; }
+.gd-icon-duo-tinted svg:last-child { color: currentColor; }
+/* Hover lifts the line to accent-hover. The shadow stays put; moving both
+ * would read as the icon jumping. */
+:is(a, button, .gd-panel):hover .gd-icon-duo svg:last-child { color: var(--color-accent-hover); }
+/* Glyphs WITHOUT a fill partner get the same offset via drop-shadow, which
+ * follows the rendered alpha and so works on a hairline shape where a second
+ * copy underneath would not. CSS cannot fill an outline.
+ *
+ * The offset MATCHES the duotone pair's. It was tried larger — a drop-shadow on a
+ * hairline is only ever as wide as the stroke, so there is a real argument for
+ * giving it more room to clear it — but at 0.09em and again at 0.075em the shadow
+ * detached and read as a second, offset glyph rather than as depth. Equal to the
+ * pairs is also the more honest answer: the catalogue reads as one language. */
+.gd-icon-shadow { filter: drop-shadow(0.06em 0.1em 0 var(--color-accent-shadow)); }
+@media (prefers-reduced-motion: reduce) { .gd-icon-duo svg { transition: none; } }
+
+/* ===========================================================================
+ * STATUS MESSAGES
+ * ======================================================================== */
+.gd-message {
+  margin: 0; padding: 0.75rem 1rem; border-radius: var(--radius-sm);
+  border-left: 4px solid var(--color-accent); background-color: var(--color-surface);
+  font-size: var(--text-base); color: var(--color-ink);
+}
+.gd-message-success { border-left-color: var(--color-success); color: var(--color-success); }
+.gd-message-warning { border-left-color: var(--color-warning); color: var(--color-warning); }
+.gd-message-error { border-left-color: var(--color-error); color: var(--color-error); }
+
+/* ===========================================================================
+ * TILE CHROME — the recurring surface behind info tiles and every sidebar
+ * widget (author, related, series, toc). Padding stays at the call site
+ * because each surface has its own rhythm.
+ * ======================================================================== */
+.at-tile { background: var(--surface-tile); border: 1px solid var(--border-hairline); border-radius: var(--radius-tile); }
+.at-tile-label {
+  margin: 0; font-size: 0.7rem; font-weight: var(--weight-strong);
+  letter-spacing: var(--tracking-label); text-transform: uppercase;
+  color: var(--color-ink-muted); line-height: 1;
+}
+.at-tile-value { font-size: var(--text-sm); line-height: 1.2; color: var(--color-accent); font-variant-numeric: tabular-nums; }
+
+/* ===========================================================================
+ * CARD — the magazine tile on overviews. Paired shadow, gold hairline, and a
+ * gold rule that grows along the bottom edge on hover. Cover images sit in
+ * sepia until you point at one.
+ * ======================================================================== */
+/* No overflow clipping: the Rubrik ribbon and the cover image deliberately hang
+ * outside the card's box, as they do upstream. 8px radius, not 12 — the scale says
+ * md is for cards and panels, lg for dialogs and overlays. The card had lg by
+ * mistake, which is exactly the drift a three-step scale exists to prevent. */
+.at-card {
+  position: relative; height: 100%; max-width: 733.5px; margin-left: auto; margin-right: auto;
+  background: var(--color-surface-raised);
+  border: 1px solid color-mix(in srgb, var(--color-accent) 20%, transparent);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  color: var(--color-ink);
+}
+.at-card::after {
+  content: ""; position: absolute; bottom: 0; left: 6px; width: 0; height: 3px;
+  border-radius: 3px; background: var(--color-accent);
+  transition: width var(--duration-base) var(--ease-out);
+}
+.at-card:hover::after { width: calc(100% - 12px); }
+.at-card-fixed { border-color: color-mix(in srgb, var(--color-accent) 50%, transparent); }
+.at-card-title {
+  margin: 0; font-family: var(--font-heading); font-size: var(--text-xl);
+  line-height: var(--text-xl--line-height); font-weight: var(--weight-strong);
+  letter-spacing: var(--tracking-heading);
+}
+.at-card-title a { color: var(--color-accent-hover); }
+.at-card-title a:hover { color: var(--color-accent); }
+.at-card-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5em 0.75em; margin: 0; font-size: var(--text-sm); color: var(--color-ink-muted); }
+/* The excerpt is NOT clipped in CSS, and that is deliberate. It used to be
+ * `overflow: hidden` with a fade over it — which is precisely what broke the float
+ * and the offset: overflow:hidden establishes a new block formatting context, so
+ * text refuses to run around the cover, and it clipped the figure's negative margin
+ * so the image stopped hanging off the card. The excerpt is already truncated where
+ * it is written (500 characters with a cover, 1000 without), so a second clip here
+ * bought nothing and cost both. */
+.at-card-excerpt { min-width: 0; }
+.at-card-footer {
+  display: flex; flex-wrap: wrap; justify-content: space-between; align-items: stretch;
+  background: var(--color-surface); border-top: 1px solid color-mix(in srgb, var(--color-accent-muted) 50%, transparent);
+  font-size: var(--text-sm); color: var(--color-ink-muted);
+}
+/* ONE SIZE IN THE ROW. The footer collected four: 14px on the row, 12.5px on the
+ * hashtags, 14.4px on the heart, 14px on the growth badge — every component
+ * arriving with the size it uses on its own. Inside this row the row decides, and
+ * the same applies to the badge in the metadata line above. Sizes that differ by a
+ * point and a half do not read as hierarchy, they read as sloppiness. */
+.at-card-footer .at-hashtag,
+.at-card-footer .at-heart,
+.at-card-footer .at-heart-count,
+.at-card-footer .at-growth,
+.at-card-meta .at-badge { font-size: inherit; }
+.at-card-footer-item { display: flex; align-items: center; gap: 0.5rem; padding: 0.6em 1.2em; }
+/* The tags cell is the flexible one: it takes whatever the fixed cells leave and
+ * wraps inside itself. Without min-width:0 a long tag list refused to shrink and
+ * pushed the whole footer into three stacked full-width rows. */
+.at-card-footer-item:has(.at-hashtag) { flex: 1 1 6rem; min-width: 0; flex-wrap: wrap; }
+/* Footer cells are divided by a gold hairline, as they are upstream — the row
+ * carries two unrelated kinds of information (how long it takes to read, what
+ * state it is in) and reads as two cells, not one. */
+.at-card-footer-item + .at-card-footer-item { border-left: 1px solid color-mix(in srgb, var(--color-accent-muted) 50%, transparent); }
+
+/* Corner badge — "Neu" and "Gesehen", rotated 45° across the card's top-right.
+ * Upstream these were the site's only two unicode symbols (☀ and ✓); both are now
+ * sprite glyphs like every other icon, so the badge speaks the same language as
+ * the rest of the catalogue. */
+.at-card-badge {
+  /* Hangs just past the corner. Upstream used -14px for the short label and -25px
+   * for the long one; a single value has to clear the neighbouring card in a grid,
+   * so it stays at the tighter end. */
+  position: absolute; top: 6px; right: -14px; z-index: 10;
+  transform: rotate(45deg); width: max-content;
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 9px; border-radius: 3px;
+  border: 1px solid color-mix(in srgb, var(--color-accent-muted) 70%, transparent);
+  background-color: hsl(190 11% 12%); color: var(--color-accent);
+  font-size: 0.7rem; font-weight: var(--weight-body);
+}
+/* IMAGERY — 4:3 landscape, always, and always in sepia until you point at it.
+ *
+ * The old covers were 2:3 portrait, cropped from the same files. A portrait well
+ * beside a text column makes the card as tall as the picture rather than as tall as
+ * the text, and a blog's pictures are roads, skylines and screens — landscape
+ * subjects forced upright. One ratio for every image on the site: cards, term
+ * tiles, article headers.
+ *
+ * Sepia is the house treatment, not a per-image choice: it pulls every photograph,
+ * whatever its own palette, into the gold. Full colour is the reward for hovering.
+ * The image also sits 1.5em LEFT of and 1.5em BELOW its container's top corner, so
+ * it reads as laid ON the surface rather than cropped into it. */
+.at-card-cover, .at-figure img {
+  display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover;
+  border-radius: var(--radius-md); box-shadow: var(--shadow-card);
+  filter: sepia(1); transition: filter var(--duration-slow) var(--ease-out);
+}
+.at-card:hover .at-card-cover, .at-figure:hover img { filter: sepia(0); }
+/* Full-bleed background image — the note card, where the picture IS the surface.
+ * A different job from a 4:3 figure, so it gets its own class.
+ *
+ * SIZED EXPLICITLY, not by insets. For an absolutely positioned REPLACED element,
+ * `width: auto` resolves to the intrinsic width, the box becomes over-constrained
+ * and `right`/`bottom` are simply dropped — a 1200×500 photograph then painted at
+ * its natural size and hung 308px out of the document. The overhang has to come
+ * from the width, so it is stated: 100% plus the 1.5em it reaches past the left
+ * edge, and 100% minus the 1.5em it starts below the top. */
+.at-card-bleed {
+  position: absolute; top: 1.5em; left: -1.5em;
+  width: calc(100% + 1.5em); height: calc(100% - 1.5em);
+  aspect-ratio: auto; object-fit: cover;
+  border-radius: var(--radius-md); opacity: 0.5;
+  filter: sepia(1); transition: filter var(--duration-slow) var(--ease-out);
+}
+.at-card:hover .at-card-bleed { filter: sepia(0); }
+/* The offset. Same two numbers everywhere it is used. */
+.at-figure { position: relative; margin: 1.5em 0 0 -1.5em; align-self: start; }
+/* FLOATED, so the text runs around the picture instead of standing in a column
+ * beside it. A 4:3 landscape image in its own grid column leaves a text column too
+ * narrow to read — six words to a line, which is what the two-column card became
+ * the moment the ratio changed.
+ *
+ * The left margin is −3em, not −1.5em: it has to cross the container's own 1.5em of
+ * padding before it starts hanging out. At −1.5em the two cancelled exactly and the
+ * image sat flush on the border, which reads as a mistake rather than a decision.
+ * The TOP margin is zero for the same reason, inverted — the container's padding
+ * already supplies the 1.5em, and adding another produced 3em of air above the
+ * picture while the title beside it started at 1.5em. */
+.at-figure-float {
+  float: left; width: min(46%, 22rem);
+  margin: 0 var(--spacing-gutter) var(--spacing-4) -3em;
+}
+/* The container has to contain its float, or the card collapses behind the image. */
+.at-flow::after { content: ""; display: block; clear: both; }
+@media (max-width: 640px) {
+  .at-figure-float { float: none; width: auto; margin: 0 0 var(--spacing-4) -3em; }
+}
+.at-figcaption {
+  position: absolute; inset: auto 0 0 0; padding: 0.5em;
+  font-size: var(--text-sm); color: hsl(190 20% 90%);
+  background: hsl(190 11% 8% / 0.7); border-top: 1px solid hsl(190 11% 5% / 0.5);
+  border-radius: 0 0 var(--radius-md) var(--radius-md);
+}
+
+/* Rubrik ribbon — the category flag that hangs off a card's top-left corner. */
+.at-ribbon {
+  position: absolute; max-width: 13.5em; z-index: 5;
+  padding: 0.4em 0.75em; border: none;
+  background-color: var(--color-accent-muted); color: hsl(190 20% 90%);
+  font-family: var(--font-heading); font-weight: var(--weight-strong);
+  text-shadow: 3px 3px 4px rgb(0 0 0 / 0.5);
+  transition: color var(--duration-slow) var(--ease-out), background-color var(--duration-slow) var(--ease-out);
+}
+.at-ribbon:hover { color: hsl(190 20% 95%); background-color: var(--color-surface); }
+
+/* Hashtag pill and the Rubrik tag inside a tile value. Both carry the element
+ * selector: .at-prose a underlines every link inside prose at (0,1,1), which beats
+ * a bare .at-hashtag at (0,1,0) — and an underlined pill reads as a rendering
+ * fault. These are controls, not running text. */
+a.at-hashtag, a.at-tag { text-decoration: none; }
+.at-hashtag {
+  display: inline-block; padding: 0.18em 0.55em; border-radius: var(--radius-pill);
+  font-size: 0.78rem; color: var(--color-accent); background: hsl(190 11% 13%);
+  text-decoration: none;
+  transition: color var(--duration-fast) var(--ease-out);
+}
+.at-hashtag:hover { color: var(--color-accent-hover); }
+.at-tag {
+  display: inline-block; max-width: 100%; padding: 0.25em 0.6em;
+  border-radius: 0.35rem; background: var(--color-accent-muted); color: hsl(190 20% 90%);
+  font-size: 0.8rem; line-height: 1.2; text-decoration: none; text-shadow: 1px 1px 2px rgb(0 0 0 / 0.4);
+  transition: filter var(--duration-fast) var(--ease-out);
+}
+.at-tag:hover { color: hsl(190 20% 90%); filter: brightness(1.1); }
+
+/* ===========================================================================
+ * RUBRIK BADGE — the category, as a neutral pill with a coloured dot.
+ *
+ * This is how per-Rubrik colour comes back without spending the palette on it.
+ * The ribbon put a saturated fill across the top of the picture: it competed with
+ * the photograph, and with the gold. Here the colour is a 0.5em dot — enough to
+ * tell Rubriken apart at a glance, small enough that it never fights anything.
+ * The pill itself stays surface-and-hairline, so a row of them reads as one family.
+ * Set the dot with `--at-badge-dot`; it falls back to the accent.
+ * ======================================================================== */
+.at-badge {
+  display: inline-flex; align-items: center; gap: 0.45em;
+  padding: 0.25em 0.7em 0.25em 0.55em;
+  border: 1px solid var(--border-hairline); border-radius: var(--radius-pill);
+  background: var(--color-surface); color: var(--color-ink);
+  font-size: 0.78rem; line-height: 1.4; text-decoration: none; white-space: nowrap;
+  transition: border-color var(--duration-fast) var(--ease-out), color var(--duration-fast) var(--ease-out);
+}
+.at-badge::before {
+  content: ""; flex: none; width: 0.5em; height: 0.5em; border-radius: 50%;
+  background: var(--at-badge-dot, var(--color-accent));
+}
+.at-badge:hover { border-color: var(--color-accent); color: var(--color-ink-strong); }
+
+/* ===========================================================================
+ * PROSE ELEMENTS — what an article body is actually made of.
+ * Lists, tables, inline figures, code. All of it composes from the same tokens as
+ * everything else; none of it introduces a colour.
+ * ======================================================================== */
+.at-prose ul, .at-prose ol { margin: 0 0 1rem; padding-left: 1.5em; }
+.at-prose ul { list-style: disc; }
+.at-prose ol { list-style: decimal; }
+.at-prose li { margin: 0 0 0.35rem; }
+.at-prose li > ul, .at-prose li > ol { margin: 0.35rem 0 0; }
+/* Gold markers are a single global decision, not a per-list one. */
+.at-prose li::marker { color: var(--color-accent); }
+.at-prose dl { margin: 0 0 1rem; }
+.at-prose dt { color: var(--color-ink-strong); font-weight: var(--weight-strong); }
+.at-prose dd { margin: 0 0 0.6rem; color: var(--color-ink-muted); }
+
+/* Tables get the header treatment the tile labels use — uppercase, tracked, muted —
+ * plus the fading gold rule under the head row. Body rows are separated by the same
+ * dashed hairline the sidebar lists use, so a table reads as a list with columns
+ * rather than as a grid of boxes. No zebra striping: on this surface an alternating
+ * fill is louder than the data. */
+.at-prose table { width: 100%; border-collapse: collapse; margin: 0 0 1.25rem; font-size: var(--text-sm); }
+.at-prose caption { padding-bottom: 0.6em; color: var(--color-ink-muted); font-size: var(--text-sm); text-align: left; }
+.at-prose th {
+  padding: 0.55em 0.8em; text-align: left; vertical-align: bottom;
+  font-size: 0.7rem; font-weight: var(--weight-strong); letter-spacing: var(--tracking-label);
+  text-transform: uppercase; color: var(--color-ink-muted);
+  background-image: linear-gradient(to right, var(--rule-gold), transparent);
+  background-size: 100% 1px; background-position: left bottom; background-repeat: no-repeat;
+}
+.at-prose td {
+  padding: 0.6em 0.8em; vertical-align: top;
+  border-bottom: 1px dashed color-mix(in srgb, var(--color-accent-muted) 30%, transparent);
+}
+.at-prose tbody tr:last-child td { border-bottom: none; }
+.at-prose tbody tr:hover td { background: color-mix(in srgb, var(--color-accent-muted) 12%, transparent); }
+.at-prose td:last-child, .at-prose th:last-child { text-align: right; font-variant-numeric: tabular-nums; }
+
+/* Inline figure — an image inside the running text rather than beside it. Full
+ * column width, so it never competes with the floated cover at the top, and it
+ * keeps the same 4:3, sepia and radius as every other picture. */
+.at-figure-inline { margin: 1.5rem 0; }
+.at-figure-inline img { width: 100%; }
+
+.at-prose pre {
+  margin: 0 0 1.25rem; padding: var(--spacing-4); overflow-x: auto;
+  border-radius: var(--radius-md); border: 1px solid var(--border-hairline-quiet);
+  background: hsl(190 11% 8%); font-size: var(--text-sm); line-height: 1.6;
+}
+.at-prose pre code { color: var(--color-ink); }
+.at-prose hr { margin: var(--spacing-gutter) 0; border: 0; height: 1px; background: linear-gradient(to right, var(--rule-gold), transparent); }
+
+/* ===========================================================================
+ * GROWTH STAGE — the digital-garden signal. Colour is applied to the GLYPH,
+ * never as a background: tone on tone. Four stages, four tints, nothing else.
+ * ======================================================================== */
+.at-growth { display: inline-flex; align-items: center; flex-wrap: wrap; gap: 0.4em; min-width: 0; font-size: var(--text-sm); }
+.at-growth svg { width: 1.2em; height: 1.2em; fill: currentColor; }
+.at-growth[data-stage="seedling"] { color: var(--color-seedling); }
+.at-growth[data-stage="budding"] { color: var(--color-budding); }
+.at-growth[data-stage="evergreen"] { color: var(--color-evergreen); }
+.at-growth[data-stage="withered"] { color: var(--color-withered); }
+/* Inside an info tile the standalone icon on the left ALREADY shows the stage
+ * glyph, tinted from the same token — so the badge's own inline copy is hidden
+ * and the badge contributes the text label alone. Two identical glyphs 36px apart
+ * read as a rendering fault, and they pushed the tile's value past its column. */
+.at-tile[data-stage] .at-growth svg,
+.at-tile[data-stage] .at-growth .gd-icon-duo { display: none; }
+
+/* ===========================================================================
+ * HEART — the one engagement control. A pill at rest, red once hearted.
+ * ======================================================================== */
+.at-heart {
+  display: inline-flex; align-items: center; gap: 0.4em; padding: 0.35em 0.85em;
+  border: 1px solid color-mix(in srgb, var(--color-accent-muted) 50%, transparent);
+  border-radius: var(--radius-pill); background: hsl(190 11% 9%);
+  color: var(--color-accent-hover); font: inherit; font-size: 0.95rem; line-height: 1;
+  transition: background var(--duration-fast) var(--ease-out), color var(--duration-fast) var(--ease-out),
+    border-color var(--duration-fast) var(--ease-out), transform var(--duration-fast) var(--ease-out);
+}
+.at-heart:hover:not(:disabled) { border-color: var(--color-accent-hover); color: var(--color-accent); transform: translateY(-1px); }
+.at-heart svg { width: 1.1em; height: 1.1em; flex-shrink: 0; fill: currentColor; }
+.at-heart-count { font-variant-numeric: tabular-nums; font-weight: var(--weight-strong); }
+.at-heart.is-hearted { cursor: default; color: hsl(0 70% 65%); border-color: color-mix(in srgb, hsl(0 70% 65%) 50%, transparent); }
+/* Card variant — flat, to sit level with the format icons beside it. */
+.at-heart-flat {
+  padding: 0; border: none; background: transparent; gap: 0.2em; font-size: 0.9rem;
+  color: color-mix(in srgb, var(--color-accent-hover) 80%, transparent);
+}
+.at-heart-flat:hover:not(:disabled) { background: transparent; border: none; transform: none; color: var(--color-accent); }
+
+/* ===========================================================================
+ * TOOLTIP — attribute driven, so any element can carry one.
+ * ======================================================================== */
+[data-tooltip] { position: relative; }
+[data-tooltip]::before, [data-tooltip]::after {
+  position: absolute; opacity: 0; visibility: hidden; pointer-events: none; z-index: 9999;
+  transition: opacity var(--duration-slow), visibility var(--duration-slow);
+}
+[data-tooltip]::before {
+  content: attr(data-tooltip); bottom: 100%; left: 50%;
+  transform: translateX(-50%) translateY(-10px);
+  padding: 0.5rem 1rem; border-radius: 4px;
+  background-color: hsl(190 11% 6%); color: hsl(190 20% 90%);
+  font-family: var(--font-body); font-size: 0.8rem; text-align: center; white-space: nowrap;
+  box-shadow: 2px 2px 5px color-mix(in srgb, var(--color-accent-hover) 20%, transparent);
+}
+[data-tooltip]::after {
+  content: ""; bottom: 100%; left: 50%; transform: translateX(-50%) translateY(-10px);
+  border: 10px solid transparent; border-top-color: hsl(190 11% 6%); margin-bottom: -20px;
+}
+[data-tooltip]:hover::before, [data-tooltip]:hover::after,
+[data-tooltip]:focus-visible::before, [data-tooltip]:focus-visible::after { opacity: 1; visibility: visible; }
+
+/* ===========================================================================
+ * NAVIGATION — the band directly under the header, and the page's top edge.
+ *
+ * Its job is to SEPARATE. It sits one surface level below the page (sunken), so
+ * it reads as chrome, and it carries the same fading gold rule along its bottom
+ * that gd-h2 uses — the header above it is the most decorated thing on the site,
+ * and this is the line where that stops and the page begins.
+ *
+ * Sticky, so the separation survives scrolling. Below 768px the links collapse
+ * into a full-viewport drawer: on a phone a menu is a place you go, not a strip
+ * you squint at, so it gets the heading font and 44px rows.
+ * ======================================================================== */
+.at-nav {
+  position: sticky; top: 0; z-index: 50;
+  display: flex; align-items: center; gap: 0.25rem;
+  min-height: 3.5rem; padding: 0 1rem;
+  background: var(--color-surface-sunken);
+  font-family: var(--font-body); color: var(--color-ink);
+}
+.at-nav::after {
+  content: ""; position: absolute; inset: auto 0 0 0; height: 1px;
+  background: linear-gradient(to right, var(--rule-gold), transparent);
+}
+.at-nav-brand { display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 0.5rem 0.5rem 0; font-family: var(--font-heading); font-weight: var(--weight-strong); color: var(--color-ink); }
+.at-nav-brand:hover { color: var(--color-accent); }
+.at-nav-links { display: flex; align-items: center; min-width: 0; }
+.at-nav-link {
+  position: relative; display: flex; align-items: center; gap: 0.5rem;
+  padding: 0.9rem 0.85rem; color: var(--color-ink); font-size: 0.9375rem; white-space: nowrap;
+  transition: color var(--duration-base) var(--ease-out);
+}
+.at-nav-link:hover { color: var(--color-accent); }
+/* The current item gets a gold underline that fades out to the right — the same
+ * device as every other rule in the system, at 2px so it reads as a marker
+ * rather than as another divider. */
+.at-nav-link[aria-current] { color: var(--color-accent); }
+.at-nav-link[aria-current]::after {
+  content: ""; position: absolute; inset: auto 0.85rem -1px 0.85rem; height: 2px;
+  background: linear-gradient(to right, var(--color-accent), color-mix(in srgb, var(--color-accent) 20%, transparent));
+}
+.at-nav-right { margin-left: auto; display: flex; align-items: center; gap: 0.25rem; }
+.at-nav-icon { display: flex; align-items: center; justify-content: center; min-width: 2.75rem; min-height: 2.75rem; color: var(--color-ink); }
+.at-nav-icon:hover { color: var(--color-accent); }
+.at-nav-search { position: relative; display: flex; align-items: center; }
+.at-nav-search input {
+  width: 14rem; max-width: 100%; padding: 0.375rem 2.25rem 0.375rem 0.75rem; appearance: none;
+  border: 1px solid var(--color-accent-muted); border-radius: var(--radius-sm);
+  background: var(--color-surface); color: var(--color-ink); font: inherit;
+  font-size: var(--text-sm); caret-color: var(--color-accent);
+  transition: border-color var(--duration-base) var(--ease-out), box-shadow var(--duration-base) var(--ease-out);
+}
+.at-nav-search input:focus { outline: none; border-color: var(--color-accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-accent) 25%, transparent); }
+.at-nav-search-icon { position: absolute; right: 0.75rem; display: flex; align-items: center; pointer-events: none; color: var(--color-accent); }
+/* The result panel hangs from the nav's right edge, not from the field — it is
+ * far wider than the field, and anchoring it there put an 800px panel under a
+ * 224px input. */
+.at-nav-results { position: absolute; top: 100%; right: 0; z-index: 60; width: min(50rem, calc(100vw - 2rem)); margin-top: 0.75rem; }
+.at-nav-results > div {
+  max-height: 60vh; overflow: auto; padding: var(--spacing-gutter);
+  border: 1px solid color-mix(in srgb, var(--color-accent) 20%, transparent);
+  border-radius: var(--radius-lg); background: var(--color-surface-raised); box-shadow: var(--shadow-lg);
+}
+.at-nav-burger { display: none; }
+
+@media (max-width: 767px) {
+  .at-nav-links, .at-nav-follow, .at-nav-search { display: none; }
+  .at-nav-burger { display: flex; }
+}
+
+/* The drawer. Opaque, not frosted — the system has no backdrop filters over
+ * content, and a translucent menu over a dotted page is unreadable. */
+.at-drawer {
+  position: fixed; inset: 0; z-index: 100;
+  display: flex; flex-direction: column; gap: var(--spacing-gutter);
+  padding: 1rem 1.25rem 2rem; overflow: auto;
+  background: var(--color-surface-sunken);
+  animation: at-drawer-in var(--duration-base) var(--ease-out) both;
+}
+@keyframes at-drawer-in { from { opacity: 0; transform: translateX(4%); } to { opacity: 1; transform: none; } }
+.at-drawer-head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+.at-drawer-links { display: flex; flex-direction: column; }
+.at-drawer-link {
+  position: relative; display: flex; align-items: center; gap: 1rem;
+  min-height: 2.75rem; padding: 1rem 0.25rem;
+  font-family: var(--font-heading); font-size: var(--text-xl); font-weight: var(--weight-strong);
+  color: var(--color-ink);
+}
+.at-drawer-link + .at-drawer-link::before {
+  content: ""; position: absolute; inset: 0 0 auto 0; height: 1px;
+  background: linear-gradient(to right, var(--rule-gold), transparent);
+}
+.at-drawer-link[aria-current] { color: var(--color-accent); }
+.at-drawer-follow { margin-top: auto; display: flex; align-items: center; gap: 0.5rem; }
+@media (prefers-reduced-motion: reduce) { .at-drawer { animation: none; } }
+
+/* ===========================================================================
+ * WORDMARK — the site title in the header. Gold gradient over a drop-line,
+ * with a blurred glow behind it and a shimmer that sweeps across on hover.
+ * This predates the token system and is the one place a fixed px size is
+ * correct: it is a logo, not text in a scale.
+ * ======================================================================== */
+.at-wordmark {
+  /* The shimmer strip needs horizontal padding so the 50px gradient can start
+   * off-glyph. The drop-line pseudo-element has to carry the SAME padding or it
+   * lands at the parent's left edge while the visible text sits inside the
+   * padding — which reads as two words printed over each other. One variable,
+   * both users. */
+  --at-wordmark-pad: 130px;
+  position: relative; display: inline-block; font-family: var(--font-heading);
+  font-weight: var(--weight-strong); font-size: 70px; line-height: 1.1;
+  background: linear-gradient(to bottom, var(--color-accent) 32%, var(--color-accent-hover) 50%, var(--color-accent-muted) 80%);
+  background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.at-wordmark::before {
+  content: ""; position: absolute; top: 0; bottom: 0; left: calc(50% - 250px);
+  width: 500px; z-index: -1; opacity: 0.3; filter: blur(30px);
+  background-color: hsl(29 100% 88%);
+}
+.at-wordmark::after {
+  content: attr(data-heading); position: absolute; top: 0; left: 0; width: 100%; z-index: -1;
+  padding: 0 var(--at-wordmark-pad); box-sizing: border-box;
+  text-shadow: -1px 0 1px hsl(29 100% 84%), 0 1px 1px hsl(29 100% 84%),
+    5px 5px 10px rgb(0 0 0 / 0.7), -2px -2px 5px rgb(255 255 255 / 0.3);
+}
+.at-wordmark-shimmer {
+  padding: 0 var(--at-wordmark-pad);
+  background: linear-gradient(to right, var(--color-accent-hover), #fff 50%, var(--color-accent-hover));
+  background-size: 50px 100%; background-repeat: no-repeat;
+  background-clip: text; -webkit-background-clip: text;
+}
+.at-wordmark:hover .at-wordmark-shimmer { animation: at-shimmer 0.8s ease-out 1; }
+@keyframes at-shimmer { from { background-position: top left; } to { background-position: top right; } }
+@media (max-width: 640px) {
+  .at-wordmark { font-size: 37px; --at-wordmark-pad: 50px; }
+  .at-wordmark-shimmer { background-size: 40px 100%; }
+}
+@media (prefers-reduced-motion: reduce) { .at-wordmark:hover .at-wordmark-shimmer { animation: none; } }
+
+/* ===========================================================================
+ * SKY — the header ground. Four states, switched by time of day from the
+ * visitor's own sunrise/sunset. Night and dusk show stars; day and dusk show
+ * the hot-air balloon.
+ * ======================================================================== */
+.at-sky { background: radial-gradient(ellipse at bottom, #0c1a37 0%, #2c449d 50%, #ef8d5c 100%); }
+.at-sky[data-sky="night"] { background: radial-gradient(circle, #000 0%, #010010 35%, #0c1a37 100%); }
+.at-sky[data-sky="dawn"]  { background: radial-gradient(ellipse at bottom, #0c1a37 0%, #2c449d 50%, #ce98af 100%); }
+.at-sky[data-sky="day"]   { background: radial-gradient(circle, #32bafa 0%, #b8e7fd 35%, #d1e8e2 100%); }
+.at-sky[data-sky="dusk"]  { background: radial-gradient(ellipse at bottom, #0c1a37 0%, #2c449d 50%, #ef8d5c 100%); }
+/* The harbour silhouette. Repeats horizontally, pinned to the bottom, sepia so
+ * it belongs to the gold palette rather than fighting the sky behind it. */
+.at-city {
+  position: absolute; inset: 0; z-index: 2;
+  background-image: url("../assets/images/header/city.svg");
+  background-repeat: repeat-x; background-position: center bottom; background-size: auto 100%;
+  filter: sepia(0.4);
+}
+
+/* ===========================================================================
+ * QUOTED — the remixicon double-quote pair, used on pull quotes, note cards and
+ * the footer slogan. A unicode-by-codepoint use of the icon font, not the sprite.
+ * ======================================================================== */
+.at-quoted::before, .at-quoted::after {
+  font-family: var(--font-icon); color: var(--color-accent); display: inline-block;
+}
+.at-quoted::before { content: "\ec51"; }
+.at-quoted::after { content: "\ec52"; }
+
+/* ===========================================================================
+ * SIDEBAR WIDGETS — series, table of contents, related, archive.
+ *
+ * ONE ROW SHAPE FOR ALL OF THEM. They used to differ in every incidental way —
+ * line-height 2 against 1.35 against 1.4, the series title in the heading font
+ * while nothing else was, the counter in Montserrat Alternates against an em dash
+ * in Montserrat, three different left paddings — so three widgets stacked in one
+ * sidebar read as three separate designs. Everything shared now lives on
+ * .at-widget-list; each list keeps exactly ONE distinguishing mark, because that
+ * mark is the information:
+ *   Serie     leading-zero counter over a continuous rail
+ *   Inhalt    em dash, and nesting
+ *   Ähnliche  the date, right-aligned
+ * The marker column is the same width in all three, so the text edges line up
+ * down the whole sidebar.
+ * ======================================================================== */
+.at-widget { padding: 0.9rem 1rem; }
+/* The widget header rule fades to the right like gd-h2 — a border-bottom cannot
+ * fade, so it is drawn as a background gradient on the bottom edge instead. */
+.at-widget-head {
+  display: flex; align-items: center; justify-content: space-between; gap: 0.5rem;
+  padding-bottom: 0.7rem; margin-bottom: 0.7rem;
+  background-image: linear-gradient(to right, var(--rule-gold), transparent);
+  background-size: 100% 1px; background-position: left bottom; background-repeat: no-repeat;
+}
+.at-widget-count {
+  font-size: 0.7rem; padding: 0.25em 0.6em; border-radius: 0.35rem; white-space: nowrap;
+  color: color-mix(in srgb, var(--color-accent-hover) 70%, transparent); background: hsl(35 45% 14%);
+}
+.at-widget-list {
+  --at-marker: 1.9rem;
+  list-style: none; margin: 0; padding: 0;
+  font-size: 0.85rem; line-height: 1.4;
+}
+/* Rows are the same box everywhere: same padding, same radius, same hover. */
+.at-widget-list > li { margin: 0; position: relative; }
+.at-widget-list > li > a, .at-widget-list > li > span {
+  display: block; position: relative;
+  padding: 0.4rem 0.7rem 0.4rem var(--at-marker); border-radius: 0.3rem;
+  color: color-mix(in srgb, var(--color-accent-hover) 85%, transparent);
+}
+.at-widget-list > li > a:hover { color: var(--color-accent); background: color-mix(in srgb, var(--color-accent-muted) 15%, transparent); }
+/* "You are here" reads the same in every widget. */
+.at-widget-list > li.is-current > a, .at-widget-list > li.is-current > span {
+  background: color-mix(in srgb, var(--color-accent) 8%, transparent);
+  color: var(--color-accent-hover); font-weight: var(--weight-strong);
+}
+.at-widget-list > li.is-current > * ::before, .at-widget-list > li.is-current > *::before { color: var(--color-accent-hover); }
+
+/* Series: leading-zero counter in the marker column, with a continuous rail
+ * behind it. The rail is anchored on the list, not on each item, so it stays one
+ * unbroken segment regardless of hover backgrounds. */
+.at-series-list { position: relative; counter-reset: series-item; }
+.at-series-list::before {
+  content: ""; position: absolute; left: 0.95rem; top: 0.9rem; bottom: 0.9rem; width: 1px;
+  background: var(--color-accent-muted); opacity: 0.4; pointer-events: none;
+}
+.at-series-list > li { counter-increment: series-item; }
+.at-series-list > li > *::before {
+  content: counter(series-item, decimal-leading-zero);
+  position: absolute; left: 0; top: 0.4rem; width: var(--at-marker);
+  text-align: center; font-size: 0.7rem; font-weight: var(--weight-strong);
+  letter-spacing: 0.05em; font-variant-numeric: tabular-nums; color: var(--color-accent-muted);
+}
+/* Withered members keep their place in the sequence but read as faded. */
+.at-series-list > li.is-withered > * { color: color-mix(in srgb, var(--color-accent-hover) 50%, transparent); }
+
+/* Table of contents: em-dash marker in the same column, so its text edge lines up
+ * with the series numbers above it. Nested levels indent and gain a rail. */
+.at-toc-list > li > a::before, .at-toc-list ul > li > a::before {
+  content: "—"; position: absolute; left: 0; top: 0.4rem; width: var(--at-marker);
+  text-align: center; color: var(--color-accent-muted); font-weight: var(--weight-strong);
+}
+.at-toc-list ul {
+  list-style: none; margin: 0 0 0 0.8rem; padding-left: 0.4rem;
+  border-left: 1px solid color-mix(in srgb, var(--color-accent-muted) 30%, transparent);
+}
+.at-toc-list ul > li { position: relative; margin: 0; }
+.at-toc-list ul > li > a {
+  display: block; position: relative;
+  padding: 0.4rem 0.7rem 0.4rem var(--at-marker); border-radius: 0.3rem;
+  color: color-mix(in srgb, var(--color-accent-hover) 85%, transparent);
+}
+.at-toc-list ul > li > a:hover { color: var(--color-accent); background: color-mix(in srgb, var(--color-accent-muted) 15%, transparent); }
+
+/* Related: the date is the marker, right-aligned. Same row box as the others, so
+ * only the divider distinguishes the list. */
+.at-rows > li {
+  display: flex; align-items: flex-start; justify-content: space-between; gap: 0.8rem;
+  border-bottom: 1px dashed color-mix(in srgb, var(--color-accent-muted) 30%, transparent);
+}
+.at-rows > li:last-child { border-bottom: none; }
+.at-rows > li > a { flex: 1; min-width: 0; padding-left: 0.7rem; }
+.at-rows .at-rows-aside { flex-shrink: 0; padding: 0.4rem 0.7rem 0.4rem 0; font-size: 0.75rem; color: var(--color-ink-muted); font-variant-numeric: tabular-nums; }
+
+/* Archive in the footer: name left, count right, and a dotted leader between
+ * them drawn as a repeating radial gradient. */
+.at-leader-list > li { display: flex; width: 100%; padding: 0.1em 0; margin: 0; }
+.at-leader-list > li > :first-child { order: 1; padding: 0; }
+.at-leader-list > li::after {
+  content: ""; flex-grow: 1; order: 2; height: auto;
+  background-image: radial-gradient(circle, color-mix(in srgb, var(--color-accent-muted) 50%, transparent) 1px, transparent 1px);
+  background-position-y: calc(100% - 6px); background-size: 1ex 3px; background-repeat: repeat-x;
+}
+.at-leader-list > li > :last-child { order: 3; padding: 0 0 0 0.3em; color: var(--color-ink-muted); }
+
+/* The clock face rises into place once on load, and the birds cross the header
+ * on a slow loop. Those two plus the wordmark shimmer are the only animations on
+ * the site. */
+.at-clock {
+  position: absolute; inset: 0 0 auto 0; height: 100%; z-index: 1; opacity: 0.8;
+  background: url("../assets/images/header/clock.webp") no-repeat top center;
+  background-size: contain;
+  animation: at-clock-rise 2s both;
+  will-change: background-position;
+}
+@keyframes at-clock-rise { from { background-position: 50% 200px; } to { background-position: 50% 20px; } }
+
+.at-bird {
+  width: 88px; height: 125px;
+  background-image: url("../assets/images/header/birds.svg"); background-size: auto 100%;
+  animation: at-fly-cycle 1s steps(10) infinite;
+  will-change: background-position;
+}
+@keyframes at-fly-cycle { to { background-position: -900px 0; } }
+.at-bird-path {
+  position: absolute; top: 15px; left: -10%;
+  transform: scale(0) translateX(-10vw);
+  animation: at-fly-across 15s linear infinite;
+  will-change: transform;
+}
+@keyframes at-fly-across {
+  0%   { transform: scale(0.25) translateX(-10vw); }
+  10%  { transform: translateY(2vh) translateX(10vw) scale(0.3); }
+  20%  { transform: translateY(0) translateX(30vw) scale(0.35); }
+  30%  { transform: translateY(4vh) translateX(50vw) scale(0.4); }
+  50%  { transform: translateY(0) translateX(90vw) scale(0.4); }
+  100% { transform: translateY(0) translateX(110vw) scale(0.35); }
+}
+.at-balloon {
+  position: absolute; top: 130px; left: calc(50% + 360px); width: 40px; height: 40px;
+  background: url("../assets/images/header/hotairballoon.svg") no-repeat;
+  transform: rotate(10deg);
+}
+@media (prefers-reduced-motion: reduce) {
+  .at-clock { animation: none; background-position: 50% 20px; }
+  .at-bird, .at-bird-path { animation: none; }
+}
+
+/* The sea reflection under the footer: the same skyline, flipped and blurred.
+ * The turbulence filter that ripples it lives in an inline <svg> next to it. */
+.at-footer-sea::before, .at-footer-sea::after {
+  content: ""; position: absolute; width: 100%; height: 300px;
+  background-image: url("../assets/images/header/city.svg");
+  background-repeat: repeat-x; background-size: auto 300px;
+  opacity: 0.4; filter: sepia(0.6);
+}
+.at-footer-sea::before { top: -260px; }
+.at-footer-sea::after { top: 37px; transform: rotate(180deg) scaleX(-1); filter: sepia(0.7) blur(0.1em) url("#at-turbulence"); }
+
+/* External links get a small gold arrow after them. */
+.at-external::after { content: "\ecaf"; font-family: var(--font-icon); font-size: 80%; color: color-mix(in srgb, var(--color-accent) 50%, transparent); }

@@ -1,0 +1,272 @@
+{{- /* Garden — the card. The most repeated element on the site, and the one that
+ * cost the old theme 552 lines of SCSS by deciding its own values.
+ *
+ * THREE SHAPES FROM ONE PARTIAL, because the source is one partial with
+ * variants and the grid they sit in does not care which is which:
+ *
+ *   article  cover floated left inside the text, title, metadata, excerpt,
+ *            footer across the bottom. Without a cover the text takes the whole
+ *            width and the excerpt is allowed to run twice as long.
+ *   note     no title and no excerpt — the note IS the text, set large between
+ *            gold quote marks with its picture dimmed behind it.
+ *   term     a Rubrik or Tag: cover, name, and how many entries are in it.
+ *
+ * HOVER DOES EXACTLY THREE THINGS: a gold rule grows along the bottom edge, the
+ * cover releases its sepia, and the round button presses in. Nothing scales,
+ * nothing lifts. See docs/design.md.
+ *
+ * THE CELL WRAPPER IS GONE. Upstream every card came wrapped in Bulma's `.cell`
+ * with a conditional `is-row-span-2`; the grid at the call site places them now,
+ * which is where layout belongs.
+ *
+ * CONTRACT WITH assets/js/gdpr.js: it marks cards you have already opened and
+ * cards newer than a week by finding `article.at-card` and a `time[datetime]`
+ * inside it. Keep both. */ -}}
+
+{{- $sprite := "fonts/remixicon/remixicon.symbol.svg" | relURL -}}
+{{- $rv := .Site.Params.remixicon_version -}}
+{{- $img := "" -}}
+{{- with .Resources }}{{ $img = (.ByType "image").GetMatch "cover*" }}{{ end -}}
+
+{{- if or (eq .Type "articles") (eq .Type "notes") -}}
+{{- $isNote := eq .Params.format "note" -}}
+{{- $featured := eq .Params.weight 1 -}}
+{{- $rubrik := "" -}}
+{{- with .GetTerms "categories" }}{{ range first 1 . }}{{ $rubrik = . }}{{ end }}{{ end -}}
+
+<article class="at-card group/card h-entry{{ if $featured }} border-accent/50{{ end }}{{ if $isNote }} min-h-[400px]{{ end }}">
+
+    {{- if $isNote -}}
+        {{- /* NO RIBBON. The design system keeps one here — a note has no metadata
+               row, so the argument was that the label has to sit on the picture.
+               It does not: the footer is a metadata row, the note has one like
+               every other card, and a saturated flag across the corner of a
+               photograph was the thing the dot badge replaced everywhere else.
+               One card type carrying the old device is worse than either choice
+               applied consistently. The badge is in the footer with the dates. */ -}}
+        <div class="relative grid place-items-center p-gutter">
+            {{- with $img }}
+            {{- $bleed := .Process "fill 600x480 webp" }}
+            {{- /* The note's picture IS the surface: it fills the note area edge to
+                   edge, dimmed behind the quote, and does NOT take the article
+                   cover's overhang — a background is not an object lying on the
+                   card, so an offset just read as a mistake. Top corners nest
+                   inside the card's radius; the bottom edge meets the footer
+                   flush. Sepia releases on card hover like every photograph. */ -}}
+            <img class="absolute inset-0 h-full w-full rounded-t-[calc(var(--radius-md)-1px)] object-cover opacity-50 sepia transition-[filter] duration-300 ease-out group-hover/card:sepia-0" src="{{ $bleed.RelPermalink }}" alt="" width="600" height="480" loading="lazy">
+            {{- end }}
+            <p class="at-quoted e-content relative z-2 m-0 bg-[linear-gradient(270deg,transparent_0%,rgb(0_0_0/0.5)_50%,transparent_100%)] py-4 text-center font-heading text-[30px]/[1.3] font-semibold text-ink-strong [text-shadow:3px_3px_4px_rgb(0_0_0/0.5)]">
+                {{ .Summary | markdownify | plainify }}
+            </p>
+        </div>
+    {{- else -}}
+        {{- /* `at-flow` clears the float. Without it the card collapses to the
+               height of its text and the picture hangs out of the bottom. */ -}}
+        <div class="at-flow relative p-gutter">
+            {{- with $img }}
+            {{- /* 4:3 LANDSCAPE, ALWAYS, floated into the text — see ui/figure. */ -}}
+            {{- $cover := .Process "fill 480x360 webp" }}
+            {{- $caption := partial "image-caption.html" . }}
+            {{ partial "ui/figure" (dict "src" $cover.RelPermalink "alt" $.Title "href" $.RelPermalink "title" $.Title "caption" $caption "bleed" true) }}
+            {{- end }}
+
+            <h2 class="m-0 font-heading text-xl font-semibold tracking-heading" aria-label="{{ .Title }}">
+                <a class="p-name u-url text-accent-hover hover:text-accent" href="{{ .RelPermalink }}" title="{{ .Title }}">{{ .Title }}</a>
+            </h2>
+
+            {{- /* The Rubrik sits WITH the metadata, not above the title: above it
+                   it stood between the reader and the one thing on the card that
+                   matters, and it is metadata. The dot takes the category's own
+                   colour; the pill stays neutral, so a row of them reads as one
+                   family instead of three competing fills. */ -}}
+            <p class="m-0 flex flex-wrap items-center gap-x-[0.75em] gap-y-[0.5em] text-sm text-ink-muted">
+                {{- with $rubrik }}
+                {{ partial "ui/badge" (dict "label" .LinkTitle "href" .RelPermalink "dot" .Params.categoryColor) }}
+                {{- end }}
+                <time class="dt-published inline-flex items-center gap-1.5" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}" title="Veröffentlichungsdatum">
+                    <svg class="size-4 shrink-0 fill-current text-ink-muted" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#calendar-line"></use></svg>
+                    {{ .Date.Format "02.01.06" }}
+                </time>
+                {{- /* When it was last touched, and only when that differs from
+                       when it appeared — a "edited" date equal to the publication
+                       date is noise dressed as information.
+
+                       The design system leaves this off the card, on the grounds
+                       that a badge and two dates need about 230px while the text
+                       column beside a 46% float is about 250px. That was true
+                       when the card was locked to one width. It is a size
+                       container now: the row is full width whenever the picture
+                       stacks, and the row wraps when it does not. On a
+                       digital garden, when something was last tended is close to
+                       the point. */ -}}
+                {{- if ne (.Date.Format "02.01.06") (.Lastmod.Format "02.01.06") }}
+                <time class="dt-updated inline-flex items-center gap-1.5" datetime="{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}" title="Letztes Bearbeitungsdatum">
+                    <svg class="size-4 shrink-0 fill-current text-ink-muted" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#pencil-line"></use></svg>
+                    {{ .Lastmod.Format "02.01.06" }}
+                </time>
+                {{- end }}
+            </p>
+
+            <div class="mt-3 min-w-0">
+                {{- if .Params.summary -}}
+                    {{- $content := .Summary | markdownify -}}
+                    {{- if $img }}{{ $content | truncate 500 }}{{ else }}{{ $content | truncate 1000 }}{{ end -}}
+                {{- else -}}
+                    {{- errorf "Missing summary in front matter for page: %s" .File.Path -}}
+                {{- end -}}
+            </div>
+        </div>
+    {{- end -}}
+
+    {{- /* Cells pack LEFT and the icon cell carries ml-auto. justify-between
+           looked fine with three cells in one row, but the moment a narrow
+           track wrapped the icon cell to a second row, the remaining two were
+           flung apart and the reading time sat in a field of nothing. */ -}}
+    <footer class="at-card-footer flex flex-wrap items-stretch rounded-b-[calc(var(--radius-md)-1px)] border-t border-accent-muted/50 bg-surface text-sm text-ink-muted">
+        {{- /* ICONS SIT IN A FLEX ROW WITH THEIR TEXT, not inline with a nudge.
+               Every one of these was `inline-block` plus a hand-picked
+               `-translate-y`, which is a guess that only holds at one font size —
+               the 20px timer needed -4px and came out visibly high, while the
+               15px calendar beside it needed -1px. `items-center` is not a
+               guess. */ -}}
+        <div class="at-card-footer-item flex items-center gap-2 px-[1.2em] py-[0.6em]">
+            {{- if $isNote -}}
+                <time class="dt-published inline-flex items-center gap-1.5" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}" data-tooltip="Veröffentlichungsdatum">
+                    <svg class="size-4 shrink-0 fill-current text-ink-muted" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#calendar-line"></use></svg>
+                    {{ .Date.Format "02.01.06" }}
+                </time>
+                {{- if ne (.Date.Format "02.01.06") (.Lastmod.Format "02.01.06") }}
+                <time class="dt-updated inline-flex items-center gap-1.5" datetime="{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}" data-tooltip="Letztes Bearbeitungsdatum">
+                    <svg class="size-4 shrink-0 fill-current text-ink-muted" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#pencil-line"></use></svg>
+                    {{ .Lastmod.Format "02.01.06" }}
+                </time>
+                {{- end }}
+            {{- else -}}
+                {{- $readingTime := math.Ceil (div (float .WordCount) .Site.Params.reading_speed) }}
+                <span class="inline-flex items-center gap-1.5" data-tooltip="{{ $readingTime }} Minuten Lesedauer">
+                    <svg class="size-5 shrink-0 fill-current text-ink-muted" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#timer-line"></use></svg>
+                    {{ $readingTime }} Min.
+                </span>
+            {{- end -}}
+        </div>
+
+        {{- /* The Rubrik. On an article it sits in the metadata row beside the
+               date; a note has no metadata row, so it takes the cell the tags
+               would occupy. Same badge either way. */ -}}
+        {{- if $isNote }}{{ with $rubrik }}
+        <div class="at-card-footer-item flex items-center gap-2 px-[1.2em] py-[0.6em]">
+            {{ partial "ui/badge" (dict "label" .LinkTitle "href" .RelPermalink "dot" .Params.categoryColor) }}
+        </div>
+        {{- end }}{{ end }}
+
+        {{- /* Tags moved out of the running text into the footer, where the rest
+               of the metadata already is. In the body they interrupted the
+               excerpt with a row of links; here they read as what they are —
+               filing, not content.
+
+               CAPPED AT THREE. Six tags in a third of a card wrapped the footer
+               onto four lines and made it taller than the excerpt above it. The
+               full list is on the article page. */ -}}
+        {{- if not $isNote -}}{{- with .GetTerms "tags" -}}
+        <div class="at-card-footer-item flex items-center gap-2 px-[1.2em] py-[0.6em]">
+            <svg class="size-[18px] shrink-0 fill-current text-ink-muted" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#price-tag-3-line"></use></svg>
+            {{- range first 3 . }}
+            <a class="inline-block rounded-pill bg-[hsl(190_11%_13%)] px-[0.55em] py-[0.18em] text-accent no-underline transition-colors duration-150 ease-out hover:text-accent-hover" href="{{ .RelPermalink }}" title="{{ .LinkTitle }}">{{ .LinkTitle }}</a>
+            {{- end }}
+            {{- if gt (len .) 3 }}
+            <a href="{{ $.RelPermalink }}" class="text-ink-muted" title="{{ range after 3 . }}#{{ .LinkTitle }} {{ end }}">+{{ sub (len .) 3 }}</a>
+            {{- end }}
+        </div>
+        {{- end }}{{- end }}
+
+        <div class="at-card-footer-item ml-auto flex items-center gap-2 px-[1.2em] py-[0.6em]">
+            {{- if $isNote -}}
+                <span data-tooltip="Notiz" class="gd-icon-duo text-xl">
+                    <svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#lightbulb-fill"></use></svg>
+                    <svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#lightbulb-line"></use></svg>
+                </span>
+            {{- else -}}
+                {{ partial "growth-badge.html" (dict "page" . "context" "card") }}
+            {{- end -}}
+            {{- if .Params.series }}
+            <span data-tooltip="Teil einer Serie" class="gd-icon-duo text-xl">
+                <svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#stack-fill"></use></svg>
+                <svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#stack-line"></use></svg>
+            </span>
+            {{- end }}
+            {{ partial "widgets/heart-button" (dict "page" . "context" "card") }}
+            {{- if not $isNote }}
+            {{- /* WEITERLESEN IS THE ROUND BUTTON AGAIN — but in the footer row,
+                   not floating over the excerpt covering words like its
+                   article-time ancestor. The bare chevron that stood here was
+                   invisible next to the capsule and the duotone marks (Angel's
+                   verdict); the raised dome with the press-in hover is the one
+                   control on the card that LOOKS pressable, which is what a
+                   read-more must do. Compact size via the custom property the
+                   base rule computes everything from. */ -}}
+            <a href="{{ .RelPermalink }}" title="Weiterlesen" aria-label="Weiterlesen" class="gd-round-button [--gd-round-size:2.25rem] shrink-0">
+                <svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#arrow-right-s-line"></use></svg>
+            </a>
+            {{- end }}
+        </div>
+    </footer>
+</article>
+
+{{- else if or (eq .Type "tags") (eq .Type "categories") -}}
+{{- /* Term card: a Rubrik or a Tag. Same box, no footer — there is no reading
+       time, no growth stage and nothing to heart about a category. The count is
+       the content. */ -}}
+<article class="at-card group/card">
+    <div class="relative flex h-full flex-col gap-2 p-gutter">
+        {{- with $img }}
+        {{- $cover := .Process "fill 480x360 webp" }}
+        {{- /* ALWAYS the full-bleed cover, not ui/figure: the term card is
+               permanently stacked — title under picture, no text column at any
+               width — so the float treatment has nothing to do here. Same
+               nesting as everywhere: negative gutters, top corners inside the
+               card's radius. shadow-card underneath so the picture reads as
+               laid onto the card, like every other photograph. */ -}}
+        <a class="-mx-gutter -mt-gutter mb-2 block" href="{{ $.RelPermalink }}" title="{{ $.Title }}">
+            <img class="block aspect-[4/3] h-auto w-full rounded-t-[calc(var(--radius-md)-1px)] object-cover shadow-card sepia transition-[filter] duration-300 ease-out group-hover/card:sepia-0" src="{{ $cover.RelPermalink }}" alt="{{ $.Title }}" width="480" height="360" loading="lazy">
+        </a>
+        {{- end }}
+        {{- /* WITHOUT a picture the text block centres VERTICALLY (my-auto) and
+               stays left-bound — "mittig" meant the empty height, not the
+               axis, as Angel clarified after the first attempt centred the
+               wrong one. With a picture, everything flows under its edge. */ -}}
+        <div class="{{ if not $img }}my-auto {{ end }}flex flex-col gap-2">
+            <h2 class="m-0 font-heading text-xl font-semibold tracking-heading" aria-label="{{ .Title }}">
+                {{- /* The Rubrik's own colour lands on the DOT, not on the title.
+                       A per-category heading colour is the same mistake the ribbon
+                       made, one element further in. */ -}}
+                <a class="text-accent-hover hover:text-accent" href="{{ .RelPermalink }}" title="{{ .Title }}">{{ .Title }}</a>
+            </h2>
+            {{- /* The term's own description, when it has one — the same job the
+                   excerpt does on an article card: say what lives behind the
+                   door before the click. Clamped to three lines and stripped
+                   to plain text; the full prose belongs to the term's page. */ -}}
+            {{- with .Summary }}
+            <p class="m-0 line-clamp-3 text-sm text-ink-muted">{{ . | plainify | truncate 180 }}</p>
+            {{- end }}
+            <p class="m-0 flex flex-wrap items-center gap-x-[0.75em] gap-y-[0.5em] text-sm text-ink-muted">
+                {{- /* NOT the badge: the badge would repeat the title one line
+                       under itself. What the card owes the reader is only the
+                       COLOUR this Rubrik carries — so it is the bare dot, with
+                       the tooltip saying what it is. */ -}}
+                {{- with .Params.categoryColor }}
+                <span class="inline-block size-[0.6em] shrink-0 rounded-full" style="background-color: {{ . }}" data-tooltip="Farbe der Rubrik"></span>
+                {{- end }}
+                {{- /* Story 1.3: the count on a term card excludes withered entries,
+                       matching what the listing behind it will actually show. */ -}}
+                <span>{{ len (partial "withered-filter.html" .Pages) }} Artikel</span>
+                {{- /* The same pressable dome as the article card's Weiterlesen,
+                       on the SAME LINE as the count — the term card was a click
+                       target nothing marked as one. */ -}}
+                <a href="{{ .RelPermalink }}" title="{{ .Title }} ansehen" aria-label="{{ .Title }} ansehen" class="gd-round-button [--gd-round-size:2.25rem] ml-auto shrink-0">
+                    <svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#arrow-right-s-line"></use></svg>
+                </a>
+            </p>
+        </div>
+    </div>
+</article>
+{{- end -}}

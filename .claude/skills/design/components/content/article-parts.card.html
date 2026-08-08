@@ -1,0 +1,44 @@
+<!-- @dsCard group="Components" viewport="760x620" name="Content — Artikelseite" subtitle="Info-Tiles, Verwelkt-Hinweis, Webmention und Rubrik-Karte" -->
+<!DOCTYPE html>
+<html lang="de"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../../styles.css">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="../../assets/icons/inline-sprite.js"></script>
+<script src="../../_ds_bundle.js"></script>
+<style>body{margin:0;padding:24px;background:var(--color-surface-sunken);font-family:var(--font-body)}
+#root{display:grid;gap:24px}
+.cap{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--color-ink-muted)}
+.strip{display:flex;flex-wrap:wrap;align-items:center;gap:14px}</style>
+</head><body><div id="root"></div>
+<script type="text/babel">
+const { TermCard, GrowthBadge, Tag, Hashtag, InfoTiles, InfoTile, WitheredBanner, Webmention } = window.ArticleTimeDesignSystem_de8a72;
+function Card(){return (<>
+  <InfoTiles>
+    <InfoTile icon="pushpin-line" label="Rubrik"><Tag href="#">Allgemein</Tag></InfoTile>
+    <InfoTile icon="tree-line" iconColor="var(--color-evergreen)" label="Stadium" stage="evergreen"><GrowthBadge stage="evergreen" showLabel tinted={false}/></InfoTile>
+    <InfoTile icon="calendar-line" label="Publiziert"><span style={{display:'flex',flexDirection:'column',gap:'0.15em'}}><time>06.08.26</time><span style={{fontSize:'0.75rem',color:'var(--color-ink-muted)'}}>editiert 07.08.26</span></span></InfoTile>
+    <InfoTile icon="timer-line" label="Lesedauer">7 Min.</InfoTile>
+    <InfoTile icon="heart-line" iconColor="hsl(0 70% 65%)" label="Herzen">41</InfoTile>
+    <InfoTile icon="message-3-line" label="Reaktionen"><a href="#">3</a></InfoTile>
+    <InfoTile icon="price-tag-3-line" label="Tags" wide><Hashtag href="#">hugo</Hashtag><Hashtag href="#">indieweb</Hashtag><Hashtag href="#">tailwind</Hashtag></InfoTile>
+  </InfoTiles>
+  <WitheredBanner date="12.03.24" reason="Bulma ist hier inzwischen durch Tailwind ersetzt." replacement="Die Migration nach Tailwind" replacementHref="#" onDismiss={()=>{}}/>
+  <div style={{display:'grid',gridTemplateColumns:'1.3fr 1fr',gap:24,alignItems:'start'}}>
+    <div>
+      <h3 className="gd-h3">Antworten</h3>
+      <ul style={{margin:'0 0 16px',padding:0,display:'grid',gap:12}}>
+        <Webmention type="reply" author="@leser@norden.social" authorUrl="#" avatar="../../assets/images/identity/angel.webp" content="Genau so ist es mir auch ergangen." source="#" sourceLabel="norden.social"/>
+      </ul>
+      <h3 className="gd-h3">Likes und Reposts</h3>
+      <ul style={{margin:0,padding:0,display:'flex',flexWrap:'wrap',gap:8}}>
+        <Webmention type="like" author="@jemand@chaos.social" source="#" sourceLabel="chaos.social"/>
+        <Webmention type="repost" author="hugo-weekly.dev" source="#" sourceLabel="hugo-weekly.dev"/>
+      </ul>
+    </div>
+    <TermCard title="Allgemein" href="#" cover="../../assets/images/covers/rubriken-cover.jpg" count={14}/>
+  </div>
+</>);}
+ReactDOM.createRoot(document.getElementById('root')).render(<Card/>);
+</script></body></html>
