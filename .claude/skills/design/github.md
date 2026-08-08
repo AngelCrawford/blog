@@ -1,10 +1,20 @@
 repo: AngelCrawford/blog
-branch: neustart
+branch: main
 path: themes
 
 ## Last sync
 
 date: 2026-08-07T15:54:40Z
+
+> **STALE SINCE THE TEARDOWN (August 2026).** Everything below was built from
+> a repo with two themes. `themes/article-time` and all its SCSS are deleted,
+> the styleguide page is deleted, and several components have changed shape
+> (no ribbon, no info tiles, the Steckbrief instead, the heart as a capsule,
+> three corner flags). The React components and UI kit here still describe
+> the design faithfully in SPIRIT — colours, type, spacing, the gold rules —
+> but their per-component "built from" paths point at files that no longer
+> exist. Re-sync before treating any single component as ground truth; the
+> live templates in `themes/garden/layouts` are the truth in the meantime.
 
 ### Updated in this project
 
@@ -18,7 +28,7 @@ date: 2026-08-07T15:54:40Z
 | Screen / file | Built from |
 |---|---|
 | `tokens/*.css`, `css/components.css` | `themes/garden/assets/css/main.css` |
-| `guidelines/*.card.html` | `themes/garden/layouts/page/styleguide.html`, `docs/design.md` |
+| `guidelines/*.card.html` | the (now deleted) styleguide page, `docs/design.md` |
 | `components/core/*` | `main.css` (`gd-h1`–`gd-h3`, `gd-button`, `gd-round-button`, `gd-panel`, `gd-icon-duo`), `vars/_helpers.scss` |
 | `components/forms/*` | `main.css` (`gd-field`, `gd-check`) |
 | `components/content/ArticleCard`, `TermCard`, `Tag` | `layouts/_partials/card.html`, `scss/layout/card.scss`, `scss/elements/ribbon.scss` |

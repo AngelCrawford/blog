@@ -6,21 +6,21 @@ Everything in this system is German-facing. Component APIs and code comments are
 
 ## The product
 
-One product, one surface: `angel-crawford.de`, a Hugo site built from `AngelCrawford/blog`. Two themes are composed while a migration finishes:
+One product, one surface: `angel-crawford.de`, a Hugo site built from `AngelCrawford/blog`. **ONE THEME since August 2026:**
 
-- **`themes/article-time`** — the original Bulma-based theme. Still owns the header, the cards, the article body and the footer.
-- **`themes/garden`** — the Tailwind-based successor. Owns the navigation, the token block and the living styleguide at `/pages/styleguide/`.
+- **`themes/garden`** — Tailwind 4, every template, hook, shortcode and asset. Preflight is on, there is one stylesheet, and no `!important` anywhere.
+- **`themes/article-time`** — the Bulma predecessor. **Deleted.** It owned the header, cards, article body and footer until the teardown; what was worth keeping was carried over deliberately, not inherited.
 
-The design system in this project is the *garden* vocabulary (`gd-*` classes, role-named tokens) plus the parts of article-time worth keeping (the header, the card, the tile chrome, and above all the footer).
+The design system in this project is the *garden* vocabulary (`gd-*` classes, role-named tokens) plus the article-time patterns worth keeping (the header, the card, the tile chrome, and above all the footer).
 
 Content types: **Artikel** (full posts, with Rubrik, Tags, optional Serie, growth stage, reading time), **Notizen** (short notes with no detail page of their own), and the taxonomies **Rubriken**, **Tags**, **Serien**. A **Wachstumsstufe** — seedling, budding, evergreen, withered — is attached to every article; that is the digital-garden signal. Engagement is a **heart** and incoming **IndieWeb webmentions**; there is no comment system, by decision.
 
 ## Sources
 
-- **Repository:** <https://github.com/AngelCrawford/blog> — branch `neustart`. Worth exploring further before building anything substantial: the templates in `themes/*/layouts` and the SCSS in `themes/article-time/assets/scss` are the ground truth for every value here. See `github.md` for the sync record.
+- **Repository:** <https://github.com/AngelCrawford/blog> — branch `main`. Worth exploring before building anything substantial: `themes/garden/layouts` is the ground truth for every value here. See `github.md` for the sync record.
 - **`docs/design.md`** in that repo — the *why* behind every decision below. Read it before changing a token.
-- **`themes/garden/assets/css/main.css`** — the live token block and the `gd-*` component CSS this project mirrors.
-- **`themes/garden/layouts/page/styleguide.html`** — the living styleguide, which renders itself from the tokens. It shows the *current* state of the site, not the target state; this project is the target.
+- **`themes/garden/assets/css/tokens.css`** — the live token block; **`components.css`** — the 160-odd rules that survived the audit, each one something utilities cannot say.
+- **The site itself.** There is no styleguide page any more: a hand-kept catalogue drifted from the components it claimed to document, so it was deleted in August 2026. Look at a card, an article and the footer.
 
 No logo file exists in any source. **There is no wordmark asset** — the brand mark is the site title set in Montserrat Alternates with the gold gradient over it (`.at-wordmark`). Render the name in type wherever a logo would go; do not draw one.
 
@@ -69,7 +69,7 @@ Dark plus gold, minimal, unchanged since 2020. **Tokens are named for their role
 
 **Ink is warm, surfaces stay cool — on purpose.** Ink sits at hue 40, the same family as the gold accent at 35; the surfaces stay at hue 190. The resulting warm-on-cool contrast makes text read as sitting *in front of* the surface rather than merged into it. The ink ladder is 96 / 85 / 63 percent lightness (the old 95 / 90 / 72 collapsed into one visual weight under antialiasing), and saturation falls as the text gets quieter, 25 → 12 → 8, so the muted step recedes instead of becoming a second accent. Contrast against `--color-surface`: 15.5 / 12.1 / 6.7 : 1.
 
-**Gold is the only accent.** Growth tints are the sole exception and are restricted to glyphs — never a surface, never a run of text. Social icons carry their silo's own brand colour in the h-card; that is the second and last exception. No other colour enters the system without a reason that survives the styleguide. **No purple-blue gradients, no rainbow, no second accent.**
+**Gold is the only accent.** Growth tints are the sole exception and are restricted to glyphs — never a surface, never a run of text. Social icons carry their silo's own brand colour in the h-card; that is the second and last exception. No other colour enters the system without a reason that survives a night's sleep. **No purple-blue gradients, no rainbow, no second accent.**
 
 ### Type
 
@@ -77,7 +77,7 @@ Dark plus gold, minimal, unchanged since 2020. **Tokens are named for their role
 
 Seven sizes, 14 → 48px, and **each size carries its own line height** (1.55 down to 1.1). Body sits at **1.7**, not the usual 1.5: dimmer text on a dark surface needs more room between lines. 12px does not exist — it was too small to read and was removed from the scale, so any leftover use fails visibly.
 
-Headings are weight 600 with 0.03em tracking. The known cost — `I`, `l` and `1` are hard to tell apart in Montserrat — is accepted knowingly and printed in the styleguide (`Illegal · Ill 1l · lIl1`) so it stays visible rather than forgotten.
+Headings are weight 600 with 0.03em tracking. The known cost — `I`, `l` and `1` are hard to tell apart in Montserrat — is accepted knowingly; the specimen string `Illegal · Ill 1l · lIl1` is worth typing whenever the heading font is touched, so the cost stays visible rather than forgotten.
 
 **Re-opened and closed again, August 2026.** The body face was put back on the table specifically because of that ambiguity, and three replacements were set against it: **IBM Plex Sans** (resolves all three glyphs — tailed `l`, crossbarred `I`, footed `1`), **Atkinson Hyperlegible** (drawn for exactly this problem) and **Public Sans** (tailed `l`, otherwise near-identical proportions, the smallest possible change). **Montserrat stays.** Judged side by side at 16px on 1.7 it simply read better: the higher x-height and the finer, lighter stroke carry a long text more comfortably than any of the three, and the ambiguity — which almost never causes real confusion in running prose — does not outweigh that. Recorded here so the question is not reopened a third time as if it were new. The side-by-side comparison page is gone: it pulled all three candidates from Google Fonts at runtime, which this project does not do — this paragraph is the record instead.
 
@@ -113,9 +113,9 @@ Gold appears as a line in three shapes, and they are not interchangeable: the **
 
 ### Cards
 
-`--color-surface-raised` fill, 12px radius, 1px gold border at 20% (50% for the featured `weight: 1` entry), and the paired card shadow. Hover does exactly three things: a **gold rule grows along the bottom edge** from 0 to full width, the cover releases its sepia, and the round button presses in. Nothing scales, nothing lifts.
+`--color-surface-raised` fill, 8px radius, 1px gold border at 20% (50% for a pinned entry — any positive `weight`, capped at three per feed), and the paired card shadow. Hover does exactly three things: a **gold rule grows along the bottom edge** (2px, ending short of the corners so it never runs into the radius), the cover releases its sepia, and the round button presses in. Nothing scales, nothing lifts.
 
-Long excerpts are cut by a **protection gradient in the card's own fill** — the text fades out rather than stopping at an ellipsis. The Rubrik hangs off the corner as a **ribbon**.
+The excerpt is **not** clipped: a protection gradient needs `overflow: hidden`, which establishes a block formatting context and kills the floated cover's overhang. Hugo's `truncate` cuts the text instead. **No ribbon** — the Rubrik is a neutral pill with a dot in the category's own colour, and the corner belongs to the state flags (Neu / Gepflegt / Gesehen). The card footer is three segments divided by hairlines: reading time, the marks and counters, the round Weiterlesen button.
 
 ### The page title lives inside the box
 
@@ -129,8 +129,8 @@ This is also why the header is allowed to be as decorated as it is. It only work
 
 Two things on the live card conflict with the token decisions, and both are left as they are rather than quietly changed:
 
-- **Coloured Rubrik ribbons.** The live cards carry teal, red and gold ribbons from each category's `categoryColor` front-matter field — three saturated hues, none of them in the palette, on the most repeated element on the site. **Resolved, August 2026: gold for now.** `Ribbon` and `Tag` default to muted gold, and the ribbon's *position* is what distinguishes it; colour does not have to. The `color` prop stays as a deliberate per-Rubrik override, unused by default, because per-category colour is still open as an idea rather than rejected.
-- **The `☀ Neu` and `✓ Gesehen` corner badges** were the only two places the site set a unicode symbol instead of a sprite glyph. **Resolved, August 2026:** the badges stay — a rotated 45° corner flag is genuinely useful and long-standing — but the two symbols are now `sparkling-line` and `check-fill` from the sprite. Nothing outside the sprite renders as an icon any more.
+- **Coloured Rubrik ribbons.** The live cards carried teal, red and gold ribbons from each category's `categoryColor` — three saturated hues, none in the palette, on the most repeated element of the site. **Resolved, August 2026:** the ribbon is gone entirely. The Rubrik is a neutral pill whose **dot** carries `categoryColor`; surface stays neutral, so a row of them reads as one family. Same mechanism on the tag pairs in prose.
+- **The corner flags** were the only place the site set unicode symbols instead of sprite glyphs. **Resolved, August 2026:** the flags stay — a rotated 45° corner flag is useful and long-standing — with sprite glyphs, and there are now three: **Neu** in the palette's green (a feed full of gold "Gesehen" needs the new one to stand out), **Gepflegt** in light gold with the pencil (tended since YOUR last visit — the marker stores a timestamp, so it dies when you reopen the article), and **Gesehen** in muted gold. Nothing outside the sprite renders as an icon any more.
 
 ### Transparency and blur
 
@@ -153,13 +153,15 @@ Short and unshowy: 0.15 / 0.2 / 0.3s, all `ease-out`, on colour, border, shadow 
 
 ## Iconography
 
-**Remixicon**, self-hosted as an SVG sprite at `assets/icons/remixicon.symbol.svg` (53 symbols, copied from the repository — not a CDN link, and not substituted). The webfont build (`assets/icons/remixicon.woff2`) ships too, but only because four glyphs are used by codepoint: the double-quote pair on pull quotes, notes and the footer slogan (`\ec51` / `\ec52`), the external-link arrow (`\ecaf`), and the image marker in article figcaptions (`\efe0`).
+**Remixicon**, self-hosted as an SVG sprite at `assets/icons/remixicon.symbol.svg` (53 symbols, copied from the repository — not a CDN link, and not substituted). The webfont build ships too, but for exactly ONE pair of glyphs now: the double quotes on pull quotes, notes and the footer slogan (`\ec51` / `\ec52`).
+
+The other two codepoints were fiction. The external-link arrow (`\ecaf`) had been dead since the port — the escape came out of the CSS pipeline as an empty string, and the icon FONT it addressed was never even shipped by the site; it is a sprite `<svg>` in the link render hook now. The figcaption image marker is a sprite glyph too. **If a glyph can be an element, it is one**; the font survives only where CSS content is the only hook available.
 
 **Duotone is the default, not the exception.** Every glyph renders as two stacked copies: behind, the filled `-fill` body in `--color-accent-shadow`, offset 0.03em right and 0.055em down; in front, the `-line` glyph in accent gold, lifting to `accent-hover` on hover while the shadow stays put. The offset is in `em`, so **size comes from `font-size`, never from width/height**. The vertical shift is nearly twice the horizontal one: an equal offset reads as a diagonal smear, weighting it down reads as the glyph sitting above its own shadow.
 
 CSS cannot fill an outline, so glyphs whose `-fill` partner is missing from the sprite get the same offset via `drop-shadow` and stay single-colour. Getting true duotone across the whole set means regenerating the sprite with fill partners included.
 
-Icon sizes in use: 15px inline in card metadata, 20px in card footers, 1.25rem in navigation, 1.6rem in info tiles, 35px inside a 48px round button (the drawn shape is far smaller than its 24×24 viewBox, so a "large" number is correct).
+Icon sizes in use: 1em inline in card and Steckbrief rows (the row decides the size — ONE SIZE IN THE ROW, and no component inside it sets its own), 1.25rem in navigation, 1.1em in the heart capsule, 35px inside a 48px round button (the drawn shape is far smaller than its 24×24 viewBox, so a "large" number is correct).
 
 Icons never appear without a purpose: no decorative icon rows, no icon per paragraph. Growth stages, formats (article / note), metadata (calendar, pencil, timer, tag, stack), navigation and silo logos — that is the whole vocabulary.
 
@@ -172,7 +174,7 @@ Icons never appear without a purpose: no decorative icon rows, no icon per parag
 | `styles.css` | The one file consumers link. `@import` lines only. |
 | `tokens/` | `colors.css`, `typography.css`, `spacing.css`, `radius.css`, `depth.css`, `motion.css`, `fonts.css` (`@font-face`). |
 | `css/base.css` | Page ground, dotted texture, prose defaults, links, focus ring. |
-| `css/components.css` | The `gd-*` vocabulary plus the article-time patterns (card, ribbon, tile, hashtag, growth, heart, tooltip, wordmark, sky, widgets). |
+| `css/components.css` | The `gd-*` vocabulary plus the article-time patterns (card, tile, growth, tooltip, wordmark, sky, widgets). In the live repo this file is down to ~160 rules: everything utilities could express moved into the markup or into a `ui/*` partial. |
 | `guidelines/` | 18 specimen cards: Colors, Type, Spacing, Brand. |
 | `components/` | React primitives, grouped below. |
 | `ui_kits/website/` | Click-through recreation of the Hugo site — see its own README. |
@@ -211,7 +213,7 @@ Present upstream, deliberately absent here because nothing would be gained by ap
 
 The live Hugo site runs Tailwind — the `garden` theme declares its tokens in a `@theme static` block and the templates are utility-classed. **This design system deliberately does not.** The same values ship as plain CSS custom properties in `tokens/`, the recurring patterns as ordinary classes in `css/components.css`, and the components as React with inline styles.
 
-The reason is what a design system is for: it has to open in a browser and render with nothing installed. A utility-classed artifact needs Tailwind's scanner to have seen the exact literal class strings at build time — a class assembled from a variable produces no rule, no warning and an unstyled element, which is the failure mode the upstream styleguide warns about in its own header comment. Tokens survive that; utilities do not.
+The reason is what a design system is for: it has to open in a browser and render with nothing installed. A utility-classed artifact needs Tailwind's scanner to have seen the exact literal class strings at build time — a class assembled from a variable produces no rule, no warning and an unstyled element, which is the failure mode the project's own CLAUDE.md warns about (Tailwind rule 6). Tokens survive that; utilities do not.
 
 Consequences worth knowing:
 
