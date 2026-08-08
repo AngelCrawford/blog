@@ -137,7 +137,8 @@
       searching = true;
       const started = performance.now();
 
-      const matches = search(buildTerms(term));
+      const terms = buildTerms(term);
+      const matches = search(terms);
       matches.sort((a, b) => b.weight - a.weight);
 
       if (matches.length) {
@@ -147,7 +148,7 @@
             : `für "${box.value.trim()}"`;
         results.replaceChildren(
           heading(`${matches.length} Ergebnisse`, label),
-          ...matches.slice(0, LIMIT).map((m) => resultNode(m.item))
+          ...matches.slice(0, LIMIT).map((m) => resultNode(m.item, terms))
         );
       } else {
         results.replaceChildren(heading("Kein Ergebnis", `für "${box.value.trim()}"`));
@@ -196,7 +197,55 @@
     return span;
   }
 
-  function resultNode(item) {
+  const STAGE_CLASS = {
+    seedling: "text-seedling",
+    budding: "text-budding",
+    evergreen: "text-evergreen",
+    withered: "text-withered",
+  };
+  const STAGE_LABEL = { seedling: "Seedling", budding: "Budding", evergreen: "Evergreen", withered: "Withered" };
+  const STAGE_ICON = { seedling: "seedling-line", budding: "flower-line", evergreen: "tree-line", withered: "skull-2-line" };
+
+  function stageMark(stage) {
+    const span = document.createElement("span");
+    span.className = "mr-3 inline-flex items-center " + (STAGE_CLASS[stage] || STAGE_CLASS.seedling);
+    span.title = STAGE_LABEL[stage] || stage;
+    span.appendChild(icon(STAGE_ICON[stage] || STAGE_ICON.seedling));
+    span.appendChild(document.createTextNode(STAGE_LABEL[stage] || stage));
+    return span;
+  }
+
+  function categoryMark(name, color) {
+    const span = document.createElement("span");
+    span.className = "mr-3 inline-flex items-center gap-1.5";
+    const dot = document.createElement("span");
+    dot.className = "inline-block size-[0.5em] shrink-0 rounded-full" + (color ? "" : " bg-accent");
+    if (color) dot.style.backgroundColor = color;
+    span.appendChild(dot);
+    span.appendChild(document.createTextNode(name));
+    return span;
+  }
+
+  function highlighted(text, terms) {
+    const frag = document.createDocumentFragment();
+    const words = (terms || []).map((t) => t.term.trim()).filter((w) => w.length >= MIN_CHARS).sort((a, b) => b.length - a.length);
+    if (!words.length) { frag.appendChild(document.createTextNode(text)); return frag; }
+    const escaped = words.map((w) => w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
+    const re = new RegExp("(" + escaped.join("|") + ")", "gi");
+    let last = 0;
+    for (const m of text.matchAll(re)) {
+      if (m.index > last) frag.appendChild(document.createTextNode(text.slice(last, m.index)));
+      const mark = document.createElement("mark");
+      mark.className = "rounded-[2px] bg-[hsl(35_45%_22%)] px-0.5 text-accent-hover";
+      mark.textContent = m[0];
+      frag.appendChild(mark);
+      last = m.index + m[0].length;
+    }
+    if (last < text.length) frag.appendChild(document.createTextNode(text.slice(last)));
+    return frag;
+  }
+
+  function resultNode(item, terms) {
     const article = document.createElement("article");
     article.className = "border-b border-accent-muted/30 py-5 last:border-b-0";
 
@@ -204,17 +253,20 @@
     title.className = "mb-1 block font-heading text-lg text-accent-hover hover:text-accent";
     title.href = item.permalink;
     title.title = item.showTitle;
-    title.textContent = item.showTitle;
+    title.appendChild(highlighted(item.showTitle, terms));
 
     const info = document.createElement("p");
-    info.className = "mb-2 text-sm text-ink-muted";
-    if (item.rawTags) info.appendChild(meta("price-tag-3-line", item.rawTags));
+    info.className = "mb-2 flex flex-wrap items-center text-sm text-ink-muted";
+    if (item.category) info.appendChild(categoryMark(item.category, item.categoryColor));
+    if (item.stage) info.appendChild(stageMark(item.stage));
     if (item.publishedOn) info.appendChild(meta("calendar-line", item.publishedOn));
-    if (item.updatedOn) info.appendChild(meta("pencil-line", item.updatedOn));
+    if (item.updatedOn && item.updatedOn !== item.publishedOn) info.appendChild(meta("pencil-line", item.updatedOn));
+    if (item.reactions > 0) info.appendChild(meta("question-answer-line", String(item.reactions)));
 
     const excerpt = document.createElement("p");
     excerpt.className = "text-ink";
-    excerpt.textContent = item.showContent.slice(0, 250) + " […] ";
+    excerpt.appendChild(highlighted(item.showContent.slice(0, 250), terms));
+    excerpt.appendChild(document.createTextNode(" […] "));
 
     const more = document.createElement("a");
     more.className = "text-accent hover:text-accent-hover";
@@ -223,7 +275,16 @@
     more.textContent = "weiterlesen";
     excerpt.appendChild(more);
 
-    article.append(title, info, excerpt);
+    /* title and info go IN FRONT of the subtitle that may already be there. */
+    /* Order: title, placement row, subtitle when there is one, excerpt. */
+    article.append(title, info);
+    if (item.showSubtitle) {
+      const subtitle = document.createElement("p");
+      subtitle.className = "mb-1 text-sm text-ink-strong";
+      subtitle.appendChild(highlighted(item.showSubtitle, terms));
+      article.append(subtitle);
+    }
+    article.append(excerpt);
     return article;
   }
 
@@ -304,7 +365,12 @@
           seen.add(entry.permalink);
           index.push({
             showTitle: entry.title,
+            showSubtitle: entry.subtitle || "",
             showContent: entry.content,
+            category: entry.category || "",
+            categoryColor: entry.categoryColor || "",
+            stage: entry.stage || "seedling",
+            reactions: entry.reactions || 0,
             title: normalize(entry.title),
             subtitle: normalize(entry.subtitle),
             description: normalize(entry.description),

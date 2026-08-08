@@ -1,15 +1,37 @@
-{{/* NOTE: Search index intentionally includes withered content per Story 1.3 AC #5. Do not filter here. */}}
-[
-  {{ range $index, $element := where .Site.RegularPages "Type" "in" "articles" -}}
-    {{- if and $index (gt $index 0) -}},{{- end }}
-    {
-      "index" : {{ add 1 $index }},
-      "title" : "{{ htmlEscape .Title }}",
-      "tags"  : [{{ range $tindex, $tag := .Params.tags }}{{ if $tindex }}, {{ end }}"#{{ $tag | htmlEscape }}"{{ end }}],
-      "content": {{ .Summary | truncate 250 "..." | plainify | jsonify }},
-      "permalink": "{{ .Permalink }}",
-      "publishedOn": "{{ .Date.Format "02.01.06" }}",
-      "updatedOn": "{{ .Lastmod.Format "02.01.06" }}"
-    }
-  {{ end }}
-]
+{{- /* The search index. ARTICLES ONLY, and that is not an oversight: notes are
+       headless (`render: link` in their cascade), so they have a permalink but
+       no page behind it — a search hit would lead nowhere.
+
+       Withered content IS included, per Story 1.3 AC #5. Do not filter here.
+
+       Every field below has a consumer in assets/js/search.js: `subtitle` and
+       `description` are scored at double weight — they were scored against
+       `undefined` until August 2026 because this template never emitted them —
+       and the rest dresses the result row so a hit can be placed at a glance
+       (#246, widened from its webmention-count-only scope: a reaction count is
+       the least useful thing a result can say about itself). */ -}}
+{{- $items := slice -}}
+{{- range where .Site.RegularPages "Type" "in" "articles" -}}
+  {{- $mentions := index hugo.Data.webmentions_by_article .RelPermalink | default (slice) -}}
+  {{- $rubrik := "" }}{{ $color := "" -}}
+  {{- with .GetTerms "categories" }}{{ range first 1 . }}
+    {{- $rubrik = .LinkTitle }}{{ $color = .Params.categoryColor | default "" -}}
+  {{ end }}{{ end -}}
+  {{- $desc := "" -}}
+  {{- with .Params.Seo }}{{ with .desc }}{{ $desc = . }}{{ end }}{{ end -}}
+  {{- $items = $items | append (dict
+      "title"       .Title
+      "subtitle"    (.Params.subtitle | default "")
+      "description" ($desc | plainify)
+      "content"     (.Summary | plainify | truncate 250 "...")
+      "tags"        (apply (.Params.tags | default slice) "printf" "#%s" ".")
+      "permalink"   .RelPermalink
+      "publishedOn" (.Date.Format "02.01.06")
+      "updatedOn"   (.Lastmod.Format "02.01.06")
+      "category"    $rubrik
+      "categoryColor" $color
+      "stage"       (.Params.growth_stage | default "seedling")
+      "reactions"   (len $mentions)
+    ) -}}
+{{- end -}}
+{{- $items | jsonify (dict "indent" "  ") -}}
