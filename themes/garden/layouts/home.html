@@ -43,13 +43,12 @@
            HOW MANY tracks fit from the track's max when it is definite. With
            `minmax(min(34rem,100%),46rem)` that count was floor(1392/760) = 1 —
            a single 736px column on a 1392px grid, measured. With `1fr` the
-           count comes from the floor — and the floor is 40rem ON PURPOSE: it
-           is the same threshold the card's own container query uses to drop
-           the floated cover. Tracks below it would render three stacked
-           towers on a normal desktop, which Angel vetoed on sight. Two wide
-           float-layout columns on a desktop, one on smaller screens; the
-           cards restyle themselves per track width. */ -}}
-    <div class="h-feed grid grid-cols-[repeat(auto-fill,minmax(min(40rem,100%),1fr))] gap-x-gutter gap-y-gutter">
+           count comes from the 28rem floor — the same threshold at which the
+           card's container query drops the floated cover, so every track that
+           exists carries the float layout and stacking is left to phones.
+           Three columns on a full 96rem page, two from about 1050px, one
+           below; the cards restyle themselves per track width. */ -}}
+    <div class="h-feed grid grid-cols-[repeat(auto-fill,minmax(min(28rem,100%),1fr))] gap-x-gutter gap-y-gutter">
         {{- /* Weighted entries first and in weight order, then everything else
                newest first, then anything with no weight at all. Three ranges
                rather than one sort because `weight` is optional and Hugo sorts
