@@ -13,7 +13,10 @@
 {{- $replies := where $mentions "type" "reply" -}}
 {{- $generic := where $mentions "type" "mention" -}}
 
-<section id="webmentions" class="at-flow mt-gutter rounded-md border border-accent-muted/40 bg-surface-raised p-gutter shadow-md">
+{{- /* NO PANEL AROUND THE SECTION — the reactions sit on the page ground
+       like the footer widgets do, each entry carrying its own tile. A panel
+       here made tiles-in-a-panel, and the extra surface said nothing. */ -}}
+<section id="webmentions" class="at-flow mt-section">
     <h2 class="gd-h2">Reaktionen</h2>
 
     {{- if not (or $replies $generic) -}}
