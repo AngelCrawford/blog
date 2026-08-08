@@ -25,6 +25,19 @@
         "**/.hugo_build.lock",
         "**/hugo_stats.json"
     ],
+    // Hugo-Templates sind Go HTML Template, und der Tailwind-Server hängt dort
+    // nicht von allein dran: Zeds Adapter-Map (crates/languages/src/tailwind.rs)
+    // kennt nur Astro/HTML/CSS/JS/TS/Svelte/HEEx/ERB/PHP/Vue. Ohne diesen Eintrag
+    // gibt es in 56 Template-Dateien keine einzige Klassen-Vervollständigung.
+    //
+    // format_on_save aus: Prettiers HTML-Parser kennt `{{ }}` nicht und würde
+    // Template-Blöcke beim Speichern zerlegen.
+    "languages": {
+        "Go HTML Template": {
+            "language_servers": ["tailwindcss-language-server", "..."],
+            "format_on_save": "off"
+        }
+    },
     // YAML language server configuration for content frontmatter validation (Layer 1).
     // Source schema: schemas/frontmatter/article.schema.json
     // CAVEAT: Zed's YAML LSP validates .yaml/.yml files reliably; embedded YAML
@@ -33,6 +46,37 @@
     //         described in docs/authoring.md, and rely on the
     //         pre-commit hook (Layer 2) as the authoritative gate.
     "lsp": {
+        "tailwindcss-language-server": {
+            "settings": {
+                // Der Server bekommt die Sprache unter einer ID gemeldet, die er
+                // nicht kennt, und behandelt die Datei sonst als nicht
+                // unterstützt. Welche der drei es ist, verrät erst
+                // `dev: open language server logs` im textDocument/didOpen —
+                // überzählige Einträge schaden nicht, siehe README-Notiz unten.
+                "includeLanguages": {
+                    "gotmpl": "html",
+                    "go-html-template": "html",
+                    "go html template": "html"
+                },
+                "experimental": {
+                    // Zeigt auf .zed/tailwind.css und schaltet damit die
+                    // Auto-Discovery ab, die sonst tokens.css erwischt. Das
+                    // Warum steht ausführlich in dieser Datei.
+                    "configFile": ".zed/tailwind.css",
+                    // Klassen in Templates stehen oft neben Template-Ausdrücken
+                    // (`class="a {{ if … }}b{{ end }}"`); der Regex hält das
+                    // Attribut auch dann zusammen.
+                    "classRegex": ["class=\"([^\"]*)\""]
+                }
+            }
+        },
+        // Der CSS-Server kennt Tailwind 4 nicht und meldet @theme, @source und
+        // @utility als unbekannte At-Rules — drei Fehler pro Datei, alle falsch.
+        "vscode-css-language-server": {
+            "settings": {
+                "css": { "lint": { "unknownAtRules": "ignore" } }
+            }
+        },
         "yaml-language-server": {
             "settings": {
                 "yaml": {

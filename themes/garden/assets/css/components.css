@@ -676,35 +676,10 @@ a.at-hashtag, a.at-tag { text-decoration: none; }
 }
 .at-tag:hover { color: hsl(190 20% 90%); filter: brightness(1.1); }
 
-/* ===========================================================================
- * RUBRIK BADGE — the category, as a neutral pill with a coloured dot.
- *
- * This is how per-Rubrik colour comes back without spending the palette on it.
- * The ribbon put a saturated fill across the top of the picture: it competed with
- * the photograph, and with the gold. Here the colour is a 0.5em dot — enough to
- * tell Rubriken apart at a glance, small enough that it never fights anything.
- * The pill itself stays surface-and-hairline, so a row of them reads as one family.
- * Set the dot with `--at-badge-dot`; it falls back to the accent.
- * ======================================================================== */
-.at-badge {
-  display: inline-flex; align-items: center; gap: 0.45em;
-  padding: 0.25em 0.7em 0.25em 0.55em;
-  border: 1px solid var(--border-hairline); border-radius: var(--radius-pill);
-  /* GOLD, LIKE EVERY OTHER LINK. The design system had this at `--color-ink`,
-   * which on a card meant a control that looks exactly like the sentence next to
-   * it — the pill's outline was doing all the work of saying "this goes
-   * somewhere". Links are gold on this site; a link shaped like a pill is still
-   * a link. The neutral SURFACE is what the badge decision was about: the fill
-   * stays out of the palette so a row of Rubriken reads as one family. */
-  background: var(--color-surface); color: var(--color-accent);
-  font-size: 0.78rem; line-height: 1.4; text-decoration: none; white-space: nowrap;
-  transition: border-color var(--duration-fast) var(--ease-out), color var(--duration-fast) var(--ease-out);
-}
-.at-badge::before {
-  content: ""; flex: none; width: 0.5em; height: 0.5em; border-radius: 50%;
-  background: var(--at-badge-dot, var(--color-accent));
-}
-.at-badge:hover { border-color: var(--color-accent); color: var(--color-accent-hover); }
+/* THE RUBRIK BADGE lives in layouts/_partials/ui/badge.html. The dot that
+ * needed a ::before and a pass-through custom property here is a real element
+ * there, and the pill is utilities. The reasoning behind the badge — neutral
+ * surface, colour only on the dot — is recorded in docs/design.md. */
 
 /* ===========================================================================
  * PROSE ELEMENTS — what an article body is actually made of.
@@ -767,52 +742,22 @@ a.at-hashtag, a.at-tag { text-decoration: none; }
 .at-prose pre code { color: var(--color-ink); }
 .at-prose hr { margin: var(--spacing-gutter) 0; border: 0; height: 1px; background: linear-gradient(to right, var(--rule-gold), transparent); }
 
-/* ===========================================================================
- * GROWTH STAGE — the digital-garden signal. Colour is applied to the GLYPH,
- * never as a background: tone on tone. Four stages, four tints, nothing else.
- * ======================================================================== */
-.at-growth { display: inline-flex; align-items: center; flex-wrap: wrap; gap: 0.4em; min-width: 0; font-size: var(--text-sm); }
-.at-growth svg { width: 1.2em; height: 1.2em; fill: currentColor; }
-.at-growth[data-stage="seedling"] { color: var(--color-seedling); }
-.at-growth[data-stage="budding"] { color: var(--color-budding); }
-.at-growth[data-stage="evergreen"] { color: var(--color-evergreen); }
-.at-growth[data-stage="withered"] { color: var(--color-withered); }
-/* THE DUOTONE PAIR KEEPS THE DUO GEOMETRY. `.at-growth svg` above is written for
- * the single-glyph form and sizes the element itself; the stacked copies inside
- * a `.gd-icon-duo` are absolutely positioned and want 100% of their wrapper.
- * Both selectors are (0,1,1), so the later one — `.at-growth svg` — was winning
- * and the two layers came out 1.2em of their own font size, overflowing a 1em
- * box. The design system has the same collision latent in it; it only shows once
- * a growth badge is actually rendered duotone. */
-.at-growth .gd-icon-duo svg { width: 100%; height: 100%; }
+/* GROWTH STAGES render from layouts/_partials/growth-badge.html: the tint is a
+ * finished utility class per stage (text-seedling …), the glyph is the duotone
+ * stack, the size inherits from the row. `at-growth` and `data-stage` survive
+ * in the markup as e2e hooks with no styles attached. The old `.at-growth svg`
+ * sizing rule — and the collision fix it forced onto the duotone stack — died
+ * with the cause. The tile-context hide rule went too: when single.html builds
+ * info tiles, the partial simply does not render the duplicate glyph, which is
+ * a template condition and not a CSS job. */
 
-/* Inside an info tile the standalone icon on the left ALREADY shows the stage
- * glyph, tinted from the same token — so the badge's own inline copy is hidden
- * and the badge contributes the text label alone. Two identical glyphs 36px apart
- * read as a rendering fault, and they pushed the tile's value past its column. */
-.at-tile[data-stage] .at-growth svg,
-.at-tile[data-stage] .at-growth .gd-icon-duo { display: none; }
-
-/* ===========================================================================
- * HEART — the one engagement control. A pill at rest, red once hearted.
- * ======================================================================== */
-.at-heart {
-  display: inline-flex; align-items: center; gap: 0.4em; padding: 0.35em 0.85em;
-  border: 1px solid color-mix(in srgb, var(--color-accent-muted) 50%, transparent);
-  border-radius: var(--radius-pill); background: hsl(190 11% 9%);
-  color: var(--color-accent-hover); font: inherit; font-size: 0.95rem; line-height: 1;
-  transition: background var(--duration-fast) var(--ease-out), color var(--duration-fast) var(--ease-out),
-    border-color var(--duration-fast) var(--ease-out), transform var(--duration-fast) var(--ease-out);
-}
-.at-heart:hover:not(:disabled) { border-color: var(--color-accent-hover); color: var(--color-accent); transform: translateY(-1px); }
-.at-heart svg { width: 1.1em; height: 1.1em; flex-shrink: 0; fill: currentColor; }
-.at-heart.is-hearted { cursor: default; color: hsl(0 70% 65%); border-color: color-mix(in srgb, hsl(0 70% 65%) 50%, transparent); }
-/* Card variant — flat, to sit level with the format icons beside it. */
-.at-heart-flat {
-  padding: 0; border: none; background: transparent; gap: 0.2em; font-size: 0.9rem;
-  color: color-mix(in srgb, var(--color-accent-hover) 80%, transparent);
-}
-.at-heart-flat:hover:not(:disabled) { background: transparent; border: none; transform: none; color: var(--color-accent); }
+/* THE HEART is utilities in layouts/_partials/widgets/heart-button.html, and
+ * its hearted state styles from `aria-pressed:` — which closed a real bug: the
+ * CSS here styled `.is-hearted` while hearts.js has always set `.hearted`, so
+ * the red state never fired since the port. hearts.js sets aria-pressed="true"
+ * too and always did; the state now lives in the attribute that means it. The
+ * pill variant that stood here had no consumer and returns with single.html's
+ * info tile if it is still wanted then. */
 
 /* ===========================================================================
  * TOOLTIP — attribute driven, so any element can carry one.

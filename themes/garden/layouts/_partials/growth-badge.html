@@ -29,18 +29,24 @@
 {{- $stage := default "seedling" $page.Params.growth_stage -}}
 {{- /* Line glyph, filled partner, label, tooltip. The fill is what the duotone
        shadow layer draws; every one of these four has a partner in the sprite. */ -}}
+{{- /* `tint` is the FINISHED utility class name, never `text-` plus a variable:
+       Tailwind extracts complete literal strings only. */ -}}
 {{- $stages := dict
-  "seedling"  (dict "line" "seedling-line" "fill" "seedling-fill" "label" "Seedling"  "tip" "Seedling; früher Entwurf")
-  "budding"   (dict "line" "flower-line"   "fill" "flower-fill"   "label" "Budding"   "tip" "Budding; in Entwicklung")
-  "evergreen" (dict "line" "tree-line"     "fill" "tree-fill"     "label" "Evergreen" "tip" "Evergreen; gepflegt & aktuell")
-  "withered"  (dict "line" "skull-2-line"  "fill" "skull-2-fill"  "label" "Withered"  "tip" "Withered; veraltet")
+  "seedling"  (dict "line" "seedling-line" "fill" "seedling-fill" "label" "Seedling"  "tip" "Seedling; früher Entwurf"       "tint" "text-seedling")
+  "budding"   (dict "line" "flower-line"   "fill" "flower-fill"   "label" "Budding"   "tip" "Budding; in Entwicklung"        "tint" "text-budding")
+  "evergreen" (dict "line" "tree-line"     "fill" "tree-fill"     "label" "Evergreen" "tip" "Evergreen; gepflegt & aktuell"  "tint" "text-evergreen")
+  "withered"  (dict "line" "skull-2-line"  "fill" "skull-2-fill"  "label" "Withered"  "tip" "Withered; veraltet"             "tint" "text-withered")
 -}}
 {{- $s := index $stages $stage -}}
 {{- $sprite := "fonts/remixicon/remixicon.symbol.svg" | relURL -}}
 {{- $rv := $page.Site.Params.remixicon_version -}}
 
 {{- if eq $context "card" -}}
-<span class="at-growth" data-stage="{{ $stage }}" data-tooltip="{{ $s.tip }}" title="{{ $s.tip }}">
+{{- /* `at-growth` and `data-stage` are HOOKS for the e2e tests, no styles hang
+       off them any more — the tint is a utility from the dict above, the size
+       inherits from the row it sits in, and the duotone wrapper carries its own
+       geometry. No font size here: ONE SIZE IN THE ROW. */ -}}
+<span class="at-growth inline-flex min-w-0 flex-wrap items-center gap-[0.4em] {{ $s.tint }}" data-stage="{{ $stage }}" data-tooltip="{{ $s.tip }}" title="{{ $s.tip }}">
     <span class="gd-icon-duo gd-icon-duo-tinted text-[1.2em]">
         <svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#{{ $s.fill }}"></use></svg>
         <svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#{{ $s.line }}"></use></svg>

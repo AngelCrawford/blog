@@ -40,27 +40,33 @@
 {{- $rv := $page.Site.Params.remixicon_version -}}
 
 {{- if $readonly -}}
-    {{- /* `at-heart-flat` — no pill, no border. It sits in the card footer beside
-           the growth mark and the series icon, and a bordered capsule among bare
-           glyphs reads as the one thing you are supposed to press. This one is
-           not pressable. */ -}}
-    <span class="at-heart at-heart-flat" data-tooltip="Dieser Artikel hat {{ $hearts }} Herzen erhalten" aria-label="Herz-Anzahl: {{ $hearts }}">
-        <svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#heart-line"></use></svg>
+    {{- /* Flat — no pill, no border. It sits in the card footer beside the growth
+           mark and the series icon, and a bordered capsule among bare glyphs
+           reads as the one thing you are supposed to press. This one is not
+           pressable. No font size: ONE SIZE IN THE ROW. */ -}}
+    <span class="inline-flex items-center gap-[0.2em] text-[color-mix(in_srgb,var(--color-accent-hover)_80%,transparent)]" data-tooltip="Dieser Artikel hat {{ $hearts }} Herzen erhalten" aria-label="Herz-Anzahl: {{ $hearts }}">
+        <svg class="size-[1.1em] shrink-0 fill-current" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#heart-line"></use></svg>
         <span class="heart-count font-semibold tabular-nums">{{ $hearts }}</span>
     </span>
 {{- else if $isCard -}}
+    {{- /* THE HEARTED STATE STYLES FROM aria-pressed, and that closes a real bug:
+           the ported CSS styled `.is-hearted` while hearts.js has always set
+           `.hearted` — the red state never fired since the port. hearts.js also
+           sets aria-pressed="true" (and did all along), so the state lives in
+           the attribute that already means it. The disabled dimming comes from
+           the global base rule, unchanged. */ -}}
     <button type="button"
-            class="at-heart at-heart-flat heart-button"
+            class="heart-button inline-flex cursor-pointer items-center gap-[0.2em] text-[color-mix(in_srgb,var(--color-accent-hover)_80%,transparent)] transition-colors duration-150 ease-out hover:text-accent aria-pressed:text-[hsl(0_70%_65%)]"
             data-tooltip="Diese Notiz mit einem Herz markieren"
             data-article="{{ $page.RelPermalink }}"
             aria-label="Diese Notiz mit einem Herz markieren"
             aria-pressed="false">
-        <svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#heart-line"></use></svg>
+        <svg class="size-[1.1em] shrink-0 fill-current" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#heart-line"></use></svg>
         <span class="heart-count font-semibold tabular-nums" aria-live="polite">{{ $hearts }}</span>
     </button>
     <noscript>
-        <span class="at-heart at-heart-flat" aria-label="Herz-Anzahl: {{ $hearts }}">
-            <svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#heart-line"></use></svg>
+        <span class="inline-flex items-center gap-[0.2em] text-[color-mix(in_srgb,var(--color-accent-hover)_80%,transparent)]" aria-label="Herz-Anzahl: {{ $hearts }}">
+            <svg class="size-[1.1em] shrink-0 fill-current" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#heart-line"></use></svg>
             <span class="heart-count font-semibold tabular-nums">{{ $hearts }}</span>
         </span>
     </noscript>

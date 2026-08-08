@@ -1,0 +1,26 @@
+/* Einstiegspunkt AUSSCHLIESSLICH für tailwindcss-language-server. Der Build
+ * benutzt diese Datei nicht — der läuft über themes/garden/assets/css/main.css.
+ *
+ * WARUM ES SIE ÜBERHAUPT GIBT. main.css schreibt seine Imports projektrelativ,
+ * weil Hugo den Inhalt über stdin an die Tailwind-CLI pipet und dem Resolver
+ * damit jedes enthaltende Verzeichnis fehlt (siehe den Kommentar dort). Der
+ * Language Server bekommt dagegen einen echten Dateipfad und löst dateirelativ
+ * auf — an main.css scheitert er deshalb reproduzierbar:
+ *
+ *     Can't resolve './themes/garden/assets/css/base.css'
+ *     in '…/themes/garden/assets/css'
+ *
+ * Ohne ladbaren Einstiegspunkt fällt er auf Auto-Discovery zurück, findet
+ * tokens.css (@theme static, aber keine Utilities) und bietet praktisch nichts
+ * an. `.zed/settings.json` zeigt ihn per experimental.configFile hierher.
+ *
+ * NUR THEME UND UTILITIES. Completions entstehen aus dem Design-System, nicht
+ * aus base.css/components.css — die fehlen hier bewusst, damit die Datei nicht
+ * mitwandern muss, wenn dort etwas umzieht. Ebenso kein `@source`: gescannte
+ * Templates braucht der Server für Vervollständigung nicht.
+ *
+ * Was hier steht, muss zu tokens.css passen — sonst schlägt der Editor Klassen
+ * vor, die der Build nicht erzeugt. tokens.css ist die einzige Abhängigkeit. */
+@import "tailwindcss/theme.css";
+@import "../themes/garden/assets/css/tokens.css";
+@import "tailwindcss/utilities.css" source(none);

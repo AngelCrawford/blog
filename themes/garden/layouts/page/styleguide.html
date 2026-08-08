@@ -710,7 +710,7 @@
                    dem Foto: eine gesättigte Fläche quer über dem Bild konkurriert
                    mit dem Bild und mit dem Gold. Gefärbt ist nur der 0,5-em-Punkt,
                    aus `categoryColor` der Rubrik. */ -}}
-            <a class="at-badge" href="#vokabular" style="--at-badge-dot: #1d7a7a">Allgemein</a>
+            {{ partial "ui/badge" (dict "label" "Allgemein" "href" "#vokabular" "dot" "#1d7a7a") }}
             <time datetime="2026-08-06" title="Veröffentlichungsdatum">
               <svg class="mr-0.5 inline-block size-[15px] -translate-y-px fill-current text-ink-muted" aria-hidden="true"><use href="{{ $sprite }}?t={{ $v }}#calendar-line"></use></svg>
               06.08.26
@@ -743,8 +743,8 @@
               <svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $v }}#stack-fill"></use></svg>
               <svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $v }}#stack-line"></use></svg>
             </span>
-            <span class="at-heart at-heart-flat">
-              <svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $v }}#heart-fill"></use></svg>
+            <span class="inline-flex items-center gap-[0.2em] text-[color-mix(in_srgb,var(--color-accent-hover)_80%,transparent)]">
+              <svg class="size-[1.1em] shrink-0 fill-current" aria-hidden="true"><use href="{{ $sprite }}?t={{ $v }}#heart-fill"></use></svg>
               <span class="font-semibold tabular-nums">41</span>
             </span>
             <a href="#vokabular" title="Weiterlesen" aria-label="Weiterlesen" class="flex text-accent">
@@ -776,8 +776,8 @@
               <svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $v }}#lightbulb-fill"></use></svg>
               <svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $v }}#lightbulb-line"></use></svg>
             </span>
-            <button type="button" class="at-heart at-heart-flat">
-              <svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $v }}#heart-line"></use></svg>
+            <button type="button" class="cursor-pointer inline-flex items-center gap-[0.2em] text-[color-mix(in_srgb,var(--color-accent-hover)_80%,transparent)] transition-colors duration-150 ease-out hover:text-accent aria-pressed:text-[hsl(0_70%_65%)]" aria-pressed="false">
+              <svg class="size-[1.1em] shrink-0 fill-current" aria-hidden="true"><use href="{{ $sprite }}?t={{ $v }}#heart-line"></use></svg>
               <span class="font-semibold tabular-nums">23</span>
             </button>
           </div>
@@ -788,16 +788,16 @@
     <h3 class="mb-4 font-heading text-lg font-semibold text-accent mt-gutter">Auszeichnungen</h3>
     <div class="grid grid-cols-1 gap-gutter sm:grid-cols-2">
       <div class="rounded-md border border-accent-muted/40 bg-surface-raised p-gutter shadow-md flex flex-col gap-4">
-        <div class="flex flex-wrap items-center gap-3">
-          <a class="at-badge" href="#vokabular" style="--at-badge-dot: #1d7a7a">Kategorie 1</a>
-          <a class="at-badge" href="#vokabular" style="--at-badge-dot: #285fa5">Movie</a>
-          <a class="at-badge" href="#vokabular" style="--at-badge-dot: #a52828">Allgemein</a>
+        <div class="flex flex-wrap items-center gap-3 text-sm">
+          {{ partial "ui/badge" (dict "label" "Kategorie 1" "href" "#vokabular" "dot" "#1d7a7a") }}
+          {{ partial "ui/badge" (dict "label" "Movie" "href" "#vokabular" "dot" "#285fa5") }}
+          {{ partial "ui/badge" (dict "label" "Allgemein" "href" "#vokabular") }}
         </div>
         <p class="text-sm text-ink-muted">
-          <code class="text-accent">at-badge</code> — die Rubrik. So kommt Farbe pro Rubrik
-          zurück, ohne die Palette dafür auszugeben: die Fläche bleibt neutral, gefärbt ist
-          der Punkt. <code class="text-accent">--at-badge-dot</code> setzt ihn, ohne Wert
-          fällt er auf Gold zurück.
+          Die Rubrik, als Partial: <code class="text-accent">ui/badge</code>. So kommt
+          Farbe pro Rubrik zurück, ohne die Palette dafür auszugeben: die Fläche bleibt
+          neutral, gefärbt ist der Punkt — ein echtes Element, dessen Farbe der
+          <code class="text-accent">dot</code>-Parameter setzt; ohne ihn Gold.
         </p>
         <div class="flex flex-wrap items-center gap-3 border-t border-accent-muted/30 pt-4">
           <a class="at-hashtag" href="#vokabular">hugo</a>
@@ -810,27 +810,35 @@
         </p>
       </div>
       <div class="rounded-md border border-accent-muted/40 bg-surface-raised p-gutter shadow-md flex flex-col gap-4">
-        <ul class="flex flex-col gap-3">
+        <ul class="flex flex-col gap-3 text-sm">
           {{- range $stages }}
-          <li class="at-growth" data-stage="{{ .label }}" data-tooltip="{{ .use }}">
-            <svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $v }}#{{ .icon }}"></use></svg>
+          <li class="inline-flex items-center gap-[0.4em] {{ .ink }}" data-tooltip="{{ .use }}">
+            <span class="gd-icon-duo gd-icon-duo-tinted text-[1.2em]">
+              <svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $v }}#{{ .fill }}"></use></svg>
+              <svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $v }}#{{ .icon }}"></use></svg>
+            </span>
             {{ .label }}
           </li>
           {{- end }}
         </ul>
         <p class="text-sm text-ink-muted">
-          <code class="text-accent">at-growth</code> mit <code class="text-accent">data-stage</code>.
+          Das Wachstumsabzeichen — Tönung als fertige Utility
+          (<code class="text-accent">text-seedling</code> …), gerendert vom Partial
+          <code class="text-accent">growth-badge.html</code>.
           Die Farbe sitzt auf dem <strong class="text-ink-strong">Glyph</strong>, nie als
           Fläche — vier Stufen, vier Tönungen, sonst nichts. Das ist die einzige Ausnahme
           von „Gold ist die einzige Akzentfarbe".
         </p>
         <div class="flex flex-wrap items-center gap-4 border-t border-accent-muted/30 pt-4">
-          <button type="button" class="at-heart">
-            <svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $v }}#heart-line"></use></svg>
+          <button type="button" class="cursor-pointer inline-flex items-center gap-[0.2em] text-[color-mix(in_srgb,var(--color-accent-hover)_80%,transparent)] transition-colors duration-150 ease-out hover:text-accent aria-pressed:text-[hsl(0_70%_65%)]" aria-pressed="false">
+            <svg class="size-[1.1em] shrink-0 fill-current" aria-hidden="true"><use href="{{ $sprite }}?t={{ $v }}#heart-line"></use></svg>
             <span class="font-semibold tabular-nums">41</span>
           </button>
-          <button type="button" class="at-heart is-hearted" disabled>
-            <svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $v }}#heart-fill"></use></svg>
+          {{- /* Geherzt: hearts.js setzt aria-pressed="true" und disabled — Rot aus der
+                 aria-pressed-Variante, Dämpfung aus der globalen disabled-Regel.
+                 Genau so sieht der Zustand live aus. */ -}}
+          <button type="button" class="inline-flex items-center gap-[0.2em] text-[color-mix(in_srgb,var(--color-accent-hover)_80%,transparent)] transition-colors duration-150 ease-out aria-pressed:text-[hsl(0_70%_65%)]" aria-pressed="true" disabled>
+            <svg class="size-[1.1em] shrink-0 fill-current" aria-hidden="true"><use href="{{ $sprite }}?t={{ $v }}#heart-fill"></use></svg>
             <span class="font-semibold tabular-nums">42</span>
           </button>
           <span data-tooltip="Aktuelle Seite" class="gd-round-button gd-round-button-pressed">
@@ -838,7 +846,9 @@
           </span>
         </div>
         <p class="text-sm text-ink-muted">
-          Das Herz einmal pro Besuch, danach gesperrt. Der dauerhaft gedrückte runde Button
+          Das Herz einmal pro Besuch, danach gesperrt — der Zustand lebt in
+          <code class="text-accent">aria-pressed</code>, das Rot in der
+          <code class="text-accent">aria-pressed:</code>-Variante. Der dauerhaft gedrückte runde Button
           (<code class="text-accent">gd-round-button-pressed</code>) markiert die aktuelle
           Seite in der Blätterleiste — als <code class="text-accent">span</code>, nicht als
           deaktivierter Button: hier gibt es keine Aktion zum Deaktivieren.
