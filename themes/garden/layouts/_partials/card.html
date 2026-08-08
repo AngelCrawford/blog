@@ -230,28 +230,35 @@
             <img class="block aspect-[4/3] h-auto w-full rounded-t-[calc(var(--radius-md)-1px)] object-cover shadow-card sepia transition-[filter] duration-300 ease-out group-hover/card:sepia-0" src="{{ $cover.RelPermalink }}" alt="{{ $.Title }}" width="480" height="360" loading="lazy">
         </a>
         {{- end }}
-        {{- /* WITHOUT a picture the text centres — a left-bound title floating
-               in an empty box read as unfinished (Angel's verdict). With one,
-               everything sits under the picture's left edge as before. */ -}}
-        <h2 class="m-0 font-heading text-xl font-semibold tracking-heading{{ if not $img }} text-center{{ end }}" aria-label="{{ .Title }}">
-            {{- /* The Rubrik's own colour lands on the DOT, not on the title.
-                   A per-category heading colour is the same mistake the ribbon
-                   made, one element further in. */ -}}
-            <a class="text-accent-hover hover:text-accent" href="{{ .RelPermalink }}" title="{{ .Title }}">{{ .Title }}</a>
-        </h2>
-        <p class="m-0 flex flex-wrap items-center gap-x-[0.75em] gap-y-[0.5em] text-sm text-ink-muted{{ if not $img }} justify-center{{ end }}">
-            {{- with .Params.categoryColor }}{{ partial "ui/badge" (dict "label" $.Title "dot" .) }}{{ end }}
-            {{- /* Story 1.3: the count on a term card excludes withered entries,
-                   matching what the listing behind it will actually show. */ -}}
-            <span>{{ len (partial "withered-filter.html" .Pages) }} Artikel</span>
-        </p>
-        {{- /* The same pressable dome as the article card's Weiterlesen, pinned
-               to the bottom right — the term card was a click target nothing
-               marked as one. */ -}}
-        <div class="mt-auto flex justify-end pt-2">
-            <a href="{{ .RelPermalink }}" title="{{ .Title }} ansehen" aria-label="{{ .Title }} ansehen" class="gd-round-button [--gd-round-size:2.25rem] shrink-0">
-                <svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#arrow-right-s-line"></use></svg>
-            </a>
+        {{- /* WITHOUT a picture the text block centres VERTICALLY (my-auto) and
+               stays left-bound — "mittig" meant the empty height, not the
+               axis, as Angel clarified after the first attempt centred the
+               wrong one. With a picture, everything flows under its edge. */ -}}
+        <div class="{{ if not $img }}my-auto {{ end }}flex flex-col gap-2">
+            <h2 class="m-0 font-heading text-xl font-semibold tracking-heading" aria-label="{{ .Title }}">
+                {{- /* The Rubrik's own colour lands on the DOT, not on the title.
+                       A per-category heading colour is the same mistake the ribbon
+                       made, one element further in. */ -}}
+                <a class="text-accent-hover hover:text-accent" href="{{ .RelPermalink }}" title="{{ .Title }}">{{ .Title }}</a>
+            </h2>
+            <p class="m-0 flex flex-wrap items-center gap-x-[0.75em] gap-y-[0.5em] text-sm text-ink-muted">
+                {{- /* NOT the badge: the badge would repeat the title one line
+                       under itself. What the card owes the reader is only the
+                       COLOUR this Rubrik carries — so it is the bare dot, with
+                       the tooltip saying what it is. */ -}}
+                {{- with .Params.categoryColor }}
+                <span class="inline-block size-[0.6em] shrink-0 rounded-full" style="background-color: {{ . }}" data-tooltip="Farbe der Rubrik"></span>
+                {{- end }}
+                {{- /* Story 1.3: the count on a term card excludes withered entries,
+                       matching what the listing behind it will actually show. */ -}}
+                <span>{{ len (partial "withered-filter.html" .Pages) }} Artikel</span>
+                {{- /* The same pressable dome as the article card's Weiterlesen,
+                       on the SAME LINE as the count — the term card was a click
+                       target nothing marked as one. */ -}}
+                <a href="{{ .RelPermalink }}" title="{{ .Title }} ansehen" aria-label="{{ .Title }} ansehen" class="gd-round-button [--gd-round-size:2.25rem] ml-auto shrink-0">
+                    <svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#arrow-right-s-line"></use></svg>
+                </a>
+            </p>
         </div>
     </div>
 </article>
