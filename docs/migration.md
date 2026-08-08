@@ -10,15 +10,16 @@ behind the code is worse than none.
 
 ## Right now
 
-Both themes are composed: `theme: ["garden", "article-time"]`. A file created in
-`themes/garden/` overrides its `article-time` counterpart immediately; everything
-absent from `garden` keeps working unchanged. **The site is never broken between
-steps** — that is the entire point of this arrangement.
+`theme: ["garden"]` — garden alone since the teardown. The composition
+(`["garden", "article-time"]`, first theme wins per file) was what carried the
+migration: **the site was never broken between steps**, because everything
+absent from garden kept rendering from article-time until its replacement
+landed. The folder is still on disk as an unmounted archive; see the milestone
+at the bottom.
 
-- **Migrated: 13 of 37 templates.** The whole page chrome — `head`, navigation,
-  `baseof.html`, header, footer — plus the card and everything that lists it:
-  `home`, `list`, `page/archive`, `404`, the growth badge, the heart and
-  pagination. Markup, styling and JavaScript all in `garden`, all jQuery-free.
+- **Migrated: everything.** Every template, hook, shortcode, script and asset
+  renders from `garden`; article-time serves nothing. Markup, styling and
+  JavaScript all garden, all jQuery-free.
 - **August 2026: the teardown.** `single.html` (with its sidebar widgets,
   render hooks and the withered banner), the four shortcodes, profile,
   maintenance and the cookie banner all render from `garden`; everything
@@ -93,33 +94,30 @@ the header and sea chrome is CSS by recorded decision.
 
 ## Templates
 
-Move a template by creating it at the same path under `themes/garden/layouts/`.
-Order below is roughly "most visible first" — pick by what you actually want to
-redesign, not top to bottom.
+THE TABLE IS COMPLETE — every row garden since the August 2026 teardown. Kept
+as the map of what lives where, not as a to-do list.
 
 | Template | Status |
 |---|---|
-| `_partials/_base/head.html` | ✅ garden — loads both stylesheets |
-| `_partials/_base/navigation.html` | ✅ garden — designed August 2026: sticky bar with the fading gold rule, full-viewport drawer below 768px. See below |
-| `_partials/card.html` | ✅ garden — article, note and term in one partial. The cell wrapper is gone; the grid lives at each call site |
-| `_partials/_base/hero.html` | ✅ garden — sky, harbour, clock, wordmark, birds, seasonal overlays. Copied from Bulma, see below |
-| `_partials/_base/footer.html` | ✅ garden — sea reflection, h-card, three columns. Copied from Bulma |
-| `_partials/_base/cookie-banner.html` | ⬜ article-time |
-| `_partials/_base/maintenance.html` | ⬜ article-time — becomes the webcard |
-| `baseof.html` | ✅ garden — shell, back-to-top and page ground. Still calls article-time's hero, footer and banner |
-| `home.html`, `list.html` | ✅ garden |
-| `single.html` | ⬜ article-time — the last page template |
-| `page/archive.html`, `404.html` | ✅ garden |
-| `page/profile.html` | ⬜ article-time |
-| `_partials/growth-badge.html` | ✅ garden — two contexts; the `single` branch stays Bulma until single.html moves |
-| `_partials/withered-hidden-notice.html` | ✅ garden |
-| `_partials/withered-*.html` (4, logic only) | ⬜ article-time — no styling |
-| `_partials/widgets/archive.html` | ✅ garden — moved with the footer; `page/archive.html` is its second consumer |
-| `_partials/widgets/heart-button.html` | ✅ garden — three shapes; the `single` branch stays Bulma |
-| `_partials/widgets/pagination.html` | ✅ garden |
-| `_partials/widgets/*.html` (6 files) | ⬜ article-time — all sidebar widgets, they move with single.html |
-| `_markup/render-*.html` (3), `_shortcodes/*.html` (4) | ⬜ article-time — markup only, low priority |
-| `_partials/_base/seo.html`, `validate-growth-stage.html` | ⬜ article-time — no styling, may never need moving |
+| `_partials/_base/head.html` | ✅ one stylesheet: the Tailwind bundle |
+| `_partials/_base/navigation.html` | ✅ sticky bar, fading gold rule, drawer below 768px |
+| `_partials/card.html` | ✅ article, note and term in one partial; grids live at the call sites |
+| `_partials/_base/hero.html` | ✅ sky, harbour, clock, wordmark, birds, seasonal overlays |
+| `_partials/_base/footer.html` | ✅ sea reflection, h-card, three columns, content capped at 96rem |
+| `_partials/_base/cookie-banner.html` | ✅ two-click notice, `.is-visible` as element variant |
+| `_partials/_base/maintenance.html` | ✅ self-contained clock page on the Tailwind bundle |
+| `baseof.html` | ✅ shell, back-to-top, page ground, deferred single bundle |
+| `home.html`, `list.html` | ✅ feed grid: 28rem floor = the card's own stack threshold |
+| `single.html` | ✅ Steckbrief sidebar, facepiles, Reaktionen on the page ground |
+| `page/archive.html`, `404.html` | ✅ |
+| `page/profile.html` | ✅ the business card: icon rail left with the footer's fade, two-click Spotify embed |
+| `_partials/growth-badge.html` | ✅ tint as finished utility per stage, both contexts |
+| `_partials/withered-*.html` (banner + notice + 2 logic) | ✅ banner in the withered grey, logic untouched |
+| `_partials/widgets/*` | ✅ tile-head, toc/series/related sidebars, webmentions + facepile, heart capsule, pagination, archive |
+| `_partials/ui/*` | ✅ button, figure, badge, tile-head — the partials that replaced utility-pile classes |
+| `_markup/render-*` (5) | ✅ heading, image, link, blockquote, codeblock |
+| `_shortcodes/*` (5) | ✅ message, rating, tags, youtube, figure→ui/figure |
+| `_partials/_base/seo.html`, `validate-growth-stage.html`, outputs (`rss`, `index.json`, `sitemap`) | ✅ moved verbatim, no styling |
 
 ### The card is not one file
 
@@ -127,11 +125,11 @@ redesign, not top to bottom.
 lives in each consumer. Redesigning the card without redesigning the wrapper
 gets you well-designed cards in a broken grid.
 
-- **The wrapper**, currently Bulma's fixed-grid in `home.html:6-7`:
-  `fixed-grid has-1-cols-mobile … has-3-cols-fullhd` plus
-  `grid is-column-gap-7 is-row-gap-4 h-feed`. In Tailwind this becomes plain
-  `grid` with responsive column counts and `gap-gutter`. Keep `h-feed` — it is
-  a microformat, not styling.
+- **The wrapper**, an auto-fill grid at each call site since the migration:
+  `repeat(auto-fill, minmax(min(28rem,100%), 1fr))` with doubled gaps and a
+  gutter of left indent for the cover's overhang. The 28rem floor IS the
+  card's own stack threshold, so every track that exists carries the float
+  layout. `h-feed` stays — a microformat, not styling.
 - **The cell**, `card.html:3`: `cell` with a conditional `is-row-span-2` for
   term pages that carry an image.
 - **Five consumers** must all be migrated or none: `home.html` (three call
@@ -284,10 +282,9 @@ rather than a coloured one: the shadow inversion is already the site's word for
 "pressed", so "you are here" needs no colour of its own.
 
 **Two partials are shared with `single.html` and got a context parameter**
-rather than a copy: `growth-badge.html` and `widgets/heart-button.html` render
-garden markup for the card and article-time's, unchanged, for the article page.
-Delete those branches in the commit that moves `single.html` — the pattern is
-already there in the file.
+rather than a copy: `growth-badge.html` and `widgets/heart-button.html`. Both
+branches speak garden now — the single branch became the Steckbrief's badge
+row and the heart capsule when `single.html` moved.
 
 **The feed is 96rem wide and the card reacts to its own width.** The first cut
 put it in a single 733px column, because `--page-max` is 64rem and `.at-card`
@@ -427,7 +424,7 @@ port is 50 lines and the resize listener became a `ResizeObserver`, which
 catches the cases resize never did (a webfont finishing its swap, an image
 settling).
 | `firework.js` | — | ✅ garden — moved with the header; canvas geometry fixed, see below |
-| `hearts.js`, `withered-banner.js`, `suncalc.js` | 0 | ✅ already vanilla, still article-time's |
+| `hearts.js`, `withered-banner.js`, `suncalc.js` | 0 | ✅ already vanilla; moved to garden in the teardown |
 | `navbar.js` | — | ✅ deleted, was dead code |
 
 **All four are done.** The rule while they were not — porting one saves zero
