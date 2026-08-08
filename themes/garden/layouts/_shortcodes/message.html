@@ -1,0 +1,17 @@
+{{- /* Garden — message box.
+
+   THE COLOR PARAMETER IS ACCEPTED AND IGNORED, deliberately. Upstream mapped
+   it onto Bulma's seven state colours; garden's rule is that gold is the only
+   accent (docs/design.md), so there is exactly one message look. The
+   parameter stays in the signature because fixture content passes it and
+   removing it would be a content edit disguised as a style change.
+   Params: header (optional), color (ignored). Body: Markdown. */ -}}
+{{- $header := .Get "header" -}}
+<aside class="my-gutter rounded-tile border border-accent-muted/40 bg-[var(--surface-tile)]">
+  {{- with $header }}
+  <p class="m-0 rounded-t-tile bg-[hsl(35_45%_14%)] px-4 py-2 font-heading text-sm font-semibold text-accent">{{ . }}</p>
+  {{- end }}
+  <div class="[&>*:first-child]:mt-0 [&>*:last-child]:mb-0 px-4 py-3">
+    {{ .Inner | markdownify }}
+  </div>
+</aside>

@@ -1,0 +1,216 @@
+{{/* 
+  YouTube Shortcode with Privacy-Enhanced Mode and Lazy Loading
+  
+  Parameters:
+  - id: YouTube video ID (required)
+  - title: Video title for accessibility (required)
+  - class: Optional CSS class
+  - start: Optional start time in seconds
+  - autoplay: Optional autoplay (true/false) - defaults to false
+  
+  Example usage:
+  {{< youtube id="dQw4w9WgXcQ" title="Rick Astley - Never Gonna Give You Up" >}}
+*/}}
+
+{{ $id := .Get "id" }}
+{{ $title := .Get "title" | default "YouTube Video" }}
+{{ $class := .Get "class" | default "" }}
+{{ $start := .Get "start" | default 0 }}
+{{ $autoplay := .Get "autoplay" | default false }}
+
+{{ $params := slice (printf "start=%v" $start) }}
+{{ if $autoplay }}
+  {{ $params = $params | append "autoplay=1" }}
+{{ end }}
+{{ $paramString := delimit $params "&" }}
+
+{{- /* Garden: ported as-is from article-time — lite-youtube is self-contained
+     (custom element + inline script), no Bulma anywhere. Only the container
+     gained utilities; `video-container` stays for the element's own CSS. */ -}}
+<div class="video-container my-gutter block aspect-video w-full overflow-hidden rounded-md {{ $class }}">
+  <lite-youtube 
+    videoid="{{ $id }}" 
+    params="{{ $paramString }}"
+    style="background-image: url('https://i.ytimg.com/vi/{{ $id }}/hqdefault.jpg');"
+    title="{{ $title }}">
+    <button type="button" class="lty-playbtn">
+      <span class="lyt-visually-hidden">{{ $title }}</span>
+    </button>
+  </lite-youtube>
+</div>
+
+<script>
+  // Lite YouTube Embed - https://github.com/paulirish/lite-youtube-embed
+  // Only load this script once
+  if (!window.liteYouTubeLoaded) {
+    window.liteYouTubeLoaded = true;
+    
+    class LiteYTEmbed extends HTMLElement {
+      connectedCallback() {
+        this.videoId = this.getAttribute('videoid');
+        this.params = this.getAttribute('params') || '';
+        
+        let playBtnEl = this.querySelector('.lty-playbtn');
+        // A label for accessibility
+        this.playLabel = this.getAttribute('playlabel') || 'Play';
+        
+        if (!playBtnEl) {
+          playBtnEl = document.createElement('button');
+          playBtnEl.type = 'button';
+          playBtnEl.classList.add('lty-playbtn');
+          this.append(playBtnEl);
+        }
+        if (!playBtnEl.textContent) {
+          const playBtnLabelEl = document.createElement('span');
+          playBtnLabelEl.className = 'lyt-visually-hidden';
+          playBtnLabelEl.textContent = this.playLabel;
+          playBtnEl.append(playBtnLabelEl);
+        }
+        
+        // On hover (or tap), warm up the TCP connections we're (likely) about to use.
+        this.addEventListener('pointerover', LiteYTEmbed.warmConnections, {once: true});
+        
+        // Once the user clicks, add the real iframe and drop our play button
+        this.addEventListener('click', this.addIframe);
+      }
+      
+      static warmConnections() {
+        if (LiteYTEmbed.preconnected) return;
+        LiteYTEmbed.preconnected = true;
+        
+        // The iframe document and most of its subresources come right off youtube.com
+        const preconnect = (url) => {
+          const link = document.createElement('link');
+          link.rel = 'preconnect';
+          link.href = url;
+          document.head.append(link);
+        };
+        preconnect('https://www.youtube-nocookie.com');
+        preconnect('https://www.google.com');
+        
+        // The botguard script is fetched off from google.com
+        const prefetch = (url) => {
+          const link = document.createElement('link');
+          link.rel = 'prefetch';
+          link.href = url;
+          document.head.append(link);
+        };
+        prefetch('https://www.youtube-nocookie.com/s/player/');
+      }
+      
+      addIframe() {
+        const params = new URLSearchParams(this.params);
+        params.append('autoplay', '1');
+        
+        const iframeEl = document.createElement('iframe');
+        iframeEl.width = 560;
+        iframeEl.height = 315;
+        iframeEl.title = this.getAttribute('title') || 'YouTube video';
+        iframeEl.allow = 'accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture';
+        iframeEl.allowFullscreen = true;
+        iframeEl.src = `https://www.youtube-nocookie.com/embed/${this.videoId}?${params.toString()}`;
+        this.append(iframeEl);
+        
+        this.classList.add('lyt-activated');
+        
+        // Remove the placeholder image
+        this.style.backgroundImage = '';
+      }
+    }
+    
+    // Register custom element
+    customElements.define('lite-youtube', LiteYTEmbed);
+    
+    // Add CSS
+    const style = document.createElement('style');
+    style.textContent = `
+      lite-youtube {
+        background-color: #000;
+        position: relative;
+        display: block;
+        contain: content;
+        background-position: center center;
+        background-size: cover;
+        cursor: pointer;
+        max-width: 720px;
+        margin: 0 auto;
+      }
+      
+      lite-youtube::before {
+        content: '';
+        display: block;
+        position: absolute;
+        top: 0;
+        background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAADGCAYAAAAT+OqFAAAAdklEQVQoz42QQQ7AIAgEF/T/D+kbq/RWAlnQyyazA4aoAB4FsBSA/bFjuF1EOL7VbrIrBuusmrt4ZZORfb6ehbWdnRHEIiITaEUKa5EJqUakRSaEYBJSCY2dEstQY7AuxahwXFrvZmWl2rh4JZ07z9dLtesfNj5q0FU3A5ObbwAAAABJRU5ErkJggg==);
+        background-position: top;
+        background-repeat: repeat-x;
+        height: 60px;
+        padding-bottom: 50px;
+        width: 100%;
+        transition: all 0.2s cubic-bezier(0, 0, 0.2, 1);
+      }
+      
+      lite-youtube::after {
+        content: "";
+        display: block;
+        padding-bottom: 56.25%;
+      }
+      
+      lite-youtube > iframe {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        border: 0;
+      }
+      
+      lite-youtube > .lty-playbtn {
+        display: block;
+        width: 68px;
+        height: 48px;
+        position: absolute;
+        cursor: pointer;
+        transform: translate3d(-50%, -50%, 0);
+        top: 50%;
+        left: 50%;
+        z-index: 1;
+        background-color: transparent;
+        background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 68 48"><path d="M66.52 7.74c-.78-2.93-2.49-5.41-5.42-6.19C55.79.13 34 0 34 0S12.21.13 6.9 1.55c-2.93.78-4.63 3.26-5.42 6.19C.06 13.05 0 24 0 24s.06 10.95 1.48 16.26c.78 2.93 2.49 5.41 5.42 6.19C12.21 47.87 34 48 34 48s21.79-.13 27.1-1.55c2.93-.78 4.64-3.26 5.42-6.19C67.94 34.95 68 24 68 24s-.06-10.95-1.48-16.26z" fill="red"/><path d="M45 24 27 14v20" fill="white"/></svg>');
+        filter: grayscale(100%);
+        transition: filter .1s cubic-bezier(0, 0, 0.2, 1);
+        border: none;
+      }
+      
+      lite-youtube:hover > .lty-playbtn,
+      lite-youtube .lty-playbtn:focus {
+        filter: none;
+      }
+      
+      lite-youtube.lyt-activated {
+        cursor: unset;
+      }
+      
+      lite-youtube.lyt-activated::before,
+      lite-youtube.lyt-activated > .lty-playbtn {
+        opacity: 0;
+        pointer-events: none;
+      }
+      
+      .lyt-visually-hidden {
+        clip: rect(0 0 0 0);
+        clip-path: inset(50%);
+        height: 1px;
+        overflow: hidden;
+        position: absolute;
+        white-space: nowrap;
+        width: 1px;
+      }
+      
+      .video-container {
+        margin: 2rem 0;
+      }
+    `;
+    document.head.append(style);
+  }
+</script>

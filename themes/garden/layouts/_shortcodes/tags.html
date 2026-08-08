@@ -1,0 +1,47 @@
+{{- /* Garden — label/value tag pairs. The parser is upstream's, unchanged:
+       "tag: [value] name: [name] color: [color]", split on "tag:".
+
+       THE COLOR IS PARSED AND DROPPED — same reasoning as the message
+       shortcode: gold is the only accent, so every pair renders as one
+       neutral label plus one filled value, the series-tag treatment. */ -}}
+{{- $tagsParam := .Get "tags" | default "" -}}
+
+{{- if $tagsParam -}}
+<div class="my-4 flex flex-wrap gap-2">
+  {{- $tagsList := split $tagsParam "tag:" -}}
+  {{- range $index, $element := $tagsList -}}
+    {{- if ne $index 0 -}}
+      {{- $tagInfo := $element | strings.TrimSpace -}}
+      {{- if $tagInfo -}}
+        {{- $tagParts := split $tagInfo " " -}}
+        {{- $tagValue := "" -}}
+        {{- $tagName := "" -}}
+        {{- $currentKey := "tag" -}}
+        {{- range $part := $tagParts -}}
+          {{- if eq $part "name:" -}}
+            {{- $currentKey = "name" -}}
+          {{- else if eq $part "color:" -}}
+            {{- $currentKey = "color" -}}
+          {{- else -}}
+            {{- if eq $currentKey "tag" -}}
+              {{- $tagValue = strings.TrimSpace (printf "%s %s" $tagValue $part) -}}
+            {{- else if eq $currentKey "name" -}}
+              {{- $tagName = strings.TrimSpace (printf "%s %s" $tagName $part) -}}
+            {{- else if eq $currentKey "color" -}}
+              {{- $currentKey = "done" -}}
+            {{- end -}}
+          {{- end -}}
+        {{- end -}}
+        {{- if $tagValue -}}
+        <span class="inline-flex overflow-hidden rounded-[0.35rem] text-[0.8rem]/[1.2]">
+          {{- with $tagName -}}
+          <span class="bg-[hsl(190_11%_13%)] px-[0.6em] py-[0.25em] whitespace-nowrap text-ink-muted">{{ . }}</span>
+          {{- end -}}
+          <span class="bg-accent-muted px-[0.6em] py-[0.25em] whitespace-nowrap text-[hsl(190_20%_90%)] [text-shadow:1px_1px_2px_rgb(0_0_0/0.4)]">{{ $tagValue }}</span>
+        </span>
+        {{- end -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+</div>
+{{- end -}}

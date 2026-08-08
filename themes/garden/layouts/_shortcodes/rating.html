@@ -1,0 +1,26 @@
+{{- /* Garden — star rating. Same halves logic as upstream; the stars are
+       gold because everything sanctioned is. */ -}}
+{{- $rating := .Get "value" | default "0" -}}
+{{- $max := .Get "max" | default "5" -}}
+{{- $showValue := .Get "showValue" | default "true" -}}
+{{- $ratingNum := float $rating -}}
+{{- $maxNum := float $max -}}
+{{- $sprite := "fonts/remixicon/remixicon.symbol.svg" | relURL -}}
+{{- $rv := .Page.Site.Params.remixicon_version -}}
+
+<div class="my-4 flex items-center gap-2">
+  <div class="flex items-center gap-0.5 text-accent">
+    {{- range $i := seq 1 $maxNum -}}
+      {{- $icon := "star-line" -}}
+      {{- if le $i $ratingNum -}}
+        {{- $icon = "star-fill" -}}
+      {{- else if and (lt (sub $i 1) $ratingNum) (lt $ratingNum $i) -}}
+        {{- $icon = "star-half-fill" -}}
+      {{- end -}}
+      <svg class="size-5 fill-current" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#{{ $icon }}"></use></svg>
+    {{- end -}}
+  </div>
+  {{- if eq $showValue "true" }}
+  <span class="text-sm text-ink-muted tabular-nums">{{ $rating }} / {{ $max }}</span>
+  {{- end }}
+</div>
