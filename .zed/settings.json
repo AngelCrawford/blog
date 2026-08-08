@@ -3,6 +3,14 @@
 // For a full list of overridable settings, and general information on folder-specific settings,
 // see the documentation: https://zed.dev/docs/configuring-zed#settings-files
 {
+    // Hugo-Templates sind Go HTML Template, nicht HTML. Die Sprache kommt aus der
+    // Extension `gotmpl` (hjr265/zed-gotmpl); die beansprucht von sich aus nur
+    // .gohtml und Varianten, .html muss hier zugeordnet werden. Ohne die
+    // installierte Extension zeigt Zed auf den Namen unten „No language with this
+    // name is installed" und die Zeile ist wirkungslos.
+    //
+    // DERSELBE EINTRAG STEHT IN DEN USER-SETTINGS (%APPDATA%\Zed\settings.json).
+    // Wer einen aendert, aendert beide.
     "file_types": {
         "Go HTML Template": ["html"]
     },
@@ -25,17 +33,27 @@
         "**/.hugo_build.lock",
         "**/hugo_stats.json"
     ],
-    // Hugo-Templates sind Go HTML Template, und der Tailwind-Server hängt dort
-    // nicht von allein dran: Zeds Adapter-Map (crates/languages/src/tailwind.rs)
-    // kennt nur Astro/HTML/CSS/JS/TS/Svelte/HEEx/ERB/PHP/Vue. Ohne diesen Eintrag
-    // gibt es in 56 Template-Dateien keine einzige Klassen-Vervollständigung.
+    // Die Sprache kommt aus der Extension `gotmpl` (hjr265/zed-gotmpl) — Zed
+    // bringt keinerlei Go-Template-Sprache mit. Ohne die Extension meldet Zed
+    // hier „No language with this name is installed", das file_types-Mapping
+    // oben zeigt ins Leere und .html bleibt gewöhnliches HTML.
+    //
+    // Der Tailwind-Server hängt an dieser Sprache nicht von allein dran: seine
+    // Adapter-Map (crates/languages/src/tailwind.rs) kennt nur
+    // Astro/HTML/CSS/JS/TS/Svelte/HEEx/ERB/PHP/Vue. Ohne den Eintrag gäbe es in
+    // 56 Template-Dateien keine einzige Klassen-Vervollständigung.
     //
     // format_on_save aus: Prettiers HTML-Parser kennt `{{ }}` nicht und würde
     // Template-Blöcke beim Speichern zerlegen.
+    //
+    // hard_tabs/tab_size gegen die Extension gesetzt, die `hard_tabs = true`
+    // mitbringt. Im Projekt hat keine Template-Datei einen Tab.
     "languages": {
         "Go HTML Template": {
             "language_servers": ["tailwindcss-language-server", "..."],
-            "format_on_save": "off"
+            "format_on_save": "off",
+            "hard_tabs": false,
+            "tab_size": 4
         }
     },
     // YAML language server configuration for content frontmatter validation (Layer 1).
@@ -50,12 +68,15 @@
             "settings": {
                 // Der Server bekommt die Sprache unter einer ID gemeldet, die er
                 // nicht kennt, und behandelt die Datei sonst als nicht
-                // unterstützt. Welche der drei es ist, verrät erst
-                // `dev: open language server logs` im textDocument/didOpen —
-                // überzählige Einträge schaden nicht, siehe README-Notiz unten.
+                // unterstützt. Die ID leitet Zed aus dem Sprachnamen ab —
+                // schlicht kleingeschrieben, Leerzeichen inklusive
+                // (LanguageName::lsp_id in crates/language_core).
+                //
+                // DIESE ZEILE HÄLT DIE COMPLETION AM LEBEN. Solange die
+                // gotmpl-Extension fehlte, waren die Templates gewöhnliches
+                // HTML und der Server kannte sie von sich aus; mit der
+                // Extension verschwindet dieser Zufall.
                 "includeLanguages": {
-                    "gotmpl": "html",
-                    "go-html-template": "html",
                     "go html template": "html"
                 },
                 "experimental": {

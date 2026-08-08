@@ -1,0 +1,26 @@
+{{- /* Garden — webmention display (Story 2.4, FR-012). Grouped from
+       data/webmentions_by_article.json, server-side, no JS on the display
+       path, auto-escaped (sanitization is the pipeline's job, not the
+       template's). Group order fixed: replies, reposts, mentions, likes —
+       highest information value first. The section renders even when empty:
+       the info tile links to #webmentions, and an anchor that exists only
+       sometimes is a broken promise. */ -}}
+{{- $mentions := index hugo.Data.webmentions_by_article .RelPermalink | default (slice) -}}
+
+<section id="webmentions" class="at-flow mt-gutter rounded-md border border-accent-muted/40 bg-surface-raised p-gutter shadow-md">
+    <h2 class="gd-h2">Antworten &amp; Erwähnungen</h2>
+
+    {{- if eq (len $mentions) 0 -}}
+        <p class="text-ink-muted">Noch keine Antworten. Sende einen Webmention!</p>
+    {{- else -}}
+        {{- $replies := where $mentions "type" "reply" -}}
+        {{- $reposts := where $mentions "type" "repost" -}}
+        {{- $generic := where $mentions "type" "mention" -}}
+        {{- $likes   := where $mentions "type" "like" -}}
+
+        {{- with $replies }}{{ partial "widgets/webmention-group" (dict "items" . "heading" "Antworten" "type" "reply") }}{{ end }}
+        {{- with $reposts }}{{ partial "widgets/webmention-group" (dict "items" . "heading" "Reposts" "type" "repost") }}{{ end }}
+        {{- with $generic }}{{ partial "widgets/webmention-group" (dict "items" . "heading" "Erwähnungen" "type" "mention") }}{{ end }}
+        {{- with $likes }}{{ partial "widgets/webmention-group" (dict "items" . "heading" "Likes" "type" "like") }}{{ end }}
+    {{- end -}}
+</section>

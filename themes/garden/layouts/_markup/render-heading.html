@@ -1,0 +1,24 @@
+{{- /* Garden — heading render hook, ported from article-time. Same job: an
+       anchor link after every Markdown heading. The glyph hides until the
+       heading is hovered — always-visible chain links after every heading
+       read as decoration, and this is navigation. */ -}}
+{{- $id := .Attributes.id -}}
+{{- /* Sizes per level as FINISHED literals — the map, not string-building,
+       because Tailwind only extracts complete class names. Prose headings
+       need them here: base.css strips the browser defaults, and generated
+       Markdown is exactly the case where the hook IS the call site. */ -}}
+{{- $levelClass := dict
+      "2" "mt-8 mb-3 font-heading text-2xl font-semibold tracking-heading text-ink-strong"
+      "3" "mt-6 mb-2 font-heading text-xl font-semibold tracking-heading text-ink-strong"
+      "4" "mt-5 mb-2 font-heading text-lg font-semibold text-ink-strong"
+      "5" "mt-4 mb-2 font-heading text-base font-semibold text-ink-strong"
+      "6" "mt-4 mb-2 font-heading text-base font-semibold text-ink-muted"
+-}}
+<h{{ .Level }} id="{{ $id }}" class="group/heading {{ index $levelClass (printf "%d" .Level) | default "" }}">
+  {{ .Text | safeHTML }}
+  <a class="ml-1 align-middle text-[0.75em] text-accent-muted no-underline opacity-0 transition-opacity duration-150 group-hover/heading:opacity-100 hover:text-accent focus-visible:opacity-100" href="#{{ $id }}" title="Anker zu diesem Abschnitt" aria-hidden="true" tabindex="-1">
+    <svg class="inline size-[1em] fill-current" aria-hidden="true">
+      <use href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ .Page.Site.Params.remixicon_version }}#links-line"></use>
+    </svg>
+  </a>
+</h{{ .Level }}>

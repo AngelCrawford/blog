@@ -1,0 +1,38 @@
+{{- /* Garden — series sidebar, ported from article-time with the same
+       semantics: every member listed in date order, withered members kept and
+       marked (a reader following the sequence should not meet a silent gap),
+       the current article a non-link with aria-current. The numbering is the
+       CSS counter on at-series-list; the template does no index math. */ -}}
+{{- $currentPage := . -}}
+{{- $seriesName := index .Params.series 0 -}}
+{{- $members := slice -}}
+{{- range .Site.RegularPages.ByDate -}}
+    {{- if in .Params.series $seriesName -}}{{- $members = $members | append . -}}{{- end -}}
+{{- end -}}
+{{- $count := len $members -}}
+{{- $sprite := "fonts/remixicon/remixicon.symbol.svg" | relURL -}}
+{{- $rv := .Site.Params.remixicon_version -}}
+
+<section class="rounded-tile border border-accent-muted/40 bg-[var(--surface-tile)] px-4 py-[0.9rem]">
+    {{ partial "ui/tile-head" (dict "label" "Serie" "count" (printf "%d %s" $count (cond (eq $count 1) "Teil" "Teile"))) }}
+    <a class="mb-2 block font-heading font-semibold text-accent-hover no-underline transition-colors duration-150 hover:text-accent" href="{{ printf "series/%s" ($seriesName | urlize) | relURL }}" title="{{ $seriesName }}">{{ $seriesName }}</a>
+    <ol class="at-widget-list at-series-list">
+        {{- range $members -}}
+            {{- $isCurrent := eq $currentPage.RelPermalink .RelPermalink -}}
+            {{- $isWithered := eq .Params.growth_stage "withered" -}}
+            <li{{ if or $isCurrent $isWithered }} class="{{ if $isCurrent }}is-current{{ end }}{{ if and $isCurrent $isWithered }} {{ end }}{{ if $isWithered }}is-withered{{ end }}"{{ end }}>
+                {{- if $isCurrent -}}
+                <span aria-current="page">
+                    {{- if $isWithered }}<svg class="mr-1 inline size-[1em] fill-current align-[-0.125em]" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#skull-2-line"></use></svg>{{ end -}}
+                    {{ .Title }}
+                </span>
+                {{- else -}}
+                <a href="{{ .RelPermalink }}" title="{{ .Title }}{{ if $isWithered }} — verwelkt{{ end }}">
+                    {{- if $isWithered }}<svg class="mr-1 inline size-[1em] fill-current align-[-0.125em]" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#skull-2-line"></use></svg>{{ end -}}
+                    {{ .Title }}
+                </a>
+                {{- end -}}
+            </li>
+        {{- end -}}
+    </ol>
+</section>

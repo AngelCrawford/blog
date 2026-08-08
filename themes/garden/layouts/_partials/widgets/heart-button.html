@@ -7,10 +7,8 @@
  *             shows the count as social proof and nothing else.
  *   card      a note's card. Notes have no detail page (FR-027), so this is the
  *             only place their heart can live — it stays interactive.
- *   single    the article page's info tile. UNCHANGED, Bulma classes and all:
- *             layouts/single.html has not migrated and its `.info-tile__*`
- *             styling reads this markup. Delete that branch in the commit that
- *             moves single.html.
+ *   single    the article page's info tile: round pressable heart + count +
+ *             daily-update hint. Garden markup since the single migrated.
  *
  * CONTRACT WITH assets/js/hearts.js — these survive any restyle:
  *   .heart-button (not .heart-button-fallback)   the clickable control
@@ -71,34 +69,39 @@
         </span>
     </noscript>
 {{- else -}}
-    {{- /* UNCHANGED — article-time's markup for the not-yet-migrated single page.
-           Bare fragments that slot into `.info-tile[data-tile="hearts"]`, which
-           also carries `.heart-button-wrapper` so hearts.js can reach the hint. */ -}}
+    {{- /* The single page's info tile: a round pressable heart beside the count.
+           `.heart-button-wrapper` sits on the tile at the call site so hearts.js
+           reaches `.heart-button-hint` via closest(); the red pressed state is
+           the aria-pressed: variant, same as the note card. The round button is
+           the design system's — the shadow inversion IS the press feedback. */ -}}
     <button type="button"
-            class="button round-button inset heart-button"
+            class="gd-round-button gd-round-button-full heart-button aria-pressed:text-[hsl(0_70%_65%)]"
             data-article="{{ $page.RelPermalink }}"
             data-tooltip="Diesen Artikel mit einem Herz markieren"
             aria-label="Diesen Artikel mit einem Herz markieren"
             aria-pressed="false">
-        <svg class="heart-icon ri-1x" aria-hidden="true">
+        <svg aria-hidden="true">
             <use href="{{ $sprite }}?t={{ $rv }}#heart-line"></use>
         </svg>
     </button>
-    <div class="info-tile__body">
-        <div class="info-tile__label"><span>Herzen</span></div>
-        <div class="info-tile__value">
+    <div class="min-w-0">
+        <span class="block text-[0.7rem]/[1] font-semibold tracking-label text-ink-muted uppercase">Herzen</span>
+        <span class="text-sm/[1.2] text-accent tabular-nums">
             <span class="heart-count" aria-live="polite">{{ $hearts }}</span>
-            {{- if $showHint -}}
-                <small class="heart-button-hint">(Zähler aktualisiert täglich)</small>
-            {{- end -}}
-        </div>
+            {{- if $showHint }}
+            <small class="heart-button-hint ml-1 text-[0.75em] text-ink-muted">(Zähler aktualisiert täglich)</small>
+            {{- end }}
+        </span>
     </div>
     <noscript>
+        {{- /* `heart-button-fallback` is doubly load-bearing: hearts.js's selector
+               excludes it, and the build test requires the <a> for JS-less
+               clients (Story 2.2 AC #6). */ -}}
+        {{- /* The class value is matched VERBATIM by the build test's regex —
+               nothing may be appended to it. Styling sits on the glyph. */ -}}
         <a class="heart-button heart-button-fallback" href="#" aria-label="Diesen Artikel liken">
-            <svg class="heart-icon ri-1x" aria-hidden="true">
-                <use href="{{ $sprite }}?t={{ $rv }}#heart-line"></use>
-            </svg>
+            <svg class="inline size-[1.1em] fill-current text-[color-mix(in_srgb,var(--color-accent-hover)_80%,transparent)]" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#heart-line"></use></svg>
         </a>
-        <span class="heart-count">{{ $hearts }}</span>
+        <span class="heart-count font-semibold tabular-nums">{{ $hearts }}</span>
     </noscript>
 {{- end -}}

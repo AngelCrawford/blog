@@ -40,8 +40,9 @@ test.describe("Withered banner (Story 1.4)", () => {
         const banner = page.locator(".withered-banner");
         await expect(banner).toBeVisible();
 
-        // Banner appears above the article box (AC #1).
-        const article = page.locator("article.box").first();
+        // Banner appears above the article panel (AC #1). `article.box` was
+        // Bulma's class name; the garden single carries h-entry on the panel.
+        const article = page.locator("article.h-entry").first();
         const bannerBox = await banner.boundingBox();
         const articleBox = await article.boundingBox();
         expect(bannerBox, "banner must have a bounding box").not.toBeNull();

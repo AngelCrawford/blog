@@ -53,10 +53,14 @@
     </span>
 </span>
 {{- else -}}
-<span class="growth-stage" data-stage="{{ $stage }}" data-tooltip="{{ $s.tip }}" title="{{ $s.tip }}">
-    <svg class="ri-1x" aria-hidden="true">
+{{- /* Single/tile context. `inline-flex` on the wrapper and `inline` on the
+       label are load-bearing while Bulma lives: growth-badge.scss hides the
+       label under 640px for the old card context, and an unlayered utility is
+       what keeps it visible in the tile (e2e AC #7 revised). */ -}}
+<span class="growth-stage {{ $s.tint }} inline-flex items-center gap-[0.4em]" data-stage="{{ $stage }}" data-tooltip="{{ $s.tip }}" title="{{ $s.tip }}">
+    <svg class="inline size-[1.2em] fill-current" aria-hidden="true">
         <use href="{{ $sprite }}?t={{ $rv }}#{{ $s.line }}"></use>
     </svg>
-    <span>{{ $s.label }}</span>
+    <span class="inline">{{ $s.label }}</span>
 </span>
 {{- end -}}
