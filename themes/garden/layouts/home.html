@@ -39,7 +39,14 @@
     {{- $hiddenCount := partial "withered-count.html" $all -}}
     {{- $paginator := .Paginate $visible -}}
 
-    <div class="h-feed grid grid-cols-[repeat(auto-fill,minmax(min(34rem,100%),46rem))] justify-center gap-x-gutter gap-y-gutter">
+        {{- /* WHY `1fr` AND NOT A REM CEILING AS THE TRACK MAX: auto-fill computes
+           HOW MANY tracks fit from the track's max when it is definite. With
+           `minmax(min(34rem,100%),46rem)` that count was floor(1392/760) = 1 —
+           a single 736px column on a 1392px grid, measured. With `1fr` the
+           count comes from the 28rem floor: three columns at full page width,
+           two on a laptop, one on a phone. The cards are size containers and
+           restyle themselves per track width. */ -}}
+    <div class="h-feed grid grid-cols-[repeat(auto-fill,minmax(min(28rem,100%),1fr))] gap-x-gutter gap-y-gutter">
         {{- /* Weighted entries first and in weight order, then everything else
                newest first, then anything with no weight at all. Three ranges
                rather than one sort because `weight` is optional and Hugo sorts

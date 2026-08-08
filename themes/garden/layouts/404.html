@@ -14,7 +14,7 @@
            get someone unstuck should not hand them something the site itself
            says is out of date. */ -}}
     {{- $recent := partial "withered-filter.html" (where .Site.RegularPages "Section" "articles") -}}
-    <div class="grid grid-cols-[repeat(auto-fill,minmax(min(34rem,100%),46rem))] justify-center gap-x-gutter gap-y-gutter">
+    <div class="grid grid-cols-[repeat(auto-fill,minmax(min(28rem,100%),1fr))] gap-x-gutter gap-y-gutter">
         {{- range first 4 $recent.ByDate.Reverse }}{{ partial "card" . }}{{ end }}
     </div>
 </div>

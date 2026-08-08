@@ -1,9 +1,20 @@
 {{- /* Garden — label/value tag pairs. The parser is upstream's, unchanged:
        "tag: [value] name: [name] color: [color]", split on "tag:".
 
-       THE COLOR IS PARSED AND DROPPED — same reasoning as the message
-       shortcode: gold is the only accent, so every pair renders as one
-       neutral label plus one filled value, the series-tag treatment. */ -}}
+       COLOUR COMES BACK AS A DOT — the Rubrik badge's mechanism, and the one
+       sanctioned way to have per-item colour without spending the palette:
+       the surfaces stay neutral, the dot carries the hue. The color parameter
+       arrives as a Bulma state name from the content, so the map below is
+       Bulma's own defaults; an unknown name falls back to gold. */ -}}
+{{- $dotColors := dict
+      "dark"    "hsl(0 0% 45%)"
+      "info"    "#3e8ed0"
+      "danger"  "#f14668"
+      "warning" "#ffe08a"
+      "primary" "#00d1b2"
+      "link"    "#485fc7"
+      "success" "#48c78e"
+-}}
 {{- $tagsParam := .Get "tags" | default "" -}}
 
 {{- if $tagsParam -}}
@@ -16,6 +27,7 @@
         {{- $tagParts := split $tagInfo " " -}}
         {{- $tagValue := "" -}}
         {{- $tagName := "" -}}
+        {{- $tagColor := "" -}}
         {{- $currentKey := "tag" -}}
         {{- range $part := $tagParts -}}
           {{- if eq $part "name:" -}}
@@ -28,16 +40,21 @@
             {{- else if eq $currentKey "name" -}}
               {{- $tagName = strings.TrimSpace (printf "%s %s" $tagName $part) -}}
             {{- else if eq $currentKey "color" -}}
+              {{- $tagColor = $part -}}
               {{- $currentKey = "done" -}}
             {{- end -}}
           {{- end -}}
         {{- end -}}
         {{- if $tagValue -}}
+        {{- $dot := index $dotColors $tagColor -}}
         <span class="inline-flex overflow-hidden rounded-[0.35rem] text-[0.8rem]/[1.2]">
           {{- with $tagName -}}
           <span class="bg-[hsl(190_11%_13%)] px-[0.6em] py-[0.25em] whitespace-nowrap text-ink-muted">{{ . }}</span>
           {{- end -}}
-          <span class="bg-accent-muted px-[0.6em] py-[0.25em] whitespace-nowrap text-[hsl(190_20%_90%)] [text-shadow:1px_1px_2px_rgb(0_0_0/0.4)]">{{ $tagValue }}</span>
+          <span class="inline-flex items-center gap-[0.45em] bg-accent-muted px-[0.6em] py-[0.25em] whitespace-nowrap text-[hsl(190_20%_90%)] [text-shadow:1px_1px_2px_rgb(0_0_0/0.4)]">
+            <span class="size-[0.5em] shrink-0 rounded-full{{ if not $dot }} bg-accent{{ end }}"{{ with $dot }} style="background-color: {{ . | safeCSS }}"{{ end }} aria-hidden="true"></span>
+            {{- $tagValue -}}
+          </span>
         </span>
         {{- end -}}
       {{- end -}}
