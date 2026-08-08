@@ -206,4 +206,5 @@
   --border-hairline-quiet: color-mix(in srgb, var(--color-accent-muted) 25%, transparent);
   --rule-gold: color-mix(in srgb, var(--color-accent) 60%, transparent);
   --focus-ring: var(--color-accent);
+  --spacing-section: 3rem;
 }
