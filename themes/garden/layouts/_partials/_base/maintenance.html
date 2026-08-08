@@ -74,14 +74,14 @@
                 <p class="gd-h1 m-0" data-heading="{{ $identity.name }}">{{ $identity.name }}</p>
 
                 {{- with $profile }}{{ with .Content }}
-                <div class="text-left [&_ul]:m-0 [&_ul]:flex [&_ul]:w-fit [&_ul]:list-none [&_ul]:flex-col [&_ul]:gap-2 [&_ul]:p-0 [&_li]:flex [&_li]:items-baseline [&_li]:gap-2.5 [&_li]:before:size-[0.4em] [&_li]:before:shrink-0 [&_li]:before:bg-accent [&_li]:before:content-[''] [&_strong]:font-semibold [&_strong]:text-ink-strong [&_small]:text-[0.9em] [&_small]:text-ink-muted [&_p]:mb-4">{{ replace . "{age}" $age | safeHTML }}</div>
+                <div class="text-left [&_ul]:m-0 [&_ul]:flex [&_ul]:w-fit [&_ul]:list-none [&_ul]:flex-col [&_ul]:gap-2 [&_ul]:p-0 [&_li]:relative [&_li]:pl-4 [&_li]:before:absolute [&_li]:before:left-0 [&_li]:before:top-[0.45em] [&_li]:before:size-[0.4em] [&_li]:before:bg-accent [&_li]:before:content-[''] [&_strong]:font-semibold [&_strong]:text-ink-strong [&_small]:text-[0.9em] [&_small]:text-ink-muted [&_p]:mb-4">{{ replace . "{age}" $age | safeHTML }}</div>
                 {{- end }}{{ end }}
             </div>
 
             {{- /* The DSGVO line, inside the card like the original: legal pages
                    are exempt from maintenance mode, so these links WORK while
                    the rest of the site is this card. */ -}}
-            <footer class="col-span-full border-t border-accent-muted/30 pt-4 text-xs text-ink-muted">
+            <footer class="col-span-full border-t border-accent-muted/30 pt-4 text-[0.7rem] text-ink-muted">
                 &copy; 2020 &ndash; {{ dateFormat "2006" now }} {{ $identity.name }}
                 <span class="text-accent-muted" aria-hidden="true">|</span>
                 <a class="text-accent-hover hover:text-accent" href="{{ "pages/impressum/" | relURL }}">Impressum</a>
