@@ -20,13 +20,32 @@ const repoRoot = resolve(__dirname, "..", "..");
 const schema = JSON.parse(
   readFileSync(resolve(repoRoot, "schemas/frontmatter/article.schema.json"), "utf8")
 );
+const noteSchema = JSON.parse(
+  readFileSync(resolve(repoRoot, "schemas/frontmatter/note.schema.json"), "utf8")
+);
 const ajv = new Ajv({ allErrors: true, strict: false });
 addFormats(ajv);
 const validate = ajv.compile(schema);
+const validateNote = ajv.compile(noteSchema);
+
+/* The withered/URL cases below predate the required fields (#189) and were
+ * written as bare fragments; MINIMUM keeps them valid on the axis they are
+ * not testing, so each test still fails for exactly one reason. */
+const MINIMUM = { title: "T", summary: "S", categories: ["Allgemein"] };
 
 function check(data) {
+  const ok = validate({ ...MINIMUM, ...data });
+  return { ok, errors: validate.errors ? [...validate.errors] : [] };
+}
+
+function checkRaw(data) {
   const ok = validate(data);
   return { ok, errors: validate.errors ? [...validate.errors] : [] };
+}
+
+function checkNote(data) {
+  const ok = validateNote(data);
+  return { ok, errors: validateNote.errors ? [...validateNote.errors] : [] };
 }
 
 // ── growth_stage enum ───────────────────────────────────────────────────────
@@ -130,4 +149,45 @@ test("schema: replacement_url rejects data: URI", () => {
     replacement_url: "data:text/html,<h1>x</h1>",
   });
   assert.ok(!ok, "data: replacement_url must be rejected");
+});
+
+// ── required fields, #189 ───────────────────────────────────────────────────
+
+test("schema: an article needs title, summary and a Rubrik", () => {
+  const { ok, errors } = checkRaw({ title: "Nur ein Titel" });
+  assert.equal(ok, false);
+  const missing = errors.filter((e) => e.keyword === "required").map((e) => e.params.missingProperty);
+  assert.deepEqual(missing.sort(), ["categories", "summary"]);
+});
+
+test("schema: an empty summary is not a summary", () => {
+  const { ok } = checkRaw({ ...MINIMUM, summary: "" });
+  assert.equal(ok, false);
+});
+
+test("schema: categories must hold at least one entry", () => {
+  const { ok } = checkRaw({ ...MINIMUM, categories: [] });
+  assert.equal(ok, false);
+});
+
+test("schema: the full minimum passes", () => {
+  const { ok, errors } = checkRaw(MINIMUM);
+  assert.equal(ok, true, JSON.stringify(errors));
+});
+
+// ── notes are headless and owe less ─────────────────────────────────────────
+
+test("note schema: a title alone is enough — a note has no summary to give", () => {
+  const { ok, errors } = checkNote({ title: "Log Testing" });
+  assert.equal(ok, true, JSON.stringify(errors));
+});
+
+test("note schema: a note without a title is still rejected", () => {
+  const { ok } = checkNote({ tags: ["log"] });
+  assert.equal(ok, false);
+});
+
+test("note schema: the withered rules still apply to notes", () => {
+  const { ok } = checkNote({ title: "T", growth_stage: "withered" });
+  assert.equal(ok, false, "withered without withered_date must fail for notes too");
 });

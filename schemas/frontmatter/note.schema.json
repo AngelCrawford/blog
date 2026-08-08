@@ -1,8 +1,8 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://article-time.de/schemas/frontmatter/article.schema.json",
-  "title": "Article / Log Frontmatter",
-  "description": "Single source of truth for content/articles/**/*.md frontmatter. Consumed by the Zed YAML LSP (Layer 1) and the git pre-commit hook validator at scripts/validate-frontmatter.js (Layer 2). Hugo's build-time partial (Layer 3) hardcodes the growth_stage enum independently — keep them in sync when adding values.\n\nNOTES USE note.schema.json: a note is a headless one-liner with no summary and no card excerpt, so the article requirements would be nonsense there.\n\nHARD requirements live here; SEO quality (description length, keyword count, missing tags) is WARNED about by the validator, never enforced — a commit blocked over a 119-character description just teaches everyone to reach for --no-verify.",
+  "$id": "https://article-time.de/schemas/frontmatter/note.schema.json",
+  "title": "Note Frontmatter",
+  "description": "content/notes/**/*.md. A note is headless — one line of text, no single page, no excerpt — so it needs a title and its taxonomy, and nothing else. Everything the article schema knows stays ALLOWED here (growth_stage, withered_*, params.SEO …); only the requirements differ.",
   "type": "object",
   "additionalProperties": true,
   "properties": {
@@ -142,6 +142,9 @@
       }
     }
   },
+  "required": [
+    "title"
+  ],
   "allOf": [
     {
       "if": {
@@ -160,10 +163,5 @@
         ]
       }
     }
-  ],
-  "required": [
-    "title",
-    "summary",
-    "categories"
   ]
 }
