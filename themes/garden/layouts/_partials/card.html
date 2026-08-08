@@ -194,6 +194,18 @@
                 <svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#stack-line"></use></svg>
             </span>
             {{- end }}
+            {{- /* Reactions, only when there ARE any — a zero on every card is
+                   noise, unlike the heart, whose zero is an invitation. The
+                   gold capsule is the heart capsule's sibling: red counts
+                   love, gold counts conversation. Links straight to the
+                   article's Reaktionen anchor. */ -}}
+            {{- $mentions := index hugo.Data.webmentions_by_article .RelPermalink | default (slice) }}
+            {{- with len $mentions }}{{ if gt . 0 }}
+            <a class="inline-flex shrink-0 items-center gap-[0.35em] rounded-pill border border-accent-muted/40 py-[0.18em] pr-[0.6em] pl-[0.5em] text-accent no-underline transition-colors duration-150 ease-out hover:border-accent hover:text-accent-hover" href="{{ $.RelPermalink }}#webmentions" data-tooltip="{{ . }} {{ if eq . 1 }}Reaktion{{ else }}Reaktionen{{ end }}" aria-label="{{ . }} {{ if eq . 1 }}Reaktion{{ else }}Reaktionen{{ end }}">
+                <svg class="size-[1.1em] shrink-0 fill-current" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#question-answer-line"></use></svg>
+                <span class="text-[0.85em] font-semibold text-ink-muted tabular-nums">{{ . }}</span>
+            </a>
+            {{- end }}{{ end }}
             {{ partial "widgets/heart-button" (dict "page" . "context" "card") }}
             {{- if not $isNote }}
             {{- /* WEITERLESEN IS THE ROUND BUTTON AGAIN — but in the footer row,
