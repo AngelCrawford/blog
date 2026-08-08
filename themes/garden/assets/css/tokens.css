@@ -191,7 +191,7 @@
   --spacing-3: 0.75rem; /* 12px icon to text */
   --spacing-4: 1rem; /* 16px inside a component */
   --spacing-gutter: 1.5rem; /* 24px between related blocks */
-  --spacing-section: 5rem; /* 80px between page sections */
+  --spacing-section: 3rem; /* 48px between page sections */
 
   /* --- Measure ----------------------------------------------------------
    * Two widths the page rhythm depends on. Text over the full window is tiring
