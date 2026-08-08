@@ -40,6 +40,16 @@
  * =========================================================================== */
 @layer bulma, theme, base, components;
 
+/* THE PACKAGE'S DEFAULT THEME, resolved from node_modules — not a file of ours,
+ * which is worth saying because it looks like a broken path. It supplies what
+ * tokens.css does not redefine: the breakpoints behind every `sm:`/`md:`/`lg:`/
+ * `xl:` variant (36 uses across the templates), default weights, easings.
+ * Where names collide, tokens.css wins by coming later.
+ *
+ * Known consequence, accepted with eyes open: the default theme also carries
+ * Tailwind's full colour palette, so `text-red-500` in a template would work
+ * and be off-palette. Nothing uses one today; if that ever needs enforcing, it
+ * is a guard test, not a reason to fork the theme file. */
 @import "tailwindcss/theme.css" layer(theme);
 
 /* `source(none)` disables Tailwind's automatic source detection. Without it,

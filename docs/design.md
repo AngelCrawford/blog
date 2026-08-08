@@ -138,8 +138,19 @@ navigation vocabulary among them — about 90 lines for a component that was
 migrated with utilities and never touched them. Another dozen were a pile of
 utilities with a name: `.at-card-title` was `m-0 font-heading text-xl
 font-semibold tracking-heading`, `.at-hcard` was `flex flex-col items-center
-text-center`. The clean-up took the file from 305 rules to 231 and moved the
-markup from 246 distinct utilities to 272.
+text-center`.
+
+The first clean-up took 305 rules to 231 and believed itself done. Angel then
+pointed at `.at-figure-float` — float, width, margin, fully utility-expressible,
+alive only because `float` was missing from the guard's property list — and the
+second, complete rule-by-rule pass followed: **164 rules remain**, each one a
+pseudo-element, a sibling or descendant rule, a keyframe, a custom-property
+hand-off, a state, or Markdown styling Hugo has no render hook for. Decisions
+that repeat live in partials — `ui/button`, `ui/figure`, `ui/badge` — because a
+partial is "one place" exactly as much as a class is, with the utilities
+visible where they apply. The audit also surfaced a bug the class approach had
+hidden: the heart's red state styled `.is-hearted` while the JS set `.hearted`,
+dead since the port; it styles from `aria-pressed:` now.
 
 **What legitimately stayed** is less than first claimed, and one claim in an
 earlier version of this section was wrong: "generated Markdown, where no class

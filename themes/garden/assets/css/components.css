@@ -539,9 +539,9 @@
  * drift, or for something utilities cannot express; a title used twice in one
  * file is neither.
  *
- * `.at-card-meta` stays, but only for the rule below it: a class is needed as a
- * hook for the descendant normalisation, and that is what utilities cannot do.
- * Its own layout moved to the markup. */
+ * `.at-card-meta` stood here after that as a hook for a font-size
+ * normalisation — until the audit removed every size the rule corrected, at
+ * which point both the rule and the hook were furniture. Gone too. */
 
 /* The excerpt is NOT clipped in CSS, and that is deliberate. It used to be
  * `overflow: hidden` with a fade over it — which is precisely what broke the float
@@ -554,16 +554,13 @@
  * the markup. The class remains because two things below need it as a hook —
  * the size normalisation and the divider between cells — and neither is
  * something a utility on a single element can say. */
-/* ONE SIZE IN THE ROW. The footer collected four: 14px on the row, 12.5px on the
- * hashtags, 14.4px on the heart, 14px on the growth badge — every component
- * arriving with the size it uses on its own. Inside this row the row decides, and
- * the same applies to the badge in the metadata line above. Sizes that differ by a
- * point and a half do not read as hierarchy, they read as sloppiness. */
-.at-card-footer .at-hashtag,
-.at-card-footer .at-heart,
-.at-card-footer .heart-count,
-.at-card-footer .at-growth,
-.at-card-meta .at-badge { font-size: inherit; }
+/* ONE SIZE IN THE ROW is structural now, not corrective. The footer once
+ * collected four font sizes — 14px on the row, 12.5px on the hashtags, 14.4px
+ * on the heart — and a normalisation rule forced them back to `inherit`. After
+ * the audit none of the row's occupants sets a size at all, so there is nothing
+ * left to correct and the rule is gone. The discipline moved into the partials:
+ * badge, hashtag, growth and heart all inherit by construction. */
+
 /* `.at-card-footer-item` layout lives in the markup; the class remains solely
  * for the two structural rules below — the divider between siblings and the
  * flexible tags cell — which no utility on a single element can say. */

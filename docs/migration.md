@@ -43,7 +43,7 @@ they ship. That gap is closed apart from the two rows marked below.
 | `css/tokens.css` | ✅ the `@theme static` block, shared by both entry points — main.css emits it, styleguide.css imports it `theme(reference)` |
 | `css/base.css` | ✅ the Preflight stand-in, `layer(base)` |
 | `css/styleguide.css` | ✅ the catalogue's own entry point, loaded by that page alone — its ~90 exclusive class names no longer ride along on every page |
-| `css/components.css` | ✅ `gd-*` plus the `at-*` vocabulary, `layer(components)` |
+| `css/components.css` | ✅ 164 rules after the full audit — only what utilities cannot express; everything else is utilities in templates or the `ui/*` partials |
 | Webfonts | ✅ Montserrat, Montserrat Alternates and remixicon registered in garden |
 | Header chrome | ✅ `at-header`, `at-city`, `at-clock`, `at-stars`, `at-birds`, `at-balloon`, `at-wordmark` — derived from `hero.scss`, not from the skill |
 | Footer chrome | ✅ `at-footer`, `at-footer-sea`, `at-hcard*`, `at-socials`, `at-slogan` — from `footer.scss`. The skill's `at-footer-sea` was right and was checked rather than trusted |
@@ -56,11 +56,16 @@ Two deliberate divergences from the skill, both commented at the rule:
   call site means retyping it at all five of them.
 - `.at-sr-only` is skipped — Tailwind already emits `sr-only`.
 
-**The vocabulary ships before the markup that uses it.** That is roughly 22 KB
-(9 KB gzipped) of currently unused CSS. The trade is that every remaining
-migration is markup work rather than another design round, and
-[`/pages/styleguide/`](../themes/garden/layouts/page/styleguide.html) renders
-every class so none of it is shipping unseen.
+**The vocabulary question was settled the hard way in August 2026.** The design
+system's 933 CSS lines were first ported wholesale; Angel then challenged the
+result twice (once over utility bundles, once over `.at-figure-float`), and a
+complete rule-by-rule audit followed: **305 ported rules became 164**, and every
+survivor is a pseudo-element, a sibling/descendant rule, a keyframe, a custom-
+property hand-off, a state, or Markdown styling with no render hook. Repeated
+markup decisions live in partials — `ui/button`, `ui/figure`, `ui/badge` — not
+in classes. `no-utility-bundles.test.mjs` trips on regressions; its property
+list deliberately excludes the background/animation/filter families, because
+the header and sea chrome is CSS by recorded decision.
 
 ## Templates
 

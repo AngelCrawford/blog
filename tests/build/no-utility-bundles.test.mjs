@@ -49,21 +49,40 @@ const ALLOWED = {
   "at-prose": "the container for two dozen descendant rules over generated Markdown, where no class can be put on anything.",
   "at-widget-list": "sets `--at-marker`, which three different list markers read.",
   "at-ghost": "hook for the SVG turbulence filter rule beneath it.",
+  "at-footer-sea": "its own box is seven utilities, but the two ::before/::after skyline reflections hang on it — the class IS the hook, and splitting box from pseudos across two files hides the component.",
 };
 
+/* THE LIST HAD A HOLE AND THE HOLE COST A CLUSTER: `float` was missing, so
+ * `.at-figure-float` — float, width, margin, nothing else — sailed through the
+ * first audit and had to be caught by a person. Everything a remaining rule
+ * could plausibly bundle is listed now.
+ *
+ * DELIBERATELY NOT LISTED: the background-*, animation-* and filter families.
+ * The header and sea chrome (skies, clock, birds, reflections) is CSS by
+ * recorded decision — keyframes, url() backgrounds, layered pseudos — and
+ * putting those properties here would only grow ALLOWED without ever catching
+ * a real bundle. This guard hunts layout and typography piles, which is where
+ * the mistake actually happened. Widening it later is one line here. */
 const UTILITY_PROPERTIES = new Set([
   "display", "flex", "flex-direction", "flex-wrap", "flex-shrink", "flex-grow", "flex-basis",
-  "align-items", "align-self", "justify-content", "justify-items", "order",
+  "align-items", "align-self", "justify-content", "justify-items", "order", "float", "clear",
   "gap", "row-gap", "column-gap",
-  "margin", "margin-top", "margin-right", "margin-bottom", "margin-left",
+  "grid-template-columns", "grid-template-rows", "place-items",
+  "margin", "margin-top", "margin-right", "margin-bottom", "margin-left", "margin-inline",
   "padding", "padding-top", "padding-right", "padding-bottom", "padding-left",
-  "width", "height", "min-width", "max-width", "min-height", "max-height",
+  "width", "height", "min-width", "max-width", "min-height", "max-height", "aspect-ratio",
   "position", "top", "right", "bottom", "left", "inset", "z-index",
   "font-size", "font-weight", "font-family", "line-height", "letter-spacing",
   "text-align", "text-transform", "text-decoration", "text-underline-offset",
+  "text-shadow", "text-wrap",
   "color", "background-color", "border-radius", "opacity", "overflow", "overflow-wrap",
   "white-space", "font-variant-numeric", "object-fit", "list-style", "vertical-align",
-  "cursor", "appearance", "container-type",
+  "cursor", "appearance", "container-type", "pointer-events", "visibility",
+  "border", "border-color", "border-top", "border-right", "border-bottom", "border-left",
+  "box-shadow", "outline", "outline-offset",
+  "transform", "rotate", "translate", "scale",
+  "transition", "transition-property", "transition-duration", "transition-timing-function",
+  "will-change", "caret-color",
 ]);
 
 /* Strip comments first: one containing a brace would split a rule in half. */
