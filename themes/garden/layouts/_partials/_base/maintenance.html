@@ -57,8 +57,8 @@
         <meta name="apple-mobile-web-app-title" content="{{ .Site.Title }}">
     </head>
     <body class="kind-is-maintenance flex min-h-dvh items-center justify-center bg-surface-sunken bg-[radial-gradient(hsl(190_11%_7%)_0.05vw,transparent_0.2vw)] bg-[length:1vw_1vw] p-6 font-body text-base text-ink">
-        <main class="grid w-full max-w-[42rem] grid-cols-1 gap-6 rounded-md border border-accent-muted/40 bg-surface-raised p-gutter py-10 text-center shadow-md min-[560px]:grid-cols-[auto_1fr] min-[560px]:gap-10 min-[560px]:px-10">
-            <nav class="at-socials flex flex-wrap justify-center gap-6 min-[560px]:flex-col min-[560px]:flex-nowrap min-[560px]:justify-between min-[560px]:self-stretch min-[560px]:py-2" aria-label="Soziale Profile">
+        <main class="grid w-full max-w-[48rem] grid-cols-1 gap-6 rounded-md border border-accent-muted/40 bg-surface-raised p-gutter py-10 text-center shadow-md min-[640px]:grid-cols-[auto_1fr] min-[640px]:gap-10 min-[640px]:px-10">
+            <nav class="at-socials flex flex-wrap justify-center gap-6 min-[640px]:flex-col min-[640px]:flex-nowrap min-[640px]:justify-between min-[640px]:self-stretch min-[640px]:py-2" aria-label="Soziale Profile">
                 {{- range $identity.socials }}
                 <a class="flex size-[1.6em] items-center justify-center text-[1.6em] transition duration-200 ease-out" href="{{ .src }}" target="_blank" rel="noopener me" title="{{ .name }}" aria-label="{{ .name }}"
                    style="color: {{ .color }};{{ with .opacity }} opacity: {{ . }};{{ end }}">
