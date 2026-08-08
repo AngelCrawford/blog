@@ -237,120 +237,15 @@
   filter: drop-shadow(0.06em 0.1em 0 var(--color-accent-shadow));
 }
 
-/* ===========================================================================
- * FORM CONTROLS
+/* FORM CONTROLS ARE GONE — gd-field, gd-check and the rebuilt select. Their
+ * only consumers were styleguide specimens; no form on this site exists yet.
+ * The search input in the navigation is utilities and always was.
  *
- * The scoped baseline strips the browser's own styling from these; this puts a
- * deliberate one back. Native select and checkbox rendering cannot be themed
- * at all on most platforms, so both are rebuilt: `appearance: none` plus an
- * arrow drawn as a background gradient, and a checkmark drawn with clip-path.
- *
- * Focus is a ring rather than a colour change, so it is visible regardless of
- * the field's state, and `caret-color` picks up the accent so even the text
- * cursor belongs to the palette.
- * =========================================================================== */
-.gd-field {
-  width: 100%;
-  padding: 0.5rem 0.75rem;
-  border: 1px solid var(--color-accent-muted);
-  border-radius: var(--radius-sm);
-  background-color: var(--color-surface-sunken);
-  color: var(--color-ink);
-  font-size: var(--text-sm);
-  caret-color: var(--color-accent);
-  transition:
-    border-color 0.2s ease-out,
-    box-shadow 0.2s ease-out;
-}
-.gd-field::placeholder {
-  color: var(--color-ink-muted);
-}
-.gd-field:hover {
-  border-color: --alpha(var(--color-accent) / 60%);
-}
-.gd-field:focus {
-  outline: none;
-  border-color: var(--color-accent);
-  box-shadow: 0 0 0 3px --alpha(var(--color-accent) / 25%);
-}
-.gd-field:user-invalid {
-  border-color: var(--color-error);
-}
-.gd-field:user-invalid:focus {
-  box-shadow: 0 0 0 3px --alpha(var(--color-error) / 25%);
-}
-
-/* Select: the native arrow cannot be styled, so it is replaced by two
- * gradients that meet in a chevron. Padding on the right keeps text clear of
- * it. */
-select.gd-field {
-  appearance: none;
-  padding-right: 2.25rem;
-  background-image:
-    linear-gradient(45deg, transparent 50%, var(--color-accent) 50%),
-    linear-gradient(135deg, var(--color-accent) 50%, transparent 50%);
-  background-position:
-    right 1.15rem center,
-    right 0.75rem center;
-  background-size:
-    0.4rem 0.4rem,
-    0.4rem 0.4rem;
-  background-repeat: no-repeat;
-}
-select.gd-field:focus {
-  background-image:
-    linear-gradient(135deg, transparent 50%, var(--color-accent-hover) 50%),
-    linear-gradient(45deg, var(--color-accent-hover) 50%, transparent 50%);
-}
-/* The dropdown list itself is drawn by the OS. These two are the only
- * properties every engine honours — worth setting so the open list is not a
- * white rectangle on a dark site. */
-select.gd-field option {
-  background-color: var(--color-surface-raised);
-  color: var(--color-ink);
-}
-
-/* Checkbox and radio, rebuilt. The checkmark is a clip-path polygon rather
- * than a glyph, so it needs no font and no sprite. */
-.gd-check {
-  flex: none;
-  width: 1.15rem;
-  height: 1.15rem;
-  border: 1px solid var(--color-accent-muted);
-  border-radius: var(--radius-sm);
-  background-color: var(--color-surface-sunken);
-  transition:
-    background-color 0.15s ease-out,
-    border-color 0.15s ease-out;
-}
-.gd-check[type="radio"] {
-  border-radius: 50%;
-}
-.gd-check:hover {
-  border-color: var(--color-accent);
-}
-.gd-check:checked {
-  border-color: var(--color-accent);
-  background-color: var(--color-accent);
-}
-.gd-check:focus-visible {
-  outline: 2px solid var(--color-accent);
-  outline-offset: 2px;
-}
-.gd-check:checked::after {
-  content: "";
-  display: block;
-  height: 100%;
-  width: 100%;
-  background-color: var(--color-surface-sunken);
-  clip-path: polygon(
-    17% 47%, 9% 55%, 39% 84%,
-    91% 32%, 83% 24%, 39% 68%
-  );
-}
-.gd-check[type="radio"]:checked::after {
-  clip-path: circle(26% at 50% 50%);
-}
+ * Two pieces genuinely were not utilities and are worth re-deriving when a
+ * form arrives: the select's arrow (two background gradients meeting in a
+ * chevron, because the native one cannot be styled) and the checkbox's tick
+ * (a clip-path polygon, so it needs no font and no sprite). The styleguide
+ * records the same note where the specimens used to stand. */
 
 /* ===========================================================================
  * ROUND BUTTON
@@ -889,8 +784,23 @@ a.at-hashtag, a.at-tag { text-decoration: none; }
 
 /* ===========================================================================
  * PROSE ELEMENTS — what an article body is actually made of.
- * Lists, tables, inline figures, code. All of it composes from the same tokens as
- * everything else; none of it introduces a colour.
+ * Lists, tables, inline figures, code. All of it composes from the same tokens
+ * as everything else; none of it introduces a colour.
+ *
+ * ROUGHLY HALF OF THIS BLOCK IS ON NOTICE. "Generated Markdown, so no class can
+ * be put on anything" was claimed here and it is only half true: Hugo has
+ * render hooks for exactly seven elements — blockquote, codeblock, heading,
+ * image, link, passthrough, table — and this project already uses three of
+ * them. The table, caption, pre and code rules below can therefore become
+ * utility-classed hook templates. The rest cannot: there is no hook for
+ * paragraphs, lists, list markers, strong, dl or hr, and those genuinely need
+ * descendant CSS.
+ *
+ * THE HOOKS ARE DELIBERATELY NOT WRITTEN YET. A render hook in garden applies
+ * to every Markdown body on the site the moment it exists, and article bodies
+ * are still rendered by article-time's single.html — a garden table hook would
+ * restyle the unmigrated article page today. They land in the commit that
+ * migrates single.html, where the restyle is the point.
  * ======================================================================== */
 .at-prose ul, .at-prose ol { margin: 0 0 1rem; padding-left: 1.5em; }
 .at-prose ul { list-style: disc; }

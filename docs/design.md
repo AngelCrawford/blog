@@ -141,8 +141,15 @@ font-semibold tracking-heading`, `.at-hcard` was `flex flex-col items-center
 text-center`. The clean-up took the file from 305 rules to 231 and moved the
 markup from 246 distinct utilities to 272.
 
-**What legitimately stayed**, and it is more than a third of the file: everything
-styling generated Markdown, where no class can be put on anything; pseudo-elements
+**What legitimately stayed** is less than first claimed, and one claim in an
+earlier version of this section was wrong: "generated Markdown, where no class
+can be put on anything". Hugo has render hooks for seven Markdown elements —
+blockquote, codeblock, heading, image, link, passthrough, table — and this
+project already uses three. Prose rules for those elements are hook templates
+waiting to be written; only paragraphs, lists, markers, `strong`, `dl` and `hr`
+truly need descendant CSS. The hooks land with `single.html`, because a garden
+render hook applies to every Markdown body site-wide the moment it exists, and
+article bodies are still article-time's. What stays regardless: pseudo-elements
 (the gradient title, the dotted leader, the quote marks, the corner ribbon of a
 rule that grows on hover); rules about siblings and descendants; the header's
 animations and its four skies; and the duotone icon stack.
