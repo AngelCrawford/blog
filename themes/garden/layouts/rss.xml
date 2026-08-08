@@ -58,7 +58,20 @@
       {{- end }}
       <link>{{ .Permalink }}</link>
       <pubDate>{{ .Date.Format "Mon, 02 Jan 2006 15:04:05 -0700" | safeHTML }}</pubDate>
-      <guid>{{ .Permalink }}</guid>
+      {{- /* RSS 2.0 HAS NO "UPDATED" — its only date is pubDate, which is why
+             #222 argued for a second feed in Atom. It does not need one: the
+             atom namespace is already declared on <rss> for the self link, so
+             the element rides along in the feed everyone reads. It matters
+             here more than on most blogs: tending is what orders this garden
+             (#260) and what the Gepflegt flag announces (#236), and until now
+             the feed was the one place that never mentioned it. Emitted only
+             when it differs from the publication date. */ -}}
+      {{- if ne (.Date.Format "2006-01-02") (.Lastmod.Format "2006-01-02") }}
+      <atom:updated>{{ .Lastmod.Format "2006-01-02T15:04:05-07:00" | safeHTML }}</atom:updated>
+      {{- end }}
+      {{- /* isPermaLink="true" is the RSS default and therefore harmless, but
+             saying it out loud stops readers from guessing at a bare string. */}}
+      <guid isPermaLink="true">{{ .Permalink }}</guid>
       {{- /*
         Sanitize content for RSS readers:
         1. Resolve relative anchor hrefs (#section) to absolute via .Permalink
@@ -70,7 +83,17 @@
         correctly. RE2 (Hugo's regex engine) lacks lookaheads, making it hard to match
         only "truly relative" srcs without breaking absolute URLs.
       */ -}}
+      {{- /* THE COVER GOES INTO THE CONTENT, or no reader shows it. The
+             media:thumbnail above is a hint many clients ignore, and the cover
+             lives in the TEMPLATE, not in the Markdown — so a feed item began
+             with a heading and no picture. Prepended as a plain <img> with an
+             absolute src: that is what every reader renders. JPEG, not the
+             site's WebP, because a feed lands in clients we do not control. */ -}}
       {{- $content := .Content -}}
+      {{- with $featured }}
+        {{- $feedImage := .Process "resize 1200x jpg q85" -}}
+        {{- $content = printf `<p><img src="%s" alt="%s" width="%d" height="%d" /></p>%s` $feedImage.Permalink ($.Title | htmlEscape) $feedImage.Width $feedImage.Height $content -}}
+      {{- end -}}
       {{- $content = replaceRE `a href="(#[^"]*)"` (printf `a href="%s$1"` .Permalink) $content -}}
       {{- $content = replaceRE `<svg[\s\S]*?</svg>` "" $content -}}
       {{- /* Strip BOTH double- and single-quoted style attributes (render-link.html uses single) */ -}}
