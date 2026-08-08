@@ -142,8 +142,14 @@ onReady(() => {
     const el = document.createElement("span");
     /* `at-card-badge` is only the dedup hook above — the styles are utilities,
      * legal here because Tailwind scans this directory too. */
+    /* The flag's CENTRE is pinned 18px inside the corner on both axes, via
+     * translate from the corner point — width-independent, so the long
+     * "Gesehen" sits on the diagonal exactly like the short "Neu". Anchoring
+     * the right EDGE (the old -right-3.5) let every extra letter drag the
+     * centre along the card edge. */
     el.className =
-      "at-card-badge absolute top-1.5 -right-3.5 z-10 inline-flex w-max rotate-45 " +
+      "at-card-badge absolute top-0 right-0 z-10 inline-flex w-max " +
+      "translate-x-[calc(50%-18px)] translate-y-[calc(-50%+18px)] rotate-45 " +
       "items-center gap-1 rounded-[3px] border border-accent-muted/70 " +
       "bg-[hsl(190_11%_12%)] px-[9px] py-[3px] text-[0.7rem] text-accent";
     el.innerHTML =

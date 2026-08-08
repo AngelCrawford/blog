@@ -27,9 +27,11 @@ growth_stage: "seedling"
 <!-- USE WITH: hugo147.exe new content notes/my-title-name (NO .md at the end, generates folder) -->
 
 <!--
-- Place your main image as "cover.[format]" in the same folder
+- OPTIONAL BACKGROUND IMAGE: place it as "cover.[format]" in this folder.
+  On a note, the cover is NOT a floated thumbnail — it fills the whole card
+  as a dimmed, sepia-toned background behind the quote text, edge to edge.
+  Sepia lifts on hover like every photograph on the site.
 - All images will be automatically converted to WebP format
-- Use the image Properties as figcaption. Windows: Properties -> Details -> Description -> Title -> Add here for figcaption
 -->
 
 <!-- Use only one line for notes, no summary -> HEADLESS PAGE, see content/notes/_index.md -->
