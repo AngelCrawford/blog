@@ -31,10 +31,20 @@
  *   alt                    required for real images; pass "" for decorative
  *   href / title           wrap the image in a link (card covers link the post)
  *   caption                optional figcaption, already safe HTML
+ *   bleed                  card covers only: STACKED, the picture goes
+ *                          edge-to-edge — negative gutters swallow the card's
+ *                          padding, the radius drops except where it nests
+ *                          inside the card's own top corners. That is the
+ *                          original mobile card look. Panels stay inset.
  */ -}}
 {{- $sprite := "fonts/remixicon/remixicon.symbol.svg" | relURL -}}
-<figure class="group/figure relative float-left mt-0 mr-gutter mb-4 -ml-[3em] w-[min(46%,22rem)] self-start @max-[40rem]:float-none @max-[40rem]:mx-0 @max-[40rem]:mb-4 @max-[40rem]:w-auto max-[640px]:float-none max-[640px]:mx-0 max-[640px]:mb-4 max-[640px]:w-auto">
-    {{- $img := printf `<img class="block aspect-[4/3] h-auto w-full rounded-md object-cover shadow-card sepia transition-[filter] duration-300 ease-out group-hover/card:sepia-0 group-hover/figure:sepia-0" src="%s" alt="%s" width="%v" height="%v" loading="lazy">` .src (.alt | default "") (.width | default 480) (.height | default 360) | safeHTML -}}
+{{- /* Both class sets are COMPLETE literals — Tailwind extracts whole strings
+       only, so the two stacked treatments cannot share a base via variables. */ -}}
+{{- $figFloat := "group/figure relative float-left mt-0 mr-gutter mb-4 -ml-[3em] w-[min(46%,22rem)] self-start" -}}
+{{- $figStack := cond (eq true .bleed) "@max-[40rem]:float-none @max-[40rem]:-mx-gutter @max-[40rem]:-mt-gutter @max-[40rem]:mb-4 @max-[40rem]:w-auto max-[640px]:float-none max-[640px]:-mx-gutter max-[640px]:-mt-gutter max-[640px]:mb-4 max-[640px]:w-auto" "@max-[40rem]:float-none @max-[40rem]:mx-0 @max-[40rem]:mb-4 @max-[40rem]:w-auto max-[640px]:float-none max-[640px]:mx-0 max-[640px]:mb-4 max-[640px]:w-auto" -}}
+{{- $imgBleed := cond (eq true .bleed) " @max-[40rem]:rounded-none @max-[40rem]:rounded-t-[calc(var(--radius-md)-1px)] max-[640px]:rounded-none max-[640px]:rounded-t-[calc(var(--radius-md)-1px)]" "" -}}
+<figure class="{{ $figFloat }} {{ $figStack }}">
+    {{- $img := printf `<img class="block aspect-[4/3] h-auto w-full rounded-md object-cover shadow-card sepia transition-[filter] duration-300 ease-out group-hover/card:sepia-0 group-hover/figure:sepia-0%s" src="%s" alt="%s" width="%v" height="%v" loading="lazy">` $imgBleed .src (.alt | default "") (.width | default 480) (.height | default 360) | safeHTML -}}
     {{- if .href -}}
     <a href="{{ .href }}"{{ with .title }} title="{{ . }}"{{ end }}>{{ $img }}</a>
     {{- else -}}

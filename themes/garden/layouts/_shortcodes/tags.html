@@ -47,14 +47,16 @@
         {{- end -}}
         {{- if $tagValue -}}
         {{- $dot := index $dotColors $tagColor -}}
-        <span class="inline-flex overflow-hidden rounded-[0.35rem] text-[0.8rem]/[1.2]">
+        {{- /* ONE pill per pair, shaped like the Rubrik badge: hairline border,
+               neutral surface, the dot carries the colour. The split-pill
+               attempt looked like a loose word next to a chip — measured by
+               Angel's eyes, which outrank mine. */ -}}
+        <span class="inline-flex items-center gap-[0.45em] rounded-pill border border-accent-muted/40 bg-surface py-[0.25em] pr-[0.7em] pl-[0.55em] text-[0.8rem]/[1.4] whitespace-nowrap">
+          <span class="size-[0.5em] shrink-0 rounded-full{{ if not $dot }} bg-accent{{ end }}"{{ with $dot }} style="background-color: {{ . | safeCSS }}"{{ end }} aria-hidden="true"></span>
           {{- with $tagName -}}
-          <span class="bg-[hsl(190_11%_13%)] px-[0.6em] py-[0.25em] whitespace-nowrap text-ink-muted">{{ . }}</span>
+          <span class="text-ink-muted">{{ . }}</span><span class="text-accent-muted" aria-hidden="true">·</span>
           {{- end -}}
-          <span class="inline-flex items-center gap-[0.45em] bg-accent-muted px-[0.6em] py-[0.25em] whitespace-nowrap text-[hsl(190_20%_90%)] [text-shadow:1px_1px_2px_rgb(0_0_0/0.4)]">
-            <span class="size-[0.5em] shrink-0 rounded-full{{ if not $dot }} bg-accent{{ end }}"{{ with $dot }} style="background-color: {{ . | safeCSS }}"{{ end }} aria-hidden="true"></span>
-            {{- $tagValue -}}
-          </span>
+          <span class="text-ink">{{ $tagValue }}</span>
         </span>
         {{- end -}}
       {{- end -}}
