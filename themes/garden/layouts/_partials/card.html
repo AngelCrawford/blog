@@ -196,12 +196,16 @@
             {{- end }}
             {{ partial "widgets/heart-button" (dict "page" . "context" "card") }}
             {{- if not $isNote }}
-            {{- /* Weiterlesen sits in the footer row with everything else.
-                   Floating, it hovered over the excerpt, covered words and
-                   belonged to no row — the one control on the card with no place
-                   of its own. */ -}}
-            <a href="{{ .RelPermalink }}" title="Weiterlesen" aria-label="Weiterlesen" class="flex text-accent">
-                <svg class="size-5 shrink-0 fill-current" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#arrow-right-s-line"></use></svg>
+            {{- /* WEITERLESEN IS THE ROUND BUTTON AGAIN — but in the footer row,
+                   not floating over the excerpt covering words like its
+                   article-time ancestor. The bare chevron that stood here was
+                   invisible next to the capsule and the duotone marks (Angel's
+                   verdict); the raised dome with the press-in hover is the one
+                   control on the card that LOOKS pressable, which is what a
+                   read-more must do. Compact size via the custom property the
+                   base rule computes everything from. */ -}}
+            <a href="{{ .RelPermalink }}" title="Weiterlesen" aria-label="Weiterlesen" class="gd-round-button [--gd-round-size:2.25rem] shrink-0">
+                <svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#arrow-right-s-line"></use></svg>
             </a>
             {{- end }}
         </div>
