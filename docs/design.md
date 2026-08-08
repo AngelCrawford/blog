@@ -1,15 +1,23 @@
 # Design system
 
 The tokens live in `themes/garden/assets/css/tokens.css`. What they look like
-lives at **`/pages/styleguide/`** — run `hugo server` and open it. This page is
-only the *why*.
+lives on the site — run `hugo server` and look at a card, an article, the
+footer. This page is only the *why*.
 
-**Every code label on the styleguide shows what you TYPE in a template** — the
-complete class name (`text-ink-muted`, `gap-gutter`, `rounded-md`), never a bare
-token stem like `muted` or `4`. The page had both for a while, and mixed
-notation on the reference page is how mixed notation gets into the code that
-copies from it. The `--color-*` form appears only where the CSS custom property
-is genuinely what you want, namely inside component CSS.
+**THE STYLEGUIDE PAGE IS GONE** (August 2026). It was a hand-kept catalogue at
+`/pages/styleguide/`, and it did what hand-kept catalogues do: its card
+specimen still showed tags in the footer and a bare chevron long after the real
+card had dropped both. A reference that lies is worse than none, because
+somebody copies from it. It also taxed every visitor 767 bytes gzipped for
+ninety class names no other page used. If a catalogue is ever wanted again,
+build it from the real partials — a specimen that IS the component cannot
+drift.
+
+**Write the complete class name when you cite one here** — `text-ink-muted`,
+`gap-gutter`, `rounded-md` — never a bare token stem like `muted` or `4`. Mixed
+notation in the reference is how mixed notation gets into the code that copies
+from it. The `--color-*` form appears only where the CSS custom property is
+genuinely what you want, namely inside component CSS.
 
 ## Component or utilities
 
@@ -27,9 +35,12 @@ Write a component when one of these is true:
 1. **The same decision would repeat and could drift.** `gd-button` exists
    because its font weight was lost once already — six utilities repeated at
    every call site is six chances to forget one.
-2. **Utilities cannot express it.** `gd-h1` needs two pseudo-elements for the
-   gradient, `gd-round-button` needs the shadow inversion, `#resultsWrapper`
-   needs positioning against a distant ancestor.
+2. **Utilities cannot express it.** `gd-round-button` needs the shadow
+   inversion, `at-card` needs a pseudo-element for the growing rule,
+   `#resultsWrapper` needs positioning against a distant ancestor. (`gd-h1`
+   was the standing example of this until its two pseudo-elements became one
+   `filter: drop-shadow()` — worth remembering that "utilities cannot express
+   it" sometimes means "not yet".)
 
 Do not write one because it "looks tidier". Giving every element a class builds
 a private framework, and a private framework becomes something to fight — which
@@ -39,7 +50,7 @@ Layout stays in the markup. The card is a component; the grid it sits in is not.
 `grid gap-gutter sm:grid-cols-2` at the call site is more honest than
 `gd-card-grid`, because the grid genuinely differs per page.
 
-**Building a component means picking from the styleguide, not inventing.** That
+**Building a component means picking from the tokens, not inventing.** That
 rule is the whole point. Between 2020 and 2026 every component got its own
 design round, which is how 4.355 lines of SCSS accumulated across 29 files with
 `card.scss` alone at 552 lines — and why nothing ever felt finished.

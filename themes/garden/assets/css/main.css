@@ -88,23 +88,22 @@
  * stylesheet to the Tailwind CLI on stdin, so there is no containing directory
  * to resolve against. A file-relative path silently produces zero utilities.
  *
- * THE STYLEGUIDE IS DELIBERATELY NOT IN HERE. It is a catalogue: it renders
- * every specimen of everything, and about ninety of its class names appear
- * nowhere else on the site. Scanning it put 5.9 KB — a tenth of this
- * stylesheet — on every page that will never use a line of it. Measured by
- * building both ways.
+ * ONE SHEET, ONE SCAN. The styleguide page used to bring a second entry point
+ * so its ninety catalogue-only class names stayed off every other page. That
+ * split broke the navigation: TWO UNLAYERED UTILITY SHEETS ON ONE PAGE CANNOT
+ * BOTH BE RIGHT — equal specificity, later file wins, so styleguide.css's
+ * `hidden` beat main.css's `md:flex` and the drawer hung open on the desktop.
+ * Swapping the order only mirrors the bug. A responsive variant and its base
+ * utility must come from the SAME generated sheet.
  *
- * It gets its own entry point, css/styleguide.css, which layouts/page/
- * styleguide.html loads for itself. Utilities the two share are emitted twice;
- * that is the cheaper mistake, and gzip barely notices repetition. */
+ * The page itself is gone now (it had drifted — specimens showing a card the
+ * site no longer built), so the question is settled from both ends. */
 @source "themes/garden/layouts";
-@source not "themes/garden/layouts/page/styleguide.html";
 
 /* JavaScript that builds DOM nodes carries class names too — search.js styles
  * every result row it generates. Forgetting this source produced a correctly
  * working search with completely unstyled results. */
 @source "themes/garden/assets/js";
-@source not "themes/garden/assets/js/styleguide.js";
 
 /* ===========================================================================
  * WEBFONTS — registered here, not inherited from article-time.

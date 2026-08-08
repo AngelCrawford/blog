@@ -65,9 +65,9 @@ they ship. That gap is closed apart from the two rows marked below.
 | What | Status |
 |---|---|
 | Tokens | ✅ all 33 adopted. `design-tokens.test.mjs` holds an **empty** backlog and fails if it refills |
-| `css/tokens.css` | ✅ the `@theme static` block, shared by both entry points — main.css emits it, styleguide.css imports it `theme(reference)` |
+| `css/tokens.css` | ✅ the `@theme static` block, imported by main.css. Split out for readability, not for a second entry point any more |
 | `css/base.css` | ✅ Preflight plus the interaction baseline, `layer(base)` — the stand-in reset died with the teardown |
-| `css/styleguide.css` | ✅ the catalogue's own entry point, loaded by that page alone — its ~90 exclusive class names no longer ride along on every page |
+| `css/styleguide.css` | ⛔ deleted with the styleguide page (August 2026). Two unlayered utility sheets on one page cannot both be right — the later one won and broke the nav |
 | `css/components.css` | ✅ 164 rules after the full audit — only what utilities cannot express; everything else is utilities in templates or the `ui/*` partials |
 | Webfonts | ✅ Montserrat, Montserrat Alternates and remixicon registered in garden |
 | Header chrome | ✅ `at-header`, `at-city`, `at-clock`, `at-stars`, `at-birds`, `at-balloon`, `at-wordmark` — derived from `hero.scss`, not from the skill |
@@ -527,7 +527,7 @@ Bulma's `url()` references to fonts and header images are relative.
 5. **Never assemble a class name from a variable.** Tailwind extracts complete
    literal strings; a template writing `bg-` followed by `{{ .name }}` produces
    no rule at all, silently, and the element renders unstyled. Carry the
-   finished class name as data instead — see how `page/styleguide.html` does it.
+   finished class name as data instead — see how `growth-badge.html` does it.
 6. **Run the dev server with `--disableFastRender`.** Tailwind live reload is
    wired up natively (`build.buildStats` + `build.cachebusters` + the
    `assets/watching` mount, see `config/_default/config.yaml`), but in

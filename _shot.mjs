@@ -1,0 +1,14 @@
+import { chromium } from '@playwright/test';
+const b = await chromium.launch();
+const p = await b.newPage({ viewport: { width: 1400, height: 1000 } });
+await p.goto('http://127.0.0.1:8124/pages/styleguide/', { waitUntil: 'networkidle' });
+await p.evaluate(() => document.getElementById('cookie-banner')?.remove());
+const card = await p.locator('.at-card').first().boundingBox();
+await p.evaluate(y => window.scrollTo(0, y - 120), card.y);
+await p.waitForTimeout(400);
+await p.screenshot({ path: '/tmp/yB-karten.png', clip: { x: 40, y: 60, width: 1330, height: 700 } });
+const st = await p.locator('.info.widget').first().boundingBox();
+await p.evaluate(y => window.scrollTo(0, y - 140), st.y);
+await p.waitForTimeout(400);
+await p.screenshot({ path: '/tmp/yB-steckbrief.png', clip: { x: 40, y: 60, width: 900, height: 560 } });
+await b.close();

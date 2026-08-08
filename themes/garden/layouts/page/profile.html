@@ -46,7 +46,7 @@
             <img class="u-photo size-[160px] rounded-full border-2 border-accent-muted object-cover" src="{{ . | relURL }}" alt="{{ $identity.name }}" width="160" height="160">
             {{- end }}
 
-            <h1 class="gd-h1 p-name" data-heading="{{ $identity.name }}">{{ $identity.name }}</h1>
+            <h1 class="gd-h1 p-name">{{ $identity.name }}</h1>
 
             {{- /* ANGEL'S CONTENT MODEL: the taglines live in the Markdown body as
                    a list — bold main, <small> sub, {age} placeholder. The template

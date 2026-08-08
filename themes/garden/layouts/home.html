@@ -27,7 +27,7 @@
 <div class="mx-auto max-w-[96rem] px-gutter pt-gutter pb-section font-body text-base text-ink">
     {{- if not .IsHome -}}
         <div class="rounded-md border border-accent-muted/40 bg-surface-raised p-gutter shadow-md mb-section">
-            <h1 class="gd-h1" data-heading="{{ .Title }}">{{ .Title }}</h1>
+            <h1 class="gd-h1">{{ .Title }}</h1>
             {{- with .Summary }}<div class="mt-gutter max-w-[70ch]">{{ . }}</div>{{ end }}
         </div>
     {{- end -}}

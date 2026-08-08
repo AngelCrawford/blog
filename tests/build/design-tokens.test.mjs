@@ -35,7 +35,7 @@ import { fileURLToPath } from "node:url";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const repoRoot = resolve(__dirname, "..", "..");
 
-/* Two files since the styleguide got its own Tailwind entry point: tokens.css
+/* Two files since tokens moved out of main.css for readability: tokens.css
  * holds the `@theme static` block (so styleguide.css can share it by
  * reference), main.css keeps the `:root` semantic aliases. Concatenated here
  * so the parser below still sees one document with both blocks. */

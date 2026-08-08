@@ -1,38 +1,27 @@
-/* Garden — the design tokens, and nothing else.
+/* Garden — the design tokens, in one `@theme static` block.
  *
- * ITS OWN FILE BECAUSE TWO COMPILATION UNITS NEED IT. Hugo runs the Tailwind
- * CLI once per entry point, and each run only knows the theme it was handed:
+ * `static` is load-bearing: without it Tailwind drops variables nothing in the
+ * markup references, and half of these are read by components.css rather than
+ * by a utility. See docs/design.md for what each family is FOR; the live site
+ * is where you look at them.
  *
- *   main.css        imports this plainly — `static` emits every variable, and
- *                   that emission is the single source of truth at runtime.
- *   styleguide.css  imports this with `theme(reference)` — the values exist for
- *                   generating utilities, but nothing is emitted twice. The
- *                   variables reach the styleguide page through main.css, which
- *                   it also loads.
- *
- * This split was learned the expensive way: styleguide.css first imported only
- * `tailwindcss/utilities.css`, and every theme-driven utility — the whole
- * spacing scale, the growth tints, the paired shadows — silently generated
- * NOTHING. `h-20` is `calc(var(--spacing) * 20)`; without a theme there is no
- * `--spacing` and therefore no `h-20`, no error, no warning. The colour swatches
- * rendered one pixel tall.
- *
- * The semantic aliases (`--text-body`, `--border-hairline`, …) are NOT here.
- * They live in main.css's `:root` block: they exist for component CSS, not for
- * utility generation, and `theme(reference)` would not stop a plain `:root`
- * block from being emitted a second time.
- */
+ * The file was split out of main.css when the styleguide had its own entry
+ * point and needed the same values by reference. Both are gone — the split
+ * because two unlayered utility sheets on one page cannot both be right, the
+ * styleguide because a hand-kept catalogue drifts and this one had. The file
+ * stays split for readability: main.css is the cascade and the sources, this
+ * is the vocabulary. */
 
 /* ===========================================================================
  * DESIGN TOKENS — the single source of every design value.
  *
  * Component styles compose from these. Nothing outside this block may hardcode
  * a colour, size, radius or shadow. See docs/design.md for the reasoning and
- * the styleguide page at /pages/styleguide/ for what they look like.
+ * the live pages for what they look like.
  *
  * `static` forces every variable into the output even when no utility
  * references it yet, so the tokens are reliably available to component CSS and
- * to the styleguide.
+ * to the live site.
  * =========================================================================== */
 @theme static {
   /* NAMED BY ROLE, NOT BY APPEARANCE.
@@ -105,7 +94,7 @@
   /* --- Growth stages ----------------------------------------------------
    * Icon tints only — one colour per stage, never a surface or a text colour.
    * They are not part of the palette a component picks from, which is why the
-   * styleguide shows them with their icons rather than as swatches. */
+   * cards and the Steckbrief show them with their icons, not as swatches. */
   --color-seedling: hsl(75 60% 60%);
   --color-budding: hsl(295 60% 60%);
   --color-evergreen: rgb(78 151 78);

@@ -31,7 +31,7 @@
         {{- $caption := partial "image-caption.html" . }}
         {{ partial "ui/figure" (dict "src" $cover.RelPermalink "alt" $pagename "caption" $caption "bleed" true) }}
         {{- end }}{{ end }}
-        <h1 class="gd-h1" data-heading="{{ $pagename }}">{{ $pagename }}</h1>
+        <h1 class="gd-h1">{{ $pagename }}</h1>
         {{- with .Params.subtitle }}<p class="mt-4 text-lg text-ink-muted">{{ . }}</p>{{ end }}
         {{- with .Summary }}<div class="mt-gutter">{{ . }}</div>{{ end }}
     </div>

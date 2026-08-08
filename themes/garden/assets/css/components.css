@@ -29,7 +29,8 @@
  * everything else here — it is carried over from article-time's
  * `main.content h1.title` rather than reinvented. Two stacked pseudo-elements:
  * one for the raised shadow, one for the gradient fill, both reading their text
- * from the `data-heading` attribute.
+ * from the `data-heading` attribute — the wordmark still does; gd-h1 no
+ * longer needs a copy at all.
  *
  * Levels are deliberately distinct so a page reads as a hierarchy rather than a
  * uniform wall:
@@ -53,8 +54,10 @@
    * the rendered alpha channel, which for background-clipped text IS the
    * glyph silhouette. So the element paints its own relief, needs no copies,
    * and — being a plain block — its lines wrap around a float like any other
-   * text. `data-heading` goes with the pseudos; the templates still pass it
-   * and it is now inert, kept as a hook for nothing in particular. */
+   * text. `data-heading` went with the pseudos — swept from every heading in
+   * the same commit. THE WORDMARK STILL USES IT (at-wordmark::after, further
+   * down): that one is a genuine second copy behind the text, because its
+   * drop line needs a different offset than a filter can give. */
   display: block;
   font-family: var(--font-heading);
   font-size: var(--text-4xl);
@@ -116,7 +119,8 @@
 }
 
 /* `.gd-h3` was five utilities and every one of its twelve uses was in the
- * styleguide — a catalogue demonstrating a class no page had asked for. */
+ * styleguide — a catalogue demonstrating a class no page had asked for. That
+ * catalogue is deleted; this note stays as the reason the class went. */
 
 /* BUTTONS live in layouts/_partials/ui/button.html.
  *

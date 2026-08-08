@@ -27,7 +27,7 @@
                 {{ partial "ui/figure" (dict "src" $cover.RelPermalink "alt" $.Title "caption" $caption "class" "u-photo" "bleed" true) }}
                 {{- end }}
 
-                <h1 class="gd-h1 p-name" data-heading="{{ .Title }}">{{ .Title }}</h1>
+                <h1 class="gd-h1 p-name">{{ .Title }}</h1>
                 {{- with .Params.subtitle }}<p class="mt-4 text-lg text-ink-muted">{{ . }}</p>{{ end }}
 
                 {{- /* Byline (Story 9.16 + #218): p-author h-card inside the h-entry,
