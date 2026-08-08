@@ -1,0 +1,33 @@
+/* Garden — the styleguide's own stylesheet, loaded by that page and no other.
+ *
+ * WHY IT IS SEPARATE. The styleguide is a catalogue: it shows every colour,
+ * every step of the scale, every component in every state. Roughly ninety of
+ * its class names appear on no other page. Scanned together with the rest, it
+ * added 5.9 KB raw — a tenth of the stylesheet — to every page on the site,
+ * which is precisely the cost Tailwind exists to avoid. Measured by building
+ * with and without it in `@source`.
+ *
+ * It carries UTILITIES ONLY. Every component it demonstrates lives in
+ * css/components.css and arrives with main.css, because the page has to show
+ * the real thing rather than a copy of it — a catalogue that reimplements its
+ * own exhibits is a catalogue that drifts.
+ *
+ * Utilities used by both sheets are emitted twice. That is the cheaper of the
+ * two mistakes: the alternative is a shared sheet that has to know what the
+ * styleguide uses, and gzip barely notices the repetition.
+ *
+ * No `@layer`: these are utilities and belong unlayered, above everything, the
+ * same as in main.css. No `@theme` either — the tokens come from main.css,
+ * which this page also loads. */
+
+/* Both themes by REFERENCE: the default scale and the project tokens exist for
+ * generating utilities here, but are emitted only by main.css, which this page
+ * also loads. Without these two lines every theme-driven utility generated
+ * nothing — no error, no warning, one-pixel colour swatches. */
+@import "tailwindcss/theme.css" theme(reference);
+@import "./themes/garden/assets/css/tokens.css" theme(reference);
+
+@import "tailwindcss/utilities.css" source(none);
+
+@source "themes/garden/layouts/page/styleguide.html";
+@source "themes/garden/assets/js/styleguide.js";

@@ -2,8 +2,9 @@
 //
 // DIRECTION MATTERS AND IS EASY TO GET BACKWARDS.
 //
-//   .claude/skills/design/tokens/*.css   the DECIDED state — the design system
-//   themes/garden/assets/css/main.css    the SHIPPED state — what the site does
+//   .claude/skills/design/tokens/*.css      the DECIDED state — the design system
+//   themes/garden/assets/css/tokens.css      the SHIPPED state (plus the :root
+//                                            aliases, which stayed in main.css)
 //
 // The skill leads, main.css follows. A difference is therefore not automatically
 // a bug: it is usually a decision that has not been migrated yet, and the whole
@@ -34,7 +35,12 @@ import { fileURLToPath } from "node:url";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const repoRoot = resolve(__dirname, "..", "..");
 
-const LIVE_CSS = resolve(repoRoot, "themes/garden/assets/css/main.css");
+/* Two files since the styleguide got its own Tailwind entry point: tokens.css
+ * holds the `@theme static` block (so styleguide.css can share it by
+ * reference), main.css keeps the `:root` semantic aliases. Concatenated here
+ * so the parser below still sees one document with both blocks. */
+const LIVE_TOKENS_CSS = resolve(repoRoot, "themes/garden/assets/css/tokens.css");
+const LIVE_MAIN_CSS = resolve(repoRoot, "themes/garden/assets/css/main.css");
 const SKILL_TOKENS = resolve(repoRoot, ".claude/skills/design/tokens");
 
 // ── The backlog ─────────────────────────────────────────────────────────────
@@ -108,9 +114,16 @@ function block(css, opener, what) {
  * `.gd-icon-duo` — the design system has no equivalent, so check 2 below would
  * report main.css as "ahead" of it on every run. */
 function liveTokens(css) {
+  /* COMMENTS GO FIRST. block() finds its opener with indexOf, and both files'
+   * header comments mention `@theme static` and `:root` in prose — tokens.css
+   * explains the split in exactly those words. Unstripped, the parser sliced at
+   * the comment, swallowed the theme block as the ":root" block, and reported
+   * all twelve aliases as never adopted. Tailwind has the same failure mode
+   * with utility names in comments; apparently it is contagious. */
+  const clean = stripComments(css);
   return {
-    ...declarations(block(css, "@theme static", "an `@theme static` block")),
-    ...declarations(block(css, ":root", "the `:root` semantic-alias block")),
+    ...declarations(block(clean, "@theme static", "an `@theme static` block")),
+    ...declarations(block(clean, ":root", "the `:root` semantic-alias block")),
   };
 }
 
@@ -122,7 +135,9 @@ assert.ok(
     ".claude/skills/design/, or delete this test if that is not the plan."
 );
 
-const live = liveTokens(readFileSync(LIVE_CSS, "utf8"));
+const live = liveTokens(
+  readFileSync(LIVE_TOKENS_CSS, "utf8") + "\n" + readFileSync(LIVE_MAIN_CSS, "utf8")
+);
 const skill = {};
 for (const file of readdirSync(SKILL_TOKENS).sort()) {
   if (file.endsWith(".css")) {

@@ -1,6 +1,6 @@
 # Design system
 
-The tokens live in `themes/garden/assets/css/main.css`. What they look like
+The tokens live in `themes/garden/assets/css/tokens.css`. What they look like
 lives at **`/pages/styleguide/`** — run `hugo server` and open it. This page is
 only the *why*.
 

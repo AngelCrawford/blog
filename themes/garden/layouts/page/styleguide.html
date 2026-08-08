@@ -2,7 +2,7 @@
 {{- /* Living styleguide.
  *
  * Every swatch, step and sample is rendered FROM the tokens in
- * themes/garden/assets/css/main.css. Change a token and this page follows.
+ * themes/garden/assets/css/tokens.css. Change a token and this page follows.
  * A styleguide maintained by hand drifts within a month.
  *
  * WHY CLASS NAMES ARE SPELLED OUT IN FULL, never assembled from variables:
@@ -976,6 +976,20 @@
   </section>
 
 </div>
+
+{{- /* THIS PAGE LOADS ITS OWN STYLESHEET, and it is the only page that does.
+       The catalogue's utilities — ninety class names that appear nowhere else —
+       used to ride along in main.css on every page of the site: 5.9 KB raw, a
+       tenth of the whole thing, for a page most visitors never open. Measured
+       by building with and without it in `@source`.
+
+       It comes AFTER main.css in the document, which matters: both sheets emit
+       unlayered utilities, so where they overlap the later one wins — and they
+       are identical, so it does not matter which. What must not happen is this
+       sheet arriving before the component layer it is meant to sit above. */ -}}
+{{- $sgCss := resources.Get "css/styleguide.css" | css.TailwindCSS (dict "minify" hugo.IsProduction) -}}
+{{- if hugo.IsProduction }}{{ $sgCss = $sgCss | fingerprint | resources.PostProcess }}{{ end -}}
+<link href="{{ $sgCss.RelPermalink }}" rel="stylesheet">
 
 {{- $sg := resources.Get "js/styleguide.js" | resources.Minify | resources.Fingerprint -}}
 <script defer src="{{ $sg.RelPermalink }}"></script>

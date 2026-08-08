@@ -40,7 +40,9 @@ they ship. That gap is closed apart from the two rows marked below.
 | What | Status |
 |---|---|
 | Tokens | ✅ all 33 adopted. `design-tokens.test.mjs` holds an **empty** backlog and fails if it refills |
+| `css/tokens.css` | ✅ the `@theme static` block, shared by both entry points — main.css emits it, styleguide.css imports it `theme(reference)` |
 | `css/base.css` | ✅ the Preflight stand-in, `layer(base)` |
+| `css/styleguide.css` | ✅ the catalogue's own entry point, loaded by that page alone — its ~90 exclusive class names no longer ride along on every page |
 | `css/components.css` | ✅ `gd-*` plus the `at-*` vocabulary, `layer(components)` |
 | Webfonts | ✅ Montserrat, Montserrat Alternates and remixicon registered in garden |
 | Header chrome | ✅ `at-header`, `at-city`, `at-clock`, `at-stars`, `at-birds`, `at-balloon`, `at-wordmark` — derived from `hero.scss`, not from the skill |

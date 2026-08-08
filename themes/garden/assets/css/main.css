@@ -61,10 +61,36 @@
 @import "./themes/garden/assets/css/base.css" layer(base);
 @import "./themes/garden/assets/css/components.css" layer(components);
 
+/* The token block lives in tokens.css so the styleguide's own entry point can
+ * share it by reference — see the header there. The `static` marker emits every
+ * variable, which makes THIS file's output the one place tokens exist at
+ * runtime.
+ *
+ * `layer(theme)` does two jobs. The variables land in the same layer Tailwind
+ * puts its own theme in — and the suffix is what keeps Hugo's import inliner
+ * off this line. Hugo resolves plain `@import`s itself, against the published
+ * path `/css/`, where this file does not exist; an import carrying a modifier
+ * is left for the Tailwind CLI, which resolves it against the project root.
+ * That is why the base/components imports above never hit this and a plain
+ * import here failed the build. */
+@import "./themes/garden/assets/css/tokens.css" layer(theme);
+
 /* Path is relative to the PROJECT ROOT, not to this file: Hugo pipes the
  * stylesheet to the Tailwind CLI on stdin, so there is no containing directory
- * to resolve against. A file-relative path silently produces zero utilities. */
-@source "themes/garden/layouts";
+ * to resolve against. A file-relative path silently produces zero utilities.
+ *
+ * THE STYLEGUIDE IS DELIBERATELY NOT IN HERE. It is a catalogue: it renders
+ * every specimen of everything, and about ninety of its class names appear
+ * nowhere else on the site. Scanning it put 5.9 KB — a tenth of this
+ * stylesheet — on every page that will never use a line of it. Measured by
+ * building both ways.
+ *
+ * It gets its own entry point, css/styleguide.css, which layouts/page/
+ * styleguide.html loads for itself. Utilities the two share are emitted twice;
+ * that is the cheaper mistake, and gzip barely notices repetition. */
+@source "themes/garden/layouts/*.html";
+@source "themes/garden/layouts/_partials";
+@source "themes/garden/layouts/page/archive.html";
 
 /* JavaScript that builds DOM nodes carries class names too — search.js styles
  * every result row it generates. Forgetting this source produced a correctly
@@ -137,232 +163,7 @@
   font-display: block;
 }
 
-/* ===========================================================================
- * DESIGN TOKENS — the single source of every design value.
- *
- * Component styles compose from these. Nothing outside this block may hardcode
- * a colour, size, radius or shadow. See docs/design.md for the reasoning and
- * the styleguide page at /pages/styleguide/ for what they look like.
- *
- * `static` forces every variable into the output even when no utility
- * references it yet, so the tokens are reliably available to component CSS and
- * to the styleguide.
- * =========================================================================== */
-@theme static {
-  /* NAMED BY ROLE, NOT BY APPEARANCE.
-   *
-   * The first version named these after what they look like — dark, light,
-   * gold — which produced `--color-dark-lighter` and `--color-light-darker`:
-   * contradictions that say nothing about when to use them. Worse, `dark` was
-   * a surface and `light` was text, so the same naming pattern covered two
-   * unrelated jobs.
-   *
-   * Role names answer the only question that matters at the call site: what is
-   * this for. They also survive a palette change — if the site ever stops being
-   * dark-on-gold, `surface-raised` is still the raised surface.
-   *
-   * The values are unchanged from 2020: dark plus gold, minimal.
-   *
-   * --- Surfaces: what things sit on ------------------------------------- */
-  --color-surface: hsl(190 11% 11%); /* default */
-  --color-surface-raised: hsl(190 11% 15%); /* cards, panels */
-  --color-surface-sunken: hsl(190 11% 8%); /* page background, wells */
 
-  /* --- Ink: what you read ------------------------------------------------
-   * Warm greys, hue 40 — the same family as the gold accent at hue 35, rather
-   * than the cool 190 the surfaces use. Two reasons this changed:
-   *
-   * 1. The old ladder was 95 / 90 / 72 percent lightness. Five points between
-   *    heading and body does not survive antialiasing, so everything read as
-   *    one weight. It is now 96 / 85 / 63.
-   * 2. Cool cyan text next to a warm gold accent sits almost opposite on the
-   *    colour wheel and quietly competes with it. Same family reads calmer.
-   *
-   * Saturation drops as the text gets quieter, so the muted step recedes
-   * instead of turning into a second accent colour.
-   *
-   * Contrast against --color-surface: 15.5 / 12.1 / 6.7 to 1 — all well past
-   * WCAG AA, the muted step included. */
-  --color-ink-strong: hsl(40 25% 96%); /* headings */
-  --color-ink: hsl(40 12% 85%); /* body text */
-  --color-ink-muted: hsl(40 8% 63%); /* secondary text, captions, metadata */
-
-  /* --- Accent: what you act on ------------------------------------------ */
-  --color-accent: hsl(35 45% 50%); /* links, focus, active */
-  --color-accent-hover: hsl(29 100% 80%); /* hover */
-  --color-accent-muted: hsl(35 45% 26%); /* borders, dividers */
-  /* The shadow beneath a duotone glyph. It is LIGHTER than the surface, which
-   * sounds wrong for a shadow and is not: a genuinely darker shade against a
-   * near-black page reads as a hole punched in it. What carries the depth is
-   * the step down from the bright line, not darkness against the page.
-   *
-   * BRONZE, not dark gold. It sat at hsl(35 48% 17%) — the accent's own hue,
-   * merely darker — and at that value the two layers separated by brightness
-   * alone, which on a dense glyph at 20px is no separation at all. Rotating it
-   * to hue 25 makes the back layer a different METAL rather than a dimmer
-   * version of the front one, and hue survives at small sizes where a few points
-   * of lightness do not. That in turn allows the value back up to 24%: clearly
-   * above the surface's 11%, so it still never reads as a hole.
-   *
-   * The offsets on .gd-icon-duo moved with it — see the note there. Colour
-   * alone would have landed half the change. */
-  --color-accent-shadow: hsl(25 50% 24%);
-
-  /* --- State ------------------------------------------------------------
-   * For messages, form validation and build/deploy feedback. Lighter than the
-   * equivalents Bulma was configured with, because those were picked for text
-   * ON the colour; here the colour is the text, on a dark surface. */
-  --color-success: hsl(152 50% 48%);
-  --color-warning: hsl(41 80% 55%);
-  --color-error: hsl(0 65% 60%);
-
-  /* --- Growth stages ----------------------------------------------------
-   * Icon tints only — one colour per stage, never a surface or a text colour.
-   * They are not part of the palette a component picks from, which is why the
-   * styleguide shows them with their icons rather than as swatches. */
-  --color-seedling: hsl(75 60% 60%);
-  --color-budding: hsl(295 60% 60%);
-  --color-evergreen: rgb(78 151 78);
-  --color-withered: hsl(0 0% 50%);
-
-  /* --- Type -------------------------------------------------------------
-   * Montserrat Alternates for headings, Montserrat for body — decided 2020,
-   * self-hosted for GDPR, unchanged. See docs/design.md.
-   *
-   * The scale is explicit rather than inherited so that changing it is one
-   * edit here, never a hunt through components. */
-  --font-heading: "Montserrat Alternates", ui-sans-serif, system-ui, sans-serif;
-  /* "Montserrat" first, the Bulma-era alias behind it: markup still rendered by
-   * article-time keeps resolving while both themes are composed. The alias
-   * drops out of this line when article-time does. */
-  --font-body: "Montserrat", "Montserrat-Regular", ui-sans-serif, system-ui, sans-serif;
-  /* Remixicon as a WEBFONT, for the four glyphs the design calls by codepoint:
-   * the double-quote pair on pull quotes, notes and the footer slogan, the
-   * external-link arrow, and the image marker in figcaptions. Everything else
-   * is the SVG sprite. */
-  --font-icon: "remixicon";
-
-  /* 12px was too small to read comfortably and is deliberately removed —
-   * `initial` deletes Tailwind's default, so `text-xs` no longer exists and any
-   * leftover use fails visibly instead of quietly shipping unreadable text.
-   * The smallest step is 14px. */
-  /* EACH SIZE CARRIES ITS OWN LINE HEIGHT.
-   *
-   * Leading is not one value for the whole page: long lines of body text need
-   * air to find the next line, a 48px headline needs the opposite or it falls
-   * apart into loose strips. So it loosens as the type gets smaller and tightens
-   * as it grows.
-   *
-   * Body deliberately sits at 1.7 rather than the usual 1.5. The ink ramp moved
-   * warmer and the muted step dropped from 72% to 63% lightness — dimmer text on
-   * a dark surface needs more room between lines to stay comfortable. */
-  --text-xs: initial;
-
-  --text-sm: 0.875rem; /* 14px  captions, metadata — the smallest allowed */
-  --text-sm--line-height: 1.55;
-
-  --text-base: 1rem; /* 16px  body */
-  --text-base--line-height: 1.7;
-
-  --text-lg: 1.125rem; /* 18px  lead paragraphs */
-  --text-lg--line-height: 1.6;
-
-  --text-xl: 1.375rem; /* 22px  card titles */
-  --text-xl--line-height: 1.4;
-
-  --text-2xl: 1.75rem; /* 28px  section headings */
-  --text-2xl--line-height: 1.3;
-
-  --text-3xl: 2.25rem; /* 36px  page titles */
-  --text-3xl--line-height: 1.2;
-
-  --text-4xl: 3rem; /* 48px  hero */
-  --text-4xl--line-height: 1.1;
-
-  /* Weight and tracking are decisions too, and they were being retyped: 600
-   * appeared on every heading rule and every button, 0.03em on every heading.
-   * `--weight-*` is deliberately NOT Tailwind's `--font-weight-*` namespace —
-   * these are for component CSS, not for minting a `font-strong` utility.
-   * `--tracking-*` IS the namespace, so `tracking-heading` and `tracking-label`
-   * exist as utilities, which is what the call sites want. */
-  --weight-body: 400;
-  --weight-strong: 600; /* headings, button labels */
-  --weight-bold: 700;
-  --tracking-heading: 0.03em;
-  --tracking-label: 0.08em; /* the 11px uppercase tile labels */
-
-  /* --- Space ------------------------------------------------------------
-   * Airy: 4px base unit, 24px between related blocks, 80px between sections.
-   * Use the named steps for layout rhythm; the numeric scale (p-2, gap-6, …)
-   * stays available for fine adjustment inside a component. */
-  --spacing: 0.25rem; /* 4px  base unit for the numeric scale */
-  /* Named steps of the numeric scale. Redundant with `--spacing` above, which
-   * already generates p-1 … p-4 at exactly these values — they are spelled out
-   * because component CSS refers to them by name (`var(--spacing-4)`) and a
-   * variable that only exists implicitly cannot be referred to. */
-  --spacing-1: 0.25rem; /* 4px */
-  --spacing-2: 0.5rem; /* 8px  inside a row */
-  --spacing-3: 0.75rem; /* 12px icon to text */
-  --spacing-4: 1rem; /* 16px inside a component */
-  --spacing-gutter: 1.5rem; /* 24px between related blocks */
-  --spacing-section: 5rem; /* 80px between page sections */
-
-  /* --- Measure ----------------------------------------------------------
-   * Two widths the page rhythm depends on. Text over the full window is tiring
-   * after two lines; the content column caps well before that. */
-  --measure: 70ch; /* comfortable prose width */
-  --page-max: 64rem; /* 1024px content column */
-
-  /* --- Radius -----------------------------------------------------------
-   * Lightly rounded. Three steps, no more — a fourth only invites debate. */
-  --radius-sm: 0.25rem; /* 4px   buttons, inputs, badges */
-  --radius-md: 0.5rem; /* 8px   cards, panels */
-  --radius-lg: 0.75rem; /* 12px  dialogs, overlays */
-  /* Two shapes rather than steps on the scale, which is why they are named for
-   * what they are instead of getting a fourth and fifth size. `tile` is the old
-   * theme's $tile-radius, kept so the sidebar and info-tile chrome does not
-   * shift by half a pixel during the migration; `pill` is fully round. */
-  --radius-tile: 0.45rem; /* legacy tile chrome — sidebars, info tiles */
-  --radius-pill: 999px; /* hashtags, heart button */
-
-  /* --- Depth ------------------------------------------------------------
-   * Restrained. On a very dark surface a shadow reads as a slightly darker
-   * halo, not as lift, so these stay soft and are used sparingly. Separation
-   * is carried mainly by surface contrast plus a gold hairline. */
-  --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.3);
-  --shadow-md: 0 4px 12px rgb(0 0 0 / 0.35);
-  --shadow-lg: 0 8px 28px rgb(0 0 0 / 0.45);
-
-  /* PAIRED shadows — dark below-right plus a faint light above-left. The pair
-   * is what makes a surface read as formed out of the page rather than stuck
-   * on top of it. This is the last of neumorphism: it was the 2020 aspiration,
-   * dropped as a page-wide idea in 2026 because it needs a light-to-mid grey
-   * ground, and kept in exactly these two places because here it works. */
-  --shadow-domed: 4px 4px 8px rgb(0 0 0 / 0.55), -3px -3px 6px hsl(40 12% 85% / 0.09);
-  --shadow-card: 5px 5px 5px rgb(0 0 0 / 0.5), -5px -5px 5px hsl(190 20% 90% / 0.05);
-  /* The same two shadows inverted to inset, and deliberately stronger: an inset
-   * shadow has to darken a surface that is already near-black, so the 55% that
-   * reads fine on the outside is invisible on the inside. The light edge moves
-   * to the bottom-right, where a pressed dish catches it. */
-  --shadow-pressed: inset 5px 5px 9px rgb(0 0 0 / 0.75), inset -4px -4px 8px hsl(40 12% 85% / 0.12);
-
-  /* --- Motion -----------------------------------------------------------
-   * Short and unshowy. Colour and shadow crossfade; nothing bounces, nothing
-   * scales on the page itself.
-   *
-   * fast — checkbox fill, tag hover
-   * base — the default: colour, border, shadow, transform
-   * slow — icon colour, tooltip fade, sepia release on cover images
-   *
-   * `--ease-out` DELIBERATELY OVERRIDES Tailwind's built-in cubic-bezier for
-   * the `ease-out` utility. The design system says the keyword, everywhere; two
-   * different curves both called ease-out is the kind of split nobody notices
-   * and nobody can explain later. */
-  --ease-out: ease-out;
-  --duration-fast: 0.15s;
-  --duration-base: 0.2s;
-  --duration-slow: 0.3s;
-}
 
 /* ===========================================================================
  * SEMANTIC ALIASES — the same values, named for the place they are used.
