@@ -825,12 +825,11 @@
 }
 .at-leader-list > li > :last-child { order: 3; padding: 0 0 0 0.3em; color: var(--color-ink-muted); }
 
-/* External links get a small gold arrow after them. A REAL CHARACTER, not an
- * icon-font codepoint: the \ecaf escape came out of the CSS pipeline as an
- * empty string, and the remixicon FONT it addressed is not even shipped — the
- * site carries the SVG sprite only. This rule was silently dead since the
- * port; the unicode arrow depends on nothing. */
-.at-external::after { content: " \2197"; font-size: 80%; color: color-mix(in srgb, var(--color-accent) 50%, transparent); }
+/* THE EXTERNAL-LINK MARK LIVES IN THE RENDER HOOK now (_markup/render-link):
+ * it is remixicon's external-link-line from the sprite, a real element. The
+ * ::after that stood here addressed an icon FONT the site never ships and was
+ * dead since the port; its unicode replacement lasted one review round before
+ * Angel asked for the proper glyph. */
 
 /* ===========================================================================
  * ═══════════════════════════════════════════════════════════════════════════
