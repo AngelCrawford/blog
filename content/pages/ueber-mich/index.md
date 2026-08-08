@@ -14,6 +14,6 @@ sitemap:
     priority: 0.3
 ---
 
-- **Web Entwickler. Sonnenliebhaber. Goth.** <small>{age} Jahre jung</small>
-- **Kuchen, 🐐 oder goldfarbene Dinge** <small>Damit bin ich durchaus bestechbar</small>
-- **Musik-, Serien- und Filmsüchtig** <small>♡ Trash-Filme!</small>
+- **Web Entwickler. Sonnenliebhaber. Goth.** | <small>{age} Jahre jung</small>
+- **Verliebt in 🐄, Kuhmuster und Gold** | <small>bestechlich mit Kuchen</small>
+- **Musik-, Serien- und Filmsüchtig** | <small>♡ Trash-Filme!</small>
