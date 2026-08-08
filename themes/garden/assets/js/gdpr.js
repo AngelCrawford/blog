@@ -137,7 +137,11 @@ onReady(() => {
    * Root-relative sprite path for the same reason the webfonts use one: baseURL
    * carries no sub-path in any of the four environments. */
   const SPRITE = "/fonts/remixicon/remixicon.symbol.svg";
-  const flag = (card, icon, label) => {
+  /* `tone` is the flag's colour as a COMPLETE class literal — never composed,
+   * Tailwind only extracts whole strings. "Neu" speaks the palette's one green:
+   * on a feed where most cards already say "Gesehen", the new one has to be
+   * the thing your eye lands on, and a second gold flag was not. */
+  const flag = (card, icon, label, tone) => {
     if (card.querySelector(".at-card-badge")) return;
     const el = document.createElement("span");
     /* `at-card-badge` is only the dedup hook above — the styles are utilities,
@@ -150,8 +154,8 @@ onReady(() => {
     el.className =
       "at-card-badge absolute top-0 right-0 z-10 inline-flex w-max " +
       "translate-x-[calc(50%-18px)] translate-y-[calc(-50%+18px)] rotate-45 " +
-      "items-center gap-1 rounded-[3px] border border-accent-muted/70 " +
-      "bg-[hsl(190_11%_12%)] px-[9px] py-[3px] text-[0.7rem] text-accent";
+      "items-center gap-1 rounded-[3px] border " +
+      "bg-[hsl(190_11%_12%)] px-[9px] py-[3px] text-[0.7rem] " + tone;
     el.innerHTML =
       `<svg class="size-[0.9em] shrink-0 fill-current" aria-hidden="true">` +
       `<use href="${SPRITE}#${icon}"></use></svg>`;
@@ -165,7 +169,7 @@ onReady(() => {
     const card = link.closest(CARD);
     if (!card) continue;
     card.classList.add("visited");
-    flag(card, "check-fill", "Gesehen");
+    flag(card, "check-fill", "Gesehen", "border-accent-muted/70 text-accent");
   }
 
   /* And mark the recent ones. The card's own `datetime` is the source — no
@@ -179,7 +183,7 @@ onReady(() => {
     if (!when) continue;
     if (Math.ceil((now - new Date(when)) / DAY_MS) <= NEW_DAYS) {
       card.classList.add("is-new");
-      flag(card, "sparkling-line", "Neu");
+      flag(card, "sparkling-line", "Neu", "border-success/70 text-success");
     }
   }
 });
