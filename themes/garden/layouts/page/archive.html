@@ -11,7 +11,7 @@
  * you came for, and four across beats two. */ -}}
 <div class="mx-auto max-w-[96rem] px-gutter pt-gutter pb-section font-body text-base text-ink">
 
-    <div class="grid grid-cols-1 gap-gutter lg:grid-cols-[minmax(0,1fr)_19rem] lg:items-start">
+    <div class="grid grid-cols-1 gap-gutter min-[768px]:pl-6 lg:grid-cols-[minmax(0,1fr)_19rem] lg:items-start">
         <div class="rounded-md border border-accent-muted/40 bg-surface-raised p-gutter shadow-md at-flow">
             {{- with .Resources }}
             {{- with (.ByType "image").GetMatch "cover*" }}
@@ -36,7 +36,7 @@
     {{- range ($combinedPages.GroupByDate "2006") }}
     <section class="mt-section">
         <h2 class="gd-h2" id="{{ .Key }}">{{ .Key }}</h2>
-        <div class="grid grid-cols-[repeat(auto-fill,minmax(22rem,1fr))] gap-x-gutter gap-y-gutter">
+        <div class="grid grid-cols-[repeat(auto-fill,minmax(22rem,1fr))] gap-x-gutter gap-y-gutter min-[768px]:pl-6">
             {{- range .Pages.ByPublishDate.Reverse }}{{ partial "card" . }}{{ end }}
         </div>
     </section>

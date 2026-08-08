@@ -24,7 +24,7 @@
 
 <div class="mx-auto max-w-[96rem] px-gutter pt-gutter pb-section font-body text-base text-ink">
 
-    <div class="rounded-md border border-accent-muted/40 bg-surface-raised p-gutter shadow-md at-flow mb-section">
+    <div class="rounded-md border border-accent-muted/40 bg-surface-raised p-gutter shadow-md at-flow mb-section min-[768px]:ml-6">
         {{- with .Resources }}
         {{- with (.ByType "image").GetMatch "cover*" }}
         {{- $cover := .Process "fill 480x360 webp" }}
@@ -43,7 +43,7 @@
         {{- $hiddenCount = partial "withered-count.html" .Pages -}}
     {{- end -}}
 
-    <div class="{{ if $isTaxonomy }}grid gap-x-gutter gap-y-gutter grid-cols-[repeat(auto-fill,minmax(22rem,1fr))]{{ else }}h-feed grid grid-cols-[repeat(auto-fill,minmax(min(28rem,100%),1fr))] gap-x-12 gap-y-12 pl-6{{ end }}">
+    <div class="{{ if $isTaxonomy }}grid gap-x-gutter gap-y-gutter min-[768px]:pl-6 grid-cols-[repeat(auto-fill,minmax(22rem,1fr))]{{ else }}h-feed grid grid-cols-[repeat(auto-fill,minmax(min(28rem,100%),1fr))] gap-x-12 gap-y-12 pl-6{{ end }}">
         {{- if $isTaxonomy -}}
             {{- /* Busiest Rubrik first: a taxonomy index is a way in, and the one
                    with two entries is not the way in. */ -}}

@@ -24,6 +24,7 @@
 
 {{- if eq .Page.Type "page" }}
 
+    <div class="min-[768px]:pl-6">
     {{ partial "withered-banner.html" . }}
     <article class="{{ $panel }}">
         {{- with $img }}
@@ -35,10 +36,14 @@
         {{- with .Params.subtitle }}<p class="mt-4 text-lg text-ink-muted">{{ . }}</p>{{ end }}
         <div class="at-prose mt-gutter">{{ .Content }}</div>
     </article>
+    </div>
 
 {{- else if eq .Page.Type "articles" }}
 
-    <div class="grid grid-cols-1 gap-gutter lg:grid-cols-[minmax(0,1fr)_22rem] lg:items-start">
+    {{- /* min-[768px]:pl-6 — the same gutter of ground the feed grid buys its
+           cards: the floated cover hangs 1.5em past the panel's left edge from
+           768px up, and without the indent it slaps the content edge. */ -}}
+    <div class="grid grid-cols-1 gap-gutter min-[768px]:pl-6 lg:grid-cols-[minmax(0,1fr)_22rem] lg:items-start">
         <div class="min-w-0">
             {{ partial "withered-banner.html" . }}
             <article class="h-entry {{ $panel }}">
