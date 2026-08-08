@@ -217,31 +217,42 @@
        time, no growth stage and nothing to heart about a category. The count is
        the content. */ -}}
 <article class="at-card group/card">
-    <div class="at-flow relative p-gutter">
+    <div class="relative flex h-full flex-col gap-2 p-gutter">
         {{- with $img }}
         {{- $cover := .Process "fill 480x360 webp" }}
         {{- /* ALWAYS the full-bleed cover, not ui/figure: the term card is
                permanently stacked — title under picture, no text column at any
-               width — so the float treatment has nothing to do here and the
-               inset thumbnail it produced read as a mistake next to the
-               stacked article cards. Same nesting as everywhere: negative
-               gutters, top corners inside the card's radius. */ -}}
-        <a class="-mx-gutter -mt-gutter mb-4 block" href="{{ $.RelPermalink }}" title="{{ $.Title }}">
-            <img class="block aspect-[4/3] h-auto w-full rounded-t-[calc(var(--radius-md)-1px)] object-cover sepia transition-[filter] duration-300 ease-out group-hover/card:sepia-0" src="{{ $cover.RelPermalink }}" alt="{{ $.Title }}" width="480" height="360" loading="lazy">
+               width — so the float treatment has nothing to do here. Same
+               nesting as everywhere: negative gutters, top corners inside the
+               card's radius. shadow-card underneath so the picture reads as
+               laid onto the card, like every other photograph. */ -}}
+        <a class="-mx-gutter -mt-gutter mb-2 block" href="{{ $.RelPermalink }}" title="{{ $.Title }}">
+            <img class="block aspect-[4/3] h-auto w-full rounded-t-[calc(var(--radius-md)-1px)] object-cover shadow-card sepia transition-[filter] duration-300 ease-out group-hover/card:sepia-0" src="{{ $cover.RelPermalink }}" alt="{{ $.Title }}" width="480" height="360" loading="lazy">
         </a>
         {{- end }}
-        <h2 class="m-0 font-heading text-xl font-semibold tracking-heading" aria-label="{{ .Title }}">
+        {{- /* WITHOUT a picture the text centres — a left-bound title floating
+               in an empty box read as unfinished (Angel's verdict). With one,
+               everything sits under the picture's left edge as before. */ -}}
+        <h2 class="m-0 font-heading text-xl font-semibold tracking-heading{{ if not $img }} text-center{{ end }}" aria-label="{{ .Title }}">
             {{- /* The Rubrik's own colour lands on the DOT, not on the title.
                    A per-category heading colour is the same mistake the ribbon
                    made, one element further in. */ -}}
             <a class="text-accent-hover hover:text-accent" href="{{ .RelPermalink }}" title="{{ .Title }}">{{ .Title }}</a>
         </h2>
-        <p class="m-0 flex flex-wrap items-center gap-x-[0.75em] gap-y-[0.5em] text-sm text-ink-muted">
+        <p class="m-0 flex flex-wrap items-center gap-x-[0.75em] gap-y-[0.5em] text-sm text-ink-muted{{ if not $img }} justify-center{{ end }}">
             {{- with .Params.categoryColor }}{{ partial "ui/badge" (dict "label" $.Title "dot" .) }}{{ end }}
             {{- /* Story 1.3: the count on a term card excludes withered entries,
                    matching what the listing behind it will actually show. */ -}}
             <span>{{ len (partial "withered-filter.html" .Pages) }} Artikel</span>
         </p>
+        {{- /* The same pressable dome as the article card's Weiterlesen, pinned
+               to the bottom right — the term card was a click target nothing
+               marked as one. */ -}}
+        <div class="mt-auto flex justify-end pt-2">
+            <a href="{{ .RelPermalink }}" title="{{ .Title }} ansehen" aria-label="{{ .Title }} ansehen" class="gd-round-button [--gd-round-size:2.25rem] shrink-0">
+                <svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#arrow-right-s-line"></use></svg>
+            </a>
+        </div>
     </div>
 </article>
 {{- end -}}
