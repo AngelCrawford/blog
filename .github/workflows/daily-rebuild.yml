@@ -48,7 +48,7 @@ jobs:
       #   - push (tag): refs/tags/v*  (the tag itself)
       #   - schedule: refs/heads/main  (then overridden to latest tag below)
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ${{ github.event_name == 'workflow_dispatch' && inputs.ref || github.ref }}
           fetch-depth: 0  # full history for git describe + worktree
@@ -88,7 +88,7 @@ jobs:
           fi
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: "22"
           cache: "npm"
@@ -96,14 +96,11 @@ jobs:
       - name: Setup Hugo
         # Pinned to SHA for supply-chain hardening (third-party action). Bump by
         # updating both the SHA and the trailing tag comment together.
-        uses: peaceiris/actions-hugo@16361eb4acea8698b220b76c0d4e84e1fd22c61d # v2.6.0
+        uses: peaceiris/actions-hugo@2752ce1d29631191ea3f27c23495fa06139a5b78 # v3.2.1
         with:
           hugo-version: "0.161.1"
           extended: true
 
-      # Hugo's `transpiler: "dartsass"` (used in layouts/_partials/_base/head.html)
-      # requires the Dart Sass binary in PATH. peaceiris/actions-hugo doesn't
-      # install it automatically.
       # `npm ci` (not `npm install`) so the resolved tree matches package-lock
       # exactly — matters now that Tailwind pulls platform-specific native
       # binaries (@tailwindcss/oxide-*) as optional dependencies. Also fails
@@ -176,7 +173,7 @@ jobs:
       # - Without: https://angelcrawford.github.io/blog/
       - name: Setup Pages
         id: pages
-        uses: actions/configure-pages@v5
+        uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
 
       # Generate version string for the footer (passed via HUGO_PARAMS_VERSION env).
       # Footer reads this via `site.Params.version` — clean replacement for the old
@@ -209,13 +206,13 @@ jobs:
             --baseURL "${{ steps.pages.outputs.base_url }}"
 
       - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with:
           path: ./public
 
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@cd2ce8fcbc39b97be8ca5fce6e763baed58fa128 # v5.0.0
 
       # Story 2.6 AC #6 — Layer 2 (workflow-enforced) failure notification.
       # Layer 1 (built-in failed-workflow email) depends on the repo owner's
@@ -225,7 +222,7 @@ jobs:
       # GitHub's standard issue-notification path (no SMTP secret needed).
       - name: Notify on failure
         if: failure()
-        uses: actions/github-script@v9
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         with:
           script: |
             const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
