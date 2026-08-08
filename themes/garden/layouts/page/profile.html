@@ -31,7 +31,7 @@
     <article class="h-card mx-auto grid max-w-[52rem] grid-cols-1 gap-6 rounded-md border border-accent-muted/40 bg-surface-raised p-gutter py-section text-center shadow-md min-[640px]:grid-cols-[auto_1fr] min-[640px]:gap-10">
         <nav class="at-socials flex flex-wrap justify-center gap-6 min-[640px]:flex-col min-[640px]:flex-nowrap min-[640px]:justify-between min-[640px]:self-stretch min-[640px]:py-2" aria-label="Soziale Profile">
             {{- range $identity.socials }}
-            <a class="flex size-[1.7em] items-center justify-center text-[1.7em] transition duration-200 ease-out" href="{{ .src }}" target="_blank" rel="noopener me" data-tooltip="{{ .name }}" aria-label="{{ .name }}"
+            <a class="flex size-[1.3em] items-center justify-center text-[1.7em] transition duration-200 ease-out" href="{{ .src }}" target="_blank" rel="noopener me" data-tooltip="{{ .name }}" aria-label="{{ .name }}"
                style="color: {{ .color }};{{ with .opacity }} opacity: {{ . }};{{ end }}">
                 <svg class="size-[1.7em] fill-current" aria-hidden="true"><use href="{{ $sprite }}?t={{ $v }}#{{ .icon }}"></use></svg>
             </a>
@@ -67,15 +67,17 @@
             {{- with .Params.spotify }}
             <div class="mt-2 w-full max-w-[22rem] rounded-xl border border-accent-muted/40 bg-[var(--surface-tile)] p-4 text-left" data-embed-src="{{ . }}" data-embed-height="80" data-embed-title="Spotify-Playlist">
                 <p class="m-0 mb-3 text-sm text-ink-muted">
-                    <strong class="font-semibold text-ink-strong">Musikgeschmack.</strong>
-                    Der Klick lädt den Player von Spotify — dabei stellt Dein Browser
-                    eine Verbindung zu Spotify her (Cookies möglich). Details in der
+                    Der Klick lädt den Player von Spotify, dabei stellt Dein Browser
+                    eine Verbindung zu Spotify her (Cookies möglich).<br /> Details in der
                     <a class="text-accent-hover underline underline-offset-2 hover:text-accent" href="{{ "pages/datenschutz/" | relURL }}">Datenschutzerklärung</a>.
                 </p>
-                <button type="button" class="inline-flex cursor-pointer items-center gap-2 rounded-sm border border-accent bg-transparent px-4 py-2 text-sm/[1.4] font-semibold text-accent transition-colors duration-200 ease-out hover:bg-accent hover:text-surface-sunken focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">
-                    <svg class="size-4 shrink-0 fill-current" aria-hidden="true"><use href="{{ $sprite }}?t={{ $v }}#play-circle-line"></use></svg>
-                    Player laden
-                </button>
+                {{- /* ui/button, not a hand-rolled twin — Angel caught the copy;
+                       the spotify-line glyph is their pick too (the curated
+                       sprite has no play icon, and naming the service on a
+                       consent button is the honest label anyway). */ -}}
+                <div class="flex justify-end">
+                    {{ partial "ui/button" (dict "label" "Player laden" "variant" "secondary" "icon" "spotify-line" "type" "button") }}
+                </div>
             </div>
             {{- end }}
 
