@@ -743,9 +743,9 @@
               <svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $v }}#stack-fill"></use></svg>
               <svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $v }}#stack-line"></use></svg>
             </span>
-            <span class="inline-flex items-center gap-[0.2em] text-[color-mix(in_srgb,var(--color-accent-hover)_80%,transparent)]">
-              <svg class="size-[1.1em] shrink-0 fill-current" aria-hidden="true"><use href="{{ $sprite }}?t={{ $v }}#heart-fill"></use></svg>
-              <span class="font-semibold tabular-nums">41</span>
+            <span class="inline-flex shrink-0 items-center gap-[0.35em] rounded-pill border border-[hsl(0_70%_65%/0.55)] py-[0.18em] pr-[0.6em] pl-[0.5em] text-[hsl(0_70%_65%)]">
+              <svg class="size-[1.1em] shrink-0 fill-current" aria-hidden="true"><use href="{{ $sprite }}?t={{ $v }}#heart-line"></use></svg>
+              <span class="text-[0.85em] font-semibold text-ink-muted tabular-nums">41</span>
             </span>
             <a href="#vokabular" title="Weiterlesen" aria-label="Weiterlesen" class="flex text-accent">
               <svg class="size-5 shrink-0 fill-current" aria-hidden="true"><use href="{{ $sprite }}?t={{ $v }}#arrow-right-s-line"></use></svg>
@@ -776,9 +776,9 @@
               <svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $v }}#lightbulb-fill"></use></svg>
               <svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $v }}#lightbulb-line"></use></svg>
             </span>
-            <button type="button" class="cursor-pointer inline-flex items-center gap-[0.2em] text-[color-mix(in_srgb,var(--color-accent-hover)_80%,transparent)] transition-colors duration-150 ease-out hover:text-accent aria-pressed:text-[hsl(0_70%_65%)]" aria-pressed="false">
+            <button type="button" class="heart-demo group/heart inline-flex shrink-0 cursor-pointer items-center gap-[0.35em] rounded-pill border border-[hsl(0_70%_65%/0.55)] py-[0.18em] pr-[0.6em] pl-[0.5em] text-[hsl(0_70%_65%)] transition-colors duration-150 ease-out hover:border-[hsl(0_70%_74%)] hover:text-[hsl(0_70%_74%)] aria-pressed:border-[hsl(0_70%_65%)]" aria-pressed="false">
               <svg class="size-[1.1em] shrink-0 fill-current" aria-hidden="true"><use href="{{ $sprite }}?t={{ $v }}#heart-line"></use></svg>
-              <span class="font-semibold tabular-nums">23</span>
+              <span class="text-[0.85em] font-semibold text-ink-muted tabular-nums">23</span>
             </button>
           </div>
         </footer>
@@ -831,16 +831,16 @@
           von „Gold ist die einzige Akzentfarbe".
         </p>
         <div class="flex flex-wrap items-center gap-4 border-t border-accent-muted/30 pt-4">
-          <button type="button" class="cursor-pointer inline-flex items-center gap-[0.2em] text-[color-mix(in_srgb,var(--color-accent-hover)_80%,transparent)] transition-colors duration-150 ease-out hover:text-accent aria-pressed:text-[hsl(0_70%_65%)]" aria-pressed="false">
+          <button type="button" class="heart-demo group/heart inline-flex shrink-0 cursor-pointer items-center gap-[0.35em] rounded-pill border border-[hsl(0_70%_65%/0.55)] py-[0.18em] pr-[0.6em] pl-[0.5em] text-[hsl(0_70%_65%)] transition-colors duration-150 ease-out hover:border-[hsl(0_70%_74%)] hover:text-[hsl(0_70%_74%)] aria-pressed:border-[hsl(0_70%_65%)]" aria-pressed="false">
             <svg class="size-[1.1em] shrink-0 fill-current" aria-hidden="true"><use href="{{ $sprite }}?t={{ $v }}#heart-line"></use></svg>
-            <span class="font-semibold tabular-nums">41</span>
+            <span class="text-[0.85em] font-semibold text-ink-muted tabular-nums">41</span>
           </button>
           {{- /* Geherzt: hearts.js setzt aria-pressed="true" und disabled — Rot aus der
                  aria-pressed-Variante, Dämpfung aus der globalen disabled-Regel.
                  Genau so sieht der Zustand live aus. */ -}}
-          <button type="button" class="inline-flex items-center gap-[0.2em] text-[color-mix(in_srgb,var(--color-accent-hover)_80%,transparent)] transition-colors duration-150 ease-out aria-pressed:text-[hsl(0_70%_65%)]" aria-pressed="true" disabled>
+          <button type="button" class="heart-demo group/heart inline-flex shrink-0 items-center gap-[0.35em] rounded-pill border border-[hsl(0_70%_65%/0.55)] py-[0.18em] pr-[0.6em] pl-[0.5em] text-[hsl(0_70%_65%)] transition-colors duration-150 ease-out hover:border-[hsl(0_70%_74%)] hover:text-[hsl(0_70%_74%)] aria-pressed:border-[hsl(0_70%_65%)]" aria-pressed="true" disabled>
             <svg class="size-[1.1em] shrink-0 fill-current" aria-hidden="true"><use href="{{ $sprite }}?t={{ $v }}#heart-fill"></use></svg>
-            <span class="font-semibold tabular-nums">42</span>
+            <span class="text-[0.85em] font-semibold text-ink-muted tabular-nums">42</span>
           </button>
           <span data-tooltip="Aktuelle Seite" class="gd-round-button gd-round-button-pressed">
             <svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $v }}#arrow-right-s-fill"></use></svg>
