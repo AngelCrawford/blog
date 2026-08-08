@@ -74,6 +74,14 @@
     setIcons(box.value ? "clear" : "idle");
     show(wrapper, false);
 
+    // First focus starts the index load; if the network is slower than the
+    // fingers, the arrival re-runs the search for whatever is in the box.
+    box.addEventListener("focus", () => {
+      loadIndex().then(() => {
+        if (box.value && index) runSearch();
+      });
+    });
+
     // Single listener, bound once — not inside a focus handler.
     box.addEventListener("input", () => {
       if (!box.value.length) {
@@ -274,33 +282,45 @@
 
   // --- index ---------------------------------------------------------------
 
-  fetch(INDEX_URL)
-    .then((response) => {
-      if (!response.ok) throw new Error(`${response.status} ${response.statusText}`);
-      return response.json();
-    })
-    .then((entries) => {
-      const seen = new Set();
-      index = [];
-      for (const entry of entries) {
-        if (!entry.tags || seen.has(entry.permalink)) continue;
-        seen.add(entry.permalink);
-        index.push({
-          showTitle: entry.title,
-          showContent: entry.content,
-          title: normalize(entry.title),
-          subtitle: normalize(entry.subtitle),
-          description: normalize(entry.description),
-          content: normalize(entry.content),
-          tags: entry.tags.map(normalize),
-          rawTags: entry.tags.join(", "),
-          permalink: entry.permalink,
-          publishedOn: entry.publishedOn,
-          updatedOn: entry.updatedOn,
-        });
-      }
-    })
-    .catch((error) => {
-      console.error("search: could not load the index —", error.message);
-    });
+  /* LAZY (#193): the index grows linearly with the article count, and it used
+   * to ride along on EVERY pageview whether search was ever touched. It loads
+   * on the first focus of the search box now — the focus gives the network a
+   * head start on the first keystroke. Memoised on the promise so repeated
+   * focus is free; reset on failure so the next focus retries instead of
+   * remembering a dead network forever. */
+  let indexPromise = null;
+  function loadIndex() {
+    if (indexPromise) return indexPromise;
+    indexPromise = fetch(INDEX_URL)
+      .then((response) => {
+        if (!response.ok) throw new Error(`${response.status} ${response.statusText}`);
+        return response.json();
+      })
+      .then((entries) => {
+        const seen = new Set();
+        index = [];
+        for (const entry of entries) {
+          if (!entry.tags || seen.has(entry.permalink)) continue;
+          seen.add(entry.permalink);
+          index.push({
+            showTitle: entry.title,
+            showContent: entry.content,
+            title: normalize(entry.title),
+            subtitle: normalize(entry.subtitle),
+            description: normalize(entry.description),
+            content: normalize(entry.content),
+            tags: entry.tags.map(normalize),
+            rawTags: entry.tags.join(", "),
+            permalink: entry.permalink,
+            publishedOn: entry.publishedOn,
+            updatedOn: entry.updatedOn,
+          });
+        }
+      })
+      .catch((error) => {
+        console.error("search: could not load the index —", error.message);
+        indexPromise = null;
+      });
+    return indexPromise;
+  }
 })();
