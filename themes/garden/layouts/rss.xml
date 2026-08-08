@@ -90,12 +90,28 @@
              absolute src: that is what every reader renders. JPEG, not the
              site's WebP, because a feed lands in clients we do not control. */ -}}
       {{- $content := .Content -}}
+      {{- $itemTitle := .Title -}}
       {{- with $featured }}
         {{- $feedImage := .Process "resize 1200x jpg q85" -}}
-        {{- $content = printf `<p><img src="%s" alt="%s" width="%d" height="%d" /></p>%s` $feedImage.Permalink ($.Title | htmlEscape) $feedImage.Width $feedImage.Height $content -}}
+        {{- /* $itemTitle, not $.Title: inside `range`, `$` is the template's
+               root — the home page — so every alt read "Home". */ -}}
+        {{- $content = printf `<p><img src="%s" alt="%s" width="%d" height="%d" /></p>%s` $feedImage.Permalink ($itemTitle | htmlEscape) $feedImage.Width $feedImage.Height $content -}}
       {{- end -}}
-      {{- $content = replaceRE `a href="(#[^"]*)"` (printf `a href="%s$1"` .Permalink) $content -}}
+      {{- /* `a href="…"` never matched: the heading hook writes class before
+             href, so the anchors stayed relative and the validator flagged all
+             ten ("description should not contain relative URL references").
+             Matching the attribute alone works regardless of order. */ -}}
+      {{- $content = replaceRE `href="(#[^"]*)"` (printf `href="%s$1"` .Permalink) $content -}}
       {{- $content = replaceRE `<svg[\s\S]*?</svg>` "" $content -}}
+      {{- /* CLASS ATTRIBUTES ARE STRIPPED, and the W3C validator is why: our
+             render hooks emit Tailwind arbitrary variants like [&_pre]:m-0 and
+             [&>*:first-child]:mt-0, and a bare & inside an attribute is
+             invalid HTML — 26 of them across the feed ("Named entity expected.
+             Got none."). The deeper reason is that a class name is worthless
+             in a feed anyway: the reader has none of our CSS and applies its
+             own. Same argument as the style attributes below. */ -}}
+      {{- $content = replaceRE `\s+class="[^"]*"` "" $content -}}
+      {{- $content = replaceRE `\s+class='[^']*'` "" $content -}}
       {{- /* Strip BOTH double- and single-quoted style attributes (render-link.html uses single) */ -}}
       {{- $content = replaceRE `\s+style="[^"]*"` "" $content -}}
       {{- $content = replaceRE `\s+style='[^']*'` "" $content -}}

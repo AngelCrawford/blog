@@ -10,15 +10,21 @@
 {{- $hint := "photo" -}}
 {{- $filter := "box" -}}
 {{- $imgClass := "" -}}
+{{- /* Captured before the `with` below rebinds the dot to the image resource:
+       `.IsBlock` belongs to the render-hook context, not to a resource. */ -}}
+{{- $isBlock := .IsBlock -}}
 
 {{- if .Page.Resources.GetMatch $src -}}
 	{{ with .Page.Resources.GetMatch $src }}
 		{{- $imgRsc := . -}}
 		{{- $actualImg := $imgRsc.Process (print "resize 640x jpg " $filter) -}}
-		{{- /* Garden: the photograph treatment, same as everywhere else — rounded,
-		       shadowed, sepia at rest. No float inside prose; content images are
-		       figures in the flow. */ -}}
-		<figure class="my-gutter">
+		{{- /* A FIGURE ONLY WHEN THE IMAGE STANDS ALONE. `.IsBlock` is true when
+		       the image is the whole paragraph; inline images stay bare <img>,
+		       because <p><figure> is invalid HTML — the figure implicitly closes
+		       the paragraph and the </p> is orphaned. The W3C feed validator
+		       found it ("Unexpected end tag (p)"), but the same broken nesting
+		       was in every rendered article page. */ -}}
+		{{- if $isBlock }}<figure class="my-gutter">{{ end }}
 			<picture>
 				<source type="image/webp" srcset="
 				{{- with $respSizes -}}
@@ -38,11 +44,9 @@
 				{{- end -}}" sizes="{{ $dataSzes }}" />
 				<img class="h-auto w-full rounded-md shadow-card" src="{{ $actualImg.RelPermalink }}" width="{{ $imgRsc.Width }}" height="{{ $imgRsc.Height }}" alt="{{ $alt }}" loading="lazy" />
 			</picture>
-			{{- with $caption -}}<figcaption class="mt-2 text-center text-sm text-ink-muted italic">{{ $caption | $.Page.RenderString }}</figcaption>{{- end }}
-		</figure>
+			{{- if $isBlock }}{{- with $caption -}}<figcaption class="mt-2 text-center text-sm text-ink-muted italic">{{ $caption | $.Page.RenderString }}</figcaption>{{- end }}
+		</figure>{{ end }}
 	{{- end -}}
 {{- else -}}
-	<figure>
-		<p><em>Image unavailable.</em></p>
-	</figure>
+	<em>Image unavailable.</em>
 {{- end -}}
