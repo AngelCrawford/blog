@@ -2,14 +2,11 @@
  *
  * Imported by main.css as `layer(components)`. Sits above css/base.css and
  * below the utilities, which is what lets every rule here be a plain class
- * selector: it beats Bulma by layer, so it never has to beat anything by
- * specificity, and a utility at the call site still overrides it.
+ * selector: nothing outranks it but the utilities, and a utility at the call
+ * site is supposed to win.
  *
  * THAT IS WHY THERE IS NO `[data-garden]` PREFIX HERE ANY MORE. It used to be
- * on every rule, pushing them to 0-2-0 — above the 0-1-0 of the utilities they
- * were supposed to let through. The prefix bought nothing: `gd-*` class names
- * exist only in garden markup, so there was nothing to scope away from.
- * `data-garden` still matters for css/base.css, which resets bare elements.
+ * the scope marker for the pre-Preflight stand-in reset; both are history.
  *
  * Only what genuinely cannot live on an element belongs in this file:
  * positioning against a distant ancestor, pseudo-elements, vendor resets, and

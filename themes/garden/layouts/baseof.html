@@ -5,15 +5,9 @@
  * Everything else still calls article-time's partials, and Hugo resolves them
  * from there: the hero, the footer and the cookie banner are unaffected.
  *
- * WHY `data-garden` IS NOT ON <body>, WHICH LOOKS LIKE THE OBVIOUS PLACE:
- * it is the scope marker for css/base.css, and css/base.css is a Preflight
- * stand-in — it strips list markers, heading sizes, paragraph margins and the
- * browser's form-control styling. On <body> that would apply to every template
- * article-time still renders, and since `base` outranks the `bulma` layer it
- * would win: discs gone from every list, every heading at 16px. The marker goes
- * on garden-owned elements only, and moves to <body> when the last Bulma
- * template does. Until then, adding it here is a one-line way to flatten the
- * whole site.
+ * THE `data-garden` MARKERS ARE GONE. They scoped css/base.css's stand-in
+ * reset while two stylesheets shared the page; Preflight is global now and
+ * the attribute selected nothing any more.
  *
  * NO BULMA CLASS NAMES LEFT. `type-is-*`/`kind-is-*` on <body> stay as
  * semantic hooks (the maintenance build test greps for kind-is-maintenance);
@@ -32,7 +26,7 @@
         {{- /* No Bulma class names left here: `hero is-medium has-sky` are gone
                with the partial they styled. `data-sky` is written by header.js
                and carries one of night / dawn / day / dusk. */ -}}
-        <header class="at-header" data-garden>
+        <header class="at-header">
             {{- partial "_base/hero" . -}}
         </header>
 
@@ -62,7 +56,7 @@
                would have overwritten the flex centring that keeps the glyph in
                the middle. `pointer-events-none` travels with the opacity so an
                invisible button cannot eat a click. main.js toggles both. */ -}}
-        <button id="back-to-top" data-garden type="button"
+        <button id="back-to-top" type="button"
                 class="gd-round-button gd-round-button-lg pointer-events-none fixed right-12 bottom-12 z-[999999] opacity-0 transition-opacity duration-300 ease-out"
                 title="Zurück zum Seitenanfang" aria-label="Zurück zum Seitenanfang">
             <svg aria-hidden="true"><use href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ .Site.Params.remixicon_version }}#arrow-up-s-fill"></use></svg>
@@ -75,7 +69,7 @@
                stands on. The inset shadow pair is the only one outside the
                round button. `at-footer` stays as the hook for the link-colour
                descendant rule. */ -}}
-        <footer class="at-footer fixed bottom-0 left-0 -z-[1] m-0 w-full overflow-hidden bg-[hsl(190_11%_6%)] pb-8 text-ink-muted shadow-[inset_10px_10px_15px_rgb(0_0_0/0.3),inset_-10px_-10px_15px_color-mix(in_srgb,var(--color-ink)_10%,transparent)]" data-garden data-page-footer>
+        <footer class="at-footer fixed bottom-0 left-0 -z-[1] m-0 w-full overflow-hidden bg-[hsl(190_11%_6%)] pb-8 text-ink-muted shadow-[inset_10px_10px_15px_rgb(0_0_0/0.3),inset_-10px_-10px_15px_color-mix(in_srgb,var(--color-ink)_10%,transparent)]" data-page-footer>
             {{ block "footer" . }}{{ partial "_base/footer" . }}{{ end }}
         </footer>
 

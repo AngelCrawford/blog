@@ -19,12 +19,23 @@ steps** — that is the entire point of this arrangement.
   `baseof.html`, header, footer — plus the card and everything that lists it:
   `home`, `list`, `page/archive`, `404`, the growth badge, the heart and
   pagination. Markup, styling and JavaScript all in `garden`, all jQuery-free.
-  **`single.html` is the last page template left.**
+- **August 2026: the teardown.** `single.html` (with its sidebar widgets,
+  render hooks and the withered banner), the four shortcodes, profile,
+  maintenance and the cookie banner all render from `garden`; everything
+  Bulma-free that article-time still carried (SEO/logic partials, RSS/JSON/
+  sitemap outputs, three JS files, i18n, archetypes, static images) moved
+  wholesale. `theme: ["garden"]` — the Bulma stylesheet is not built any more.
+  **`themes/article-time/` stays on disk as an unmounted archive** for looking
+  things up (the firework.js lesson), by Angel's call; deleting it is the last
+  milestone below.
 - **The design system's vocabulary is fully adopted** — see below. Templates are
   now the only thing left; no component still needs its CSS invented.
-- Tailwind runs without Preflight. Everything garden owns is in a cascade layer,
-  the utilities deliberately are not — see the rules in
-  [`../CLAUDE.md`](../CLAUDE.md). Do not change either without reading them.
+- **Preflight is on** since the teardown; the scoped stand-in reset in
+  `base.css` went with it, and the `data-garden` markers it scoped are swept.
+  What survives in `base.css` is the interaction baseline (pointer on
+  everything clickable) — a site rule, not a reset. Everything garden owns is
+  in a cascade layer, the utilities deliberately are not — see the rules in
+  [`../CLAUDE.md`](../CLAUDE.md).
 - **jQuery is gone.** Deleted, with `article-time/assets/js/{main,header,gdpr}.js`.
   There is now exactly one script on the page and it is deferred: 105 KB of
   minified JavaScript became 17 KB, and the render-blocking `<script>` in the
@@ -41,13 +52,13 @@ they ship. That gap is closed apart from the two rows marked below.
 |---|---|
 | Tokens | ✅ all 33 adopted. `design-tokens.test.mjs` holds an **empty** backlog and fails if it refills |
 | `css/tokens.css` | ✅ the `@theme static` block, shared by both entry points — main.css emits it, styleguide.css imports it `theme(reference)` |
-| `css/base.css` | ✅ the Preflight stand-in, `layer(base)` |
+| `css/base.css` | ✅ Preflight plus the interaction baseline, `layer(base)` — the stand-in reset died with the teardown |
 | `css/styleguide.css` | ✅ the catalogue's own entry point, loaded by that page alone — its ~90 exclusive class names no longer ride along on every page |
 | `css/components.css` | ✅ 164 rules after the full audit — only what utilities cannot express; everything else is utilities in templates or the `ui/*` partials |
 | Webfonts | ✅ Montserrat, Montserrat Alternates and remixicon registered in garden |
 | Header chrome | ✅ `at-header`, `at-city`, `at-clock`, `at-stars`, `at-birds`, `at-balloon`, `at-wordmark` — derived from `hero.scss`, not from the skill |
 | Footer chrome | ✅ `at-footer`, `at-footer-sea`, `at-hcard*`, `at-socials`, `at-slogan` — from `footer.scss`. The skill's `at-footer-sea` was right and was checked rather than trusted |
-| `body`, `a`, `:focus-visible` | ⬜ element-level base rules. They did **not** come with `baseof.html`: in the `base` layer they outrank Bulma, so they would restyle every unmigrated template at once. They land when Preflight does |
+| `body`, `a`, `:focus-visible` | ✅ Preflight landed with the teardown; the frame Bulma's `main`/`body` rules supplied rides as utilities in `baseof.html` |
 
 Two deliberate divergences from the skill, both commented at the rule:
 
@@ -373,36 +384,35 @@ calls in a file counts its history, not its work.
 Three things unlock only when a whole class of work is finished. Ticking them
 off is the real progress signal.
 
-- [ ] **Preflight on.** When no template uses Bulma class names any more, add
-      `@import "tailwindcss/preflight.css" layer(base);` and restore
-      `@layer theme, base, components, utilities;` in
-      `themes/garden/assets/css/main.css`. Tailwind runs at half strength
-      until then.
-- [ ] **Delete `themes/article-time/`.** When the template table has no ⬜ left.
-      Also drop `sudo snap install dart-sass` from both workflows, delete
-      `postcss.config.js`, and remove `postcss`, `postcss-cli` and
-      `@fullhuman/postcss-purgecss` from `package.json`.
+- [x] **Preflight on.** Done August 2026, in the same stroke as the teardown.
+- [ ] **Delete `themes/article-time/`.** The folder is unmounted and serves as
+      an archive until Angel is done consulting it. When it goes: drop
+      `sudo snap install dart-sass` from both workflows, delete
+      `postcss.config.js`, remove `postcss`, `postcss-cli` and
+      `@fullhuman/postcss-purgecss` from `package.json`, and drop the
+      `hugo_stats.json` build-stats mount if nothing else has claimed it.
 - [x] **Delete `jquery.js`.** Done August 2026. The head bundle went with it —
       it existed only because everything assumed `$` was already there.
 
-## How the two stylesheets coexist
-
-One arrangement makes everything else work, and it is worth understanding before
-touching either stylesheet:
+## How the cascade is arranged (and how two stylesheets used to coexist)
 
 Order is declared once, at the top of `main.css`:
 
 ```css
-@layer bulma, theme, base, components;
+@layer theme, base, components;
 ```
 
 | Layer | What | Wins against |
 |---|---|---|
-| `@layer bulma` | article-time's whole compiled stylesheet | nothing |
-| `@layer theme` | `tailwindcss/theme.css` — custom properties only | Bulma |
-| `@layer base` | `css/base.css`, the scoped Preflight stand-in | Bulma |
+| `@layer theme` | `tailwindcss/theme.css` + `tokens.css` — custom properties | — |
+| `@layer base` | Preflight, then the interaction baseline | `theme` |
 | `@layer components` | `css/components.css` — `gd-*` and `at-*` | both above |
 | unlayered | Tailwind utilities | everything |
+
+During the migration there was a fourth layer at the very bottom: `bulma`,
+holding article-time's entire compiled stylesheet, demoted in one move. That
+trick — demote, don't out-shout — is what made the two-theme year survivable
+and is worth remembering for any future coexistence problem.
 
 **Any unlayered declaration beats every layered one, and any later layer beats
 an earlier one — both regardless of specificity or source order.** That is what

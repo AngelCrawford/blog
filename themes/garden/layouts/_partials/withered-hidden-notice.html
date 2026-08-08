@@ -14,7 +14,7 @@
  * globally instead of depending on a caller context it never gets. */ -}}
 {{- $n := . -}}
 {{- if gt $n 0 -}}
-<p data-garden class="mt-gutter flex items-center justify-center gap-2 text-sm text-ink-muted italic"
+<p class="mt-gutter flex items-center justify-center gap-2 text-sm text-ink-muted italic"
    role="status" aria-live="polite">
     <svg class="size-4 shrink-0 fill-current text-withered" aria-hidden="true">
         <use href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ site.Params.remixicon_version }}#skull-2-line"></use>

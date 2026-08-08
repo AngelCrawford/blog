@@ -6,16 +6,11 @@
  *   css/base.css        the reset, scoped to garden markup      layer(base)
  *   css/components.css  the gd-* and at-* vocabulary            layer(components)
  *
- * Loaded IN ADDITION to article-time's Bulma bundle for as long as both themes
- * are composed. That is why Preflight is deliberately absent: Tailwind's reset
- * and Bulma's own normalize would fight, and the still-Bulma-styled parts of the
- * site (header, cards, article body) would visibly break.
- *
- * WHEN THE LAST BULMA TEMPLATE IS GONE: add
- *     @import "tailwindcss/preflight.css" layer(base);
- * and delete themes/article-time. css/base.css then loses its reason to exist
- * and goes with it. See docs/migration.md.
- */
+ * THE ONLY STYLESHEET ON THE PAGE since the Bulma teardown (August 2026).
+ * Preflight is ON — the scoped stand-in reset it replaced is recorded in
+ * docs/migration.md. css/base.css survives smaller: it holds the interaction
+ * baseline (everything clickable shows a pointer), which is a site rule from
+ * CLAUDE.md, not a reset. */
 
 /* ===========================================================================
  * THE CASCADE, IN ONE LINE.
@@ -26,11 +21,14 @@
  * to out-shout anything — and `components` loses to the unlayered utilities, so
  * a utility at the call site still wins.
  *
- *   bulma       article-time's whole compiled sheet, wrapped in head.html
  *   theme       tailwindcss/theme.css — custom properties only
- *   base        css/base.css — the Preflight stand-in
+ *   base        Preflight, then css/base.css's interaction baseline
  *   components  css/components.css — gd-* and at-*
  *   (unlayered) the utilities. Above everything, on purpose.
+ *
+ *   `bulma` stood at the bottom of this list until the teardown — the whole
+ *   compiled sheet, demoted in one move. The trick carried the migration and
+ *   is written up in docs/migration.md.
  *
  * THE PREVIOUS ARRANGEMENT LEFT THE COMPONENTS UNLAYERED TOO, and paid for it
  * in specificity: `[data-garden] .gd-panel` is 0-2-0 and therefore beat the
@@ -38,7 +36,7 @@
  * docs/migration.md records for the first attempt, one round later. Layers
  * remove the whole class of bug rather than another instance of it.
  * =========================================================================== */
-@layer bulma, theme, base, components;
+@layer theme, base, components;
 
 /* THE PACKAGE'S DEFAULT THEME, resolved from node_modules — not a file of ours,
  * which is worth saying because it looks like a broken path. It supplies what
@@ -68,6 +66,7 @@
  *
  * The `layer()` on the import is what puts the whole file in a layer, so
  * neither file needs a wrapper block of its own. */
+@import "tailwindcss/preflight.css" layer(base);
 @import "./themes/garden/assets/css/base.css" layer(base);
 @import "./themes/garden/assets/css/components.css" layer(components);
 

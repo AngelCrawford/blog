@@ -26,7 +26,7 @@
 {{- $nextURL := "" }}{{ with $paginator.Next }}{{ $nextURL = .URL }}{{ end }}
 {{- $lastURL := "" }}{{ with $paginator.Last }}{{ $lastURL = .URL }}{{ end }}
 
-<nav data-garden class="mt-section flex flex-wrap items-center justify-center gap-2" aria-label="Seitennummerierung">
+<nav class="mt-section flex flex-wrap items-center justify-center gap-2" aria-label="Seitennummerierung">
 
     {{- range slice
       (dict "on" $paginator.HasPrev "url" $firstURL "icon" "skip-back-line" "label" "Erste Seite")
