@@ -140,7 +140,12 @@ onReady(() => {
   const flag = (card, icon, label) => {
     if (card.querySelector(".at-card-badge")) return;
     const el = document.createElement("span");
-    el.className = "at-card-badge";
+    /* `at-card-badge` is only the dedup hook above — the styles are utilities,
+     * legal here because Tailwind scans this directory too. */
+    el.className =
+      "at-card-badge absolute top-1.5 -right-3.5 z-10 inline-flex w-max rotate-45 " +
+      "items-center gap-1 rounded-[3px] border border-accent-muted/70 " +
+      "bg-[hsl(190_11%_12%)] px-[9px] py-[3px] text-[0.7rem] text-accent";
     el.innerHTML =
       `<svg class="size-[0.9em] shrink-0 fill-current" aria-hidden="true">` +
       `<use href="${SPRITE}#${icon}"></use></svg>`;

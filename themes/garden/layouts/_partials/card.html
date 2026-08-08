@@ -34,7 +34,7 @@
 {{- $rubrik := "" -}}
 {{- with .GetTerms "categories" }}{{ range first 1 . }}{{ $rubrik = . }}{{ end }}{{ end -}}
 
-<article class="at-card group/card h-entry{{ if $featured }} at-card-fixed{{ end }}{{ if $isNote }} min-h-[400px]{{ end }}">
+<article class="at-card group/card h-entry{{ if $featured }} border-accent/50{{ end }}{{ if $isNote }} min-h-[400px]{{ end }}">
 
     {{- if $isNote -}}
         {{- /* NO RIBBON. The design system keeps one here — a note has no metadata
@@ -123,7 +123,7 @@
                the 20px timer needed -4px and came out visibly high, while the
                15px calendar beside it needed -1px. `items-center` is not a
                guess. */ -}}
-        <div class="at-card-footer-item">
+        <div class="at-card-footer-item flex items-center gap-2 px-[1.2em] py-[0.6em]">
             {{- if $isNote -}}
                 <time class="dt-published inline-flex items-center gap-1.5" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}" data-tooltip="Veröffentlichungsdatum">
                     <svg class="size-4 shrink-0 fill-current text-ink-muted" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#calendar-line"></use></svg>
@@ -148,7 +148,7 @@
                date; a note has no metadata row, so it takes the cell the tags
                would occupy. Same badge either way. */ -}}
         {{- if $isNote }}{{ with $rubrik }}
-        <div class="at-card-footer-item">
+        <div class="at-card-footer-item flex items-center gap-2 px-[1.2em] py-[0.6em]">
             {{ partial "ui/badge" (dict "label" .LinkTitle "href" .RelPermalink "dot" .Params.categoryColor) }}
         </div>
         {{- end }}{{ end }}
@@ -162,10 +162,10 @@
                onto four lines and made it taller than the excerpt above it. The
                full list is on the article page. */ -}}
         {{- if not $isNote -}}{{- with .GetTerms "tags" -}}
-        <div class="at-card-footer-item">
+        <div class="at-card-footer-item flex items-center gap-2 px-[1.2em] py-[0.6em]">
             <svg class="size-[18px] shrink-0 fill-current text-ink-muted" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#price-tag-3-line"></use></svg>
             {{- range first 3 . }}
-            <a class="at-hashtag" href="{{ .RelPermalink }}" title="{{ .LinkTitle }}">{{ .LinkTitle }}</a>
+            <a class="inline-block rounded-pill bg-[hsl(190_11%_13%)] px-[0.55em] py-[0.18em] text-accent no-underline transition-colors duration-150 ease-out hover:text-accent-hover" href="{{ .RelPermalink }}" title="{{ .LinkTitle }}">{{ .LinkTitle }}</a>
             {{- end }}
             {{- if gt (len .) 3 }}
             <a href="{{ $.RelPermalink }}" class="text-ink-muted" title="{{ range after 3 . }}#{{ .LinkTitle }} {{ end }}">+{{ sub (len .) 3 }}</a>
@@ -173,7 +173,7 @@
         </div>
         {{- end }}{{- end }}
 
-        <div class="at-card-footer-item">
+        <div class="at-card-footer-item flex items-center gap-2 px-[1.2em] py-[0.6em]">
             {{- if $isNote -}}
                 <span data-tooltip="Notiz" class="gd-icon-duo text-xl">
                     <svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#lightbulb-fill"></use></svg>

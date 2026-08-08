@@ -42,18 +42,13 @@
 
         {{ partial "_base/navigation" . }}
 
-        {{- /* `at-page` is the design system's page ground: surface-sunken with
-               the dotted texture, dot size in vw so the grain scales instead of
-               turning into polka dots on a large display. It replaces the same
-               two properties on Bulma's `main` rule — one percent darker, the
-               tokenised value — and leaves that rule's max-width, centring and
-               min-height alone, because garden declares none of those.
-
-               `data-page-main` is the hook for main.js. The footer-reveal effect
-               needs to find this element, and reaching for `.content.section`
-               from garden's JavaScript would tie it to two Bulma class names
-               that are supposed to disappear. */ -}}
-        <main class="content section at-page" data-page-main>
+        {{- /* The page ground: surface-sunken with the dotted texture, dot size in
+               vw so the grain scales with the viewport instead of turning into
+               polka dots on a large display. Bulma's `main` rule still supplies
+               max-width, centring and min-height, because garden declares none
+               of those. `data-page-main` is main.js's hook for the footer
+               reveal. */ -}}
+        <main class="content section bg-surface-sunken bg-[radial-gradient(hsl(190_11%_7%)_0.05vw,transparent_0.2vw)] bg-[length:1vw_1vw]" data-page-main>
             {{- block "main" . }}{{- end }}
         </main>
 
@@ -73,10 +68,14 @@
             <svg aria-hidden="true"><use href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ .Site.Params.remixicon_version }}#arrow-up-s-fill"></use></svg>
         </button>
 
-        {{- /* `data-page-footer` is main.js's hook. It measures this element and
-               ends the main column exactly one footer-height above the bottom of
-               the document, which is what makes the reveal work. */ -}}
-        <footer class="at-footer" data-garden data-page-footer>
+        {{- /* Fixed behind the page at z -1, revealed on scroll — main.js measures
+               this element via `data-page-footer` and keeps the main column
+               exactly one footer-height short. One step BELOW surface-sunken:
+               the footer must read as further away than the ground the page
+               stands on. The inset shadow pair is the only one outside the
+               round button. `at-footer` stays as the hook for the link-colour
+               descendant rule. */ -}}
+        <footer class="at-footer fixed bottom-0 left-0 -z-[1] m-0 w-full overflow-hidden bg-[hsl(190_11%_6%)] pb-8 text-ink-muted shadow-[inset_10px_10px_15px_rgb(0_0_0/0.3),inset_-10px_-10px_15px_color-mix(in_srgb,var(--color-ink)_10%,transparent)]" data-garden data-page-footer>
             {{ block "footer" . }}{{ partial "_base/footer" . }}{{ end }}
         </footer>
 

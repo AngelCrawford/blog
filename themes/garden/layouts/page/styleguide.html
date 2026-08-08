@@ -521,7 +521,7 @@
               <svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $v }}#{{ .name }}"></use></svg>
             </span>
             {{- else }}
-            <svg class="gd-icon-shadow size-5 shrink-0 fill-current text-accent transition-colors group-hover:text-accent-hover" aria-hidden="true"><use href="{{ $sprite }}?t={{ $v }}#{{ .name }}"></use></svg>
+            <svg class="size-5 shrink-0 fill-current text-accent drop-shadow-[0.06em_0.1em_0_var(--color-accent-shadow)] transition-colors group-hover:text-accent-hover" aria-hidden="true"><use href="{{ $sprite }}?t={{ $v }}#{{ .name }}"></use></svg>
             {{- end }}
             <code class="truncate text-sm text-accent">{{ .name }}</code>
           </button>
@@ -696,7 +696,7 @@
 
       {{- /* Artikel mit Bild — der Normalfall. */ -}}
       <article class="at-card group/card">
-        <span class="at-card-badge">
+        <span class="absolute top-1.5 -right-3.5 z-10 inline-flex w-max rotate-45 items-center gap-1 rounded-[3px] border border-accent-muted/70 bg-[hsl(190_11%_12%)] px-[9px] py-[3px] text-[0.7rem] text-accent">
           <svg class="size-[0.9em] shrink-0 fill-current" aria-hidden="true"><use href="{{ $sprite }}?t={{ $v }}#sparkling-line"></use></svg>
           Neu
         </span>
@@ -732,8 +732,8 @@
           </div>
           <div class="at-card-footer-item">
             <svg class="size-[18px] shrink-0 fill-current text-ink-muted" aria-hidden="true"><use href="{{ $sprite }}?t={{ $v }}#price-tag-3-line"></use></svg>
-            <a class="at-hashtag" href="#vokabular">hugo</a>
-            <a class="at-hashtag" href="#vokabular">static-site</a>
+            <a class="inline-block rounded-pill bg-[hsl(190_11%_13%)] px-[0.55em] py-[0.18em] text-accent no-underline transition-colors duration-150 ease-out hover:text-accent-hover" href="#vokabular">hugo</a>
+            <a class="inline-block rounded-pill bg-[hsl(190_11%_13%)] px-[0.55em] py-[0.18em] text-accent no-underline transition-colors duration-150 ease-out hover:text-accent-hover" href="#vokabular">static-site</a>
           </div>
           <div class="at-card-footer-item">
             <span class="at-growth" data-stage="evergreen" data-tooltip="Evergreen; gepflegt &amp; aktuell">
@@ -800,13 +800,14 @@
           <code class="text-accent">dot</code>-Parameter setzt; ohne ihn Gold.
         </p>
         <div class="flex flex-wrap items-center gap-3 border-t border-accent-muted/30 pt-4">
-          <a class="at-hashtag" href="#vokabular">hugo</a>
-          <a class="at-hashtag" href="#vokabular">indieweb</a>
-          <a class="at-tag" href="#vokabular">Serie: Der Neustart</a>
+          <a class="inline-block rounded-pill bg-[hsl(190_11%_13%)] px-[0.55em] py-[0.18em] text-accent no-underline transition-colors duration-150 ease-out hover:text-accent-hover" href="#vokabular">hugo</a>
+          <a class="inline-block rounded-pill bg-[hsl(190_11%_13%)] px-[0.55em] py-[0.18em] text-accent no-underline transition-colors duration-150 ease-out hover:text-accent-hover" href="#vokabular">indieweb</a>
+          <a class="inline-block max-w-full rounded-[0.35rem] bg-accent-muted px-[0.6em] py-[0.25em] text-[0.8rem]/[1.2] whitespace-nowrap text-[hsl(190_20%_90%)] no-underline [text-shadow:1px_1px_2px_rgb(0_0_0/0.4)] transition-[filter] duration-150 ease-out hover:brightness-110" href="#vokabular">Serie: Der Neustart</a>
         </div>
         <p class="text-sm text-ink-muted">
-          <code class="text-accent">at-hashtag</code> für Tags im Kartenfuß,
-          <code class="text-accent">at-tag</code> für das gefüllte Label in einem Tile-Wert.
+          Hashtag-Pille für Tags im Kartenfuß, gefülltes Serien-Label für einen
+          Tile-Wert — beides Utilities an der Aufrufstelle, keine Größe: die Zeile
+          entscheidet sie.
         </p>
       </div>
       <div class="rounded-md border border-accent-muted/40 bg-surface-raised p-gutter shadow-md flex flex-col gap-4">
@@ -864,10 +865,10 @@
       <em>ein</em> Unterscheidungsmerkmal, weil dieses Merkmal die Information ist.
     </p>
     <div class="grid grid-cols-1 gap-gutter lg:grid-cols-3">
-      <div class="at-tile px-4 py-[0.9rem]">
-        <div class="at-widget-head">
-          <span class="at-tile-label">Serie</span>
-          <span class="at-widget-count">4 Teile</span>
+      <div class="rounded-tile border border-accent-muted/40 bg-[var(--surface-tile)] px-4 py-[0.9rem]">
+        <div class="mb-[0.7rem] flex items-center justify-between gap-2 bg-[linear-gradient(to_right,var(--rule-gold),transparent)] bg-[length:100%_1px] bg-bottom bg-no-repeat pb-[0.7rem]">
+          <span class="m-0 text-[0.7rem]/[1] font-semibold tracking-label text-ink-muted uppercase">Serie</span>
+          <span class="rounded-[0.35rem] bg-[hsl(35_45%_14%)] px-[0.6em] py-[0.25em] text-[0.7rem] whitespace-nowrap text-[color-mix(in_srgb,var(--color-accent-hover)_70%,transparent)]">4 Teile</span>
         </div>
         <ol class="at-widget-list at-series-list">
           <li><a href="#vokabular">Die Diagnose</a></li>
@@ -876,8 +877,8 @@
           <li class="is-withered"><a href="#vokabular">Der alte Farbentwurf</a></li>
         </ol>
       </div>
-      <div class="at-tile px-4 py-[0.9rem]">
-        <div class="at-widget-head"><span class="at-tile-label">Inhalt</span></div>
+      <div class="rounded-tile border border-accent-muted/40 bg-[var(--surface-tile)] px-4 py-[0.9rem]">
+        <div class="mb-[0.7rem] flex items-center justify-between gap-2 bg-[linear-gradient(to_right,var(--rule-gold),transparent)] bg-[length:100%_1px] bg-bottom bg-no-repeat pb-[0.7rem]"><span class="m-0 text-[0.7rem]/[1] font-semibold tracking-label text-ink-muted uppercase">Inhalt</span></div>
         <ul class="at-widget-list at-toc-list">
           <li><a href="#vokabular">Die Anforderungen</a></li>
           <li>
@@ -888,15 +889,15 @@
         </ul>
       </div>
       <div class="flex flex-col gap-gutter">
-        <div class="at-tile px-4 py-[0.9rem]">
-          <div class="at-widget-head"><span class="at-tile-label">Ähnliche</span></div>
+        <div class="rounded-tile border border-accent-muted/40 bg-[var(--surface-tile)] px-4 py-[0.9rem]">
+          <div class="mb-[0.7rem] flex items-center justify-between gap-2 bg-[linear-gradient(to_right,var(--rule-gold),transparent)] bg-[length:100%_1px] bg-bottom bg-no-repeat pb-[0.7rem]"><span class="m-0 text-[0.7rem]/[1] font-semibold tracking-label text-ink-muted uppercase">Ähnliche</span></div>
           <ul class="at-widget-list at-rows">
             <li><a href="#vokabular">Bulma raus, Tailwind rein</a><span class="at-rows-aside">02.08.26</span></li>
             <li><a href="#vokabular">Die Diagnose</a><span class="at-rows-aside">28.07.26</span></li>
           </ul>
         </div>
-        <div class="at-tile px-4 py-[0.9rem]">
-          <div class="at-widget-head"><span class="at-tile-label">Archiv</span></div>
+        <div class="rounded-tile border border-accent-muted/40 bg-[var(--surface-tile)] px-4 py-[0.9rem]">
+          <div class="mb-[0.7rem] flex items-center justify-between gap-2 bg-[linear-gradient(to_right,var(--rule-gold),transparent)] bg-[length:100%_1px] bg-bottom bg-no-repeat pb-[0.7rem]"><span class="m-0 text-[0.7rem]/[1] font-semibold tracking-label text-ink-muted uppercase">Archiv</span></div>
           <ul class="at-widget-list at-leader-list">
             <li><a href="#vokabular">2026</a><span>14</span></li>
             <li><a href="#vokabular">2024</a><span>2</span></li>
@@ -917,14 +918,14 @@
         (dict "icon" "tree-line" "label" "Stadium" "value" "Evergreen" "stage" "evergreen" "tint" "gd-icon-duo-tinted text-evergreen")
         (dict "icon" "timer-line" "label" "Lesedauer" "value" "7 Min." "stage" "" "tint" "")
         (dict "icon" "heart-line" "label" "Herzen" "value" "41" "stage" "" "tint" "") }}
-      <div class="at-tile flex items-center gap-3 p-3"{{ with .stage }} data-stage="{{ . }}"{{ end }}>
+      <div class="rounded-tile border border-accent-muted/40 bg-[var(--surface-tile)] flex items-center gap-3 p-3">
         <span class="gd-icon-duo shrink-0 text-[1.6rem] {{ .tint }}">
           <svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $v }}#{{ replace .icon "-line" "-fill" }}"></use></svg>
           <svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $v }}#{{ .icon }}"></use></svg>
         </span>
         <span class="flex min-w-0 flex-col gap-1">
-          <span class="at-tile-label">{{ .label }}</span>
-          <span class="at-tile-value">{{ .value }}</span>
+          <span class="m-0 text-[0.7rem]/[1] font-semibold tracking-label text-ink-muted uppercase">{{ .label }}</span>
+          <span class="text-sm/[1.2] text-accent tabular-nums">{{ .value }}</span>
         </span>
       </div>
       {{- end }}

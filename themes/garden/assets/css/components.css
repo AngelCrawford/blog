@@ -221,31 +221,10 @@
   }
 }
 
-/* Icons WITHOUT a fill partner get the same offset shadow via drop-shadow,
- * which follows the rendered alpha and therefore works on a hairline glyph
- * where a second copy underneath would not. CSS cannot fill an outline.
- *
- * Not used for the pairs: a filled body behind the line gives a solid shape
- * that drop-shadow cannot, and applying both would double the shadow.
- *
- * The offset MATCHES the duotone pair's. It was tried larger — a drop-shadow on
- * a hairline is only ever as wide as the stroke, so there is a real argument for
- * giving it more room to clear it — but at 0.09em and again at 0.075em the
- * shadow detached and read as a second, offset glyph rather than as depth.
- * Equal to the pairs is also the more honest answer: one language, not two. */
-.gd-icon-shadow {
-  filter: drop-shadow(0.06em 0.1em 0 var(--color-accent-shadow));
-}
-
-/* FORM CONTROLS ARE GONE — gd-field, gd-check and the rebuilt select. Their
- * only consumers were styleguide specimens; no form on this site exists yet.
- * The search input in the navigation is utilities and always was.
- *
- * Two pieces genuinely were not utilities and are worth re-deriving when a
- * form arrives: the select's arrow (two background gradients meeting in a
- * chevron, because the native one cannot be styled) and the checkbox's tick
- * (a clip-path polygon, so it needs no font and no sprite). The styleguide
- * records the same note where the specimens used to stand. */
+/* Icons WITHOUT a fill partner take the same offset shadow as a one-line
+ * arbitrary utility — drop-shadow-[0.06em_0.1em_0_var(--color-accent-shadow)] —
+ * matching the duotone pair's offset so the catalogue reads as one language.
+ * The class this used to be had exactly one consumer, the styleguide. */
 
 /* ===========================================================================
  * ROUND BUTTON
@@ -380,24 +359,9 @@
  *
  * Visibility is driven by the `hidden` utility, toggled from JS. Nothing here
  * sets a display value, or it would fight that. */
-#resultsWrapper {
-  position: absolute;
-  top: 100%;
-  right: 0;
-  z-index: 9999;
-  width: min(50rem, calc(100vw - 2rem));
-  margin-top: 0.75rem;
-}
-
-#results {
-  max-height: 60vh;
-  overflow: auto;
-  padding: var(--spacing-gutter);
-  border: 1px solid --alpha(var(--color-accent) / 20%);
-  border-radius: var(--radius-lg);
-  background-color: var(--color-surface-raised);
-  box-shadow: var(--shadow-lg);
-}
+/* The result panel's box is utilities on the two ids in navigation.html; what
+ * stays is what utilities cannot say — the pointer pseudo-element below and the
+ * webkit search-decoration resets. */
 
 /* Pointer towards the search field. */
 #results::before {
@@ -451,16 +415,6 @@
  * ═══════════════════════════════════════════════════════════════════════════
  * =========================================================================== */
 
-/* The dotted page texture. It is the bottom of the stack — every surface reads
- * against it, which is why panels and cards never sit on another filled panel.
- * Dot size is in vw on purpose: the grain scales with the viewport instead of
- * turning into visible polka dots on a 4K display. */
-.at-page {
-  background-color: var(--color-surface-sunken);
-  background-image: radial-gradient(hsl(190 11% 7%) 0.05vw, transparent 0.2vw);
-  background-size: 1vw 1vw;
-}
-
 /* Prose. Line length capped: text over the full window width is tiring after
  * two lines. Gold list markers are a single global decision, not a per-page one.
  *
@@ -511,18 +465,10 @@
  * The vocabulary comes back with the shortcode, written against whatever the
  * shortcode actually needs. */
 
-/* ===========================================================================
- * TILE CHROME — the recurring surface behind info tiles and every sidebar
- * widget (author, related, series, toc). Padding stays at the call site
- * because each surface has its own rhythm.
- * ======================================================================== */
-.at-tile { background: var(--surface-tile); border: 1px solid var(--border-hairline); border-radius: var(--radius-tile); }
-.at-tile-label {
-  margin: 0; font-size: 0.7rem; font-weight: var(--weight-strong);
-  letter-spacing: var(--tracking-label); text-transform: uppercase;
-  color: var(--color-ink-muted); line-height: 1;
-}
-.at-tile-value { font-size: var(--text-sm); line-height: 1.2; color: var(--color-accent); font-variant-numeric: tabular-nums; }
+/* TILE CHROME is utilities where it is used (page/archive.html and the
+ * styleguide demos): surface, hairline, the legacy 7.2px radius, the 11px
+ * uppercase label. The `[data-stage]` hide rule went with the growth cluster —
+ * a partial that should not render a duplicate glyph simply does not. */
 
 /* ===========================================================================
  * CARD — the magazine tile on overviews. Paired shadow, gold hairline, and a
@@ -586,7 +532,6 @@
   transition: width var(--duration-base) var(--ease-out);
 }
 .at-card:hover::after { width: calc(100% - 12px); }
-.at-card-fixed { border-color: color-mix(in srgb, var(--color-accent) 50%, transparent); }
 /* `.at-card-title` and `.at-card-excerpt` USED TO BE HERE and were nothing but
  * a pile of utilities with a name — `m-0 font-heading text-xl font-semibold
  * tracking-heading` and `min-w-0`. They are written at the two call sites now.
@@ -619,7 +564,9 @@
 .at-card-footer .heart-count,
 .at-card-footer .at-growth,
 .at-card-meta .at-badge { font-size: inherit; }
-.at-card-footer-item { display: flex; align-items: center; gap: 0.5rem; padding: 0.6em 1.2em; }
+/* `.at-card-footer-item` layout lives in the markup; the class remains solely
+ * for the two structural rules below — the divider between siblings and the
+ * flexible tags cell — which no utility on a single element can say. */
 /* The tags cell is the flexible one: it takes whatever the fixed cells leave and
  * wraps inside itself. Without min-width:0 a long tag list refused to shrink and
  * pushed the whole footer into three stacked full-width rows. */
@@ -629,22 +576,10 @@
  * state it is in) and reads as two cells, not one. */
 .at-card-footer-item + .at-card-footer-item { border-left: 1px solid color-mix(in srgb, var(--color-accent-muted) 50%, transparent); }
 
-/* Corner badge — "Neu" and "Gesehen", rotated 45° across the card's top-right.
- * Upstream these were the site's only two unicode symbols (☀ and ✓); both are now
- * sprite glyphs like every other icon, so the badge speaks the same language as
- * the rest of the catalogue. */
-.at-card-badge {
-  /* Hangs just past the corner. Upstream used -14px for the short label and -25px
-   * for the long one; a single value has to clear the neighbouring card in a grid,
-   * so it stays at the tighter end. */
-  position: absolute; top: 6px; right: -14px; z-index: 10;
-  transform: rotate(45deg); width: max-content;
-  display: inline-flex; align-items: center; gap: 4px;
-  padding: 3px 9px; border-radius: 3px;
-  border: 1px solid color-mix(in srgb, var(--color-accent-muted) 70%, transparent);
-  background-color: hsl(190 11% 12%); color: var(--color-accent);
-  font-size: 0.7rem; font-weight: var(--weight-body);
-}
+/* The corner badge ("Neu"/"Gesehen") is built by gdpr.js with utility classes —
+ * Tailwind scans assets/js too. `at-card-badge` survives there only as the
+ * dedup hook. */
+
 /* IMAGERY LIVES IN layouts/_partials/ui/figure.html — the 4:3 ratio, the sepia
  * release, the float and its two-tier drop (container query in cards, viewport
  * fallback in panels), the caption bar, the overhang. All utilities, written
@@ -656,25 +591,10 @@
 /* The container has to contain its float, or the card collapses behind the image. */
 .at-flow::after { content: ""; display: block; clear: both; }
 
-/* Hashtag pill and the Rubrik tag inside a tile value. Both carry the element
- * selector: .at-prose a underlines every link inside prose at (0,1,1), which beats
- * a bare .at-hashtag at (0,1,0) — and an underlined pill reads as a rendering
- * fault. These are controls, not running text. */
-a.at-hashtag, a.at-tag { text-decoration: none; }
-.at-hashtag {
-  display: inline-block; padding: 0.18em 0.55em; border-radius: var(--radius-pill);
-  font-size: 0.78rem; color: var(--color-accent); background: hsl(190 11% 13%);
-  text-decoration: none;
-  transition: color var(--duration-fast) var(--ease-out);
-}
-.at-hashtag:hover { color: var(--color-accent-hover); }
-.at-tag {
-  display: inline-block; max-width: 100%; padding: 0.25em 0.6em;
-  border-radius: 0.35rem; background: var(--color-accent-muted); color: hsl(190 20% 90%);
-  font-size: 0.8rem; line-height: 1.2; text-decoration: none; text-shadow: 1px 1px 2px rgb(0 0 0 / 0.4);
-  transition: filter var(--duration-fast) var(--ease-out);
-}
-.at-tag:hover { color: hsl(190 20% 90%); filter: brightness(1.1); }
+/* The hashtag pill and the series tag are utilities at their call sites (card
+ * footer, styleguide). Neither sets a font size: the row decides. The old
+ * `a.at-hashtag { text-decoration: none }` guard came from prose underlining
+ * every link — the utility `no-underline` says it where it matters. */
 
 /* THE RUBRIK BADGE lives in layouts/_partials/ui/badge.html. The dot that
  * needed a ::before and a pass-through custom property here is a real element
@@ -811,16 +731,6 @@ a.at-hashtag, a.at-tag { text-decoration: none; }
  * ======================================================================== */
 /* The widget header rule fades to the right like gd-h2 — a border-bottom cannot
  * fade, so it is drawn as a background gradient on the bottom edge instead. */
-.at-widget-head {
-  display: flex; align-items: center; justify-content: space-between; gap: 0.5rem;
-  padding-bottom: 0.7rem; margin-bottom: 0.7rem;
-  background-image: linear-gradient(to right, var(--rule-gold), transparent);
-  background-size: 100% 1px; background-position: left bottom; background-repeat: no-repeat;
-}
-.at-widget-count {
-  font-size: 0.7rem; padding: 0.25em 0.6em; border-radius: 0.35rem; white-space: nowrap;
-  color: color-mix(in srgb, var(--color-accent-hover) 70%, transparent); background: hsl(35 45% 14%);
-}
 .at-widget-list {
   --at-marker: 1.9rem;
   list-style: none; margin: 0; padding: 0;
@@ -876,16 +786,6 @@ a.at-hashtag, a.at-tag { text-decoration: none; }
   color: color-mix(in srgb, var(--color-accent-hover) 85%, transparent);
 }
 .at-toc-list ul > li > a:hover { color: var(--color-accent); background: color-mix(in srgb, var(--color-accent-muted) 15%, transparent); }
-
-/* Related: the date is the marker, right-aligned. Same row box as the others, so
- * only the divider distinguishes the list. */
-.at-rows > li {
-  display: flex; align-items: flex-start; justify-content: space-between; gap: 0.8rem;
-  border-bottom: 1px dashed color-mix(in srgb, var(--color-accent-muted) 30%, transparent);
-}
-.at-rows > li:last-child { border-bottom: none; }
-.at-rows > li > a { flex: 1; min-width: 0; padding-left: 0.7rem; }
-.at-rows .at-rows-aside { flex-shrink: 0; padding: 0.4rem 0.7rem 0.4rem 0; font-size: 0.75rem; color: var(--color-ink-muted); font-variant-numeric: tabular-nums; }
 
 /* Archive in the footer: name left, count right, and a dotted leader between
  * them drawn as a repeating radial gradient. */
@@ -1163,9 +1063,6 @@ a.at-hashtag, a.at-tag { text-decoration: none; }
   .at-wordmark-shimmer.is-shimmering { animation: none; }
 }
 
-/* The hat's own fill. It is a red hat; there is no token for red hats. */
-.santa-hat-piece { fill: firebrick; }
-
 /* ===========================================================================
  * ═══════════════════════════════════════════════════════════════════════════
  * FOOTER — the reflection, the h-card, the columns.
@@ -1181,27 +1078,6 @@ a.at-hashtag, a.at-tag { text-decoration: none; }
  * and the other stops working.
  * ═══════════════════════════════════════════════════════════════════════════
  * =========================================================================== */
-.at-footer {
-  position: fixed; bottom: 0; left: 0; z-index: -1;
-  width: 100%; margin: 0; padding: 0 0 2em;
-  overflow: hidden;
-  /* One step BELOW `surface-sunken`, and the only place the three-surface scale
-   * gets a fourth value. It is not a fourth surface: the footer sits BEHIND the
-   * page rather than on it, and it has to read as further away than the ground
-   * the page stands on. Tokenising it to `surface-sunken` was tried and the
-   * revealed footer looked like the page continuing. The design system carries
-   * the same literal. */
-  background-color: hsl(190 11% 6%);
-  color: var(--color-ink-muted);
-  /* The one inset pair outside the round button. Written out rather than
-   * reusing --shadow-pressed: that one is tuned for a 48px disc, and shadow
-   * offsets do not scale to a full-width band. */
-  box-shadow:
-    inset 10px 10px 15px rgb(0 0 0 / 0.3),
-    inset -10px -10px 15px --alpha(var(--color-ink) / 10%);
-}
-.at-footer > svg { position: absolute; }
-
 /* THE SEA. The same harbour silhouette as the header, twice: once upright and
  * cropped to its waterline, once flipped underneath it and rippling. The ripple
  * is an SVG turbulence filter that shifts over 200 seconds — slow enough that
@@ -1228,16 +1104,9 @@ a.at-hashtag, a.at-tag { text-decoration: none; }
 /* The slogan, between the remixicon quote pair — the third and last place the
  * icon font is used by codepoint. The dark gradient behind it is what lifts the
  * text off the skyline; without it the letters land in a lit window. */
-.at-slogan {
-  /* `section` below it, not `gutter`. The slogan is a section of its own and the
-   * columns beneath it are the next one; at 24px the two read as one block that
-   * had accidentally been split. */
-  width: fit-content; margin: 0 auto var(--spacing-section); padding: 0.3em;
-  font-family: var(--font-heading); font-size: var(--text-2xl); line-height: 1.5;
-  color: var(--color-ink-muted); text-align: center;
-  text-shadow: 3px 3px 4px rgb(0 0 0 / 0.5);
-  background: linear-gradient(270deg, transparent 0%, rgb(0 0 0 / 0.3) 50%, transparent 100%);
-}
+/* The slogan's box is utilities in footer.html (`mb-section`, not gutter: it is
+ * a section of its own). What stays is the sizing of its quote-mark pseudos,
+ * which belong to `.at-quoted` and cannot be reached from the element. */
 .at-slogan::before, .at-slogan::after { position: relative; top: -10px; font-size: 1.7rem; }
 @media (max-width: 768px) {
   .at-slogan { font-size: 1.5rem; }

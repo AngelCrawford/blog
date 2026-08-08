@@ -90,6 +90,9 @@
 
     {{- /* Anchored to <nav>, which is `relative`. Starts hidden; search.js
            toggles the `hidden` utility. */ -}}
-    <div id="resultsWrapper" class="hidden"><div id="results"></div></div>
+    {{- /* Anchored to <nav> because the panel is far wider than the field. The ids
+       are search.js's hooks; the styles are utilities now — only the pointer
+       pseudo-element and the webkit search-decoration resets stay CSS. */ -}}
+    <div id="resultsWrapper" class="absolute top-full right-0 z-[9999] mt-3 hidden w-[min(50rem,calc(100vw-2rem))]"><div id="results" class="max-h-[60vh] overflow-auto rounded-lg border border-accent/20 bg-surface-raised p-gutter shadow-lg"></div></div>
 </nav>
 {{ end }}

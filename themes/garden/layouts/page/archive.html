@@ -24,7 +24,7 @@
             {{- with .Summary }}<div class="mt-gutter">{{ . }}</div>{{ end }}
         </div>
 
-        <div class="at-tile">
+        <div class="rounded-tile border border-accent-muted/40 bg-[var(--surface-tile)]">
             {{ partial "widgets/archive" (dict "context" . "archiveTitle" "Übersicht") }}
         </div>
     </div>

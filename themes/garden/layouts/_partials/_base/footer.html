@@ -28,7 +28,7 @@
 {{- /* The turbulence that ripples the reflection. Inline because a filter has
        to be in the document to be referenced by `url(#…)`, and namespaced
        `at-` so it cannot collide with the ghost's `#disfilter` in the header. */ -}}
-<svg width="0" height="0" aria-hidden="true" focusable="false">
+<svg class="absolute" width="0" height="0" aria-hidden="true" focusable="false">
     <filter id="at-turbulence" x="0" y="0" width="100%" height="100%">
         <feTurbulence id="at-sea-filter" numOctaves="2" seed="2" baseFrequency="0.02 0.05"></feTurbulence>
         <feDisplacementMap in2="" scale="20" in="SourceGraphic"></feDisplacementMap>
@@ -49,7 +49,7 @@
            Carried over verbatim because replacing copy is Angel's call, not a
            migration's. The slot is real — the design system keeps a slogan
            between the gold quote marks — only the sentence is wrong. */ -}}
-    <p class="at-slogan at-quoted">
+    <p class="at-slogan at-quoted mx-auto mb-section w-fit bg-[linear-gradient(270deg,transparent_0%,rgb(0_0_0/0.3)_50%,transparent_100%)] p-[0.3em] text-center font-heading text-2xl/[1.5] text-ink-muted [text-shadow:3px_3px_4px_rgb(0_0_0/0.5)]">
         Du willst schreiben - ohne einen eignen Blog zu veröffentlichen?<br />
         Be a part of Article Time!
     </p>

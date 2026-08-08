@@ -48,9 +48,6 @@ const ALLOWED = {
   "gd-round-button-full": "the same, for the icon box.",
   "at-prose": "the container for two dozen descendant rules over generated Markdown, where no class can be put on anything.",
   "at-widget-list": "sets `--at-marker`, which three different list markers read.",
-  "at-tile-label": "the 11px uppercase label, six call sites and counting.",
-  "at-tile-value": "its number, same.",
-  "at-card-footer-item": "four call sites, plus a divider between siblings and a `:has()` rule that make it a hook regardless.",
   "at-ghost": "hook for the SVG turbulence filter rule beneath it.",
 };
 
