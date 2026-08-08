@@ -779,7 +779,12 @@
  * level one, and the dashes sat beside the marker column instead of in it
  * (Angel spotted the text edge no longer lining up with the series numbers). */
 .at-toc-list ul ul {
-  list-style: none; margin: 0 0 0 0.8rem; padding-left: 0.4rem;
+  /* A FULL MARKER COLUMN of indent (1.9rem), not 0.8: with the smaller value
+   * the nested text landed exactly on level one's text edge and the nesting
+   * disappeared. At 1.9rem the rail runs precisely under the parent's text
+   * edge, the nested dash sits ON the rail, and the nested text steps in by
+   * a readable 1.1rem. */
+  list-style: none; margin: 0 0 0 1.9rem; padding-left: 0.4rem;
   border-left: 1px solid color-mix(in srgb, var(--color-accent-muted) 30%, transparent);
 }
 .at-toc-list ul > li { position: relative; margin: 0; }
@@ -789,6 +794,12 @@
   color: color-mix(in srgb, var(--color-accent-hover) 85%, transparent);
 }
 .at-toc-list ul > li > a:hover { color: var(--color-accent); background: color-mix(in srgb, var(--color-accent-muted) 15%, transparent); }
+/* NESTED LEVELS: the dash sits ON the rail, the way the series numbers sit on
+ * theirs — a marker floating beside its line reads as two unrelated decorations.
+ * -1.35rem centres the 1.9rem marker box on the ul's border-left (0.4rem padding
+ * plus half the box), and the text tucks in behind a smaller indent. */
+.at-toc-list ul ul > li > a { padding-left: 0.7rem; }
+.at-toc-list ul ul > li > a::before { left: -1.35rem; }
 
 /* Archive in the footer: name left, count right, and a dotted leader between
  * them drawn as a repeating radial gradient. */
@@ -796,6 +807,10 @@
 .at-leader-list > li > :first-child { order: 1; padding: 0; }
 .at-leader-list > li::after {
   content: ""; flex-grow: 1; order: 2; height: auto;
+  /* NEVER collapses to zero: without the min-width, a long value shrank the
+   * dots away and sat flush against its label. Two characters of dotted air
+   * survive any wrap. */
+  min-width: 2ch;
   background-image: radial-gradient(circle, color-mix(in srgb, var(--color-accent-muted) 50%, transparent) 1px, transparent 1px);
   background-position-y: calc(100% - 6px); background-size: 1ex 3px; background-repeat: repeat-x;
 }

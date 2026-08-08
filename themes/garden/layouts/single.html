@@ -115,9 +115,14 @@
                     {{- with .GetTerms "categories" }}{{ range first 1 . }}
                     <li data-tile="rubrik">
                         <span class="inline-flex items-center gap-1.5 p-0 text-ink-muted"><svg class="size-4 shrink-0 fill-current" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#article-line"></use></svg>Rubrik</span>
-                        <span class="inline-flex items-center gap-[0.45em] p-0">
-                            {{- with .Params.categoryColor }}<span class="size-[0.5em] shrink-0 rounded-full" style="background-color: {{ . }}" aria-hidden="true"></span>{{ end -}}
-                            <a class="inline p-0 text-accent hover:text-accent-hover" href="{{ .RelPermalink }}" title="{{ .LinkTitle }}">{{ .LinkTitle }}</a>
+                        {{- /* min-w-0 twice: the flex item AND the link must be allowed
+                               to shrink, or a long Rubrik refuses to wrap and rams its
+                               label. text-right keeps the wrapped lines on the value
+                               edge. LINKS WEAR LIGHT GOLD (accent-hover) — plain values
+                               are gold, and the difference is what says "clickable". */ -}}
+                        <span class="inline-flex min-w-0 items-baseline justify-end gap-[0.45em] p-0 text-right">
+                            {{- with .Params.categoryColor }}<span class="size-[0.5em] shrink-0 self-center rounded-full" style="background-color: {{ . }}" aria-hidden="true"></span>{{ end -}}
+                            <a class="inline min-w-0 p-0 text-accent-hover hover:text-accent" href="{{ .RelPermalink }}" title="{{ .LinkTitle }}">{{ .LinkTitle }}</a>
                         </span>
                     </li>
                     {{- end }}{{ end }}
@@ -149,9 +154,9 @@
                         {{- /* A link is a link: "Noch keine" wears the link colour like
                                its sibling — muted-as-text hid that it goes somewhere. */ -}}
                         {{- if gt (len $mentions) 0 }}
-                        <a class="inline p-0 text-accent hover:text-accent-hover" href="#webmentions" title="Zu den Antworten und Erwähnungen springen">{{ len $mentions }} {{ if eq (len $mentions) 1 }}Antwort{{ else }}Antworten{{ end }}</a>
+                        <a class="inline p-0 text-accent-hover hover:text-accent" href="#webmentions" title="Zu den Antworten und Erwähnungen springen">{{ len $mentions }} {{ if eq (len $mentions) 1 }}Antwort{{ else }}Antworten{{ end }}</a>
                         {{- else }}
-                        <a class="inline p-0 text-accent hover:text-accent-hover" href="#webmentions" title="Zu den Webmentions springen">Noch keine</a>
+                        <a class="inline p-0 text-accent-hover hover:text-accent" href="#webmentions" title="Zu den Webmentions springen">Noch keine</a>
                         {{- end }}
                     </li>
                 </ul>
