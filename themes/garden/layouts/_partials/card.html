@@ -220,7 +220,15 @@
     <div class="at-flow relative p-gutter">
         {{- with $img }}
         {{- $cover := .Process "fill 480x360 webp" }}
-        {{ partial "ui/figure" (dict "src" $cover.RelPermalink "alt" $.Title "href" $.RelPermalink "title" $.Title) }}
+        {{- /* ALWAYS the full-bleed cover, not ui/figure: the term card is
+               permanently stacked — title under picture, no text column at any
+               width — so the float treatment has nothing to do here and the
+               inset thumbnail it produced read as a mistake next to the
+               stacked article cards. Same nesting as everywhere: negative
+               gutters, top corners inside the card's radius. */ -}}
+        <a class="-mx-gutter -mt-gutter mb-4 block" href="{{ $.RelPermalink }}" title="{{ $.Title }}">
+            <img class="block aspect-[4/3] h-auto w-full rounded-t-[calc(var(--radius-md)-1px)] object-cover sepia transition-[filter] duration-300 ease-out group-hover/card:sepia-0" src="{{ $cover.RelPermalink }}" alt="{{ $.Title }}" width="480" height="360" loading="lazy">
+        </a>
         {{- end }}
         <h2 class="m-0 font-heading text-xl font-semibold tracking-heading" aria-label="{{ .Title }}">
             {{- /* The Rubrik's own colour lands on the DOT, not on the title.
