@@ -34,7 +34,7 @@
         {{- end }}
         <h1 class="gd-h1" data-heading="{{ .Title }}">{{ .Title }}</h1>
         {{- with .Params.subtitle }}<p class="mt-4 text-lg text-ink-muted">{{ . }}</p>{{ end }}
-        <div class="at-prose mt-gutter">{{ .Content }}</div>
+        <div class="at-prose mt-gutter max-w-none">{{ .Content }}</div>
     </article>
     </div>
 
@@ -86,7 +86,7 @@
                     <a class="u-url u-uid" href="{{ .Permalink }}" hidden></a>
                 </p>
 
-                <div class="at-prose e-content mt-gutter">{{ .Content }}</div>
+                <div class="at-prose e-content mt-gutter max-w-none">{{ .Content }}</div>
 
             </article>
 
@@ -193,7 +193,7 @@
 
     <article class="{{ $panel }}">
         <h1 class="gd-h1" data-heading="{{ .Title }}">{{ .Title }}</h1>
-        <div class="at-prose mt-gutter">{{ .Content }}</div>
+        <div class="at-prose mt-gutter max-w-none">{{ .Content }}</div>
     </article>
 
 {{- end }}
