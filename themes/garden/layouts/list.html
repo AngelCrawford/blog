@@ -28,12 +28,8 @@
         {{- with .Resources }}
         {{- with (.ByType "image").GetMatch "cover*" }}
         {{- $cover := .Process "fill 480x360 webp" }}
-        <figure class="at-figure at-figure-float">
-            <img class="at-card-cover" src="{{ $cover.RelPermalink }}" alt="{{ $pagename }}" width="480" height="360" loading="lazy">
-            {{- with .Meta.Exif }}{{ with .Tags.ImageDescription }}
-            <figcaption class="at-figcaption">{{ . | safeHTML }}</figcaption>
-            {{- end }}{{ end }}
-        </figure>
+        {{- $caption := "" }}{{ with .Meta.Exif }}{{ with .Tags.ImageDescription }}{{ $caption = . }}{{ end }}{{ end }}
+        {{ partial "ui/figure" (dict "src" $cover.RelPermalink "alt" $pagename "caption" $caption) }}
         {{- end }}{{ end }}
         <h1 class="gd-h1" data-heading="{{ $pagename }}">{{ $pagename }}</h1>
         {{- with .Params.subtitle }}<p class="mt-4 text-lg text-ink-muted">{{ . }}</p>{{ end }}

@@ -645,92 +645,16 @@
   background-color: hsl(190 11% 12%); color: var(--color-accent);
   font-size: 0.7rem; font-weight: var(--weight-body);
 }
-/* IMAGERY — 4:3 landscape, always, and always in sepia until you point at it.
- *
- * The old covers were 2:3 portrait, cropped from the same files. A portrait well
- * beside a text column makes the card as tall as the picture rather than as tall as
- * the text, and a blog's pictures are roads, skylines and screens — landscape
- * subjects forced upright. One ratio for every image on the site: cards, term
- * tiles, article headers.
- *
- * Sepia is the house treatment, not a per-image choice: it pulls every photograph,
- * whatever its own palette, into the gold. Full colour is the reward for hovering.
- * The image also sits 1.5em LEFT of and 1.5em BELOW its container's top corner, so
- * it reads as laid ON the surface rather than cropped into it. */
-.at-card-cover, .at-figure img {
-  display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover;
-  border-radius: var(--radius-md); box-shadow: var(--shadow-card);
-  filter: sepia(1); transition: filter var(--duration-slow) var(--ease-out);
-}
-.at-card:hover .at-card-cover, .at-figure:hover img { filter: sepia(0); }
-/* Full-bleed background image — the note card, where the picture IS the surface.
- * A different job from a 4:3 figure, so it gets its own class.
- *
- * SIZED EXPLICITLY, not by insets. For an absolutely positioned REPLACED element,
- * `width: auto` resolves to the intrinsic width, the box becomes over-constrained
- * and `right`/`bottom` are simply dropped — a 1200×500 photograph then painted at
- * its natural size and hung 308px out of the document. The overhang has to come
- * from the width, so it is stated: 100% plus the 1.5em it reaches past the left
- * edge, and 100% minus the 1.5em it starts below the top. */
-.at-card-bleed {
-  position: absolute; top: 1.5em; left: -1.5em;
-  width: calc(100% + 1.5em); height: calc(100% - 1.5em);
-  aspect-ratio: auto; object-fit: cover;
-  border-radius: var(--radius-md); opacity: 0.5;
-  filter: sepia(1); transition: filter var(--duration-slow) var(--ease-out);
-}
-.at-card:hover .at-card-bleed { filter: sepia(0); }
-/* The offset. Same two numbers everywhere it is used. */
-.at-figure { position: relative; margin: 1.5em 0 0 -1.5em; align-self: start; }
-/* FLOATED, so the text runs around the picture instead of standing in a column
- * beside it. A 4:3 landscape image in its own grid column leaves a text column too
- * narrow to read — six words to a line, which is what the two-column card became
- * the moment the ratio changed.
- *
- * The left margin is −3em, not −1.5em: it has to cross the container's own 1.5em of
- * padding before it starts hanging out. At −1.5em the two cancelled exactly and the
- * image sat flush on the border, which reads as a mistake rather than a decision.
- * The TOP margin is zero for the same reason, inverted — the container's padding
- * already supplies the 1.5em, and adding another produced 3em of air above the
- * picture while the title beside it started at 1.5em. */
-.at-figure-float {
-  float: left; width: min(46%, 22rem);
-  margin: 0 var(--spacing-gutter) var(--spacing-4) -3em;
-}
+/* IMAGERY LIVES IN layouts/_partials/ui/figure.html — the 4:3 ratio, the sepia
+ * release, the float and its two-tier drop (container query in cards, viewport
+ * fallback in panels), the caption bar, the overhang. All utilities, written
+ * once in the partial; the note card's full-bleed variant is utilities at its
+ * call site in card.html. What used to be five classes here is a partial call.
+ * The sepia hover runs through `group/card` on the card and `group/figure` on
+ * the figure, replacing the descendant hover rules that stood here. */
+
 /* The container has to contain its float, or the card collapses behind the image. */
 .at-flow::after { content: ""; display: block; clear: both; }
-/* THE FLOAT DROPS BY CARD WIDTH, NOT BY VIEWPORT. It used to be
- * `@media (max-width: 640px)`, which is the right threshold measured against
- * the wrong thing: in a three-column grid on a 1536px screen each card is 480px
- * and the media query never fires, so a 46% cover left about 200px of text —
- * four words to a line, the exact failure the landscape ratio was adopted to
- * avoid. 40rem is the card width below which the two-column reading falls
- * apart; above it the picture floats and the text runs around it as designed.
- *
- * `.at-figure-float` also appears in article prose, where the container is the
- * panel rather than a card. Panels are wider than 40rem, so it floats there. */
-@container (max-width: 40rem) {
-  .at-figure-float { float: none; width: auto; margin: 0 0 var(--spacing-4); }
-}
-/* Fallback for the prose case, which has no size container above it. */
-@media (max-width: 640px) {
-  .at-figure-float { float: none; width: auto; margin: 0 0 var(--spacing-4); }
-}
-/* AND THE OVERHANG GOES WITH THE FLOAT. Upstream kept `margin-left: -3em` in the
- * stacked case too, so the picture stayed shifted a full 1.5em past the card's
- * left edge while its right edge lined up with the text — which reads as a
- * misalignment rather than as depth.
- *
- * The overhang earns its keep only while the text runs around the picture: there
- * it is the picture lying ON the card. A banner across the top is not lying on
- * anything, and the radius and the paired shadow already say "photograph placed
- * here" without it. */
-.at-figcaption {
-  position: absolute; inset: auto 0 0 0; padding: 0.5em;
-  font-size: var(--text-sm); color: hsl(190 20% 90%);
-  background: hsl(190 11% 8% / 0.7); border-top: 1px solid hsl(190 11% 5% / 0.5);
-  border-radius: 0 0 var(--radius-md) var(--radius-md);
-}
 
 /* Hashtag pill and the Rubrik tag inside a tile value. Both carry the element
  * selector: .at-prose a underlines every link inside prose at (0,1,1), which beats

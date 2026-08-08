@@ -34,7 +34,7 @@
 {{- $rubrik := "" -}}
 {{- with .GetTerms "categories" }}{{ range first 1 . }}{{ $rubrik = . }}{{ end }}{{ end -}}
 
-<article class="at-card h-entry{{ if $featured }} at-card-fixed{{ end }}{{ if $isNote }} min-h-[400px]{{ end }}">
+<article class="at-card group/card h-entry{{ if $featured }} at-card-fixed{{ end }}{{ if $isNote }} min-h-[400px]{{ end }}">
 
     {{- if $isNote -}}
         {{- /* NO RIBBON. The design system keeps one here — a note has no metadata
@@ -47,7 +47,11 @@
         <div class="relative grid place-items-center p-gutter">
             {{- with $img }}
             {{- $bleed := .Process "fill 600x480 webp" }}
-            <img class="at-card-bleed" src="{{ $bleed.RelPermalink }}" alt="" width="600" height="480" loading="lazy">
+            {{- /* The note's picture IS the surface: full-bleed behind the quote, dimmed,
+                   sized explicitly because an absolutely positioned replaced element
+                   drops right/bottom when width is auto — the overhang must come from
+                   the width. Sepia releases on card hover like every photograph. */ -}}
+            <img class="absolute top-[1.5em] -left-[1.5em] h-[calc(100%-1.5em)] w-[calc(100%+1.5em)] rounded-md object-cover opacity-50 sepia transition-[filter] duration-300 ease-out group-hover/card:sepia-0" src="{{ $bleed.RelPermalink }}" alt="" width="600" height="480" loading="lazy">
             {{- end }}
             <p class="at-quoted e-content relative z-2 m-0 bg-[linear-gradient(270deg,transparent_0%,rgb(0_0_0/0.5)_50%,transparent_100%)] py-4 text-center font-heading text-[30px]/[1.3] font-semibold text-ink-strong [text-shadow:3px_3px_4px_rgb(0_0_0/0.5)]">
                 {{ .Summary | markdownify | plainify }}
@@ -58,23 +62,10 @@
                height of its text and the picture hangs out of the bottom. */ -}}
         <div class="at-flow relative p-gutter">
             {{- with $img }}
-            {{- /* 4:3 LANDSCAPE, ALWAYS, and floated rather than given a column
-                   of its own. A landscape picture in its own grid column leaves a
-                   text column six words wide — that is what the old 2:3 portrait
-                   was working around, by making the card as tall as the picture
-                   instead of as tall as the text. */ -}}
+            {{- /* 4:3 LANDSCAPE, ALWAYS, floated into the text — see ui/figure. */ -}}
             {{- $cover := .Process "fill 480x360 webp" }}
-            <figure class="at-figure at-figure-float">
-                <a href="{{ $.RelPermalink }}" title="{{ $.Title }}">
-                    <img class="at-card-cover" src="{{ $cover.RelPermalink }}" alt="{{ $.Title }}" width="480" height="360" loading="lazy">
-                </a>
-                {{- with .Meta.Exif }}{{ with .Tags.ImageDescription }}
-                <figcaption class="at-figcaption">
-                    <svg class="mr-0.5 inline-block size-4 -translate-y-px fill-current" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#pencil-line"></use></svg>
-                    {{ . | safeHTML }}
-                </figcaption>
-                {{- end }}{{ end }}
-            </figure>
+            {{- $caption := "" }}{{ with .Meta.Exif }}{{ with .Tags.ImageDescription }}{{ $caption = . }}{{ end }}{{ end }}
+            {{ partial "ui/figure" (dict "src" $cover.RelPermalink "alt" $.Title "href" $.RelPermalink "title" $.Title "caption" $caption) }}
             {{- end }}
 
             <h2 class="m-0 font-heading text-xl font-semibold tracking-heading" aria-label="{{ .Title }}">
@@ -215,15 +206,11 @@
 {{- /* Term card: a Rubrik or a Tag. Same box, no footer — there is no reading
        time, no growth stage and nothing to heart about a category. The count is
        the content. */ -}}
-<article class="at-card">
+<article class="at-card group/card">
     <div class="at-flow relative p-gutter">
         {{- with $img }}
         {{- $cover := .Process "fill 480x360 webp" }}
-        <figure class="at-figure at-figure-float">
-            <a href="{{ $.RelPermalink }}" title="{{ $.Title }}">
-                <img class="at-card-cover" src="{{ $cover.RelPermalink }}" alt="{{ $.Title }}" width="480" height="360" loading="lazy">
-            </a>
-        </figure>
+        {{ partial "ui/figure" (dict "src" $cover.RelPermalink "alt" $.Title "href" $.RelPermalink "title" $.Title) }}
         {{- end }}
         <h2 class="m-0 font-heading text-xl font-semibold tracking-heading" aria-label="{{ .Title }}">
             {{- /* The Rubrik's own colour lands on the DOT, not on the title.

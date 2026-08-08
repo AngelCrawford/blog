@@ -695,17 +695,14 @@
     <div class="grid grid-cols-1 gap-gutter xl:grid-cols-2">
 
       {{- /* Artikel mit Bild — der Normalfall. */ -}}
-      <article class="at-card">
+      <article class="at-card group/card">
         <span class="at-card-badge">
           <svg class="size-[0.9em] shrink-0 fill-current" aria-hidden="true"><use href="{{ $sprite }}?t={{ $v }}#sparkling-line"></use></svg>
           Neu
         </span>
         <div class="at-flow relative p-gutter">
           {{- with $cover }}
-          <figure class="at-figure at-figure-float">
-            <img class="at-card-cover" src="{{ . }}" alt="" width="480" height="360" loading="lazy">
-            <figcaption class="at-figcaption">Aufgenommen an der Kieler Förde</figcaption>
-          </figure>
+          {{ partial "ui/figure" (dict "src" . "alt" "" "caption" "Aufgenommen an der Kieler Förde") }}
           {{- end }}
           <h4 class="m-0 font-heading text-xl font-semibold tracking-heading"><a class="text-accent-hover hover:text-accent" href="#vokabular">Warum Hugo</a></h4>
           <p class="at-card-meta m-0 flex flex-wrap items-center gap-x-[0.75em] gap-y-[0.5em] text-sm text-ink-muted">
@@ -760,9 +757,9 @@
       {{- /* Notizkarte, dazu die hervorgehobene Variante (`weight: 1`) mit dem
              kräftigeren Rand. Das Ribbon ist weg — die Rubrik steht bei Notizen
              im Footer, wie bei allen anderen Karten auch. */ -}}
-      <article class="at-card at-card-fixed min-h-[400px]">
+      <article class="at-card group/card at-card-fixed min-h-[400px]">
         <div class="relative grid grid-cols-1 place-items-center p-gutter">
-          {{- with $cover }}<img class="at-card-bleed" src="{{ . }}" alt="">{{ end }}
+          {{- with $cover }}<img class="absolute top-[1.5em] -left-[1.5em] h-[calc(100%-1.5em)] w-[calc(100%+1.5em)] rounded-md object-cover opacity-50 sepia transition-[filter] duration-300 ease-out group-hover/card:sepia-0" src="{{ . }}" alt="">{{ end }}
           <p class="at-quoted relative z-2 m-0 bg-[linear-gradient(270deg,transparent_0%,rgb(0_0_0/0.5)_50%,transparent_100%)] py-4 text-center font-heading text-[30px]/[1.3] font-semibold text-ink-strong [text-shadow:3px_3px_4px_rgb(0_0_0/0.5)]">
             Erst die Programmierung, dann das komplette Design.
           </p>

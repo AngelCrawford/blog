@@ -1,0 +1,49 @@
+{{- /* The cover figure — the house treatment for every photograph on the site.
+ *
+ * ONE PLACE, LIKE THE BUTTON. 4:3 landscape, sepia until pointed at, 8px radius
+ * with the paired shadow, floated left hanging past its panel's edge so the
+ * text runs around it. That treatment used to be five CSS classes; it is
+ * utilities now, written once here instead of at four call sites.
+ *
+ * WHO RELEASES THE SEPIA. Two ancestors may own the hover:
+ *   group/card    on `article.at-card` — hovering anywhere on a card frees the
+ *                 cover, because the card is the unit you point at.
+ *   group/figure  on this figure — in a panel (list/archive intro) the figure
+ *                 itself is the unit.
+ * Both variants sit on the img; whichever group exists above it wins. This
+ * replaces `.at-card:hover .at-card-cover` and `.at-figure:hover img`.
+ *
+ * WHEN THE FLOAT DROPS. Measured against the figure's CONTAINER, not the
+ * viewport: below 40rem of container there is no text column left to float
+ * into and the picture stacks on top. `.at-card` is a size container, so cards
+ * answer the `@max-[40rem]:` variants; panels are no container, that query can
+ * never match there, and the `max-[640px]:` viewport fallback takes over. Same
+ * two-tier logic the old CSS had, expressed as variants.
+ *
+ * THE OVERHANG. `-ml-[3em]` while floated: the picture crosses its container's
+ * 1.5em padding and hangs 1.5em past the edge — laid ON the surface, not
+ * cropped into it. Stacked, the overhang goes with the float (`ml-0`): a
+ * banner is not lying on anything, and shifted left it just reads as crooked.
+ *
+ * Parameters
+ *   src / width / height   the processed image (caller runs .Process — crop
+ *                          sizes differ per call site and stay there)
+ *   alt                    required for real images; pass "" for decorative
+ *   href / title           wrap the image in a link (card covers link the post)
+ *   caption                optional figcaption, already safe HTML
+ */ -}}
+{{- $sprite := "fonts/remixicon/remixicon.symbol.svg" | relURL -}}
+<figure class="group/figure relative float-left mt-0 mr-gutter mb-4 -ml-[3em] w-[min(46%,22rem)] self-start @max-[40rem]:float-none @max-[40rem]:mx-0 @max-[40rem]:mb-4 @max-[40rem]:w-auto max-[640px]:float-none max-[640px]:mx-0 max-[640px]:mb-4 max-[640px]:w-auto">
+    {{- $img := printf `<img class="block aspect-[4/3] h-auto w-full rounded-md object-cover shadow-card sepia transition-[filter] duration-300 ease-out group-hover/card:sepia-0 group-hover/figure:sepia-0" src="%s" alt="%s" width="%v" height="%v" loading="lazy">` .src (.alt | default "") (.width | default 480) (.height | default 360) | safeHTML -}}
+    {{- if .href -}}
+    <a href="{{ .href }}"{{ with .title }} title="{{ . }}"{{ end }}>{{ $img }}</a>
+    {{- else -}}
+    {{ $img }}
+    {{- end -}}
+    {{- with .caption }}
+    <figcaption class="absolute inset-x-0 bottom-0 rounded-b-md border-t border-[hsl(190_11%_5%/0.5)] bg-[hsl(190_11%_8%/0.7)] p-[0.5em] text-sm text-[hsl(190_20%_90%)]">
+        <svg class="mr-0.5 inline-block size-4 fill-current" aria-hidden="true"><use href="{{ $sprite }}?t={{ site.Params.remixicon_version }}#pencil-line"></use></svg>
+        {{ . | safeHTML }}
+    </figcaption>
+    {{- end }}
+</figure>

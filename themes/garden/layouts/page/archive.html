@@ -16,9 +16,7 @@
             {{- with .Resources }}
             {{- with (.ByType "image").GetMatch "cover*" }}
             {{- $cover := .Process "fill 480x360 webp" }}
-            <figure class="at-figure at-figure-float">
-                <img class="at-card-cover" src="{{ $cover.RelPermalink }}" alt="{{ $.Title }}" width="480" height="360" loading="lazy">
-            </figure>
+            {{ partial "ui/figure" (dict "src" $cover.RelPermalink "alt" $.Title) }}
             {{- end }}{{ end }}
             {{- $heading := or .Params.translation.singular .Title }}
             <h1 class="gd-h1" data-heading="{{ $heading }}">{{ $heading }}</h1>
