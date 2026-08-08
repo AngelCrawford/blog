@@ -107,24 +107,35 @@ onReady(() => {
   const NEW_DAYS = 28;
   const DAY_MS = 24 * 60 * 60 * 1000;
 
-  /* Remember this page, if it is an article. */
+  /* Remember this page, if it is an article — WITH the visit time. The
+   * timestamp is what makes the "Aktualisiert" flag personal (#236, Angel's
+   * pick): an article tended after YOUR last visit is news to you, and the
+   * flag dies the moment you reopen it. Still all local, still nothing sent
+   * anywhere. */
   const here = window.location.pathname;
   if (here.includes("/articles/")) {
     try {
-      localStorage.setItem(`visited-${here}`, "true");
+      localStorage.setItem(`visited-${here}`, new Date().toISOString());
     } catch {
       /* Storage disabled: no markers. Nothing else breaks. */
     }
   }
 
-  /* Mark every link pointing at an article already opened. Same-origin only —
-   * whether someone read an article somewhere else is not knowable and not our
+  /* When was this article last opened here? Returns a timestamp in ms,
+   * null if never. Legacy entries hold the literal "true" from before the
+   * timestamps — they parse as epoch 0: visited, but before every possible
+   * update, so a tended article correctly flags once and the next visit
+   * overwrites the entry with a real time. Same-origin only — whether
+   * someone read an article somewhere else is not knowable and not our
    * business. */
-  const seen = (path) => {
+  const seenAt = (path) => {
     try {
-      return localStorage.getItem(`visited-${path}`) === "true";
+      const v = localStorage.getItem(`visited-${path}`);
+      if (!v) return null;
+      const t = Date.parse(v);
+      return Number.isNaN(t) ? 0 : t;
     } catch {
-      return false;
+      return null;
     }
   };
 
@@ -164,12 +175,23 @@ onReady(() => {
   };
 
   for (const link of document.querySelectorAll(`a[href*="/articles/"]`)) {
-    if (link.host !== window.location.host || !seen(link.pathname)) continue;
+    if (link.host !== window.location.host) continue;
+    const visitedAt = seenAt(link.pathname);
+    if (visitedAt === null) continue;
     link.setAttribute("data-visited", "true");
     const card = link.closest(CARD);
     if (!card) continue;
     card.classList.add("visited");
-    flag(card, "check-fill", "Gesehen", "border-accent-muted/70 text-accent");
+    /* Tended since your visit? The card's dt-updated is the source — it only
+     * exists when lastmod differs from date. Light gold with the pencil:
+     * louder than "Gesehen", quieter than the green "Neu", exactly its rank. */
+    const updated = card.querySelector("time.dt-updated")?.getAttribute("datetime");
+    if (updated && Date.parse(updated) > visitedAt) {
+      card.classList.add("updated-since-visit");
+      flag(card, "pencil-fill", "Aktualisiert", "border-accent-hover/60 text-accent-hover");
+    } else {
+      flag(card, "check-fill", "Gesehen", "border-accent-muted/70 text-accent");
+    }
   }
 
   /* And mark the recent ones. The card's own `datetime` is the source — no
