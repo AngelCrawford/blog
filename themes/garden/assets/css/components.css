@@ -349,6 +349,86 @@
  * utilities in the template.
  * =========================================================================== */
 
+/* --- Navigation ------------------------------------------------------------
+ * One set of links in two shapes: a bar under the header at 768px and up, a
+ * full-viewport drawer below it. What is here is what a utility cannot say —
+ * three pseudo-elements, one keyframe, and a scroll lock that reads a checkbox
+ * inside <nav> and applies to <body>. Everything else is utilities in
+ * layouts/_partials/_base/navigation.html.
+ * -------------------------------------------------------------------------- */
+
+/* The bar closes with the same fading gold rule gd-h2 uses. This is the line
+ * where the header's decoration stops and the page begins — which is the whole
+ * reason the bar is stuck to the top: the line has to survive scrolling. */
+.at-nav::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 1px;
+  background: linear-gradient(to right, var(--rule-gold), transparent);
+}
+
+@media (min-width: 768px) {
+  /* The current item: gold, plus a 2px gold rule fading out to the right — the
+   * same device as every other rule in the system, at 2px so it reads as a
+   * marker rather than as another divider. The inset matches the link's own
+   * `md:px-3`, so the rule sits under the label and not under the padding. */
+  .at-nav-item[aria-current]::after {
+    content: "";
+    position: absolute;
+    inset: auto calc(var(--spacing) * 3) -1px;
+    height: 2px;
+    background: linear-gradient(
+      to right,
+      var(--color-accent),
+      --alpha(var(--color-accent) / 20%)
+    );
+  }
+}
+
+@media (max-width: 767px) {
+  /* In the drawer the rows are told apart by one fading rule between them, not
+   * boxed in by a border on each. */
+  .at-nav-item + .at-nav-item::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 1px;
+    background: linear-gradient(to right, var(--rule-gold), transparent);
+  }
+
+  /* The page behind the drawer must not scroll under the fingers. The toggle is
+   * a checkbox inside <nav>, and nothing but :has() reaches <body> from there. */
+  body:has(#menu-switch:checked) {
+    overflow: hidden;
+  }
+
+  /* The drawer arrives from the right. Opaque, never see-through: this system
+   * has no backdrop filters over content, and a translucent menu over the
+   * dotted page ground is unreadable. */
+  #menu-switch:checked ~ .at-nav-drawer {
+    animation: at-drawer-in var(--duration-base) var(--ease-out) both;
+  }
+}
+
+@keyframes at-drawer-in {
+  from {
+    opacity: 0;
+    transform: translateX(4%);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* The movement goes; the drawer still opens. */
+@media (prefers-reduced-motion: reduce) {
+  #menu-switch:checked ~ .at-nav-drawer {
+    animation: none;
+  }
+}
+
 /* --- Search results panel --------------------------------------------------
  * Positioned against the <nav>, not against its own parent, and the pointer is
  * a pseudo-element. The result rows themselves are utility-styled — that markup

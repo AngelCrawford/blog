@@ -16,9 +16,13 @@
 {{ partial "_base/maintenance" . }}
 {{- else -}}
 <!DOCTYPE html>
-{{- /* scroll-smooth + the 35px scroll offset were Bulma-era globals
-       (`*, html` in main.scss); they live on <html> as utilities now. */ -}}
-<html lang="de" data-theme="dark" class="scroll-smooth [scroll-padding-top:35px]">
+{{- /* scroll-smooth was a Bulma-era global (`*, html` in main.scss) and lives on
+       <html> as a utility now. The scroll offset came along at 35px, which was
+       right while nothing covered the top of the page. The navigation is stuck
+       there since the nav redesign, so the offset is its 3.5rem plus a rem of
+       air — otherwise every in-page anchor, every footnote jump and every
+       heading link lands underneath the bar. */ -}}
+<html lang="de" data-theme="dark" class="scroll-smooth scroll-pt-18">
     {{ partial "_base/head" . }}
     {{- /* Validate growth_stage frontmatter (Layer 3 / authoritative build gate). */ -}}
     {{- partial "_base/validate-growth-stage" . -}}

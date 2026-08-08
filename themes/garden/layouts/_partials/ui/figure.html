@@ -42,7 +42,11 @@
 {{- $sprite := "fonts/remixicon/remixicon.symbol.svg" | relURL -}}
 {{- /* Both class sets are COMPLETE literals — Tailwind extracts whole strings
        only, so the two stacked treatments cannot share a base via variables. */ -}}
-{{- $figFloat := "group/figure relative float-left mt-0 mr-gutter mb-4 -ml-[3em] w-[min(46%,22rem)] self-start" -}}
+{{- /* THE OVERHANG NEEDS GROUND TO LIE ON: from 768px viewport up there is
+       page padding and grid gap beside the panel or card; below that the
+       -3em just poked past the surface into the void, frameless. ml-0 under
+       768, the overhang above. */ -}}
+{{- $figFloat := "group/figure relative float-left mt-0 mr-gutter mb-4 ml-0 min-[768px]:-ml-[3em] w-[min(46%,22rem)] self-start" -}}
 {{- $figStack := cond (eq true .bleed) "@max-[28rem]:float-none @max-[28rem]:-mx-gutter @max-[28rem]:-mt-gutter @max-[28rem]:mb-4 @max-[28rem]:w-auto max-[480px]:float-none max-[480px]:-mx-gutter max-[480px]:-mt-gutter max-[480px]:mb-4 max-[480px]:w-auto" "@max-[28rem]:float-none @max-[28rem]:mx-0 @max-[28rem]:mb-4 @max-[28rem]:w-auto max-[480px]:float-none max-[480px]:mx-0 max-[480px]:mb-4 max-[480px]:w-auto" -}}
 {{- $imgBleed := cond (eq true .bleed) " @max-[28rem]:rounded-none @max-[28rem]:rounded-t-[calc(var(--radius-md)-1px)] max-[480px]:rounded-none max-[480px]:rounded-t-[calc(var(--radius-md)-1px)]" "" -}}
 <figure class="{{ $figFloat }} {{ $figStack }}">

@@ -1,15 +1,30 @@
 {{ partialCached "_base/navigation-content" . .RelPermalink }}
 
 {{ define "partials/_base/navigation-content" }}
-{{- /* Garden navigation — first component migrated off Bulma.
+{{- /* Garden navigation — the band under the header, and the page's top edge.
  *
- * STRUCTURE IS DELIBERATELY PLAIN. This exists to prove the migration path,
- * not to settle the design. Restyling it is Angel's call.
+ * ITS JOB IS TO SEPARATE. The header above it is the most decorated thing on
+ * the site — sky, silhouette, clock, gold wordmark — and this strip is where
+ * that stops. So it sits on the sunken surface, one level below the page, and
+ * closes with the same fading gold rule `gd-h2` uses. It is Sticky so that line
+ * survives scrolling, which is also why baseof.html carries a scroll-padding
+ * of 4.5rem: without it every in-page anchor lands underneath the bar.
  *
- * NO BULMA CLASS NAMES HERE. Reusing one (navbar, icon, input, control,
- * field) drags Bulma's whole rule set back in, and it fights whatever
- * Tailwind sets. The nav is the wrong shape on screen the moment that
- * happens.
+ * ONE SET OF LINKS, TWO SHAPES. Below 768px the same markup becomes a
+ * full-viewport drawer rather than shrinking — on a phone a menu is a place you
+ * go, not a strip you squint at, so the rows get the heading face and 44px of
+ * height. It is one DOM and not two because #searchBox may exist exactly once:
+ * search.js binds it by id, and a second copy would silently take over.
+ *
+ * THE TOGGLE IS A CHECKBOX AND STAYS ONE. It works with no JavaScript at all,
+ * and `:checked` is a real state assistive technology reports — unlike the
+ * `aria-expanded="false"` this markup used to hardcode on the label and never
+ * update, because nothing ever bound it. The input carries the accessible name
+ * and the tab stop; the burger is its <label>, so Space still closes the drawer
+ * from wherever focus sits.
+ *
+ * NO BULMA CLASS NAMES HERE. Reusing one (navbar, icon, input, control, field)
+ * drags Bulma's whole rule set back in, and it fights whatever Tailwind sets.
  *
  * CONTRACT WITH search.js — these selectors must survive any restyle:
  *   input#searchBox                      the query field
@@ -17,82 +32,105 @@
  *   #searchIcons svg.remix.close         clear icon
  *   #spinnerLoading                      loading indicator
  *   #results, #resultsWrapper            result list and its positioned box
- * .searchWithButton is NOT a Bulma class — article-time's search.scss styles
- * #resultsWrapper against it, so it stays.
+ * Visibility is the `hidden` utility, toggled from JS — never set a competing
+ * display value on any of them.
  *
  * CAUTION: Tailwind extracts candidates from the WHOLE file, comments
  * included. A bare word in prose that matches a utility name becomes a real
- * rule. This bit us with the c-o-n-t-a-i-n-e-r utility, which Bulma also
- * defines and five templates still use. Hyphenate or rephrase. */ -}}
-<nav class="relative flex flex-wrap items-center gap-2 bg-surface-sunken px-4 py-2 font-body text-ink"
-     role="navigation" aria-label="main navigation">
-    <input id="menu-switch" name="menu-switch" type="checkbox" class="peer sr-only" />
+ * rule. This bit us with the c-o-n-t-a-i-n-e-r utility. Hyphenate or
+ * capitalise. */ -}}
+<nav class="at-nav sticky top-0 z-50 flex min-h-14 items-center gap-1 bg-surface-sunken px-4 font-body text-ink"
+     aria-label="Hauptnavigation">
 
-    <div class="flex w-full items-center justify-between md:w-auto">
-        <a class="flex items-center gap-2 font-heading hover:text-accent {{ if .IsHome }}text-accent{{ end }}"
-           href="{{ .Site.Home.RelPermalink }}" title="{{ .Site.Title }}">
-            <img src="{{ "images/favicon/favicon.ico" | relURL }}" width="28" height="28" alt="Logo">Artikel
-        </a>
-        <label for="menu-switch"
-               class="flex cursor-pointer flex-col gap-1 p-2 md:hidden"
-               role="button" aria-expanded="false" aria-label="Menü">
-            <span aria-hidden="true" class="block h-0.5 w-6 bg-ink"></span>
-            <span aria-hidden="true" class="block h-0.5 w-6 bg-ink"></span>
-            <span aria-hidden="true" class="block h-0.5 w-6 bg-ink"></span>
-        </label>
-    </div>
+    {{- /* The control itself. Off-screen but focusable, and it is what a screen
+           reader announces — hence the name on the input rather than on the
+           label graphic. */ -}}
+    <input id="menu-switch" name="menu-switch" type="checkbox" class="peer sr-only" aria-label="Menü" />
 
-    {{- /* peer-checked drives the mobile disclosure; md and up it is always open. */ -}}
-    <div class="hidden w-full flex-col gap-2 peer-checked:flex md:flex md:w-auto md:grow md:flex-row md:items-center md:justify-between">
-        <div class="flex flex-col md:flex-row md:items-center">
+    {{- /* The mark. It keeps its word: the main menu is Rubriken / Tags /
+           Archiv, so "Artikel" names the home listing and duplicates nothing —
+           without it the article index would have no visible way in. */ -}}
+    <a class="flex shrink-0 items-center gap-2 py-2 pr-2 font-heading font-semibold transition-colors duration-200 ease-out hover:text-accent {{ if .IsHome }}text-accent{{ end }}"
+       href="{{ .Site.Home.RelPermalink }}" title="{{ .Site.Title }}"{{ if .IsHome }} aria-current="page"{{ end }}>
+        <img src="{{ "images/favicon/favicon.ico" | relURL }}" width="28" height="28" alt="">Artikel
+    </a>
+
+    {{- /* Bar at 768px and up, drawer below it. `md:static` matters twice: it
+           takes the drawer out of the way as a positioning context, and it is
+           what lets #resultsWrapper resolve against <nav> again. */ -}}
+    <div class="at-nav-drawer fixed inset-0 z-[100] hidden flex-col gap-gutter overflow-auto bg-surface-sunken px-5 pt-4 pb-8 peer-checked:flex md:static md:z-auto md:flex md:grow md:flex-row md:items-center md:gap-2 md:overflow-visible md:bg-transparent md:p-0">
+
+        {{- /* Drawer head. The bar is behind the drawer while it is open, so the
+               way out has to live in here. */ -}}
+        <div class="flex items-center justify-between gap-4 md:hidden">
+            <span class="font-heading font-semibold text-ink-muted">{{ .Site.Title }}</span>
+            <label for="menu-switch" class="gd-round-button gd-round-button-full" title="Menü schließen">
+                <span class="sr-only">Menü schließen</span>
+                <svg aria-hidden="true"><use href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ $.Site.Params.remixicon_version }}#close-fill"></use></svg>
+            </label>
+        </div>
+
+        {{- /* Search sits at the top of the drawer and at the right of the bar;
+               the two orders are the only reason these three groups carry an
+               order at all. */ -}}
+        <div class="relative order-1 flex items-center md:static md:order-3">
+            <label for="searchBox" class="sr-only">Suchen</label>
+            <input class="w-full rounded-sm border border-accent-muted bg-surface py-1.5 pr-9 pl-3 text-ink caret-accent transition-[border-color,box-shadow] duration-200 ease-out focus:border-accent focus:ring-[3px] focus:ring-accent/25 focus:outline-none md:w-56"
+                   type="search" name="searchBox" id="searchBox" placeholder="Suchen…">
+            {{- /* pointer-events-none on the wrapper so the idle magnifier does not
+                   eat clicks meant for the field; re-enabled on the clear icon
+                   alone, which search.js binds a click handler to. Without that
+                   exception the X is unreachable and the field never clears. */ -}}
+            <span id="searchIcons" class="pointer-events-none absolute inset-y-0 right-3 flex items-center text-accent">
+              <svg class="remix lens size-4 shrink-0 fill-current" aria-hidden="true"><use href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ $.Site.Params.remixicon_version}}#search-line"></use></svg>
+              <svg class="remix close pointer-events-auto hidden size-4 shrink-0 cursor-pointer fill-current" role="button" tabindex="0" aria-label="Suche leeren"><use href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ $.Site.Params.remixicon_version}}#close-fill"></use></svg>
+              <div id="spinnerLoading" class="hidden size-4 animate-spin rounded-full border-2 border-accent-muted border-t-accent"></div>
+            </span>
+
+            {{- /* The panel is far wider than the field. In the bar it must hang
+                   from the navigation's right edge — anchoring it to the field
+                   pins an 800px panel to a 224px input, which is exactly what
+                   happened once. `md:static` on this wrapper does that without a
+                   second element: at 768px and up the nearest positioned
+                   ancestor is <nav>, below it the field's own box, which is where
+                   the panel belongs when the field is in the drawer. */ -}}
+            <div id="resultsWrapper" class="absolute top-full right-0 z-[9999] mt-3 hidden w-[min(50rem,calc(100vw-2rem))]"><div id="results" class="max-h-[60vh] overflow-auto rounded-lg border border-accent/20 bg-surface-raised p-gutter shadow-lg"></div></div>
+        </div>
+
+        <div class="order-2 flex flex-col md:order-1 md:mr-auto md:flex-row md:items-center">
             {{- $currentPage := . -}}
             {{- range .Site.Menus.main -}}
               {{- $active := or ($currentPage.IsMenuCurrent "main" .) ($currentPage.HasMenuCurrent "main" .) -}}
               {{- $label := cond (ne .Page.Params.translation.plural nil) .Page.Params.translation.plural .Name -}}
-              <a class="flex items-center gap-2 px-3 py-2 hover:text-accent {{ if $active }}text-accent{{ end }}"
+              <a class="at-nav-item relative flex min-h-11 items-center gap-4 py-4 font-heading text-xl font-semibold transition-colors duration-200 ease-out hover:text-accent aria-[current=page]:text-accent md:min-h-0 md:gap-2 md:px-3 md:py-3 md:font-body md:text-base md:font-normal"
                  {{ if $active }}aria-current="page"{{ end }} href="{{ .URL }}" title="{{ $label }}">
-                {{ if .Params.icon }}<svg class="size-5 shrink-0 fill-current" aria-hidden="true"><use href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ $.Site.Params.remixicon_version}}#{{ .Params.icon }}"></use></svg>{{ end }}
+                {{ if .Params.icon }}<svg class="size-6 shrink-0 fill-current md:size-5" aria-hidden="true"><use href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ $.Site.Params.remixicon_version}}#{{ .Params.icon }}"></use></svg>{{ end }}
                 {{- $label -}}
               </a>
             {{- end -}}
         </div>
 
-        <div class="flex flex-col gap-2 md:flex-row md:items-center">
+        {{- /* Follow icons sit at the foot of the drawer and beside the search
+               field in the bar. 44px boxes: a tap target is not the glyph. */ -}}
+        <div class="order-3 mt-auto flex items-center gap-1 md:order-2 md:mt-0">
           {{ range .Site.Params.follow.header }}
-            <a href="{{ .src | relURL }}" title="{{ .name }}" class="flex items-center px-3 py-2 hover:text-accent"
+            <a href="{{ .src | relURL }}" title="{{ .name }}"
+               class="flex size-11 items-center justify-center transition-colors duration-200 ease-out hover:text-accent"
                target="_blank" rel="noreferrer">
-              <svg class="size-5 shrink-0 fill-current" aria-hidden="true"><use href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ $.Site.Params.remixicon_version}}#{{ .icon }}"></use></svg>
+              <svg class="size-6 shrink-0 fill-current md:size-5" aria-hidden="true"><use href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ $.Site.Params.remixicon_version}}#{{ .icon }}"></use></svg>
             </a>
           {{ end }}
-
-          {{- /* Only the field and its icons are a positioning context.
-                 #resultsWrapper deliberately sits OUTSIDE this box, as a child
-                 of <nav>, because the panel is far wider than the field and is
-                 anchored to the navigation's right edge. Nesting it here pins
-                 an 800px panel to a 224px field and it lands in the wrong
-                 place — which is exactly what happened. */ -}}
-          <div class="relative px-3 py-2">
-            <label for="searchBox" class="sr-only">Search</label>
-            <input class="w-full rounded border border-accent-muted bg-surface py-1.5 pr-9 pl-3 text-ink focus:border-accent focus:outline-none md:w-56"
-                   type="search" name="searchBox" id="searchBox" aria-label="Search" aria-placeholder="Search...">
-            {{- /* pointer-events-none on the wrapper so the idle magnifier does not
-                   eat clicks meant for the field; re-enabled on the clear icon
-                   alone, which search.js binds a click handler to. Without that
-                   exception the X is unreachable and the field never clears. */ -}}
-            <span id="searchIcons" class="pointer-events-none absolute inset-y-0 right-6 flex items-center text-accent">
-              <svg class="remix lens size-4 shrink-0 fill-current" aria-hidden="true"><use href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ $.Site.Params.remixicon_version}}#search-line"></use></svg>
-              <svg class="remix close pointer-events-auto hidden size-4 shrink-0 cursor-pointer fill-current" role="button" tabindex="0" aria-label="Suche leeren"><use href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ $.Site.Params.remixicon_version}}#close-fill"></use></svg>
-              <div id="spinnerLoading" class="hidden size-4 animate-spin rounded-full border-2 border-accent-muted border-t-accent"></div>
-            </span>
-          </div>
         </div>
     </div>
 
-    {{- /* Anchored to <nav>, which is `relative`. Starts hidden; search.js
-           toggles the `hidden` utility. */ -}}
-    {{- /* Anchored to <nav> because the panel is far wider than the field. The ids
-       are search.js's hooks; the styles are utilities now — only the pointer
-       pseudo-element and the webkit search-decoration resets stay CSS. */ -}}
-    <div id="resultsWrapper" class="absolute top-full right-0 z-[9999] mt-3 hidden w-[min(50rem,calc(100vw-2rem))]"><div id="results" class="max-h-[60vh] overflow-auto rounded-lg border border-accent/20 bg-surface-raised p-gutter shadow-lg"></div></div>
+    {{- /* The burger. Three bars and no animation on open: the drawer covers the
+           bar completely, so there is nothing left on screen to morph into an X.
+           `bg-current` lets one colour rule on the label carry all three. */ -}}
+    <label for="menu-switch"
+           class="ml-auto flex size-11 shrink-0 flex-col items-center justify-center gap-1.5 transition-colors duration-200 ease-out hover:text-accent peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-accent md:hidden">
+        <span aria-hidden="true" class="block h-0.5 w-6 bg-current"></span>
+        <span aria-hidden="true" class="block h-0.5 w-6 bg-current"></span>
+        <span aria-hidden="true" class="block h-0.5 w-6 bg-current"></span>
+    </label>
 </nav>
 {{ end }}

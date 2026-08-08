@@ -4,12 +4,16 @@
        `webmention__source` are the build-test's hooks (Story 2.4 AC #6 greps
        for them). All of them are data, not styling. Reply text only for
        replies; likes/reposts/mentions carry no meaningful content. */ -}}
+{{- /* LINES, NOT BOXES: a reaction already has a life of its own at the
+       source — a tile around each one read as cards nested in a card
+       (Angel's verdict). Entries separate with the dashed hairline the
+       sidebar rows use; the panel provides the one surface. */ -}}
 <section class="mt-gutter" data-wm-group="{{ .type }}">
-    <h3 class="mb-3 font-heading text-base font-semibold text-accent">{{ .heading }} <span class="text-ink-muted tabular-nums">({{ len .items }})</span></h3>
-    <ul class="m-0 flex list-none flex-col gap-3 p-0">
+    <h3 class="mb-1 font-heading text-base font-semibold text-accent">{{ .heading }} <span class="text-ink-muted tabular-nums">({{ len .items }})</span></h3>
+    <ul class="m-0 list-none p-0">
         {{- range .items }}
-        <li>
-            <article class="webmention h-cite rounded-tile border border-accent-muted/40 bg-[var(--surface-tile)] p-4" data-wm-type="{{ .type }}">
+        <li class="border-b border-dashed border-accent-muted/30 py-3 last:border-b-0 last:pb-0">
+            <article class="webmention h-cite" data-wm-type="{{ .type }}">
                 <div class="flex flex-col gap-2">
                     {{- if .author_url }}
                     <a class="webmention__author p-author h-card u-url inline-flex items-center gap-2 font-semibold text-ink-strong no-underline hover:text-accent" href="{{ .author_url }}" rel="noopener noreferrer external" target="_blank">
