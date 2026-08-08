@@ -37,7 +37,12 @@
     {{- $all := where .Site.RegularPages "Type" "in" (slice "articles" "notes") -}}
     {{- $visible := partial "withered-filter.html" $all -}}
     {{- $hiddenCount := partial "withered-count.html" $all -}}
-    {{- $paginator := .Paginate $visible -}}
+    {{- /* #260: the feed orders by LASTMOD, not date — a 2016 article
+           reworked today belongs in front of an untouched 2025 one, because
+           tending is the relevance signal on a garden. Fresh posts sort
+           naturally (lastmod == date). The paginator gets the sorted
+           collection so page 2 slices correctly. */ -}}
+    {{- $paginator := .Paginate $visible.ByLastmod.Reverse -}}
 
         {{- /* WHY `1fr` AND NOT A REM CEILING AS THE TRACK MAX: auto-fill computes
            HOW MANY tracks fit from the track's max when it is definite. With
@@ -57,16 +62,16 @@
            pl-6 buys the first column the same air against the page edge. */ -}}
     <div class="h-feed grid grid-cols-[repeat(auto-fill,minmax(min(28rem,100%),1fr))] gap-x-12 gap-y-12 pl-6">
         {{- /* Weighted entries first and in weight order, then everything else
-               newest first, then anything with no weight at all. Three ranges
-               rather than one sort because `weight` is optional and Hugo sorts
-               a missing value to the front. */ -}}
+               freshest-tended first (#260), then anything with no weight at
+               all. Three ranges rather than one sort because `weight` is
+               optional and Hugo sorts a missing value to the front. */ -}}
         {{- range (where $paginator.Pages "Params.weight" "gt" 0).ByWeight }}
             {{ partial "card" . }}
         {{- end }}
-        {{- range (where $paginator.Pages "Params.weight" "le" 0).ByPublishDate.Reverse }}
+        {{- range (where $paginator.Pages "Params.weight" "le" 0).ByLastmod.Reverse }}
             {{ partial "card" . }}
         {{- end }}
-        {{- range (where $paginator.Pages "Params.weight" "eq" nil).ByPublishDate.Reverse }}
+        {{- range (where $paginator.Pages "Params.weight" "eq" nil).ByLastmod.Reverse }}
             {{ partial "card" . }}
         {{- end }}
     </div>

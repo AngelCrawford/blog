@@ -55,7 +55,15 @@
                 {{- with $.GetPage (printf "/%s/%s" $.Data.Plural .Term) }}{{ partial "card" . }}{{ end -}}
             {{- end -}}
         {{- else -}}
-            {{- range $visible.ByPublishDate.Reverse }}{{ partial "card" . }}{{ end -}}
+            {{- /* A SERIES reads front to back: part 1 first, ascending — the
+                   sidebar widget and this page must tell the same story. Every
+                   other listing follows #260: lastmod descending, tending is
+                   the relevance signal. */ -}}
+            {{- if and (eq .Kind "term") (eq .Data.Plural "series") -}}
+                {{- range $visible.ByDate }}{{ partial "card" . }}{{ end -}}
+            {{- else -}}
+                {{- range $visible.ByLastmod.Reverse }}{{ partial "card" . }}{{ end -}}
+            {{- end -}}
         {{- end }}
     </div>
 
