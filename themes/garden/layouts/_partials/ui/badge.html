@@ -19,7 +19,11 @@
  *   dot     optional hex colour for the dot; defaults to gold
  *   title   optional, falls back to label
  */ -}}
-{{- $classes := "inline-flex items-center gap-[0.45em] rounded-pill border border-accent-muted/40 bg-surface py-[0.25em] pr-[0.7em] pl-[0.55em] whitespace-nowrap text-accent no-underline transition-colors duration-150 ease-out hover:border-accent hover:text-accent-hover" -}}
+{{- /* NO whitespace-nowrap: a long Rubrik name wraps inside the pill instead
+       of punching through the card edge. min-w-0 lets the pill shrink in its
+       flex row at all — without it, flex refuses to go below content width
+       and the wrap never happens. */ -}}
+{{- $classes := "inline-flex min-w-0 items-center gap-[0.45em] rounded-pill border border-accent-muted/40 bg-surface py-[0.25em] pr-[0.7em] pl-[0.55em] text-accent no-underline transition-colors duration-150 ease-out hover:border-accent hover:text-accent-hover" -}}
 {{- $dot := printf `<span class="size-[0.5em] shrink-0 rounded-full%s"%s aria-hidden="true"></span>` (cond (not .dot) " bg-accent" "") (cond (ne (.dot | default "") "") (printf ` style="background-color: %s"` .dot) "" | safeHTMLAttr) | safeHTML -}}
 {{- if .href -}}
 <a class="{{ $classes }}" href="{{ .href }}" title="{{ .title | default .label }}">{{ $dot }}{{ .label }}</a>
