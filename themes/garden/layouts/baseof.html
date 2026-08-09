@@ -108,7 +108,8 @@
         {{- $witheredBanner := resources.Get "js/withered-banner.js" -}}
         {{- $hearts := resources.Get "js/hearts.js" -}}
         {{- $gdpr := resources.Get "js/gdpr.js" -}}
-        {{- $script := slice $sunCalc $main $search $firework $header $witheredBanner $hearts $gdpr | resources.Concat "js/footerBundle.js" | resources.Minify | resources.Fingerprint -}}
+        {{- $mailGuard := resources.Get "js/mail-guard.js" -}}
+        {{- $script := slice $sunCalc $main $search $firework $header $witheredBanner $hearts $gdpr $mailGuard | resources.Concat "js/footerBundle.js" | resources.Minify | resources.Fingerprint -}}
         <script defer src="{{ $script.RelPermalink }}"></script>
 
     </body>

@@ -34,8 +34,8 @@ This is the concrete form of the scope sentence in [`CLAUDE.md`](../CLAUDE.md). 
 Preparation:
 
 - ~~Audit config, templates, data files, and frontmatter for hardcoded `https://article-time.de/...`.~~ **Done 2026-08-09** — full inventory below. The short version: nine places need the cutover edit, everything else either derives from `baseURL` or is deliberately historical.
-- Prepare the static parking page for `article-time.de` — plain HTML, no Hugo: *"Diese Seite ist umgezogen nach angel-crawford.de."* plus a link.
-- Decide the fate of the old profile-card repo: archive, delete, or repurpose as the parking-page source.
+- ~~Prepare the static parking page for `article-time.de`.~~ **Dropped 2026-08-09, Angel's call:** the domain was never really live, so there is nobody to redirect — it simply lapses later. No parking page, no step 9.
+- Fate of the old profile-card repo: superseded by the blog's own profile page; archive or delete at Angel's leisure after the cutover — nothing depends on it any more.
 
 Execution, in order:
 
@@ -46,10 +46,10 @@ Execution, in order:
 5. Release the old profile-card repo's binding on the domain.
 6. Re-register the webmention.io endpoint for the new domain; update `<link rel="webmention">` if hardcoded.
 7. Update Bridgy.fed domain verification.
-8. Umami: create the new site entry and cut analytics over; the `website_id` lives in `config/_default/params.yaml`.
-9. Deploy the parking page on `article-time.de`.
+8. ~~Umami: create the new site entry.~~ **Done 2026-08-09** — Angel switched the entry to `angel-crawford.de`; the new `website_id` is already in `config/_default/params.yaml`.
+9. ~~Parking page.~~ Dropped — see Preparation.
 10. Maintenance mode OFF.
-11. Verify: Mastodon `rel="me"` still green, `indiewebify.me` passes h-card **and** h-entry on the new domain, blog loads, old domain parks.
+11. Verify: Mastodon `rel="me"` still green, `indiewebify.me` passes h-card **and** h-entry on the new domain, blog loads. The old domain just stops being ours.
 
 ### Hardcoded-URL audit — done 2026-08-09
 
@@ -68,7 +68,7 @@ this audit ran again instead of trusting the May checklist.
 | `themes/garden/layouts/_partials/_base/head.html:59` | `<link rel="webmention">` endpoint | step 6 — the path carries the domain (`webmention.io/<domain>/webmention`), so re-registering on webmention.io comes first |
 | `themes/garden/layouts/_partials/widgets/webmentions.html:33` | `$endpoint` — feeds the send form's `action` **and** the visible "Endpoint: /webmention" link | one variable, one edit; added Aug 2026 (#251) |
 | `tests/build/build-smoke.test.mjs:643, 647, 678` | pinned endpoint regexes + message | MUST move in the same commit as head.html or the suite goes red — that is the pin's job |
-| `content/pages/impressum.md:23`, `content/pages/datenschutz.md:133` | obfuscated mail address `mail [at] article-time [dot] de` | **needs Angel's decision**: does a mailbox exist on the new domain? A legal page with a dead address is worse than the old domain |
+| `config/_default/params.yaml` → `identity.email` | the contact address (was hardcoded twice in Impressum/Datenschutz; both use the `{{</* mail */>}}` shortcode now, guarded against harvesters) | **resolved 2026-08-09** — Angel set `mail@angel-crawford.de`; nothing left for the cutover |
 | `README.md:7` | live link | cosmetic |
 | `schemas/frontmatter/*.schema.json:3` (×3) | `$id` URIs | identifiers, never fetched — re-point for consistency, zero runtime impact |
 
@@ -76,11 +76,9 @@ this audit ran again instead of trusting the May checklist.
 
 - CSP `form-action` / `connect-src` allow `https://webmention.io` — host only,
   no domain path, still correct afterwards.
-- Umami: `website_id` + `script_url` are bound to the Umami *site entry*, not
-  to our config. Open decision, small: either edit the domain on the existing
-  entry (keeps the `website_id`, zero config change — recommended, there are
-  no pre-launch stats worth separating) or create a fresh entry and paste the
-  new id into `config/_default/params.yaml`.
+- Umami: **resolved 2026-08-09** — Angel pointed the entry at
+  `angel-crawford.de`; the `website_id` in `config/_default/params.yaml` is
+  already the current one. Nothing left to do at cutover.
 - `data/*.json` — zero domain literals (fixture URLs are `*.example`).
 - Content frontmatter — no absolute `permalink`/`canonicalURL` anywhere.
 - `params.identity` — all relative paths; `identity.url` empty resolves to
@@ -91,11 +89,12 @@ this audit ran again instead of trusting the May checklist.
   references to the old name/domain. Do not edit retroactively; documents
   that describe the past are allowed to name it.
 
-**Brand-adjacent findings** (input for the still-open brand decisions, not
-URL work): the site title is already `Angel Crawford` in every config; the
-footer slogan replacement (`footer.html:46`, the FIXME) and the
-`identity.photo` final asset remain the two open pieces — plus the mail
-address above.
+**Brand track — all resolved 2026-08-09:** the site title was already
+`Angel Crawford` in every config; the footer slogan is Angel's new line in
+`identity.slogan` (the six-year-old "Be a part of Article Time!" and its
+FIXME died with it); the `identity.photo` stays `angel.webp` through the
+cutover by Angel's call; and the mail address is `mail@angel-crawford.de`
+via the guarded shortcode. Nothing on the brand side blocks #248 any more.
 
 ### Deliberately not doing 301 redirects
 

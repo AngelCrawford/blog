@@ -1,0 +1,22 @@
+{{- /* The guarded mail address ({{< mail >}}) — Impressum and Datenschutz
+ * need a reachable address, harvesters and scrapers do not. Three layers,
+ * honestly ranked:
+ *
+ *   1. The HTML never contains the address: the data attribute carries it
+ *      BASE64-ENCODED, and the visible fallback text is the [at]/[dot]
+ *      form. That defeats regex harvesters reading raw HTML — the common
+ *      case. (Base64 rather than reversal because Hugo has no
+ *      strings.Reverse; the protection level is identical.)
+ *   2. assets/js/mail-guard.js reassembles text + mailto: on load for
+ *      humans with JavaScript.
+ *   3. What this does NOT stop, stated plainly: a crawler that executes
+ *      JavaScript sees the finished address like any visitor. Real
+ *      protection against that would be click-to-reveal or a contact
+ *      form — accepted trade-off, matching the old profile card's JS
+ *      approach (Angel's call).
+ *
+ * Address comes from params.identity.email — ONE config line to edit at
+ * the domain cutover. */ -}}
+{{- $addr := site.Params.identity.email -}}
+{{- if not $addr }}{{ errorf "{{< mail >}} needs params.identity.email" }}{{ end -}}
+<a class="mail-guard font-semibold text-accent-hover underline decoration-accent-muted underline-offset-4 hover:text-accent" href="#" data-m="{{ $addr | base64Encode }}" title="E-Mail-Adresse">{{ replace (replace $addr "@" " [at] ") "." " [dot] " }}</a>

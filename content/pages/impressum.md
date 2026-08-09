@@ -18,9 +18,7 @@ Details zur Datenverarbeitung findest Du in der [Datenschutzerklärung](/pages/d
 
 Ich halte mir somit vor, meine private Adresse hier nicht zu veröffentlichen, da ich aufgrund der DSGVO etwas geschädigt wurde.
 
-E-Mail (gegen Spam-Bots leicht verfremdet — bitte vor dem Senden einmal manuell zusammensetzen, [at] → `@`, [dot] → `.`):
-
-> **mail [at] article-time [dot] de**
+E-Mail: {{< mail >}}
 
 ## Information
 Gebaut mit Hugo CMS und auf Github Pages Veröffentlicht. Du kannst den Code dazu auf [Github](https://github.com/AngelCrawford/profilecard-public) finden.

@@ -128,9 +128,9 @@ Aber transparent: ein paar Dinge entstehen technisch automatisch:
 
 ## Kontakt für Datenschutzanfragen
 
-Bei Fragen zum Datenschutz oder zur Ausübung Deiner DSGVO-Rechte erreichst Du mich per E-Mail. Die Adresse ist gegen Spam-Bots leicht verfremdet — bitte vor dem Senden einmal manuell zusammensetzen ([at] → `@`, [dot] → `.`):
+Bei Fragen zum Datenschutz oder zur Ausübung Deiner DSGVO-Rechte erreichst Du mich per E-Mail. Die Adresse ist gegen Adress-Sammler geschützt — ohne JavaScript zeigt sie sich leicht verfremdet, dann bitte vor dem Senden manuell zusammensetzen ([at] → `@`, [dot] → `.`):
 
-> **mail [at] article-time [dot] de**
+> {{< mail >}}
 
 **Deine Rechte unter der DSGVO:**
 

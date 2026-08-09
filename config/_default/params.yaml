@@ -22,9 +22,15 @@ maintenance:
 # `docs/decisions.md` (Accepted 2026-05-12).
 identity:
     name: "Angel Crawford"
-    photo: "/images/identity/angel.webp" # final asset; swap path here when Story 9.14 lands the brand-cutover avatar
+    # Contact address — single source for the {{< mail >}} shortcode on
+    # Impressum/Datenschutz. Rendered reversed into a data attribute and
+    # reassembled by assets/js/mail-guard.js; without JS the visitor sees the
+    # [at]/[dot] form. The domain cutover edit for the mail is THIS line.
+    email: "mail@angel-crawford.de"
+    photo: "/images/identity/angel.webp" # final asset — stays through the cutover (Angel, 2026-08-09)
     url: "" # empty → Hugo resolves to baseURL; set explicitly only for off-site canonical identity
     about_url: "/pages/ueber-mich/" # footer h-card "Über mich" button links here; profile-page = layouts/page/profile.html
+    slogan: "Nichts hier ist fertig.<br />Das ist keine Entschuldigung, das ist die Bauart."
     note: "Web Entwickler. Sonnenliebhaber. Goth." # short bio — h-card p-note + sidebar tagline
     # `footer: true` surfaces the entry in the footer h-card (the IndieWeb-relevant
     # rel=me silos). Entries without the flag appear only on the /pages/ueber-mich/
@@ -99,7 +105,7 @@ csp:
 # server-side daily fetch.
 # TODO(Story 2.5): privacy policy needs an Umami section before this hits production.
 umami:
-    website_id: "d3ec2957-2769-4bff-a89d-8a3211336121"
+    website_id: "3c41a204-0ff3-4495-ba84-cc6e7daddff2"
     script_url: "https://cloud.umami.is/script.js"
 
 # RSS lives in the header only. The footer's social row is driven by

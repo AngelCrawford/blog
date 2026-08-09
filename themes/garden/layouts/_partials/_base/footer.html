@@ -43,18 +43,14 @@
        corners and the widgets tore apart (Angel). The sea behind stays
        full-bleed; only the content is bounded. */ -}}
 <div class="relative z-5 mx-auto max-w-[96rem] p-12">
-    {{- /* FIXME — CONTENT, NOT DESIGN. This slogan invites strangers to publish
-           here: "Du willst schreiben – ohne einen eigenen Blog zu veröffentlichen?
-           Be a part of Article Time!". That is the multi-author platform the scope
-           sentence in CLAUDE.md exists to end, and half of it is English on a site
-           whose rule is German for every visitor-facing string.
-
-           Carried over verbatim because replacing copy is Angel's call, not a
-           migration's. The slot is real — the design system keeps a slogan
-           between the gold quote marks — only the sentence is wrong. */ -}}
+    {{- /* The slogan, from identity.slogan — Angel's copy, set August 2026.
+           The sentence that stood here for six years ("Be a part of Article
+           Time!") invited strangers to publish on the multi-author platform
+           this blog decided not to be; it died with the brand transition
+           (#247), and the FIXME that guarded it goes too. The slot itself —
+           a line between the gold quote marks — is the design system's. */ -}}
     <p class="at-slogan at-quoted mx-auto mb-section w-fit bg-[linear-gradient(270deg,transparent_0%,rgb(0_0_0/0.3)_50%,transparent_100%)] p-[0.3em] text-center font-heading text-2xl/[1.5] text-ink-muted [text-shadow:3px_3px_4px_rgb(0_0_0/0.5)]">
-        Du willst schreiben - ohne einen eignen Blog zu veröffentlichen?<br />
-        Be a part of Article Time!
+        {{ .Site.Params.identity.slogan | safeHTML }}
     </p>
 
     {{- /* Layout lives at the call site, not in a class. `auto-fit` with a 15rem
