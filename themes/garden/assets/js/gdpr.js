@@ -201,6 +201,12 @@ onReady(() => {
    * you opened yesterday is not news to you. */
   const now = Date.now();
   for (const card of document.querySelectorAll(CARD)) {
+    /* Bookmark cards carry no flags at all (data-format is the template's
+     * contract for this): Gesehen/Gepflegt cannot reach them anyway — those
+     * key on /articles/ links above — and Neu is suppressed on purpose. The
+     * hanging ribbon owns that corner, and a reading-state flag has nothing
+     * to say about a card that leads off-site. */
+    if (card.dataset.format === "bookmark") continue;
     const when = card.querySelector("time[datetime]")?.getAttribute("datetime");
     if (!when) continue;
     if (Math.ceil((now - new Date(when)) / DAY_MS) <= NEW_DAYS) {

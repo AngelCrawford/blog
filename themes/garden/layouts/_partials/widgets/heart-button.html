@@ -44,7 +44,7 @@
            the card already speaks (Rubrik, tags). Count muted so the red
            outline stays the loudest part. Not pressable: just a reading. */ -}}
     <span class="inline-flex shrink-0 items-center gap-[0.35em] rounded-pill border border-[hsl(0_70%_65%/0.55)] py-[0.18em] pr-[0.6em] pl-[0.5em] text-[hsl(0_70%_65%)]" data-tooltip="Dieser Artikel hat {{ $hearts }} Herzen erhalten" aria-label="Herz-Anzahl: {{ $hearts }}">
-        <svg class="size-[1.1em] shrink-0 fill-current" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#heart-line"></use></svg>
+        <svg class="size-4 shrink-0 fill-current" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#heart-line"></use></svg>
         <span class="heart-count text-[0.85em] font-semibold text-ink-muted tabular-nums">{{ $hearts }}</span>
     </span>
 {{- else if $isCard -}}
@@ -65,14 +65,14 @@
             aria-label="Diese Notiz mit einem Herz markieren"
             aria-pressed="false">
         <span class="relative inline-flex shrink-0">
-            <svg class="size-[1.1em] fill-current opacity-100 transition-opacity duration-150 group-aria-pressed/heart:opacity-0" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#heart-line"></use></svg>
-            <svg class="absolute inset-0 size-[1.1em] fill-current opacity-0 transition-opacity duration-150 group-aria-pressed/heart:opacity-100" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#heart-fill"></use></svg>
+            <svg class="size-4 fill-current opacity-100 transition-opacity duration-150 group-aria-pressed/heart:opacity-0" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#heart-line"></use></svg>
+            <svg class="absolute inset-0 size-4 fill-current opacity-0 transition-opacity duration-150 group-aria-pressed/heart:opacity-100" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#heart-fill"></use></svg>
         </span>
         <span class="heart-count text-[0.85em] font-semibold text-ink-muted tabular-nums" aria-live="polite">{{ $hearts }}</span>
     </button>
     <noscript>
         <span class="inline-flex items-center gap-[0.2em] text-[color-mix(in_srgb,var(--color-accent-hover)_80%,transparent)]" aria-label="Herz-Anzahl: {{ $hearts }}">
-            <svg class="size-[1.1em] shrink-0 fill-current" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#heart-line"></use></svg>
+            <svg class="size-4 shrink-0 fill-current" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#heart-line"></use></svg>
             <span class="heart-count font-semibold tabular-nums">{{ $hearts }}</span>
         </span>
     </noscript>
@@ -91,8 +91,8 @@
                 aria-label="Diesen Artikel mit einem Herz markieren"
                 aria-pressed="false">
             <span class="relative inline-flex shrink-0">
-                <svg class="size-[1.1em] fill-current opacity-100 transition-opacity duration-150 group-aria-pressed/heart:opacity-0" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#heart-line"></use></svg>
-                <svg class="absolute inset-0 size-[1.1em] fill-current opacity-0 transition-opacity duration-150 group-aria-pressed/heart:opacity-100" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#heart-fill"></use></svg>
+                <svg class="size-4 fill-current opacity-100 transition-opacity duration-150 group-aria-pressed/heart:opacity-0" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#heart-line"></use></svg>
+                <svg class="absolute inset-0 size-4 fill-current opacity-0 transition-opacity duration-150 group-aria-pressed/heart:opacity-100" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#heart-fill"></use></svg>
             </span>
             <span class="heart-count text-[0.85em] font-semibold text-ink-muted tabular-nums" aria-live="polite">{{ $hearts }}</span>
         </button>
@@ -101,7 +101,7 @@
         {{- end }}
         <noscript>
             <a class="heart-button heart-button-fallback" href="#" aria-label="Diesen Artikel liken">
-                <svg class="inline size-[1.1em] fill-current text-[color-mix(in_srgb,var(--color-accent-hover)_80%,transparent)]" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#heart-line"></use></svg>
+                <svg class="inline size-4 fill-current text-[color-mix(in_srgb,var(--color-accent-hover)_80%,transparent)]" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#heart-line"></use></svg>
             </a>
             <span class="heart-count font-semibold tabular-nums">{{ $hearts }}</span>
         </noscript>

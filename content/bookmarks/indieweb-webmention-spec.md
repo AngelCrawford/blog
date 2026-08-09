@@ -1,6 +1,6 @@
 ---
 title: "Webmention (W3C Recommendation)"
-date: 2026-04-12T18:40:00+02:00
+date: 2026-08-04T18:40:00+02:00
 draft: false
 bookmark_of: "https://www.w3.org/TR/webmention/"
 categories: ["Allgemein"]

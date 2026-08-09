@@ -1,0 +1,9 @@
+{{- /* The bookmark's hanging ribbon — the fill glyph IS the shape of a
+ * bookmark hanging out of a book, laid over the top edge. One partial, two
+ * homes (the bookmark card and the bookmark single), so position, size and
+ * shadow cannot drift apart.
+ *
+ * The parent must be position:relative. right-6 keeps the ribbon clear of
+ * the Neu/Gesehen corner flags on cards — moot there since bookmark cards
+ * carry no flags, but the clearance is part of the shape either way. */ -}}
+<svg class="absolute -top-[3px] right-6 z-10 size-7 fill-accent drop-shadow-[2px_2px_2px_rgb(0_0_0/0.5)]" aria-hidden="true"><use href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ site.Params.remixicon_version }}#bookmark-fill"></use></svg>

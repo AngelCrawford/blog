@@ -77,7 +77,7 @@
     <p class="mt-3 mb-0 flex flex-wrap items-center gap-x-2 gap-y-1 text-[0.8rem]" data-tile="tags">
         <span class="gd-icon-duo shrink-0 text-base text-ink-muted"><svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#price-tag-3-fill"></use></svg><svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#price-tag-3-line"></use></svg></span>
         {{- range ($.GetTerms "tags") -}}
-        <a class="inline-block rounded-pill bg-[hsl(190_11%_13%)] px-[0.55em] py-[0.18em] text-accent no-underline transition-colors duration-150 ease-out hover:text-accent-hover" href="{{ .RelPermalink }}" title="{{ .LinkTitle }}">{{ .LinkTitle }}</a>
+        {{ partial "ui/tag" (dict "label" .LinkTitle "href" .RelPermalink) }}
         {{- end -}}
     </p>
     {{- end }}

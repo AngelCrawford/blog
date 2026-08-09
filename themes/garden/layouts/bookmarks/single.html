@@ -12,7 +12,18 @@
 {{- if not $target }}{{ errorf "Missing bookmark_of in front matter for page: %s" .File.Path }}{{ end -}}
 
 <div class="mx-auto max-w-[96rem] px-gutter pt-gutter pb-section font-body text-base text-ink">
-    <article class="h-entry at-flow mx-auto max-w-3xl rounded-md border border-accent-muted/40 bg-surface-raised p-gutter shadow-md">
+    <article class="h-entry at-flow relative mx-auto max-w-3xl rounded-md border border-accent-muted/40 bg-surface-raised p-gutter shadow-md">
+        {{- /* The same ribbon the card hangs from its top edge — page and
+               card read as one thing, from one partial. */ -}}
+        {{ partial "ui/bookmark-ribbon" . }}
+        {{- /* The house cover treatment, like every single: the card's void
+               problem does not exist here — without grid neighbours the
+               picture may decide the panel's height. */ -}}
+        {{- with .Resources }}{{ with (.ByType "image").GetMatch "cover*" }}
+        {{- $cover := .Process "fill 480x360 webp" }}
+        {{- $caption := partial "image-caption.html" . }}
+        {{ partial "ui/figure" (dict "src" $cover.RelPermalink "alt" $.Title "caption" $caption "class" "u-photo" "bleed" true) }}
+        {{- end }}{{ end }}
         <p class="m-0 text-[0.7rem]/[1] font-semibold tracking-label text-ink-muted uppercase">Lesezeichen</p>
         <h1 class="gd-h1 p-name mt-3">{{ .Title }}</h1>
 
@@ -25,20 +36,52 @@
         <div class="at-prose e-content mt-gutter max-w-none">{{ . }}</div>
         {{- end }}
 
+        {{- /* THE FOOTER BAND — date, Rubrik, tags and author in one strip
+               bled to the panel's bottom edge, the card footer's device on
+               the card's page (Angel's call: the loose "gespeichert am" line
+               plus a second tag row read as leftovers, not as metadata).
+               clear-both: the band must sit below the floated cover, not
+               beside it. Same 0.7rem the card footers speak; icons hold
+               their absolute sizes. p-author / dt-published / p-category
+               are the parser contracts, as before. */ -}}
         {{- $identity := .Site.Params.identity -}}
         {{- $authorLink := or $identity.about_url $identity.url -}}
-        <p class="mt-gutter mb-0 text-sm text-ink-muted">
-            gespeichert am <time class="dt-published" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Date.Format "02.01.06" }}</time>
-            von
-            <span class="p-author h-card">
-                {{- if $authorLink -}}
-                    <a class="p-name u-url text-accent-hover no-underline hover:text-accent" href="{{ $authorLink | relURL }}">{{ $identity.name }}</a>
-                {{- else -}}
-                    <span class="p-name">{{ $identity.name }}</span>
+        {{- $rubrik := "" -}}
+        {{- with .GetTerms "categories" }}{{ range first 1 . }}{{ $rubrik = . }}{{ end }}{{ end -}}
+        <footer class="-mx-gutter -mb-gutter mt-gutter flex clear-both flex-wrap items-center gap-x-4 gap-y-2 rounded-b-[calc(var(--radius-md)-1px)] border-t border-accent-muted/50 bg-surface px-gutter py-3 text-[0.7rem]/[1.4] text-ink-muted">
+            <span class="inline-flex items-center gap-1.5" data-tooltip="Gespeichert am">
+                <svg class="size-4 shrink-0 fill-current" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#calendar-line"></use></svg>
+                <time class="dt-published" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Date.Format "02.01.06" }}</time>
+            </span>
+            {{- if ne (.Date.Format "02.01.06") (.Lastmod.Format "02.01.06") }}
+            <time class="dt-updated inline-flex items-center gap-1.5" datetime="{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}" data-tooltip="Letztes Bearbeitungsdatum">
+                <svg class="size-4 shrink-0 fill-current" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#pencil-line"></use></svg>
+                {{ .Lastmod.Format "02.01.06" }}
+            </time>
+            {{- end }}
+            {{- with $rubrik }}
+            {{ partial "ui/badge" (dict "label" .LinkTitle "href" .RelPermalink "dot" .Params.categoryColor) }}
+            {{- end }}
+            {{- with .GetTerms "tags" }}
+            <span class="inline-flex flex-wrap items-center gap-x-2 gap-y-1">
+                <span class="gd-icon-duo shrink-0 text-base"><svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#price-tag-3-fill"></use></svg><svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#price-tag-3-line"></use></svg></span>
+                {{- range . -}}
+                {{ partial "ui/tag" (dict "label" .LinkTitle "href" .RelPermalink "class" "p-category") }}
                 {{- end -}}
             </span>
+            {{- end }}
+            <span class="ml-auto">
+                von
+                <span class="p-author h-card">
+                    {{- if $authorLink -}}
+                        <a class="p-name u-url text-accent-hover no-underline hover:text-accent" href="{{ $authorLink | relURL }}">{{ $identity.name }}</a>
+                    {{- else -}}
+                        <span class="p-name">{{ $identity.name }}</span>
+                    {{- end -}}
+                </span>
+            </span>
             <a class="u-url u-uid" href="{{ .Permalink }}" hidden></a>
-        </p>
+        </footer>
     </article>
 </div>
 {{ end }}

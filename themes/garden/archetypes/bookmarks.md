@@ -14,4 +14,13 @@ tags: [""]
 
 <!-- USE WITH: hugo new content bookmarks/name-des-lesezeichens.md -->
 
+<!--
+Optional cover: turn the file into a bundle — a folder with this content as
+index.md plus a cover.[jpg|png|webp] beside it. The card then renders the
+picture full-bleed on top (term-card treatment, 4:3, sepia); without one the
+text block centres itself. Deliberately NOT part of this archetype: most
+bookmarks are just a link, and a placeholder image in every new one would be
+a file to delete instead of a choice to make.
+-->
+
 Ein, zwei Sätze: warum dieser Link ein Lesezeichen wert ist.

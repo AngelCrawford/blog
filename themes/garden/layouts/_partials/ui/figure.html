@@ -1,9 +1,17 @@
 {{- /* The cover figure — the house treatment for every photograph on the site.
  *
- * ONE PLACE, LIKE THE BUTTON. 4:3 landscape, sepia until pointed at, 8px radius
- * with the paired shadow, floated left hanging past its panel's edge so the
- * text runs around it. That treatment used to be five CSS classes; it is
- * utilities now, written once here instead of at four call sites.
+ * ONE PLACE, LIKE THE BUTTON — and ONE PARTIAL for all three shapes a cover
+ * can take. A second image partial (ui/card-cover) existed for one afternoon
+ * and was folded back in on Angel's call: every mode shares the 4:3 crop,
+ * the sepia-until-pointed-at and the nested top radius, and splitting them
+ * across files is how the shared parts start to drift.
+ *
+ *   (default)      floated left, text runs around it — articles, singles.
+ *   "stacked"      full-bleed on top, content under it at every width — the
+ *                  term card, whose text column could never host a float.
+ *   "background"   the picture IS the surface: absolute, dimmed, text set
+ *                  over it — the note, and the bookmark card (where a
+ *                  stacked cover made one card dictate the grid row).
  *
  * WHO RELEASES THE SEPIA. Two ancestors may own the hover:
  *   group/card    on `article.at-card` — hovering anywhere on a card frees the
@@ -28,17 +36,38 @@
  * banner is not lying on anything, and shifted left it just reads as crooked.
  *
  * Parameters
+ *   variant                "" (float, default) / "stacked" / "background"
  *   src / width / height   the processed image (caller runs .Process — crop
  *                          sizes differ per call site and stay there)
  *   alt                    required for real images; pass "" for decorative
- *   href / title           wrap the image in a link (card covers link the post)
- *   caption                optional figcaption, already safe HTML
- *   bleed                  card covers only: STACKED, the picture goes
- *                          edge-to-edge — negative gutters swallow the card's
- *                          padding, the radius drops except where it nests
- *                          inside the card's own top corners. That is the
- *                          original mobile card look. Panels stay inset.
+ *   href / title           wrap the image in a link (card covers link the
+ *                          post; float and stacked only — a background is
+ *                          not a target)
+ *   external               stacked only: adds rel+target — the bookmark
+ *                          card's cover leaves the site
+ *   dimClass               background only: the opacity utility as a
+ *                          COMPLETE literal (Tailwind extracts whole strings
+ *                          only). Default opacity-50, the note's value; a
+ *                          card setting small running text over the picture
+ *                          passes a deeper dim.
+ *   caption                float only: optional figcaption, already safe HTML
+ *   bleed                  float in cards only: STACKED under 28rem, the
+ *                          picture goes edge-to-edge — negative gutters
+ *                          swallow the card's padding, the radius drops
+ *                          except where it nests inside the card's own top
+ *                          corners. That is the original mobile card look.
+ *                          Panels stay inset.
  */ -}}
+{{- if eq (.variant | default "") "background" -}}
+<img class="absolute inset-0 h-full w-full rounded-t-[calc(var(--radius-md)-1px)] object-cover {{ .dimClass | default "opacity-50" }} sepia transition-[filter] duration-300 ease-out group-hover/card:sepia-0" src="{{ .src }}" alt="{{ .alt | default "" }}" width="{{ .width | default 600 }}" height="{{ .height | default 480 }}" loading="lazy">
+{{- else if eq (.variant | default "") "stacked" -}}
+{{- $img := printf `<img class="block aspect-[4/3] h-auto w-full rounded-t-[calc(var(--radius-md)-1px)] object-cover shadow-card sepia transition-[filter] duration-300 ease-out group-hover/card:sepia-0" src="%s" alt="%s" width="%v" height="%v" loading="lazy">` .src (.alt | default "") (.width | default 480) (.height | default 360) | safeHTML -}}
+{{- if .href -}}
+<a class="-mx-gutter -mt-gutter mb-2 block" href="{{ .href }}"{{ with .title }} title="{{ . }}"{{ end }}{{ if .external }} rel="noopener noreferrer external" target="_blank"{{ end }}>{{ $img }}</a>
+{{- else -}}
+<div class="-mx-gutter -mt-gutter mb-2">{{ $img }}</div>
+{{- end -}}
+{{- else -}}
 {{- $sprite := "fonts/remixicon/remixicon.symbol.svg" | relURL -}}
 {{- /* Both class sets are COMPLETE literals — Tailwind extracts whole strings
        only, so the two stacked treatments cannot share a base via variables. */ -}}
@@ -64,3 +93,4 @@
     </figcaption>
     {{- end }}
 </figure>
+{{- end -}}

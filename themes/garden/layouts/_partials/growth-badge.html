@@ -43,11 +43,13 @@
 
 {{- if eq $context "card" -}}
 {{- /* `at-growth` and `data-stage` are HOOKS for the e2e tests, no styles hang
-       off them any more — the tint is a utility from the dict above, the size
-       inherits from the row it sits in, and the duotone wrapper carries its own
-       geometry. No font size here: ONE SIZE IN THE ROW. */ -}}
+       off them any more — the tint is a utility from the dict above and the
+       duotone wrapper carries its own geometry. The glyph size is PINNED, no
+       longer 1.2em of the row: when the footer text dropped to 0.7rem the
+       icons were to hold their size (Angel's call) — 1.05rem is exactly what
+       1.2em resolved to at the old 14px row. */ -}}
 <span class="at-growth inline-flex min-w-0 flex-wrap items-center gap-[0.4em] {{ $s.tint }}" data-stage="{{ $stage }}" data-tooltip="{{ $s.tip }}" title="{{ $s.tip }}">
-    <span class="gd-icon-duo gd-icon-duo-tinted text-[1.2em]">
+    <span class="gd-icon-duo gd-icon-duo-tinted text-[1.05rem]">
         <svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#{{ $s.fill }}"></use></svg>
         <svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#{{ $s.line }}"></use></svg>
     </span>

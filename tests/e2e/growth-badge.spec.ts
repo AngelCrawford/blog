@@ -45,9 +45,12 @@ test.describe("Growth-stage badge (Story 1.2)", () => {
 
         for (let i = 0; i < count; i++) {
             const card = allCards.nth(i);
-            // Note cards show the lightbulb instead of a growth badge — skip them.
+            // Note cards show the lightbulb and bookmark cards the bookmark glyph
+            // instead of a growth badge — a note has no maturity to report and a
+            // saved link does not ripen. Skip both.
             const isNote = (await card.locator(".at-card-footer [data-tooltip='Notiz']").count()) > 0;
-            if (isNote) continue;
+            const isBookmark = (await card.locator(".at-card-footer [data-tooltip='Lesezeichen']").count()) > 0;
+            if (isNote || isBookmark) continue;
 
             const badge = card.locator(".at-card-footer span.at-growth").first();
             await expect(badge, `card ${i} should have a growth-stage badge`).toBeVisible();

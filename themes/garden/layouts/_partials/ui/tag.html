@@ -1,0 +1,15 @@
+{{- /* The tag pill — the hashtag-style link to a tag page. Promoted to the
+ * library when the bookmark single became the second consumer; until then it
+ * lived inline in the Steckbrief, and the copy was already drifting (the
+ * copy carried an mf2 class the original lacked).
+ *
+ * NO FONT SIZE, like the badge: the row decides for everyone.
+ *
+ * Parameters
+ *   label   required
+ *   href    required — the tag page
+ *   title   optional, falls back to label
+ *   class   optional extras — e.g. `p-category` where the pill sits inside
+ *           an h-entry and parsers should read it
+ */ -}}
+<a class="{{ with .class }}{{ . }} {{ end }}inline-block rounded-pill bg-[hsl(190_11%_13%)] px-[0.55em] py-[0.18em] text-accent no-underline transition-colors duration-150 ease-out hover:text-accent-hover" href="{{ .href }}" title="{{ .title | default .label }}">{{ .label }}</a>
