@@ -22,11 +22,14 @@ import matter from "gray-matter";
 const repoRoot = process.cwd();
 
 /* One schema per content kind: an article owes a summary and a Rubrik, a note
- * is a headless one-liner that owes neither. The path decides which applies. */
+ * is a headless one-liner that owes neither, a bookmark owes its target URL.
+ * The path decides which applies. Section indexes (_index.md) are branch
+ * bundles carrying cascades, not posts — they owe nothing, and running them
+ * through a post schema was a latent bug the bookmark section exposed. */
 const SCHEMAS = [
-  { match: /^content\/articles\/.+\.md$/, file: "schemas/frontmatter/article.schema.json", kind: "article" },
-  { match: /^content\/notes\/.+\.md$/, file: "schemas/frontmatter/note.schema.json", kind: "note" },
-  { match: /^content\/bookmarks\/.+\.md$/, file: "schemas/frontmatter/bookmark.schema.json", kind: "bookmark" },
+  { match: /^content\/articles\/(?!_index\.md$).+\.md$/, file: "schemas/frontmatter/article.schema.json", kind: "article" },
+  { match: /^content\/notes\/(?!_index\.md$).+\.md$/, file: "schemas/frontmatter/note.schema.json", kind: "note" },
+  { match: /^content\/bookmarks\/(?!_index\.md$).+\.md$/, file: "schemas/frontmatter/bookmark.schema.json", kind: "bookmark" },
 ];
 
 for (const s of SCHEMAS) {

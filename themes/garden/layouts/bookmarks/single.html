@@ -1,0 +1,44 @@
+{{ define "main" }}
+{{- /* Garden — the bookmark single. Thin BY DESIGN, and that is its job: this
+ * page is the webmention SOURCE for the bookmark (#251, formerly #219) — the
+ * target's receiver fetches this URL and looks for the u-bookmark-of link —
+ * and the permalink behind the card's date. Humans follow the card straight
+ * to the target; robots are disallowed via the section cascade. The h-entry /
+ * p-name / u-bookmark-of / e-content / dt-published / p-author classes are
+ * parser contracts, not styling hooks. */ -}}
+{{- $sprite := "fonts/remixicon/remixicon.symbol.svg" | relURL -}}
+{{- $rv := .Site.Params.remixicon_version -}}
+{{- $target := .Params.bookmark_of -}}
+{{- if not $target }}{{ errorf "Missing bookmark_of in front matter for page: %s" .File.Path }}{{ end -}}
+
+<div class="mx-auto max-w-[96rem] px-gutter pt-gutter pb-section font-body text-base text-ink">
+    <article class="h-entry at-flow mx-auto max-w-3xl rounded-md border border-accent-muted/40 bg-surface-raised p-gutter shadow-md">
+        <p class="m-0 text-[0.7rem]/[1] font-semibold tracking-label text-ink-muted uppercase">Lesezeichen</p>
+        <h1 class="gd-h1 p-name mt-3">{{ .Title }}</h1>
+
+        <p class="mt-4 mb-0 flex flex-wrap items-center gap-2 text-sm">
+            <svg class="size-4 shrink-0 fill-current text-accent" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#bookmark-line"></use></svg>
+            <a class="u-bookmark-of break-all text-accent-hover no-underline hover:text-accent" href="{{ $target }}" rel="noopener noreferrer external" target="_blank">{{ $target }}</a>
+        </p>
+
+        {{- with .Content }}
+        <div class="at-prose e-content mt-gutter max-w-none">{{ . }}</div>
+        {{- end }}
+
+        {{- $identity := .Site.Params.identity -}}
+        {{- $authorLink := or $identity.about_url $identity.url -}}
+        <p class="mt-gutter mb-0 text-sm text-ink-muted">
+            gespeichert am <time class="dt-published" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Date.Format "02.01.06" }}</time>
+            von
+            <span class="p-author h-card">
+                {{- if $authorLink -}}
+                    <a class="p-name u-url text-accent-hover no-underline hover:text-accent" href="{{ $authorLink | relURL }}">{{ $identity.name }}</a>
+                {{- else -}}
+                    <span class="p-name">{{ $identity.name }}</span>
+                {{- end -}}
+            </span>
+            <a class="u-url u-uid" href="{{ .Permalink }}" hidden></a>
+        </p>
+    </article>
+</div>
+{{ end }}
