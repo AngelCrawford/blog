@@ -800,15 +800,10 @@
 [data-tooltip]:focus-visible::before, [data-tooltip]:focus-visible::after { opacity: 1; visibility: visible; }
 
 
-/* ===========================================================================
- * QUOTED — the remixicon double-quote pair, used on pull quotes, note cards and
- * the footer slogan. A unicode-by-codepoint use of the icon font, not the sprite.
- * ======================================================================== */
-.at-quoted::before, .at-quoted::after {
-  font-family: var(--font-icon); color: var(--color-accent); display: inline-block;
-}
-.at-quoted::before { content: "\ec51"; }
-.at-quoted::after { content: "\ec52"; }
+/* THE QUOTE PAIR IS GONE FROM HERE: `.at-quoted` was the icon font's last
+ * job — codepoints \ec51/\ec52 in pseudo-elements, because a pseudo cannot
+ * hold a <use>. The marks are sprite elements via ui/quote-mark now (Angel's
+ * call), and the webfont left the site with them. */
 
 /* ===========================================================================
  * SIDEBAR WIDGETS — series, table of contents, related, archive.
@@ -993,7 +988,10 @@
 
 /* Two birds, and the second one matters: it has its own cycle duration and its
  * own negative delay, so the pair never flaps or crosses in lockstep. A single
- * bird reads as a loop; two read as birds. */
+ * bird reads as a loop; two read as birds.
+ * THANKS: Bird — https://codepen.io/matchboxhero/pen/RLebOY (credit lived in
+ * the old hero.scss and died in the CSS audit; restored, and listed in the
+ * Impressum). */
 .at-birds .at-bird {
   width: 88px; height: 125px;
   background-image: url("/images/header/birds.svg");
@@ -1023,7 +1021,8 @@
   100% { transform: translateY(0) translateX(110vw) scale(0.35); }
 }
 
-/* The balloon, by day and at dusk. */
+/* The balloon, by day and at dusk.
+ * THANKS: Hot Air Balloon — https://codepen.io/nicooprat/pen/ALANqj */
 .at-balloon {
   position: absolute; top: 130px; left: calc(50% + 360px);
   width: 40px; height: 40px;
@@ -1042,7 +1041,9 @@
 /* ---- Seasonal overlays ---------------------------------------------------
  * December and October. Both are inline SVG in the markup, because both need
  * something a background image cannot give: the hat is two pieces that move
- * against each other, and the ghost is displaced by an SVG turbulence filter. */
+ * against each other, and the ghost is displaced by an SVG turbulence filter.
+ * THANKS: Santa Hat — https://codepen.io/bennettfeely/pen/mEjio
+ *         Ghosty — https://codepen.io/uchardon/pen/eGjJap */
 .at-santa-front, .at-santa-back {
   position: absolute; z-index: 5;
   width: 4.5rem; height: 3.9rem;
@@ -1220,16 +1221,13 @@
 /* `.at-footer-inner` was `relative z-5 p-12` and is written that way at its one
  * call site now. */
 
-/* The slogan, between the remixicon quote pair — the third and last place the
- * icon font is used by codepoint. The dark gradient behind it is what lifts the
- * text off the skyline; without it the letters land in a lit window. */
-/* The slogan's box is utilities in footer.html (`mb-section`, not gutter: it is
- * a section of its own). What stays is the sizing of its quote-mark pseudos,
- * which belong to `.at-quoted` and cannot be reached from the element. */
-.at-slogan::before, .at-slogan::after { position: relative; top: -10px; font-size: 1.7rem; }
+/* The slogan. Its box is utilities in footer.html (`mb-section`, not gutter:
+ * it is a section of its own), and the quote marks are sprite elements there
+ * too since the icon font left — what stays here is the one thing utilities
+ * cannot say per breakpoint without repeating themselves at the call site:
+ * the mobile type size. */
 @media (max-width: 768px) {
   .at-slogan { font-size: 1.5rem; }
-  .at-slogan::before, .at-slogan::after { font-size: 1rem; }
 }
 
 /* ---- The h-card ----------------------------------------------------------

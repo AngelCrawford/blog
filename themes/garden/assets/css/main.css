@@ -155,21 +155,11 @@
   font-display: swap;
 }
 
-/* REMIXICON AS A WEBFONT — the same debt, and deliberately the smaller build.
- * Icons are the SVG sprite; this exists only for the four glyphs the design
- * calls by codepoint, where a pseudo-element needs a character rather than a
- * `<use>`: the double-quote pair on pull quotes, notes and the footer slogan,
- * the external-link arrow, and the image marker in figcaptions.
- *
- * woff2 alone. article-time also ships eot, ttf, svg and woff for browsers that
- * have not existed for a decade; nothing garden targets needs them, and
- * `font-display: block` is right here because a missing icon glyph renders as a
- * blank box rather than as unstyled text. */
-@font-face {
-  font-family: "remixicon";
-  src: url("/fonts/remixicon/remixicon.woff2") format("woff2");
-  font-display: block;
-}
+/* THE REMIXICON WEBFONT IS GONE (August 2026). It survived the migration for
+ * the glyphs called by codepoint from pseudo-elements; those shrank to the
+ * double-quote pair, and when Angel moved the pair onto sprite elements
+ * (ui/quote-mark) the font's last reason left. Icons are the SVG sprite,
+ * full stop — do not reintroduce a font-face for them. */
 
 
 

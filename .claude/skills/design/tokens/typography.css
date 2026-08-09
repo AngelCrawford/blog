@@ -15,7 +15,9 @@
 :root {
   --font-heading: "Montserrat Alternates", ui-sans-serif, system-ui, sans-serif;
   --font-body: "Montserrat", "Montserrat-Regular", ui-sans-serif, system-ui, sans-serif;
-  --font-icon: "remixicon";
+  /* --font-icon is gone (August 2026): the icon WEBFONT left the site when
+   * its last two glyphs — the double-quote pair — became sprite elements
+   * (ui/quote-mark in the live repo). Icons are the SVG sprite, exclusively. */
 
   --text-sm: 0.875rem;   /* 14px  captions, metadata — smallest allowed */
   --text-sm--line-height: 1.55;

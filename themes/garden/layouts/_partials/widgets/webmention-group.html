@@ -67,7 +67,7 @@
                 </a>
                 {{- end }}
                 {{- if .content }}
-                <p class="webmention__content p-content mt-3 mb-0 text-ink"><svg class="mr-1 inline size-3 fill-current align-baseline text-accent" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#double-quotes-l"></use></svg>{{ .content }}</p>
+                <p class="webmention__content p-content mt-3 mb-0 text-ink">{{ partial "ui/quote-mark" (dict "side" "l" "class" "mr-1 size-3 align-baseline") }}{{ .content }}</p>
                 {{- end }}
             </article>
         </li>

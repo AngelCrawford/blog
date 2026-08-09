@@ -1,0 +1,12 @@
+{{- /* The gold double-quote glyph, from the sprite. These two symbols were
+ * the icon FONT's last job — called by codepoint from ::before/::after,
+ * because a pseudo-element cannot hold a <use>. Angel called it: the marks
+ * become real elements, and the webfont leaves the site with them. Three
+ * consumers: the note card, the footer slogan, the webmention reply quote.
+ *
+ * Parameters
+ *   side    "l" or "r" — which half of the pair
+ *   class   sizing and position, decided at the call site. Defaults to
+ *           size-[1em], so the mark rides its text like the font glyph did.
+ */ -}}
+<svg class="inline shrink-0 fill-accent {{ .class | default "size-[1em]" }}" aria-hidden="true"><use href="{{ "fonts/remixicon/remixicon.symbol.svg" | relURL }}?t={{ site.Params.remixicon_version }}#double-quotes-{{ .side }}"></use></svg>

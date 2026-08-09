@@ -69,7 +69,7 @@ they ship. That gap is closed apart from the two rows marked below.
 | `css/base.css` | ✅ Preflight plus the interaction baseline, `layer(base)` — the stand-in reset died with the teardown |
 | `css/styleguide.css` | ⛔ deleted with the styleguide page (August 2026). Two unlayered utility sheets on one page cannot both be right — the later one won and broke the nav |
 | `css/components.css` | ✅ 164 rules after the full audit — only what utilities cannot express; everything else is utilities in templates or the `ui/*` partials |
-| Webfonts | ✅ Montserrat, Montserrat Alternates and remixicon registered in garden |
+| Webfonts | ✅ Montserrat and Montserrat Alternates. The remixicon webfont was carried through the migration for its codepoint glyphs and deleted in August 2026 once the quote pair became sprite elements (ui/quote-mark) — the sprite is the only icon source now |
 | Header chrome | ✅ `at-header`, `at-city`, `at-clock`, `at-stars`, `at-birds`, `at-balloon`, `at-wordmark` — derived from `hero.scss`, not from the skill |
 | Footer chrome | ✅ `at-footer`, `at-footer-sea`, `at-hcard*`, `at-socials`, `at-slogan` — from `footer.scss`. The skill's `at-footer-sea` was right and was checked rather than trusted |
 | `body`, `a`, `:focus-visible` | ✅ Preflight landed with the teardown; the frame Bulma's `main`/`body` rules supplied rides as utilities in `baseof.html` |

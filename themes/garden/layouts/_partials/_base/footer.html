@@ -49,8 +49,11 @@
            this blog decided not to be; it died with the brand transition
            (#247), and the FIXME that guarded it goes too. The slot itself —
            a line between the gold quote marks — is the design system's. */ -}}
-    <p class="at-slogan at-quoted mx-auto mb-section w-fit bg-[linear-gradient(270deg,transparent_0%,rgb(0_0_0/0.3)_50%,transparent_100%)] p-[0.3em] text-center font-heading text-2xl/[1.5] text-ink-muted [text-shadow:3px_3px_4px_rgb(0_0_0/0.5)]">
-        {{ .Site.Params.identity.slogan | safeHTML }}
+    {{- /* The quote marks are sprite elements via ui/quote-mark — the sizes
+           and the -10px lift reproduce what .at-slogan::before/::after did
+           when the marks were still icon-font pseudos. */ -}}
+    <p class="at-slogan mx-auto mb-section w-fit bg-[linear-gradient(270deg,transparent_0%,rgb(0_0_0/0.3)_50%,transparent_100%)] p-[0.3em] text-center font-heading text-2xl/[1.5] text-ink-muted [text-shadow:3px_3px_4px_rgb(0_0_0/0.5)]">
+        {{ partial "ui/quote-mark" (dict "side" "l" "class" "relative -top-[10px] mr-[0.2em] size-[1.7rem] max-[768px]:size-4") }}{{ .Site.Params.identity.slogan | safeHTML }}{{ partial "ui/quote-mark" (dict "side" "r" "class" "relative -top-[10px] ml-[0.2em] size-[1.7rem] max-[768px]:size-4") }}
     </p>
 
     {{- /* Layout lives at the call site, not in a class. `auto-fit` with a 15rem

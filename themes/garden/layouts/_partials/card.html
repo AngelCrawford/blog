@@ -76,8 +76,8 @@
             {{- /* justify-self-stretch lets the scrim span the grid area so
                    the negative gutters can take it to the card's edges; the
                    quote itself stays centred. */ -}}
-            <p class="at-quoted e-content relative z-2 m-0 justify-self-stretch {{ $scrim }} text-center font-heading text-[30px]/[1.3] font-semibold text-ink-strong">
-                {{ .Summary | markdownify | plainify }}
+            <p class="e-content relative z-2 m-0 justify-self-stretch {{ $scrim }} text-center font-heading text-[30px]/[1.3] font-semibold text-ink-strong">
+                {{ partial "ui/quote-mark" (dict "side" "l" "class" "size-[1em]") }}{{ .Summary | markdownify | plainify }}{{ partial "ui/quote-mark" (dict "side" "r" "class" "ml-[0.2em] size-[0.95em]") }}
             </p>
         </div>
     {{- else if $isBookmark -}}

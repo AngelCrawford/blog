@@ -111,11 +111,8 @@
    * article-time keeps resolving while both themes are composed. The alias
    * drops out of this line when article-time does. */
   --font-body: "Montserrat", "Montserrat-Regular", ui-sans-serif, system-ui, sans-serif;
-  /* Remixicon as a WEBFONT, for the four glyphs the design calls by codepoint:
-   * the double-quote pair on pull quotes, notes and the footer slogan, the
-   * external-link arrow, and the image marker in figcaptions. Everything else
-   * is the SVG sprite. */
-  --font-icon: "remixicon";
+  /* --font-icon died with the remixicon webfont (August 2026) — every glyph
+   * is a sprite element now, ui/quote-mark carried the last two over. */
 
   /* 12px was too small to read comfortably and is deliberately removed —
    * `initial` deletes Tailwind's default, so `text-xs` no longer exists and any
