@@ -11,10 +11,12 @@
        are hereby superseded — the counter band inside the panel carries
        likes, reposts and bookmarks now, and the sidebar is clean.
 
-       LAYOUT, top to bottom: header (eyebrow, title, subtitle, the dashed
-       „INDIE WEB [Jahr]" stamp), counter band (content-free types as
-       facepile cells), 01 Antworten as a card grid, 02 Erwähnungen as rows,
-       the send box, and the link bar bled to the panel's bottom edge.
+       LAYOUT, top to bottom: header (tile-head eyebrow, title, subtitle),
+       counter band (content-free types as facepile cells), Antworten as a
+       card grid, Erwähnungen as rows, the send box, and the link bar bled
+       to the panel's bottom edge. The mockup's dashed „INDIE WEB"-stamp
+       and its 01/02 group numbering rode along for one iteration and fell
+       to the palette pass — the widget vocabulary carries the section now.
 
        The section renders even when empty: an anchor that exists only
        sometimes is a broken promise. */ -}}
@@ -30,46 +32,55 @@
        CSP form-action allow-lists the host (config/_default/params.yaml). */ -}}
 {{- $endpoint := "https://webmention.io/article-time.de/webmention" -}}
 
-<section id="webmentions" class="mt-section rounded-md border border-accent-muted/40 bg-[var(--surface-tile)] p-gutter shadow-md">
+{{- /* bg-surface-raised, NOT the tile colour: the reply cards inside are
+       var(--surface-tile) at 10%, and a 10%-panel left them visible only as
+       borders — separation is carried by surface contrast here (raised 15%,
+       tiles 10%, send band sunken 8%), the hairlines are support. Same level
+       as the article panel above, which is what a sibling section is.
 
-    <header class="relative">
-        <div class="mb-[0.7rem] flex items-center justify-between gap-2 bg-[linear-gradient(to_right,var(--rule-gold),transparent)] bg-[length:100%_1px] bg-bottom bg-no-repeat pb-[0.7rem]">
-            <span class="m-0 text-[0.7rem]/[1] font-semibold tracking-label text-ink-muted uppercase">Aus dem IndieWeb</span>
-        </div>
+       THE PANEL IS A STACK OF FULL-WIDTH BANDS, one per zone, every joint
+       the same hairline via divide-y — that uniform rhythm is what replaced
+       the "zu wild" spacing of loose blocks (Angel's read, and the mockup
+       agrees: its zones are separated by lines, not by boxes). A zone with
+       nothing to show renders no band, so nothing sits there empty. Only
+       the send band carries its own background: it is the one interactive
+       zone, and sunken is the palette's word for a well. overflow-hidden
+       clips the band backgrounds to the panel's radius. */ -}}
+<section id="webmentions" class="mt-section overflow-hidden rounded-md border border-accent-muted/40 bg-surface-raised shadow-md divide-y divide-accent-muted/25">
+
+    <header class="px-gutter pt-gutter pb-6">
+        {{- /* The eyebrow is the widget tile-head, not a copy of it. */ -}}
+        {{ partial "ui/tile-head" (dict "label" "Aus dem IndieWeb") }}
         <h2 class="m-0 mt-3 font-heading text-2xl font-semibold tracking-heading text-accent-hover">Echos &amp; Antworten</h2>
         <p class="m-0 mt-2 max-w-[60ch] text-sm text-ink-muted">Reaktionen von anderen Seiten, gesammelt via Webmention. Schreib eine Antwort auf deinem eigenen Blog und sie taucht hier auf.</p>
-        {{- /* The stamp: dashed circle, slight tilt, the year of the build —
-               the mockup's one piece of jewellery, kept because Angel showed
-               it twice. Decorative, so hidden from readers of the other
-               kind, and hidden below 640px where it would crowd the title. */ -}}
     </header>
 
     {{- if not $mentions -}}
-        <p class="mt-gutter mb-0 text-ink-muted italic">Noch keine Reaktionen.</p>
+        <p class="m-0 px-gutter py-6 text-ink-muted italic">Noch keine Reaktionen.</p>
     {{- else -}}
 
         {{- if or $likes $reposts $bookmarks }}
-        {{- /* The counter band: the content-free types, WHO as facepile. The
-               cells sit -mx-4 so their inner padding meets the hairlines,
-               and the band's own rules close it top and bottom. */ -}}
-        <div class="mt-gutter grid grid-cols-1 divide-y divide-accent-muted/25 border-y border-accent-muted/25 sm:grid-cols-3 sm:divide-x sm:divide-y-0">
+        {{- /* The counter band: the content-free types, WHO as facepile.
+               Cell padding px-6 = the gutter, so the first cell's content
+               aligns with every other band's left edge. */ -}}
+        <div class="grid grid-cols-1 divide-y divide-accent-muted/25 sm:grid-cols-3 sm:divide-x sm:divide-y-0">
             {{ partial "widgets/webmention-facepile" (dict "items" $likes "label" "Likes" "type" "like" "icon" "heart") }}
             {{ partial "widgets/webmention-facepile" (dict "items" $reposts "label" "Reposts" "type" "repost" "icon" "share") }}
             {{ partial "widgets/webmention-facepile" (dict "items" $bookmarks "label" "Bookmarks" "type" "bookmark" "icon" "bookmark") }}
         </div>
         {{- end }}
 
-        {{- with $replies }}{{ partial "widgets/webmention-group" (dict "items" . "heading" "Antworten" "type" "reply" "index" "01" "layout" "grid") }}{{ end }}
-        {{- with $generic }}{{ partial "widgets/webmention-group" (dict "items" . "heading" "Erwähnungen" "type" "mention" "index" "02") }}{{ end }}
+        {{- with $replies }}{{ partial "widgets/webmention-group" (dict "items" . "heading" "Antworten" "type" "reply" "layout" "grid" "countKey" "webmentions.reply_count") }}{{ end }}
+        {{- with $generic }}{{ partial "widgets/webmention-group" (dict "items" . "heading" "Erwähnungen" "type" "mention" "countKey" "webmentions.mention_count") }}{{ end }}
 
     {{- end -}}
 
-    {{- /* The send box: a plain POST straight to the endpoint —
+    {{- /* The send band: a plain POST straight to the endpoint —
            webmention.io answers on its own page, and that is acceptable for
            the launch; a fetch()-based inline confirmation is enhancement,
            not requirement. No JS on this path today. Copy is Angel's, from
            the mockup. */ -}}
-    <div class="mt-gutter rounded-tile border border-accent-muted/40 bg-surface-sunken p-5" data-wm-send>
+    <div class="bg-surface-sunken px-gutter py-6" data-wm-send>
         <p class="m-0 flex items-center gap-2 text-[0.7rem]/[1] font-semibold tracking-label text-ink-muted uppercase">
             <svg class="size-3.5 shrink-0 fill-current text-accent" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#mail-line"></use></svg>
             Eigene Webmention senden
@@ -84,8 +95,9 @@
         </form>
     </div>
 
-    {{- /* The link bar, bled to the panel's edges like the card footer. */ -}}
-    <p class="mt-gutter -mx-gutter -mb-gutter flex flex-wrap items-center gap-x-3 gap-y-2 rounded-b-[calc(var(--radius-md)-1px)] border-t border-accent-muted/25 bg-surface px-gutter py-3 text-xs tracking-label text-ink-muted">
+    {{- /* The link bar: tile-label size, so it reads as chrome under the
+           section instead of competing with the body text above it. */ -}}
+    <p class="m-0 flex flex-wrap items-center gap-x-3 gap-y-2 bg-surface px-gutter py-3 text-[0.7rem]/[1.4] tracking-label text-ink-muted">
         <span class="inline-block size-1.5 rounded-full bg-accent" aria-hidden="true"></span>
         <a class="no-underline hover:text-accent" href="https://indieweb.org/" rel="noopener noreferrer external" target="_blank">Powered by IndieWeb</a>
         <span class="text-ink-muted/40" aria-hidden="true">|</span>

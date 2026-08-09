@@ -1,6 +1,8 @@
-{{- /* Garden — one webmention type-group under a numbered heading (#251,
-       second round, after Angel's mockup). Receives dict: items, heading,
-       type, index ("01" …), layout:
+{{- /* Garden — one webmention type-group (#251, second round, after Angel's
+       mockup, then aligned to the widget vocabulary). Renders as one BAND in
+       the section's stack — the parent's divide-y draws the joints, this
+       partial only owes the uniform inset. Receives dict: items, heading,
+       type, countKey (i18n key for the pluralised count pill), layout:
 
          "grid"  replies — two-up card grid from 768px; each card a tile
                  with the gold left edge, avatar + name, source domain under
@@ -18,19 +20,18 @@
        `webmention__content` are the build-test's hooks (Story 2.4 ACs #6
        and #8 grep for them). All of them are data, not styling.
 
-       The group heading stays sentence case against the mockup's ALL CAPS —
-       "ALL CAPS only for the 11px tile labels, never in a heading" is a
-       recorded casing rule, and the number + rule + count carry the
-       mockup's structure without breaking it. */ -}}
+       The group head is the widget tile-head, not a heading element — the
+       same call every sidebar widget makes, count in the pill. That also
+       settles the mockup's ALL-CAPS group titles legally: the tile label
+       is the one sanctioned caps context, so the look survives without
+       breaking the "never in a heading" casing rule. */ -}}
 {{- $sprite := "fonts/remixicon/remixicon.symbol.svg" | relURL -}}
 {{- $rv := site.Params.remixicon_version -}}
 {{- $grid := eq (.layout | default "rows") "grid" -}}
-<section class="mt-gutter" data-wm-group="{{ .type }}">
-    <h3 class="mb-3 flex items-center gap-3 font-heading text-base font-semibold text-ink-muted">
-        <span>{{ .heading }}</span>
-        <span class="h-px flex-1 bg-[linear-gradient(to_right,var(--rule-gold),transparent)]" aria-hidden="true"></span>
-        <span class="text-xs font-normal text-ink-muted tabular-nums">{{ len .items }}</span>
-    </h3>
+{{- $count := printf "%d" (len .items) -}}
+{{- with .countKey }}{{ $count = T . (len $.items) }}{{ end -}}
+<section class="px-gutter py-6" data-wm-group="{{ .type }}">
+    {{ partial "ui/tile-head" (dict "label" .heading "count" $count) }}
 
     {{- if $grid }}
     <ul class="m-0 grid list-none grid-cols-1 gap-4 p-0 md:grid-cols-2">

@@ -25,13 +25,18 @@
 {{- $rv := site.Params.remixicon_version -}}
 {{- $shown := first 5 .items -}}
 {{- $rest := sub (len .items) (len $shown) -}}
-<div class="min-w-0 px-4 py-4" data-wm-group="{{ .type }}">
+{{- /* px-6 = the gutter, so the first cell's content lines up with the
+       other bands' left edge. */ -}}
+<div class="min-w-0 px-6 py-5" data-wm-group="{{ .type }}">
     <p class="m-0 flex items-center gap-2">
         <span class="gd-icon-duo text-base">
             <svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#{{ .icon }}-fill"></use></svg>
             <svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#{{ .icon }}-line"></use></svg>
         </span>
-        <span class="text-ink-muted text-[0.7rem]/[1] tracking-label">{{ .label }}</span>
+        {{- /* The tile-label style, verbatim — lowercase drifted in during the
+               palette pass and made this the one label on the site that was
+               not caps. */ -}}
+        <span class="text-[0.7rem]/[1] font-semibold tracking-label text-ink-muted uppercase">{{ .label }}</span>
         <span class="ml-auto rounded-[0.35rem] bg-[hsl(35_45%_14%)] px-[0.6em] py-[0.25em] text-[0.7rem] whitespace-nowrap text-[color-mix(in_srgb,var(--color-accent-hover)_70%,transparent)]">{{ T "webmentions.echo_count" (len .items) }}</span>
     </p>
     <p class="m-0 mt-3 flex items-center -space-x-2">

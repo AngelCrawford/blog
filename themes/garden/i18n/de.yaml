@@ -12,3 +12,9 @@ webmentions:
     echo_count:
         one: "{{ . }} Echo"
         other: "{{ . }} Echos"
+    reply_count:
+        one: "{{ . }} Antwort"
+        other: "{{ . }} Antworten"
+    mention_count:
+        one: "{{ . }} Erwähnung"
+        other: "{{ . }} Erwähnungen"
