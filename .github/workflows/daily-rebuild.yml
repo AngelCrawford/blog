@@ -101,6 +101,16 @@ jobs:
           hugo-version: "0.161.1"
           extended: true
 
+      # THIS STEP LOOKS DEAD AND IS NOT. Main has no Sass since the Bulma
+      # teardown — but THIS JOB DOES NOT BUILD MAIN. The cron checks out the
+      # latest TAG, and v0.1.7 still has layouts/ at the repo root calling
+      # `toCSS` with the dartsass transpiler. Removing the step "because
+      # nothing uses it" broke the nightly rebuild of the live release within
+      # a day. It goes when the deployed tag no longer needs it — that is,
+      # after the first tag cut from the garden-only tree.
+      - name: Install Dart Sass (needed by tagged releases up to v0.1.7)
+        run: sudo snap install dart-sass
+
       # `npm ci` (not `npm install`) so the resolved tree matches package-lock
       # exactly — matters now that Tailwind pulls platform-specific native
       # binaries (@tailwindcss/oxide-*) as optional dependencies. Also fails
