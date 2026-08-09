@@ -21,30 +21,34 @@ Ich halte mir somit vor, meine private Adresse hier nicht zu veröffentlichen, d
 E-Mail: {{< mail >}}
 
 ## Information
-Gebaut mit Hugo CMS und auf Github Pages Veröffentlicht. Du kannst den Code dazu auf [Github](https://github.com/AngelCrawford/profilecard-public) finden.
+Gebaut mit Hugo und auf Github Pages veröffentlicht. Du kannst den Code dazu auf [Github](https://github.com/AngelCrawford/blog) finden.
 * https://angel-crawford.de
-* Sprachen: Deutsch / English
-* Gebaut mit [Hugo](https://gohugo.io)
+* Sprache: Deutsch
 
 ## Urheberrechtshinweise
 ### Allgemein
 * [Hugo](https://gohugo.io)
-* [Split Theme](https://onepagelove.com/split)
-* [FontAwesome](https://fontawesome.com)
+* [Tailwind CSS](https://tailwindcss.com/)
 * [Github Pages](https://pages.github.com/)
 
-### CSS und JS/jQuery
+### CSS und JavaScript
 * [Tooltip](https://codepen.io/redouglas/pen/yyyXjm)
-* [Slider](https://codepen.io/geekwen/pen/QNxymm)
-* [PX-to-REM](https://daniellamb.com/experiments/px-to-rem-calc)
-* [Pie Chart](https://codepen.io/ejsado/pen/cLrlm)
-* [Page Loader](https://github.com/aarmea/mfw-singlepage)
+* [Firework.js](https://codepen.io/zystvan/details/LEbNRp) — das Neujahrs-Feuerwerk im Header
+* [SunriseSunsetJS](https://github.com/udivankin/sunrise-sunset) — Sonnenauf- und -untergang für den Tag-Nacht-Himmel
+* [Heißluftballon](https://codepen.io/nicooprat/pen/ALANqj) — die Ballon-Animation im Header
+* [Vögel](https://codepen.io/matchboxhero/pen/RLebOY) — die zwei Vögel über der Skyline
+* [Weihnachtsmütze](https://codepen.io/bennettfeely/pen/mEjio) — der Dezember-Überzug
+* [Halloween-Geist](https://codepen.io/uchardon/pen/eGjJap) — der Oktober-Überzug
+
+### Schriften
+* [Montserrat & Montserrat Alternates](https://fonts.google.com/specimen/Montserrat) — SIL Open Font License, lokal eingebunden (keine Verbindung zu Google beim Seitenaufruf)
+
+### Icons
+* [RemixIcons](https://remixicon.com/) — Apache License 2.0, lokal eingebunden
 
 ### Bilder
-* [Licht- und Schattenspiel](https://www.facebook.com/lichtundschattenspiel)
-* [Kara Kuckoo](https://www.facebook.com/KaraKuckoo)
+* Header-SVGs von [pixelliebe](https://www.shutterstock.com/g/pixelliebe) auf Shutterstock: [Hamburg-Skyline](https://www.shutterstock.com/image-vector/hamburg-skyline-471775031) und [Kiel-Skyline](https://www.shutterstock.com/image-vector/kiel-skyline-german-city-581455954)
 * [Favicon Generator](https://realfavicongenerator.net)
-* [The High Resolution Flag Sprite](https://www.freakflagsprite.com)
 
 ## Haftungs- und Urheberrechtshinweise
 Als Diensteanbieter bin ich gemäß § 7 Abs.1 TMG für eigene Inhalte auf diesen Seiten nach den allgemeinen Gesetzen verantwortlich. Nach §§ 8 bis 10 TMG bin ich als Diensteanbieter jedoch nicht verpflichtet, übermittelte oder gespeicherte fremde Informationen zu überwachen oder nach Umständen zu forschen, die auf eine rechtswidrige Tätigkeit hinweisen.

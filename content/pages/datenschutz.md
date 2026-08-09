@@ -10,16 +10,18 @@ params:
   maintenance_exempt: true # DSGVO: aus der Wartungs-Visitenkarte verlinkt, muss immer erreichbar sein
 ---
 
-*Stand: 11. Mai 2026 · Version: 1.1*
+*Stand: 9. August 2026 · Version: 1.2*
 
 ## Auf einen Blick
 
-Diese Seite respektiert Deine Privatsphäre — und ist dabei ehrlich darüber, was passiert. Es gibt **keine Tracking-Cookies, keine personalisierte Werbung, keine Newsletter-Anmeldung, kein Kommentarsystem**. Aber vier Dinge wirst Du wissen wollen, weil sie Daten betreffen:
+Diese Seite respektiert Deine Privatsphäre — und ist dabei ehrlich darüber, was passiert. Es gibt **keine Tracking-Cookies, keine personalisierte Werbung, keine Newsletter-Anmeldung, kein Kommentarsystem**. Aber sechs Dinge wirst Du wissen wollen, weil sie Daten betreffen:
 
 1. **Umami** — anonyme Seitenaufrufe ohne Cookies (siehe Abschnitt unten).
 2. **Herz-Reaktionen** — Du kannst Artikeln ein Herz geben; das wird als anonymes Event gezählt.
-3. **Webmentions** — wenn andere Seiten auf meine Artikel verweisen, erscheinen diese Erwähnungen öffentlich.
-4. **Hinweis-Dismiss bei verwelkten Inhalten** — blendest Du einen Warnhinweis aus, merkt sich Dein Browser das nur für die aktuelle Sitzung.
+3. **Gelesen-Markierungen** — Dein Browser merkt sich lokal, welche Artikel Du geöffnet hast, damit die Karten „Gesehen"/„Gepflegt" anzeigen können.
+4. **Webmentions** — wenn andere Seiten auf meine Artikel verweisen, erscheinen diese Erwähnungen öffentlich.
+5. **Spotify-Player** — auf der Profilseite, lädt erst nach Deinem ausdrücklichen Klick.
+6. **Hinweis-Dismiss bei verwelkten Inhalten** — blendest Du einen Warnhinweis aus, merkt sich Dein Browser das nur für die aktuelle Sitzung.
 
 Im Detail:
 
@@ -68,7 +70,37 @@ Unter jedem Artikel findest Du eine Herz-Schaltfläche. Wenn Du sie anklickst, w
 
 **Rechtsgrundlage:** Art. 6 Abs. 1 lit. f DSGVO — berechtigtes Interesse an der Erhebung anonymer Engagement-Signale; keine Identifikation einzelner Lesender möglich.
 
+**Wenn Du Umami blockierst** (Do Not Track, uBlock Origin o. Ä.): Der Herz-Button funktioniert trotzdem — Dein Browser merkt sich den Klick lokal und zeigt ihn Dir an. Das Ereignis wird dann aber nicht gezählt und fließt nicht in die öffentlich angezeigte Zahl ein. Das ist so gewollt: lieber ein ungezähltes Herz als ein Tracking-Zwang.
+
 **Wie kannst Du widersprechen?** Klicke das Herz nicht. Es gibt keine andere Erfassung.
+
+## Gelesen-Markierungen (Neu / Gesehen / Gepflegt)
+
+Artikelkarten tragen kleine Eck-Markierungen: „Neu" für frische Artikel, „Gesehen" für Artikel, die Du schon geöffnet hast, und „Gepflegt" für Artikel, die seit Deinem letzten Besuch überarbeitet wurden. Damit das funktioniert, merkt sich Dein Browser lokal, wann Du eine Artikelseite geöffnet hast.
+
+**Was wird gespeichert?**
+
+* Ein Eintrag im `localStorage` Deines Browsers pro geöffnetem Artikel (Schlüssel `visited-<artikel-pfad>`, Wert: Zeitstempel des Besuchs).
+* Zusätzlich merkt sich der `sessionStorage`, ob Du den Datenverarbeitungs-Hinweis unten auf der Seite weggeklickt hast — nur für die laufende Sitzung.
+
+**Was wird übertragen?** Nichts. Beide Einträge verlassen Deinen Browser nicht; ich kann sie nicht einsehen und erfahre nicht, was Du gelesen hast.
+
+**Wie lange bleibt das gespeichert?** Die Gelesen-Einträge, bis Du sie löschst (Browser-Einstellungen → Website-Daten löschen); der Hinweis-Dismiss bis zum Schließen des Tabs.
+
+**Rechtsgrundlage:** § 25 Abs. 2 Nr. 2 TTDSG — rein lokale Komfortfunktion ohne jede Übertragung; es werden keine personenbezogenen Daten im Sinne der DSGVO verarbeitet, weil die Information Deinen Browser nie verlässt.
+
+**Wie kannst Du widersprechen?** Blockiere Website-Daten für diese Domain in Deinem Browser oder nutze den privaten Modus — die Seite funktioniert vollständig ohne diese Einträge, nur die Markierungen entfallen.
+
+## Spotify-Player (Profilseite)
+
+Auf der Profilseite gibt es einen eingebetteten Spotify-Player — nach dem **Zwei-Klick-Prinzip**: Beim Laden der Seite wird **keine** Verbindung zu Spotify aufgebaut. Erst wenn Du auf „Player laden" klickst, lädt Dein Browser den Player von `open.spotify.com`.
+
+**Was passiert beim Klick?**
+
+* Dein Browser stellt eine Verbindung zu Spotify her und übermittelt dabei technisch bedingt Deine IP-Adresse; Spotify kann eigene Cookies setzen.
+* Verantwortlich für diese Verarbeitung ist Spotify AB. Datenschutzhinweise: <https://www.spotify.com/de/legal/privacy-policy/>
+
+**Rechtsgrundlage:** Deine Einwilligung durch den aktiven Klick (Art. 6 Abs. 1 lit. a DSGVO, § 25 Abs. 1 TTDSG). Ohne Klick passiert nichts; die Einwilligung gilt für den aktuellen Seitenaufruf und wird nicht gespeichert — beim nächsten Besuch fragt die Seite erneut.
 
 ## Webmentions
 
@@ -114,7 +146,7 @@ Auf als „verwelkt" (deprecated) markierten Artikelseiten erscheint oben ein ge
 
 Damit es keine Missverständnisse gibt, hier eine Liste dessen, was diese Seite **nicht** macht:
 
-* **Keine Tracking-Cookies.** Umami arbeitet im Cookieless-Modus. Hearts werden im `localStorage` markiert, der Withered-Hinweis-Dismiss im `sessionStorage` (sitzungsweise, kein Cookie). Webmentions sind serverseitig, kein Browser-Storage.
+* **Keine Tracking-Cookies.** Umami arbeitet im Cookieless-Modus. Hearts und Gelesen-Markierungen liegen im `localStorage`, die Hinweis-Dismisses im `sessionStorage` (sitzungsweise, kein Cookie) — alles rein lokal, nichts davon wird übertragen. Webmentions sind serverseitig, kein Browser-Storage.
 * **Keine personenbezogenen Daten.** Es gibt keine Anmeldung, keinen Newsletter, kein Kommentarsystem, kein Kontaktformular.
 * **Keine Werbung.** Keine Banner, keine Affiliate-Links mit Tracking, keine „Sponsored Content"-Einbindungen, kein Google AdSense.
 * **Kein Google Analytics.** Kein Google Tag Manager, keine Google Fonts (Schriftarten werden lokal eingebunden), keine Google reCAPTCHA.
@@ -124,13 +156,14 @@ Aber transparent: ein paar Dinge entstehen technisch automatisch:
 
 * **Server-Log beim Hoster (GitHub Pages):** GitHub speichert Zugriffslogs (siehe Abschnitt **Externes Hosting** weiter unten).
 * **Eingebundene YouTube-Videos:** Wenn ein Artikel ein YouTube-Video einbettet, wird `youtube-nocookie.com` genutzt (datenschutzfreundlicher Modus, keine Cookies bis zum Klick auf Play).
+* **Spotify-Player auf der Profilseite:** Lädt erst nach Deinem Klick (siehe Abschnitt **Spotify-Player**).
 * **Avatare bei Webmentions:** Werden direkt von den Servern der jeweiligen Sender geladen (siehe Abschnitt **Webmentions**).
 
 ## Kontakt für Datenschutzanfragen
 
-Bei Fragen zum Datenschutz oder zur Ausübung Deiner DSGVO-Rechte erreichst Du mich per E-Mail. Die Adresse ist gegen Adress-Sammler geschützt — ohne JavaScript zeigt sie sich leicht verfremdet, dann bitte vor dem Senden manuell zusammensetzen ([at] → `@`, [dot] → `.`):
+Bei Fragen zum Datenschutz oder zur Ausübung Deiner DSGVO-Rechte erreichst Du mich per E-Mail. 
 
-> {{< mail >}}
+E-Mail: {{< mail >}}
 
 **Deine Rechte unter der DSGVO:**
 
