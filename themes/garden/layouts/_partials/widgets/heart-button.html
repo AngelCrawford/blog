@@ -36,6 +36,14 @@
 {{- $hearts := index hugo.Data.umami_hearts $page.RelPermalink | default 0 -}}
 {{- $sprite := "fonts/remixicon/remixicon.symbol.svg" | relURL -}}
 {{- $rv := $page.Site.Params.remixicon_version -}}
+{{- /* data-article is a STORAGE KEY, not a link (#250 AC 2): hearts.js builds
+       `hearted-…` localStorage entries from it, and Umami events carry it.
+       RelPermalink shifts with baseURL (subpath deploy, staging mirror, the
+       domain cutover in #248) and would silently orphan every stored entry —
+       so the site's base path is stripped and the key is stable wherever the
+       site is mounted. On a root deploy this IS RelPermalink, byte for byte.
+       Story 3.1's fetch script must key umami_hearts.json the same way. */ -}}
+{{- $articleID := printf "/%s" (strings.TrimPrefix site.Home.RelPermalink $page.RelPermalink) -}}
 
 {{- if $readonly -}}
     {{- /* THE CAPSULE — variant A of five mocked side by side, Angel's pick.
@@ -61,7 +69,7 @@
     <button type="button"
             class="heart-button group/heart inline-flex shrink-0 cursor-pointer items-center gap-[0.35em] rounded-pill border border-[hsl(0_70%_65%/0.55)] py-[0.18em] pr-[0.6em] pl-[0.5em] text-[hsl(0_70%_65%)] transition-colors duration-150 ease-out hover:border-[hsl(0_70%_74%)] hover:text-[hsl(0_70%_74%)] aria-pressed:border-[hsl(0_70%_65%)]"
             data-tooltip="Diese Notiz mit einem Herz markieren"
-            data-article="{{ $page.RelPermalink }}"
+            data-article="{{ $articleID }}"
             aria-label="Diese Notiz mit einem Herz markieren"
             aria-pressed="false">
         <span class="relative inline-flex shrink-0">
@@ -86,7 +94,7 @@
     <span class="heart-button-wrapper inline-flex items-center">
         <button type="button"
                 class="heart-button group/heart inline-flex shrink-0 cursor-pointer items-center gap-[0.35em] rounded-pill border border-[hsl(0_70%_65%/0.55)] py-[0.18em] pr-[0.6em] pl-[0.5em] text-[hsl(0_70%_65%)] transition-colors duration-150 ease-out hover:border-[hsl(0_70%_74%)] hover:text-[hsl(0_70%_74%)] aria-pressed:border-[hsl(0_70%_65%)]"
-                data-article="{{ $page.RelPermalink }}"
+                data-article="{{ $articleID }}"
                 data-tooltip="Diesen Artikel mit einem Herz markieren"
                 aria-label="Diesen Artikel mit einem Herz markieren"
                 aria-pressed="false">

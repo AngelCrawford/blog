@@ -58,6 +58,14 @@
       "published": ""
     },
     {
+      "type": "mention",
+      "author": "<script>alert(1)</script>",
+      "author_url": "javascript:alert(1)",
+      "content": "<script>alert(1)</script>",
+      "url": "https://adversarial.example/xss-probe/",
+      "published": "2026-04-22T10:00:00Z"
+    },
+    {
       "type": "bookmark",
       "author": "Erik Larsen",
       "author_url": "https://eriklarsen.example/",

@@ -1,0 +1,19 @@
+{{- /*
+  Webmention URL guard (#250 AC 1) — pure-function partial.
+  Returns true only when a webmention-supplied URL is safe to emit as an
+  href: scheme allowlist http / https / mailto. Hugo's auto-escape stops
+  HTML injection but NOT protocol injection — `author_url:
+  "javascript:alert(1)"` renders as a perfectly executable link — and once
+  Bridgy lands (#224) any Fediverse account can put a string into these
+  fields via Mastodon → Bridgy → webmention.io.
+  Empty, relative or unparseable input → false; every caller already has a
+  plain-text branch to fall through to. MUST NOT emit HTML.
+  Usage: {{ if partial "webmention-url-ok.html" .author_url }}
+*/ -}}
+{{- $ok := false -}}
+{{- with . -}}
+    {{- with urls.Parse . -}}
+        {{- if in (slice "http" "https" "mailto") .Scheme }}{{ $ok = true }}{{ end -}}
+    {{- end -}}
+{{- end -}}
+{{- return $ok -}}

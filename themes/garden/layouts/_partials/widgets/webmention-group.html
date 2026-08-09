@@ -20,6 +20,12 @@
        `webmention__content` are the build-test's hooks (Story 2.4 ACs #6
        and #8 grep for them). All of them are data, not styling.
 
+       EVERY href HERE IS ATTACKER-SUPPLIED once Bridgy lands, so every link
+       runs through webmention-url-ok.html (#250 AC 1) — scheme allowlist,
+       unsafe URLs fall through to the span branches. Do not add a link to
+       this partial without the guard. */ -}}
+{{- /*
+
        The group head is the widget tile-head, not a heading element — the
        same call every sidebar widget makes, count in the pill. That also
        settles the mockup's ALL-CAPS group titles legally: the tile label
@@ -39,7 +45,7 @@
         <li>
             <article class="webmention h-cite flex h-full flex-col rounded-tile border border-accent-muted/40 border-l-[3px] border-l-accent/60 bg-[var(--surface-tile)] p-4" data-wm-type="{{ .type }}">
                 <div class="flex items-start gap-3">
-                    {{- if .author_url }}
+                    {{- if partial "webmention-url-ok.html" .author_url }}
                     <a class="webmention__author p-author h-card u-url inline-flex min-w-0 items-center gap-3 font-semibold text-ink-strong no-underline hover:text-accent" href="{{ .author_url }}" rel="noopener noreferrer external" target="_blank">
                         {{- with .author_photo }}<img class="u-photo size-10 shrink-0 rounded-full border border-accent-muted/40 object-cover" src="{{ . }}" alt="" loading="lazy" width="40" height="40">{{ end -}}
                         <span class="p-name truncate">{{ .author | default (i18n "webmention_author_unknown") }}</span>
@@ -54,7 +60,7 @@
                         {{- with .published }}<time class="dt-published" datetime="{{ . }}">{{ time.Format "02.01.06" . }}</time>{{ else }}—{{ end -}}
                     </span>
                 </div>
-                {{- if .url }}
+                {{- if partial "webmention-url-ok.html" .url }}
                 <a class="webmention__source u-url mt-1 inline-flex items-center gap-1.5 self-start pl-[52px] text-xs text-ink-muted no-underline hover:text-accent" href="{{ .url }}" rel="noopener noreferrer external" target="_blank" title="Quelle ansehen">
                     <svg class="size-3.5 shrink-0 fill-current" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#external-link-line"></use></svg>
                     {{ (urls.Parse .url).Hostname }}
@@ -74,7 +80,7 @@
         <li class="webmention h-cite py-4 first:pt-1" data-wm-type="{{ .type }}">
             <div class="flex items-baseline gap-3">
                 <p class="m-0 min-w-0 flex-1 text-sm text-ink">
-                    {{- if .author_url }}
+                    {{- if partial "webmention-url-ok.html" .author_url }}
                     <a class="webmention__author p-author h-card u-url inline-flex items-center gap-2 align-middle font-semibold text-ink-strong no-underline hover:text-accent" href="{{ .author_url }}" rel="noopener noreferrer external" target="_blank">
                         {{- with .author_photo }}<img class="u-photo size-8 shrink-0 rounded-full border border-accent-muted/40 object-cover" src="{{ . }}" alt="" loading="lazy" width="32" height="32">{{ end -}}
                         <span class="p-name">{{ .author | default (i18n "webmention_author_unknown") }}</span>
@@ -86,7 +92,7 @@
                     </span>
                     {{- end }}
                     {{ if .title }}verlinkte diesen Artikel in <span class="text-ink-strong">&#8222;{{ .title }}&#8220;</span>{{ else }}erwähnte diesen Artikel{{ end }}
-                    {{- if .url }}
+                    {{- if partial "webmention-url-ok.html" .url }}
                     <span aria-hidden="true"> · </span>
                     <a class="webmention__source u-url text-xs text-accent-hover no-underline hover:text-accent" href="{{ .url }}" rel="noopener noreferrer external" target="_blank" title="Quelle ansehen">{{ (urls.Parse .url).Hostname }}</a>
                     {{- end }}

@@ -9,6 +9,14 @@
 // localStorage key format: `hearted-${articleUrl}` (e.g.
 // `hearted-/articles/my-post/`). Per-browser only — clearable, not secure;
 // acceptable because hearts are an engagement signal, not a vote.
+//
+// THE KEY IS baseURL-INDEPENDENT BY DESIGN (#250 AC 2): `data-article` is NOT
+// RelPermalink but the site-root-relative path — heart-button.html strips the
+// site's base path before it reaches this file. On a root deploy the two are
+// byte-identical, which is exactly why this looks redundant and is not: a
+// subpath deploy, a staging mirror or the #248 domain cutover would shift
+// RelPermalink and silently orphan every stored `hearted-…` entry. Do not
+// "simplify" the template back to raw RelPermalink.
 ;(function() {
     'use strict';
 

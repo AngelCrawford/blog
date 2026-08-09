@@ -43,7 +43,10 @@
         {{- range $shown }}
         {{- $name := .author | default (i18n "webmention_author_unknown") }}
         <span class="h-cite inline-flex" data-wm-type="{{ $.type }}">
-            {{- if .url }}
+            {{- /* Same scheme guard as the groups (#250 AC 1) — the issue only
+                   named webmention-group's links, but an avatar wrapping a
+                   javascript: URI is the identical hole. */ -}}
+            {{- if partial "webmention-url-ok.html" .url }}
             <a class="p-author h-card u-url inline-flex" href="{{ .url }}" rel="noopener noreferrer external" target="_blank" title="{{ $name }}" data-tooltip="{{ $name }}">
                 {{- if .author_photo }}
                 <img class="u-photo size-8 rounded-full border border-accent-muted/40 object-cover transition duration-150 hover:border-accent" src="{{ .author_photo }}" alt="{{ $name }}" loading="lazy" width="32" height="32">

@@ -908,14 +908,27 @@ test("Story 2.4 AC #8: webmention reply content is auto-escaped (XSS guard, no s
     "utf8"
   );
 
-  // The fixture's reply content "Schöner Artikel! Ich sehe das ähnlich." has
-  // no HTML, so we cannot directly assert escape behavior on it. Instead,
-  // confirm the surrounding <p class="webmention__content"> never contains a
-  // raw <script> or <iframe> — these are the only ways a regression to
-  // safeHTML would manifest in production data.
+  // Story 2.9 / #250 AC 3: the fixture now carries a deliberately hostile
+  // entry (content AND author = "<script>alert(1)</script>"), so the
+  // auto-escape assertion is no longer vacuous: the escaped payload must be
+  // PRESENT in the rendered page, and the raw payload must not.
+  assert.match(
+    articleHtml,
+    /&lt;script&gt;alert\(1\)&lt;\/script&gt;/,
+    "The adversarial fixture payload must render HTML-escaped — if it is missing entirely, the fixture or the mention rendering broke"
+  );
+  assert.doesNotMatch(
+    articleHtml,
+    /<script>alert\(1\)<\/script>/,
+    "The adversarial fixture payload must NEVER reach the page unescaped (safeHTML regression)"
+  );
   const contentBlocks = articleHtml.match(
     /<p class="webmention__content[^"]*">[\s\S]*?<\/p>/g
   ) || [];
+  assert.ok(
+    contentBlocks.length > 0,
+    "webmention__content blocks must exist on the fixture-targeted article"
+  );
   for (const block of contentBlocks) {
     assert.doesNotMatch(
       block,
@@ -923,6 +936,37 @@ test("Story 2.4 AC #8: webmention reply content is auto-escaped (XSS guard, no s
       `Reply content block must NOT contain raw script-like tags: ${block}`
     );
   }
+});
+
+test("Story 2.9 / #250 AC #1: javascript: URIs from webmention payloads never render as hrefs", () => {
+  // Hugo's auto-escape stops HTML injection but NOT protocol injection: an
+  // `author_url: "javascript:alert(1)"` would render as a perfectly
+  // executable link. Every webmention-supplied URL runs through the
+  // webmention-url-ok.html allowlist (http/https/mailto); unsafe URLs fall
+  // through to the <span> branch. The fixture seeds exactly that payload.
+  const result = runBuild(hugoArgs);
+  assert.equal(result.status, 0, `Production build failed.\n${result.stderr}`);
+
+  const articleHtml = readFileSync(
+    resolve(testPublic, "articles", webmentionFixtureSlug, "index.html"),
+    "utf8"
+  );
+
+  // No href on the whole page may carry an executable scheme — this also
+  // guards the facepile avatars, which the original issue text overlooked.
+  assert.doesNotMatch(
+    articleHtml,
+    /href\s*=\s*["'](?:javascript|data|vbscript):/i,
+    "A webmention-supplied executable URI leaked into an href attribute"
+  );
+
+  // The hostile author must still APPEAR (escaped, as a span, name intact) —
+  // the guard downgrades the link, it does not swallow the mention.
+  assert.match(
+    articleHtml,
+    /<span class="webmention__author[^"]*"[\s\S]*?&lt;script&gt;alert\(1\)&lt;\/script&gt;/,
+    "The adversarial author must render in the linkless <span> branch with its name escaped"
+  );
 });
 
 // =============================================================================
