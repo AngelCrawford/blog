@@ -35,7 +35,9 @@
     {{- /* Withered content is filtered out BEFORE pagination, so the three
            weight buckets and the page count all reflect non-withered totals.
            See Story 1.3 and withered-filter.html. */ -}}
-    {{- $all := where .Site.RegularPages "Type" "in" (slice "articles" "notes") -}}
+    {{- /* Bookmarks ride in the feed as outward-linking cards (#251); RSS
+           stays article-only, like it already was for notes. */ -}}
+    {{- $all := where .Site.RegularPages "Type" "in" (slice "articles" "notes" "bookmarks") -}}
     {{- $visible := partial "withered-filter.html" $all -}}
     {{- $hiddenCount := partial "withered-count.html" $all -}}
     {{- /* #260: the feed orders by LASTMOD, not date — a 2016 article

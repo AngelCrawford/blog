@@ -23,10 +23,14 @@ const schema = JSON.parse(
 const noteSchema = JSON.parse(
   readFileSync(resolve(repoRoot, "schemas/frontmatter/note.schema.json"), "utf8")
 );
+const bookmarkSchema = JSON.parse(
+  readFileSync(resolve(repoRoot, "schemas/frontmatter/bookmark.schema.json"), "utf8")
+);
 const ajv = new Ajv({ allErrors: true, strict: false });
 addFormats(ajv);
 const validate = ajv.compile(schema);
 const validateNote = ajv.compile(noteSchema);
+const validateBookmark = ajv.compile(bookmarkSchema);
 
 /* The withered/URL cases below predate the required fields (#189) and were
  * written as bare fragments; MINIMUM keeps them valid on the axis they are
@@ -190,4 +194,26 @@ test("note schema: a note without a title is still rejected", () => {
 test("note schema: the withered rules still apply to notes", () => {
   const { ok } = checkNote({ title: "T", growth_stage: "withered" });
   assert.equal(ok, false, "withered without withered_date must fail for notes too");
+});
+
+// ── bookmarks owe a target URL and nothing else ─────────────────────────────
+
+function checkBookmark(data) {
+  const ok = validateBookmark(data);
+  return { ok, errors: validateBookmark.errors ? [...validateBookmark.errors] : [] };
+}
+
+test("bookmark schema: title plus bookmark_of is enough — no summary, no Rubrik, no growth stage", () => {
+  const { ok, errors } = checkBookmark({ title: "T", bookmark_of: "https://example.com/post/" });
+  assert.equal(ok, true, JSON.stringify(errors));
+});
+
+test("bookmark schema: bookmark_of is required — a bookmark without a target is not a bookmark", () => {
+  const { ok } = checkBookmark({ title: "T" });
+  assert.equal(ok, false);
+});
+
+test("bookmark schema: bookmark_of must be an absolute http(s) URL — a relative path cannot receive a webmention", () => {
+  const { ok } = checkBookmark({ title: "T", bookmark_of: "/articles/local/" });
+  assert.equal(ok, false);
 });

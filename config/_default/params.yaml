@@ -76,7 +76,7 @@ identity:
 # Stricter is better — every entry is a hole in the policy.
 csp:
     default: ["'self'"]
-    formaction: ["'self'"]
+    formaction: ["'self'", "https://webmention.io"] # Webmention-Send-Form auf der Artikelseite POSTet direkt an den Endpoint (#251)
     framesrc: ["'self'", "https://www.youtube-nocookie.com", "https://open.spotify.com"] # Spotify erst nach Zwei-Klick-Consent (Profilseite)
     frameancestors: ["'none'"] # Modern X-Frame-Options replacement — Clickjacking-Schutz, niemand darf die Site embedden
     imgsrc: ["'self'", "data:", "https:"]

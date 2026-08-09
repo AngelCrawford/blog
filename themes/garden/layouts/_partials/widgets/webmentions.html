@@ -1,28 +1,100 @@
-{{- /* Garden — webmention display (Story 2.4, FR-012). Grouped from
+{{- /* Garden — webmention display: „Echos & Antworten" (#251, second round —
+       built to Angel's mockup, on top of Story 2.4 / FR-012). Grouped from
        data/webmentions_by_article.json, server-side, no JS on the display
        path, auto-escaped (sanitization is the pipeline's job, not the
        template's).
 
-       ONLY THE TYPES WITH CONTENT LIVE HERE: replies and mentions. Likes and
-       reposts carry nothing but WHO — they render as facepile tiles in the
-       sidebar (webmention-facepile.html), per the IndieWeb convention and
-       Angel's call. The heading is "Reaktionen", matching the Steckbrief row
-       that links to this anchor. The section renders even when empty: an
-       anchor that exists only sometimes is a broken promise. */ -}}
+       THE SECTION IS A PANEL AGAIN — Angel's call, mockup in hand, and it
+       is legal by the surface rule: panel on page ground, tiles on panel,
+       nothing deeper. The first round had the reactions flat on the page
+       ground with likes/reposts as sidebar facepiles; both of those calls
+       are hereby superseded — the counter band inside the panel carries
+       likes, reposts and bookmarks now, and the sidebar is clean.
+
+       LAYOUT, top to bottom: header (eyebrow, title, subtitle, the dashed
+       „INDIE WEB [Jahr]" stamp), counter band (content-free types as
+       facepile cells), 01 Antworten as a card grid, 02 Erwähnungen as rows,
+       the send box, and the link bar bled to the panel's bottom edge.
+
+       The section renders even when empty: an anchor that exists only
+       sometimes is a broken promise. */ -}}
+{{- $sprite := "fonts/remixicon/remixicon.symbol.svg" | relURL -}}
+{{- $rv := site.Params.remixicon_version -}}
 {{- $mentions := index hugo.Data.webmentions_by_article .RelPermalink | default (slice) -}}
 {{- $replies := where $mentions "type" "reply" -}}
 {{- $generic := where $mentions "type" "mention" -}}
+{{- $likes := where $mentions "type" "like" -}}
+{{- $reposts := where $mentions "type" "repost" -}}
+{{- $bookmarks := where $mentions "type" "bookmark" -}}
+{{- /* Hardcoded like head.html's discovery tag — single-tenant, never varies.
+       CSP form-action allow-lists the host (config/_default/params.yaml). */ -}}
+{{- $endpoint := "https://webmention.io/article-time.de/webmention" -}}
 
-{{- /* NO PANEL AROUND THE SECTION — the reactions sit on the page ground
-       like the footer widgets do, each entry carrying its own tile. A panel
-       here made tiles-in-a-panel, and the extra surface said nothing. */ -}}
-<section id="webmentions" class="at-flow mt-section">
-    <h2 class="gd-h2">Reaktionen</h2>
+<section id="webmentions" class="mt-section rounded-md border border-accent-muted/40 bg-[var(--surface-tile)] p-gutter shadow-md">
 
-    {{- if not (or $replies $generic) -}}
-        <p class="text-ink-muted">Noch keine Antworten. Sende einen Webmention!</p>
+    <header class="relative">
+        <div class="mb-[0.7rem] flex items-center justify-between gap-2 bg-[linear-gradient(to_right,var(--rule-gold),transparent)] bg-[length:100%_1px] bg-bottom bg-no-repeat pb-[0.7rem]">
+            <span class="m-0 text-[0.7rem]/[1] font-semibold tracking-label text-ink-muted uppercase">Aus dem IndieWeb</span>
+        </div>
+        <h2 class="m-0 mt-3 font-heading text-2xl font-semibold tracking-heading text-accent-hover">Echos &amp; Antworten</h2>
+        <p class="m-0 mt-2 max-w-[60ch] text-sm text-ink-muted">Reaktionen von anderen Seiten, gesammelt via Webmention. Schreib eine Antwort auf deinem eigenen Blog und sie taucht hier auf.</p>
+        {{- /* The stamp: dashed circle, slight tilt, the year of the build —
+               the mockup's one piece of jewellery, kept because Angel showed
+               it twice. Decorative, so hidden from readers of the other
+               kind, and hidden below 640px where it would crowd the title. */ -}}
+    </header>
+
+    {{- if not $mentions -}}
+        <p class="mt-gutter mb-0 text-ink-muted italic">Noch keine Reaktionen.</p>
     {{- else -}}
-        {{- with $replies }}{{ partial "widgets/webmention-group" (dict "items" . "heading" "Antworten" "type" "reply") }}{{ end }}
-        {{- with $generic }}{{ partial "widgets/webmention-group" (dict "items" . "heading" "Erwähnungen" "type" "mention") }}{{ end }}
+
+        {{- if or $likes $reposts $bookmarks }}
+        {{- /* The counter band: the content-free types, WHO as facepile. The
+               cells sit -mx-4 so their inner padding meets the hairlines,
+               and the band's own rules close it top and bottom. */ -}}
+        <div class="mt-gutter grid grid-cols-1 divide-y divide-accent-muted/25 border-y border-accent-muted/25 sm:grid-cols-3 sm:divide-x sm:divide-y-0">
+            {{ partial "widgets/webmention-facepile" (dict "items" $likes "label" "Likes" "type" "like" "icon" "heart") }}
+            {{ partial "widgets/webmention-facepile" (dict "items" $reposts "label" "Reposts" "type" "repost" "icon" "share") }}
+            {{ partial "widgets/webmention-facepile" (dict "items" $bookmarks "label" "Bookmarks" "type" "bookmark" "icon" "bookmark") }}
+        </div>
+        {{- end }}
+
+        {{- with $replies }}{{ partial "widgets/webmention-group" (dict "items" . "heading" "Antworten" "type" "reply" "index" "01" "layout" "grid") }}{{ end }}
+        {{- with $generic }}{{ partial "widgets/webmention-group" (dict "items" . "heading" "Erwähnungen" "type" "mention" "index" "02") }}{{ end }}
+
     {{- end -}}
+
+    {{- /* The send box: a plain POST straight to the endpoint —
+           webmention.io answers on its own page, and that is acceptable for
+           the launch; a fetch()-based inline confirmation is enhancement,
+           not requirement. No JS on this path today. Copy is Angel's, from
+           the mockup. */ -}}
+    <div class="mt-gutter rounded-tile border border-accent-muted/40 bg-surface-sunken p-5" data-wm-send>
+        <p class="m-0 flex items-center gap-2 text-[0.7rem]/[1] font-semibold tracking-label text-ink-muted uppercase">
+            <svg class="size-3.5 shrink-0 fill-current text-accent" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#mail-line"></use></svg>
+            Eigene Webmention senden
+        </p>
+        <p class="m-0 mt-3 font-heading text-lg font-semibold text-ink-strong">Du hast dazu auf deinem Blog geschrieben?</p>
+        <p class="m-0 mt-2 max-w-[70ch] text-sm text-ink-muted">Verlinke diesen Artikel in deinem Beitrag und gib unten die URL deines Posts an — der Rest passiert automatisch via <a class="text-accent-hover underline decoration-accent-muted underline-offset-4 hover:text-accent" href="https://webmention.io/" rel="noopener noreferrer external" target="_blank">webmention.io</a>. Kein Account, keine Cookies. Auch über <a class="text-accent-hover underline decoration-accent-muted underline-offset-4 hover:text-accent" href="https://brid.gy/" rel="noopener noreferrer external" target="_blank">Bridgy</a> aus Mastodon, Bluesky &amp; Co.</p>
+        <form class="mt-4 flex flex-col gap-3 sm:flex-row" action="{{ $endpoint }}" method="post">
+            <label class="sr-only" for="wm-source">URL des eigenen Beitrags</label>
+            <input class="w-full flex-1 rounded-sm border border-accent-muted bg-surface px-3 py-1.5 text-ink caret-accent transition-[border-color,box-shadow] duration-200 ease-out focus:border-accent focus:ring-[3px] focus:ring-accent/25 focus:outline-none" id="wm-source" name="source" type="url" required placeholder="https://dein-blog.de/dein-beitrag/" autocomplete="url">
+            <input type="hidden" name="target" value="{{ .Permalink }}">
+            {{ partial "ui/button" (dict "label" "Senden" "type" "submit" "icon" "reply-line" "title" "Webmention an diesen Artikel senden") }}
+        </form>
+    </div>
+
+    {{- /* The link bar, bled to the panel's edges like the card footer. */ -}}
+    <p class="mt-gutter -mx-gutter -mb-gutter flex flex-wrap items-center gap-x-3 gap-y-2 rounded-b-[calc(var(--radius-md)-1px)] border-t border-accent-muted/25 bg-surface px-gutter py-3 text-xs tracking-label text-ink-muted">
+        <span class="inline-block size-1.5 rounded-full bg-accent" aria-hidden="true"></span>
+        <a class="no-underline hover:text-accent" href="https://indieweb.org/" rel="noopener noreferrer external" target="_blank">Powered by IndieWeb</a>
+        <span class="text-ink-muted/40" aria-hidden="true">|</span>
+        <a class="no-underline hover:text-accent" href="https://indieweb.org/Webmention" rel="noopener noreferrer external" target="_blank">Was ist eine Webmention?</a>
+        {{- with .Site.Home.OutputFormats.Get "rss" }}
+        <span class="text-ink-muted/40" aria-hidden="true">|</span>
+        <a class="no-underline hover:text-accent" href="{{ .Permalink }}">RSS abonnieren</a>
+        {{- end }}
+        <span class="text-ink-muted/40" aria-hidden="true">|</span>
+        <a class="no-underline hover:text-accent" href="{{ $endpoint }}" rel="noopener noreferrer external" target="_blank">Endpoint: <span class="text-accent-hover">/webmention</span></a>
+    </p>
 </section>

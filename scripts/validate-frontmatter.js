@@ -26,6 +26,7 @@ const repoRoot = process.cwd();
 const SCHEMAS = [
   { match: /^content\/articles\/.+\.md$/, file: "schemas/frontmatter/article.schema.json", kind: "article" },
   { match: /^content\/notes\/.+\.md$/, file: "schemas/frontmatter/note.schema.json", kind: "note" },
+  { match: /^content\/bookmarks\/.+\.md$/, file: "schemas/frontmatter/bookmark.schema.json", kind: "bookmark" },
 ];
 
 for (const s of SCHEMAS) {
@@ -142,8 +143,10 @@ for (const { file, schema } of targets) {
     }
   }
 
-  /* Warnings ride along even on a valid file — that is the point of them. */
-  const warnings = seoWarnings(data, schema.kind);
+  /* Warnings ride along even on a valid file — that is the point of them.
+   * Bookmarks are exempt: their pages are robots-disallowed thin content
+   * (webmention sources, not search targets), so SEO advice is pure noise. */
+  const warnings = schema.kind === "bookmark" ? [] : seoWarnings(data, schema.kind);
   if (warnings.length) {
     warned += warnings.length;
     console.warn(`⚠ ${file}`);

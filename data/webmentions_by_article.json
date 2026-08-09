@@ -46,6 +46,8 @@
       "author": "Dana Müller",
       "author_url": "https://danamueller.example/",
       "url": "https://danamueller.example/articles/related-thoughts/",
+      "title": "Verwandte Gedanken zu Feeds",
+      "content": "besonders die Aufschlüsselung der Feed-Formate war Gold wert, gerade wenn man RSS zum ersten Mal angeht",
       "published": "2026-04-19T09:00:00Z"
     },
     {
@@ -54,6 +56,22 @@
       "author_url": "",
       "url": "",
       "published": ""
+    },
+    {
+      "type": "bookmark",
+      "author": "Erik Larsen",
+      "author_url": "https://eriklarsen.example/",
+      "author_photo": "https://picsum.photos/200/300",
+      "content": "Gute Referenz zum Thema RSS — gespeichert.",
+      "url": "https://eriklarsen.example/bookmarks/article-time-rss/",
+      "published": "2026-04-20T11:20:00Z"
+    },
+    {
+      "type": "bookmark",
+      "author": "Mira Otten",
+      "author_url": "https://mira.example/",
+      "url": "https://mira.example/links/2026-04/",
+      "published": "2026-04-21T19:05:00Z"
     }
   ]
 }

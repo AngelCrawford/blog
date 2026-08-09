@@ -8,3 +8,7 @@
 # Use `{{ i18n "key" }}` in templates; combine with `default` for fallback chains.
 
 webmention_author_unknown: Unbekannt
+webmentions:
+    echo_count:
+        one: "{{ . }} Echo"
+        other: "{{ . }} Echos"

@@ -1,9 +1,16 @@
-{{- /* Garden — a facepile tile for content-free webmention types (likes and
-       reposts), the IndieWeb's own answer to "what do you show when there is
-       nothing to show but WHO": a row of avatars, no dates — the chronology
-       lives at the source, which is where the avatar links. Name in the
-       tooltip and title; a missing photo becomes an initial in a circle so
-       the count never lies.
+{{- /* Garden — one counter cell in the „Echos & Antworten" panel's counter
+       band (#251, second round): duotone icon + label + count, a facepile of
+       the senders underneath. This is the IndieWeb's answer to "what do you
+       show when there is nothing to show but WHO" — likes, reposts and
+       bookmarks all land here; anything that carries text lives in the
+       groups below. Renders nothing when empty, so the band's grid closes
+       up. Was a sidebar tile until Angel pulled the reactions back into the
+       section, mockup in hand.
+
+       Avatars cap at five, the rest becomes a "+N" chip — a facepile that
+       wraps to three rows stops being a glance. Name in tooltip and title;
+       a missing photo becomes an initial in a circle so the count never
+       lies.
 
        NO printf FOR THE AVATAR MARKUP: the class names carry hsl percent
        signs, and printf reads % as a verb — the first version rendered
@@ -11,14 +18,26 @@
        the two wrappers, is the boring correct form.
 
        The h-cite / p-author / h-card / u-url / u-photo classes are parser
-       contracts, as everywhere. Receives dict: items, heading, type. */ -}}
+       contracts, as everywhere. Receives dict: items, label, type, icon
+       (sprite id WITHOUT the -line/-fill suffix — both get drawn). */ -}}
 {{- if .items -}}
-<section class="rounded-tile border border-accent-muted/40 bg-[var(--surface-tile)] px-4 py-[0.9rem]" data-wm-group="{{ .type }}">
-    {{ partial "ui/tile-head" (dict "label" .heading "count" (printf "%d" (len .items))) }}
-    <p class="m-0 flex flex-wrap gap-1.5">
-        {{- range .items }}
+{{- $sprite := "fonts/remixicon/remixicon.symbol.svg" | relURL -}}
+{{- $rv := site.Params.remixicon_version -}}
+{{- $shown := first 5 .items -}}
+{{- $rest := sub (len .items) (len $shown) -}}
+<div class="min-w-0 px-4 py-4" data-wm-group="{{ .type }}">
+    <p class="m-0 flex items-center gap-2">
+        <span class="gd-icon-duo text-base">
+            <svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#{{ .icon }}-fill"></use></svg>
+            <svg aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#{{ .icon }}-line"></use></svg>
+        </span>
+        <span class="text-ink-muted text-[0.7rem]/[1] tracking-label">{{ .label }}</span>
+        <span class="ml-auto rounded-[0.35rem] bg-[hsl(35_45%_14%)] px-[0.6em] py-[0.25em] text-[0.7rem] whitespace-nowrap text-[color-mix(in_srgb,var(--color-accent-hover)_70%,transparent)]">{{ T "webmentions.echo_count" (len .items) }}</span>
+    </p>
+    <p class="m-0 mt-3 flex items-center -space-x-2">
+        {{- range $shown }}
         {{- $name := .author | default (i18n "webmention_author_unknown") }}
-        <span class="h-cite inline-flex" data-wm-type="{{ .type }}">
+        <span class="h-cite inline-flex" data-wm-type="{{ $.type }}">
             {{- if .url }}
             <a class="p-author h-card u-url inline-flex" href="{{ .url }}" rel="noopener noreferrer external" target="_blank" title="{{ $name }}" data-tooltip="{{ $name }}">
                 {{- if .author_photo }}
@@ -40,6 +59,9 @@
             {{- end }}
         </span>
         {{- end }}
+        {{- if gt $rest 0 }}
+        <span class="flex size-8 items-center justify-center rounded-full border border-dashed border-accent-muted/60 bg-surface text-xs font-semibold text-ink-muted tabular-nums" data-tooltip="{{ $rest }} weitere">+{{ $rest }}</span>
+        {{- end }}
     </p>
-</section>
+</div>
 {{- end -}}

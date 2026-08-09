@@ -1,46 +1,104 @@
-{{- /* Garden — one webmention type-group. Receives dict: items, heading, type.
-       The h-cite / p-author / u-url / dt-published class names are microformat
-       contracts with parsers reading OUR page (#218); `webmention__author` and
-       `webmention__source` are the build-test's hooks (Story 2.4 AC #6 greps
-       for them). All of them are data, not styling. Reply text only for
-       replies; likes/reposts/mentions carry no meaningful content. */ -}}
-{{- /* EACH REACTION IS ITS OWN TILE — that part was right all along. What
-       was wrong was the panel AROUND the whole section, which made these
-       read as cards nested in a card; the section sits on the page ground
-       now, like the footer widgets (see webmentions.html). */ -}}
+{{- /* Garden — one webmention type-group under a numbered heading (#251,
+       second round, after Angel's mockup). Receives dict: items, heading,
+       type, index ("01" …), layout:
+
+         "grid"  replies — two-up card grid from 768px; each card a tile
+                 with the gold left edge, avatar + name, source domain under
+                 the name, date top right, the text led by a small gold
+                 quote mark.
+         rows    mentions — flat rows on the panel, divided by hairlines:
+                 avatar + name woven into a sentence („verlinkte diesen
+                 Artikel in …" when the source post's title is known,
+                 „erwähnte diesen Artikel" when not), snippet in muted
+                 italics underneath.
+
+       The h-cite / p-author / u-url / u-photo / dt-published / p-content
+       class names are microformat contracts with parsers reading OUR page
+       (#218); `webmention__author`, `webmention__source` and
+       `webmention__content` are the build-test's hooks (Story 2.4 ACs #6
+       and #8 grep for them). All of them are data, not styling.
+
+       The group heading stays sentence case against the mockup's ALL CAPS —
+       "ALL CAPS only for the 11px tile labels, never in a heading" is a
+       recorded casing rule, and the number + rule + count carry the
+       mockup's structure without breaking it. */ -}}
+{{- $sprite := "fonts/remixicon/remixicon.symbol.svg" | relURL -}}
+{{- $rv := site.Params.remixicon_version -}}
+{{- $grid := eq (.layout | default "rows") "grid" -}}
 <section class="mt-gutter" data-wm-group="{{ .type }}">
-    <h3 class="mb-3 font-heading text-base font-semibold text-accent">{{ .heading }} <span class="text-ink-muted tabular-nums">({{ len .items }})</span></h3>
-    <ul class="m-0 flex list-none flex-col gap-3 p-0">
+    <h3 class="mb-3 flex items-center gap-3 font-heading text-base font-semibold text-ink-muted">
+        <span>{{ .heading }}</span>
+        <span class="h-px flex-1 bg-[linear-gradient(to_right,var(--rule-gold),transparent)]" aria-hidden="true"></span>
+        <span class="text-xs font-normal text-ink-muted tabular-nums">{{ len .items }}</span>
+    </h3>
+
+    {{- if $grid }}
+    <ul class="m-0 grid list-none grid-cols-1 gap-4 p-0 md:grid-cols-2">
         {{- range .items }}
         <li>
-            <article class="webmention h-cite rounded-tile border border-accent-muted/40 bg-[var(--surface-tile)] p-4" data-wm-type="{{ .type }}">
-                <div class="flex flex-col gap-2">
+            <article class="webmention h-cite flex h-full flex-col rounded-tile border border-accent-muted/40 border-l-[3px] border-l-accent/60 bg-[var(--surface-tile)] p-4" data-wm-type="{{ .type }}">
+                <div class="flex items-start gap-3">
                     {{- if .author_url }}
-                    <a class="webmention__author p-author h-card u-url inline-flex items-center gap-2 font-semibold text-ink-strong no-underline hover:text-accent" href="{{ .author_url }}" rel="noopener noreferrer external" target="_blank">
-                        {{- with .author_photo }}<img class="u-photo size-10 rounded-full border border-accent-muted/40 object-cover" src="{{ . }}" alt="" loading="lazy" width="40" height="40">{{ end -}}
-                        <span class="p-name">{{ .author | default (i18n "webmention_author_unknown") }}</span>
+                    <a class="webmention__author p-author h-card u-url inline-flex min-w-0 items-center gap-3 font-semibold text-ink-strong no-underline hover:text-accent" href="{{ .author_url }}" rel="noopener noreferrer external" target="_blank">
+                        {{- with .author_photo }}<img class="u-photo size-10 shrink-0 rounded-full border border-accent-muted/40 object-cover" src="{{ . }}" alt="" loading="lazy" width="40" height="40">{{ end -}}
+                        <span class="p-name truncate">{{ .author | default (i18n "webmention_author_unknown") }}</span>
                     </a>
                     {{- else }}
-                    <span class="webmention__author p-author h-card inline-flex items-center gap-2 font-semibold text-ink-strong">
-                        {{- with .author_photo }}<img class="u-photo size-10 rounded-full border border-accent-muted/40 object-cover" src="{{ . }}" alt="" loading="lazy" width="40" height="40">{{ end -}}
-                        <span class="p-name">{{ .author | default (i18n "webmention_author_unknown") }}</span>
+                    <span class="webmention__author p-author h-card inline-flex min-w-0 items-center gap-3 font-semibold text-ink-strong">
+                        {{- with .author_photo }}<img class="u-photo size-10 shrink-0 rounded-full border border-accent-muted/40 object-cover" src="{{ . }}" alt="" loading="lazy" width="40" height="40">{{ end -}}
+                        <span class="p-name truncate">{{ .author | default (i18n "webmention_author_unknown") }}</span>
                     </span>
                     {{- end }}
-                    {{- if and (eq .type "reply") .content }}
-                    <p class="p-content m-0 text-ink">{{ .content }}</p>
-                    {{- end }}
-                    {{- if .url }}
-                    <a class="webmention__source u-url self-start text-sm text-ink-muted underline-offset-4 hover:text-accent" href="{{ .url }}" rel="noopener noreferrer external" target="_blank" title="Quelle ansehen">
-                        {{- with .published }}<time class="dt-published" datetime="{{ . }}">{{ time.Format ":date_long" . }}</time>{{ else }}<span>—</span>{{ end -}}
-                    </a>
-                    {{- else }}
-                    <span class="webmention__source self-start text-sm text-ink-muted">
-                        {{- with .published }}<time class="dt-published" datetime="{{ . }}">{{ time.Format ":date_long" . }}</time>{{ else }}<span>—</span>{{ end -}}
+                    <span class="ml-auto shrink-0 pt-1 text-xs text-ink-muted">
+                        {{- with .published }}<time class="dt-published" datetime="{{ . }}">{{ time.Format "02.01.06" . }}</time>{{ else }}—{{ end -}}
                     </span>
-                    {{- end }}
                 </div>
+                {{- if .url }}
+                <a class="webmention__source u-url mt-1 inline-flex items-center gap-1.5 self-start pl-[52px] text-xs text-ink-muted no-underline hover:text-accent" href="{{ .url }}" rel="noopener noreferrer external" target="_blank" title="Quelle ansehen">
+                    <svg class="size-3.5 shrink-0 fill-current" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#external-link-line"></use></svg>
+                    {{ (urls.Parse .url).Hostname }}
+                </a>
+                {{- end }}
+                {{- if .content }}
+                <p class="webmention__content p-content mt-3 mb-0 text-ink"><svg class="mr-1 inline size-3 fill-current align-baseline text-accent" aria-hidden="true"><use href="{{ $sprite }}?t={{ $rv }}#double-quotes-l"></use></svg>{{ .content }}</p>
+                {{- end }}
             </article>
         </li>
         {{- end }}
     </ul>
+
+    {{- else }}
+    <ul class="m-0 flex list-none flex-col divide-y divide-accent-muted/25 p-0">
+        {{- range .items }}
+        <li class="webmention h-cite py-4 first:pt-1" data-wm-type="{{ .type }}">
+            <div class="flex items-baseline gap-3">
+                <p class="m-0 min-w-0 flex-1 text-sm text-ink">
+                    {{- if .author_url }}
+                    <a class="webmention__author p-author h-card u-url inline-flex items-center gap-2 align-middle font-semibold text-ink-strong no-underline hover:text-accent" href="{{ .author_url }}" rel="noopener noreferrer external" target="_blank">
+                        {{- with .author_photo }}<img class="u-photo size-8 shrink-0 rounded-full border border-accent-muted/40 object-cover" src="{{ . }}" alt="" loading="lazy" width="32" height="32">{{ end -}}
+                        <span class="p-name">{{ .author | default (i18n "webmention_author_unknown") }}</span>
+                    </a>
+                    {{- else }}
+                    <span class="webmention__author p-author h-card inline-flex items-center gap-2 align-middle font-semibold text-ink-strong">
+                        {{- with .author_photo }}<img class="u-photo size-8 shrink-0 rounded-full border border-accent-muted/40 object-cover" src="{{ . }}" alt="" loading="lazy" width="32" height="32">{{ end -}}
+                        <span class="p-name">{{ .author | default (i18n "webmention_author_unknown") }}</span>
+                    </span>
+                    {{- end }}
+                    {{ if .title }}verlinkte diesen Artikel in <span class="text-ink-strong">&#8222;{{ .title }}&#8220;</span>{{ else }}erwähnte diesen Artikel{{ end }}
+                    {{- if .url }}
+                    <span aria-hidden="true"> · </span>
+                    <a class="webmention__source u-url text-xs text-accent-hover no-underline hover:text-accent" href="{{ .url }}" rel="noopener noreferrer external" target="_blank" title="Quelle ansehen">{{ (urls.Parse .url).Hostname }}</a>
+                    {{- end }}
+                </p>
+                {{- with .published }}
+                <time class="dt-published shrink-0 text-xs text-ink-muted" datetime="{{ . }}">{{ time.Format "02.01.06" . }}</time>
+                {{- end }}
+            </div>
+            {{- if .content }}
+            <p class="webmention__content p-content mt-2 mb-0 pl-10 text-sm text-ink-muted italic">{{ .content }}</p>
+            {{- end }}
+        </li>
+        {{- end }}
+    </ul>
+    {{- end }}
 </section>
