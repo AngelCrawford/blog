@@ -24,7 +24,7 @@
   },
   "homepage": "https://github.com/AngelCrawford/blog#readme",
   "devDependencies": {
-    "@playwright/test": "^1.62.0",
+    "@playwright/test": "^1.62.1",
     "@tailwindcss/cli": "^4.3.3",
     "ajv": "^8.17.1",
     "ajv-formats": "^3.0.1",
